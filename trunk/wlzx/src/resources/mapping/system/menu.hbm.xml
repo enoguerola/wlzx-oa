@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="system.entity.MenuModel" table="wlzx_system_menu">
+		<id name="id">
+			<column name="id" />
+			<generator class="native" />
+		</id>
+		<property name="symbol" type="string" unique="true">
+			<column name="symbol" />
+		</property>
+		<property name="name" type="string">
+			<column name="name" />
+		</property>
+		<property name="detail" type="string">
+			<column name="detail" />
+		</property>
+		<property name="creationDate" type="java.util.Date">
+			<column name="creation_date" />
+		</property>
+		<property name="modifiedDate" type="java.util.Date">
+			<column name="modified_date" />
+		</property>
+		<set name="children" lazy="false"  table="wlzx_system_menu_treeship" cascade="all">
+			<key column="parent_id" not-null="true" />
+			<many-to-many column="child_id" class="system.entity.MenuModel" /> 
+		</set>
+		<set name="parents" lazy="false"  table="wlzx_system_menu_treeship" cascade="all" inverse="true">
+			<key column="child_id" not-null="true" />
+			<many-to-many column="parent_id" class="system.entity.MenuModel" /> 
+		</set>
+		<set name="modules" lazy="false"  table="wlzx_system_menu_module_relationship" cascade="all">
+			<key column="menu_id" not-null="true" />
+			<many-to-many column="module_id" class="system.entity.ModuleModel" /> 
+		</set>
+		<set name="systems" lazy="false"  table="wlzx_system_menu_relationship" cascade="all">
+			<key column="menu_id" not-null="true" />
+			<many-to-many column="system_id" class="system.entity.SystemModel" /> 
+		</set>
+	</class>
+</hibernate-mapping>
