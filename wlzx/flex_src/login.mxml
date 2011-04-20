@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--当 Application 完成构建后立即触发 init() 方法，以实现对 Server 端 Java 的调用-->
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx"   width="100%" pageTitle="登陆页面"  height="100%"  backgroundColor="#FFFEFE" xmlns:flexlib="http://code.google.com/p/flexlib/"  xmlns:viewers="flexlib.scheduling.scheduleClasses.viewers.*" xmlns:sliderClasses="flexlib.controls.sliderClasses.*" xmlns:baseClasses="flexlib.baseClasses.*">
+	<s:layout>
+		<s:VerticalLayout  horizontalAlign="center" verticalAlign="middle"/>
+	</s:layout>
+	<s:controlBarContent>	
+	</s:controlBarContent>
+	<flexlib:MDIWindow  width="400" height="200" layout="vertical">
+		<mx:Form width="100%" height="100%" paddingLeft="16" paddingRight="16" paddingBottom="16" paddingTop="16" >
+			<s:BorderContainer width="100%" height="80" borderVisible="false">
+				<s:layout>
+					<s:TileLayout requestedRowCount="2" requestedColumnCount="2" horizontalAlign="center" verticalAlign="middle" rowHeight="40"/>
+				</s:layout>
+				
+				<s:Label text="用户名" height="20" width="110" verticalAlign="middle" textAlign="right"/>
+				<s:TextInput/>
+				<s:Label text="密码" height="20" width="110" verticalAlign="middle" textAlign="right"/>
+				<s:TextInput/>
+			</s:BorderContainer>
+			<s:BorderContainer width="100%" height="40" borderVisible="false">
+				<s:layout>
+					<s:HorizontalLayout requestedColumnCount="2" verticalAlign="middle" horizontalAlign="center" gap="20"/>
+				</s:layout>
+				<s:Button label="登陆"/>
+				<s:Button label="重置"/>
+			</s:BorderContainer>
+		</mx:Form>
+		
+	</flexlib:MDIWindow>
+	
+	
+</s:Application>

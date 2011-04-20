@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<flexProperties enableServiceManager="false" flexServerFeatures="4" flexServerType="8" flexWarLocation="D:/eclipse_flex4/flex_java_commnication/blazeds.war" serverContextRoot="/wlzx" serverRoot="D:/workspace2/wlzx/WebContent" serverRootURL="http://localhost:8080/wlzx" toolCompile="true" useServerFlexSDK="false" version="2"/>

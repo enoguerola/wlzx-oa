@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="system.entity.RoleModel" table="wlzx_system_role">
+		<id name="id">
+			<column name="id" />
+			<generator class="native" />
+		</id>
+		<property name="name" type="string">
+			<column name="name" />
+		</property>
+		<property name="detail" type="string">
+			<column name="detail" />
+		</property>
+		<property name="creationDate" type="java.util.Date">
+			<column name="creation_date" />
+		</property>
+		<property name="modifiedDate" type="java.util.Date">
+			<column name="modified_date" />
+		</property>
+		<property name="supervisorFlag" type="boolean">
+			<column name="supervisor_flag" />
+		</property> 	
+		<set name="subordinates" lazy="false"  table="wlzx_system_role_leadship" cascade="all">
+			<key column="lead_id" not-null="true" />
+			<one-to-many class="system.entity.RoleModel" /> 
+		</set>
+		<set name="leaders" lazy="false"  table="wlzx_system_role_leadship" cascade="all">
+			<key column="subordinate_id" not-null="true" />
+			<one-to-many class="system.entity.RoleModel" /> 
+		</set>
+		<set name="users" lazy="false"  table="wlzx_system_role_user_relationship" cascade="all">
+			<key column="role_id" not-null="true" />
+			<one-to-many class="system.entity.UserModel" /> 
+		</set>
+		<set name="dataAccessModes" lazy="false"  table="wlzx_system_role_dam_relationship" cascade="all">
+			<key column="role_id" not-null="true" />
+			<one-to-many class="system.entity.DataAccessModeModel" /> 
+		</set>
+		<set name="departments" lazy="false"  table="wlzx_system_department_role_relationship" cascade="all">
+			<key column="role_id" not-null="true" />
+			<one-to-many class="system.entity.DepartmentModel" /> 
+		</set>
+		
+	</class>
+</hibernate-mapping>
