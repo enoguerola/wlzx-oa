@@ -102,7 +102,7 @@
 			}
 			
 			
-			[Embed(source="../WebContent/media/Home.png")]
+			[Embed(source="../WebContent/resources/common/icon/Home.png")]
 			private var home_icon:Class;
 			private function initHomeTab():void {	
 				addTab(homeTabTitle, nav, null, home_icon);
@@ -163,7 +163,7 @@
 		<s:layout>
 			<s:HorizontalLayout verticalAlign="middle" />
 		</s:layout>
-		<mx:Image x="0" y="0" source="@Embed(source='../WebContent/media/xh.jpg')" height="78" width="100"/>
+		<mx:Image x="0" y="0" source="@Embed(source='../WebContent/resources/common/layout/logo.jpg')" height="78" width="100"/>
 		<s:Label x="128" y="20" text="浙江省温岭中学" fontSize="32" width="100%"/>
 		<mx:HBox height="40" horizontalAlign="center" autoLayout="true">
 			<mx:Button label="主页" click="homeTab()" />
