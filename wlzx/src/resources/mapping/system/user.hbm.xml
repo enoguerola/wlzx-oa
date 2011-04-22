@@ -8,6 +8,9 @@
 			<column name="id" /> 
 			<generator class="native" />
 		</id>
+		<property name="symbol" type="string" unique="true">
+			<column name="symbol" />
+		</property>
 		<property name="name" type="string">
 			<column name="name" />
 		</property>
@@ -30,7 +33,7 @@
 			<column name="email" />
 		</property>
 		<set name="subordinates" lazy="false"  table="wlzx_system_user_leadship" cascade="all">
-			<key column="lead_id" not-null="true" />
+			<key column="leader_id" not-null="true" />
 			<one-to-many class="system.entity.UserModel" /> 
 		</set>
 		<set name="leaders" lazy="false"  table="wlzx_system_user_leadship" cascade="all">

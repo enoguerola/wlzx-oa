@@ -53,4 +53,21 @@ public class DataAccessModeDAO extends BaseDAOImpl<DataAccessModeModel> {
 		}
 		return null;
 	}
+
+	/** 
+	  * 通过唯一性系统标记查询数据访问方式实体
+	  * @param symbol 
+	  * @return T
+	  * @创建时间 2011-4-15 上午10:41:15
+	  */
+	@SuppressWarnings("unchecked")
+	public DataAccessModeModel getDataAccessModeBySymbol(String symbol){
+		if (StringUtils.isNotEmpty(symbol)) {
+			DetachedCriteria criteria = DetachedCriteria.forClass(DataAccessModeModel.class);
+			criteria.add(Restrictions.eq("symbol", symbol));
+			List<DataAccessModeModel> result = this.getListByCriteria(criteria);
+			return result != null && result.size() > 0 ? result.get(0) : null;
+		}
+		return null;
+	}
 }

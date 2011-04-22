@@ -10,10 +10,13 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import system.dao.*;
 import system.entity.DataAccessModeModel;
+import system.entity.DepartmentModel;
 import system.entity.MenuModel;
 import system.entity.ModuleModel;
 import system.entity.OperationModel;
+import system.entity.RoleModel;
 import system.entity.SystemModel;
+import system.entity.UserModel;
 
 
   
@@ -90,14 +93,15 @@ public class InitService {
 	public void setUserDAO(UserDAO userDAO) {
 		this.userDAO = userDAO;
 	}
-	protected static ApplicationContext applicationContext = 
-		new ClassPathXmlApplicationContext(
-				new String[]{"spring/system/*.xml","spring/system/spring-system.xml"});
+	
 	public static void main(String[] args) {
+		 ApplicationContext applicationContext = new ClassPathXmlApplicationContext(new String[]{"spring/system/*.xml","spring/system/spring-system.xml"});
 		// TODO Auto-generated method stub
 		InitService initService=(InitService)applicationContext.getBean("initService");
 		initService.initSystem();
 		initService.printSystemStructure();
+		initService.initDepartment();
+		initService.printDepartmentStructure();
 //		System.out.println(initService.getModuleDAO().getModuleBySymbol("basic_authorization_department_main").getOperations().size());
 
 	}
@@ -191,6 +195,19 @@ public class InitService {
 								departmentAuthorizationMainModuleSearch.setCreationDate(new Date());
 								departmentAuthorizationMainModuleSearch.setModifiedDate(new Date());
 								departmentAuthorizationMainModule.getOperations().add(departmentAuthorizationMainModuleSearch);
+								//部门授权主模块查询操作数据访问控制
+								DataAccessModeModel departmentAuthorizationMainModuleSearchDataDefaultFilter=dataAccessModeDAO.getDataAccessModeBySymbol("basic_authorization_department_main_search_deafultFilter");
+								if(departmentAuthorizationMainModuleSearchDataDefaultFilter==null){
+									departmentAuthorizationMainModuleSearchDataDefaultFilter=new DataAccessModeModel();
+									departmentAuthorizationMainModuleSearchDataDefaultFilter.setName("全部");
+									departmentAuthorizationMainModuleSearchDataDefaultFilter.setValue("NULL");//空过滤类
+									departmentAuthorizationMainModuleSearchDataDefaultFilter.setSymbol("basic_authorization_department_main_search_deafultFilter");
+									departmentAuthorizationMainModuleSearchDataDefaultFilter.setCreationDate(new Date());
+									departmentAuthorizationMainModuleSearchDataDefaultFilter.setModifiedDate(new Date());
+									departmentAuthorizationMainModuleSearch.getDataAccessModes().add(departmentAuthorizationMainModuleSearchDataDefaultFilter);
+								}else{
+										
+								}
 							}else {
 								
 							}
@@ -205,6 +222,19 @@ public class InitService {
 								departmentAuthorizationMainModuleEdit.setCreationDate(new Date());
 								departmentAuthorizationMainModuleEdit.setModifiedDate(new Date());
 								departmentAuthorizationMainModule.getOperations().add(departmentAuthorizationMainModuleEdit);
+								//部门授权主模块编辑操作数据访问控制
+								DataAccessModeModel departmentAuthorizationMainModuleEditDataDefaultFilter=dataAccessModeDAO.getDataAccessModeBySymbol("basic_authorization_department_main_edit_deafultFilter");
+								if(departmentAuthorizationMainModuleEditDataDefaultFilter==null){
+									departmentAuthorizationMainModuleEditDataDefaultFilter=new DataAccessModeModel();
+									departmentAuthorizationMainModuleEditDataDefaultFilter.setName("全部");
+									departmentAuthorizationMainModuleEditDataDefaultFilter.setValue("NULL");//空过滤类
+									departmentAuthorizationMainModuleEditDataDefaultFilter.setSymbol("basic_authorization_department_main_edit_deafultFilter");
+									departmentAuthorizationMainModuleEditDataDefaultFilter.setCreationDate(new Date());
+									departmentAuthorizationMainModuleEditDataDefaultFilter.setModifiedDate(new Date());
+									departmentAuthorizationMainModuleEdit.getDataAccessModes().add(departmentAuthorizationMainModuleEditDataDefaultFilter);
+								}else{
+									
+								}
 							}else {
 								
 							}
@@ -274,12 +304,15 @@ public class InitService {
 		
 	}
 	public void printSystemStructure(){
+		System.out.println("***系统结构图begin***");
 		SystemModel root=systemDAO.getSystemBySymbol("root");
 		printSystem(root,"");
+		System.out.println("***系统结构图end***");
 	}
+	
 	public void printSystem(SystemModel system,String tab){
 		if(system!=null){
-			System.out.println(tab+"->"+system.getName());
+			System.out.println(tab+"->"+system.getName()+"(系统)");
 			if(system.getChildren()!=null)
 			for(SystemModel subSystem:system.getChildren()){
 				printSystem(subSystem,tab+"  ");
@@ -292,7 +325,7 @@ public class InitService {
 	}
 	public void printMenu(MenuModel menu,String tab){
 		if(menu!=null){
-			System.out.println(tab+"->"+menu.getName());
+			System.out.println(tab+"->"+menu.getName()+"(菜单)");
 			if(menu.getChildren()!=null)
 			for(MenuModel subMenu:menu.getChildren()){
 				printMenu(subMenu,tab+"  ");
@@ -306,7 +339,7 @@ public class InitService {
 	}
 	public void printModule(ModuleModel module,String tab){
 		if(module!=null){
-			System.out.println(tab+"->"+module.getName());
+			System.out.println(tab+"->"+module.getName()+"(模块)");
 			if(module.getChildren()!=null&&module.getChildren().size()>0)
 				for(ModuleModel subModule:module.getChildren()){
 					printModule(subModule,tab+"  ");
@@ -325,7 +358,7 @@ public class InitService {
 	}
 	public void printOperation(OperationModel operation,String tab){
 		if(operation!=null){
-			System.out.println(tab+"->"+operation.getName());
+			System.out.println(tab+"->"+operation.getName()+"(操作)");
 			if(operation.getDataAccessModes()!=null&&operation.getDataAccessModes().size()>0)
 				for(DataAccessModeModel dam:operation.getDataAccessModes()){
 					printDAM(dam,tab+"  "+"  ");
@@ -334,7 +367,67 @@ public class InitService {
 	}
 	public void printDAM(DataAccessModeModel dam,String tab){
 		if(dam!=null){
-			System.out.println(tab+"->"+dam.getName());
+			System.out.println(tab+"->"+dam.getName()+"(访问)");
 		}	
+	}
+	public void initDepartment(){
+		//初始化根部门
+		DepartmentModel root=departmentDAO.getDepartmentBySymbol("root");
+		if(root==null){
+			root=new DepartmentModel();
+			root.setSymbol("root");
+			root.setCreationDate(new Date());
+			root.setName("温岭中学");
+			root.setModifiedDate(new Date());
+		}else{
+			
+		}
+		departmentDAO.saveOrUpdate(root);
+	}
+	public void printDepartmentStructure(){
+		System.out.println("***部门结构图begin***");
+		DepartmentModel root=departmentDAO.getDepartmentBySymbol("root");
+		printDepartment(root,"");
+		System.out.println("***部门结构图end***");
+	}
+
+	private void printDepartment(DepartmentModel department, String tab) {
+		if(department!=null){
+			System.out.println(tab+"->"+department.getName()+"(部门)");
+			if(department.getSubordinates()!=null)
+			for(DepartmentModel subDepartment:department.getSubordinates()){
+				printDepartment(subDepartment,tab+"  ");
+				if(subDepartment.getRoles()!=null)
+				for(RoleModel role:subDepartment.getRoles()){
+					printRole(role,tab+"  "+"  ");
+				}
+			}
+		}
+		
+	}
+	private void printRole(RoleModel role, String tab) {
+		if(role!=null){
+			System.out.println(tab+"->"+role.getName()+"(角色)");
+			if(role.getSubordinates()!=null)
+			for(RoleModel subRole:role.getSubordinates()){
+				printRole(subRole,tab+"  ");
+				if(subRole.getUsers()!=null)
+				for(UserModel user:subRole.getUsers()){
+					printUser(user,tab+"  "+"  ");
+				}
+			}
+		}
+		
+	}
+	private void printUser(UserModel user, String tab) {
+		if(user!=null){
+			System.out.println(tab+"->"+user.getName()+"(用户)");
+			if(user.getSubordinates()!=null)
+			for(UserModel subUser:user.getSubordinates()){
+				printUser(subUser,tab+"  ");
+				
+			}
+		}
+		
 	}
 }

@@ -10,23 +10,42 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
                         http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
-
-    <debug />
-
-    <global-method-security pre-post-annotations="enabled" />
-
-    <http pattern="/loggedout.jsp" security="none"/>
-	<http auto-config='true'>
-		<intercept-url pattern="/**" access="ROLE_USER" />
-        <remember-me />
-
-        <!-- Uncomment to limit the number of sessions a user can have -->
-        <session-management invalid-session-url="/timeout.jsp">
-            <concurrency-control max-sessions="1" error-if-maximum-exceeded="false" />
-        </session-management>
-          
-  	</http>
-
+ 	<debug /> 
+  	<global-method-security pre-post-annotations="enabled" /> 
+ 	
+   <http pattern="/loggedout.jsp" security="none" />
+   <http pattern="/login.html" security="none" /> 
+   <http auto-config="true" access-denied-page="/login.html">
+   		<intercept-url pattern="/system/*.html" access="ROLE_USER" />
+		<intercept-url pattern="/*.html" access="ROLE_USER" />
+		
+		<!-- 指定登陆页面、成功页面、失败页面-->
+		<form-login login-page="/login.html" default-target-url="/index.html"   always-use-default-target="true" login-processing-url="/j_spring_security_check" authentication-failure-url="/login.html" />
+		<!-- 尝试访问没有权限的页面时跳转的页面
+		<access-denied-handler error-page="/login.html" />
+		 -->
+		<!--
+			使用记住用户名、密码功能，指定数据源和加密的key <remember-me data-source-ref="dataSource"
+			/>
+		-->
+		<remember-me />
+		<!-- logout页面，logout后清除session -->
+		<logout invalidate-session="true" logout-success-url="/login.html" />
+		<!-- session 失效后跳转的页面，最大登陆次数 -->
+		 <!-- session-management是针对session的管理. 这里可以不配置. 如有需求可以配置. -->  
+         <!-- id登陆唯一. 后登陆的账号会挤掉第一次登陆的账号  error-if-maximum-exceeded="true" 禁止2次登陆;   
+             session-fixation-protection="none" 防止伪造sessionid攻击. 用户登录成功后会销毁用户当前的session.   
+             创建新的session,并把用户信息复制到新session中.   
+          -->  
+         <session-management session-fixation-protection="none">  
+             <concurrency-control/>  
+         </session-management>  
+		<session-management invalid-session-url="/login.html">
+			<concurrency-control max-sessions="1" />
+		</session-management>
+		<logout logout-success-url="/loggedout.jsp" delete-cookies="JSESSIONID" /> 
+		
+	</http>
     <!--
     Usernames/Passwords are
         rod/koala

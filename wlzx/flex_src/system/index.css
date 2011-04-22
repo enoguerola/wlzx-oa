@@ -1,0 +1,24 @@
+/* CSS file */
+@namespace s "library://ns.adobe.com/flex/spark";
+@namespace mx "library://ns.adobe.com/flex/mx";
+
+
+global
+{
+	content-background-alpha: 1.0;
+	chrome-color: #F7F4F4;
+	font-size: 14;
+}
+@namespace supertabs "flexlib.controls.tabBarClasses.*"; 
+
+supertabs|SuperTab 
+{ 
+	tabCloseButtonStyleName: "closeButton"; 
+} 
+.closeButton 
+{ 
+	defaultSkin:Embed(source="../WebContent/media/assets/assets.swf", symbol="firefox_close_up"); 
+	upSkin:Embed(source="../WebContent/media/assets/assets.swf", symbol="firefox_close_up"); 
+	downSkin:Embed(source="../WebContent/media/assets/assets.swf", symbol="firefox_close_down"); 
+	overSkin:Embed(source="../WebContent/media/assets/assets.swf", symbol="firefox_close_over"); 
+} 
