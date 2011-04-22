@@ -8,6 +8,9 @@
 			<column name="id" />
 			<generator class="native" />
 		</id>
+		<property name="symbol" type="string" unique="true">
+			<column name="symbol" />
+		</property>
 		<property name="name" type="string">
 			<column name="name" />
 		</property>
@@ -20,21 +23,22 @@
 		<property name="modifiedDate" type="java.util.Date">
 			<column name="modified_date" />
 		</property>
+
 		<set name="subordinates" lazy="false"  table="wlzx_system_department_leadship" cascade="all">
-			<key column="lead_id" not-null="true" />
-			<one-to-many class="system.entity.DepartmentModel" /> 
+			<key column="leader_id" not-null="true" />
+			<many-to-many   column="subordinate_id"  class="system.entity.DepartmentModel" /> 
 		</set>
-		<set name="leaders" lazy="false"  table="wlzx_system_department_leadship" cascade="all">
+		<set name="leaders" lazy="false"  table="wlzx_system_department_leadship" cascade="all"  inverse="true">
 			<key column="subordinate_id" not-null="true" />
-			<one-to-many class="system.entity.DepartmentModel" /> 
+			<many-to-many  column="leader_id"  class="system.entity.DepartmentModel" /> 
 		</set>
 		<set name="dataAccessModes" lazy="false"  table="wlzx_system_department_dam_relationship" cascade="all">
 			<key column="department_id" not-null="true" />
-			<one-to-many class="system.entity.DataAccessModeModel" /> 
+			<many-to-many column="dam_id" class="system.entity.DataAccessModeModel" /> 
 		</set>
 		<set name="roles" lazy="false"  table="wlzx_system_department_role_relationship" cascade="all-delete-orphan">
 			<key column="department_id" not-null="true" />
-			<one-to-many class="system.entity.RoleModel" /> 
+			<many-to-many column="role_id" class="system.entity.RoleModel" /> 
 		</set>
 		
 	</class>

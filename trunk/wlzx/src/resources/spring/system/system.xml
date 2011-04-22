@@ -13,7 +13,8 @@
        http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
        http://www.springframework.org/schema/tx
        http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
-
+	<context:annotation-config/>
+	<flex:message-broker />
 	<!-- 注入配置 -->
 	<bean id="systemDAO" class="system.dao.SystemDAO">
 		<property name="sessionFactory" ref="systemSessionFactory" />
@@ -48,5 +49,9 @@
 		<property name="departmentDAO" ref="departmentDAO" />
 		<property name="roleDAO" ref="roleDAO" />
 		<property name="userDAO" ref="userDAO" />
+	</bean>
+	<bean id="systemServiceDest" class="system.service.SystemService">
+		<flex:remoting-destination />
+		<property name="systemDAO" ref="systemDAO" />
 	</bean>
 </beans>

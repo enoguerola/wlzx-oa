@@ -8,6 +8,9 @@
 			<column name="id" />
 			<generator class="native" />
 		</id>
+		<property name="symbol" type="string" unique="true">
+			<column name="symbol" />
+		</property>
 		<property name="name" type="string">
 			<column name="name" />
 		</property>
@@ -23,25 +26,25 @@
 		<property name="supervisorFlag" type="boolean">
 			<column name="supervisor_flag" />
 		</property> 	
-		<set name="subordinates" lazy="false"  table="wlzx_system_role_leadship" cascade="all">
-			<key column="lead_id" not-null="true" />
-			<one-to-many class="system.entity.RoleModel" /> 
+		<set name="subordinates" lazy="false"  table="wlzx_system_department_leadship" cascade="all">
+			<key column="leader_id" not-null="true" />
+			<many-to-many  column="subordinate_id"  class="system.entity.DepartmentModel" /> 
 		</set>
-		<set name="leaders" lazy="false"  table="wlzx_system_role_leadship" cascade="all">
+		<set name="leaders" lazy="false"  table="wlzx_system_department_leadship" cascade="all"  inverse="true">
 			<key column="subordinate_id" not-null="true" />
-			<one-to-many class="system.entity.RoleModel" /> 
+			<many-to-many  column="leader_id"  class="system.entity.DepartmentModel" /> 
 		</set>
 		<set name="users" lazy="false"  table="wlzx_system_role_user_relationship" cascade="all">
 			<key column="role_id" not-null="true" />
-			<one-to-many class="system.entity.UserModel" /> 
+			<many-to-many column="user_id" class="system.entity.UserModel" /> 
 		</set>
 		<set name="dataAccessModes" lazy="false"  table="wlzx_system_role_dam_relationship" cascade="all">
 			<key column="role_id" not-null="true" />
-			<one-to-many class="system.entity.DataAccessModeModel" /> 
+			<many-to-many column="dam_id" class="system.entity.DataAccessModeModel" /> 
 		</set>
 		<set name="departments" lazy="false"  table="wlzx_system_department_role_relationship" cascade="all">
 			<key column="role_id" not-null="true" />
-			<one-to-many class="system.entity.DepartmentModel" /> 
+			<many-to-many column="department_id" class="system.entity.DepartmentModel" /> 
 		</set>
 		
 	</class>
