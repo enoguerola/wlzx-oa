@@ -4,23 +4,10 @@
 package system.service;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Restrictions;
-
 import system.dao.*;
-import system.entity.DataAccessModeModel;
-import system.entity.DepartmentModel;
 import system.entity.MenuModel;
-import system.entity.ModuleModel;
-import system.entity.OperationModel;
-import system.entity.RoleModel;
 import system.entity.SystemModel;
-import system.entity.UserModel;
-import system.utils.StringUtils;
 
 
   
@@ -97,11 +84,20 @@ public class SystemService {
 	public void setUserDAO(UserDAO userDAO) {
 		this.userDAO = userDAO;
 	}
-	//获得所有系统
-	public List<SystemModel> getSystemsByRoot(){		
-		SystemModel root=systemDAO.getSystemBySymbol("root");
+	//获得某系统子系统
+	public List<SystemModel> getSystemsByRootSymbol(String symbol){		
+		SystemModel root=systemDAO.getSystemBySymbol(symbol);
 		if(root!=null){
 			List<SystemModel> result=new ArrayList<SystemModel>(root.getChildren());
+			return result;
+		}
+		else return null;
+	}
+	//获得某系统菜单
+	public List<MenuModel> getMenusBySystemSymbol(String symbol){		
+		SystemModel root=systemDAO.getSystemBySymbol(symbol);
+		if(root!=null){
+			List<MenuModel> result=new ArrayList<MenuModel>(root.getMenus());
 			return result;
 		}
 		else return null;

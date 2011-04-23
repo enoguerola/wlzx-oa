@@ -49,9 +49,7 @@
 			<param-name>contextConfigLocation</param-name>
 			<param-value>
 				 /WEB-INF/spring-system.xml,
-				 /WEB-INF/spring-system-oa.xml,
-				 classpath:spring/system/*.xml,
-				 classpath:spring/system/wlims/oa/*.xml
+				 classpath:spring/system/*.xml
 			</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
@@ -63,7 +61,7 @@
 	</servlet-mapping>
 
 	<welcome-file-list>
-		<welcome-file>index.html</welcome-file>
+		<welcome-file>home.html</welcome-file>
 	</welcome-file-list>
 
 </web-app>
