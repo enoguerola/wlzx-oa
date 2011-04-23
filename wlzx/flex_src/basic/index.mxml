@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Module xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		   xmlns:s="library://ns.adobe.com/flex/spark" 
+		   xmlns:mx="library://ns.adobe.com/flex/mx" layout="vertical" creationComplete="init();" width="100%" pageTitle="基础数据系统主页" height="100%"  backgroundColor="#FFFFFF" xmlns:flexlib="http://code.google.com/p/flexlib/"  xmlns:viewers="flexlib.scheduling.scheduleClasses.viewers.*" xmlns:sliderClasses="flexlib.controls.sliderClasses.*" xmlns:baseClasses="flexlib.baseClasses.*">
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+		<!--定义 RemoteObject 组件-->
+		<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" result="systemResultHandler(event);" fault="systemFaultHandler(event);"/>
+		<mx:HTTPService id="myHttp" url="j_spring_security_logout" showBusyCursor="true" method="POST" result="httpHandle(event);" fault="service_faultHandler(event);" useProxy="false" resultFormat="text">  
+			<mx:request>  
+				
+			</mx:request>  
+		</mx:HTTPService>  
+	</fx:Declarations>
+	<fx:Script>    
+		<![CDATA[   
+			import mx.rpc.events.ResultEvent;  
+			import mx.rpc.events.FaultEvent;
+			import mx.controls.Alert;                       
+			private function httpHandle(e:ResultEvent):void  
+			{ 
+				ExternalInterface.call("function() {window.location.href='login.html';}"); 
+				//Alert.show(e.result.Result); 
+			} 
+			private function service_faultHandler(event:FaultEvent):void
+			{
+				Alert.show("请求异常");
+			}
+			
+		]]>    
+	</fx:Script> 
+	<fx:Script>
+		<![CDATA[
+			import flexlib.controls.SuperTabBar;
+			import flexlib.controls.tabBarClasses.SuperTab;
+			import flexlib.events.TabReorderEvent;
+			
+			import mx.collections.ArrayCollection;
+			import mx.containers.*;
+			import mx.controls.*;
+			import mx.events.*;
+			import mx.rpc.events.*;
+			
+			import spark.components.*;
+			
+			import system.entity.*;
+			
+			
+			private function init():void {
+				systemServiceRO.getMenusBySystemSymbol("basic");
+//				initHomeTab();
+			}
+			
+			private function systemResultHandler(event:ResultEvent):void {
+				var menuList:ArrayCollection = ArrayCollection(event.result);
+				trace(menuList.toString()+"");
+//				Alert.show();
+//				menus.historyManagementEnabled = true;
+//				makeAccordion(menuList);
+			}
+			
+			private function systemFaultHandler(event:FaultEvent):void {
+				Alert.show(event.fault.faultString, 'Error');
+			}
+			private function makeAccordion(menuList:ArrayCollection):void{
+				var nc:NavigatorContent =null;
+				var tree:Tree =null;
+				for (var i:int = 0; i < menuList.length; i++){	
+					var _menu:MenuModel = MenuModel(menuList.getItemAt(i));						
+					nc = new NavigatorContent();
+					nc.percentHeight=100;
+					nc.percentWidth=100;
+					nc.setStyle("font-size","20");
+					nc.label=_menu.name;
+					nc.name=_menu.detail;
+					menus.addChild(nc as DisplayObject);
+				}
+				
+				menus.selectedIndex=menus.getChildren().length-1;
+				
+			}
+			
+			private var homeTabTitle:String="主页";
+			private function showHideLeftbody_handler(event:MouseEvent):void{
+				if(menus.visible){
+					menus.width=0;
+				}else{
+					menus.width=220;
+				}
+				menus.visible=!menus.visible;
+			}
+			
+			
+			[Embed(source="../WebContent/resources/common/icon/Home.png")]
+			private var home_icon:Class;
+			private function initHomeTab():void {	
+				addTab(homeTabTitle, nav, null, home_icon);
+				
+			}
+			
+			private function addTab(title:String, navigator:SuperTabNavigator, detail:String=null, icon:Class=null):void {
+				for(var i:int=0;i<navigator.getChildren().length;i++){
+					// 将对象转换为一个泛型
+					var obj:* = navigator.getChildAt(i);
+					if(obj.label == title){
+						navigator.selectedIndex = i;
+						return;
+					}
+				}
+				var curNum:Number = nav.numChildren + 1;			
+				var child:Canvas = new Canvas();								
+				child.percentHeight=100;
+				child.percentWidth=100;
+				child.label = title;
+				child.name = title;				
+				child.icon = icon;		
+				var systemDetail:spark.components.TextArea=new  spark.components.TextArea();
+				systemDetail.percentHeight=100;
+				systemDetail.percentWidth=100;
+				systemDetail.text=detail;
+				systemDetail.setStyle("borderVisible", false);
+				systemDetail.editable=false;
+				child.addChild(systemDetail as DisplayObject);
+				navigator.addChild(child as DisplayObject);
+				navigator.selectedIndex = navigator.getChildIndex(child);
+				navigator.setClosePolicyForTab(0, SuperTab.CLOSE_NEVER);
+			}
+			
+			
+			
+			private function homeTab():void{
+				// TODO Auto-generated method stub
+				nav.selectedIndex = 0;
+			}
+			private function exitSystem():void{
+				// TODO Auto-generated method stub
+				myHttp.send();
+			}
+			
+		]]>
+	</fx:Script>
+	
+	
+	
+	
+	
+	
+	
+	<s:BorderContainer width="100%" height="80">
+		<s:layout>
+			<s:HorizontalLayout verticalAlign="middle" />
+		</s:layout>
+		<mx:Image x="0" y="0" source="@Embed(source='../WebContent/resources/common/layout/logo.jpg')" height="78" width="100"/>
+		<s:Label x="128" y="20" text="浙江省温岭中学" fontSize="32" width="100%"/>
+		<mx:HBox height="40" horizontalAlign="center" autoLayout="true">
+			<mx:Button label="主页" click="homeTab()" />
+			<mx:Button label="退出" click="exitSystem()" />
+		</mx:HBox>   
+		<mx:VRule x="610" y="15" height="50"/>
+		<s:BorderContainer y="20" height="50" width="200" backgroundAlpha="1.0" backgroundColor="#ffffff" borderVisible="false">
+			<s:layout>
+				<s:HorizontalLayout verticalAlign="middle" horizontalAlign="center"/>
+			</s:layout>
+			<s:Label text="当前用户：admin&#xd;用户角色：管理员" fontSize="14"/>
+		</s:BorderContainer>
+		
+		
+	</s:BorderContainer>
+	<s:BorderContainer width="100%" height="100%" >
+		<s:layout>
+			<s:HorizontalLayout verticalAlign="middle" gap="0"/>
+		</s:layout>
+		<mx:Accordion width="220"  height="100%"  selectedIndex="-1" id="menus" dropShadowVisible="false" backgroundAlpha="0.0" headerHeight="35" fontSize="15" textAlign="center">
+			
+		</mx:Accordion>
+		
+		<flexlib:DockableToolBar x="215" y="65" height="100%" paddingTop="200" dropShadowVisible="false" borderVisible="false"  doubleClickEnabled="true" doubleClick="showHideLeftbody_handler(event)" toolTip="隐藏/展开左区域菜单"></flexlib:DockableToolBar>
+		<flexlib:SuperTabNavigator id="nav" closePolicy="SuperTab.CLOSE_ROLLOVER|SuperTab.CLOSE_ALWAYS|SuperTab.CLOSE_SELECTED|SuperTab.CLOSE_NEVER" width="100%" height="100%" tabWidth="120" tabHeight="30" creationPolicy="all" horizontalGap="5"  popUpButtonPolicy="auto" borderVisible="true" allowTabSqueezing="true"  dragEnabled="false">
+			
+			
+		</flexlib:SuperTabNavigator>
+	</s:BorderContainer>
+	
+	<s:BorderContainer width="100%" height="30" backgroundAlpha="1.0" cornerRadius="1" borderVisible="true"  borderWeight="1">
+		<s:layout>
+			<s:HorizontalLayout verticalAlign="middle" horizontalAlign="center"/>
+		</s:layout>
+		<s:Label text="浙江省温岭中学基础数据系统  CopyRight：2011-2012&#xd;"/>
+	</s:BorderContainer>
+</mx:Module>
