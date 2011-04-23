@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--当 Application 完成构建后立即触发 init() 方法，以实现对 Server 端 Java 的调用-->
-<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+<mx:Module xmlns:fx="http://ns.adobe.com/mxml/2009" 
 			   xmlns:s="library://ns.adobe.com/flex/spark" 
 			   xmlns:mx="library://ns.adobe.com/flex/mx"   creationComplete="init();" width="100%" pageTitle="系统主页" height="100%"  backgroundColor="#FFFFFF" xmlns:flexlib="http://code.google.com/p/flexlib/"  xmlns:viewers="flexlib.scheduling.scheduleClasses.viewers.*" xmlns:sliderClasses="flexlib.controls.sliderClasses.*" xmlns:baseClasses="flexlib.baseClasses.*">
-	<s:layout>
-		<s:VerticalLayout gap="0"/>
-	</s:layout>
-	
+
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
 		<!--定义 RemoteObject 组件-->
@@ -50,13 +47,13 @@
 			import spark.components.*;
 			
 			import system.entity.*;
+			import mx.managers.IPopUpManager; 
+			import mx.modules.*;
+//			private var systemList:Object;
 			
-			[Bindable]	
-			private var systemList:Object;
-			
-			private var systemXMLList:XMLList = new XMLList();
+//			private var systemXMLList:XMLList = new XMLList();
 			private function init():void {
-				systemServiceRO.getSystemsByRoot();
+				systemServiceRO.getSystemsByRootSymbol("root");
 				initHomeTab();
 			}
 			
@@ -156,9 +153,7 @@
 	
 	<fx:Style source="index.css"/>
 	
-	<s:controlBarContent>
-		
-	</s:controlBarContent>
+
 	<s:BorderContainer width="100%" height="80">
 		<s:layout>
 			<s:HorizontalLayout verticalAlign="middle" />
@@ -201,4 +196,4 @@
 		<s:Label text="浙江省温岭中学数字化系统  CopyRight：2011-2012&#xd;"/>
 	</s:BorderContainer>
 	
-</s:Application>
+</mx:Module>

@@ -17,8 +17,8 @@ supertabs|SuperTab
 } 
 .closeButton 
 { 
-	defaultSkin:Embed(source="../WebContent/resources/common/ui/tabClose.swf", symbol="firefox_close_up"); 
-	upSkin:Embed(source="../WebContent/resources/common/ui/tabClose.swf", symbol="firefox_close_up"); 
-	downSkin:Embed(source="../WebContent/resources/common/ui/tabClose.swf", symbol="firefox_close_down"); 
-	overSkin:Embed(source="../WebContent/resources/common/ui/tabClose.swf", symbol="firefox_close_over"); 
+	defaultSkin:Embed(source="/../WebContent/resources/common/ui/tabClose.swf", symbol="firefox_close_up"); 
+	upSkin:Embed(source="/../WebContent/resources/common/ui/tabClose.swf", symbol="firefox_close_up"); 
+	downSkin:Embed(source="/../WebContent/resources/common/ui/tabClose.swf", symbol="firefox_close_down"); 
+	overSkin:Embed(source="/../WebContent/resources/common/ui/tabClose.swf", symbol="firefox_close_over"); 
 } 

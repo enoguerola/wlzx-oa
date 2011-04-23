@@ -11,7 +11,7 @@
 			         import mx.controls.Alert;                       
 			         private function httpHandle(e:ResultEvent):void  
 			         { 
-						 ExternalInterface.call("function() {window.location.href='index.html';}"); 
+						 ExternalInterface.call("function() {window.location.href='home.html';}"); 
 //						 Alert.show(e.result.Result); 
 			         } 
 					 private function service_faultHandler(event:FaultEvent):void
