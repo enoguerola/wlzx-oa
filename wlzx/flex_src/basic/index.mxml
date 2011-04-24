@@ -53,10 +53,10 @@
 			
 			private function systemResultHandler(event:ResultEvent):void {
 				var menuList:ArrayCollection = ArrayCollection(event.result);
-				trace(menuList.toString()+"");
+//				trace(menuList.toString()+"");
 //				Alert.show();
-//				menus.historyManagementEnabled = true;
-//				makeAccordion(menuList);
+				menus.historyManagementEnabled = true;
+				makeAccordion(menuList);
 			}
 			
 			private function systemFaultHandler(event:FaultEvent):void {
@@ -72,7 +72,7 @@
 					nc.percentWidth=100;
 					nc.setStyle("font-size","20");
 					nc.label=_menu.name;
-					nc.name=_menu.detail;
+//					nc.name=_menu.detail;
 					menus.addChild(nc as DisplayObject);
 				}
 				

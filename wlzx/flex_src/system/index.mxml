@@ -3,7 +3,7 @@
 <!--当 Application 完成构建后立即触发 init() 方法，以实现对 Server 端 Java 的调用-->
 <mx:Module xmlns:fx="http://ns.adobe.com/mxml/2009" 
 			   xmlns:s="library://ns.adobe.com/flex/spark" 
-			   xmlns:mx="library://ns.adobe.com/flex/mx"   creationComplete="init();" width="100%" pageTitle="系统主页" height="100%"  backgroundColor="#FFFFFF" xmlns:flexlib="http://code.google.com/p/flexlib/"  xmlns:viewers="flexlib.scheduling.scheduleClasses.viewers.*" xmlns:sliderClasses="flexlib.controls.sliderClasses.*" xmlns:baseClasses="flexlib.baseClasses.*">
+			   xmlns:mx="library://ns.adobe.com/flex/mx"   creationComplete="init();" width="100%" pageTitle="系统主页" height="100%"  backgroundColor="#FFFFFF" xmlns:flexlib="http://code.google.com/p/flexlib/"  xmlns:viewers="flexlib.scheduling.scheduleClasses.viewers.*" xmlns:sliderClasses="flexlib.controls.sliderClasses.*" xmlns:baseClasses="flexlib.baseClasses.*" implements="system.implement.BaseImpl">
 
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
@@ -17,9 +17,11 @@
 	</fx:Declarations>
 	<fx:Script>    
 		<![CDATA[   
-			import mx.rpc.events.ResultEvent;  
+			import mx.controls.Alert;
 			import mx.rpc.events.FaultEvent;
-			import mx.controls.Alert;                       
+			import mx.rpc.events.ResultEvent;
+			
+			import system.implement.BaseImpl;                       
 			private function httpHandle(e:ResultEvent):void  
 			{ 
 				ExternalInterface.call("function() {window.location.href='login.html';}"); 
@@ -49,6 +51,7 @@
 			import system.entity.*;
 			import mx.managers.IPopUpManager; 
 			import mx.modules.*;
+			import system.event.BaseEvent;
 //			private var systemList:Object;
 			
 //			private var systemXMLList:XMLList = new XMLList();
@@ -78,6 +81,7 @@
 					nc.setStyle("font-size","20");
 					nc.label=_system.name;
 					nc.name=_system.detail;
+					nc.id=_system.indexPath;
 					systems.addChild(nc as DisplayObject);
 				}
 
@@ -85,7 +89,8 @@
 				
 			}
 			public function changeHandler(event:mx.events.IndexChangedEvent):void{ 
-				addTab(systems.selectedChild.label,nav,systems.selectedChild.name);
+				var accordion:NavigatorContent=systems.selectedChild as NavigatorContent;
+				addTab(accordion.label,nav,accordion.id,accordion.name);
 			} 
 			
 			private var homeTabTitle:String="校园简介";
@@ -102,11 +107,15 @@
 			[Embed(source="../WebContent/resources/common/icon/Home.png")]
 			private var home_icon:Class;
 			private function initHomeTab():void {	
-				addTab(homeTabTitle, nav, null, home_icon);
+				addTab(homeTabTitle, nav, "system/index.swf",null,home_icon);
 				
 			}
-			
-			private function addTab(title:String, navigator:SuperTabNavigator, detail:String=null, icon:Class=null):void {
+			private function openSystemByUrl(event:Event):void{
+				var button:mx.controls.Button=mx.controls.Button(event.currentTarget);
+//				this.parentApplication.loadModule(button.name);
+				dispatchEvent(new BaseEvent(BaseEvent.Enter, button.name));
+			}
+			private function addTab(title:String, navigator:SuperTabNavigator,indexPath:String, detail:String=null,  icon:Class=null):void {
 				for(var i:int=0;i<navigator.getChildren().length;i++){
 					// 将对象转换为一个泛型
 					var obj:* = navigator.getChildAt(i);
@@ -121,7 +130,7 @@
 				child.percentWidth=100;
 				child.label = title;
 				child.name = title;				
-				child.icon = icon;		
+				child.icon = icon;	
 				var systemDetail:spark.components.TextArea=new  spark.components.TextArea();
 				systemDetail.percentHeight=100;
 				systemDetail.percentWidth=100;
@@ -129,6 +138,12 @@
 				systemDetail.setStyle("borderVisible", false);
 				systemDetail.editable=false;
 				child.addChild(systemDetail as DisplayObject);
+				var button:mx.controls.Button=new mx.controls.Button();
+				button.label=indexPath;
+				button.name=indexPath;
+				button.addEventListener(MouseEvent.CLICK,openSystemByUrl);
+				child.addChild(button as DisplayObject);
+				
 				navigator.addChild(child as DisplayObject);
 				navigator.selectedIndex = navigator.getChildIndex(child);
 				navigator.setClosePolicyForTab(0, SuperTab.CLOSE_NEVER);

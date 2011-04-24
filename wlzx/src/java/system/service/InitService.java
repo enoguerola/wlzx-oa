@@ -114,6 +114,7 @@ public class InitService {
 			root.setCreationDate(new Date());
 			root.setName("温岭数字化校园系列");
 			root.setDetail("数字化校园信息平台是以学校现有网络为基础，以服务于全校师生的教学、科研、生活为目的，建立在学校数据中心平台之上，涵盖了学校的信息化标准管理、学校管理、学生管理、教学管理、教职工管理、科研管理、财务管理、资产与设备管理、行政办公管理、数字图书资料管理等全方位的管理信息平台与信息服务平台。");
+			root.setIndexPath("system/index.swf");
 			root.setModifiedDate(new Date());
 		}else{
 			
@@ -126,6 +127,7 @@ public class InitService {
 			basic.setCreationDate(new Date());
 			basic.setName("基础数据系统");
 			basic.setDetail("基础数据系统是数字化校园所有业务应用系统的公共数据库，处于中心位置，基础数据库保持最完整、最准确的数据，提供其他业务系统使用。基础数据库管理系统实现对基础数据库所有信息库的维护管理。");
+			basic.setIndexPath("basic/index.swf");
 			basic.setModifiedDate(new Date());
 			/*
 			 * 基础数据系统菜单初始化开始
@@ -295,6 +297,7 @@ public class InitService {
 			oa.setName("办公自动化系统");
 			oa.setDetail("办公自动化系统以公文流转为核心，实现办公流程的快速高效；同时提供多种部门间的信息交流的手段和渠道，加强部门间的沟通协作；提供信息共享的平台，实现公共资源的共享；提供辅助办公功能，为每一项业务提供相关信息，促进学校办公的成熟和规范化；提供强大的搜索查询功能，便于用户在日积月累的海量信息中快速的查找需要的内容");
 			oa.setModifiedDate(new Date());
+			oa.setIndexPath("oa/index.swf");
 			root.getChildren().add(oa);
 		}else{
 			

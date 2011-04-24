@@ -17,6 +17,9 @@
 		<property name="detail" type="string">
 			<column name="detail" />
 		</property>
+		<property name="indexPath" type="string">
+			<column name="index_path" />
+		</property>
 		<property name="creationDate" type="java.util.Date">
 			<column name="creation_date" />
 		</property>
