@@ -185,7 +185,8 @@ public class InitService {
 							departmentAuthorizationMainModule.setSymbol("basic_authorization_department_main");
 							departmentAuthorizationMainModule.setName("部门授权主模块");
 							departmentAuthorizationMainModule.setCreationDate(new Date());
-							departmentAuthorizationMainModule.setModifiedDate(new Date());	
+							departmentAuthorizationMainModule.setModifiedDate(new Date());
+							departmentAuthorizationMainModule.setUrl("");
 							departmentAuthorization.getModules().add(departmentAuthorizationMainModule);
 							//部门授权主模块查询操作
 							OperationModel departmentAuthorizationMainModuleSearch=operationDAO.getOperationBySymbol("basic_authorization_department_main_search");
@@ -223,6 +224,7 @@ public class InitService {
 								departmentAuthorizationMainModuleEdit.setSymbol("basic_authorization_department_main_edit");
 								departmentAuthorizationMainModuleEdit.setCreationDate(new Date());
 								departmentAuthorizationMainModuleEdit.setModifiedDate(new Date());
+								departmentAuthorizationMainModuleEdit.setUrl("");
 								departmentAuthorizationMainModule.getOperations().add(departmentAuthorizationMainModuleEdit);
 								//部门授权主模块编辑操作数据访问控制
 								DataAccessModeModel departmentAuthorizationMainModuleEditDataDefaultFilter=dataAccessModeDAO.getDataAccessModeBySymbol("basic_authorization_department_main_edit_deafultFilter");
