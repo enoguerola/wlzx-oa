@@ -43,5 +43,6 @@
 			}
 		]]>    
 	</fx:Script> 
-	<mx:ModuleLoader id="currentModule" ready="readyModule(event)" url="system/index.swf" width="100%"  height="100%"/> 
+	<fx:Style source="index.css"/>
+	<mx:ModuleLoader id="currentModule" ready="readyModule(event)" url="basic/index.swf" width="100%"  height="100%"/> 
 </s:Application>

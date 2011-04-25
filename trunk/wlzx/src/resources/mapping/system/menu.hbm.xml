@@ -17,6 +17,9 @@
 		<property name="detail" type="string">
 			<column name="detail" />
 		</property>
+		<property name="menuIcon" type="string">
+			<column name="menu_icon" />
+		</property>
 		<property name="creationDate" type="java.util.Date">
 			<column name="creation_date" />
 		</property>

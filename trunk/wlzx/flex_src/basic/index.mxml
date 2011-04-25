@@ -14,9 +14,9 @@
 	</fx:Declarations>
 	<fx:Script>    
 		<![CDATA[   
-			import mx.rpc.events.ResultEvent;  
+			import mx.controls.Alert;
 			import mx.rpc.events.FaultEvent;
-			import mx.controls.Alert;                       
+			import mx.rpc.events.ResultEvent;                       
 			private function httpHandle(e:ResultEvent):void  
 			{ 
 				ExternalInterface.call("function() {window.location.href='login.html';}"); 
@@ -40,7 +40,8 @@
 			import mx.controls.*;
 			import mx.events.*;
 			import mx.rpc.events.*;
-			
+			import mx.modules.*;
+			import mx.events.ModuleEvent;
 			import spark.components.*;
 			
 			import system.entity.*;
@@ -48,7 +49,7 @@
 			
 			private function init():void {
 				systemServiceRO.getMenusBySystemSymbol("basic");
-//				initHomeTab();
+				initHomeTab();
 			}
 			
 			private function systemResultHandler(event:ResultEvent):void {
@@ -72,14 +73,45 @@
 					nc.percentWidth=100;
 					nc.setStyle("font-size","20");
 					nc.label=_menu.name;
-//					nc.name=_menu.detail;
+					if(ArrayCollection(_menu.children).length>0){
+						var resultXML:String=buildSubMenus(_menu);
+						var menuData:XML=new XML(resultXML);
+						tree=new Tree();
+						tree.percentWidth=100;
+						tree.percentHeight=100;
+						tree.showRoot=false;
+						tree.labelField="@label";
+						tree.setStyle("textAlign","left");
+						tree.setStyle("paddingLeft","10");
+						tree.dataProvider=menuData;
+						tree.addEventListener(ListEvent.ITEM_CLICK,clickLeafMenuItem);
+						nc.addElement(tree);
+					}
 					menus.addChild(nc as DisplayObject);
 				}
-				
-				menus.selectedIndex=menus.getChildren().length-1;
-				
+								
 			}
-			
+			public function clickLeafMenuItem(event:Event):void{ 
+				var selectedNode:XML=Tree(event.target).selectedItem as XML; 
+				if(selectedNode.children().length()==0)
+					addTab(selectedNode.@label,nav,"com/wl/home/blank.swf",null);
+				//Alert.show(selectedNode.@label);
+			} 
+			private function buildSubMenus(menu:MenuModel):String{
+				var resultXML:String="";
+				var menuList:ArrayCollection = ArrayCollection(menu.children);
+				if(menuList.length>0){
+					resultXML=resultXML.concat("<node label='"+menu.name+"'>");
+					for (var i:int = 0; i < menuList.length; i++){
+						var _menu:MenuModel = MenuModel(menuList.getItemAt(i));	
+						resultXML=resultXML.concat(buildSubMenus(_menu));
+					}
+					resultXML=resultXML.concat("</node>");
+				}		
+				else resultXML=resultXML.concat("<node label='"+menu.name+"' url='"+menu.getUrl()+"'/>");				
+				
+				return resultXML;
+			}
 			private var homeTabTitle:String="主页";
 			private function showHideLeftbody_handler(event:MouseEvent):void{
 				if(menus.visible){
@@ -94,11 +126,11 @@
 			[Embed(source="../WebContent/resources/common/icon/Home.png")]
 			private var home_icon:Class;
 			private function initHomeTab():void {	
-				addTab(homeTabTitle, nav, null, home_icon);
+				addTab(homeTabTitle, nav, "com/wl/home/blank.swf", home_icon);
 				
 			}
 			
-			private function addTab(title:String, navigator:SuperTabNavigator, detail:String=null, icon:Class=null):void {
+			private function addTab(title:String, navigator:SuperTabNavigator, moduleUrl:String=null, icon:Class=null):void {
 				for(var i:int=0;i<navigator.getChildren().length;i++){
 					// 将对象转换为一个泛型
 					var obj:* = navigator.getChildAt(i);
@@ -107,20 +139,17 @@
 						return;
 					}
 				}
+				
 				var curNum:Number = nav.numChildren + 1;			
-				var child:Canvas = new Canvas();								
+				var child:ModuleLoader = new ModuleLoader();				
+				child.setStyle("closable", true);
 				child.percentHeight=100;
 				child.percentWidth=100;
 				child.label = title;
 				child.name = title;				
-				child.icon = icon;		
-				var systemDetail:spark.components.TextArea=new  spark.components.TextArea();
-				systemDetail.percentHeight=100;
-				systemDetail.percentWidth=100;
-				systemDetail.text=detail;
-				systemDetail.setStyle("borderVisible", false);
-				systemDetail.editable=false;
-				child.addChild(systemDetail as DisplayObject);
+				child.icon = icon;	
+				child.url = moduleUrl+"?uid=" + new Date().getTime();
+				child.loadModule();    
 				navigator.addChild(child as DisplayObject);
 				navigator.selectedIndex = navigator.getChildIndex(child);
 				navigator.setClosePolicyForTab(0, SuperTab.CLOSE_NEVER);
@@ -130,6 +159,7 @@
 			
 			private function homeTab():void{
 				// TODO Auto-generated method stub
+				initHomeTab();
 				nav.selectedIndex = 0;
 			}
 			private function exitSystem():void{
