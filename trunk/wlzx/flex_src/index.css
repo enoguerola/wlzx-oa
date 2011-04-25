@@ -11,10 +11,6 @@ global
 }
 @namespace supertabs "flexlib.controls.tabBarClasses.*"; 
 
-supertabs|SuperTab 
-{ 
-	tabCloseButtonStyleName: "closeButton"; 
-} 
 .closeButton 
 { 
 	defaultSkin:Embed(source="/../WebContent/resources/common/ui/tabClose.swf", symbol="firefox_close_up"); 
