@@ -19,11 +19,11 @@ import java.util.TreeSet;
 
 public class MenuModel extends BaseModel{
 	private String detail;
+	private String menuIcon;
 	private Set<SystemModel> systems=new TreeSet<SystemModel>();//功能菜单所属系统集
 	private Set<ModuleModel> modules=new TreeSet<ModuleModel>();//功能菜单模块集
 	private Set<MenuModel> children=new TreeSet<MenuModel>();//子功能菜单集
 	private Set<MenuModel> parents=new TreeSet<MenuModel>();//父功能菜单集
-
 	public String getDetail() {
 		return detail;
 	}
@@ -63,6 +63,21 @@ public class MenuModel extends BaseModel{
 
 	public void setChildren(Set<MenuModel> children) {
 		this.children = children;
+	}
+
+	public String getMenuIcon() {
+		return menuIcon;
+	}
+
+	public void setMenuIcon(String menuIcon) {
+		this.menuIcon = menuIcon;
+	}
+
+	public String getUrl() {
+		if(modules!=null&&modules.size()>0){
+			return getModules().iterator().next().getUrl();
+		}
+		else return null;
 	}
 
 	

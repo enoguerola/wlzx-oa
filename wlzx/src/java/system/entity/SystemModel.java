@@ -33,6 +33,7 @@ import java.util.TreeSet;
 public class SystemModel extends BaseModel{
 	private String detail;
 	private String indexPath;
+	private String systemIcon;
 	private Set<MenuModel> menus=new TreeSet<MenuModel>();//系统功能菜单集
 	private Set<SystemModel> children=new TreeSet<SystemModel>();//子系统集
 	private Set<SystemModel> parents=new TreeSet<SystemModel>();//父亲系统集
@@ -83,6 +84,14 @@ public class SystemModel extends BaseModel{
 
 	public void setIndexPath(String indexPath) {
 		this.indexPath = indexPath;
+	}
+
+	public String getSystemIcon() {
+		return systemIcon;
+	}
+
+	public void setSystemIcon(String systemIcon) {
+		this.systemIcon = systemIcon;
 	}
 
 	

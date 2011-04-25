@@ -20,6 +20,9 @@
 		<property name="indexPath" type="string">
 			<column name="index_path" />
 		</property>
+		<property name="systemIcon" type="string">
+			<column name="system_icon" />
+		</property>
 		<property name="creationDate" type="java.util.Date">
 			<column name="creation_date" />
 		</property>
