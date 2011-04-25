@@ -170,25 +170,14 @@
 	
 	
 
-	<s:BorderContainer width="100%" height="80">
+	<s:BorderContainer width="100%" height="80" backgroundImage="@Embed(source='../WebContent/resources/common/layout/head_bg.jpg')">
 		<s:layout>
-			<s:HorizontalLayout verticalAlign="middle" />
+			<s:HorizontalLayout verticalAlign="middle" gap="0"/>
 		</s:layout>
-		<mx:Image x="0" y="0" source="@Embed(source='../WebContent/resources/common/layout/logo.jpg')" height="78" width="100"/>
-		<s:Label x="128" y="20" text="浙江省温岭中学" fontSize="32" width="100%"/>
-		<mx:HBox height="40" horizontalAlign="center" autoLayout="true">
-			<mx:Button label="主页" click="homeTab()" />
-			<mx:Button label="退出" click="exitSystem()" />
-		</mx:HBox>   
-		<mx:VRule x="610" y="15" height="50"/>
-		<s:BorderContainer y="20" height="50" width="200" backgroundAlpha="1.0" backgroundColor="#ffffff" borderVisible="false">
-			<s:layout>
-				<s:HorizontalLayout verticalAlign="middle" horizontalAlign="center"/>
-			</s:layout>
-			<s:Label text="当前用户：admin&#xd;用户角色：管理员" fontSize="14"/>
-		</s:BorderContainer>
+			<mx:VBox width="90%"></mx:VBox> 
+			<s:Label text="当前用户：admin&#xd;用户角色：管理员" fontSize="14"  y="20"/>		
 		
-		
+			
 	</s:BorderContainer>
 	<s:BorderContainer width="100%" height="100%" >
 		<s:layout>
