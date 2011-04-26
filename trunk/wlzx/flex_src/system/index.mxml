@@ -9,31 +9,7 @@
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
 		<!--定义 RemoteObject 组件-->
 		<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" result="systemResultHandler(event);" fault="systemFaultHandler(event);"/>
-		<mx:HTTPService id="myHttp" url="j_spring_security_logout" showBusyCursor="true" method="POST" result="httpHandle(event);" fault="service_faultHandler(event);" useProxy="false" resultFormat="text">  
-			<mx:request>  
-			
-			</mx:request>  
-		</mx:HTTPService>  
 	</fx:Declarations>
-	<fx:Script>    
-		<![CDATA[   
-			import mx.controls.Alert;
-			import mx.rpc.events.FaultEvent;
-			import mx.rpc.events.ResultEvent;
-			
-			import system.implement.BaseImpl;                       
-			private function httpHandle(e:ResultEvent):void  
-			{ 
-				ExternalInterface.call("function() {window.location.href='login.html';}"); 
-				//						 Alert.show(e.result.Result); 
-			} 
-			private function service_faultHandler(event:FaultEvent):void
-			{
-				Alert.show("请求异常");
-			}
-			
-		]]>    
-	</fx:Script> 
 	<fx:Script>
 		<![CDATA[
 			import flexlib.controls.SuperTabBar;
@@ -158,7 +134,7 @@
 			}
 			private function exitSystem():void{
 				// TODO Auto-generated method stub
-				myHttp.send();
+				this.parentApplication.logoutRequest.send();
 			}
 			
 		]]>

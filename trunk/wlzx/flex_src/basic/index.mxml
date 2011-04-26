@@ -1,34 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Module xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		   xmlns:s="library://ns.adobe.com/flex/spark" 
-		   xmlns:mx="library://ns.adobe.com/flex/mx" layout="vertical" creationComplete="init();" width="100%" pageTitle="基础数据系统主页" height="100%"  backgroundColor="#FFFFFF" xmlns:flexlib="http://code.google.com/p/flexlib/"  xmlns:viewers="flexlib.scheduling.scheduleClasses.viewers.*" xmlns:sliderClasses="flexlib.controls.sliderClasses.*" xmlns:baseClasses="flexlib.baseClasses.*">
+		   xmlns:mx="library://ns.adobe.com/flex/mx" layout="vertical" creationComplete="init();" width="100%" pageTitle="基础数据系统主页" height="100%"   xmlns:flexlib="http://code.google.com/p/flexlib/"  xmlns:viewers="flexlib.scheduling.scheduleClasses.viewers.*" xmlns:sliderClasses="flexlib.controls.sliderClasses.*" xmlns:baseClasses="flexlib.baseClasses.*">
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
 		<!--定义 RemoteObject 组件-->
 		<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" result="systemResultHandler(event);" fault="systemFaultHandler(event);"/>
-		<mx:HTTPService id="myHttp" url="j_spring_security_logout" showBusyCursor="true" method="POST" result="httpHandle(event);" fault="service_faultHandler(event);" useProxy="false" resultFormat="text">  
-			<mx:request>  
-				
-			</mx:request>  
-		</mx:HTTPService>  
 	</fx:Declarations>
-	<fx:Script>    
-		<![CDATA[   
-			import mx.controls.Alert;
-			import mx.rpc.events.FaultEvent;
-			import mx.rpc.events.ResultEvent;                       
-			private function httpHandle(e:ResultEvent):void  
-			{ 
-				ExternalInterface.call("function() {window.location.href='login.html';}"); 
-				//Alert.show(e.result.Result); 
-			} 
-			private function service_faultHandler(event:FaultEvent):void
-			{
-				Alert.show("请求异常");
-			}
-			
-		]]>    
-	</fx:Script> 
+	
 	<fx:Script>
 		<![CDATA[
 			import flexlib.controls.SuperTabBar;
@@ -94,7 +73,7 @@
 			public function clickLeafMenuItem(event:Event):void{ 
 				var selectedNode:XML=Tree(event.target).selectedItem as XML; 
 				if(selectedNode.children().length()==0)
-					addTab(selectedNode.@label,nav,"com/wl/home/blank.swf",null);
+					addTab(selectedNode.@label,nav,selectedNode.@url,null);
 				//Alert.show(selectedNode.@label);
 			} 
 			private function buildSubMenus(menu:MenuModel):String{
@@ -164,7 +143,7 @@
 			}
 			private function exitSystem():void{
 				// TODO Auto-generated method stub
-				myHttp.send();
+				this.parentApplication.logoutRequest.send();
 			}
 			
 		]]>
