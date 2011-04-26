@@ -7,6 +7,8 @@
 	</s:layout>
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+		<mx:HTTPService id="logoutRequest" url="j_spring_security_logout" showBusyCursor="true" method="POST" result="logout_success_handle(event);" fault="logout_fault_handler(event);" useProxy="false" resultFormat="text">  
+		</mx:HTTPService>  
 	</fx:Declarations>
 	<fx:Script>    
 		<![CDATA[   
@@ -15,6 +17,8 @@
 			import mx.events.ModuleEvent;
 			import system.implement.BaseImpl;
 			import system.event.BaseEvent;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;      
 			public var default_url:String="system/index.swf";
 			private function readyModule( event:ModuleEvent ) : void
 			{ 
@@ -40,6 +44,16 @@
 				// setting the url triggers the module to load
 				currentModule.url = s;
 				currentModule.loadModule();
+			}
+			                 
+			private function logout_success_handle(e:ResultEvent):void  
+			{ 
+				ExternalInterface.call("function() {window.location.href='login.html';}"); 
+				//Alert.show(e.result.Result); 
+			} 
+			private function logout_fault_handler(event:FaultEvent):void
+			{
+				Alert.show("请求异常");
 			}
 		]]>    
 	</fx:Script> 

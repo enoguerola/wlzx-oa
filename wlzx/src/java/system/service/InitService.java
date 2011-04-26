@@ -95,7 +95,7 @@ public class InitService {
 	}
 	
 	public static void main(String[] args) {
-		 ApplicationContext applicationContext = new ClassPathXmlApplicationContext(new String[]{"spring/system/*.xml","spring/system/spring-system.xml"});
+		 ApplicationContext applicationContext = new ClassPathXmlApplicationContext(new String[]{"system/service/system.xml","system/service/spring-system.xml"});
 		// TODO Auto-generated method stub
 		InitService initService=(InitService)applicationContext.getBean("initService");
 		initService.initSystem();
@@ -277,7 +277,59 @@ public class InitService {
 					basicSetting.setCreationDate(new Date());
 					basicSetting.setModifiedDate(new Date());
 					basic.getMenus().add(basicSetting);	
-	
+					//部门设置
+					MenuModel departmentSetting=menuDAO.getMenuBySymbol("basic_setting_department");
+					if(departmentSetting==null){
+						departmentSetting=new MenuModel();
+						departmentSetting.setSymbol("basic_setting_department");
+						departmentSetting.setName("部门设置");
+						departmentSetting.setCreationDate(new Date());
+						departmentSetting.setModifiedDate(new Date());		
+						basicSetting.getChildren().add(departmentSetting);
+						//部门设置主模块
+						ModuleModel departmentSettingMainModule=moduleDAO.getModuleBySymbol("basic_setting_department_main");
+						if(departmentSettingMainModule==null){
+							departmentSettingMainModule=new ModuleModel();
+							departmentSettingMainModule.setSymbol("basic_setting_department_main");
+							departmentSettingMainModule.setName("部门设置主模块");
+							departmentSettingMainModule.setCreationDate(new Date());
+							departmentSettingMainModule.setModifiedDate(new Date());
+							departmentSettingMainModule.setUrl("basic/setting/departmentSetting.swf");
+							departmentSetting.getModules().add(departmentSettingMainModule);
+
+						}else{
+							
+						}
+					}else{
+						
+					}
+					//岗位设置
+					MenuModel roleSetting=menuDAO.getMenuBySymbol("basic_setting_role");
+					if(roleSetting==null){
+						roleSetting=new MenuModel();
+						roleSetting.setSymbol("basic_setting_role");
+						roleSetting.setName("岗位设置");
+						roleSetting.setCreationDate(new Date());
+						roleSetting.setModifiedDate(new Date());		
+						basicSetting.getChildren().add(roleSetting);
+						//岗位设置主模块
+						ModuleModel roleSettingMainModule=moduleDAO.getModuleBySymbol("basic_setting_role_main");
+						if(roleSettingMainModule==null){
+							roleSettingMainModule=new ModuleModel();
+							roleSettingMainModule.setSymbol("basic_setting_role_main");
+							roleSettingMainModule.setName("岗位设置主模块");
+							roleSettingMainModule.setCreationDate(new Date());
+							roleSettingMainModule.setModifiedDate(new Date());
+							roleSettingMainModule.setUrl("basic/setting/roleSetting.swf");
+							roleSetting.getModules().add(roleSettingMainModule);
+
+						}else{
+							
+						}
+						
+					}else{
+						
+					}
 				}else{
 					
 				}		
