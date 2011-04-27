@@ -19,8 +19,9 @@
   <modules>
     <module application="flex_src/home.mxml" destPath="basic/index.swf" optimize="true" sourcePath="flex_src/basic/index.mxml"/>
     <module application="flex_src/home.mxml" destPath="system/index.swf" optimize="true" sourcePath="flex_src/system/index.mxml"/>
-    <module destPath="basic/setting/departmentSetting.swf" optimize="false" sourcePath="flex_src/basic/setting/departmentSetting.mxml"/>
-    <module destPath="basic/setting/roleSetting.swf" optimize="false" sourcePath="flex_src/basic/setting/roleSetting.mxml"/>
+    <module application="flex_src/home.mxml" destPath="basic/setting/departmentSetting.swf" optimize="false" sourcePath="flex_src/basic/setting/departmentSetting.mxml"/>
+    <module application="flex_src/home.mxml" destPath="basic/setting/roleSetting.swf" optimize="false" sourcePath="flex_src/basic/setting/roleSetting.mxml"/>
+    <module application="flex_src/home.mxml" destPath="oa/index.swf" optimize="true" sourcePath="flex_src/oa/index.mxml"/>
   </modules>
   <buildCSSFiles/>
 </actionScriptProperties>

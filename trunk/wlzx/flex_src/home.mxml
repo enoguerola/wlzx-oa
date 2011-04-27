@@ -19,7 +19,7 @@
 			import system.event.BaseEvent;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;      
-			public var default_url:String="system/index.swf";
+			public var default_url:String="oa/index.swf";
 			private function readyModule( event:ModuleEvent ) : void
 			{ 
 				var ml:ModuleLoader = event.target as ModuleLoader;				
@@ -58,5 +58,5 @@
 		]]>    
 	</fx:Script> 
 	<fx:Style source="index.css"/>
-	<mx:ModuleLoader id="currentModule" ready="readyModule(event)" url="system/index.swf" width="100%"  height="100%"/> 
+	<mx:ModuleLoader id="currentModule" ready="readyModule(event)" url="{default_url}" width="100%"  height="100%"/> 
 </s:Application>

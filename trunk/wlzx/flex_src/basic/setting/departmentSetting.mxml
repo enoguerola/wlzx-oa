@@ -1,8 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Module xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		   xmlns:s="library://ns.adobe.com/flex/spark" 
-		   xmlns:mx="library://ns.adobe.com/flex/mx" layout="vertical" width="100%"  height="100%" >
+		   xmlns:mx="library://ns.adobe.com/flex/mx" layout="vertical" creationComplete="init();" width="100%"  height="100%"  xmlns:flexlib="http://code.google.com/p/flexlib/" >
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+		<!--定义 RemoteObject 组件-->
+		<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" result="systemResultHandler(event);" fault="systemFaultHandler(event);"/>
 	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import basic.setting.popWin.DepartmentPopWin;
+			
+			import flexlib.controls.SuperTabBar;
+			import flexlib.controls.tabBarClasses.SuperTab;
+			import flexlib.events.TabReorderEvent;
+			
+			import mx.collections.ArrayCollection;
+			import mx.containers.*;
+			import mx.controls.*;
+			import mx.events.*;
+			import mx.events.ModuleEvent;
+			import mx.managers.PopUpManager;
+			import mx.modules.*;
+			import mx.rpc.events.*;
+			
+			import spark.components.*;
+			
+			import system.entity.*;
+			
+			
+			private function init():void {
+				systemServiceRO.getDepartmentBySymbol("root");
+			}
+			
+			private function systemResultHandler(event:ResultEvent):void {
+				var department:DepartmentModel=DepartmentModel(event.result);
+				var resultXML:String=buildSubDepartments(department);
+				var departmentData:XML=new XML(resultXML);
+				this.departments.dataProvider=departmentData;
+//				var list:ArrayCollection = ArrayCollection(event.result);
+			}
+			
+			private function systemFaultHandler(event:FaultEvent):void {
+				Alert.show(event.fault.faultString, 'Error');
+			}
+			private function buildSubDepartments(department:DepartmentModel):String{
+				var resultXML:String="";
+				var list:ArrayCollection = ArrayCollection(department.subordinates);
+				if(list.length>0){
+					resultXML=resultXML.concat("<node label='"+department.name+"' id='"+department.id+"'>");
+					for (var i:int = 0; i < list.length; i++){
+						var _department:DepartmentModel = DepartmentModel(list.getItemAt(i));	
+						resultXML=resultXML.concat(buildSubDepartments(_department));
+					}
+					resultXML=resultXML.concat("</node>");
+				}		
+				else resultXML=resultXML.concat("<node label='"+department.name+"' id='"+department.id+"'/>");				
+				
+				return resultXML;
+			}
+			private function addDepartment():void{
+				var selectId:String=treeSelectedItemId();
+				if(selectId!=null){
+					var pop:DepartmentPopWin=DepartmentPopWin(PopUpManager.createPopUp(this,DepartmentPopWin,true));  
+//					Alert.show(selectId);
+				}	
+			}
+			private function editDepartment():void{
+				var selectId:String=treeSelectedItemId();
+				if(selectId!=null){
+					Alert.show(selectId);
+				}	
+			}
+			private function deleteDepartment():void{
+				var selectId:String=treeSelectedItemId();
+				if(selectId!=null){
+					Alert.show(selectId);
+				}	
+			}
+			private function saveDepartment():void{
+				
+			}
+			private function treeSelectedItemId():String{
+				var selectedNode:XML=departments.selectedItem as XML;
+				if(selectedNode!=null)
+					return selectedNode.@id;
+				else{
+					Alert.show("当前未选中任何节点部门","操作不当");
+					return null;
+				} 
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<s:Panel width="100%" height="100%" title="部门设置">
+		<s:Button label="新增"  width="50" top="-25" right="160" click="addDepartment();"/>
+		<s:Button label="编辑"  width="50" top="-25" right="100" click="editDepartment();"/>
+		<s:Button label="删除"  width="50" top="-25" right="40" click="deleteDepartment();"/>
+		<flexlib:ConvertibleTreeList id="departments" labelField="@label"   width="100%" height="100%">
+		</flexlib:ConvertibleTreeList>
+	</s:Panel>
 </mx:Module>
