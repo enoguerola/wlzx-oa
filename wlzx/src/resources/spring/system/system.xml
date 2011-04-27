@@ -40,7 +40,8 @@
 	<bean id="userDAO" class="system.dao.UserDAO">
 		<property name="sessionFactory" ref="systemSessionFactory" />
 	</bean>
-	<bean id="initService" class="system.service.InitService">
+	<bean id="systemServiceDest" class="system.service.SystemService">
+		<flex:remoting-destination />
 		<property name="systemDAO" ref="systemDAO" />
 		<property name="menuDAO" ref="menuDAO" />
 		<property name="moduleDAO" ref="moduleDAO" />
@@ -49,9 +50,5 @@
 		<property name="departmentDAO" ref="departmentDAO" />
 		<property name="roleDAO" ref="roleDAO" />
 		<property name="userDAO" ref="userDAO" />
-	</bean>
-	<bean id="systemServiceDest" class="system.service.SystemService">
-		<flex:remoting-destination />
-		<property name="systemDAO" ref="systemDAO" />
 	</bean>
 </beans>

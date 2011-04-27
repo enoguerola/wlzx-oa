@@ -134,7 +134,7 @@
 			}
 			private function exitSystem():void{
 				// TODO Auto-generated method stub
-				this.parentApplication.logoutRequest.send();
+				Alert.show("你确定要退出系统吗?","确认",Alert.YES|Alert.NO,null,this.parentApplication.logoutRequest.send());
 			}
 			
 		]]>

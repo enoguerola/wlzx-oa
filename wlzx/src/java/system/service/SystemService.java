@@ -6,6 +6,7 @@ package system.service;
 import java.util.ArrayList;
 import java.util.List;
 import system.dao.*;
+import system.entity.DepartmentModel;
 import system.entity.MenuModel;
 import system.entity.SystemModel;
 
@@ -101,5 +102,9 @@ public class SystemService {
 			return result;
 		}
 		else return null;
+	}
+	//获得某部门
+	public DepartmentModel getDepartmentBySymbol(String symbol){		
+		return departmentDAO.getDepartmentBySymbol(symbol);
 	}
 }

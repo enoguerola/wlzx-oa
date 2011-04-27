@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Module xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		   xmlns:s="library://ns.adobe.com/flex/spark" 
-		   xmlns:mx="library://ns.adobe.com/flex/mx" layout="vertical" creationComplete="init();" width="100%" pageTitle="基础数据系统主页" height="100%"   xmlns:flexlib="http://code.google.com/p/flexlib/"  xmlns:viewers="flexlib.scheduling.scheduleClasses.viewers.*" xmlns:sliderClasses="flexlib.controls.sliderClasses.*" xmlns:baseClasses="flexlib.baseClasses.*">
+		   xmlns:mx="library://ns.adobe.com/flex/mx" layout="vertical"  verticalGap="0" creationComplete="init();" width="100%" pageTitle="基础数据系统主页" height="100%"   xmlns:flexlib="http://code.google.com/p/flexlib/"  xmlns:viewers="flexlib.scheduling.scheduleClasses.viewers.*" xmlns:sliderClasses="flexlib.controls.sliderClasses.*" xmlns:baseClasses="flexlib.baseClasses.*">
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
 		<!--定义 RemoteObject 组件-->
@@ -27,7 +27,7 @@
 			
 			
 			private function init():void {
-				systemServiceRO.getMenusBySystemSymbol("basic");
+				systemServiceRO.getMenusBySystemSymbol("oa");
 				initHomeTab();
 			}
 			
@@ -155,31 +155,22 @@
 	
 	
 	
-	<s:BorderContainer width="100%" height="80">
+	<s:BorderContainer width="100%" height="140"  borderColor="#6DA752" backgroundImage="@Embed(source='../WebContent/resources/oa/layout/head.jpg')">
 		<s:layout>
 			<s:HorizontalLayout verticalAlign="middle" />
 		</s:layout>
-		<mx:Image x="0" y="0" source="@Embed(source='../WebContent/resources/common/layout/logo.jpg')" height="78" width="100"/>
-		<s:Label x="128" y="20" text="浙江省温岭中学" fontSize="32" width="100%"/>
-		<mx:HBox height="40" horizontalAlign="center" autoLayout="true">
-			<mx:Button label="主页" click="homeTab()" />
-			<mx:Button label="退出" click="exitSystem()" />
-		</mx:HBox>   
-		<mx:VRule x="610" y="15" height="50"/>
-		<s:BorderContainer y="20" height="50" width="200" backgroundAlpha="1.0" backgroundColor="#ffffff" borderVisible="false">
-			<s:layout>
-				<s:HorizontalLayout verticalAlign="middle" horizontalAlign="center"/>
-			</s:layout>
-			<s:Label text="当前用户：admin&#xd;用户角色：管理员" fontSize="14"/>
-		</s:BorderContainer>
+
+
 		
 		
 	</s:BorderContainer>
-	<s:BorderContainer width="100%" height="100%" >
+	<s:BorderContainer height="5" width="100%" backgroundColor="#A6C17A"  borderVisible="false"></s:BorderContainer>
+	<s:BorderContainer width="100%" height="100%" backgroundColor="#A6C17A"  borderVisible="false">
 		<s:layout>
 			<s:HorizontalLayout verticalAlign="middle" gap="0"/>
 		</s:layout>
-		<mx:Accordion width="220"  height="100%"  selectedIndex="-1" id="menus" dropShadowVisible="false" backgroundAlpha="0.0" headerHeight="35" fontSize="15" textAlign="center">
+		
+		<mx:Accordion width="220"  top="15" height="100%"  selectedIndex="-1" id="menus" dropShadowVisible="false" backgroundAlpha="0.0" headerHeight="35" fontSize="15" textAlign="center">
 			
 		</mx:Accordion>
 		
@@ -190,10 +181,11 @@
 		</flexlib:SuperTabNavigator>
 	</s:BorderContainer>
 	
-	<s:BorderContainer width="100%" height="30" backgroundAlpha="1.0" cornerRadius="1" borderVisible="true"  borderWeight="1">
+	<s:BorderContainer width="100%" height="30" backgroundColor="#A6C17A" borderVisible="false">
 		<s:layout>
 			<s:HorizontalLayout verticalAlign="middle" horizontalAlign="center"/>
 		</s:layout>
-		<s:Label text="浙江省温岭中学基础数据系统  CopyRight：2011-2012&#xd;"/>
+		<s:Label text="浙江省温岭中学办公自动化系统  CopyRight：2011-2012     "/>
+		<s:Label text="杭州池墨科技有限公司"/>
 	</s:BorderContainer>
 </mx:Module>

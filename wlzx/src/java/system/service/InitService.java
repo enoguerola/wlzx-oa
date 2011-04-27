@@ -352,7 +352,168 @@ public class InitService {
 			oa.setDetail("办公自动化系统以公文流转为核心，实现办公流程的快速高效；同时提供多种部门间的信息交流的手段和渠道，加强部门间的沟通协作；提供信息共享的平台，实现公共资源的共享；提供辅助办公功能，为每一项业务提供相关信息，促进学校办公的成熟和规范化；提供强大的搜索查询功能，便于用户在日积月累的海量信息中快速的查找需要的内容");
 			oa.setModifiedDate(new Date());
 			oa.setIndexPath("oa/index.swf");
+
+			//公共事务管理
+			MenuModel publicAffair=menuDAO.getMenuBySymbol("oa_public_affair");
+			if(publicAffair==null){
+				publicAffair=new MenuModel();
+				publicAffair.setSymbol("oa_public_affair");
+				publicAffair.setName("公共事务管理");
+				publicAffair.setCreationDate(new Date());
+				publicAffair.setModifiedDate(new Date());
+				//公告管理
+				MenuModel noticeManage=menuDAO.getMenuBySymbol("notice_manage");
+				if(noticeManage==null){
+					noticeManage=new MenuModel();
+					noticeManage.setSymbol("notice_manage");
+					noticeManage.setName("公告管理");
+					noticeManage.setCreationDate(new Date());
+					noticeManage.setModifiedDate(new Date());		
+					publicAffair.getChildren().add(noticeManage);
+					MenuModel noticePost=menuDAO.getMenuBySymbol("notice_post");
+					if(noticePost==null){
+						noticePost=new MenuModel();
+						noticePost.setSymbol("notice_post");
+						noticePost.setName("公告发布");
+						noticePost.setCreationDate(new Date());
+						noticePost.setModifiedDate(new Date());		
+						noticeManage.getChildren().add(noticePost);
+					}else{
+						
+					}
+					MenuModel noticeList=menuDAO.getMenuBySymbol("notice_list");
+					if(noticeList==null){
+						noticeList=new MenuModel();
+						noticeList.setSymbol("notice_list");
+						noticeList.setName("公告管理");
+						noticeList.setCreationDate(new Date());
+						noticeList.setModifiedDate(new Date());		
+						noticeManage.getChildren().add(noticeList);
+					}else{
+						
+					}
+					MenuModel noticeSign=menuDAO.getMenuBySymbol("notice_sign");
+					if(noticeSign==null){
+						noticeSign=new MenuModel();
+						noticeSign.setSymbol("notice_sign");
+						noticeSign.setName("公告签批");
+						noticeSign.setCreationDate(new Date());
+						noticeSign.setModifiedDate(new Date());		
+						noticeManage.getChildren().add(noticeSign);
+					}else{
+						
+					}
+				}else{
+					
+				}
+				//日程管理
+				MenuModel scheduleManage=menuDAO.getMenuBySymbol("schedule_manage");
+				if(scheduleManage==null){
+					scheduleManage=new MenuModel();
+					scheduleManage.setSymbol("scheduleManage");
+					scheduleManage.setName("日程管理");
+					scheduleManage.setCreationDate(new Date());
+					scheduleManage.setModifiedDate(new Date());		
+					publicAffair.getChildren().add(scheduleManage);
+//					MenuModel noticePost=menuDAO.getMenuBySymbol("notice_post");
+//					if(noticePost==null){
+//						noticePost=new MenuModel();
+//						noticePost.setSymbol("notice_post");
+//						noticePost.setName("公告发布");
+//						noticePost.setCreationDate(new Date());
+//						noticePost.setModifiedDate(new Date());		
+//						publicAffair.getChildren().add(noticePost);
+//					}else{
+//						
+//					}
+//					MenuModel noticeList=menuDAO.getMenuBySymbol("notice_list");
+//					if(noticeList==null){
+//						noticeList=new MenuModel();
+//						noticeList.setSymbol("notice_list");
+//						noticeList.setName("公告管理");
+//						noticeList.setCreationDate(new Date());
+//						noticeList.setModifiedDate(new Date());		
+//						publicAffair.getChildren().add(noticeList);
+//					}else{
+//						
+//					}
+//					MenuModel noticeSign=menuDAO.getMenuBySymbol("notice_sign");
+//					if(noticeSign==null){
+//						noticeSign=new MenuModel();
+//						noticeSign.setSymbol("notice_sign");
+//						noticeSign.setName("公告签批");
+//						noticeSign.setCreationDate(new Date());
+//						noticeSign.setModifiedDate(new Date());		
+//						publicAffair.getChildren().add(noticeSign);
+//					}else{
+//						
+//					}
+				}else{
+					
+				}
+				oa.getMenus().add(publicAffair);
+				
+			}else{
+				
+			}
+			//内部事务管理
+			MenuModel insideAffair=menuDAO.getMenuBySymbol("oa_inside_affair");
+			if(insideAffair==null){
+				insideAffair=new MenuModel();
+				insideAffair.setSymbol("oa_inside_affair");
+				insideAffair.setName("内部事务管理");
+				insideAffair.setCreationDate(new Date());
+				insideAffair.setModifiedDate(new Date());
+				
+				oa.getMenus().add(insideAffair);
+				
+			}else{
+				
+			}
+			//公文管理
+			MenuModel officialDocument=menuDAO.getMenuBySymbol("oa_official_document");
+			if(officialDocument==null){
+				officialDocument=new MenuModel();
+				officialDocument.setSymbol("oa_official_document");
+				officialDocument.setName("公文管理");
+				officialDocument.setCreationDate(new Date());
+				officialDocument.setModifiedDate(new Date());
+				
+				oa.getMenus().add(officialDocument);
+				
+			}else{
+				
+			}
+			//学校管理
+			MenuModel schoolAffair=menuDAO.getMenuBySymbol("oa_school_affair");
+			if(schoolAffair==null){
+				schoolAffair=new MenuModel();
+				schoolAffair.setSymbol("oa_school_affair");
+				schoolAffair.setName("学校管理");
+				schoolAffair.setCreationDate(new Date());
+				schoolAffair.setModifiedDate(new Date());
+				
+				oa.getMenus().add(schoolAffair);
+				
+			}else{
+				
+			}
+			//系统管理
+			MenuModel systemManage=menuDAO.getMenuBySymbol("oa_system_management");
+			if(systemManage==null){
+				systemManage=new MenuModel();
+				systemManage.setSymbol("oa_system_management");
+				systemManage.setName("系统管理");
+				systemManage.setCreationDate(new Date());
+				systemManage.setModifiedDate(new Date());
+				
+				oa.getMenus().add(systemManage);
+				
+			}else{
+				
+			}	
 			root.getChildren().add(oa);
+		
 		}else{
 			
 		}
