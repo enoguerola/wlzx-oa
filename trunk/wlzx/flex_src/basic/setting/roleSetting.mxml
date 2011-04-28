@@ -1,8 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Module xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		   xmlns:s="library://ns.adobe.com/flex/spark" 
-		   xmlns:mx="library://ns.adobe.com/flex/mx" layout="vertical" width="100%"  height="100%" >
+		   xmlns:mx="library://ns.adobe.com/flex/mx" layout="vertical"   creationComplete="init();" width="100%"  height="100%"  xmlns:flexlib="http://code.google.com/p/flexlib/" >
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+		<!--定义 RemoteObject 组件-->
+		<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+			<mx:method name="getRoleBySymbol"  concurrency="last"  result="getRoleBySymbolResult(event);" />
+			<mx:method name="getDepartmentBySymbol"  concurrency="last"  result="getDepartmentBySymbolResult(event);" />
+		</mx:RemoteObject>
+
 	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import basic.setting.popWin.RolePopWin;
+			
+			import flexlib.controls.SuperTabBar;
+			import flexlib.controls.tabBarClasses.SuperTab;
+			import flexlib.events.TabReorderEvent;
+			
+			import mx.collections.ArrayCollection;
+			import mx.containers.*;
+			import mx.controls.*;
+			import mx.core.FlexGlobals;
+			import mx.events.*;
+			import mx.events.ModuleEvent;
+			import mx.managers.PopUpManager;
+			import mx.modules.*;
+			import mx.rpc.events.*;
+			
+			import spark.components.*;
+			
+			import system.entity.*;
+			
+			private function init():void {
+				systemServiceRO.getRoleBySymbol("root_supervisor");
+				systemServiceRO.getDepartmentBySymbol("root");
+			}
+			private function systemFaultHandler(event:FaultEvent):void {
+				Alert.show(event.fault.faultString, 'Error');
+			}
+			private function getRoleBySymbolResult(event:ResultEvent):void {
+				var role:RoleModel=RoleModel(event.result);
+				var resultXML:String=buildSubRoles(role);
+				var roleData:XML=new XML(resultXML);
+				this.roles.dataProvider=roleData;
+				//				var list:ArrayCollection = ArrayCollection(event.result);
+			}
+			private function getDepartmentBySymbolResult(event:ResultEvent):void {
+				var department:DepartmentModel=DepartmentModel(event.result);
+				var resultList:ArrayCollection = new ArrayCollection();
+				buildSubDepartments(department,resultList,0);				
+				this.departments.dataProvider=resultList;
+				this.departments.selectedIndex=0;
+			}
+			private function buildSubDepartments(department:DepartmentModel,resultList:ArrayCollection,depth:int):void{
+				var headText:String="";
+				for(var j:int = 0;j<depth;j++)
+					headText=headText.concat("-");
+				headText=headText.concat(department.name);
+				resultList.addItem( {dataField:department.symbol, headerText:headText})
+				var list:ArrayCollection = ArrayCollection(department.subordinates);			
+				if(list.length>0){
+					for (var i:int = 0; i < list.length; i++){
+						var _department:DepartmentModel = DepartmentModel(list.getItemAt(i));	
+						buildSubDepartments(_department,resultList,depth+1);
+					}
+				}		
+				
+			}
+			private function buildSubRoles(role:RoleModel):String{
+				var resultXML:String="";
+				var list:ArrayCollection = ArrayCollection(role.subordinates);
+				if(list.length>0){
+					resultXML=resultXML.concat("<node label='"+role.name+"' id='"+role.id+"'>");
+					for (var i:int = 0; i < list.length; i++){
+						var _role:RoleModel = RoleModel(list.getItemAt(i));	
+						resultXML=resultXML.concat(buildSubRoles(_role));
+					}
+					resultXML=resultXML.concat("</node>");
+				}		
+				else resultXML=resultXML.concat("<node label='"+role.name+"' id='"+role.id+"'/>");				
+				
+				return resultXML;
+			}
+			private function addRole():void{
+				var selectId:String=treeSelectedItemId();
+				if(selectId!=null){
+					var pop:RolePopWin=RolePopWin(PopUpManager.createPopUp(this,RolePopWin,true));  
+					PopUpManager.centerPopUp(pop);
+					pop.percentHeight=100;
+					pop.percentWidth=100;
+					pop.x=FlexGlobals.topLevelApplication.stage.stageWidth/2-pop.width/2;
+					pop.y=FlexGlobals.topLevelApplication.stage.stageHeight/2-pop.height/2;
+					//					Alert.show(selectId);
+				}	
+			}
+			private function editRole():void{
+				var selectId:String=treeSelectedItemId();
+				if(selectId!=null){
+					Alert.show(selectId);
+				}	
+			}
+			private function deleteRole():void{
+				var selectId:String=treeSelectedItemId();
+				if(selectId!=null){
+					Alert.show(selectId);
+				}	
+			}
+			private function saveRole():void{
+				
+			}
+			private function treeSelectedItemId():String{
+				var selectedNode:XML=roles.selectedItem as XML;
+				if(selectedNode!=null)
+					return selectedNode.@id;
+				else{
+					Alert.show("当前未选中任何节点岗位","操作不当");
+					return null;
+				} 
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<s:Panel width="100%" height="100%" title="岗位设置" >
+		<s:HGroup  top="-25"  left="100" verticalAlign="middle"  horizontalAlign="center" >
+			<s:Label text="部门选择" textAlign="center"  />
+			<s:DropDownList  width="200" id="departments" labelField="headerText"  selectedIndex="0" />
+			<s:Button label="新增"  width="50" right="160" click="addRole();"/>
+			<s:Button label="编辑"  width="50" right="100" click="editRole();"/>
+			<s:Button label="删除"  width="50" right="40" click="deleteRole();"/>
+		</s:HGroup>	
+		<flexlib:ConvertibleTreeList id="roles" labelField="@label"   width="100%" height="100%">
+		</flexlib:ConvertibleTreeList>
+	</s:Panel>
 </mx:Module>

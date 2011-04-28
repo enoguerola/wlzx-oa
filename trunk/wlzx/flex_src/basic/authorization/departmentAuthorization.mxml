@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Module xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		   xmlns:s="library://ns.adobe.com/flex/spark" 
+		   xmlns:mx="library://ns.adobe.com/flex/mx" layout="vertical" creationComplete="init();" width="100%" height="100%" xmlns:flexlib="http://code.google.com/p/flexlib/" >
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+		<!--定义 RemoteObject 组件-->
+		<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+			<mx:method name="getSystemBySymbol"  concurrency="last"  result="getSystemBySymbolResult2(event);" />
+		</mx:RemoteObject>
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import basic.setting.popWin.DepartmentPopWin;
+			
+			import flexlib.controls.SuperTabBar;
+			import flexlib.controls.tabBarClasses.SuperTab;
+			import flexlib.events.TabReorderEvent;
+			
+			import mx.collections.ArrayCollection;
+			import mx.containers.*;
+			import mx.controls.Alert;
+			import mx.core.FlexGlobals;
+			import mx.events.*;
+			import mx.events.ModuleEvent;
+			import mx.managers.PopUpManager;
+			import mx.modules.*;
+			import mx.rpc.events.*;
+			
+			import spark.components.*;
+			
+			import system.entity.*;
+			
+			private function init():void {
+				systemServiceRO.getSystemBySymbol("root");
+			}
+			
+			private function systemFaultHandler(event:FaultEvent):void {
+				Alert.show(event.fault.faultString, 'Error');
+			}
+			private function getSystemBySymbolResult2(event:ResultEvent):void {
+				var dddd:SystemModel =SystemModel(event.result);
+				
+				test.visible=false;
+//				test.text=bbbbbbbb.symbol;
+//				var systemList:ArrayCollection = ArrayCollection(rootSystem.children);
+//				for (var i:int = 0; i < systemList.length; i++){
+//					Alert.show(i+"");
+////					addTab2(SystemModel(systemList.getItemAt(i)));
+//				}
+			}
+//			private function addTab2(_system:SystemModel):void {				
+//				var curNum:Number = nav2.numChildren + 1;			
+//				var child:Canvas = new Canvas();								
+//				child.height=100;
+//				child.width=100;
+//				child.label = _system.name;
+////				var systemDetail:spark.components.TextArea=new  spark.components.TextArea();
+////				systemDetail.percentHeight=100;
+////				systemDetail.percentWidth=100;
+////				systemDetail.text=detail;
+////				systemDetail.setStyle("borderVisible", false);
+////				systemDetail.editable=false;
+////				child.addChild(systemDetail as DisplayObject);
+////				var button:mx.controls.Button=new mx.controls.Button();
+////				button.label=indexPath;
+////				button.name=indexPath;
+////				button.addEventListener(MouseEvent.CLICK,openSystemByUrl);
+////				child.addChild(button as DisplayObject);
+//				
+//				nav2.addChild(child as DisplayObject);
+//				nav2.selectedIndex = nav2.getChildIndex(child);
+////				nav2.selectedIndex = navigator.getChildIndex(child);
+////				nav2.setClosePolicyForTab(0, SuperTab.CLOSE_NEVER);
+//			}
+			
+		]]>
+	</fx:Script>
+	
+	<s:Panel width="100%" height="100%" title="部门授权">
+		<s:Label text="1" id="test">
+			
+		</s:Label>
+	</s:Panel>
+	
+</mx:Module>

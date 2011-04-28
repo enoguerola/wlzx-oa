@@ -3,11 +3,11 @@
  */
 package system.service;
 
-import java.util.ArrayList;
-import java.util.List;
+
 import system.dao.*;
 import system.entity.DepartmentModel;
 import system.entity.MenuModel;
+import system.entity.RoleModel;
 import system.entity.SystemModel;
 
 
@@ -85,26 +85,20 @@ public class SystemService {
 	public void setUserDAO(UserDAO userDAO) {
 		this.userDAO = userDAO;
 	}
-	//获得某系统子系统
-	public List<SystemModel> getSystemsByRootSymbol(String symbol){		
-		SystemModel root=systemDAO.getSystemBySymbol(symbol);
-		if(root!=null){
-			List<SystemModel> result=new ArrayList<SystemModel>(root.getChildren());
-			return result;
-		}
-		else return null;
+	//获得某系统
+	public SystemModel getSystemBySymbol(String symbol){		
+		return systemDAO.getSystemBySymbol(symbol);
 	}
-	//获得某系统菜单
-	public List<MenuModel> getMenusBySystemSymbol(String symbol){		
-		SystemModel root=systemDAO.getSystemBySymbol(symbol);
-		if(root!=null){
-			List<MenuModel> result=new ArrayList<MenuModel>(root.getMenus());
-			return result;
-		}
-		else return null;
+	//获得某菜单
+	public MenuModel getMenuBySymbol(String symbol){		
+		return menuDAO.getMenuBySymbol(symbol);
 	}
 	//获得某部门
 	public DepartmentModel getDepartmentBySymbol(String symbol){		
 		return departmentDAO.getDepartmentBySymbol(symbol);
+	}
+	//获得某角色（岗位）
+	public RoleModel getRoleBySymbol(String symbol){		
+		return roleDAO.getRoleBySymbol(symbol);
 	}
 }

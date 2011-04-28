@@ -186,7 +186,7 @@ public class InitService {
 							departmentAuthorizationMainModule.setName("部门授权主模块");
 							departmentAuthorizationMainModule.setCreationDate(new Date());
 							departmentAuthorizationMainModule.setModifiedDate(new Date());
-							departmentAuthorizationMainModule.setUrl("");
+							departmentAuthorizationMainModule.setUrl("basic/authorization/departmentAuthorization.swf");
 							departmentAuthorization.getModules().add(departmentAuthorizationMainModule);
 							//部门授权主模块查询操作
 							OperationModel departmentAuthorizationMainModuleSearch=operationDAO.getOperationBySymbol("basic_authorization_department_main_search");
@@ -255,11 +255,23 @@ public class InitService {
 					if(roleAuthorization==null){
 						roleAuthorization=new MenuModel();
 						roleAuthorization.setSymbol("basic_authorization_role");
-						roleAuthorization.setName("部门角色授权");
+						roleAuthorization.setName("岗位授权");
 						roleAuthorization.setCreationDate(new Date());
 						roleAuthorization.setModifiedDate(new Date());		
 						basicAuthorization.getChildren().add(roleAuthorization);
-						
+						//部门角色授权主模块
+						ModuleModel roleAuthorizationMainModule=moduleDAO.getModuleBySymbol("basic_authorization_role_main");
+						if(roleAuthorizationMainModule==null){
+							roleAuthorizationMainModule=new ModuleModel();
+							roleAuthorizationMainModule.setSymbol("basic_authorization_role_main");
+							roleAuthorizationMainModule.setName("岗位授权主模块");
+							roleAuthorizationMainModule.setCreationDate(new Date());
+							roleAuthorizationMainModule.setModifiedDate(new Date());
+							roleAuthorizationMainModule.setUrl("basic/authorization/roleAuthorization.swf");
+							roleAuthorization.getModules().add(roleAuthorizationMainModule);
+						}else{
+							
+						}
 					}else{
 						
 					}
@@ -492,7 +504,6 @@ public class InitService {
 				schoolAffair.setName("学校管理");
 				schoolAffair.setCreationDate(new Date());
 				schoolAffair.setModifiedDate(new Date());
-				
 				oa.getMenus().add(schoolAffair);
 				
 			}else{
@@ -519,6 +530,27 @@ public class InitService {
 		}
 		
 		systemDAO.saveOrUpdate(root);
+		//补充完善菜单1
+		MenuModel departmentRole=menuDAO.getMenuBySymbol("oa_school_affair_department_role");
+		if(departmentRole==null){
+			departmentRole=new MenuModel();
+			departmentRole.setSymbol("oa_school_affair_department_role");
+			departmentRole.setName("部门与岗位");
+			departmentRole.setCreationDate(new Date());
+			departmentRole.setModifiedDate(new Date());
+			MenuModel schoolAffair=menuDAO.getMenuBySymbol("oa_school_affair");
+			schoolAffair.getChildren().add(departmentRole);
+			menuDAO.saveOrUpdate(schoolAffair);
+		}
+		MenuModel departmentAuthorization=menuDAO.getMenuBySymbol("basic_authorization_department");
+		departmentRole.getChildren().add(departmentAuthorization);
+		MenuModel roleAuthorization=menuDAO.getMenuBySymbol("basic_authorization_role");
+		departmentRole.getChildren().add(roleAuthorization);
+		MenuModel roleSetting=menuDAO.getMenuBySymbol("basic_setting_role");
+		departmentRole.getChildren().add(roleSetting);
+		MenuModel departmentSetting=menuDAO.getMenuBySymbol("basic_setting_department");
+		departmentRole.getChildren().add(departmentSetting);
+		menuDAO.merge(departmentRole);
 		
 	}
 	public void printSystemStructure(){
@@ -597,7 +629,15 @@ public class InitService {
 			root.setCreationDate(new Date());
 			root.setName("温岭中学");
 			root.setModifiedDate(new Date());
+			RoleModel rootRole=new RoleModel();
+			rootRole.setSymbol("root_supervisor");
+			rootRole.setCreationDate(new Date());
+			rootRole.setName("温岭中学校长");
+			rootRole.setModifiedDate(new Date());
+			rootRole.setSupervisorFlag(true);
+			root.getRoles().add(rootRole);
 		}else{
+			
 			
 		}
 		departmentDAO.saveOrUpdate(root);

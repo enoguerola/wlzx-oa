@@ -32,12 +32,13 @@
 			
 //			private var systemXMLList:XMLList = new XMLList();
 			private function init():void {
-				systemServiceRO.getSystemsByRootSymbol("root");
+				systemServiceRO.getSystemBySymbol("root");
 				initHomeTab();
 			}
 			
 			private function systemResultHandler(event:ResultEvent):void {
-				var systemList:ArrayCollection = ArrayCollection(event.result);
+				var rootSystem:SystemModel =SystemModel(event.result);
+				var systemList:ArrayCollection = ArrayCollection(rootSystem.children);
 				systems.historyManagementEnabled = true;
 				systems.addEventListener(mx.events.IndexChangedEvent.CHANGE,changeHandler);
 				makeAccordion(systemList);
@@ -55,7 +56,7 @@
 					nc.percentHeight=100;
 					nc.percentWidth=100;
 					nc.setStyle("font-size","20");
-					nc.label=_system.name;
+					nc.label=_system.name;_system
 					nc.name=_system.detail;
 					nc.id=_system.indexPath;
 					systems.addChild(nc as DisplayObject);

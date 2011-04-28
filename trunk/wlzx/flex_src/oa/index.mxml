@@ -28,7 +28,7 @@
 			
 			
 			private function init():void {
-				systemServiceRO.getMenusBySystemSymbol("oa");
+				systemServiceRO.getSystemBySymbol("oa");
 				initHomeTab();
 			}
 			
@@ -41,7 +41,8 @@
 				
 			}
 			private function systemResultHandler(event:ResultEvent):void {
-				var menuList:ArrayCollection = ArrayCollection(event.result);
+				var rootSystem:SystemModel =SystemModel(event.result);
+				var menuList:ArrayCollection = ArrayCollection(rootSystem.menus);
 				mySort(menuList);
 //				trace(menuList.toString()+"");
 //				Alert.show();
