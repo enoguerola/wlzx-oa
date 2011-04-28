@@ -3,22 +3,39 @@
 <!--当 Application 完成构建后立即触发 init() 方法，以实现对 Server 端 Java 的调用-->
 <s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
 			   xmlns:s="library://ns.adobe.com/flex/spark" 
-			   xmlns:mx="library://ns.adobe.com/flex/mx"   width="100%" pageTitle="登陆页面"  height="100%" backgroundColor="#ADBF91" xmlns:flexlib="http://code.google.com/p/flexlib/"  xmlns:viewers="flexlib.scheduling.scheduleClasses.viewers.*" xmlns:sliderClasses="flexlib.controls.sliderClasses.*" xmlns:baseClasses="flexlib.baseClasses.*">
+			   xmlns:mx="library://ns.adobe.com/flex/mx"   width="100%" pageTitle="登陆页面"   creationComplete="init();" height="100%" backgroundColor="#ADBF91" xmlns:flexlib="http://code.google.com/p/flexlib/"  xmlns:viewers="flexlib.scheduling.scheduleClasses.viewers.*" xmlns:sliderClasses="flexlib.controls.sliderClasses.*" xmlns:baseClasses="flexlib.baseClasses.*">
+	<fx:Style source="login.css"/>
 	     <fx:Script>    
 			       <![CDATA[   
-			         import mx.rpc.events.ResultEvent;  
-					 import mx.rpc.events.FaultEvent;
-			         import mx.controls.Alert;                       
+					   import flash.display.Stage;
+					   import flash.display.StageDisplayState;
+					   
+					   import mx.controls.Alert;
+					   import mx.rpc.events.FaultEvent;
+					   import mx.rpc.events.ResultEvent;
 			         private function httpHandle(e:ResultEvent):void  
 			         { 
-						 ExternalInterface.call("function() {window.location.href='home.html';}"); 
-//						 Alert.show(e.result.Result); 
+						
+						 ExternalInterface.call("function() {" +
+							 "window.location.href='home.html';" +
+//							 "window.open('home.html','FullWnd','fullscreen,scrollbars=no');" +
+//							 "this.parent.opener=null;" +
+//							 "this.parent.close();" +
+							 "}"		 	
+						 ); 
+	//						 Alert.show(e.result.Result); 
 			         } 
 					 private function service_faultHandler(event:FaultEvent):void
 					 {
 		                Alert.show("请求异常");
 		             }
-					   
+					  private function init():void{
+						  
+						  focusManager.setFocus(j_username);
+						  
+					  }
+
+					 
 			         ]]>    
 		 </fx:Script> 
 	<fx:Declarations>
@@ -37,7 +54,7 @@
 			<s:VGroup  gap="20" >
 				<s:HGroup width="100%" textAlign="center" verticalAlign="middle" gap="10">
 					<s:Label text="用户名："   width="60" verticalAlign="middle" textAlign="right"/>
-					<s:TextInput id="j_username"    name="j_username"  width="200" />
+					<s:TextInput id="j_username" name="j_username"  width="200" />
 				</s:HGroup>
 				<s:HGroup width="100%"  top="20" textAlign="center" verticalAlign="middle" gap="10">		
 					<s:Label text="密码："    width="60" verticalAlign="middle" textAlign="right"/>

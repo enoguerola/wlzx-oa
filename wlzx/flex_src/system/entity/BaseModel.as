@@ -9,6 +9,7 @@ package system.entity
 		public var symbol:String;
 		public var creationDate: Date;
 		public var modifiedDate: Date ;
+		public var sequence:int;
 		public function BaseModel()
 		{
 		}

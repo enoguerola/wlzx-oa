@@ -23,6 +23,7 @@ public  class BaseModel implements Comparable<BaseModel>{
 	private String symbol;
 	private Date creationDate;
 	private Date modifiedDate;
+	private int sequence;
 	public String getId(){
 		return id;
 	}
@@ -78,5 +79,13 @@ public  class BaseModel implements Comparable<BaseModel>{
 	public int compareTo(BaseModel baseModel) {
 		// TODO Auto-generated method stub
 		return this.symbol.compareTo(baseModel.symbol);//这里的compareTo方法是String中的，String已实现 Comparable接口，按照字母顺序来排序的。它返回的也是int（1,,0,,-1）同时实现了对字母排序。比如，有年龄相同的姓名不相同的元素，那么就会按字母顺序来排，如果都一样，则就是同一元素
+	}
+
+	public int getSequence() {
+		return sequence;
+	}
+
+	public void setSequence(int sequence) {
+		this.sequence = sequence;
 	}
 }
