@@ -7,7 +7,7 @@
 		<!--定义 RemoteObject 组件-->
 		<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" result="systemResultHandler(event);" fault="systemFaultHandler(event);"/>
 	</fx:Declarations>
-	
+
 	<fx:Script>
 		<![CDATA[
 			import flexlib.controls.SuperTabBar;
@@ -22,7 +22,8 @@
 			import mx.modules.*;
 			import mx.events.ModuleEvent;
 			import spark.components.*;
-			
+			import mx.collections.SortField;  
+			import mx.collections.Sort;  
 			import system.entity.*;
 			
 			
@@ -31,8 +32,17 @@
 				initHomeTab();
 			}
 			
+			private function mySort(list:ArrayCollection):void{
+				var sort:Sort=new Sort();  
+				//按照sequence升序排序  
+				sort.fields=[new SortField("sequence")];  
+				list.sort=sort;
+				list.refresh();//更新  
+				
+			}
 			private function systemResultHandler(event:ResultEvent):void {
 				var menuList:ArrayCollection = ArrayCollection(event.result);
+				mySort(menuList);
 //				trace(menuList.toString()+"");
 //				Alert.show();
 				menus.historyManagementEnabled = true;
@@ -79,6 +89,7 @@
 			private function buildSubMenus(menu:MenuModel):String{
 				var resultXML:String="";
 				var menuList:ArrayCollection = ArrayCollection(menu.children);
+				mySort(menuList);
 				if(menuList.length>0){
 					resultXML=resultXML.concat("<node label='"+menu.name+"'>");
 					for (var i:int = 0; i < menuList.length; i++){
