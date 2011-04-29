@@ -1,8 +1,235 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Module xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		   xmlns:s="library://ns.adobe.com/flex/spark" 
-		   xmlns:mx="library://ns.adobe.com/flex/mx" layout="absolute" width="400" height="300">
+		   xmlns:mx="library://ns.adobe.com/flex/mx"  creationComplete="init();" width="100%" height="100%" xmlns:flexlib="http://code.google.com/p/flexlib/" >
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+		<!--定义 RemoteObject 组件-->
+		<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+			<mx:method name="getSystemBySymbol"  concurrency="last"  result="getSystemBySymbolResult(event);" />
+			<mx:method name="getDepartmentBySymbol"  concurrency="last"  result="getDepartmentBySymbolResult(event);" />
+		</mx:RemoteObject>
 	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import basic.setting.popWin.DepartmentPopWin;
+			
+			import flexlib.controls.SuperTabBar;
+			import flexlib.controls.tabBarClasses.SuperTab;
+			import flexlib.events.TabReorderEvent;
+			
+			import mx.collections.ArrayCollection;
+			import mx.containers.Canvas;
+			import mx.controls.Alert;
+			import mx.rpc.events.*;
+			
+			import spark.components.*;
+			
+			import system.entity.*;
+			private var TAB_WIDTH:int=30;
+			private function init():void {
+				systemServiceRO.getSystemBySymbol("root");
+				systemServiceRO.getDepartmentBySymbol("root");
+			}
+			
+			private function systemFaultHandler(event:FaultEvent):void {
+				Alert.show(event.fault.faultString, 'Error');
+			}
+			private function getSystemBySymbolResult(event:ResultEvent):void {
+				var rootSystem:Object =event.result ;
+				//				addTab(rootSystem);
+				var systemList:ArrayCollection = ArrayCollection(rootSystem.children);
+				for (var i:int = 0; i < systemList.length; i++){
+					//					Alert.show(i+"");
+					addTab(systemList.getItemAt(i));
+					//					callLater(closeTab);
+				}
+			}
+			
+			private function addTab(_system:Object):void {	
+				var child:mx.containers.VBox = new mx.containers.VBox();								
+				child.percentHeight=100;
+				child.percentWidth=100;
+				child.label = _system.name;
+				var vGroup:VGroup=new VGroup();
+				buildSubSystem(_system,vGroup,0);
+				child.addChild(vGroup);
+				systems.addChild(child as DisplayObject);
+				
+			}
+			private function buildSubSystem(system:Object,vGroup:VGroup,depth:int):void {
+				var systemList:ArrayCollection = ArrayCollection(system.children);
+				if(systemList.length>0){
+					for (var i:int = 0; i < systemList.length; i++){
+						var _system:Object = systemList.getItemAt(i);	
+						var vSubGroup:VGroup=new VGroup();
+						var hGroup:HGroup=new HGroup();
+						var checkBox:CheckBox=new CheckBox();
+						checkBox.id="system_"+_system.id;
+						var label:Label=new Label();		
+						label.text=_system.name;
+						var tabGroup:HGroup=new HGroup();
+						tabGroup.width=depth*TAB_WIDTH;
+						hGroup.addElement(tabGroup);
+						hGroup.addElement(checkBox);
+						hGroup.addElement(label);
+						vSubGroup.addElement(hGroup);
+						buildSubSystem(_system,vSubGroup,depth+1);
+						vGroup.addElement(vSubGroup);			
+					}
+					
+				}else{
+					var menuList:ArrayCollection = ArrayCollection(system.menus);
+					for (var j:int = 0; j < menuList.length; j++){
+						var menu:Object = menuList.getItemAt(j);	
+						buildSubMenu(menu,vGroup,depth);
+					}
+					
+				}
+			}
+			private function buildSubMenu(menu:Object,vGroup:VGroup,depth:int):void {
+				var vSubGroup:VGroup=new VGroup();
+				var hGroup:HGroup=new HGroup();
+				var checkBox:CheckBox=new CheckBox();
+				checkBox.id="menu_"+menu.id;
+				var label:Label=new Label();		
+				label.text=menu.name;
+				var tabGroup:HGroup=new HGroup();
+				tabGroup.width=depth*TAB_WIDTH;
+				hGroup.addElement(tabGroup);
+				hGroup.addElement(checkBox);
+				hGroup.addElement(label);
+				vSubGroup.addElement(hGroup);
+				var subMenuList:ArrayCollection = ArrayCollection(menu.children);
+				if(subMenuList.length>0){
+					for (var i:int = 0; i < subMenuList.length; i++){
+						var subMenu:Object = subMenuList.getItemAt(i);	
+						buildSubMenu(subMenu,vSubGroup,depth+1);
+					}
+				}else{
+					var subModuleList:ArrayCollection = ArrayCollection(menu.modules);
+					for (var j:int = 0; j < subModuleList.length; j++){
+						var module:Object = subModuleList.getItemAt(j);	
+						buildSubModule(module,vSubGroup,depth+1);
+					}
+				}
+				vGroup.addElement(vSubGroup);			
+				
+			}
+			private function buildSubModule(module:Object,vGroup:VGroup,depth:int):void {
+				var vSubGroup:VGroup=new VGroup();
+				var hGroup:HGroup=new HGroup();
+				var checkBox:CheckBox=new CheckBox();
+				checkBox.id="module_"+module.id;
+				var label:Label=new Label();		
+				label.text=module.name;
+				var tabGroup:HGroup=new HGroup();
+				tabGroup.width=depth*TAB_WIDTH;
+				hGroup.addElement(tabGroup);
+				hGroup.addElement(checkBox);
+				hGroup.addElement(label);
+				vSubGroup.addElement(hGroup);
+				var subModuleList:ArrayCollection = ArrayCollection(module.children);
+				if(subModuleList.length>0){
+					for (var i:int = 0; i < subModuleList.length; i++){
+						var subModule:Object = subModuleList.getItemAt(i);	
+						buildSubModule(subModule,vSubGroup,depth+1);
+					}
+				}else{
+					//					Alert.show("a");
+					var operationList:ArrayCollection = ArrayCollection(module.operations);
+					//					Alert.show(operationList.toString());
+					var hSubGroup:HGroup=new HGroup();
+					for (var j:int = 0; j < operationList.length; j++){
+						var operation:Object = operationList.getItemAt(j);	
+						
+						buildSubOperation(operation,hSubGroup,depth+1);
+						
+					}
+					vSubGroup.addElement(hSubGroup);
+				}
+				vGroup.addElement(vSubGroup);	
+			}
+			private function buildSubOperation(operation:Object,vGroup:HGroup,depth:int):void {
+				var vSubGroup:HGroup=new HGroup();
+				var hGroup:HGroup=new HGroup();
+				var checkBox:CheckBox=new CheckBox();
+				checkBox.id="operation_"+operation.id;
+				var label:Label=new Label();		
+				label.text=operation.name;
+				var tabGroup:HGroup=new HGroup();
+				tabGroup.width=depth*TAB_WIDTH;
+				hGroup.addElement(tabGroup);
+				hGroup.addElement(checkBox);
+				hGroup.addElement(label);
+				vSubGroup.addElement(hGroup);
+				var dataAccessModesList:ArrayCollection = ArrayCollection(operation.dataAccessModes);
+				
+				for (var i:int = 0; i < dataAccessModesList.length; i++){
+					var dataAccessMode:Object = dataAccessModesList.getItemAt(i);
+					var aLabel:Label=new Label();		
+					aLabel.text="->数据[";
+					vSubGroup.addElement(aLabel);
+					buildSubDataAccessMode(dataAccessMode,vSubGroup,depth+1);
+					var bLabel:Label=new Label();		
+					bLabel.text="]";
+					vSubGroup.addElement(bLabel);
+					vSubGroup.verticalAlign="top";
+					vSubGroup.horizontalAlign="center";
+				}
+				
+				vGroup.addElement(vSubGroup);	
+			}
+			private function buildSubDataAccessMode(dataAccessMode:Object,vGroup:HGroup,depth:int):void {
+				var vSubGroup:VGroup=new VGroup();
+				var hGroup:HGroup=new HGroup();
+				
+				var checkBox:RadioButton=new RadioButton();
+				checkBox.id="dataAccessMode_"+dataAccessMode.id;
+				var label:Label=new Label();		
+				label.text=dataAccessMode.name;
+				hGroup.addElement(checkBox);
+				hGroup.addElement(label);
+				vSubGroup.addElement(hGroup);
+				vGroup.addElement(vSubGroup);	
+			}
+			private function getDepartmentBySymbolResult(event:ResultEvent):void {
+				var department:DepartmentModel=DepartmentModel(event.result);
+				var resultList:ArrayCollection = new ArrayCollection();
+				buildSubDepartments(department,resultList,0);				
+				this.departments.dataProvider=resultList;
+				this.departments.selectedIndex=0;
+			}
+			private function buildSubDepartments(department:DepartmentModel,resultList:ArrayCollection,depth:int):void{
+				var headText:String="";
+				for(var j:int = 0;j<depth;j++)
+					headText=headText.concat("-");
+				headText=headText.concat(department.name);
+				resultList.addItem( {dataField:department.symbol, headerText:headText})
+				var list:ArrayCollection = ArrayCollection(department.subordinates);			
+				if(list.length>0){
+					for (var i:int = 0; i < list.length; i++){
+						var _department:DepartmentModel = DepartmentModel(list.getItemAt(i));	
+						buildSubDepartments(_department,resultList,depth+1);
+					}
+				}		
+				
+			}
+			
+		]]>
+	</fx:Script>
+	
+	
+	<s:HGroup   verticalAlign="middle"  horizontalAlign="right" width="100%">
+		<s:Label text="部门选择" textAlign="center"  />
+		<s:DropDownList  width="200" id="departments" labelField="headerText"  selectedIndex="0" />
+		<s:Label text="岗位选择" textAlign="center"  />
+		<s:DropDownList  width="200" id="roles" labelField="headerText"  selectedIndex="0" />
+		<s:Button label="保存"  width="50" />
+	</s:HGroup>	
+	<mx:TabNavigator id="systems" width="100%" height="100%">
+		
+	</mx:TabNavigator>
+	
+	
 </mx:Module>

@@ -28,6 +28,7 @@
 			import mx.managers.IPopUpManager; 
 			import mx.modules.*;
 			import system.event.BaseEvent;
+			import flash.utils.setInterval;
 //			private var systemList:Object;
 			
 //			private var systemXMLList:XMLList = new XMLList();
@@ -85,7 +86,7 @@
 			private var home_icon:Class;
 			private function initHomeTab():void {	
 				addTab(homeTabTitle, nav, "system/index.swf",null,home_icon);
-				
+				callLater(initNonCloseTab);
 			}
 			private function openSystemByUrl(event:Event):void{
 				var button:mx.controls.Button=mx.controls.Button(event.currentTarget);
@@ -123,10 +124,12 @@
 				
 				navigator.addChild(child as DisplayObject);
 				navigator.selectedIndex = navigator.getChildIndex(child);
-				navigator.setClosePolicyForTab(0, SuperTab.CLOSE_NEVER);
+				
 			}
 			
-			
+			private function initNonCloseTab():void{
+				nav.setClosePolicyForTab(0, SuperTab.CLOSE_NEVER);		
+			}
 			
 			private function homeTab():void{
 				// TODO Auto-generated method stub

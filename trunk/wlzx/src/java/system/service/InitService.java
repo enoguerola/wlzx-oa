@@ -250,7 +250,7 @@ public class InitService {
 					}else{
 						
 					}
-					//部门角色授权
+					//岗位授权
 					MenuModel roleAuthorization=menuDAO.getMenuBySymbol("basic_authorization_role");
 					if(roleAuthorization==null){
 						roleAuthorization=new MenuModel();
@@ -259,7 +259,7 @@ public class InitService {
 						roleAuthorization.setCreationDate(new Date());
 						roleAuthorization.setModifiedDate(new Date());		
 						basicAuthorization.getChildren().add(roleAuthorization);
-						//部门角色授权主模块
+						//岗位授权主模块
 						ModuleModel roleAuthorizationMainModule=moduleDAO.getModuleBySymbol("basic_authorization_role_main");
 						if(roleAuthorizationMainModule==null){
 							roleAuthorizationMainModule=new ModuleModel();
