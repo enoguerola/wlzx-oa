@@ -3,9 +3,13 @@
  */
 package system.entity;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.Set;
 import java.util.TreeSet;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 
   
@@ -22,8 +26,12 @@ import java.util.TreeSet;
  *
  */
 
-public class UserModel  extends BaseModel {
-	private String password;
+public class UserModel  extends BaseModel implements UserDetails{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3928147466709546513L;
+	private String pwd;
 	private Date lastLoginTime;
 	private String lastLoginIP;
 	private String email;
@@ -31,11 +39,11 @@ public class UserModel  extends BaseModel {
 	private Set<UserModel> subordinates=new TreeSet<UserModel>();//直属下属
 	private Set<UserModel> leaders=new TreeSet<UserModel>();//直属领导
 	private Set<RoleModel> roles=new TreeSet<RoleModel>();//所属角色
-	public String getPassword() {
-		return password;
+	public String getPwd() {
+		return pwd;
 	}
-	public void setPassword(String password) {
-		this.password = password;
+	public void setPwd(String pwd) {
+		this.pwd = pwd;
 	}
 	public Date getLastLoginTime() {
 		return lastLoginTime;
@@ -78,7 +86,53 @@ public class UserModel  extends BaseModel {
 	}
 	public void setRoles(Set<RoleModel> roles) {
 		this.roles = roles;
+	}	
+
+
+	//用户拥有的权限
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		// TODO Auto-generated method stub
+		return null;
 	}
+	//用户名
+	@Override
+	public String getUsername() {
+		// TODO Auto-generated method stub
+		return getName();
+	}
+	//密码
+	@Override
+	public String getPassword() {
+		// TODO Auto-generated method stub
+		return getPwd();
+	}
+
+	//用户账号是否过期
+	@Override
+	public boolean isAccountNonExpired() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+	//用户账号是否被锁定
+	@Override
+	public boolean isAccountNonLocked() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+	//用户密码是否过期
+	@Override
+	public boolean isCredentialsNonExpired() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+	//用户是否可用
+	@Override
+	public boolean isEnabled() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+	
 
 	
 	

@@ -17,7 +17,7 @@
 		<property name="name" type="string">
 			<column name="name" />
 		</property>
-		<property name="password" type="string">
+		<property name="pwd" type="string">
 			<column name="password" />
 		</property>
 		<property name="creationDate" type="java.util.Date">
@@ -39,7 +39,7 @@
 			<key column="leader_id" not-null="true" />
 			<many-to-many  column="subordinate_id"  class="system.entity.UserModel" /> 
 		</set>
-		<set name="leaders" lazy="false"  table="wlzx_system_role_user_relationship" cascade="all"  inverse="true">
+		<set name="leaders" lazy="false"  table="wlzx_system_user_leadship" cascade="all"  inverse="true">
 			<key column="subordinate_id" not-null="true" />
 			<many-to-many  column="leader_id"  class="system.entity.UserModel" /> 
 		</set>

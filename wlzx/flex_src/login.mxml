@@ -15,7 +15,7 @@
 					   import mx.rpc.events.ResultEvent;
 			         private function httpHandle(e:ResultEvent):void  
 			         { 
-						
+//						Alert.show(e.toString());
 						 ExternalInterface.call("function() {" +
 							 "window.location.href='home.html';" +
 //							 "window.open('home.html','FullWnd','fullscreen,scrollbars=no');" +
@@ -23,7 +23,7 @@
 //							 "this.parent.close();" +
 							 "}"		 	
 						 ); 
-	//						 Alert.show(e.result.Result); 
+	//					Alert.show(e.result.Result); 
 			         } 
 					 private function service_faultHandler(event:FaultEvent):void
 					 {
@@ -42,7 +42,8 @@
 	     <mx:HTTPService id="myHttp" url="j_spring_security_check" showBusyCursor="true" method="POST" result="httpHandle(event);" fault="service_faultHandler(event);" useProxy="false" resultFormat="text">  
 			 <mx:request>  
 				<j_username>{j_username.text}</j_username>  
-				<j_password>{j_password.text}</j_password>  
+				<j_password>{j_password.text}</j_password> 
+				<_spring_security_remember_me>{_spring_security_remember_me.selected}</_spring_security_remember_me>  
 			 </mx:request>  
 		</mx:HTTPService>  
 	</fx:Declarations>
@@ -68,7 +69,7 @@
 				</s:HGroup>
 				<s:HGroup width="100%" height="20">	
 					<s:HGroup width="60"></s:HGroup>
-					<s:CheckBox label="记住我"/>
+					<s:CheckBox label="记住我" id="_spring_security_remember_me"  name="_spring_security_remember_me" />
 					<mx:Image source="@Embed(source='../WebContent/resources/oa/login_wh.jpg')">
 						
 					</mx:Image>

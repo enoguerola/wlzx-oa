@@ -50,4 +50,7 @@
 		<property name="roleDAO" ref="roleDAO" />
 		<property name="userDAO" ref="userDAO" />
 	</bean>
+	<bean id="securityUserHolder" class="system.components.support.SecurityUserHolder">
+		<flex:remoting-destination />
+	</bean>
 </beans>

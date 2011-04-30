@@ -12,54 +12,46 @@
                         http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
  	<debug /> 
   	<global-method-security pre-post-annotations="enabled" /> 
- 	
    <http pattern="/login.html" security="none" /> 
-   <http auto-config="true" access-denied-page="/login.html">
-		<intercept-url pattern="/*.html" access="ROLE_USER" />
-		
+   <http pattern="/*.swf" security="none" /> 
+   <http pattern="/*.js" security="none" /> 
+   <http pattern="/*.css" security="none" /> 
+   <http auto-config="true" access-denied-page="/login.html" access-decision-manager-ref="accessDecisionManager">
+		<intercept-url pattern="/home.html" access="IS_AUTHENTICATED_FULLY"/>
+		<intercept-url pattern="/home.swf" access="IS_AUTHENTICATED_FULLY"/>		
+		<intercept-url pattern="/**/*.swf" access="IS_AUTHENTICATED_FULLY"/>	
 		<!-- 指定登陆页面、成功页面、失败页面-->
-		<form-login login-page="/login.html" default-target-url="/home.html"   always-use-default-target="true" login-processing-url="/j_spring_security_check" authentication-failure-url="/login.html" />
-		<!-- 尝试访问没有权限的页面时跳转的页面
-		<access-denied-handler error-page="/home.html" />
-		 -->
-		<!--
-			使用记住用户名、密码功能，指定数据源和加密的key <remember-me data-source-ref="dataSource"
-			/>
-		-->
-		<remember-me />
+		<form-login login-page="/login.html" default-target-url="/home.html"  always-use-default-target="true" login-processing-url="/j_spring_security_check" authentication-failure-url="/login.html" />
+		<!-- 尝试访问没有权限的页面时跳转的页面<access-denied-handler error-page="/home.html" /> -->
+		<!--使用记住用户名、密码功能，指定数据源和加密的key<remember-me data-source-ref="dataSource"/>-->
+		<remember-me  user-service-ref="securityManager"/>
 		<!-- logout页面，logout后清除session -->
 		<logout invalidate-session="true" logout-success-url="/login.html" />
-		<!-- session 失效后跳转的页面，最大登陆次数 -->
-		 <!-- session-management是针对session的管理. 这里可以不配置. 如有需求可以配置. -->  
-         <!-- id登陆唯一. 后登陆的账号会挤掉第一次登陆的账号  error-if-maximum-exceeded="true" 禁止2次登陆;   
-             session-fixation-protection="none" 防止伪造sessionid攻击. 用户登录成功后会销毁用户当前的session.   
-             创建新的session,并把用户信息复制到新session中.   
+		 <!-- session-management是针对session的管理 
+		 	 nvalid-session-url=""配置session 失效后跳转的页面
+         	 max-sessions="1"同一账号最大登陆次数error-if-maximum-exceeded="true" 禁止同一账户2次登陆; false允许2次登陆并后登陆的账号会挤掉第一次登陆的账号  
+             session-fixation-protection="none" 防止伪造sessionid攻击. 
           -->  
-         <session-management session-fixation-protection="none">  
-             <concurrency-control/>  
-         </session-management>  
-		<session-management invalid-session-url="/login.html">
-			<concurrency-control max-sessions="1" />
-		</session-management>
-		
+         <session-management session-fixation-protection="none" invalid-session-url="/login.html">  
+            <concurrency-control max-sessions="1" error-if-maximum-exceeded="false"/>
+         </session-management>  	
 	</http>
-    <!--
-    Usernames/Passwords are
-        rod/koala
-        dianne/emu
-        scott/wombat
-        peter/opal
-    -->
     <authentication-manager>
-        <authentication-provider>
-            <!--<password-encoder hash="md5"/> -->
-            <user-service>
-                <user name="admin" password="admin" authorities="ROLE_SUPERVISOR, ROLE_USER, ROLE_TELLER" />
-                <user name="dianne" password="65d15fe9156f9c4bbffd98085992a44e" authorities="ROLE_USER,ROLE_TELLER" />
-                <user name="scott" password="2b58af6dddbd072ed27ffc86725d7d3a" authorities="ROLE_USER" />
-                <user name="peter" password="22b5c9accc6e1ba628cedc63a72d57f8" authorities="ROLE_USER" />
-            </user-service>
-        </authentication-provider>
+       	<authentication-provider user-service-ref="securityManager">
+			<password-encoder hash="md5"/>
+		</authentication-provider>
     </authentication-manager>
-
+    
+    <beans:bean id="securityManager" class="system.components.support.SecurityManagerSupport">
+		<beans:property name="systemService" ref="systemServiceDest"/>
+	</beans:bean>
+	<beans:bean id="accessDecisionManager" class="org.springframework.security.access.vote.AffirmativeBased">
+		<beans:property name="allowIfAllAbstainDecisions" value="false"/>
+		<beans:property name="decisionVoters">
+			<beans:list>
+				<beans:bean class="org.springframework.security.access.vote.RoleVoter"/>
+				<beans:bean class="org.springframework.security.access.vote.AuthenticatedVoter"/>
+			</beans:list>
+		</beans:property>
+	</beans:bean>
 </beans:beans>
