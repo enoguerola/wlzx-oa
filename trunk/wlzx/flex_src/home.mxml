@@ -1,62 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
 			   xmlns:s="library://ns.adobe.com/flex/spark" 
-			   xmlns:mx="library://ns.adobe.com/flex/mx" width="100%"  height="100%" >
+			   xmlns:mx="library://ns.adobe.com/flex/mx" width="100%"  height="100%"   creationComplete="init();">
 	<s:layout>
 		<s:BasicLayout/>
 	</s:layout>
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
 		<mx:HTTPService id="logoutRequest" url="j_spring_security_logout" showBusyCursor="true" method="POST" result="logout_success_handle(event);" fault="logout_fault_handler(event);" useProxy="false" resultFormat="text">  
-		</mx:HTTPService>  
+		</mx:HTTPService> 
+		<mx:RemoteObject id="securityUserHolder" destination="securityUserHolder"  fault="securityUserHolder_fault_handler(event);">
+			<mx:method name="getCurrentUser"  concurrency="last"  result="getCurrentUserResult(event);" />
+		</mx:RemoteObject>
 	</fx:Declarations>
 	<fx:Script>    
 		<![CDATA[   
-			import mx.modules.*;
-			import mx.controls.*;
-			import mx.events.ModuleEvent;
-			import system.implement.BaseImpl;
-			import system.event.BaseEvent;
-			import mx.rpc.events.FaultEvent;
-			import mx.rpc.events.ResultEvent;   
 			import flash.display.Stage;
 			import flash.display.StageDisplayState;
-//			import mx.managers.BrowserManager;  
-//			import mx.managers.IBrowserManager;  
+			
+			import mx.controls.*;
+			import mx.events.ModuleEvent;
+			import mx.modules.*;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			import system.event.BaseEvent;
+			import system.implement.BaseImpl;
+
 			public var default_url:String="oa/index.swf";
-//			private var bm:IBrowserManager = BrowserManager.getInstance(); 
+			public var account:String;
+			public var roles:String;
+			private function init():void{
+				securityUserHolder.getCurrentUser();
+			}
 			private function readyModule( event:ModuleEvent ) : void
 			{ 
-				var ml:ModuleLoader = event.target as ModuleLoader;				
-				var ichild:BaseImpl = ml.child as BaseImpl;
-				ichild.addEventListener(BaseEvent.RETURN, returnHomeModule);
-				ichild.addEventListener(BaseEvent.Enter, EnterNewModule);
+//				var ml:ModuleLoader = event.target as ModuleLoader;				
+//				var ichild:BaseImpl = ml.child as BaseImpl;
+//				ichild.addEventListener(BaseEvent.RETURN, returnHomeModule);
+//				ichild.addEventListener(BaseEvent.Enter, EnterNewModule);
 				
 			}
-			public function returnHomeModule(event:BaseEvent):void
-			{
-				loadModule(default_url);
-			}
-			public function EnterNewModule(event:BaseEvent):void
-			{
-				loadModule(event.module);
-			}
-			
-			/**
-			 *  加载模块。
-			 */
-			public function loadModule(s:String):void {
-				// setting the url triggers the module to load
-				currentModule.url = s;
-				currentModule.loadModule();
-			}
+//			public function returnHomeModule(event:BaseEvent):void
+//			{
+//				loadModule(default_url);
+//			}
+//			public function EnterNewModule(event:BaseEvent):void
+//			{
+//				loadModule(event.module);
+//			}
+//			
+//			/**
+//			 *  加载模块。
+//			 */
+//			public function loadModule(s:String):void {
+//				// setting the url triggers the module to load
+//				currentModule.url = s;
+//				currentModule.loadModule();
+//			}
 			                 
-			private function logout_success_handle(e:ResultEvent):void  
+			private function logout_success_handle(event:ResultEvent):void  
 			{ 
 				ExternalInterface.call("function() {window.location.href='login.html';}"); 
 				//Alert.show(e.result.Result); 
 			} 
 			private function logout_fault_handler(event:FaultEvent):void
+			{
+				Alert.show("退出失败");
+			}
+			private function getCurrentUserResult(event:ResultEvent):void  
+			{ 
+				account=event.result.name;
+				roles=event.result.roles;
+//				Alert.show(event.result.roles);
+			} 
+			private function securityUserHolder_fault_handler(event:FaultEvent):void
 			{
 				Alert.show("请求异常");
 			}

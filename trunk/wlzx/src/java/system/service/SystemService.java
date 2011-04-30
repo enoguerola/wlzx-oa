@@ -9,6 +9,7 @@ import system.entity.DepartmentModel;
 import system.entity.MenuModel;
 import system.entity.RoleModel;
 import system.entity.SystemModel;
+import system.entity.UserModel;
 
 
   
@@ -100,5 +101,9 @@ public class SystemService {
 	//获得某角色（岗位）
 	public RoleModel getRoleBySymbol(String symbol){		
 		return roleDAO.getRoleBySymbol(symbol);
+	}
+	//获得某用户
+	public UserModel getUserByUserAccount(String userAccount){		
+		return userDAO.getUserByUserAccount(userAccount);
 	}
 }
