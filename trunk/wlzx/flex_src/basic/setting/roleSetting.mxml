@@ -48,13 +48,13 @@
 				//				var list:ArrayCollection = ArrayCollection(event.result);
 			}
 			private function getDepartmentBySymbolResult(event:ResultEvent):void {
-				var department:DepartmentModel=DepartmentModel(event.result);
+				var department:Object=event.result;
 				var resultList:ArrayCollection = new ArrayCollection();
 				buildSubDepartments(department,resultList,0);				
 				this.departments.dataProvider=resultList;
 				this.departments.selectedIndex=0;
 			}
-			private function buildSubDepartments(department:DepartmentModel,resultList:ArrayCollection,depth:int):void{
+			private function buildSubDepartments(department:Object,resultList:ArrayCollection,depth:int):void{
 				var headText:String="";
 				for(var j:int = 0;j<depth;j++)
 					headText=headText.concat("-");
@@ -63,7 +63,7 @@
 				var list:ArrayCollection = ArrayCollection(department.subordinates);			
 				if(list.length>0){
 					for (var i:int = 0; i < list.length; i++){
-						var _department:DepartmentModel = DepartmentModel(list.getItemAt(i));	
+						var _department:Object = list.getItemAt(i);	
 						buildSubDepartments(_department,resultList,depth+1);
 					}
 				}		

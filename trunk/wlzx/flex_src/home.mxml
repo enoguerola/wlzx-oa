@@ -32,32 +32,33 @@
 			public var roles:String;
 			private function init():void{
 				securityUserHolder.getCurrentUser();
+				loadModule(default_url);
 			}
 			private function readyModule( event:ModuleEvent ) : void
 			{ 
-//				var ml:ModuleLoader = event.target as ModuleLoader;				
-//				var ichild:BaseImpl = ml.child as BaseImpl;
-//				ichild.addEventListener(BaseEvent.RETURN, returnHomeModule);
-//				ichild.addEventListener(BaseEvent.Enter, EnterNewModule);
+				var ml:ModuleLoader = event.target as ModuleLoader;				
+				var ichild:BaseImpl = ml.child as BaseImpl;
+				ichild.addEventListener(BaseEvent.RETURN, returnHomeModule);
+				ichild.addEventListener(BaseEvent.Enter, EnterNewModule);
 				
 			}
-//			public function returnHomeModule(event:BaseEvent):void
-//			{
-//				loadModule(default_url);
-//			}
-//			public function EnterNewModule(event:BaseEvent):void
-//			{
-//				loadModule(event.module);
-//			}
-//			
-//			/**
-//			 *  加载模块。
-//			 */
-//			public function loadModule(s:String):void {
-//				// setting the url triggers the module to load
-//				currentModule.url = s;
-//				currentModule.loadModule();
-//			}
+			public function returnHomeModule(event:BaseEvent):void
+			{
+				loadModule(default_url);
+			}
+			public function EnterNewModule(event:BaseEvent):void
+			{
+				loadModule(event.module);
+			}
+			
+			/**
+			 *  加载模块。
+			 */
+			public function loadModule(s:String):void {
+				// setting the url triggers the module to load
+				currentModule.url = s;
+				currentModule.loadModule();
+			}
 			                 
 			private function logout_success_handle(event:ResultEvent):void  
 			{ 
@@ -72,7 +73,7 @@
 			{ 
 				account=event.result.name;
 				roles=event.result.roles;
-//				Alert.show(event.result.roles);
+				Alert.show(event.result.name);
 			} 
 			private function securityUserHolder_fault_handler(event:FaultEvent):void
 			{
@@ -85,5 +86,5 @@
 		]]>    
 	</fx:Script> 
 	<fx:Style source="home.css"/>
-	<mx:ModuleLoader id="currentModule" ready="readyModule(event);" url="{default_url}" width="100%"  height="100%" /> 
+	<mx:ModuleLoader id="currentModule" ready="readyModule(event);"  width="100%"  height="100%" /> 
 </s:Application>
