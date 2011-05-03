@@ -1,8 +1,7 @@
-package system.components.support;
+package system.components;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import system.components.SecurityManager;
 import system.entity.UserModel;
 import system.utils.CipherUtil;
 import system.utils.StringUtils;
@@ -29,17 +28,17 @@ public class SecurityUserHolder {
 	}
 	
 	public static boolean isSuperRootUser(String userName, String pwd){
-		boolean result = userName.equals(SecurityManager.superUserName);
+		boolean result = userName.equals(WlzxUserDetailsService.superUserName);
 		if(pwd != null && StringUtils.isNotEmpty(pwd)){
-			result = SecurityManager.superUserPwd.equals(CipherUtil.encodeByMD5(pwd));
+			result = WlzxUserDetailsService.superUserPwd.equals(CipherUtil.encodeByMD5(pwd));
 		}
 		return result;
 	}
 	
 	public static UserModel getSuperRootUserModel(){
 		UserModel superModel = new UserModel();
-		superModel.setName(SecurityManager.superUserName);
-		superModel.setPwd(SecurityManager.superUserPwd);
+		superModel.setName(WlzxUserDetailsService.superUserName);
+		superModel.setPwd(WlzxUserDetailsService.superUserPwd);
 		return superModel;
 	}
 }

@@ -1,30 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<!--
-  - Sample namespace-based configuration
-  -
-  -->
-
 <beans:beans xmlns="http://www.springframework.org/schema/security"
     xmlns:beans="http://www.springframework.org/schema/beans"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-                        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
- 	<debug /> 
-  	<global-method-security pre-post-annotations="enabled" /> 
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+           http://www.springframework.org/schema/security
+           http://www.springframework.org/schema/security/spring-security-3.1.xsd">
    <http pattern="/login.html" security="none" /> 
    <http pattern="/*.swf" security="none" /> 
    <http pattern="/*.js" security="none" /> 
    <http pattern="/*.css" security="none" /> 
-   <http auto-config="true" access-denied-page="/login.html" access-decision-manager-ref="accessDecisionManager">
-		<intercept-url pattern="/home.html" access="IS_AUTHENTICATED_FULLY"/>
-		<intercept-url pattern="/home.swf" access="IS_AUTHENTICATED_FULLY"/>		
-		<intercept-url pattern="/**/*.swf" access="IS_AUTHENTICATED_FULLY"/>	
+   <http auto-config="true" access-denied-page="/login.html" access-decision-manager-ref="wlzxAccessDecisionManagerBean">
+
 		<!-- 指定登陆页面、成功页面、失败页面-->
 		<form-login login-page="/login.html" default-target-url="/home.html"  always-use-default-target="true" login-processing-url="/j_spring_security_check" authentication-failure-url="/login.html" />
 		<!-- 尝试访问没有权限的页面时跳转的页面<access-denied-handler error-page="/home.html" /> -->
 		<!--使用记住用户名、密码功能，指定数据源和加密的key<remember-me data-source-ref="dataSource"/>-->
-		<remember-me  user-service-ref="securityManager"/>
+		<remember-me  user-service-ref="wlzxUserDetailsService"/>
 		<!-- logout页面，logout后清除session -->
 		<logout invalidate-session="true" logout-success-url="/login.html" />
 		 <!-- session-management是针对session的管理 
@@ -34,24 +26,35 @@
           -->  
          <session-management session-fixation-protection="none" invalid-session-url="/login.html">  
             <concurrency-control max-sessions="1" error-if-maximum-exceeded="false"/>
-         </session-management>  	
+         </session-management>
+          <!-- 增加一个filter，这点与Acegi是不一样的，不能修改默认的filter了，这个filter位于FILTER_SECURITY_INTERCEPTOR之前 -->
+        <custom-filter before="FILTER_SECURITY_INTERCEPTOR"  ref="wlzxFilter" />  	
 	</http>
-    <authentication-manager>
-       	<authentication-provider user-service-ref="securityManager">
-			<password-encoder hash="md5"/>
-		</authentication-provider>
+    <!-- 一个自定义的filter，必须包含authenticationManager,accessDecisionManager,securityMetadataSource三个属性，我们的所有控制将在这三个类中实现，解释详见具体配置 -->
+    <beans:bean id="wlzxFilter" class="system.components.WlzxFilterSecurityInterceptor">
+        <beans:property name="authenticationManager" ref="wlzxAuthenticationManager" />
+        <beans:property name="accessDecisionManager" ref="wlzxAccessDecisionManagerBean" />
+        <beans:property name="securityMetadataSource" ref="wlzxsecurityMetadataSource" />
+    </beans:bean>   
+    <!-- 认证管理器，实现用户认证的入口，主要实现UserDetailsService接口即可 -->
+    <authentication-manager alias="wlzxAuthenticationManager">
+        <authentication-provider user-service-ref="wlzxUserDetailsService">
+            <!--   如果用户的密码采用加密的话，可以加点“盐” -->
+            <password-encoder hash="md5" />
+        </authentication-provider>
     </authentication-manager>
     
-    <beans:bean id="securityManager" class="system.components.support.SecurityManagerSupport">
+	<!-- 用户信息服务 -->
+	<beans:bean id="wlzxUserDetailsService" class="system.components.WlzxUserDetailsService">
 		<beans:property name="systemService" ref="systemServiceDest"/>
 	</beans:bean>
-	<beans:bean id="accessDecisionManager" class="org.springframework.security.access.vote.AffirmativeBased">
-		<beans:property name="allowIfAllAbstainDecisions" value="false"/>
-		<beans:property name="decisionVoters">
-			<beans:list>
-				<beans:bean class="org.springframework.security.access.vote.RoleVoter"/>
-				<beans:bean class="org.springframework.security.access.vote.AuthenticatedVoter"/>
-			</beans:list>
-		</beans:property>
-	</beans:bean>
+	
+    <!-- 访问决策器，决定某个用户具有的角色，是否有足够的权限去访问某个资源 -->
+    <beans:bean id="wlzxAccessDecisionManagerBean"  class="system.components.WlzxAccessDecisionManager"/>
+    
+    <!-- 资源源数据定义，即定义某一资源可以被哪些角色访问 -->
+    <beans:bean id="wlzxsecurityMetadataSource"  class="system.components.WlzxInvocationSecurityMetadataSource" />
+    
+
+	
 </beans:beans>
