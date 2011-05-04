@@ -194,7 +194,7 @@ public class InitService {
 								departmentAuthorizationMainModuleSearch=new OperationModel();
 								departmentAuthorizationMainModuleSearch.setName("访问");
 								departmentAuthorizationMainModuleSearch.setRsType("URL");
-								departmentAuthorizationMainModuleSearch.setRsValue("basic/authorization/departmentAuthorization.swf");
+								departmentAuthorizationMainModuleSearch.setRsValue("/basic/authorization/departmentAuthorization.swf*");
 								departmentAuthorizationMainModuleSearch.setSymbol("basic_authorization_department_main_search");
 								departmentAuthorizationMainModuleSearch.setCreationDate(new Date());
 								departmentAuthorizationMainModuleSearch.setModifiedDate(new Date());
