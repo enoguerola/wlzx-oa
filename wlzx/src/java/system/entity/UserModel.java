@@ -5,10 +5,12 @@ package system.entity;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 
@@ -92,8 +94,13 @@ public class UserModel  extends BaseModel implements UserDetails{
 	//用户拥有的权限
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		// TODO Auto-generated method stub
-		return null;
+		Set<GrantedAuthority> authSet = new HashSet<GrantedAuthority>();  
+        Set<RoleModel> roles = this.getRoles();  
+          
+        for(RoleModel role : roles) {  
+        	authSet.add(new SimpleGrantedAuthority(role.getSymbol())); 
+        }  
+        return authSet;  
 	}
 	//用户名
 	@Override

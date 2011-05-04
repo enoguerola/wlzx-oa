@@ -188,12 +188,13 @@ public class InitService {
 							departmentAuthorizationMainModule.setModifiedDate(new Date());
 							departmentAuthorizationMainModule.setUrl("basic/authorization/departmentAuthorization.swf");
 							departmentAuthorization.getModules().add(departmentAuthorizationMainModule);
-							//部门授权主模块查询操作
+							//部门授权主模块访问操作
 							OperationModel departmentAuthorizationMainModuleSearch=operationDAO.getOperationBySymbol("basic_authorization_department_main_search");
 							if(departmentAuthorizationMainModuleSearch==null){
 								departmentAuthorizationMainModuleSearch=new OperationModel();
-								departmentAuthorizationMainModuleSearch.setName("查询");
-								departmentAuthorizationMainModuleSearch.setUrl("");
+								departmentAuthorizationMainModuleSearch.setName("访问");
+								departmentAuthorizationMainModuleSearch.setRsType("URL");
+								departmentAuthorizationMainModuleSearch.setRsValue("basic/authorization/departmentAuthorization.swf");
 								departmentAuthorizationMainModuleSearch.setSymbol("basic_authorization_department_main_search");
 								departmentAuthorizationMainModuleSearch.setCreationDate(new Date());
 								departmentAuthorizationMainModuleSearch.setModifiedDate(new Date());
@@ -220,11 +221,11 @@ public class InitService {
 							if(departmentAuthorizationMainModuleEdit==null){
 								departmentAuthorizationMainModuleEdit=new OperationModel();
 								departmentAuthorizationMainModuleEdit.setName("编辑");
-								departmentAuthorizationMainModuleEdit.setUrl("");
+								departmentAuthorizationMainModuleEdit.setRsType("METHOD");
+								departmentAuthorizationMainModuleEdit.setRsValue("departmentAuthorizationSave");
 								departmentAuthorizationMainModuleEdit.setSymbol("basic_authorization_department_main_edit");
 								departmentAuthorizationMainModuleEdit.setCreationDate(new Date());
 								departmentAuthorizationMainModuleEdit.setModifiedDate(new Date());
-								departmentAuthorizationMainModuleEdit.setUrl("");
 								departmentAuthorizationMainModule.getOperations().add(departmentAuthorizationMainModuleEdit);
 								//部门授权主模块编辑操作数据访问控制
 								DataAccessModeModel departmentAuthorizationMainModuleEditDataDefaultFilter=dataAccessModeDAO.getDataAccessModeBySymbol("basic_authorization_department_main_edit_deafultFilter");

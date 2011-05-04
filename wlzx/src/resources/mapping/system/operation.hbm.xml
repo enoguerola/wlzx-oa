@@ -20,8 +20,11 @@
 		<property name="detail" type="string">
 			<column name="detail" />
 		</property>
-		<property name="url" type="string">
-			<column name="url" />
+		<property name="rsType" type="string">
+			<column name="rs_type" />
+		</property>
+		<property name="rsValue" type="string" unique="true">
+			<column name="rs_value" />
 		</property>
 		<property name="creationDate" type="java.util.Date">
 			<column name="creation_date" />

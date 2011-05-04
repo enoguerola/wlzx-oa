@@ -1,10 +1,10 @@
 package system.components;
 
 
-
 import org.apache.log4j.Logger;
-import system.service.SystemService;
 
+import system.entity.UserModel;
+import system.service.SystemService;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -21,19 +21,35 @@ public class WlzxUserDetailsService implements UserDetailsService{
 	
 	public UserDetails loadUserByUsername(String userAccount)
 			throws UsernameNotFoundException, DataAccessException {
-		String userName = userAccount.toUpperCase();
-		return SecurityUserHolder.isSuperRootUser(userName) ? 
-				SecurityUserHolder.getSuperRootUserModel() : systemService.getUserByUserAccount(userName);
+	            UserModel userModel = systemService.getUserByUserAccount(userAccount);  
+	            if (userModel ==null){  
+	                String message = "用户"+userAccount+"不存在";  
+	                logger.error(message);  
+	                throw new UsernameNotFoundException(message);  
+	            }  
+	            else if(SecurityUserHolder.isSuperRootUser(userAccount))
+	            	return SecurityUserHolder.getSuperRootUserModel();
+	            else return userModel;
 	}
-	
-//	public Map<String, String> loadUrlAuthorities() {
-////		try {
-////			return resourceService.getResourceAuthorities();
-////		} catch (ServiceException e) {
-////			logger.error("SecurityManagerSupport loadUrlAuthorities: " + e.getMessage());
-////		}
-//		return null;
-//	}
+//	
+//	    //取得用户的权限  
+//	    @SuppressWarnings("unused")
+//		private Set<GrantedAuthority> obtionGrantedAuthorities(UserModel user) {  
+//	        Set<GrantedAuthority> authSet = new HashSet<GrantedAuthority>();  
+//	        List<DataAccessModeModel> resources = new ArrayList<DataAccessModeModel>();  
+//	        Set<RoleModel> roles = user.getRoles();  
+//	          
+//	        for(RoleModel role : roles) {  
+//	            Set<DataAccessModeModel> tempRes = role.getDataAccessModes();  
+//	            for(DataAccessModeModel res : tempRes) {  
+//	                resources.add(res);  
+//	            }  
+//	        }  
+//	        for(DataAccessModeModel res : resources) {  
+//	            authSet.add(new SimpleGrantedAuthority(res.getSymbol()));  
+//	        }  
+//	        return authSet;  
+//	    }  
 	
 	public static Logger getLogger() {
 		return logger;

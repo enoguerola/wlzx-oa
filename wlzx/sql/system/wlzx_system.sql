@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2011 年 04 月 29 日 16:15
+-- 生成日期: 2011 年 05 月 03 日 17:08
 -- 服务器版本: 5.0.91
 -- PHP 版本: 5.2.13
 
@@ -44,9 +44,9 @@ CREATE TABLE IF NOT EXISTS `wlzx_system` (
 --
 
 INSERT INTO `wlzx_system` (`id`, `symbol`, `sequence`, `name`, `detail`, `index_path`, `system_icon`, `creation_date`, `modified_date`) VALUES
-(1, 'root', 0, '温岭数字化校园系列', '数字化校园信息平台是以学校现有网络为基础，以服务于全校师生的教学、科研、生活为目的，建立在学校数据中心平台之上，涵盖了学校的信息化标准管理、学校管理、学生管理、教学管理、教职工管理、科研管理、财务管理、资产与设备管理、行政办公管理、数字图书资料管理等全方位的管理信息平台与信息服务平台。', 'system/index.swf', NULL, '2011-04-28 16:21:45', '2011-04-28 16:21:45'),
-(2, 'basic', 0, '基础数据系统', '基础数据系统是数字化校园所有业务应用系统的公共数据库，处于中心位置，基础数据库保持最完整、最准确的数据，提供其他业务系统使用。基础数据库管理系统实现对基础数据库所有信息库的维护管理。', 'basic/index.swf', NULL, '2011-04-28 16:21:45', '2011-04-28 16:21:45'),
-(3, 'oa', 0, '办公自动化系统', '办公自动化系统以公文流转为核心，实现办公流程的快速高效；同时提供多种部门间的信息交流的手段和渠道，加强部门间的沟通协作；提供信息共享的平台，实现公共资源的共享；提供辅助办公功能，为每一项业务提供相关信息，促进学校办公的成熟和规范化；提供强大的搜索查询功能，便于用户在日积月累的海量信息中快速的查找需要的内容', 'oa/index.swf', NULL, '2011-04-28 16:21:45', '2011-04-28 16:21:45');
+(1, 'root', 0, '温岭数字化校园系列', '数字化校园信息平台是以学校现有网络为基础，以服务于全校师生的教学、科研、生活为目的，建立在学校数据中心平台之上，涵盖了学校的信息化标准管理、学校管理、学生管理、教学管理、教职工管理、科研管理、财务管理、资产与设备管理、行政办公管理、数字图书资料管理等全方位的管理信息平台与信息服务平台。', 'system/index.swf', NULL, '2011-05-03 17:07:40', '2011-05-03 17:07:40'),
+(2, 'basic', 0, '基础数据系统', '基础数据系统是数字化校园所有业务应用系统的公共数据库，处于中心位置，基础数据库保持最完整、最准确的数据，提供其他业务系统使用。基础数据库管理系统实现对基础数据库所有信息库的维护管理。', 'basic/index.swf', NULL, '2011-05-03 17:07:40', '2011-05-03 17:07:40'),
+(3, 'oa', 0, '办公自动化系统', '办公自动化系统以公文流转为核心，实现办公流程的快速高效；同时提供多种部门间的信息交流的手段和渠道，加强部门间的沟通协作；提供信息共享的平台，实现公共资源的共享；提供辅助办公功能，为每一项业务提供相关信息，促进学校办公的成熟和规范化；提供强大的搜索查询功能，便于用户在日积月累的海量信息中快速的查找需要的内容', 'oa/index.swf', NULL, '2011-05-03 17:07:40', '2011-05-03 17:07:40');
 
 -- --------------------------------------------------------
 
@@ -72,8 +72,8 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_data_access_mode` (
 --
 
 INSERT INTO `wlzx_system_data_access_mode` (`id`, `name`, `symbol`, `sequence`, `value`, `detail`, `creation_date`, `modified_date`) VALUES
-(1, '全部', 'basic_authorization_department_main_edit_deafultFilter', 0, 'NULL', NULL, '2011-04-28 16:21:45', '2011-04-28 16:21:45'),
-(2, '全部', 'basic_authorization_department_main_search_deafultFilter', 0, 'NULL', NULL, '2011-04-28 16:21:45', '2011-04-28 16:21:45');
+(1, '全部', 'basic_authorization_department_main_edit_deafultFilter', 0, 'NULL', NULL, '2011-05-03 17:07:40', '2011-05-03 17:07:40'),
+(2, '全部', 'basic_authorization_department_main_search_deafultFilter', 0, 'NULL', NULL, '2011-05-03 17:07:40', '2011-05-03 17:07:40');
 
 -- --------------------------------------------------------
 
@@ -98,7 +98,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_department` (
 --
 
 INSERT INTO `wlzx_system_department` (`id`, `name`, `symbol`, `sequence`, `detail`, `creation_date`, `modified_date`) VALUES
-(1, '温岭中学', 'root', 0, NULL, '2011-04-28 16:21:48', '2011-04-28 16:21:48');
+(1, '温岭中学', 'root', 0, NULL, '2011-05-03 17:07:42', '2011-05-03 17:07:42');
 
 -- --------------------------------------------------------
 
@@ -180,25 +180,25 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_menu` (
 --
 
 INSERT INTO `wlzx_system_menu` (`id`, `name`, `symbol`, `sequence`, `detail`, `menu_icon`, `creation_date`, `modified_date`) VALUES
-(1, '系统授权', 'basic_authorization', 0, NULL, NULL, '2011-04-28 16:21:45', '2011-04-28 16:21:45'),
-(2, '部门授权', 'basic_authorization_department', 0, NULL, NULL, '2011-04-28 16:21:45', '2011-04-28 16:21:45'),
-(3, '岗位授权', 'basic_authorization_role', 0, NULL, NULL, '2011-04-28 16:21:45', '2011-04-29 16:12:51'),
-(4, '基础数据', 'basic_data', 0, NULL, NULL, '2011-04-28 16:21:45', '2011-04-28 16:21:45'),
-(5, '员工基础数据', 'basic_data_staff', 0, NULL, NULL, '2011-04-28 16:21:45', '2011-04-28 16:21:45'),
-(6, '系统设置', 'basic_setting', 0, NULL, NULL, '2011-04-28 16:21:45', '2011-04-28 16:21:45'),
-(7, '部门设置', 'basic_setting_department', 0, NULL, NULL, '2011-04-28 16:21:45', '2011-04-28 16:21:45'),
-(8, '岗位设置', 'basic_setting_role', 0, NULL, NULL, '2011-04-28 16:21:45', '2011-04-28 16:21:45'),
-(9, '内部事务管理', 'oa_inside_affair', 0, NULL, NULL, '2011-04-28 16:21:45', '2011-04-28 16:21:45'),
-(10, '公文管理', 'oa_official_document', 0, NULL, NULL, '2011-04-28 16:21:45', '2011-04-28 16:21:45'),
-(11, '公共事务管理', 'oa_public_affair', 0, NULL, NULL, '2011-04-28 16:21:45', '2011-04-28 16:21:45'),
-(12, '公告管理', 'notice_manage', 0, NULL, NULL, '2011-04-28 16:21:45', '2011-04-28 16:21:45'),
-(13, '公告管理', 'notice_list', 0, NULL, NULL, '2011-04-28 16:21:45', '2011-04-28 16:21:45'),
-(14, '公告发布', 'notice_post', 0, NULL, NULL, '2011-04-28 16:21:45', '2011-04-28 16:21:45'),
-(15, '公告签批', 'notice_sign', 0, NULL, NULL, '2011-04-28 16:21:45', '2011-04-28 16:21:45'),
-(16, '日程管理', 'scheduleManage', 0, NULL, NULL, '2011-04-28 16:21:45', '2011-04-28 16:21:45'),
-(17, '学校管理', 'oa_school_affair', 0, NULL, NULL, '2011-04-28 16:21:45', '2011-04-28 16:21:45'),
-(18, '系统管理', 'oa_system_management', 0, NULL, NULL, '2011-04-28 16:21:45', '2011-04-28 16:21:45'),
-(19, '部门与岗位', 'oa_school_affair_department_role', 0, NULL, NULL, '2011-04-28 16:21:45', '2011-04-28 16:21:45');
+(1, '系统授权', 'basic_authorization', 0, NULL, NULL, '2011-05-03 17:07:40', '2011-05-03 17:07:40'),
+(2, '部门授权', 'basic_authorization_department', 0, NULL, NULL, '2011-05-03 17:07:40', '2011-05-03 17:07:40'),
+(3, '岗位授权', 'basic_authorization_role', 0, NULL, NULL, '2011-05-03 17:07:40', '2011-05-03 17:07:40'),
+(4, '基础数据', 'basic_data', 0, NULL, NULL, '2011-05-03 17:07:40', '2011-05-03 17:07:40'),
+(5, '员工基础数据', 'basic_data_staff', 0, NULL, NULL, '2011-05-03 17:07:40', '2011-05-03 17:07:40'),
+(6, '系统设置', 'basic_setting', 0, NULL, NULL, '2011-05-03 17:07:40', '2011-05-03 17:07:40'),
+(7, '部门设置', 'basic_setting_department', 0, NULL, NULL, '2011-05-03 17:07:40', '2011-05-03 17:07:40'),
+(8, '岗位设置', 'basic_setting_role', 0, NULL, NULL, '2011-05-03 17:07:40', '2011-05-03 17:07:40'),
+(9, '内部事务管理', 'oa_inside_affair', 0, NULL, NULL, '2011-05-03 17:07:40', '2011-05-03 17:07:40'),
+(10, '公文管理', 'oa_official_document', 0, NULL, NULL, '2011-05-03 17:07:40', '2011-05-03 17:07:40'),
+(11, '公共事务管理', 'oa_public_affair', 0, NULL, NULL, '2011-05-03 17:07:40', '2011-05-03 17:07:40'),
+(12, '公告管理', 'notice_manage', 0, NULL, NULL, '2011-05-03 17:07:40', '2011-05-03 17:07:40'),
+(13, '公告管理', 'notice_list', 0, NULL, NULL, '2011-05-03 17:07:40', '2011-05-03 17:07:40'),
+(14, '公告发布', 'notice_post', 0, NULL, NULL, '2011-05-03 17:07:40', '2011-05-03 17:07:40'),
+(15, '公告签批', 'notice_sign', 0, NULL, NULL, '2011-05-03 17:07:40', '2011-05-03 17:07:40'),
+(16, '日程管理', 'scheduleManage', 0, NULL, NULL, '2011-05-03 17:07:40', '2011-05-03 17:07:40'),
+(17, '学校管理', 'oa_school_affair', 0, NULL, NULL, '2011-05-03 17:07:40', '2011-05-03 17:07:40'),
+(18, '系统管理', 'oa_system_management', 0, NULL, NULL, '2011-05-03 17:07:40', '2011-05-03 17:07:40'),
+(19, '部门与岗位', 'oa_school_affair_department_role', 0, NULL, NULL, '2011-05-03 17:07:41', '2011-05-03 17:07:41');
 
 -- --------------------------------------------------------
 
@@ -308,10 +308,10 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_module` (
 --
 
 INSERT INTO `wlzx_system_module` (`id`, `name`, `symbol`, `sequence`, `detail`, `creation_date`, `modified_date`, `url`) VALUES
-(1, '部门授权主模块', 'basic_authorization_department_main', 0, NULL, '2011-04-28 16:21:45', '2011-04-28 16:21:45', 'basic/authorization/departmentAuthorization.swf'),
-(2, '岗位授权主模块', 'basic_authorization_role_main', 0, NULL, '2011-04-28 16:21:45', '2011-04-28 16:21:45', 'basic/authorization/roleAuthorization.swf'),
-(3, '部门设置主模块', 'basic_setting_department_main', 0, NULL, '2011-04-28 16:21:45', '2011-04-28 16:21:45', 'basic/setting/departmentSetting.swf'),
-(4, '岗位设置主模块', 'basic_setting_role_main', 0, NULL, '2011-04-28 16:21:45', '2011-04-28 16:21:45', 'basic/setting/roleSetting.swf');
+(1, '部门授权主模块', 'basic_authorization_department_main', 0, NULL, '2011-05-03 17:07:40', '2011-05-03 17:07:40', 'basic/authorization/departmentAuthorization.swf'),
+(2, '岗位授权主模块', 'basic_authorization_role_main', 0, NULL, '2011-05-03 17:07:40', '2011-05-03 17:07:40', 'basic/authorization/roleAuthorization.swf'),
+(3, '部门设置主模块', 'basic_setting_department_main', 0, NULL, '2011-05-03 17:07:40', '2011-05-03 17:07:40', 'basic/setting/departmentSetting.swf'),
+(4, '岗位设置主模块', 'basic_setting_role_main', 0, NULL, '2011-05-03 17:07:40', '2011-05-03 17:07:40', 'basic/setting/roleSetting.swf');
 
 -- --------------------------------------------------------
 
@@ -363,21 +363,23 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_operation` (
   `name` varchar(100) NOT NULL,
   `symbol` varchar(100) NOT NULL,
   `sequence` bigint(20) default '0',
+  `rs_type` varchar(100) NOT NULL,
+  `rs_value` varchar(200) NOT NULL,
   `detail` text,
-  `url` varchar(500) NOT NULL,
   `creation_date` datetime NOT NULL,
   `modified_date` timestamp NOT NULL default '0000-00-00 00:00:00' on update CURRENT_TIMESTAMP,
   PRIMARY KEY  (`id`),
-  UNIQUE KEY `symbol` (`symbol`)
+  UNIQUE KEY `symbol` (`symbol`),
+  UNIQUE KEY `method` (`rs_value`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
 --
 -- 转存表中的数据 `wlzx_system_operation`
 --
 
-INSERT INTO `wlzx_system_operation` (`id`, `name`, `symbol`, `sequence`, `detail`, `url`, `creation_date`, `modified_date`) VALUES
-(1, '编辑', 'basic_authorization_department_main_edit', 0, NULL, '', '2011-04-28 16:21:45', '2011-04-28 16:21:45'),
-(2, '查询', 'basic_authorization_department_main_search', 0, NULL, '', '2011-04-28 16:21:45', '2011-04-28 16:21:45');
+INSERT INTO `wlzx_system_operation` (`id`, `name`, `symbol`, `sequence`, `rs_type`, `rs_value`, `detail`, `creation_date`, `modified_date`) VALUES
+(1, '编辑', 'basic_authorization_department_main_edit', 0, 'METHOD', 'departmentAuthorizationSave', NULL, '2011-05-03 17:07:40', '2011-05-03 17:07:40'),
+(2, '访问', 'basic_authorization_department_main_search', 0, 'URL', 'basic/authorization/departmentAuthorization.swf', NULL, '2011-05-03 17:07:40', '2011-05-03 17:07:40');
 
 -- --------------------------------------------------------
 
@@ -424,7 +426,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_role` (
 --
 
 INSERT INTO `wlzx_system_role` (`id`, `symbol`, `sequence`, `name`, `detail`, `creation_date`, `modified_date`, `supervisor_flag`) VALUES
-(1, 'root_supervisor', 0, '温岭中学校长', NULL, '2011-04-28 16:21:48', '2011-04-28 16:21:48', 1);
+(1, 'root_supervisor', 0, '温岭中学校长', NULL, '2011-05-03 17:07:42', '2011-05-03 17:07:42', 1);
 
 -- --------------------------------------------------------
 
