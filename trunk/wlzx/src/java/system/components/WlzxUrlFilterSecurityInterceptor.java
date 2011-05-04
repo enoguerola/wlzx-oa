@@ -12,12 +12,11 @@ import org.springframework.security.access.SecurityMetadataSource;
 import org.springframework.security.access.intercept.AbstractSecurityInterceptor;
 import org.springframework.security.access.intercept.InterceptorStatusToken;
 import org.springframework.security.web.FilterInvocation;
-import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 
-public class WlzxFilterSecurityInterceptor extends AbstractSecurityInterceptor
+public class WlzxUrlFilterSecurityInterceptor extends AbstractSecurityInterceptor
         implements Filter {
 
-    private FilterInvocationSecurityMetadataSource securityMetadataSource;
+    private SecurityMetadataSource securityMetadataSource;
 
     // ~ Methods
     // ========================================================================================================
@@ -44,7 +43,7 @@ public class WlzxFilterSecurityInterceptor extends AbstractSecurityInterceptor
         invoke(fi);
     }
 
-    public FilterInvocationSecurityMetadataSource getSecurityMetadataSource() {
+    public SecurityMetadataSource getSecurityMetadataSource() {
         return this.securityMetadataSource;
     }
 
@@ -67,7 +66,7 @@ public class WlzxFilterSecurityInterceptor extends AbstractSecurityInterceptor
     }
 
     public void setSecurityMetadataSource(
-            FilterInvocationSecurityMetadataSource newSource) {
+            SecurityMetadataSource newSource) {
         this.securityMetadataSource = newSource;
     }
 
