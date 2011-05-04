@@ -70,4 +70,11 @@ public class DataAccessModeDAO extends BaseDAOImpl<DataAccessModeModel> {
 		}
 		return null;
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<DataAccessModeModel> getAllResources() {
+		DetachedCriteria criteria = DetachedCriteria.forClass(DataAccessModeModel.class);
+		List<DataAccessModeModel> result = this.getListByCriteria(criteria);
+		return result;
+	}
 }

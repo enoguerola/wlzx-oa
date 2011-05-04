@@ -53,7 +53,10 @@
     <beans:bean id="wlzxAccessDecisionManagerBean"  class="system.components.WlzxAccessDecisionManager"/>
     
     <!-- 资源源数据定义，即定义某一资源可以被哪些角色访问 -->
-    <beans:bean id="wlzxsecurityMetadataSource"  class="system.components.WlzxInvocationSecurityMetadataSource" />
+    <beans:bean id="wlzxsecurityMetadataSource"  class="system.components.WlzxInvocationSecurityMetadataSource"  init-method="loadResourceDefine">
+     	<beans:property name="resourcesDao" ref="dataAccessModeDAO" />
+     	<beans:property name="roleDao" ref="roleDAO" />
+    </beans:bean>
     
 
 	

@@ -23,17 +23,13 @@ import java.util.TreeSet;
  */
 
 public class OperationModel extends BaseModel{
-	private String url;
+	private String rsValue;
+	private String rsType;
 	private String detail;
 	private Set<ModuleModel> modules=new TreeSet<ModuleModel>();//操作所属模块集
 	private Set<DataAccessModeModel> dataAccessModes=new TreeSet<DataAccessModeModel>();//操作数据访问方式集
 
-	public String getUrl() {
-		return url;
-	}
-	public void setUrl(String url) {
-		this.url = url;
-	}
+
 	public String getDetail() {
 		return detail;
 	}
@@ -60,6 +56,18 @@ public class OperationModel extends BaseModel{
 		if(getModules().iterator()!=null)
 			return getModules().iterator().next();
 		else return null;
+	}
+	public String getRsValue() {
+		return rsValue;
+	}
+	public void setRsValue(String rsValue) {
+		this.rsValue = rsValue;
+	}
+	public String getRsType() {
+		return rsType;
+	}
+	public void setRsType(String rsType) {
+		this.rsType = rsType;
 	}
 	
 }

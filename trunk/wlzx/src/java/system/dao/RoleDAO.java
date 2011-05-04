@@ -90,4 +90,11 @@ public class RoleDAO extends BaseDAOImpl<RoleModel> {
 		}
 		return null;
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<RoleModel> getAllRoles() {
+		DetachedCriteria criteria = DetachedCriteria.forClass(RoleModel.class);
+		List<RoleModel> result = this.getListByCriteria(criteria);
+		return result;
+	}
 }
