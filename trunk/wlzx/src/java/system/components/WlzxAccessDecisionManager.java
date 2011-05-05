@@ -20,7 +20,7 @@ public class WlzxAccessDecisionManager implements AccessDecisionManager {
 	        if (configAttributes == null) {  
 	            return;  
 	        }  
-            System.out.println("正在访问的url是："+object.toString());  
+            System.out.println("正在访问的资源是："+object.toString());  
 	        Iterator<ConfigAttribute> ite = configAttributes.iterator();  
 	        while (ite.hasNext()) {  
 	            ConfigAttribute ca = ite.next();  
@@ -29,8 +29,7 @@ public class WlzxAccessDecisionManager implements AccessDecisionManager {
 	            for (GrantedAuthority ga : authentication.getAuthorities()) {  
 	            	System.out.println("\t授权信息是："+ga.getAuthority());  
 	                if (needRole.equals(ga.getAuthority())) { // ga is user's role.  
-	                    	System.out.println("判断到，needRole 是"+needRole+",用户的角色是:"+ga.getAuthority()+"，授权数据相匹配");  
-	                    	System.out.println("decide(Authentication, Object, Collection<ConfigAttribute>) - end"); //$NON-NLS-1$  
+	                    	System.out.println("判断到，needRole是"+needRole+",用户拥有该角色"+ga.getAuthority()+"，授权数据相匹配");  
 	                    return;  
 	                }  
 	            }  

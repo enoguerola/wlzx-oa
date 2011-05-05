@@ -3,8 +3,8 @@ package system.components;
 
 import org.apache.log4j.Logger;
 
+import system.dao.UserDAO;
 import system.entity.UserModel;
-import system.service.SystemService;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -16,12 +16,12 @@ public class WlzxUserDetailsService implements UserDetailsService{
 	public static final String superUserRole = "ROLE_SUPER_ROOT";
 	private final static Logger logger = Logger.getLogger(WlzxUserDetailsService.class);
 	
-	private SystemService systemService;
+	private UserDAO userDao;
 
 	
 	public UserDetails loadUserByUsername(String userAccount)
 			throws UsernameNotFoundException, DataAccessException {
-	            UserModel userModel = systemService.getUserByUserAccount(userAccount);  
+	            UserModel userModel = userDao.getUserByUserAccount(userAccount);  
 	            if (userModel ==null){  
 	                String message = "用户"+userAccount+"不存在";  
 	                logger.error(message);  
@@ -55,13 +55,15 @@ public class WlzxUserDetailsService implements UserDetailsService{
 		return logger;
 	}
 
-	public SystemService getSystemService() {
-		return systemService;
+	public UserDAO getUserDao() {
+		return userDao;
 	}
 
-	public void setSystemService(SystemService systemService) {
-		this.systemService = systemService;
+	public void setUserDao(UserDAO userDao) {
+		this.userDao = userDao;
 	}
+
+
 
 
 
