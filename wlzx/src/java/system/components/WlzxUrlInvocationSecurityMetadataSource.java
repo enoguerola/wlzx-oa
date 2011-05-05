@@ -46,7 +46,7 @@ public class WlzxUrlInvocationSecurityMetadataSource
                 //把资源放入到spring security的resouceMap中  
                 for(DataAccessModeModel resource:resources){ 
                 	if(resource.getBelongOperation().getRsType().equals("URL")){
-	                	System.out.println("角色：["+role.getSymbol()+"]拥有的resource有："+resource.getBelongOperation().getRsValue());  
+	                	System.out.println("角色：["+role.getSymbol()+"]拥有的URL资源有："+resource.getBelongOperation().getRsValue());  
 	                    resourceMap.put(resource.getBelongOperation().getRsValue(), atts); 
                     }
                 }  
@@ -58,16 +58,12 @@ public class WlzxUrlInvocationSecurityMetadataSource
     @Override
     public Collection<ConfigAttribute> getAttributes(Object object)
             throws IllegalArgumentException {
-        // guess object is a URL.
-//    	 String url2 = object.toString();
-//    	 System.out.println(url2);
         String url = ((FilterInvocation)object).getRequestUrl();
+        System.out.println("访问URL:=" + url);
         Iterator<String> ite = resourceMap.keySet().iterator();
         while (ite.hasNext()) {
             String resURL = ite.next();
-//            System.out.println("	"+resURL);           
             if (urlMatcher.match(resURL,url )) {
-//            	System.out.println(resourceMap.get(resURL).size());
                 return resourceMap.get(resURL);
             }
         }

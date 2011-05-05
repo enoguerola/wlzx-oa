@@ -12,6 +12,8 @@
 	</fx:Declarations>
 	<fx:Script>
 		<![CDATA[
+			import cn.org.rapid_framework.flex_security.SecurityControler;
+
 			import basic.setting.popWin.DepartmentPopWin;
 			
 			import flexlib.controls.SuperTabBar;
@@ -30,6 +32,8 @@
 			private function init():void {
 				systemServiceRO.getSystemBySymbol("root");
 				systemServiceRO.getDepartmentBySymbol("root");
+				//增加需要权限保护的UI资源
+				SecurityControler.addSecurityAction(departmentSave);
 			}
 			
 			private function systemFaultHandler(event:FaultEvent):void {
@@ -223,7 +227,7 @@
 		<s:HGroup   verticalAlign="middle"  horizontalAlign="right" width="100%">
 			<s:Label text="部门选择" textAlign="center"  />
 			<s:DropDownList  width="200" id="departments" labelField="headerText"  selectedIndex="0" />
-			<s:Button label="保存"  width="50" />
+			<s:Button label="保存"  width="50" id="departmentSave"/>
 		</s:HGroup>	
 		<mx:TabNavigator id="systems" width="100%" height="100%">
 			

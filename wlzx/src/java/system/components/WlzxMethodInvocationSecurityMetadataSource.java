@@ -4,14 +4,15 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import org.springframework.aop.framework.ReflectiveMethodInvocation;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.access.method.MethodSecurityMetadataSource;
-import org.springframework.util.PathMatcher;
-import org.springframework.util.AntPathMatcher;
+
 
 import system.dao.DataAccessModeDAO;
 import system.dao.RoleDAO;
@@ -44,7 +45,7 @@ public class WlzxMethodInvocationSecurityMetadataSource
                 //把资源放入到spring security的resouceMap中  
                 for(DataAccessModeModel resource:resources){
                 	if(resource.getBelongOperation().getRsType().equals("METHOD")){
-	                	System.out.println("角色：["+role.getSymbol()+"]拥有的resource有："+resource.getBelongOperation().getRsValue());  
+	                	System.out.println("角色：["+role.getSymbol()+"]拥有的Method资源有："+resource.getBelongOperation().getRsValue());  
 	                    resourceMap.put(resource.getBelongOperation().getRsValue(), atts); 
                     }
                 }  
@@ -53,10 +54,18 @@ public class WlzxMethodInvocationSecurityMetadataSource
     }
 
 	@Override
-	public Collection<ConfigAttribute> getAttributes(Method method, Class<?> arg1) {
+	public Collection<ConfigAttribute> getAttributes(Method method, Class<?> targetClass) {
 		// TODO Auto-generated method stub
-		System.out.println(method.toString()+"2");
-		return null;
+		String class_method = targetClass.getName() + "." + method.getName();
+		System.out.println("调用method:=" + class_method);
+		 Iterator<String> ite = resourceMap.keySet().iterator();
+	        while (ite.hasNext()) {
+	            String resMethod = ite.next();
+	            if (resMethod.equals(class_method)) {
+	                return resourceMap.get(resMethod);
+	            }
+	        }
+	        return null;
 	}
 
 	@Override
@@ -65,12 +74,14 @@ public class WlzxMethodInvocationSecurityMetadataSource
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Collection<ConfigAttribute> getAttributes(Object object)
 			throws IllegalArgumentException {
 		// TODO Auto-generated method stub
-		  System.out.println(object.toString());
-		  return null;
+		Method method = ((ReflectiveMethodInvocation) object).getMethod();
+		Class targetClass = method.getDeclaringClass();
+		return getAttributes(method, targetClass);
 	}
 
 	@Override
@@ -93,13 +104,6 @@ public class WlzxMethodInvocationSecurityMetadataSource
 
 	public void setRoleDao(RoleDAO roleDao) {
 		this.roleDao = roleDao;
-	}
-	public static void main(String[] args){
-		String url1="/basic/authorization/departmentAuthorization.swf?uid=1304486667468";
-		String url2="/basic/authorization/departmentAuthorization.swf*";
-		PathMatcher urlMatcher = new AntPathMatcher();
-		System.out.println(urlMatcher.match(url2,url1));
-		 
 	}
 
 }
