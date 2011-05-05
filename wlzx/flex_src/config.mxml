@@ -1,0 +1,454 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="100%" creationComplete="init();">
+	<s:layout>
+		<s:VerticalLayout  horizontalAlign="center" verticalAlign="middle"/>
+	</s:layout>
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+		<!--定义 RemoteObject 组件-->
+		<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+			<mx:method name="getSystemBySymbol"  concurrency="last"  result="getSystemBySymbolResult(event);" />
+		</mx:RemoteObject>
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import cn.org.rapid_framework.flex_security.SecurityControler;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.rpc.events.*;
+			
+			import system.component.CommonUtils;
+			import system.entity.*;
+			[Bindable] 
+			
+			public var selectedNode:XML; 
+			private function init():void {
+				systemServiceRO.getSystemBySymbol("root");
+				//启动权限控制
+				SecurityControler.start(null,'enabled');
+				//增加需要权限保护的UI资源
+				SecurityControler.addSecurityAction(systemAdd);
+				SecurityControler.addSecurityAction(systemDelete);
+				SecurityControler.addSecurityAction(systemUpdate);
+				SecurityControler.addSecurityAction(systemUp);
+				SecurityControler.addSecurityAction(systemDown);
+				
+				SecurityControler.addSecurityAction(menuAdd);
+				SecurityControler.addSecurityAction(menuDelete);
+				SecurityControler.addSecurityAction(menuUpdate);
+				SecurityControler.addSecurityAction(menuUp);
+				SecurityControler.addSecurityAction(menuDown);
+				
+				SecurityControler.addSecurityAction(moduleAdd);
+				SecurityControler.addSecurityAction(moduleDelete);
+				SecurityControler.addSecurityAction(moduleUpdate);
+				SecurityControler.addSecurityAction(moduleUp);
+				SecurityControler.addSecurityAction(moduleDown);
+				
+				SecurityControler.addSecurityAction(operationAdd);
+				SecurityControler.addSecurityAction(operationDelete);
+				SecurityControler.addSecurityAction(operationUpdate);
+				SecurityControler.addSecurityAction(operationUp);
+				SecurityControler.addSecurityAction(operationDown);
+	
+				SecurityControler.addSecurityAction(damAdd);
+				SecurityControler.addSecurityAction(damDelete);
+				SecurityControler.addSecurityAction(damUpdate);
+				SecurityControler.addSecurityAction(damUp);
+				SecurityControler.addSecurityAction(damDown);
+				
+			}
+			private function systemFaultHandler(event:FaultEvent):void {
+				Alert.show(event.fault.faultString, 'Error');
+			}
+			private function getSystemBySymbolResult(event:ResultEvent):void {
+				var rootSystem:Object =event.result ;
+				var resultXML:String=buildSystems(rootSystem);
+				var menuData:XML=new XML(resultXML);
+				tree.dataProvider=menuData;
+	
+			}
+			public function clickItem(event:Event):void{ 
+				selectedNode=Tree(event.target).selectedItem as XML; 
+				var type:String=selectedNode.@type;
+				var id:String=selectedNode.@id;
+				var symbol:String=selectedNode.@symbol;
+//				Alert.show((type=='system').toString());
+				if(type=='system'){
+					SecurityControler.addPerm("systemAdd");
+					if(symbol=='root')SecurityControler.removePerm("systemDelete");
+					else SecurityControler.addPerm("systemDelete");
+					SecurityControler.addPerm("systemUpdate");
+					SecurityControler.addPerm("systemUp");
+					SecurityControler.addPerm("systemDown");
+					SecurityControler.addPerm("menuAdd");
+					SecurityControler.removePerm("menuDelete");
+					SecurityControler.removePerm("menuUpdate");
+					SecurityControler.removePerm("menuUp");
+					SecurityControler.removePerm("menuDown");
+					SecurityControler.removePerm("moduleAdd");
+					SecurityControler.removePerm("moduleDelete");
+					SecurityControler.removePerm("moduleUpdate");
+					SecurityControler.removePerm("moduleUp");
+					SecurityControler.removePerm("moduleDown");
+					SecurityControler.removePerm("operationAdd");
+					SecurityControler.removePerm("operationDelete");
+					SecurityControler.removePerm("operationUpdate");
+					SecurityControler.removePerm("operationUp");
+					SecurityControler.removePerm("operationDown");
+					SecurityControler.removePerm("damAdd");
+					SecurityControler.removePerm("damDelete");
+					SecurityControler.removePerm("damUpdate");
+					SecurityControler.removePerm("damUp");
+					SecurityControler.removePerm("damDown");
+				}else if(type=='menu'){
+					SecurityControler.removePerm("systemAdd");
+					SecurityControler.removePerm("systemDelete");
+					SecurityControler.removePerm("systemUpdate");
+					SecurityControler.removePerm("systemUp");
+					SecurityControler.removePerm("systemDown");
+					SecurityControler.addPerm("menuAdd");
+					SecurityControler.addPerm("menuDelete");
+					SecurityControler.addPerm("menuUpdate");
+					SecurityControler.addPerm("menuUp");
+					SecurityControler.addPerm("menuDown");
+					SecurityControler.addPerm("moduleAdd");
+					SecurityControler.removePerm("moduleDelete");
+					SecurityControler.removePerm("moduleUpdate");
+					SecurityControler.removePerm("moduleUp");
+					SecurityControler.removePerm("moduleDown");
+					SecurityControler.removePerm("operationAdd");
+					SecurityControler.removePerm("operationDelete");
+					SecurityControler.removePerm("operationUpdate");
+					SecurityControler.removePerm("operationUp");
+					SecurityControler.removePerm("operationDown");
+					SecurityControler.removePerm("damAdd");
+					SecurityControler.removePerm("damDelete");
+					SecurityControler.removePerm("damUpdate");
+					SecurityControler.removePerm("damUp");
+					SecurityControler.removePerm("damDown");
+				}else if(type=='module'){
+					SecurityControler.removePerm("systemAdd");
+					SecurityControler.removePerm("systemDelete");
+					SecurityControler.removePerm("systemUpdate");
+					SecurityControler.removePerm("systemUp");
+					SecurityControler.removePerm("systemDown");
+					SecurityControler.removePerm("menuAdd");
+					SecurityControler.removePerm("menuDelete");
+					SecurityControler.removePerm("menuUpdate");
+					SecurityControler.removePerm("menuUp");
+					SecurityControler.removePerm("menuDown");
+					SecurityControler.addPerm("moduleAdd");
+					SecurityControler.addPerm("moduleDelete");
+					SecurityControler.addPerm("moduleUpdate");
+					SecurityControler.addPerm("moduleUp");
+					SecurityControler.addPerm("moduleDown");
+					SecurityControler.addPerm("operationAdd");
+					SecurityControler.removePerm("operationDelete");
+					SecurityControler.removePerm("operationUpdate");
+					SecurityControler.removePerm("operationUp");
+					SecurityControler.removePerm("operationDown");
+					SecurityControler.removePerm("damAdd");
+					SecurityControler.removePerm("damDelete");
+					SecurityControler.removePerm("damUpdate");
+					SecurityControler.removePerm("damUp");
+					SecurityControler.removePerm("damDown");
+				}else if(type=='operation'){
+					SecurityControler.removePerm("systemAdd");
+					SecurityControler.removePerm("systemDelete");
+					SecurityControler.removePerm("systemUpdate");
+					SecurityControler.removePerm("systemUp");
+					SecurityControler.removePerm("systemDown");
+					SecurityControler.removePerm("menuAdd");
+					SecurityControler.removePerm("menuDelete");
+					SecurityControler.removePerm("menuUpdate");
+					SecurityControler.removePerm("menuUp");
+					SecurityControler.removePerm("menuDown");
+					SecurityControler.removePerm("moduleAdd");
+					SecurityControler.removePerm("moduleDelete");
+					SecurityControler.removePerm("moduleUpdate");
+					SecurityControler.removePerm("moduleUp");
+					SecurityControler.removePerm("moduleDown");
+					SecurityControler.addPerm("operationAdd");
+					SecurityControler.addPerm("operationDelete");
+					SecurityControler.addPerm("operationUpdate");
+					SecurityControler.addPerm("operationUp");
+					SecurityControler.addPerm("operationDown");
+					SecurityControler.addPerm("damAdd");
+					SecurityControler.removePerm("damDelete");
+					SecurityControler.removePerm("damUpdate");
+					SecurityControler.removePerm("damUp");
+					SecurityControler.removePerm("damDown");
+				}else if(type=='dam'){
+					SecurityControler.removePerm("systemAdd");
+					SecurityControler.removePerm("systemDelete");
+					SecurityControler.removePerm("systemUpdate");
+					SecurityControler.removePerm("systemUp");
+					SecurityControler.removePerm("systemDown");
+					SecurityControler.removePerm("menuAdd");
+					SecurityControler.removePerm("menuDelete");
+					SecurityControler.removePerm("menuUpdate");
+					SecurityControler.removePerm("menuUp");
+					SecurityControler.removePerm("menuDown");
+					SecurityControler.removePerm("moduleAdd");
+					SecurityControler.removePerm("moduleDelete");
+					SecurityControler.removePerm("moduleUpdate");
+					SecurityControler.removePerm("moduleUp");
+					SecurityControler.removePerm("moduleDown");
+					SecurityControler.removePerm("operationAdd");
+					SecurityControler.removePerm("operationDelete");
+					SecurityControler.removePerm("operationUpdate");
+					SecurityControler.removePerm("operationUp");
+					SecurityControler.removePerm("operationDown");
+					SecurityControler.removePerm("damAdd");
+					SecurityControler.addPerm("damDelete");
+					SecurityControler.addPerm("damUpdate");
+					SecurityControler.addPerm("damUp");
+					SecurityControler.addPerm("damDown");
+				}
+			} 
+			private function buildSystems(system:Object):String{
+				var resultXML:String="";
+				var systemList:ArrayCollection = ArrayCollection(system.children);
+				CommonUtils.sortBySequence(systemList);
+				if(systemList.length>0){
+					resultXML=resultXML.concat("<node type='system' label='"+system.name+"[系统]' symbol='"+system.symbol+"' id='"+system.id+"'>");
+					for (var i:int = 0; i < systemList.length; i++){
+						var _system:SystemModel = SystemModel(systemList.getItemAt(i));	
+						resultXML=resultXML.concat(buildSystems(_system));
+					}
+					resultXML=resultXML.concat("</node>");
+				}		
+				else{ 
+					
+					resultXML=resultXML.concat("<node type='system'  label='"+system.name+"[系统]' symbol='"+system.symbol+"' id='"+system.id+"'>");
+					var s:SystemModel=system as SystemModel;
+					var menuList:ArrayCollection = ArrayCollection(s.menus);
+					CommonUtils.sortBySequence(menuList);
+					for (var j:int = 0; j < menuList.length; j++){
+						var _menu:Object =menuList.getItemAt(j);	
+						resultXML=resultXML.concat(buildMenus(_menu));
+					}
+					resultXML=resultXML.concat("</node>");
+				
+				}			
+				
+				return resultXML;
+			}
+			private function buildMenus(menu:Object):String{
+				var resultXML:String="";
+				var menuList:ArrayCollection = ArrayCollection(menu.children);
+				CommonUtils.sortBySequence(menuList);
+				if(menuList.length>0){
+					resultXML=resultXML.concat("<node type='menu' label='"+menu.name+"[菜单]'  symbol='"+menu.symbol+"' id='"+menu.id+"'>");
+					for (var i:int = 0; i < menuList.length; i++){
+						var _menu:Object = menuList.getItemAt(i);	
+						resultXML=resultXML.concat(buildMenus(_menu));
+					}
+					resultXML=resultXML.concat("</node>");
+				}		
+				else{
+					resultXML=resultXML.concat("<node type='menu' label='"+menu.name+"[菜单]'  symbol='"+menu.symbol+"' id='"+menu.id+"'>");
+					var m:MenuModel=menu as MenuModel;
+					var moduleList:ArrayCollection = ArrayCollection(m.modules);
+					CommonUtils.sortBySequence(moduleList);
+					for (var j:int = 0; j < moduleList.length; j++){
+						var _module:Object =moduleList.getItemAt(j);	
+						resultXML=resultXML.concat(buildModules(_module));
+					}
+					resultXML=resultXML.concat("</node>");
+				
+				}			
+				
+				return resultXML;
+			}
+			private function buildModules(module:Object):String{
+				var resultXML:String="";
+				var moduleList:ArrayCollection = ArrayCollection(module.children);
+				CommonUtils.sortBySequence(moduleList);
+				if(moduleList.length>0){
+					resultXML=resultXML.concat("<node type='module' label='"+module.name+"[模块]' symbol='"+module.symbol+"' id='"+module.id+"'>");
+					for (var i:int = 0; i < moduleList.length; i++){
+						var _module:Object = moduleList.getItemAt(i);	
+						resultXML=resultXML.concat(buildModules(_module));
+					}
+					resultXML=resultXML.concat("</node>");
+				}		
+				else{
+					resultXML=resultXML.concat("<node type='module' label='"+module.name+"[模块]' symbol='"+module.symbol+"' id='"+module.id+"'>");
+					var m:ModuleModel=module as ModuleModel;
+					var operationList:ArrayCollection = ArrayCollection(m.operations);
+					CommonUtils.sortBySequence(operationList);
+
+					for (var j:int = 0; j < operationList.length; j++){
+						var _operation:Object =operationList.getItemAt(j);	
+						resultXML=resultXML.concat(buildOperation(_operation));
+					}
+					resultXML=resultXML.concat("</node>");
+					
+				}			
+				
+				return resultXML;
+			}
+			private function buildOperation(operation:Object):String{
+				var resultXML:String="";
+
+				resultXML=resultXML.concat("<node type='operation' label='"+operation.name+"[操作]' symbol='"+operation.symbol+"' id='"+operation.id+"'>");
+				
+				var o:OperationModel=operation as OperationModel;
+				var damList:ArrayCollection = ArrayCollection(o.dataAccessModes);
+				CommonUtils.sortBySequence(damList);
+				for (var j:int = 0; j < damList.length; j++){
+					var _dam:Object =damList.getItemAt(j);	
+					resultXML=resultXML.concat(buildDam(_dam));
+				}
+				
+				resultXML=resultXML.concat("</node>");
+	
+				
+				return resultXML;
+			}
+			private function buildDam(dam:Object):String{
+				var resultXML:String="";
+				
+				resultXML=resultXML.concat("<node type='dam' label='"+dam.name+"[数据访问]'  symbol='"+dam.symbol+"' id='"+dam.id+"'>");
+				
+				resultXML=resultXML.concat("</node>");
+				
+				
+				return resultXML;
+			}
+			private function addSystem(event:Event):void{
+	
+			}
+			private function deleteSystem(event:Event):void{
+				
+			}
+			private function updateSystem(event:Event):void{
+				
+			}
+			private function upSystem(event:Event):void{
+				
+			}
+			private function downSystem(event:Event):void{
+				
+			}
+			
+			private function addMenu(event:Event):void{
+				
+			}
+			private function deleteMenu(event:Event):void{
+				
+			}
+			private function updateMenu(event:Event):void{
+				
+			}
+			private function upMenu(event:Event):void{
+				
+			}
+			private function downMenu(event:Event):void{
+				
+			}
+			private function addModule(event:Event):void{
+				
+			}
+			private function deleteModule(event:Event):void{
+				
+			}
+			private function updateModule(event:Event):void{
+				
+			}
+			private function upModule(event:Event):void{
+				
+			}
+			private function downModule(event:Event):void{
+				
+			}
+			private function addOperation(event:Event):void{
+				
+			}
+			private function deleteOperation(event:Event):void{
+				
+			}
+			private function updateOperation(event:Event):void{
+				
+			}
+			private function upOperation(event:Event):void{
+				
+			}
+			private function downOperation(event:Event):void{
+				
+			}
+			private function addDam(event:Event):void{
+				
+			}
+			private function deleteDam(event:Event):void{
+				
+			}
+			private function updateDam(event:Event):void{
+				
+			}
+			private function upDam(event:Event):void{
+				
+			}
+			private function downDam(event:Event):void{
+				
+			}
+		]]>
+	</fx:Script>
+	<s:Label text="开发人员配置页面" width="100%"  fontSize="15"  height="20"  textAlign="center" horizontalCenter="center" verticalAlign="middle"/>
+	<s:HGroup width="100%" height="150" verticalAlign="middle" horizontalAlign="left">
+		<s:VGroup  width="100%" height="100"  verticalAlign="middle">
+			<s:HGroup width="100%" height="20%" verticalAlign="middle">
+				<s:Label text="系统" width="60" textAlign="right"/>
+				<mx:Canvas   backgroundColor="#F9B808" width="50" height="100%"  />
+				<s:Button  label="添加" width="60" height="100%" id="systemAdd" click="addSystem(event);"/>
+				<s:Button  label="删除" width="60" height="100%" id="systemDelete" click="deleteSystem(event);"/>
+				<s:Button  label="编辑" width="60" height="100%" id="systemUpdate" click="updateSystem(event);"/>
+				<s:Button  label="上移" width="60" height="100%" id="systemUp" click="upSystem(event);"/>
+				<s:Button  label="下移" width="60" height="100%" id="systemDown" click="downSystem(event);"/>
+			</s:HGroup>
+			<s:HGroup width="100%" height="20%" verticalAlign="middle">
+				<s:Label text="菜单" width="60" textAlign="right"/>
+				<mx:Canvas   backgroundColor="#E27AD0" width="50" height="100%"/>
+				<s:Button  label="添加" width="60" height="100%" id="menuAdd" click="addMenu(event);"/>
+				<s:Button  label="删除" width="60" height="100%" id="menuDelete" click="deleteMenu(event);"/>
+				<s:Button  label="编辑" width="60" height="100%" id="menuUpdate" click="updateMenu(event);"/>
+				<s:Button  label="上移" width="60" height="100%" id="menuUp" click="upMenu(event);"/>
+				<s:Button  label="下移" width="60" height="100%" id="menuDown" click="downMenu(event);"/>
+			</s:HGroup>
+			<s:HGroup width="100%" height="20%" verticalAlign="middle">
+				<s:Label text="模块" width="60" textAlign="right"/>
+				<mx:Canvas   backgroundColor="#93B6FC" width="50" height="100%"  />
+				<s:Button  label="添加" width="60" height="100%" id="moduleAdd" click="addModule(event);"/>
+				<s:Button  label="删除" width="60" height="100%" id="moduleDelete" click="deleteModule(event);"/>
+				<s:Button  label="编辑" width="60" height="100%" id="moduleUpdate" click="updateModule(event);"/>
+				<s:Button  label="上移" width="60" height="100%" id="moduleUp" click="upModule(event);"/>
+				<s:Button  label="下移" width="60" height="100%" id="moduleDown" click="downModule(event);"/>
+			</s:HGroup>
+			<s:HGroup width="100%" height="20%" verticalAlign="middle">
+				<s:Label text="操作" width="60" textAlign="right"/>
+				<mx:Canvas   backgroundColor="#00FFEA" width="50" height="100%"  />
+				<s:Button  label="添加" width="60" height="100%" id="operationAdd" click="addOperation(event);"/>
+				<s:Button  label="删除" width="60" height="100%" id="operationDelete" click="deleteOperation(event);"/>
+				<s:Button  label="编辑" width="60" height="100%" id="operationUpdate" click="updateOperation(event);"/>
+				<s:Button  label="上移" width="60" height="100%" id="operationUp" click="upOperation(event);"/>
+				<s:Button  label="下移" width="60" height="100%" id="operationDown" click="downOperation(event);"/>
+			</s:HGroup>
+			<s:HGroup width="100%" height="20%" verticalAlign="middle">
+				<s:Label text="数据访问" width="60" textAlign="right"/>
+				<mx:Canvas   backgroundColor="#36FF00" width="50" height="100%"  />
+				<s:Button  label="添加" width="60" height="100%" id="damAdd" click="addDam(event);"/>
+				<s:Button  label="删除" width="60" height="100%" id="damDelete" click="deleteDam(event);"/>
+				<s:Button  label="编辑" width="60" height="100%" id="damUpdate" click="updateDam(event);"/>
+				<s:Button  label="上移" width="60" height="100%" id="damUp" click="upDam(event);"/>
+				<s:Button  label="下移" width="60" height="100%" id="damDown" click="downDam(event);"/>
+			</s:HGroup>
+		</s:VGroup>
+		
+	</s:HGroup>
+	<mx:Tree id="tree"  itemClick="clickItem(event)" width="100%" height="100%"  iconField="@icon" labelField="@label"   textAlign="left"  paddingLeft="10" showRoot="true"/>    
+</s:Application>
