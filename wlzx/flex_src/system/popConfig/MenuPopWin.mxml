@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:VGroup xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx"  xmlns:valueObjects="system.entity.*" xmlns:flexlib="http://code.google.com/p/flexlib/"   creationComplete="init();" width="800" height="500">
+	
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+		<mx:StringValidator id="name_stringValidator" source="{menuName}" property="text"  requiredFieldError="菜单名称不能为空"/>
+		<mx:StringValidator id="createDate_dateValidator"  source="{creationDate}" property="text" requiredFieldError="菜单创建日期不能为空"/>
+		<mx:NumberValidator id="sequence_numberValidator" source="{sequence}" required="false" property="text" integerError="请输入整数值，同级菜单默认排序升序" domain="int"/>
+		<valueObjects:MenuModel id="menu"/>
+		<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+			<mx:method name="menuAdd"  concurrency="last"  result="menuAddResult_resultHandler(event);" />
+			<mx:method name="getMenuBySymbol"  concurrency="last"  result="getMenuBySymbol_resultHandler(event);" />
+			<mx:method name="menuUpdate"  concurrency="last"  result="menuUpdate_resultHandler(event);" />
+		</mx:RemoteObject>
+	</fx:Declarations>
+	
+	<fx:Script> 
+		
+		<![CDATA[  
+		
+			import mx.controls.Alert;
+			import mx.events.ValidationResultEvent;
+			import mx.formatters.DateFormatter;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.*;
+			import mx.validators.Validator;
+			import mx.validators.ZipCodeValidatorDomainType;
+			
+			import system.component.*;
+			private var validatorArr:Array;
+			
+			private function init():void
+			{
+				
+				validatorArr = new Array();
+				validatorArr.push(name_stringValidator);
+				validatorArr.push(createDate_dateValidator);
+				validatorArr.push(sequence_numberValidator);
+				callLater(initMenuWin);
+				
+			} 
+			private function initMenuWin():void{
+				if(this.toolTip=='Update'){		
+					this.menuWin.title="菜单编辑";
+					var menuSymbol:String=this.name;//弹出窗口时设定的中转参数
+					systemServiceRO.getMenuBySymbol(menuSymbol);
+				}else if(this.toolTip=='Add'){
+					menu=new MenuModel();
+					this.menuWin.title="菜单新增";					
+					
+				}
+			}
+			private function validateForm(evt:MouseEvent):void {
+				var validatorErrorArray:Array = Validator.validateAll(validatorArr);;
+				var isValidForm:Boolean = validatorErrorArray.length == 0;
+				if (isValidForm) {
+					menu.name=menuName.text;
+					menu.creationDate=DateFormatter.parseDateString(creationDate.text);
+					menu.detail=detail.text;
+					menu.symbol=symbol.text;
+					menu.sequence=parseInt(sequence.text);
+					menu.menuIcon=menuIcon.text;
+					if(this.toolTip=='Update'){
+						systemServiceRO.menuUpdate(menu);
+					}else if(this.toolTip=='Add'){
+						var parentType:String=this.id;//弹出窗口时设定的中转参数
+						var parentSymbol:String=this.name;//弹出窗口时设定的中转参数
+						systemServiceRO.menuAdd(menu,parentType,parentSymbol);
+						
+					}
+					
+				} else {
+					var err:ValidationResultEvent;
+					var errorMessageArray:Array = [];
+					for each (err in validatorErrorArray) {
+						var errField:String = FormItem(err.currentTarget.source.parent).label
+						errorMessageArray.push(errField + ": " + err.message);
+					}
+					Alert.show(errorMessageArray.join("\n\n"), "请按照以下错误提示信息重新填写", Alert.OK);
+				}
+			}
+			protected function menuAddResult_resultHandler(event:ResultEvent):void
+			{
+				var menu:MenuModel=event.result as MenuModel;
+				if(menu!=null){
+					var menuData:XML=new XML("<node type='menu' label='"+menu.name+"[菜单]'  symbol='"+menu.symbol+"' id='"+menu.id+"'></node>");
+					this.parentApplication.selectedNode.appendChild(menuData);
+					PopUpManager.removePopUp(this);
+				}else{
+					Alert.show("添加失败");
+				}
+			}
+			protected function getMenuBySymbol_resultHandler(event:ResultEvent):void
+			{
+				menu=event.result as MenuModel;
+				menuName.text=menu.name;
+				creationDate.text=CommonUtils.formatDate(menu.creationDate,"YYYY-MM-DD");
+				detail.text=menu.detail;
+				symbol.text=menu.symbol;
+				sequence.text=menu.sequence.toString();
+				menuIcon.text=menu.menuIcon;
+			}
+			protected function menuUpdate_resultHandler(event:ResultEvent):void
+			{
+				var menu:MenuModel=event.result as MenuModel;
+				if(menu!=null){
+					this.parentApplication.selectedNode.@label=menu.name+"[菜单]";
+					this.parentApplication.selectedNode.@symbol=menu.symbol;
+					this.parentApplication.selectedNode.@id=menu.id;
+					PopUpManager.removePopUp(this);
+				}else{
+					Alert.show("更新失败");
+				}
+			}
+			
+			protected function systemFaultHandler(event:FaultEvent):void {
+				Alert.show(event.fault.faultString, 'Error');
+			}
+			private function resetForm(evt:MouseEvent):void{
+				if(this.toolTip=='Update'){		
+					menuName.text=menu.name;
+					creationDate.text=CommonUtils.formatDate(menu.creationDate,"YYYY-MM-DD");
+					detail.text=menu.detail;
+					symbol.text=menu.symbol;
+					sequence.text=menu.sequence.toString();
+					menuIcon.text=menu.menuIcon;
+				}else if(this.toolTip=='Add'){
+					menuName.text="";
+					creationDate.text="";
+					detail.text="";
+					symbol.text="";
+					sequence.text="";
+					menuIcon.text="";			
+					
+				}
+			} 	
+		]]> 
+		
+	</fx:Script> 
+	<s:TitleWindow  id="menuWin" width="100%" height="100%"  close="PopUpManager.removePopUp(this);this.parentApplication.menuPopWin=null;">
+		<mx:Form width="100%" height="100%" id="dform">
+			<mx:FormHeading label="菜单信息" fontSize="15" width="100%" textAlign="center"/>
+			
+			<mx:FormItem label="菜单名称">
+				<mx:TextInput id="menuName" width="200"/>
+			</mx:FormItem>
+			
+			<mx:FormItem label="创建日期 ">
+				<mx:DateField  id="creationDate" width="200" formatString="YYYY-MM-DD" />
+			</mx:FormItem>
+			
+			<mx:FormItem label="唯一标识">
+				<mx:TextInput id="symbol" width="200"/>
+			</mx:FormItem>	
+			<mx:FormItem label="同级排序顺序">
+				<mx:TextInput id="sequence" width="200"/>
+			</mx:FormItem>
+			
+			<mx:FormItem label="菜单图标地址"  >
+				<mx:TextInput id="menuIcon" width="200"/>
+			</mx:FormItem>
+			<mx:FormItem label="菜单描述">
+				<s:TextArea id="detail" width="400"/>
+			</mx:FormItem>
+			<mx:FormItem width="100%">
+				<mx:HBox verticalAlign="middle" horizontalAlign="right" width="100%">
+					<mx:Button label="保存" click="validateForm(event)" />
+					<mx:Button label="重置" click="resetForm(event);" />
+				</mx:HBox>
+			</mx:FormItem> 
+		</mx:Form>
+		
+	</s:TitleWindow>
+	
+</s:VGroup>

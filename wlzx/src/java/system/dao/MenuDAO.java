@@ -82,4 +82,14 @@ public class MenuDAO extends BaseDAOImpl<MenuModel> {
 		}
 		return null;
 	}
+	/** 
+	  * 通过唯一性系统标记删除菜单实体
+	  * @param symbol 
+	  * @创建时间 2011-4-15 上午10:41:15
+	  */
+	public void removeMenuBySymbol(String symbol) {
+//		MenuModel menu=getMenuBySymbol(symbol);
+//		merge(menu);
+		remove(getMenuBySymbol(symbol));	
+	}
 }

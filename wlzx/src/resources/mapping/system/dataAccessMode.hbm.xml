@@ -29,7 +29,7 @@
 		<property name="modifiedDate" type="java.util.Date">
 			<column name="modified_date" />
 		</property>
-		<set name="operations" lazy="false"  table="wlzx_system_operation_dam_relationship" cascade="all" inverse="true">
+		<set name="operations" lazy="false"  table="wlzx_system_operation_dam_relationship">
 			<key column="dam_id" not-null="true" />
 			<many-to-many column="operation_id" class="system.entity.OperationModel" /> 
 		</set>

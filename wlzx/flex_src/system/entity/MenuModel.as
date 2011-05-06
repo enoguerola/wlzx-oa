@@ -7,6 +7,7 @@ package system.entity
 	{
 		
 		public var detail:String;
+		public var menuIcon:String;
 		public var children:Object;//子系统集
 		public var parent:Object;//父亲系统集
 		public var systems:Object;//系统集
