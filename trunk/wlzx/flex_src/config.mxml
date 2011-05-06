@@ -10,21 +10,25 @@
 		<!--定义 RemoteObject 组件-->
 		<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 			<mx:method name="getSystemBySymbol"  concurrency="last"  result="getSystemBySymbolResult(event);" />
+			<mx:method name="menuRemove"  concurrency="last"   result="menuRemove_resultHandler(event);" />
 		</mx:RemoteObject>
 	</fx:Declarations>
 	<fx:Script>
 		<![CDATA[
 			import cn.org.rapid_framework.flex_security.SecurityControler;
-			
+			import mx.managers.PopUpManager;
+			import mx.core.FlexGlobals;
+
 			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
 			import mx.rpc.events.*;
 			
 			import system.component.CommonUtils;
 			import system.entity.*;
+			import system.popConfig.*;
 			[Bindable] 
 			
-			public var selectedNode:XML; 
+			public var selectedNode:XML;
 			private function init():void {
 				systemServiceRO.getSystemBySymbol("root");
 				//启动权限控制
@@ -53,13 +57,40 @@
 				SecurityControler.addSecurityAction(operationUpdate);
 				SecurityControler.addSecurityAction(operationUp);
 				SecurityControler.addSecurityAction(operationDown);
-	
+				
 				SecurityControler.addSecurityAction(damAdd);
 				SecurityControler.addSecurityAction(damDelete);
 				SecurityControler.addSecurityAction(damUpdate);
 				SecurityControler.addSecurityAction(damUp);
 				SecurityControler.addSecurityAction(damDown);
 				
+			}
+			private function disabled():void{
+				SecurityControler.removePerm("systemAdd");
+				SecurityControler.removePerm("systemDelete");
+				SecurityControler.removePerm("systemUpdate");
+				SecurityControler.removePerm("systemUp");
+				SecurityControler.removePerm("systemDown");
+				SecurityControler.removePerm("menuAdd");
+				SecurityControler.removePerm("menuDelete");
+				SecurityControler.removePerm("menuUpdate");
+				SecurityControler.removePerm("menuUp");
+				SecurityControler.removePerm("menuDown");
+				SecurityControler.removePerm("moduleAdd");
+				SecurityControler.removePerm("moduleDelete");
+				SecurityControler.removePerm("moduleUpdate");
+				SecurityControler.removePerm("moduleUp");
+				SecurityControler.removePerm("moduleDown");
+				SecurityControler.removePerm("operationAdd");
+				SecurityControler.removePerm("operationDelete");
+				SecurityControler.removePerm("operationUpdate");
+				SecurityControler.removePerm("operationUp");
+				SecurityControler.removePerm("operationDown");
+				SecurityControler.removePerm("damAdd");
+				SecurityControler.removePerm("damDelete");
+				SecurityControler.removePerm("damUpdate");
+				SecurityControler.removePerm("damUp");
+				SecurityControler.removePerm("damDown");
 			}
 			private function systemFaultHandler(event:FaultEvent):void {
 				Alert.show(event.fault.faultString, 'Error');
@@ -336,19 +367,47 @@
 			private function downSystem(event:Event):void{
 				
 			}
-			
 			private function addMenu(event:Event):void{
-				
+				var menuPopWin:MenuPopWin=MenuPopWin(PopUpManager.createPopUp(this,MenuPopWin,true));  
+				PopUpManager.centerPopUp(menuPopWin);
+				menuPopWin.percentHeight=100;
+				menuPopWin.percentWidth=100;
+				menuPopWin.x=FlexGlobals.topLevelApplication.stage.stageWidth/2-menuPopWin.width/2;
+				menuPopWin.y=FlexGlobals.topLevelApplication.stage.stageHeight/2-menuPopWin.height/2;
+				menuPopWin.id=selectedNode.@type;//参数传递使用
+				menuPopWin.name=selectedNode.@symbol;//参数传递使用
+				menuPopWin.toolTip="Add";
 			}
 			private function deleteMenu(event:Event):void{
-				
+				//Alert.show(selectedNode.@symbol);
+				var symbol:String=selectedNode.@symbol;
+				systemServiceRO.menuRemove(symbol);
 			}
+			protected function menuRemove_resultHandler(event:ResultEvent):void{
+				if(event.result==true){
+//					Alert.show(selectedNode.childIndex());
+					delete selectedNode.parent().node[selectedNode.childIndex()];
+					disabled();
+				}else{
+					Alert.show("删除菜单失败");
+				}
+			}
+			
 			private function updateMenu(event:Event):void{
-				
+				var menuPopWin:MenuPopWin=MenuPopWin(PopUpManager.createPopUp(this,MenuPopWin,true));  
+				PopUpManager.centerPopUp(menuPopWin);
+				menuPopWin.percentHeight=100;
+				menuPopWin.percentWidth=100;
+				menuPopWin.x=FlexGlobals.topLevelApplication.stage.stageWidth/2-menuPopWin.width/2;
+				menuPopWin.y=FlexGlobals.topLevelApplication.stage.stageHeight/2-menuPopWin.height/2;
+				menuPopWin.id=selectedNode.@type;//参数传递使用
+				menuPopWin.name=selectedNode.@symbol;//参数传递使用
+				menuPopWin.toolTip="Update";
 			}
 			private function upMenu(event:Event):void{
 				
 			}
+			
 			private function downMenu(event:Event):void{
 				
 			}

@@ -35,15 +35,15 @@
 		<property name="email" type="string">
 			<column name="email" />
 		</property>
-		<set name="subordinates" lazy="false"  table="wlzx_system_user_leadship" cascade="all">
+		<set name="subordinates" lazy="false"  table="wlzx_system_user_leadship">
 			<key column="leader_id" not-null="true" />
 			<many-to-many  column="subordinate_id"  class="system.entity.UserModel" /> 
 		</set>
-		<set name="leaders" lazy="false"  table="wlzx_system_user_leadship" cascade="all"  inverse="true">
+		<set name="leaders" lazy="false"  table="wlzx_system_user_leadship">
 			<key column="subordinate_id" not-null="true" />
 			<many-to-many  column="leader_id"  class="system.entity.UserModel" /> 
 		</set>
-		<set name="roles" lazy="false"  table="wlzx_system_role_user_relationship" cascade="all">
+		<set name="roles" lazy="false"  table="wlzx_system_role_user_relationship">
 			<key column="user_id" not-null="true" />
 			<many-to-many  column="role_id" class="system.entity.RoleModel" /> 
 		</set>

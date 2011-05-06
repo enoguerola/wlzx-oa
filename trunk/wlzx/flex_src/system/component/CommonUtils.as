@@ -3,6 +3,7 @@ package system.component
 	import mx.collections.ArrayCollection;
 	import mx.collections.Sort;
 	import mx.collections.SortField;
+	import mx.formatters.*;
 	public class CommonUtils
 	{
 		public static function sortBySequence(list:ArrayCollection):void{
@@ -13,5 +14,13 @@ package system.component
 			list.refresh();//更新  
 			
 		}
+		public static function formatDate(date:Date,patten:String=null):String{
+			if(date==null)return null;
+			var dateFormatter:DateFormatter=new DateFormatter();
+			if(patten==null)dateFormatter.formatString="YYYY-MM-DD JJ:NN:SS";
+			else dateFormatter.formatString=patten;
+			return dateFormatter.format(date);
+		}
+		
 	}
 }

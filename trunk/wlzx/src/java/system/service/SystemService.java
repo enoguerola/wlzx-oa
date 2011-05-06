@@ -4,6 +4,9 @@
 package system.service;
 
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
 import system.dao.*;
 import system.entity.DepartmentModel;
 import system.entity.MenuModel;
@@ -105,5 +108,37 @@ public class SystemService {
 	//获得某用户
 	public UserModel getUserByUserAccount(String userAccount){		
 		return userDAO.getUserByUserAccount(userAccount);
+	}
+	//新增菜单
+	public MenuModel menuAdd(MenuModel menu,String parentType,String parentSymbol){
+		if(parentType.equals("system")){
+			SystemModel parentSystem=systemDAO.getSystemBySymbol(parentSymbol);
+			parentSystem.getMenus().add(menu);
+			systemDAO.saveOrUpdate(parentSystem);
+			return menu;
+		}else if(parentType.equals("menu")){
+			MenuModel parentMenu=menuDAO.getMenuBySymbol(parentSymbol);
+			parentMenu.getChildren().add(menu);
+			menuDAO.saveOrUpdate(parentMenu);
+			return menu;
+		} else return null;
+		
+	}
+	//更新菜单
+	public MenuModel menuUpdate(MenuModel menu){
+		menuDAO.saveOrUpdate(menu);
+		return menu;		
+	}
+	//删除菜单
+	public boolean menuRemove(String symbol){
+//		System.out.println(symbol);
+		menuDAO.removeMenuBySymbol(symbol);
+		return true;		
+	}
+	public static void main(String[] args) {
+		 ApplicationContext applicationContext = new ClassPathXmlApplicationContext(new String[]{"system/service/system.xml","system/service/spring-system.xml"});
+		// TODO Auto-generated method stub
+		SystemService systemService=(SystemService)applicationContext.getBean("systemService");
+		systemService.menuRemove("a");
 	}
 }

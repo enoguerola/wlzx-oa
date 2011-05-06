@@ -36,7 +36,7 @@
 			<key column="parent_id"  />
 			<many-to-many column="child_id" class="system.entity.SystemModel" /> 
 		</set>
-		<set name="parents" lazy="false"  table="wlzx_system_treeship" cascade="all" inverse="true">
+		<set name="parents" lazy="false"  table="wlzx_system_treeship">
 			<key column="child_id"  />
 			<many-to-many column="parent_id" class="system.entity.SystemModel" /> 
 		</set>

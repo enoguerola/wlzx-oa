@@ -33,7 +33,7 @@
 			<key column="parent_id" not-null="true" />
 			<many-to-many column="child_id" class="system.entity.ModuleModel" /> 
 		</set>
-		<set name="parents" lazy="false"  table="wlzx_system_module_treeship" cascade="all" inverse="true">
+		<set name="parents" lazy="false"  table="wlzx_system_module_treeship">
 			<key column="child_id" not-null="true" />
 			<many-to-many column="parent_id" class="system.entity.ModuleModel" /> 
 		</set>
@@ -42,7 +42,7 @@
 			<key column="module_id" not-null="true" />
 			<many-to-many column="operation_id" class="system.entity.OperationModel" /> 
 		</set>
-		<set name="menus" lazy="false"  table="wlzx_system_menu_module_relationship" cascade="all" inverse="true">
+		<set name="menus" lazy="false"  table="wlzx_system_menu_module_relationship">
 			<key column="module_id" not-null="true" />
 			<many-to-many column="menu_id" class="system.entity.MenuModel" /> 
 		</set>
