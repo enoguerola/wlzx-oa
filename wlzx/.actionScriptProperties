@@ -15,6 +15,7 @@
   <applications>
     <application path="home.mxml"/>
     <application path="login.mxml"/>
+    <application path="config.mxml"/>
   </applications>
   <modules>
     <module application="flex_src/home.mxml" destPath="basic/index.swf" optimize="true" sourcePath="flex_src/basic/index.mxml"/>
@@ -22,7 +23,7 @@
     <module application="flex_src/home.mxml" destPath="basic/setting/departmentSetting.swf" optimize="false" sourcePath="flex_src/basic/setting/departmentSetting.mxml"/>
     <module application="flex_src/home.mxml" destPath="basic/setting/roleSetting.swf" optimize="false" sourcePath="flex_src/basic/setting/roleSetting.mxml"/>
     <module application="flex_src/home.mxml" destPath="oa/index.swf" optimize="true" sourcePath="flex_src/oa/index.mxml"/>
-    <module destPath="basic/authorization/departmentAuthorization.swf" optimize="false" sourcePath="flex_src/basic/authorization/departmentAuthorization.mxml"/>
+    <module application="flex_src/home.mxml" destPath="basic/authorization/departmentAuthorization.swf" optimize="false" sourcePath="flex_src/basic/authorization/departmentAuthorization.mxml"/>
     <module application="flex_src/home.mxml" destPath="basic/authorization/roleAuthorization.swf" optimize="true" sourcePath="flex_src/basic/authorization/roleAuthorization.mxml"/>
   </modules>
   <buildCSSFiles/>
