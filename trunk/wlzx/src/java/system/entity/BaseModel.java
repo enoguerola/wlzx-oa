@@ -1,6 +1,7 @@
 
 package system.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
   /**
@@ -16,8 +17,12 @@ import java.util.Date;
  *
  */
 
-public  class BaseModel implements Comparable<BaseModel>{
+public  class BaseModel implements Comparable<BaseModel>,Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2975949181971555105L;
 	protected String id = null;
 	private String name;
 	private String symbol;

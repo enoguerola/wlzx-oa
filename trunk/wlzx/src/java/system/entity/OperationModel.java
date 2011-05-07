@@ -23,6 +23,10 @@ import java.util.TreeSet;
  */
 
 public class OperationModel extends BaseModel{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3083690818422837582L;
 	private String rsValue;
 	private String rsType;
 	private String detail;

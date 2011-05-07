@@ -18,6 +18,10 @@ import java.util.TreeSet;
 */
 
 public class ModuleModel extends BaseModel{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8940806580674257805L;
 	private String detail;
 	private String url;
 	private Set<MenuModel> menus=new TreeSet<MenuModel>();//模块所属菜单功能集

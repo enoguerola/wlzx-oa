@@ -4,15 +4,14 @@
 package system.service;
 
 
+import java.util.Date;
+
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import system.dao.*;
-import system.entity.DepartmentModel;
-import system.entity.MenuModel;
-import system.entity.RoleModel;
-import system.entity.SystemModel;
-import system.entity.UserModel;
+import system.entity.*;
+
 
 
   
@@ -97,6 +96,10 @@ public class SystemService {
 	public MenuModel getMenuBySymbol(String symbol){		
 		return menuDAO.getMenuBySymbol(symbol);
 	}
+	//获得某模块
+	public ModuleModel getModuleBySymbol(String symbol){		
+		return moduleDAO.getModuleBySymbol(symbol);
+	}
 	//获得某部门
 	public DepartmentModel getDepartmentBySymbol(String symbol){		
 		return departmentDAO.getDepartmentBySymbol(symbol);
@@ -126,8 +129,14 @@ public class SystemService {
 	}
 	//更新菜单
 	public MenuModel menuUpdate(MenuModel menu){
-		menuDAO.saveOrUpdate(menu);
-		return menu;		
+		MenuModel newMenu=menuDAO.get(menu.getId());
+		newMenu.setSymbol(menu.getSymbol());
+		newMenu.setCreationDate(menu.getCreationDate());
+		newMenu.setDetail(menu.getDetail());
+		newMenu.setName(menu.getName());
+		newMenu.setSequence(menu.getSequence());
+		menuDAO.saveOrUpdate(newMenu);
+		return newMenu;		
 	}
 	//删除菜单
 	public boolean menuRemove(String symbol){
@@ -135,10 +144,43 @@ public class SystemService {
 		menuDAO.removeMenuBySymbol(symbol);
 		return true;		
 	}
+	//新增模块
+	public ModuleModel moduleAdd(ModuleModel module,String parentType,String parentSymbol){
+		if(parentType.equals("menu")){
+			MenuModel parentMenu=menuDAO.getMenuBySymbol(parentSymbol);
+			parentMenu.getModules().add(module);
+			menuDAO.saveOrUpdate(parentMenu);
+			return module;
+		}else return null;
+		
+	}
+	//更新模块
+	public ModuleModel moduleUpdate(ModuleModel module){
+		ModuleModel newModule=moduleDAO.get(module.getId());
+		newModule.setSymbol(module.getSymbol());
+		newModule.setCreationDate(module.getCreationDate());
+		newModule.setDetail(module.getDetail());
+		newModule.setName(module.getName());
+		newModule.setSequence(module.getSequence());
+		newModule.setUrl(module.getUrl());
+		moduleDAO.saveOrUpdate(newModule);	
+		return module;		
+	}
+	//删除模块
+	public boolean moduleRemove(String symbol){
+//		System.out.println(symbol);
+		moduleDAO.removeModuleBySymbol(symbol);
+		return true;		
+	}
 	public static void main(String[] args) {
 		 ApplicationContext applicationContext = new ClassPathXmlApplicationContext(new String[]{"system/service/system.xml","system/service/spring-system.xml"});
-		// TODO Auto-generated method stub
 		SystemService systemService=(SystemService)applicationContext.getBean("systemService");
-		systemService.menuRemove("a");
+		ModuleModel module=new ModuleModel();
+		module.setName("a");
+		module.setCreationDate(new Date());
+		module.setDetail("aaa");
+		module.setSymbol("rg22222");
+		module.setSequence(1);
+		systemService.moduleAdd(module,"menu","gweg");
 	}
 }
