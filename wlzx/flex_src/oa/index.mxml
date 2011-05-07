@@ -7,7 +7,14 @@
 		<!--定义 RemoteObject 组件-->
 		<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" result="systemResultHandler(event);" fault="systemFaultHandler(event);"/>
 	</fx:Declarations>
-
+	<fx:Style>
+		.customAccordionHeadStyles {
+			skin: ClassReference("system.skins.WlzxAccordionHeaderSkin");
+		}
+		.customTabStyles {
+			skin: ClassReference("system.skins.WlzxTabSkin");
+		}
+	</fx:Style>
 	<fx:Script>
 		<![CDATA[
 			import flexlib.controls.SuperTabBar;
@@ -18,35 +25,36 @@
 			import mx.containers.*;
 			import mx.controls.*;
 			import mx.events.*;
-			import mx.rpc.events.*;
-			import mx.modules.*;
 			import mx.events.ModuleEvent;
+			import mx.modules.*;
+			import mx.rpc.events.*;
+			
 			import spark.components.*;
-			import mx.collections.SortField;  
-			import mx.collections.Sort;  
+			
+			import system.component.CommonUtils;
 			import system.entity.*;
+
 			
 			
 			private function init():void {
 				systemServiceRO.getSystemBySymbol("oa");
 				initHomeTab();
-				Alert.show(this.parentApplication.account);
+//				Alert.show(this.parentApplication.account);
 				account.text=account.text.concat(this.parentApplication.account);
 				roles.text=roles.text.concat(this.parentApplication.roles);
+				lastLoginTime.text=lastLoginTime.text.concat(this.parentApplication.lastLoginTime);
+				var timer:Timer = new Timer(1000);			
+				timer.addEventListener(TimerEvent.TIMER, updateCurrentTime);				
+				timer.start();
+//				currentTime.text=currentTime.text.concat(this.parentApplication.lastLoginTime);
 			}
-			
-			private function mySort(list:ArrayCollection):void{
-				var sort:Sort=new Sort();  
-				//按照sequence升序排序  
-				sort.fields=[new SortField("sequence")];  
-				list.sort=sort;
-				list.refresh();//更新  
-				
+			private function updateCurrentTime(event:TimerEvent):void{
+				currentTime.text=CommonUtils.formatDate(new Date());
 			}
 			private function systemResultHandler(event:ResultEvent):void {
 				var rootSystem:SystemModel =SystemModel(event.result);
 				var menuList:ArrayCollection = ArrayCollection(rootSystem.menus);
-				mySort(menuList);
+				CommonUtils.sortBySequence(menuList);
 //				trace(menuList.toString()+"");
 //				Alert.show();
 				menus.historyManagementEnabled = true;
@@ -64,12 +72,14 @@
 					nc = new NavigatorContent();
 					nc.percentHeight=100;
 					nc.percentWidth=100;
+					nc.setStyle("borderVisible",false);
 					nc.setStyle("font-size","20");
 					nc.label=_menu.name;
 					if(ArrayCollection(_menu.children).length>0){
 						var resultXML:String=buildSubMenus(_menu);
 						var menuData:XML=new XML(resultXML);
 						tree=new Tree();
+						tree.setStyle("borderVisible",false);
 						tree.percentWidth=100;
 						tree.percentHeight=100;
 						tree.showRoot=false;
@@ -93,7 +103,7 @@
 			private function buildSubMenus(menu:MenuModel):String{
 				var resultXML:String="";
 				var menuList:ArrayCollection = ArrayCollection(menu.children);
-				mySort(menuList);
+				CommonUtils.sortBySequence(menuList);
 				if(menuList.length>0){
 					resultXML=resultXML.concat("<node label='"+menu.name+"'>");
 					for (var i:int = 0; i < menuList.length; i++){
@@ -170,14 +180,22 @@
 	
 	
 	
-	<s:BorderContainer width="100%" height="140"  borderColor="#6DA752" backgroundImage="@Embed(source='../WebContent/resources/oa/layout/head.jpg')">
+	<s:BorderContainer width="100%" height="80"  borderColor="#6DA752" backgroundImage="@Embed(source='../WebContent/resources/oa/layout/head.jpg')">
 		<s:layout>
 			<s:HorizontalLayout verticalAlign="middle"  horizontalAlign="right"/>
 		</s:layout>
-		<s:VGroup width="200" height="80">
-			<s:Label id="account" text="当前用户："/>
-			<s:Label id="roles" text="用户角色："/>
+		<s:VGroup width="35%">
+			<s:HGroup width="35%">
+				<s:Label id="account" text="当前用户："/>
+				<s:Label id="roles" text="用户角色："/>
+			</s:HGroup>
+			<s:HGroup width="35%">
+				<s:Label id="lastLoginTime" text="上次登录："/>
+				<s:Label text="当前时间："/>
+				<s:Label id="currentTime" text=""/>
+			</s:HGroup>
 		</s:VGroup>
+		
 
 		
 		
@@ -188,12 +206,12 @@
 			<s:HorizontalLayout verticalAlign="middle" gap="0"/>
 		</s:layout>
 		
-		<mx:Accordion width="220"  top="15" height="100%"  selectedIndex="-1" id="menus" dropShadowVisible="false" backgroundAlpha="0.0" headerHeight="35" fontSize="15" textAlign="center">
+		<mx:Accordion   headerStyleName="customAccordionHeadStyles" width="220"  top="15" height="100%"  selectedIndex="-1" id="menus" dropShadowVisible="false" backgroundAlpha="0.0" headerHeight="35" fontSize="15" textAlign="center">
 			
 		</mx:Accordion>
 		
 		<flexlib:DockableToolBar x="215" y="65" height="100%" paddingTop="200" dropShadowVisible="false" borderVisible="false"  doubleClickEnabled="true" doubleClick="showHideLeftbody_handler(event)" toolTip="隐藏/展开左区域菜单"></flexlib:DockableToolBar>
-		<flexlib:SuperTabNavigator id="nav" closePolicy="SuperTab.CLOSE_ROLLOVER|SuperTab.CLOSE_ALWAYS|SuperTab.CLOSE_SELECTED|SuperTab.CLOSE_NEVER" width="100%" height="100%" tabWidth="120" tabHeight="30" creationPolicy="all" horizontalGap="5"  popUpButtonPolicy="auto" borderVisible="true" allowTabSqueezing="true"  dragEnabled="false">
+		<flexlib:SuperTabNavigator id="nav"  tabStyleName="customTabStyles" horizontalGap="1" borderVisible="false" paddingTop="0" paddingBottom="0" paddingLeft="0" paddingRight="0" closePolicy="SuperTab.CLOSE_ROLLOVER|SuperTab.CLOSE_ALWAYS|SuperTab.CLOSE_SELECTED|SuperTab.CLOSE_NEVER" width="100%" height="100%" tabWidth="120"   allowTabSqueezing="false"  dragEnabled="false">
 			
 			
 		</flexlib:SuperTabNavigator>

@@ -1,7 +1,9 @@
 package system.entity
 {
+	import mx.collections.ArrayCollection;
 	[Bindable]
 	[RemoteClass(alias="system.entity.UserModel")] 
+	
 	public class UserModel extends BaseModel
 	{
 
@@ -15,6 +17,15 @@ package system.entity
 
 		public function UserModel()
 		{
+		}
+		public function getAllRole():String
+		{	var result:String="";
+			var roleList:ArrayCollection = ArrayCollection(roles);
+			for (var i:int = 0; i < roleList.length; i++){
+				var _role:Object = roleList.getItemAt(i);	
+				result=result.concat(_role.name);
+			}
+			return result;
 		}
 	}
 }
