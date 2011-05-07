@@ -12,12 +12,4 @@ global
 	selection-color: #C7E399;
 	roll-over-color: #E2FBB8;
 }
-@namespace supertabs "flexlib.controls.tabBarClasses.*"; 
 
-.closeButton 
-{ 
-	defaultSkin:Embed(source="/../WebContent/resources/common/ui/tabClose.swf", symbol="firefox_close_up"); 
-	upSkin:Embed(source="/../WebContent/resources/common/ui/tabClose.swf", symbol="firefox_close_up"); 
-	downSkin:Embed(source="/../WebContent/resources/common/ui/tabClose.swf", symbol="firefox_close_down"); 
-	overSkin:Embed(source="/../WebContent/resources/common/ui/tabClose.swf", symbol="firefox_close_over"); 
-} 

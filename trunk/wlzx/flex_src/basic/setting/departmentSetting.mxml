@@ -100,7 +100,7 @@
 		]]>
 	</fx:Script>
 	
-	<s:Panel width="100%" height="100%" title="部门设置">
+	<s:Panel width="100%" height="100%" title="部门设置" skinClass="system.skins.WlzxPanelSkin">
 		<s:Button label="新增"  width="50" top="-25" right="160" click="addDepartment();"/>
 		<s:Button label="编辑"  width="50" top="-25" right="100" click="editDepartment();"/>
 		<s:Button label="删除"  width="50" top="-25" right="40" click="deleteDepartment();"/>

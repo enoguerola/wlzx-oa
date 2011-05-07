@@ -12,6 +12,7 @@
     </libraryPath>
     <sourceAttachmentPath/>
   </compiler>
+  <theme themeIsDefault="false" themeIsSDK="false" themeLocation="${EXTERNAL_THEME_DIR}/wlzx"/>
   <applications>
     <application path="home.mxml"/>
     <application path="login.mxml"/>
@@ -25,6 +26,7 @@
     <module application="flex_src/home.mxml" destPath="oa/index.swf" optimize="true" sourcePath="flex_src/oa/index.mxml"/>
     <module application="flex_src/home.mxml" destPath="basic/authorization/departmentAuthorization.swf" optimize="false" sourcePath="flex_src/basic/authorization/departmentAuthorization.mxml"/>
     <module application="flex_src/home.mxml" destPath="basic/authorization/roleAuthorization.swf" optimize="true" sourcePath="flex_src/basic/authorization/roleAuthorization.mxml"/>
+    <module destPath="oa/notice/postNotice.swf" optimize="false" sourcePath="flex_src/oa/notice/postNotice.mxml"/>
   </modules>
   <buildCSSFiles/>
 </actionScriptProperties>

@@ -27,16 +27,20 @@
 			import mx.rpc.events.ResultEvent;
 			import system.event.BaseEvent;
 			import system.implement.BaseImpl;
-
+			import system.entity.*;
+			import system.component.CommonUtils;
 			public var default_url:String="oa/index.swf";
 			public var account:String;
 			public var roles:String;
+			public var lastLoginTime:String;
 			private function init():void{
 				securityUserHolder.getCurrentUser();
 				loadModule(default_url);
 				//启动权限控制
 				SecurityControler.start(null,'enabled');
+				
 			}
+			
 			private function readyModule( event:ModuleEvent ) : void
 			{ 
 				var ml:ModuleLoader = event.target as ModuleLoader;				
@@ -73,14 +77,16 @@
 				Alert.show("退出失败");
 			}
 			private function getCurrentUserResult(event:ResultEvent):void  
-			{ 
-				account=event.result.name;
-				roles=event.result.roles;
+			{  
+				var user:Object=event.result;
+				account=user.name;
+				roles=user.getAllRole();
+				lastLoginTime=CommonUtils.formatDate(user.lastLoginTime);
 				Alert.show(event.result.name);
 			} 
 			private function securityUserHolder_fault_handler(event:FaultEvent):void
 			{
-				Alert.show("请求异常");
+				Alert.show("请求当前用户信息异常");
 			}
 			private function fullScreen():void{
 				stage.displayState = StageDisplayState.FULL_SCREEN;	

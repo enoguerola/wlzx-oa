@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:SparkSkin name="WlzxAccordionHeaderSkin"
+			 xmlns:fx="http://ns.adobe.com/mxml/2009"
+			 xmlns:s="library://ns.adobe.com/flex/spark"
+			 minWidth="21" minHeight="21"
+			 alpha.disabled="0.5">
+	<!-- states -->
+	<s:states>
+		<s:State name="up" />
+		<s:State name="over" />
+		<s:State name="down" />
+		<s:State name="disabled" />
+		<s:State name="selectedUp" />
+		<s:State name="selectedOver" />
+		<s:State name="selectedDown" />
+		<s:State name="selectedDisabled" />
+	</s:states>
+	
+	
+	
+	<!-- layer 4: fill lowlight -->
+	<s:Rect left="1" right="1" bottom="1" height="9">
+		<s:fill>
+			<s:LinearGradient rotation="90">
+				<s:GradientEntry color="0x000000" alpha="0.0099" />
+				<s:GradientEntry color="0x000000" alpha="0.0627" />
+			</s:LinearGradient>
+		</s:fill>
+	</s:Rect>
+	
+	
+	<!-- layer 2: border -->
+	<s:Rect left="0" right="0" top="0" bottom="0" width="69" height="20" excludeFrom="up">
+		<s:fill>
+			<s:LinearGradient rotation="90">
+				<s:GradientEntry color="white"/>
+				<s:GradientEntry color="white"/>
+			</s:LinearGradient>
+		</s:fill>
+	</s:Rect>
+	<!-- layer 2: border -->
+	<s:Rect left="0" right="0" top="0" bottom="0" width="69" height="20" excludeFrom="down,over,disabled,selectedUp,selectedOver,selectedDown,selectedDisabled">
+		<s:fill>
+			<s:LinearGradient rotation="90">
+				<s:GradientEntry color="white"/>
+				<s:GradientEntry color="0xD0E8AA"/>
+			</s:LinearGradient>
+		</s:fill>
+	</s:Rect>
+</s:SparkSkin>
