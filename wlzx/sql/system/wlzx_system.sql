@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2011 年 05 月 06 日 11:51
+-- 生成日期: 2011 年 05 月 07 日 11:15
 -- 服务器版本: 5.0.91
 -- PHP 版本: 5.2.13
 
@@ -173,7 +173,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_menu` (
   `modified_date` timestamp NOT NULL default '0000-00-00 00:00:00' on update CURRENT_TIMESTAMP,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `symbol` (`symbol`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=20 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=21 ;
 
 --
 -- 转存表中的数据 `wlzx_system_menu`
@@ -188,17 +188,18 @@ INSERT INTO `wlzx_system_menu` (`id`, `name`, `symbol`, `sequence`, `detail`, `m
 (6, '系统设置', 'basic_setting', 0, NULL, NULL, '2011-05-06 11:50:32', '2011-05-06 11:50:32'),
 (7, '部门设置', 'basic_setting_department', 0, NULL, NULL, '2011-05-06 11:50:32', '2011-05-06 11:50:32'),
 (8, '岗位设置', 'basic_setting_role', 0, NULL, NULL, '2011-05-06 11:50:32', '2011-05-06 11:50:32'),
-(9, '内部事务管理', 'oa_inside_affair', 0, NULL, NULL, '2011-05-06 11:50:32', '2011-05-06 11:50:32'),
-(10, '公文管理', 'oa_official_document', 0, NULL, NULL, '2011-05-06 11:50:32', '2011-05-06 11:50:32'),
+(9, '内部事务管理', 'oa_inside_affair', 1, '', NULL, '2011-05-06 00:00:00', '2011-05-06 11:50:32'),
+(10, '公文管理', 'oa_official_document', 2, '', NULL, '2011-05-06 00:00:00', '2011-05-06 11:50:32'),
 (11, '公共事务管理', 'oa_public_affair', 0, NULL, NULL, '2011-05-06 11:50:32', '2011-05-06 11:50:32'),
 (12, '公告管理', 'notice_manage', 0, NULL, NULL, '2011-05-06 11:50:32', '2011-05-06 11:50:32'),
-(13, '公告管理', 'notice_list', 0, NULL, NULL, '2011-05-06 11:50:32', '2011-05-06 11:50:32'),
+(13, '公告管理', 'notice_list', 2, '', NULL, '2011-05-06 00:00:00', '2011-05-06 11:50:32'),
 (14, '公告发布', 'notice_post', 0, NULL, NULL, '2011-05-06 11:50:32', '2011-05-06 11:50:32'),
-(15, '公告签批', 'notice_sign', 0, NULL, NULL, '2011-05-06 11:50:32', '2011-05-06 11:50:32'),
+(15, '公告签批', 'notice_sign', 3, '', NULL, '2011-05-06 00:00:00', '2011-05-06 11:50:32'),
 (16, '日程管理', 'scheduleManage', 0, NULL, NULL, '2011-05-06 11:50:32', '2011-05-06 11:50:32'),
-(17, '学校管理', 'oa_school_affair', 0, NULL, NULL, '2011-05-06 11:50:33', '2011-05-06 11:50:33'),
-(18, '系统管理', 'oa_system_management', 0, NULL, NULL, '2011-05-06 11:50:33', '2011-05-06 11:50:33'),
-(19, '部门与岗位', 'oa_school_affair_department_role', 0, NULL, NULL, '2011-05-06 11:50:33', '2011-05-06 11:50:33');
+(17, '学校管理', 'oa_school_affair', 3, '', NULL, '2011-05-06 00:00:00', '2011-05-06 11:50:33'),
+(18, '系统管理', 'oa_system_management', 4, '', NULL, '2011-05-06 00:00:00', '2011-05-06 11:50:33'),
+(19, '部门与岗位', 'oa_school_affair_department_role', 0, NULL, NULL, '2011-05-06 11:50:33', '2011-05-06 11:50:33'),
+(20, '公告阅读', 'notice_read', 1, '', '', '2011-05-07 00:00:00', '2011-05-07 11:06:17');
 
 -- --------------------------------------------------------
 
@@ -211,7 +212,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_menu_module_relationship` (
   `menu_id` bigint(20) NOT NULL,
   `module_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
 
 --
 -- 转存表中的数据 `wlzx_system_menu_module_relationship`
@@ -221,7 +222,8 @@ INSERT INTO `wlzx_system_menu_module_relationship` (`id`, `menu_id`, `module_id`
 (1, 2, 1),
 (2, 3, 2),
 (3, 7, 3),
-(4, 8, 4);
+(4, 8, 4),
+(5, 14, 5);
 
 -- --------------------------------------------------------
 
@@ -261,7 +263,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_menu_treeship` (
   `parent_id` bigint(20) NOT NULL,
   `child_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=16 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=17 ;
 
 --
 -- 转存表中的数据 `wlzx_system_menu_treeship`
@@ -282,7 +284,8 @@ INSERT INTO `wlzx_system_menu_treeship` (`id`, `parent_id`, `child_id`) VALUES
 (12, 19, 3),
 (13, 19, 2),
 (14, 19, 8),
-(15, 19, 7);
+(15, 19, 7),
+(16, 12, 20);
 
 -- --------------------------------------------------------
 
@@ -301,7 +304,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_module` (
   `url` varchar(500) default NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `symbol` (`symbol`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
 
 --
 -- 转存表中的数据 `wlzx_system_module`
@@ -311,7 +314,8 @@ INSERT INTO `wlzx_system_module` (`id`, `name`, `symbol`, `sequence`, `detail`, 
 (1, '部门授权主模块', 'basic_authorization_department_main', 0, NULL, '2011-05-06 11:50:32', '2011-05-06 11:50:32', 'basic/authorization/departmentAuthorization.swf'),
 (2, '岗位授权主模块', 'basic_authorization_role_main', 0, NULL, '2011-05-06 11:50:32', '2011-05-06 11:50:32', 'basic/authorization/roleAuthorization.swf'),
 (3, '部门设置主模块', 'basic_setting_department_main', 0, NULL, '2011-05-06 11:50:32', '2011-05-06 11:50:32', 'basic/setting/departmentSetting.swf'),
-(4, '岗位设置主模块', 'basic_setting_role_main', 0, NULL, '2011-05-06 11:50:32', '2011-05-06 11:50:32', 'basic/setting/roleSetting.swf');
+(4, '岗位设置主模块', 'basic_setting_role_main', 0, NULL, '2011-05-06 11:50:32', '2011-05-06 11:50:32', 'basic/setting/roleSetting.swf'),
+(5, '公告发布主模块', 'notice_post_main', 0, '', '2011-05-07 00:00:00', '2011-05-07 11:12:25', 'oa/notice/postNotice.swf');
 
 -- --------------------------------------------------------
 
@@ -369,8 +373,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_operation` (
   `creation_date` datetime NOT NULL,
   `modified_date` timestamp NOT NULL default '0000-00-00 00:00:00' on update CURRENT_TIMESTAMP,
   PRIMARY KEY  (`id`),
-  UNIQUE KEY `symbol` (`symbol`),
-  UNIQUE KEY `method` (`rs_value`)
+  UNIQUE KEY `symbol` (`symbol`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
 --
@@ -523,12 +526,15 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_user` (
   `modified_date` timestamp NOT NULL default '0000-00-00 00:00:00' on update CURRENT_TIMESTAMP,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `symbol` (`symbol`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='系统用户' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='系统用户' AUTO_INCREMENT=3 ;
 
 --
 -- 转存表中的数据 `wlzx_system_user`
 --
 
+INSERT INTO `wlzx_system_user` (`id`, `symbol`, `sequence`, `name`, `password`, `last_login_time`, `last_login_ip`, `person_id`, `email`, `creation_date`, `modified_date`) VALUES
+(1, 'super_root', 0, 'super_root', '134bca5421a15476a1e5ebaebdba1ede', NULL, NULL, NULL, NULL, '2011-05-07 11:04:09', '0000-00-00 00:00:00'),
+(2, 'admin', 0, 'admin', '21232f297a57a5a743894a0e4a801fc3', NULL, NULL, NULL, NULL, '2011-05-07 11:04:22', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 

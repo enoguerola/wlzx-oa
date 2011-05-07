@@ -23,7 +23,7 @@
 		<property name="rsType" type="string">
 			<column name="rs_type" />
 		</property>
-		<property name="rsValue" type="string" unique="true">
+		<property name="rsValue" type="string">
 			<column name="rs_value" />
 		</property>
 		<property name="creationDate" type="java.util.Date">
@@ -32,7 +32,7 @@
 		<property name="modifiedDate" type="java.util.Date">
 			<column name="modified_date" />
 		</property>
-		<set name="dataAccessModes" lazy="false"  table="wlzx_system_operation_dam_relationship" cascade="all-delete-orphan">
+		<set name="dataAccessModes" lazy="false"  table="wlzx_system_operation_dam_relationship" cascade="all">
 			<key column="operation_id" not-null="true" />
 			<many-to-many column="dam_id" class="system.entity.DataAccessModeModel" /> 
 		</set>

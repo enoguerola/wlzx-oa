@@ -23,6 +23,10 @@ import java.util.TreeSet;
  */
 
 public class RoleModel extends BaseModel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7679845606857505181L;
 	private String detail;
 	private Boolean supervisorFlag;//部门主管标记，注：有此标记的角色不可自行删除，随部门删除而删除
 	private Set<RoleModel> subordinates=new TreeSet<RoleModel>();//直属下级角色

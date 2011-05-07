@@ -22,6 +22,10 @@ import java.util.TreeSet;
  */
 
 public class DepartmentModel  extends BaseModel{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7972036409727505069L;
 	private String detail;
 	private Set<DepartmentModel> subordinates=new TreeSet<DepartmentModel>();//直属下级部门
 	private Set<DepartmentModel> leaders=new TreeSet<DepartmentModel>();//直属上级部门

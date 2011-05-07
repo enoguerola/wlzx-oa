@@ -22,6 +22,10 @@ import java.util.TreeSet;
  */
 
 public class DataAccessModeModel extends BaseModel{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6537176421866028228L;
 	private String detail;
 	private String value;
 	private Set<OperationModel> operations=new TreeSet<OperationModel>();

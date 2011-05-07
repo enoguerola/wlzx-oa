@@ -84,4 +84,9 @@ public class ModuleDAO extends BaseDAOImpl<ModuleModel> {
 		}
 		return null;
 	}
+
+	public void removeModuleBySymbol(String symbol) {
+		// TODO Auto-generated method stub
+		remove(getModuleBySymbol(symbol));
+	}
 }

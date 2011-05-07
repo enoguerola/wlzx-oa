@@ -31,6 +31,10 @@ import java.util.TreeSet;
  */
 
 public class SystemModel extends BaseModel{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7218943086876550862L;
 	private String detail;
 	private String indexPath;
 	private String systemIcon;
