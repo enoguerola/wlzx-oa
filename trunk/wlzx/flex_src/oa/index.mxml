@@ -33,7 +33,7 @@
 			
 			import spark.components.*;
 			
-			import system.component.CommonUtils;
+			import system.utils.CommonUtils;
 			import system.entity.*;
 
 			
@@ -200,11 +200,23 @@
 	
 	
 	
-	<s:BorderContainer width="100%" height="80"  borderColor="#6DA752" backgroundImage="@Embed(source='../WebContent/resources/oa/layout/head.png')">
+	<s:BorderContainer width="100%" height="80"  borderColor="#6DA752" backgroundImage="@Embed(source='../WebContent/resources/oa/layout/head.jpg')">
 		<s:layout>
-			<s:HorizontalLayout verticalAlign="middle"  horizontalAlign="right"/>
+			<s:HorizontalLayout  verticalAlign="top" horizontalAlign="right"/>
 		</s:layout>
-		<s:VGroup width="35%">
+		<s:HGroup  width="15%"  height="100%" verticalAlign="top"  paddingTop="15">
+			<s:HGroup  paddingLeft="-2">
+				<mx:Image source="@Embed(source='../WebContent/resources/oa/buttonIcon/home_icon.png')"></mx:Image>
+			</s:HGroup>
+			<s:HGroup  paddingLeft="20">
+				<mx:Image source="@Embed(source='../WebContent/resources/oa/buttonIcon/help_icon.png')"></mx:Image>
+			</s:HGroup>
+			<s:HGroup  paddingLeft="40">
+				<mx:Image source="@Embed(source='../WebContent/resources/oa/buttonIcon/exit_icon.png')"></mx:Image>
+			</s:HGroup>
+		</s:HGroup>
+	
+		<s:VGroup width="35%" height="100%" verticalAlign="middle">
 			<s:HGroup width="35%">
 				<s:Label id="account" text="当前用户："/>
 				<s:Label id="roles" text="用户角色："/>

@@ -28,7 +28,7 @@
 			import system.event.BaseEvent;
 			import system.implement.BaseImpl;
 			import system.entity.*;
-			import system.component.CommonUtils;
+			import system.utils.CommonUtils;
 			public var default_url:String="oa/index.swf";
 			public var account:String;
 			public var roles:String;

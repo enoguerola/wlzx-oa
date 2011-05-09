@@ -28,7 +28,7 @@
 			import mx.validators.Validator;
 			import mx.validators.ZipCodeValidatorDomainType;
 			
-			import system.component.*;
+			import system.utils.*;
 			private var validatorArr:Array;
 			
 			private function init():void
