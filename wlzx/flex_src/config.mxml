@@ -24,7 +24,7 @@
 			import mx.controls.Alert;
 			import mx.rpc.events.*;
 			
-			import system.component.CommonUtils;
+			import system.utils.CommonUtils;
 			import system.entity.*;
 			import system.popConfig.*;
 			[Bindable] 

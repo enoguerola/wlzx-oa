@@ -32,9 +32,9 @@ in accordance with the terms of the license agreement accompanying it.
 		<s:State name="disabledWithControlBar" stateGroups="withControls" />
 	</s:states>
 	<!-- drop shadow can't be hittable so it stays sibling of other graphics -->
-	<!--- @private -->
+	<!--- @private
 	<s:RectangularDropShadow id="dropShadow" blurX="20" blurY="20" alpha="0.32" distance="11"
-							 angle="90" color="#000000" left="0" top="0" right="0" bottom="0"/>
+							 angle="90" color="#000000" left="0" top="0" right="0" bottom="0"/> -->
 	<!-- drop shadow can't be hittable so all other graphics go in this group -->
 	<s:Group left="0" right="0" top="0" bottom="0">
 		<!-- top group mask -->
@@ -61,7 +61,9 @@ in accordance with the terms of the license agreement accompanying it.
 		<!-- layer 1: border -->
 		<!--- @private -->
 		<s:Rect id="border" left="0" right="0" top="0" bottom="0" >
-			
+			<s:fill>
+				<s:SolidColor alpha="0.1"/>
+			</s:fill>
 		</s:Rect>
 		<!-- layer 2: background fill -->
 		<!--- Defines the appearance of the PanelSkin class's background. -->
@@ -111,7 +113,7 @@ in accordance with the terms of the license agreement accompanying it.
 				<!--- @copy spark.components.Panel#titleDisplay -->
 				<s:Label id="titleDisplay" maxDisplayedLines="1"
 						 left="9" right="3" top="1" bottom="0" minHeight="30"
-						 verticalAlign="middle" textAlign="left" fontWeight="bold" color="blue">
+						 verticalAlign="middle" textAlign="left" fontWeight="bold" color="black">
 				</s:Label>
 			</s:Group>
 			<!--

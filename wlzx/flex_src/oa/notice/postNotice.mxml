@@ -1,10 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Module xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		   xmlns:s="library://ns.adobe.com/flex/spark" 
-		   xmlns:mx="library://ns.adobe.com/flex/mx" layout="absolute" width="100%" height="100%"  borderVisible="false">
+		   xmlns:mx="library://ns.adobe.com/flex/mx" layout="absolute" width="100%" height="100%"  borderVisible="false" dropShadowVisible="false" xmlns:component="system.component.*">
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
 	</fx:Declarations>
 	<s:Panel width="100%" height="100%"  skinClass="system.skins.WlzxPanelSkin" title="公告发布"  borderVisible="false">
+		<s:HGroup width="100%" height="100%" gap="5">
+			<s:VGroup  width="80%" height="100%" gap="0">
+				<mx:HBox  width="100%" height="7%" backgroundColor="#C5E497" horizontalGap="10" paddingLeft="20" verticalAlign="middle">
+					<mx:Image source="@Embed(source='../WebContent/resources/oa/buttonIcon/send.jpg')">
+						
+					</mx:Image>
+					<mx:Image source="@Embed(source='../WebContent/resources/oa/buttonIcon/save.jpg')">
+						
+					</mx:Image>
+					<mx:Image source="@Embed(source='../WebContent/resources/oa/buttonIcon/cancle.jpg')">
+						
+					</mx:Image>
+				</mx:HBox>
+				<s:VGroup  width="100%" height="86%">
+					<mx:Form width="100%" height="100%">
+						<mx:FormItem label="标题" width="100%">
+							<s:TextInput width="100%"/>
+						</mx:FormItem>
+						<mx:FormItem label="必读对象" width="100%">
+							<s:TextInput width="100%"/>
+						</mx:FormItem>
+						<mx:FormItem label="可读 对象" width="100%">
+							<s:TextInput width="100%"/>
+						</mx:FormItem>
+						<mx:FormItem label="公告类型" width="100%">
+						<s:HGroup  width="100%" gap="0">
+							<s:ComboBox/>
+							<mx:FormItem label="发布部门">
+								<s:ComboBox/>
+							</mx:FormItem>
+							<mx:FormItem>
+								<s:CheckBox label="紧急"/>
+							</mx:FormItem>
+							<mx:FormItem>
+								<s:CheckBox label="需签批"/>
+							</mx:FormItem>
+						</s:HGroup>
+						</mx:FormItem>
+						<mx:FormItem  width="100%" >
+							<s:HGroup  width="100%" verticalAlign="middle">
+								<s:Label  text="添加附件"></s:Label>
+							</s:HGroup>
+						</mx:FormItem>
+						<mx:FormItem label="内容" width="100%" height="100%">
+							<mx:RichTextEditor id="rte" title="Halo RichTextEditor" width="100%" height="100%" dropShadowVisible="false"
+											   text="Enter text into the Halo RichTextEditor control, then click a button to display your text as plain text, or as HTML-formatted text." >
+							</mx:RichTextEditor>
+						</mx:FormItem>
+						
+					</mx:Form>
+				</s:VGroup>
+				<mx:HBox  width="100%" height="7%" backgroundColor="#C5E497" horizontalGap="10" paddingLeft="20" verticalAlign="middle">
+					<mx:Image source="@Embed(source='../WebContent/resources/oa/buttonIcon/send.jpg')">
+						
+					</mx:Image>
+					<mx:Image source="@Embed(source='../WebContent/resources/oa/buttonIcon/save.jpg')">
+						
+					</mx:Image>
+					<mx:Image source="@Embed(source='../WebContent/resources/oa/buttonIcon/cancle.jpg')">
+						
+					</mx:Image>
+				</mx:HBox>
+			</s:VGroup>
+			<s:VGroup  width="20%" height="100%" gap="0" >
+				<s:Panel width="100%" height="100%"  skinClass="system.skins.WlzxPanelSkin" title="通讯录"   dropShadowVisible="false" borderVisible="true">
+					<s:VGroup>
+						<s:HGroup  verticalAlign="middle"  paddingTop="10">
+							<s:Label  text="查找" />	
+							<s:TextInput/>	
+							<mx:Image source="@Embed(source='../WebContent/resources/oa/buttonIcon/search_icon.jpg')" />	
+						</s:HGroup>
+									
+					</s:VGroup>
+				</s:Panel>
+			</s:VGroup>
+		</s:HGroup>
+		
 	</s:Panel>
 </mx:Module>
