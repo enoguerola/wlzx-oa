@@ -63,6 +63,8 @@
 							<mx:DataGridColumn textAlign="center" headerText="标记" dataField="loginaccount" width="50">
 							
 							</mx:DataGridColumn>
+							<mx:DataGridColumn textAlign="center" headerText="公告类型" dataField="type" width="150">
+							</mx:DataGridColumn>
 							<mx:DataGridColumn textAlign="center" headerText="公告标题" dataField="name" width="500">
 							</mx:DataGridColumn>
 							<mx:DataGridColumn textAlign="center" headerText="发布时间" dataField="col3" width="150">
@@ -73,7 +75,7 @@
 							</mx:DataGridColumn>
 							</component:mygridcolumns>
 					</component:WlzxDataGrid>
-
+					
 				</s:VGroup>
 			</s:Panel>
 		</s:VGroup>
