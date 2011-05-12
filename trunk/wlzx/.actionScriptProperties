@@ -20,7 +20,7 @@
   </applications>
   <modules>
     <module application="flex_src/home.mxml" destPath="oa/notice/postNotice.swf" optimize="false" sourcePath="flex_src/oa/notice/postNotice.mxml"/>
-    <module destPath="oa/notice/noticeRead.swf" optimize="false" sourcePath="flex_src/oa/notice/noticeRead.mxml"/>
+    <module application="flex_src/home.mxml" destPath="oa/notice/noticeRead.swf" optimize="false" sourcePath="flex_src/oa/notice/noticeRead.mxml"/>
     <module application="flex_src/home.mxml" destPath="system/index.swf" optimize="true" sourcePath="flex_src/system/index.mxml"/>
     <module application="flex_src/home.mxml" destPath="basic/authorization/departmentAuthorization.swf" optimize="false" sourcePath="flex_src/basic/authorization/departmentAuthorization.mxml"/>
     <module application="flex_src/home.mxml" destPath="basic/authorization/roleAuthorization.swf" optimize="true" sourcePath="flex_src/basic/authorization/roleAuthorization.mxml"/>
@@ -28,8 +28,9 @@
     <module application="flex_src/home.mxml" destPath="basic/setting/roleSetting.swf" optimize="false" sourcePath="flex_src/basic/setting/roleSetting.mxml"/>
     <module application="flex_src/home.mxml" destPath="basic/setting/departmentSetting.swf" optimize="false" sourcePath="flex_src/basic/setting/departmentSetting.mxml"/>
     <module application="flex_src/home.mxml" destPath="oa/index.swf" optimize="true" sourcePath="flex_src/oa/index.mxml"/>
-    <module destPath="oa/notice/noticeList.swf" optimize="false" sourcePath="flex_src/oa/notice/noticeList.mxml"/>
-    <module destPath="oa/notice/noticeSign.swf" optimize="false" sourcePath="flex_src/oa/notice/noticeSign.mxml"/>
+    <module application="flex_src/home.mxml" destPath="oa/notice/noticeList.swf" optimize="false" sourcePath="flex_src/oa/notice/noticeList.mxml"/>
+    <module application="flex_src/home.mxml" destPath="oa/notice/noticeSign.swf" optimize="false" sourcePath="flex_src/oa/notice/noticeSign.mxml"/>
+    <module destPath="oa/schedule/personSchedule.swf" optimize="false" sourcePath="flex_src/oa/schedule/personSchedule.mxml"/>
   </modules>
   <buildCSSFiles/>
 </actionScriptProperties>
