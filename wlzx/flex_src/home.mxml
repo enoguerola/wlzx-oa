@@ -82,7 +82,7 @@
 				account=user.name;
 				roles=user.getAllRole();
 				lastLoginTime=CommonUtils.formatDate(user.lastLoginTime);
-				Alert.show(event.result.name);
+//				Alert.show(event.result.name);
 			} 
 			private function securityUserHolder_fault_handler(event:FaultEvent):void
 			{
