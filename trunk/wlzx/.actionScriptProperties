@@ -30,7 +30,14 @@
     <module application="flex_src/home.mxml" destPath="oa/index.swf" optimize="true" sourcePath="flex_src/oa/index.mxml"/>
     <module application="flex_src/home.mxml" destPath="oa/notice/noticeList.swf" optimize="false" sourcePath="flex_src/oa/notice/noticeList.mxml"/>
     <module application="flex_src/home.mxml" destPath="oa/notice/noticeSign.swf" optimize="false" sourcePath="flex_src/oa/notice/noticeSign.mxml"/>
-    <module destPath="oa/schedule/personSchedule.swf" optimize="false" sourcePath="flex_src/oa/schedule/personSchedule.mxml"/>
+    <module application="flex_src/home.mxml" destPath="oa/schedule/personSchedule.swf" optimize="false" sourcePath="flex_src/oa/schedule/personSchedule.mxml"/>
+    <module application="flex_src/home.mxml" destPath="oa/indexMainHomeBody.swf" optimize="false" sourcePath="flex_src/oa/indexMainHomeBody.mxml"/>
+    <module application="flex_src/home.mxml" destPath="oa/task/personTask.swf" optimize="false" sourcePath="flex_src/oa/task/personTask.mxml"/>
+    <module application="flex_src/home.mxml" destPath="oa/schedule/departmentSchedule.swf" optimize="false" sourcePath="flex_src/oa/schedule/departmentSchedule.mxml"/>
+    <module application="flex_src/home.mxml" destPath="oa/schedule/schoolSchedule.swf" optimize="false" sourcePath="flex_src/oa/schedule/schoolSchedule.mxml"/>
+    <module application="flex_src/home.mxml" destPath="oa/schedule/staffSchedule.swf" optimize="false" sourcePath="flex_src/oa/schedule/staffSchedule.mxml"/>
+    <module application="flex_src/home.mxml" destPath="oa/task/staffTask.swf" optimize="false" sourcePath="flex_src/oa/task/staffTask.mxml"/>
+    <module destPath="oa/communication/publicAddressBook.swf" optimize="false" sourcePath="flex_src/oa/communication/publicAddressBook.mxml"/>
   </modules>
   <buildCSSFiles/>
 </actionScriptProperties>

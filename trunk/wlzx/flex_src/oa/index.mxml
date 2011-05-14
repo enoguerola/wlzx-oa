@@ -152,7 +152,7 @@
 			[Embed(source="../WebContent/resources/common/icon/Home.png")]
 			private var home_icon:Class;
 			private function initHomeTab():void {	
-				addTab(homeTabTitle, nav, "com/wl/home/blank.swf", home_icon);
+				addTab(homeTabTitle, nav, "oa/indexMainHomeBody.swf", home_icon);
 				
 			}
 			
@@ -239,13 +239,13 @@
 		</s:layout>
 		<s:HGroup  width="15%"  height="100%" verticalAlign="top"  paddingTop="15">
 			<s:HGroup  paddingLeft="-2">
-				<mx:Image source="@Embed(source='../WebContent/resources/oa/buttonIcon/home_icon.png')"  alpha="0.5" id="home_button" mouseOver="home_button.alpha=1;"   mouseOut="home_button.alpha=0.5;"></mx:Image>
+				<mx:Image source="@Embed(source='../WebContent/resources/oa/buttonIcon/home_icon.png')"  alpha="0.5" id="home_button" mouseOver="home_button.alpha=1;"   mouseOut="home_button.alpha=0.5;" click="homeTab();"></mx:Image>
 			</s:HGroup>
 			<s:HGroup  paddingLeft="20">
-				<mx:Image source="@Embed(source='../WebContent/resources/oa/buttonIcon/help_icon.png')"  alpha="0.5" id="help_button" mouseOver="help_button.alpha=1;"   mouseOut="help_button.alpha=0.5;"></mx:Image>
+				<mx:Image source="@Embed(source='../WebContent/resources/oa/buttonIcon/help_icon.png')"  alpha="0.5" id="help_button" mouseOver="help_button.alpha=1;"   mouseOut="help_button.alpha=0.5;" click="Alert.show('帮助文档建设中');"></mx:Image>
 			</s:HGroup>
 			<s:HGroup  paddingLeft="40">
-				<mx:Image source="@Embed(source='../WebContent/resources/oa/buttonIcon/exit_icon.png')"  alpha="0.5" id="exit_button" mouseOver="exit_button.alpha=1;"   mouseOut="exit_button.alpha=0.5;"></mx:Image>
+				<mx:Image source="@Embed(source='../WebContent/resources/oa/buttonIcon/exit_icon.png')"  alpha="0.5" id="exit_button" mouseOver="exit_button.alpha=1;"   mouseOut="exit_button.alpha=0.5;" click="exitSystem();"></mx:Image>
 			</s:HGroup>
 		</s:HGroup>
 	
