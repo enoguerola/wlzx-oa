@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:SparkSkin name="WlzxAccordionHeaderSkin"
+<s:SparkSkin name="WlzxSubTabSkin"
 			 xmlns:fx="http://ns.adobe.com/mxml/2009"
 			 xmlns:s="library://ns.adobe.com/flex/spark"
 			 minWidth="21" minHeight="21"
@@ -16,27 +16,29 @@
 		<s:State name="selectedDisabled" />
 	</s:states>
 	
-	
-	
 
-	
-	
 	<!-- layer 2: border -->
-	<s:Rect left="0" right="0" top="0" bottom="0" width="69" height="20" excludeFrom="up">
+	<s:Rect left="0" right="0" top="0" bottom="0"  excludeFrom="up">
 		<s:fill>
-			<s:LinearGradient rotation="90">
-				<s:GradientEntry color="0xDDEED5"/>
-				<s:GradientEntry color="0xFCFEFB"/>
+			<s:LinearGradient rotation="180">
+				<s:GradientEntry color="white"/>
+				<s:GradientEntry color="0xD0E8AA"/>
 			</s:LinearGradient>
 		</s:fill>
+		<s:stroke>
+			<s:SolidColorStroke color="0xD0E8AA" />
+		</s:stroke>
 	</s:Rect>
 	<!-- layer 2: border -->
-	<s:Rect left="0" right="0" top="0" bottom="0" width="69" height="20" excludeFrom="down,over,disabled,selectedUp,selectedOver,selectedDown,selectedDisabled">
+	<s:Rect left="0" right="0" top="0" bottom="0"  excludeFrom="down,over,disabled,selectedUp,selectedOver,selectedDown,selectedDisabled">
 		<s:fill>
 			<s:LinearGradient rotation="90">
-				<s:GradientEntry color="0xDDEED5"/>
-				<s:GradientEntry color="0xDDEED5"/>
+				<s:GradientEntry color="white"/>
+				<s:GradientEntry color="0xD0E8AA"/>
 			</s:LinearGradient>
 		</s:fill>
+		<s:stroke>
+			<s:SolidColorStroke color="0xD0E8AA" />
+		</s:stroke>
 	</s:Rect>
 </s:SparkSkin>

@@ -78,6 +78,8 @@ package system.component.schedule.views
 			{
 				backMonthButton = new Button();
 				backMonthButton.label="<-";
+				backMonthButton.width=30;
+				backMonthButton.styleName="customButton";
 				backMonthButton.addEventListener(FlexEvent.BUTTON_DOWN,backMonthButton_buttonDownHandler);
 				m_appBar.addChild(backMonthButton);
 			}
@@ -88,6 +90,8 @@ package system.component.schedule.views
 			{
 				fwdMonthButton = new Button();
 				fwdMonthButton.label="->";
+				fwdMonthButton.width=30;
+				fwdMonthButton.styleName="customButton";
 				fwdMonthButton.addEventListener(FlexEvent.BUTTON_DOWN,fwdMonthButton_buttonDownHandler);
 				m_appBar.addChild(fwdMonthButton);
 			}

@@ -69,6 +69,8 @@ package system.component.schedule.views
 			{
 				backMonthButton = new Button();
 				backMonthButton.label="<-";
+				backMonthButton.width=30;
+				backMonthButton.styleName="customButton";
 //				backMonthButton.styleName = new StyleProxy(this, prevMonthStyleFilters);
 //				backMonthButton.focusEnabled = false;
 //				backMonthButton.autoRepeat = true;
@@ -91,6 +93,8 @@ package system.component.schedule.views
 			{
 				fwdMonthButton = new Button();
 				fwdMonthButton.label="->";
+				fwdMonthButton.width=30;
+				fwdMonthButton.styleName="customButton";
 				//				fwdMonthButton.styleName = new StyleProxy(this,nextMonthStyleFilters);
 				//				fwdMonthButton.autoRepeat = true;
 				//				fwdMonthButton.focusEnabled = false;

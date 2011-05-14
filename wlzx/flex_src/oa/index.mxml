@@ -1,20 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Module xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		   xmlns:s="library://ns.adobe.com/flex/spark" 
-		   xmlns:mx="library://ns.adobe.com/flex/mx" layout="vertical"  verticalGap="0" creationComplete="init();" width="100%" pageTitle="基础数据系统主页" height="100%"   xmlns:flexlib="http://code.google.com/p/flexlib/"  xmlns:viewers="flexlib.scheduling.scheduleClasses.viewers.*" xmlns:sliderClasses="flexlib.controls.sliderClasses.*" xmlns:baseClasses="flexlib.baseClasses.*">
+		   xmlns:mx="library://ns.adobe.com/flex/mx" layout="vertical"  verticalGap="0" creationComplete="init();" width="100%" pageTitle="办公自动化系统主页" height="100%"   xmlns:flexlib="http://code.google.com/p/flexlib/"  xmlns:viewers="flexlib.scheduling.scheduleClasses.viewers.*" xmlns:sliderClasses="flexlib.controls.sliderClasses.*" xmlns:baseClasses="flexlib.baseClasses.*">
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
 		<!--定义 RemoteObject 组件-->
 		<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" result="systemResultHandler(event);" fault="systemFaultHandler(event);"/>
 	</fx:Declarations>
-	<fx:Style>
-		.customAccordionHeadStyles {
-			skin: ClassReference("system.skins.WlzxAccordionHeaderSkin");
-		}
-		.customTabStyles {
-			skin: ClassReference("system.skins.WlzxTabSkin");
-		}
-	</fx:Style>
 	<fx:Script>
 		<![CDATA[
 			import flexlib.controls.IconLoader;
@@ -221,7 +213,16 @@
 			}
 			private function exitSystem():void{
 				// TODO Auto-generated method stub
-				Alert.show("你确定要退出系统吗?","确认",Alert.YES|Alert.NO,null,this.parentApplication.logoutRequest.send());
+				Alert.show("你确定要退出系统吗?","确认",Alert.YES | Alert.NO,null,exitCallBack);
+
+			}
+			//具体执行退出操作
+			private function exitCallBack(event:CloseEvent):void
+			{
+				if(event.detail == Alert.YES)
+				{
+					this.parentApplication.logoutRequest.send();
+				}
 			}
 			
 		]]>
@@ -237,18 +238,25 @@
 		<s:layout>
 			<s:HorizontalLayout  verticalAlign="top" horizontalAlign="right"/>
 		</s:layout>
-		<s:HGroup  width="15%"  height="100%" verticalAlign="top"  paddingTop="15">
-			<s:HGroup  paddingLeft="-2">
-				<mx:Image source="@Embed(source='../WebContent/resources/oa/buttonIcon/home_icon.png')"  alpha="0.5" id="home_button" mouseOver="home_button.alpha=1;"   mouseOut="home_button.alpha=0.5;" click="homeTab();"></mx:Image>
-			</s:HGroup>
-			<s:HGroup  paddingLeft="20">
-				<mx:Image source="@Embed(source='../WebContent/resources/oa/buttonIcon/help_icon.png')"  alpha="0.5" id="help_button" mouseOver="help_button.alpha=1;"   mouseOut="help_button.alpha=0.5;" click="Alert.show('帮助文档建设中');"></mx:Image>
-			</s:HGroup>
-			<s:HGroup  paddingLeft="40">
-				<mx:Image source="@Embed(source='../WebContent/resources/oa/buttonIcon/exit_icon.png')"  alpha="0.5" id="exit_button" mouseOver="exit_button.alpha=1;"   mouseOut="exit_button.alpha=0.5;" click="exitSystem();"></mx:Image>
-			</s:HGroup>
-		</s:HGroup>
-	
+		<s:VGroup width="15%" height="100%" verticalAlign="top" paddingTop="15">
+			<s:BorderContainer width="203"  height="52" backgroundImage="@Embed(source='../WebContent/resources/oa/layout/button_bar_bg.png')" borderVisible="false"  alpha="0.5">
+				<s:HGroup  width="100%"  height="100%" verticalAlign="middle">
+					<s:VGroup  paddingLeft="20">
+						<mx:Image source="@Embed(source='../WebContent/resources/oa/buttonIcon/home_icon.png')"  alpha="1" id="home_button" mouseOver="home_button.alpha=2;"   mouseOut="home_button.alpha=1;" click="homeTab();"></mx:Image>
+						<s:Label text="首页" paddingLeft="3" fontSize="12" textAlign="center"/>						
+					</s:VGroup>
+					<s:VGroup  paddingLeft="20">
+						<mx:Image source="@Embed(source='../WebContent/resources/oa/buttonIcon/help_icon.png')"  alpha="1" id="help_button" mouseOver="help_button.alpha=2;"   mouseOut="help_button.alpha=1;" click="Alert.show('帮助文档建设中');"></mx:Image>
+						<s:Label text="帮助" paddingLeft="3" fontSize="12" textAlign="center"/>
+					</s:VGroup>
+					<s:VGroup  paddingLeft="20">
+						<mx:Image source="@Embed(source='../WebContent/resources/oa/buttonIcon/exit_icon.png')"  alpha="1" id="exit_button" mouseOver="exit_button.alpha=2;"   mouseOut="exit_button.alpha=1;" click="exitSystem();"></mx:Image>
+						<s:Label text="退出" paddingLeft="3" fontSize="12" textAlign="center"/>
+					</s:VGroup>
+				</s:HGroup>
+			</s:BorderContainer>
+		</s:VGroup>
+		
 		<s:VGroup width="35%" height="100%" verticalAlign="middle">
 			<s:HGroup width="35%">
 				<s:Label id="account" text="当前用户："/>
@@ -259,9 +267,11 @@
 				<s:Label text="当前时间："/>
 				<s:Label id="currentTime" text=""/>
 			</s:HGroup>
+			
 		</s:VGroup>
-		
-
+		<s:VGroup  height="100%" verticalAlign="middle" width="20" paddingRight="10">
+			<mx:Image source="@Embed(source='../WebContent/resources/oa/buttonIcon/full_screen.png')"  toolTip="全屏|退出全屏控制" alpha="0.6" id="full_screen" mouseOver="full_screen.alpha=1;"   mouseOut="full_screen.alpha=0.6;" click="if(stage.displayState != StageDisplayState.FULL_SCREEN)stage.displayState = StageDisplayState.FULL_SCREEN;else stage.displayState = StageDisplayState.NORMAL;"></mx:Image>
+		</s:VGroup>
 		
 		
 	</s:BorderContainer>

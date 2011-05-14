@@ -12,17 +12,49 @@ global
 	focus-color: #C7E399;
 	selection-color: #C7E399;
 	roll-over-color: #E2FBB8;
+	tabCloseButtonStyleName: "closeButton"; 
 }
 
 
-supertabs|SuperTab 
-{ 
-	tabCloseButtonStyleName: "closeButton"; 
-} 
 .closeButton 
 { 
 	defaultSkin:Embed(source="../WebContent/resources/common/ui/tabClose.swf", symbol="firefox_close_up"); 
 	upSkin:Embed(source="../WebContent/resources/common/ui/tabClose.swf", symbol="firefox_close_up"); 
 	downSkin:Embed(source="../WebContent/resources/common/ui/tabClose.swf", symbol="firefox_close_down"); 
 	overSkin:Embed(source="../WebContent/resources/common/ui/tabClose.swf", symbol="firefox_close_over"); 
+}
+.customAccordionHeadStyles {
+	skin: ClassReference("system.skins.WlzxAccordionHeaderSkin");
+}
+.customTabStyles {
+	skin: ClassReference("system.skins.WlzxTabSkin");
+	border:1px;
+}
+.customSubTabStyles {
+	skin: ClassReference("system.skins.WlzxSubTabSkin");
+	border:1px;
+}
+.customButton {
+	upSkin:ClassReference('flexlib.skins.EnhancedButtonSkin');
+	overSkin:ClassReference('flexlib.skins.EnhancedButtonSkin');
+	downSkin:ClassReference('flexlib.skins.EnhancedButtonSkin');
+	disabledSkin:ClassReference('flexlib.skins.EnhancedButtonSkin');
+	selectedUpSkin:ClassReference('flexlib.skins.EnhancedButtonSkin');
+	selectedOverSkin:ClassReference('flexlib.skins.EnhancedButtonSkin');
+	selectedDownSkin:ClassReference('flexlib.skins.EnhancedButtonSkin');
+	selectedDisabledSkin:ClassReference('flexlib.skins.EnhancedButtonSkin');
+	corner-Radii: 2, 2,2, 2;
+	border-Colors: #B2DC32, #4b5f0c;
+	over-Border-Colors:#B2DC32, #4b5f0c;
+	selected-Border-Colors: #B2DC32, #4b5f0c;
+	border-Thickness: 1;
+	border-Alpha: 1;
+	fill-Colors: #B2DC32, #4b5f0c;
+	fill-Color-Ratios: 0, 255;
+	over-Fill-Colors: #B2DC32, #4b5f0c;
+	over-Fill-ColorRatios: 255, 0;
+	selected-Fill-Colors: #B2DC32, #4b5f0c;
+	selected-Fill-Color-Ratios: 0, 255;
+	color: black;
+	text-Roll-Over-Color: #4b5f0c;
 }
