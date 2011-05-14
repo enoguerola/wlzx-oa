@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:SparkSkin name="WlzxAccordionHeaderSkin"
+<s:SparkSkin name="WlzxTabSkin"
 			 xmlns:fx="http://ns.adobe.com/mxml/2009"
 			 xmlns:s="library://ns.adobe.com/flex/spark"
 			 minWidth="21" minHeight="21"
@@ -18,19 +18,10 @@
 	
 	
 	
-	<!-- layer 4: fill lowlight -->
-	<s:Rect left="1" right="1" bottom="1" height="9">
-		<s:fill>
-			<s:LinearGradient rotation="90">
-				<s:GradientEntry color="0x000000" alpha="0.0099" />
-				<s:GradientEntry color="0x000000" alpha="0.0627" />
-			</s:LinearGradient>
-		</s:fill>
-	</s:Rect>
 	
 	
 	<!-- layer 2: border -->
-	<s:Rect left="0" right="0" top="0" bottom="0" width="69" height="20" excludeFrom="up">
+	<s:Rect left="0" right="0" top="0" bottom="0"  excludeFrom="up">
 		<s:fill>
 			<s:LinearGradient rotation="90">
 				<s:GradientEntry color="white"/>
@@ -39,7 +30,7 @@
 		</s:fill>
 	</s:Rect>
 	<!-- layer 2: border -->
-	<s:Rect left="0" right="0" top="0" bottom="0" width="69" height="20" excludeFrom="down,over,disabled,selectedUp,selectedOver,selectedDown,selectedDisabled">
+	<s:Rect left="0" right="0" top="0" bottom="0"  excludeFrom="down,over,disabled,selectedUp,selectedOver,selectedDown,selectedDisabled">
 		<s:fill>
 			<s:LinearGradient rotation="90">
 				<s:GradientEntry color="white"/>
