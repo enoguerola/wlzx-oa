@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2011 年 05 月 12 日 14:17
+-- 生成日期: 2011 年 05 月 14 日 15:08
 -- 服务器版本: 5.0.91
 -- PHP 版本: 5.2.13
 
@@ -221,7 +221,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_menu_module_relationship` (
   `menu_id` bigint(20) NOT NULL,
   `module_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=10 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=16 ;
 
 --
 -- 转存表中的数据 `wlzx_system_menu_module_relationship`
@@ -236,7 +236,13 @@ INSERT INTO `wlzx_system_menu_module_relationship` (`id`, `menu_id`, `module_id`
 (6, 20, 6),
 (7, 13, 7),
 (8, 15, 8),
-(9, 25, 9);
+(9, 25, 9),
+(10, 26, 10),
+(11, 21, 11),
+(12, 22, 12),
+(13, 27, 13),
+(14, 28, 14),
+(15, 29, 15);
 
 -- --------------------------------------------------------
 
@@ -326,7 +332,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_module` (
   `url` varchar(500) default NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `symbol` (`symbol`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=10 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=16 ;
 
 --
 -- 转存表中的数据 `wlzx_system_module`
@@ -341,7 +347,13 @@ INSERT INTO `wlzx_system_module` (`id`, `name`, `symbol`, `sequence`, `detail`, 
 (6, '公告阅读主模块', 'notice_read_main', 0, '', '2011-05-09 00:00:00', '2011-05-09 14:09:41', 'oa/notice/noticeRead.swf'),
 (7, '公告管理主模块', 'notice_list_main', 0, '', '2011-05-09 00:00:00', '2011-05-09 14:10:19', 'oa/notice/noticeList.swf'),
 (8, '公告签批主模块', 'notice_sign_main', 0, '', '2011-05-09 00:00:00', '2011-05-09 14:10:50', 'oa/notice/noticeSign.swf'),
-(9, '个人日程管理主模块', 'person_schedule_main', 0, '', '2011-05-11 00:00:00', '2011-05-11 10:22:07', 'oa/schedule/personSchedule.swf');
+(9, '个人日程管理主模块', 'person_schedule_main', 0, '', '2011-05-11 00:00:00', '2011-05-11 10:22:07', 'oa/schedule/personSchedule.swf'),
+(10, '员工日程管理主模块', 'schedule_staff_main', 0, '', '2011-05-14 00:00:00', '2011-05-14 14:39:31', 'oa/schedule/staffSchedule.swf'),
+(11, '部门日程主模块', 'department_schedule_main', 0, '', '2011-05-14 00:00:00', '2011-05-14 14:42:08', 'oa/schedule/departmentSchedule.swf'),
+(12, '学校日程主模块', 'schedule_school_main', 0, '', '2011-05-14 00:00:00', '2011-05-14 14:42:52', 'oa/schedule/schoolSchedule.swf'),
+(13, '个人待办工作主模块', 'person_waiting_work_main', 0, '', '2011-05-14 00:00:00', '2011-05-14 14:45:43', 'oa/task/personTask.swf'),
+(14, '员工工作指派主模块', 'staff_work_assign_main', 0, '', '2011-05-14 00:00:00', '2011-05-14 14:46:59', 'oa/task/staffTask.swf'),
+(15, '公共通讯录主模块', 'public_address_book_main', 0, '', '2011-05-14 00:00:00', '2011-05-14 15:05:56', 'oa/communication/publicAddressBook.swf');
 
 -- --------------------------------------------------------
 
