@@ -8,16 +8,19 @@
 	<fx:Script> 
 		
 		<![CDATA[  
-			import mx.managers.PopUpManager;
-			import mx.core.FlexGlobals;
+			
 			import mx.controls.Alert;
+			import mx.core.FlexGlobals;
+			import mx.events.ItemClickEvent;
 			import mx.events.ValidationResultEvent;
 			import mx.formatters.DateFormatter;
 			import mx.managers.PopUpManager;
 			import mx.rpc.events.*;
 			import mx.validators.Validator;
 			import mx.validators.ZipCodeValidatorDomainType;
+			
 			import oa.common.popWin.StaffSelectPopWin;
+			
 			import system.utils.*;
 			private var staffSelectPopWin:StaffSelectPopWin=null;
 			private function openStaffSelectPopWin(event:Event):void{
@@ -29,6 +32,15 @@
 				staffSelectPopWin.x=FlexGlobals.topLevelApplication.stage.stageWidth/2-staffSelectPopWin.width/2;
 				staffSelectPopWin.y=FlexGlobals.topLevelApplication.stage.stageHeight/2-staffSelectPopWin.height/2;
 			
+			}
+			private function switchSignerArea(event:Event):void{
+				var check:CheckBox=event.currentTarget as CheckBox;
+				if(check.selected){
+					signerArea.visible=true;
+				}else{
+					signerArea.visible=false;
+				}
+				
 			}
 		
 		]]> 
@@ -67,13 +79,16 @@
 								<s:CheckBox label="紧急"/>
 							</mx:FormItem>
 							<mx:FormItem>
-								<s:CheckBox label="需签批"/>
+								<s:CheckBox label="需签批"   change="switchSignerArea(event);"/>
+							</mx:FormItem>
+							<mx:FormItem label="签批人" visible="false" id="signerArea">
+								<s:TextInput   focusIn="openStaffSelectPopWin(event);" editable="false"/>
 							</mx:FormItem>
 						</s:HGroup>
 						</mx:FormItem>
 						<mx:FormItem  width="100%" >
 							<s:HGroup  width="100%" verticalAlign="middle">
-								<s:Label  text="添加附件"></s:Label>
+								<mx:LinkButton  label="添加附件" icon="@Embed(source='../WebContent/resources/common/tools/button_attachment_icon.png')"/>
 							</s:HGroup>
 						</mx:FormItem>
 						<mx:FormItem label="内容" width="100%" height="100%">

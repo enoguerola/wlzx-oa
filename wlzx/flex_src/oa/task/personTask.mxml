@@ -45,7 +45,7 @@
 				<mx:Label text="|"/>
 				<mx:LinkButton  label="新建" icon="@Embed(source='../WebContent/resources/common/tools/button_add_icon.png')"   click="addPersonTask(event);"/>
 				<mx:Label text="|"/>
-				<mx:LinkButton  label="修改" icon="@Embed(source='../WebContent/resources/common/tools/button_edit_icon.png')"  click="editPersonTask(event);"/>
+				<mx:LinkButton  label="编辑" icon="@Embed(source='../WebContent/resources/common/tools/button_edit_icon.png')"  click="editPersonTask(event);"/>
 				<mx:Label text="|"/>
 				<mx:LinkButton  label="删除" icon="@Embed(source='../WebContent/resources/common/tools/button_delete_icon.png')"  click="deletePersonTask(event);"/>
 				<mx:Label text="|"/>
@@ -94,7 +94,7 @@
 					</mx:Form>
 				</mx:VBox>
 				<s:VGroup  width="100%" height="100%" gap="0" paddingTop="10" paddingRight="10" paddingBottom="10">
-					<component:WlzxDataGrid width="100%" height="100%" borderVisible="false"  verticalAlign="middle" id="mydg"  >				
+					<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="false"  verticalAlign="middle" id="mydg"  >				
 						<component:mygridcolumns>
 							<mx:DataGridColumn textAlign="center" headerText="任务来源" dataField="type" width="100">
 							</mx:DataGridColumn>
@@ -116,7 +116,7 @@
 							<mx:DataGridColumn textAlign="center" headerText="转为日程" dataField="col3" width="100">
 							</mx:DataGridColumn>
 						</component:mygridcolumns>
-					</component:WlzxDataGrid>
+					</component:WlzxPageDataGrid>
 					
 				</s:VGroup>
 				

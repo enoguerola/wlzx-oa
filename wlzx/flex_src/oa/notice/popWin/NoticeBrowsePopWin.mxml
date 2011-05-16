@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:VGroup xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		  xmlns:s="library://ns.adobe.com/flex/spark" 
+		  xmlns:mx="library://ns.adobe.com/flex/mx"  xmlns:valueObjects="system.entity.*" xmlns:flexlib="http://code.google.com/p/flexlib/"  width="800" height="600">
+	
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+	
+	<fx:Script> 
+		<![CDATA[  
+			import mx.managers.PopUpManager;
+		]]> 		
+	</fx:Script> 
+	<s:Panel width="100%" height="100%"  skinClass="system.skins.WlzxPanelSkin" title="公告浏览"   dropShadowVisible="false" borderVisible="true" borderColor="black">
+		<s:VGroup width="100%" height="100%"  verticalAlign="middle">
+			<s:HGroup  verticalAlign="middle"   horizontalAlign="right" width="100%"  height="30" top="40">
+			
+				<s:Label text="|"/>
+				<mx:LinkButton label="打印" color="0x3380DD" />
+				<s:Label text="|"/>
+				<mx:LinkButton label="关闭" color="0x3380DD" click="PopUpManager.removePopUp(this);this.parentApplication.menuPopWin=null;" textDecoration="underline" fontWeight="normal" />
+				
+				<s:Label text="|"/>
+				
+			</s:HGroup>
+			<s:VGroup  width="100%" height="100%" verticalAlign="middle"   horizontalAlign="center"  paddingLeft="10" paddingRight="10" paddingBottom="10">
+				<s:HGroup width="100%" height="40"  verticalAlign="middle"   horizontalAlign="center" >
+					<s:Label text="【重要通知】"/>
+					<s:Label text="五一学校放假安排"/>
+				</s:HGroup>
+				<s:HGroup width="100%" height="30"  verticalAlign="middle"   horizontalAlign="right" >
+					<s:Label text="发布部门：校长办公室"/>
+					<s:Label text="2011-04-22 13:49:03"/>
+				</s:HGroup>
+				<s:TextArea enabled="false" height="100%" width="100%" />
+					
+				<s:HGroup width="100%" height="50" verticalAlign="middle"   horizontalAlign="left">
+					<mx:LinkButton  label="附件区域：" icon="@Embed(source='../WebContent/resources/common/tools/button_attachment_icon.png')"/>
+				</s:HGroup>
+			</s:VGroup>
+		</s:VGroup>
+	</s:Panel>
+</s:VGroup>
