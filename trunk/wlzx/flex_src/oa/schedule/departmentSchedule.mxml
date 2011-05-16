@@ -6,7 +6,7 @@
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
 	</fx:Declarations>
 
-	<s:Panel width="100%" height="100%"  skinClass="system.skins.WlzxPanelSkin"   borderVisible="true" dropShadowVisible="false">
+	<s:Panel width="100%" height="100%" title="部门日程"  skinClass="system.skins.WlzxPanelSkin"   borderVisible="true" dropShadowVisible="false">
 		<s:HGroup verticalAlign="middle" horizontalAlign="right" width="100%" paddingTop="5">
 			
 			<s:Label text="部门选择:"/>
