@@ -241,16 +241,16 @@
 		<s:VGroup width="15%" height="100%" verticalAlign="top" paddingTop="15">
 			<s:BorderContainer width="203"  height="52" backgroundImage="@Embed(source='../WebContent/resources/oa/layout/button_bar_bg.png')" borderVisible="false"  alpha="0.5">
 				<s:HGroup  width="100%"  height="100%" verticalAlign="middle">
-					<s:VGroup  paddingLeft="20">
-						<mx:Image source="@Embed(source='../WebContent/resources/oa/buttonIcon/home_icon.png')"  alpha="1" id="home_button" mouseOver="home_button.alpha=2;"   mouseOut="home_button.alpha=1;" click="homeTab();"></mx:Image>
+					<s:VGroup  paddingLeft="20" id="home_button_area"  alpha="1"  mouseOver="home_button_area.alpha=2;"   mouseOut="home_button_area.alpha=1;" >
+						<mx:Image source="@Embed(source='../WebContent/resources/oa/buttonIcon/home_icon.png')"  id="home_button" click="homeTab();"></mx:Image>
 						<s:Label text="首页" paddingLeft="3" fontSize="12" textAlign="center"/>						
 					</s:VGroup>
-					<s:VGroup  paddingLeft="20">
-						<mx:Image source="@Embed(source='../WebContent/resources/oa/buttonIcon/help_icon.png')"  alpha="1" id="help_button" mouseOver="help_button.alpha=2;"   mouseOut="help_button.alpha=1;" click="Alert.show('帮助文档建设中');"></mx:Image>
+					<s:VGroup  paddingLeft="20" id="help_button_area"  alpha="1"  mouseOver="help_button_area.alpha=2;"   mouseOut="help_button_area.alpha=1;">
+						<mx:Image source="@Embed(source='../WebContent/resources/oa/buttonIcon/help_icon.png')"  id="help_button"     click="Alert.show('帮助文档建设中');"></mx:Image>
 						<s:Label text="帮助" paddingLeft="3" fontSize="12" textAlign="center"/>
 					</s:VGroup>
-					<s:VGroup  paddingLeft="20">
-						<mx:Image source="@Embed(source='../WebContent/resources/oa/buttonIcon/exit_icon.png')"  alpha="1" id="exit_button" mouseOver="exit_button.alpha=2;"   mouseOut="exit_button.alpha=1;" click="exitSystem();"></mx:Image>
+					<s:VGroup  paddingLeft="20" id="exit_button_area"  alpha="1"  mouseOver="exit_button_area.alpha=2;"   mouseOut="exit_button_area.alpha=1;">
+						<mx:Image source="@Embed(source='../WebContent/resources/oa/buttonIcon/exit_icon.png')"   id="exit_button"  click="exitSystem();"></mx:Image>
 						<s:Label text="退出" paddingLeft="3" fontSize="12" textAlign="center"/>
 					</s:VGroup>
 				</s:HGroup>

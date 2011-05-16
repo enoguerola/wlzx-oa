@@ -1,8 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Module xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		   xmlns:s="library://ns.adobe.com/flex/spark" 
-		   xmlns:mx="library://ns.adobe.com/flex/mx" layout="vertical" width="100%" height="100%">
+		   xmlns:mx="library://ns.adobe.com/flex/mx" layout="vertical" width="100%" height="100%"  xmlns:component="system.component.*">
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
 	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import mx.managers.PopUpManager;
+			import mx.core.FlexGlobals;
+			import mx.controls.Button;
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.rpc.events.*;
+			import system.utils.CommonUtils;
+			import oa.task.popWin.TaskPopWin;
+			import oa.common.popWin.StaffSelectPopWin;
+
+			private function addStaffTask(event:Event):void{
+				var taskPopWin:TaskPopWin=TaskPopWin(PopUpManager.createPopUp(this,TaskPopWin,true));  
+				PopUpManager.centerPopUp(taskPopWin);
+				taskPopWin.percentHeight=100;
+				taskPopWin.percentWidth=100;
+				taskPopWin.x=FlexGlobals.topLevelApplication.stage.stageWidth/2-taskPopWin.width/2;
+				taskPopWin.y=FlexGlobals.topLevelApplication.stage.stageHeight/2-taskPopWin.height/2;
+//				taskPopWin.id=selectedNode.@type;//参数传递使用
+//				taskPopWin.name=selectedNode.@symbol;//参数传递使用
+				taskPopWin.toolTip="AddStaffTask";//判断领导工作指派还是自我工作安排标记
+			}
+			private function editStaffTask(event:Event):void{
+			}
+			private function deleteStaffTask(event:Event):void{
+			}
+			private function detailStaffTask(event:Event):void{
+			}
+			private function searchStaffTask(event:Event):void{
+			}
+			private function openStaffSelectPopWin(event:Event):void{
+				var staffSelectPopWin:StaffSelectPopWin=StaffSelectPopWin(PopUpManager.createPopUp(this,StaffSelectPopWin,true));  
+				PopUpManager.centerPopUp(staffSelectPopWin);
+				staffSelectPopWin.percentHeight=100;
+				staffSelectPopWin.percentWidth=100;
+				staffSelectPopWin.x=FlexGlobals.topLevelApplication.stage.stageWidth/2-staffSelectPopWin.width/2;
+				staffSelectPopWin.y=FlexGlobals.topLevelApplication.stage.stageHeight/2-staffSelectPopWin.height/2;
+				
+			}
+		]]>
+	</fx:Script>
+
+	<s:Panel width="100%" height="100%"  skinClass="system.skins.WlzxPanelSkin" title="工作指派"  borderVisible="false" dropShadowVisible="false">
+		<s:VGroup width="100%" height="100%" gap="0"  verticalAlign="middle">
+			<mx:HBox width="100%" height="35" paddingLeft="30"  horizontalGap="15" backgroundColor="#C5E497"  verticalAlign="middle">
+				<mx:Button label="新建" width="80" height="30" styleName="customButton" icon="@Embed(source='../WebContent/resources/common/tools/button_add_icon.png')"   click="addStaffTask(event);"/>
+				<mx:Button label="修改" width="80" height="30" styleName="customButton" icon="@Embed(source='../WebContent/resources/common/tools/button_edit_icon.png')"  click="editStaffTask(event);"/> 
+				<mx:Button label="删除" width="80" height="30" styleName="customButton" icon="@Embed(source='../WebContent/resources/common/tools/button_delete_icon.png')"  click="deleteStaffTask(event);"/>  
+				<mx:Button label="详细" width="80" height="30" styleName="customButton" icon="@Embed(source='../WebContent/resources/common/tools/button_detail_icon.png')" click="detailStaffTask(event);"/>   
+				<mx:Button label="搜索" width="80" height="30" styleName="customButton" icon="@Embed(source='../WebContent/resources/common/tools/button_search_icon.png')" click="searchStaffTask(event);"/>   
+				<mx:Button label="打印" width="80" height="30" styleName="customButton" />   
+				<mx:Button label="导出" width="80" height="30" styleName="customButton" />   
+			</mx:HBox>
+			     
+			
+			<s:HGroup width="100%" height="100%" gap="0">
+				<mx:VBox  width="280" height="100%" verticalAlign="middle" horizontalAlign="center" paddingLeft="0">
+					<mx:Form width="100%" height="100%">
+
+						<mx:FormHeading label="搜索条件" fontSize="15" width="100%" textAlign="left"/>
+						
+						<mx:FormItem label="任务主题" >
+							<mx:TextInput id="taskTitle"/>
+						</mx:FormItem>
+						
+						<mx:FormItem label="任务状态 ">
+							<s:ComboBox/>
+						</mx:FormItem>
+						<mx:FormItem label="任务类别 ">
+							<s:ComboBox/>
+						</mx:FormItem>
+						<mx:FormItem label="优先级 ">
+							<s:ComboBox/>
+						</mx:FormItem>
+						<mx:FormItem label="起始时间" >
+							<mx:DateField formatString="YYYY-MM-DD"/>
+						</mx:FormItem>	
+						<mx:FormItem label="截止时间">
+							<mx:DateField formatString="YYYY-MM-DD"/>
+						</mx:FormItem>
+						
+						<mx:FormItem label="指派人"  >
+							<mx:TextInput  focusIn="openStaffSelectPopWin(event);"/>
+						</mx:FormItem>
+						<mx:FormItem label="责任人">
+							<mx:TextInput  focusIn="openStaffSelectPopWin(event);"/>
+						</mx:FormItem>
+						
+					</mx:Form>
+				</mx:VBox>
+				<s:VGroup  width="100%" height="100%" gap="0" paddingTop="10" paddingRight="10" paddingBottom="10">
+					<component:WlzxDataGrid width="100%" height="100%" borderVisible="false"  verticalAlign="middle" id="mydg"  >				
+						<component:mygridcolumns>
+							<mx:DataGridColumn textAlign="center" headerText="任务类别" dataField="type" width="100">
+							</mx:DataGridColumn>
+							<mx:DataGridColumn textAlign="center" headerText="任务主题" dataField="col3" width="200">
+							</mx:DataGridColumn>
+							<mx:DataGridColumn textAlign="center" headerText="开始日期" dataField="type" width="100">
+							</mx:DataGridColumn>
+							<mx:DataGridColumn textAlign="center" headerText="截止日期" dataField="name" width="100">
+							</mx:DataGridColumn>
+							
+							<mx:DataGridColumn textAlign="center" headerText="优先等级" dataField="col3" width="100">
+							</mx:DataGridColumn>
+							<mx:DataGridColumn textAlign="center" headerText="任务状态" dataField="col3" width="100">
+							</mx:DataGridColumn>
+							<mx:DataGridColumn textAlign="center" headerText="责任人" dataField="col3" width="100">
+							</mx:DataGridColumn>
+							<mx:DataGridColumn textAlign="center" headerText="指派人" dataField="col3" width="100">
+							</mx:DataGridColumn>
+						</component:mygridcolumns>
+					</component:WlzxDataGrid>
+					
+				</s:VGroup>
+				
+			</s:HGroup>
+		</s:VGroup>
+		
+	</s:Panel>
 </mx:Module>

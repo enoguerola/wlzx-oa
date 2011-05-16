@@ -5,12 +5,7 @@
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
 	</fx:Declarations>
-	<fx:Style>
-		.customTabStyles {
-			skin: ClassReference("system.skins.WlzxSubTabSkin");
-			border:1px;
-		}
-	</fx:Style>
+	
 	<s:Panel width="100%" height="100%"  skinClass="system.skins.WlzxPanelSkin" title="公告签批"  borderVisible="false"  dropShadowVisible="false">
 		<mx:TabNavigator id="systems"  width="100%" height="100%" tabStyleName="customTabStyles"  horizontalGap="5" borderVisible="false" paddingTop="0" paddingBottom="0" paddingLeft="0" paddingRight="0" tabWidth="160" tabHeight="30">
 			<s:NavigatorContent label="公告签批" width="100%" height="100%">

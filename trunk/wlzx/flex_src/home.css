@@ -58,3 +58,6 @@ global
 	color: black;
 	text-Roll-Over-Color: #4b5f0c;
 }
+.customButtonBar {
+	skin: ClassReference("system.skins.WlzxButtonBarSkin");
+}
