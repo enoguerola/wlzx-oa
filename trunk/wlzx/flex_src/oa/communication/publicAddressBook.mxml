@@ -1,8 +1,150 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Module xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		   xmlns:s="library://ns.adobe.com/flex/spark" 
-		   xmlns:mx="library://ns.adobe.com/flex/mx" layout="vertical" width="100%" height="100%">
+		   xmlns:mx="library://ns.adobe.com/flex/mx" layout="vertical" creationComplete="init();" width="100%"  height="100%"  xmlns:component="system.component.*" xmlns:flexlib="http://code.google.com/p/flexlib/" >
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+		<!--定义 RemoteObject 组件-->
+		<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+			<mx:method name="getDepartmentBySymbol"  concurrency="last"  result="getDepartmentBySymbolResult(event);" />
+		</mx:RemoteObject>
 	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import basic.setting.popWin.DepartmentPopWin;
+			
+			import flexlib.controls.SuperTabBar;
+			import flexlib.controls.tabBarClasses.SuperTab;
+			import flexlib.events.TabReorderEvent;
+			
+			import mx.collections.ArrayCollection;
+			import mx.containers.*;
+			import mx.controls.*;
+			import mx.events.*;
+			import mx.events.ModuleEvent;
+			import mx.managers.PopUpManager;
+			import mx.modules.*;
+			import mx.rpc.events.*;
+			
+			import spark.components.*;
+			
+			import system.entity.*;
+			import mx.core.FlexGlobals;
+			
+			private function init():void {
+				systemServiceRO.getDepartmentBySymbol("root");
+			}
+			
+			private function systemFaultHandler(event:FaultEvent):void {
+				Alert.show(event.fault.faultString, 'Error');
+			}
+			private function getDepartmentBySymbolResult(event:ResultEvent):void {
+				var department:DepartmentModel=DepartmentModel(event.result);
+				var resultXML:String=buildSubDepartments(department);
+				var departmentData:XML=new XML(resultXML);
+				this.departments.dataProvider=departmentData;
+				//				var list:ArrayCollection = ArrayCollection(event.result);
+			}
+			private function buildSubDepartments(department:DepartmentModel):String{
+				var resultXML:String="";
+				var list:ArrayCollection = ArrayCollection(department.subordinates);
+				if(list.length>0){
+					resultXML=resultXML.concat("<node label='"+department.name+"' id='"+department.id+"'>");
+					for (var i:int = 0; i < list.length; i++){
+						var _department:DepartmentModel = DepartmentModel(list.getItemAt(i));	
+						resultXML=resultXML.concat(buildSubDepartments(_department));
+					}
+					resultXML=resultXML.concat("</node>");
+				}		
+				else resultXML=resultXML.concat("<node label='"+department.name+"' id='"+department.id+"'/>");				
+				
+				return resultXML;
+			}
+			private function addDepartment():void{
+				var selectId:String=treeSelectedItemId();
+				if(selectId!=null){
+					var pop:DepartmentPopWin=DepartmentPopWin(PopUpManager.createPopUp(this,DepartmentPopWin,true));  
+					PopUpManager.centerPopUp(pop);
+					pop.percentHeight=100;
+					pop.percentWidth=100;
+					pop.x=FlexGlobals.topLevelApplication.stage.stageWidth/2-pop.width/2;
+					pop.y=FlexGlobals.topLevelApplication.stage.stageHeight/2-pop.height/2;
+					//					Alert.show(selectId);
+				}	
+			}
+			private function editDepartment():void{
+				var selectId:String=treeSelectedItemId();
+				if(selectId!=null){
+					Alert.show(selectId);
+				}	
+			}
+			private function deleteDepartment():void{
+				var selectId:String=treeSelectedItemId();
+				if(selectId!=null){
+					Alert.show(selectId);
+				}	
+			}
+			private function saveDepartment():void{
+				
+			}
+			private function treeSelectedItemId():String{
+				var selectedNode:XML=departments.selectedItem as XML;
+				if(selectedNode!=null)
+					return selectedNode.@id;
+				else{
+					Alert.show("当前未选中任何节点部门","操作不当");
+					return null;
+				} 
+			}
+			
+		]]>
+	</fx:Script>
+	<s:Panel width="100%" height="100%"  skinClass="system.skins.WlzxPanelSkin" title="公共通讯录"  borderVisible="false">
+		<s:VGroup  width="100%" height="100%" gap="0">
+			<mx:HBox  width="100%" height="7%" backgroundColor="#C5E497" horizontalGap="10" paddingLeft="20" verticalAlign="middle">
+				<mx:Label text="|"/>
+				<mx:LinkButton  label="导出" icon="@Embed(source='../WebContent/resources/common/tools/button_down_icon.png')"/>
+				<mx:Label text="|"/>
+				
+				<mx:LinkButton  label="快速查找" icon="@Embed(source='../WebContent/resources/oa/buttonIcon/search_icon.jpg')">
+					
+				</mx:LinkButton>
+				<s:TextInput />	
+				<mx:Label text="|"/>
+			</mx:HBox>
+			
+			<s:HGroup  width="100%" height="100%" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10">
+				<s:VGroup width="200" height="100%">
+					
+					<s:Panel width="100%" height="100%"  skinClass="system.skins.WlzxPanelSkin" title="部门结构"   dropShadowVisible="false" borderVisible="true">
+						<flexlib:ConvertibleTreeList id="departments" labelField="@label"   width="100%" height="100%" >
+						</flexlib:ConvertibleTreeList>
+					</s:Panel>
+				</s:VGroup>
+				<s:VGroup  width="100%" height="100%" gap="0" >
+					<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="false"   borderAlpha="0.2" verticalAlign="middle"   id="postedDG" pagecount="13">				
+						<component:mygridcolumns>
+							
+							
+							<mx:DataGridColumn textAlign="center" headerText="姓名/部门名称" dataField="type" width="100">
+							</mx:DataGridColumn>
+							<mx:DataGridColumn textAlign="center" headerText="职务" dataField="title" width="100">
+							</mx:DataGridColumn>
+							
+							<mx:DataGridColumn textAlign="center" headerText="电子邮箱" dataField="department" width="100">
+							</mx:DataGridColumn>
+							<mx:DataGridColumn textAlign="center" headerText="办公电话" dataField="priority" width="100">
+							</mx:DataGridColumn>
+							<mx:DataGridColumn textAlign="center" headerText="手机号码" dataField="postTime" width="100">
+							</mx:DataGridColumn>
+							
+						</component:mygridcolumns>
+					</component:WlzxPageDataGrid>
+				</s:VGroup>
+			</s:HGroup>
+			
+		</s:VGroup>
+		
+		
+	</s:Panel>
 </mx:Module>
