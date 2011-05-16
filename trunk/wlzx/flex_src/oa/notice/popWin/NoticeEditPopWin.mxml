@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:VGroup xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		  xmlns:s="library://ns.adobe.com/flex/spark" 
+		  xmlns:mx="library://ns.adobe.com/flex/mx"  xmlns:valueObjects="system.entity.*" xmlns:flexlib="http://code.google.com/p/flexlib/"   creationComplete="init();" width="600" height="500">
+	
+
+		<fx:Declarations>
+			<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+		</fx:Declarations>
+		<fx:Script> 
+		
+			<![CDATA[  
+				
+				import mx.controls.Alert;
+				import mx.core.FlexGlobals;
+				import mx.events.ItemClickEvent;
+				import mx.events.ValidationResultEvent;
+				import mx.formatters.DateFormatter;
+				import mx.managers.PopUpManager;
+				import mx.rpc.events.*;
+				import mx.validators.Validator;
+				import mx.validators.ZipCodeValidatorDomainType;
+				
+				import oa.common.popWin.StaffSelectPopWin;
+				
+				import system.utils.*;
+				private var staffSelectPopWin:StaffSelectPopWin=null;
+				private function openStaffSelectPopWin(event:Event):void{
+					if(staffSelectPopWin!=null)PopUpManager.removePopUp(staffSelectPopWin);
+					staffSelectPopWin=StaffSelectPopWin(PopUpManager.createPopUp(this,StaffSelectPopWin,true));  
+					PopUpManager.centerPopUp(staffSelectPopWin);
+					staffSelectPopWin.percentHeight=100;
+					staffSelectPopWin.percentWidth=100;
+					staffSelectPopWin.x=FlexGlobals.topLevelApplication.stage.stageWidth/2-staffSelectPopWin.width/2;
+					staffSelectPopWin.y=FlexGlobals.topLevelApplication.stage.stageHeight/2-staffSelectPopWin.height/2;
+					
+				}
+				private function switchSignerArea(event:Event):void{
+					var check:CheckBox=event.currentTarget as CheckBox;
+					if(check.selected){
+						signerArea.visible=true;
+					}else{
+						signerArea.visible=false;
+					}
+					
+				}
+				
+			]]> 
+			
+		</fx:Script> 
+	<s:TitleWindow  id="noticeWin" width="100%" height="100%"  close="PopUpManager.removePopUp(this);this.parentApplication.menuPopWin=null;" skinClass="system.skins.WlzxTitleWindowSkin">
+			<s:VGroup  width="100%" height="100%" gap="0">
+				<mx:HBox  width="100%" height="7%" backgroundColor="#C5E497" horizontalGap="10" paddingLeft="20" verticalAlign="middle">
+					<mx:Label text="|"/>
+					<mx:LinkButton  label="发布" icon="@Embed(source='../WebContent/resources/common/tools/button_save_icon.png')"/>
+					<mx:Label text="|"/>
+					<mx:LinkButton  label="草稿" icon="@Embed(source='../WebContent/resources/common/tools/button_draftSave_icon.png')"/>
+					<mx:Label text="|"/>
+					<mx:LinkButton  label="丢弃" icon="@Embed(source='../WebContent/resources/common/tools/button_abanden_icon.png')"/>
+					<mx:Label text="|"/>
+					
+				</mx:HBox>
+				<s:VGroup  width="100%" height="100%">
+					<mx:Form width="100%" height="100%">
+						<mx:FormItem label="标题" width="100%">
+							<s:TextInput width="100%"/>
+						</mx:FormItem>
+						<mx:FormItem label="必读对象" width="100%">
+							<s:TextInput width="100%"  focusIn="openStaffSelectPopWin(event);" editable="false"/>
+						</mx:FormItem>
+						<mx:FormItem label="可读 对象" width="100%">
+							<s:TextInput width="100%" focusIn="openStaffSelectPopWin(event);" editable="false"/>
+						</mx:FormItem>
+						<mx:FormItem label="公告类型" width="100%">
+							<s:HGroup  width="100%" gap="0">
+								<s:ComboBox/>
+								<mx:FormItem label="发布部门">
+									<s:ComboBox/>
+								</mx:FormItem>
+								<mx:FormItem>
+									<s:CheckBox label="紧急"/>
+								</mx:FormItem>
+								<mx:FormItem>
+									<s:CheckBox label="需签批"   change="switchSignerArea(event);"/>
+								</mx:FormItem>
+								<mx:FormItem label="签批人" visible="false" id="signerArea">
+									<s:TextInput   focusIn="openStaffSelectPopWin(event);" editable="false"/>
+								</mx:FormItem>
+							</s:HGroup>
+						</mx:FormItem>
+						<mx:FormItem  width="100%" >
+							<s:HGroup  width="100%" verticalAlign="middle">
+								<mx:LinkButton  label="添加附件" icon="@Embed(source='../WebContent/resources/common/tools/button_attachment_icon.png')"/>
+							</s:HGroup>
+						</mx:FormItem>
+						<mx:FormItem label="内容" width="100%" height="100%">
+							<mx:RichTextEditor id="rte" title="Halo RichTextEditor"   headerHeight="0" width="100%" height="100%" dropShadowVisible="false" text="" >
+							</mx:RichTextEditor>
+						</mx:FormItem>
+						
+					</mx:Form>
+				</s:VGroup>
+				
+			</s:VGroup>
+			
+			
+	</s:TitleWindow>
+		
+	
+</s:VGroup>

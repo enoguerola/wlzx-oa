@@ -69,7 +69,7 @@
 					<mx:Label text="|"/>
 					<mx:LinkButton  label="新建" icon="@Embed(source='../WebContent/resources/common/tools/button_add_icon.png')"   click="addScheduleTask(event);"/>
 					<mx:Label text="|"/>
-					<mx:LinkButton  label="修改" icon="@Embed(source='../WebContent/resources/common/tools/button_edit_icon.png')"  click="editScheduleTask(event);"/>
+					<mx:LinkButton  label="编辑" icon="@Embed(source='../WebContent/resources/common/tools/button_edit_icon.png')"  click="editScheduleTask(event);"/>
 					<mx:Label text="|"/>
 					<mx:LinkButton  label="删除" icon="@Embed(source='../WebContent/resources/common/tools/button_delete_icon.png')"  click="deleteScheduleTask(event);"/>
 					<mx:Label text="|"/>
@@ -85,9 +85,9 @@
 				</mx:HBox>
 			</s:HGroup>
 			<s:HGroup width="100%" height="100%" gap="0">
-				<mx:VBox  width="220" height="100%" verticalAlign="middle" horizontalAlign="center" paddingLeft="0">
-					<mx:Form width="100%" height="100%">		
-						<mx:FormHeading label="搜索条件" fontSize="15" width="100%" textAlign="left"/>
+				<mx:VBox  width="220" height="100%" verticalAlign="middle" horizontalAlign="center" paddingLeft="0" paddingTop="0">
+					<mx:Form width="100%" height="100%" paddingTop="0">		
+						<mx:FormHeading label="搜索条件" fontSize="15" width="100%" textAlign="left" paddingTop="0"/>
 						<mx:FormItem label="日程视图 ">
 							<s:RadioButtonGroup id="scheduleView"  itemClick="scheduleViewSwitch(event);" />
 							<s:RadioButton label="列表视图"  groupName="scheduleView" id="listView" selected="true" value="list"/>
@@ -119,6 +119,9 @@
 							</s:HGroup>
 							
 						</mx:FormItem>
+						<mx:FormItem label="日程主题 " width="100%">
+							<s:TextInput width="100%"/>
+						</mx:FormItem>
 						<mx:FormItem label="起始时间" id="beginDateArea">
 							<mx:DateField formatString="YYYY-MM-DD" width="100%"/>
 						</mx:FormItem>	
@@ -135,7 +138,7 @@
 						<s:NavigatorContent label="日程列表" width="100%" height="100%" name="list" id="list">
 							<s:VGroup width="100%" height="100%">
 								
-								<component:WlzxDataGrid width="100%" height="100%" borderVisible="false"   borderAlpha="0.2" verticalAlign="middle" id="mydg">				
+								<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="false"   borderAlpha="0.2" verticalAlign="middle" id="mydg">				
 									<component:mygridcolumns>
 										
 										<mx:DataGridColumn textAlign="center" headerText="标记" dataField="loginaccount" width="50">
@@ -160,7 +163,7 @@
 										<mx:DataGridColumn textAlign="center" headerText="删除" dataField="col3" width="50">
 										</mx:DataGridColumn>
 									</component:mygridcolumns>
-								</component:WlzxDataGrid>
+								</component:WlzxPageDataGrid>
 							</s:VGroup>
 							
 						</s:NavigatorContent>
@@ -168,7 +171,7 @@
 							<s:HGroup width="100%" height="100%" top="10">
 								
 								<s:VGroup width="70%" height="100%">
-									<component:WlzxDataGrid width="100%" height="100%" borderVisible="false"   borderAlpha="0.2" verticalAlign="middle">				
+									<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="false"   borderAlpha="0.2" verticalAlign="middle">				
 										<component:mygridcolumns>
 											<mx:DataGridColumn textAlign="center" headerText="标记" dataField="loginaccount" width="50">
 												
@@ -188,7 +191,7 @@
 											</mx:DataGridColumn>
 											
 										</component:mygridcolumns>
-									</component:WlzxDataGrid>
+									</component:WlzxPageDataGrid>
 								</s:VGroup>
 								<s:VGroup width="30%" height="100"  horizontalAlign="center">
 									<mx:DateChooser width="100%"/>

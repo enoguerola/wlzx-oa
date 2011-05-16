@@ -175,7 +175,8 @@
 				}); 
 				child.addEventListener( ModuleEvent.ERROR,function(e:ModuleEvent):void{
 					child.removeAllChildren();
-					Alert.show("模块加载错误，请检查网络或联系系统管理员");
+					Alert.show("模块加载错误，这可能是用户长时间未操作导致的用户认证过期，请重新登录操作。如果仍存在问题，请检查网络或联系系统管理员","提示",Alert.YES,null,exitCallBack);
+//					Alert.show("你确定要退出系统吗?","确认",Alert.YES,null,exitCallBack);
 				}); 
 				var bar:ProgressBar=new ProgressBar();
 				bar.minimum=0;
@@ -238,22 +239,14 @@
 		<s:layout>
 			<s:HorizontalLayout  verticalAlign="top" horizontalAlign="right"/>
 		</s:layout>
-		<s:VGroup width="15%" height="100%" verticalAlign="top" paddingTop="15">
-			<s:BorderContainer width="203"  height="52" backgroundImage="@Embed(source='../WebContent/resources/oa/layout/button_bar_bg.png')" borderVisible="false"  alpha="0.5">
-				<s:HGroup  width="100%"  height="100%" verticalAlign="middle">
-					<s:VGroup  paddingLeft="20" id="home_button_area"  alpha="1"  mouseOver="home_button_area.alpha=2;"   mouseOut="home_button_area.alpha=1;" >
-						<mx:Image source="@Embed(source='../WebContent/resources/oa/buttonIcon/home_icon.png')"  id="home_button" click="homeTab();"></mx:Image>
-						<s:Label text="首页" paddingLeft="3" fontSize="12" textAlign="center"/>						
-					</s:VGroup>
-					<s:VGroup  paddingLeft="20" id="help_button_area"  alpha="1"  mouseOver="help_button_area.alpha=2;"   mouseOut="help_button_area.alpha=1;">
-						<mx:Image source="@Embed(source='../WebContent/resources/oa/buttonIcon/help_icon.png')"  id="help_button"     click="Alert.show('帮助文档建设中');"></mx:Image>
-						<s:Label text="帮助" paddingLeft="3" fontSize="12" textAlign="center"/>
-					</s:VGroup>
-					<s:VGroup  paddingLeft="20" id="exit_button_area"  alpha="1"  mouseOver="exit_button_area.alpha=2;"   mouseOut="exit_button_area.alpha=1;">
-						<mx:Image source="@Embed(source='../WebContent/resources/oa/buttonIcon/exit_icon.png')"   id="exit_button"  click="exitSystem();"></mx:Image>
-						<s:Label text="退出" paddingLeft="3" fontSize="12" textAlign="center"/>
-					</s:VGroup>
+		<s:VGroup width="15%" height="100%" verticalAlign="top" paddingTop="7">
+			<s:BorderContainer width="203"  height="60" backgroundImage="@Embed(source='../WebContent/resources/oa/layout/button_bar_bg.png')" borderVisible="false"  alpha="0.5">
+				<s:HGroup  width="100%"  height="100%" verticalAlign="middle"  alpha="2" paddingLeft="20" gap="20">
+					<mx:LinkButton   height="52" icon="@Embed(source='../WebContent/resources/oa/buttonIcon/home_icon.png')" label="首页" fontSize="12" textAlign="center" labelPlacement="bottom" click="homeTab();"/>
+					<mx:LinkButton   height="52" icon="@Embed(source='../WebContent/resources/oa/buttonIcon/help_icon.png')" label="帮助" fontSize="12" textAlign="center" labelPlacement="bottom" click="Alert.show('帮助文档建设中');"/>
+					<mx:LinkButton   height="52" icon="@Embed(source='../WebContent/resources/oa/buttonIcon/exit_icon.png')" label="退出" fontSize="12" textAlign="center" labelPlacement="bottom" click="exitSystem();"/>
 				</s:HGroup>
+				
 			</s:BorderContainer>
 		</s:VGroup>
 		

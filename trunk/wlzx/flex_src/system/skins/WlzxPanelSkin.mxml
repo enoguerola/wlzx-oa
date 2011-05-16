@@ -109,7 +109,7 @@ in accordance with the terms of the license agreement accompanying it.
 						<s:SolidColor color="0xC0C0C0" />
 					</s:fill>
 				</s:Rect>
-				<!-- layer 3: text 通过在这里自定义修改标题样式 -->
+				<!-- layer 3: text 通过在这里自定义编辑标题样式 -->
 				<!--- @copy spark.components.Panel#titleDisplay -->
 				<s:Label id="titleDisplay" maxDisplayedLines="1"
 						 left="9" right="3" top="1" bottom="0" minHeight="30"

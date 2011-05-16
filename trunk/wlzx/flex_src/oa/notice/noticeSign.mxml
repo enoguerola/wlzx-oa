@@ -8,7 +8,7 @@
 	
 	<s:Panel width="100%" height="100%"  skinClass="system.skins.WlzxPanelSkin" title="公告签批"  borderVisible="false"  dropShadowVisible="false">
 		<mx:TabNavigator id="systems"  width="100%" height="100%" tabStyleName="customSubTabStyles"  horizontalGap="1" borderVisible="false" paddingTop="0" paddingBottom="0" paddingLeft="0" paddingRight="0" tabWidth="120" tabHeight="30">
-			<s:NavigatorContent label="公告签批" width="100%" height="100%">
+			<s:NavigatorContent label="待签批公告" width="100%" height="100%">
 				<s:VGroup gap="20" width="100%" height="100%"  paddingTop="10" paddingBottom="10" paddingLeft="20" paddingRight="20" horizontalAlign="center" verticalAlign="middle">
 					<s:Panel width="100%" height="30%"  skinClass="system.skins.WlzxPanelSkin" title="搜索条件"  borderVisible="true" >
 						<mx:Form width="100%" height="100%" verticalGap="10" >
@@ -31,7 +31,7 @@
 					</s:Panel>
 					<s:Panel width="100%" height="70%"  skinClass="system.skins.WlzxPanelSkin" title="公告列表"  borderVisible="true">
 						<s:VGroup  width="100%" height="100%" gap="0">
-							<component:WlzxDataGrid width="100%" height="100%" borderVisible="false"   borderAlpha="0.2" verticalAlign="middle" id="mydg">				
+							<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="false"   borderAlpha="0.2" verticalAlign="middle" id="mydg">				
 								<component:mygridcolumns>
 									<mx:DataGridColumn textAlign="center"  headerText="选择" dataField="loginaccount" width="50">
 										<mx:itemRenderer>
@@ -62,7 +62,7 @@
 									</mx:DataGridColumn>
 		
 								</component:mygridcolumns>
-							</component:WlzxDataGrid>
+							</component:WlzxPageDataGrid>
 							
 						</s:VGroup>
 						
@@ -70,7 +70,7 @@
 				</s:VGroup>
 				
 			</s:NavigatorContent>
-			<s:NavigatorContent label="签批记录" width="100%" height="100%">
+			<s:NavigatorContent label="历史签批记录" width="100%" height="100%">
 			</s:NavigatorContent>
 			
 		</mx:TabNavigator>
