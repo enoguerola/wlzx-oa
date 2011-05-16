@@ -50,14 +50,23 @@
 
 	<s:Panel width="100%" height="100%"  skinClass="system.skins.WlzxPanelSkin" title="工作指派"  borderVisible="false" dropShadowVisible="false">
 		<s:VGroup width="100%" height="100%" gap="0"  verticalAlign="middle">
-			<mx:HBox width="100%" height="35" paddingLeft="30"  horizontalGap="15" backgroundColor="#C5E497"  verticalAlign="middle">
-				<mx:Button label="新建" width="80" height="30" styleName="customButton" icon="@Embed(source='../WebContent/resources/common/tools/button_add_icon.png')"   click="addStaffTask(event);"/>
-				<mx:Button label="修改" width="80" height="30" styleName="customButton" icon="@Embed(source='../WebContent/resources/common/tools/button_edit_icon.png')"  click="editStaffTask(event);"/> 
-				<mx:Button label="删除" width="80" height="30" styleName="customButton" icon="@Embed(source='../WebContent/resources/common/tools/button_delete_icon.png')"  click="deleteStaffTask(event);"/>  
-				<mx:Button label="详细" width="80" height="30" styleName="customButton" icon="@Embed(source='../WebContent/resources/common/tools/button_detail_icon.png')" click="detailStaffTask(event);"/>   
-				<mx:Button label="搜索" width="80" height="30" styleName="customButton" icon="@Embed(source='../WebContent/resources/common/tools/button_search_icon.png')" click="searchStaffTask(event);"/>   
-				<mx:Button label="打印" width="80" height="30" styleName="customButton" />   
-				<mx:Button label="导出" width="80" height="30" styleName="customButton" />   
+			<mx:HBox width="100%" height="35" paddingLeft="20"  horizontalGap="10" backgroundColor="#C5E497"  verticalAlign="middle">
+				<mx:Label text="|"/>
+				<mx:LinkButton  label="新建" icon="@Embed(source='../WebContent/resources/common/tools/button_add_icon.png')"   click="addStaffTask(event);"/>
+				<mx:Label text="|"/>
+				<mx:LinkButton  label="修改" icon="@Embed(source='../WebContent/resources/common/tools/button_edit_icon.png')"  click="editStaffTask(event);"/>
+				<mx:Label text="|"/>
+				<mx:LinkButton  label="删除" icon="@Embed(source='../WebContent/resources/common/tools/button_delete_icon.png')"  click="deleteStaffTask(event);"/>
+				<mx:Label text="|"/>
+				<mx:LinkButton  label="详细" icon="@Embed(source='../WebContent/resources/common/tools/button_detail_icon.png')" click="detailStaffTask(event);"/>
+				<mx:Label text="|"/>
+				<mx:LinkButton  label="搜索" icon="@Embed(source='../WebContent/resources/common/tools/button_search_icon.png')" click="searchStaffTask(event);"/>
+				<mx:Label text="|"/>
+				<mx:LinkButton  label="打印" icon="@Embed(source='../WebContent/resources/common/tools/button_printer_icon.png')"/>
+				<mx:Label text="|"/>
+				<mx:LinkButton  label="导出" icon="@Embed(source='../WebContent/resources/common/tools/button_down_icon.png')"/>
+				<mx:Label text="|"/>
+				
 			</mx:HBox>
 			     
 			

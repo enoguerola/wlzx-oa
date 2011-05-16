@@ -7,7 +7,7 @@
 	</fx:Declarations>
 	
 	<s:Panel width="100%" height="100%"  skinClass="system.skins.WlzxPanelSkin" title="公告管理"  borderVisible="false" dropShadowVisible="false">
-		<mx:TabNavigator id="systems"  width="100%" height="100%" tabStyleName="customTabStyles"  horizontalGap="5" borderVisible="false" paddingTop="0" paddingBottom="0" paddingLeft="0" paddingRight="0" tabWidth="160" tabHeight="30">
+		<mx:TabNavigator id="systems"  width="100%" height="100%" tabStyleName="customSubTabStyles"  horizontalGap="1" borderVisible="false" paddingTop="0" paddingBottom="0" paddingLeft="0" paddingRight="0" tabWidth="120" tabHeight="30">
 			<s:NavigatorContent label="我保存的公告" width="100%" height="100%">
 				<s:VGroup gap="20" width="100%" height="100%"  paddingTop="10" paddingBottom="10" paddingLeft="20" paddingRight="20" horizontalAlign="center" verticalAlign="middle">
 					<s:Panel width="100%" height="30%"  skinClass="system.skins.WlzxPanelSkin" title="搜索条件"  borderVisible="true" >
