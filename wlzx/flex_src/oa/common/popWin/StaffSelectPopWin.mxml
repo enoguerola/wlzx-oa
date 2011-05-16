@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:VGroup xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		  xmlns:s="library://ns.adobe.com/flex/spark" 
+		  xmlns:mx="library://ns.adobe.com/flex/mx"  xmlns:valueObjects="system.entity.*" xmlns:flexlib="http://code.google.com/p/flexlib/"  width="500" height="500">
+	
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+	
+	<fx:Script> 
+		<![CDATA[  
+			import mx.managers.PopUpManager;
+		]]> 		
+	</fx:Script> 
+<s:Panel width="100%" height="100%"  skinClass="system.skins.WlzxPanelSkin" title="人员选择"   dropShadowVisible="false" borderVisible="true" borderColor="black">
+	<s:VGroup width="100%" height="100%"  verticalAlign="middle">
+		<s:HGroup  verticalAlign="middle"   horizontalAlign="right" width="100%"  height="30" top="40">
+			<s:Label text="|"/>
+			<s:Label text="全体人员"/>
+			<s:Label text="|"/>
+			<s:Label text="确认选择"/>
+			<s:Label text="|"/>
+			<s:Label text="关闭" click="PopUpManager.removePopUp(this);this.parentApplication.menuPopWin=null;"/>
+			<s:Label text="|"/>
+			
+		</s:HGroup>
+		<s:HGroup  verticalAlign="middle" width="100%" height="100%" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10">
+			<mx:VBox borderVisible="true" width="45%" height="100%" borderColor="0xD0E8AA">
+				<s:HGroup  verticalAlign="middle"   horizontalAlign="center" width="100%" height="40">
+					<s:TextInput width="80%"/>	
+					<mx:Image source="@Embed(source='../WebContent/resources/common/tools/button_search_icon.png')" />
+				</s:HGroup>
+				<mx:Accordion    headerStyleName="customAccordionHeadStyles" width="100%"  top="15" height="100%"  selectedIndex="0" id="menus" dropShadowVisible="false" backgroundAlpha="0.0" headerHeight="25" fontSize="15" textAlign="center">
+					<s:NavigatorContent label="所有人员列表" fontSize="20" width="100%" height="100%">
+						<s:layout>
+							<s:VerticalLayout horizontalAlign="center"/>
+						</s:layout>
+						<mx:Tree id="myTree1" iconField="@icon"   width="100%" height="100%" labelField="@label"   textAlign="left"  paddingLeft="10" showRoot="false" />    
+
+					</s:NavigatorContent>
+					<s:NavigatorContent label="选择部门" fontSize="20" width="100%" height="100%">
+						<s:layout>
+							<s:VerticalLayout horizontalAlign="center"/>
+						</s:layout>
+						<mx:Tree id="myTree2" iconField="@icon"   width="100%" height="100%" labelField="@label"   textAlign="left"  paddingLeft="10" showRoot="false" />    
+						
+					</s:NavigatorContent>
+					<s:NavigatorContent label="按部门选择员工" fontSize="20" width="100%" height="100%">
+						<s:layout>
+							<s:VerticalLayout horizontalAlign="center"/>
+						</s:layout>
+						<mx:Tree id="myTree3" iconField="@icon"   width="100%" height="100%" labelField="@label"   textAlign="left"  paddingLeft="10" showRoot="false" />    
+						
+					</s:NavigatorContent>
+					<s:NavigatorContent label="按岗位选择员工" fontSize="20" width="100%" height="100%">
+						<s:layout>
+							<s:VerticalLayout horizontalAlign="center"/>
+						</s:layout>
+						<mx:Tree id="myTree4" iconField="@icon"   width="100%" height="100%" labelField="@label"   textAlign="left"  paddingLeft="10" showRoot="false" />    
+						
+					</s:NavigatorContent>
+				</mx:Accordion>
+			</mx:VBox>	
+			<s:VGroup width="5%" height="100%" verticalAlign="middle" horizontalAlign="center" gap="10">
+				<mx:Image source="@Embed(source='../WebContent/resources/common/tools/button_next_icon.png')" />
+				<mx:Image source="@Embed(source='../WebContent/resources/common/tools/button_pre_icon.png')" />
+				<mx:Image source="@Embed(source='../WebContent/resources/common/tools/button_nextPlus_icon.png')" />
+				<mx:Image source="@Embed(source='../WebContent/resources/common/tools/button_prePlus_icon.png')" />
+
+			</s:VGroup>	
+			<mx:VBox borderVisible="true" width="45%" height="100%" borderColor="0xD0E8AA">
+				<s:HGroup  verticalAlign="middle"   horizontalAlign="left" width="100%" height="40">					
+					<mx:Image source="@Embed(source='../WebContent/resources/common/tools/button_hook_icon.png')" />
+					<s:Label text="已选人员"/>	
+				</s:HGroup>
+			</mx:VBox>
+		</s:HGroup>
+	</s:VGroup>
+</s:Panel>
+</s:VGroup>

@@ -5,110 +5,209 @@
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
 	</fx:Declarations>
-	
-	<s:Panel width="100%" height="100%"  skinClass="system.skins.WlzxPanelSkin"   borderVisible="true" dropShadowVisible="false">
-		<s:HGroup verticalAlign="middle" horizontalAlign="right" width="100%" paddingTop="5">
-			<mx:Button  label="新建" styleName="customButton" width="70">
-				
-			</mx:Button>
-			<mx:Button  label="打印" styleName="customButton" width="70">
-				
-			</mx:Button>
-			<mx:Button  label="导出" styleName="customButton" width="70">
-				
-			</mx:Button>
-			<mx:Button  label="查看他人日程" styleName="customButton" width="120">
-				
-			</mx:Button>
-		</s:HGroup>
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.controls.Button;
+			import mx.core.FlexGlobals;
+			import mx.core.INavigatorContent;
+			import mx.events.ItemClickEvent;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.*;
+			
+			import oa.schedule.popWin.SchedulePopWin;
+			
+			import system.utils.CommonUtils;
 
-			<mx:TabNavigator id="systems"  width="100%" height="100%" tabStyleName="customSubTabStyles"  horizontalGap="2" borderVisible="false" paddingTop="0" paddingBottom="0" paddingLeft="0" paddingRight="0" tabWidth="100" tabHeight="30">
-				<s:NavigatorContent label="日程列表" width="100%" height="100%">
-					<s:VGroup width="100%" height="100%">
-						<mx:HBox backgroundColor="#DCEDC0" width="100%" height="40" verticalAlign="middle" horizontalAlign="left">
-							<s:Label text="起止时间:"/>
-							<mx:DateField/>
-							<mx:Label text="-"/>
-							<mx:DateField/>
-							<s:Label text="状态:"/>
-							<s:ComboBox/>
-							<mx:Button label="查询" styleName="searchButton" width="70"/>
-						</mx:HBox>
-						<component:WlzxDataGrid width="100%" height="100%" borderVisible="false"   borderAlpha="0.2" verticalAlign="middle" id="mydg">				
-							<component:mygridcolumns>
-								
-								<mx:DataGridColumn textAlign="center" headerText="标记" dataField="loginaccount" width="50">
-									
-								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="开始时间" dataField="type" width="150">
-								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="截止时间" dataField="name" width="150">
-								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="工作内容" dataField="col3" width="150">
-								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="重要度" dataField="col3" width="150">
-								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="完成" dataField="col3" width="150">
-								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="删除" dataField="col3" width="150">
-								</mx:DataGridColumn>
-							</component:mygridcolumns>
-						</component:WlzxDataGrid>
-					</s:VGroup>
-					
-				</s:NavigatorContent>
-				<s:NavigatorContent label="按日查看" width="100%" height="100%">
-					<s:HGroup width="100%" height="100%" top="10">
+			private function addScheduleTask(event:Event):void{
+				var schedulePopWin:SchedulePopWin=SchedulePopWin(PopUpManager.createPopUp(this,SchedulePopWin,true));  
+				PopUpManager.centerPopUp(schedulePopWin);
+				schedulePopWin.percentHeight=100;
+				schedulePopWin.percentWidth=100;
+				schedulePopWin.x=FlexGlobals.topLevelApplication.stage.stageWidth/2-schedulePopWin.width/2;
+				schedulePopWin.y=FlexGlobals.topLevelApplication.stage.stageHeight/2-schedulePopWin.height/2;
+			
+				schedulePopWin.toolTip="Add";
+			}
+			private function editScheduleTask(event:Event):void{
+			}
+			private function deleteScheduleTask(event:Event):void{
+			}
+			private function detailScheduleTask(event:Event):void{
+			}
+			private function searchScheduleTask(event:Event):void{
+			}
+			
+			private function scheduleViewSwitch(event:ItemClickEvent):void {
+				var value:String=event.currentTarget.selectedValue;
+//				Alert.show(value);
+//				scheduleViewContainer.setCurrentState(value,true);
+				if(value=="list"){
+					scheduleViewContainer.selectedChild= list;
+					beginDateArea.visible=true;
+					endDateArea.visible=true;
+				}else{
+					beginDateArea.visible=false;
+					endDateArea.visible=false;
+					if(value=="date")
+						scheduleViewContainer.selectedChild= date;
+					else if(value=="week")
+						scheduleViewContainer.selectedChild= week;
+					else if(value=="month")
+						scheduleViewContainer.selectedChild= month;
+				}
+				
+				
+			}
+		]]>
+	</fx:Script>
+	<s:Panel width="100%" height="100%"  skinClass="system.skins.WlzxPanelSkin"  title="日程安排"  borderVisible="true" dropShadowVisible="false">
+		<s:VGroup width="100%" height="100%">
+			<s:HGroup verticalAlign="middle" horizontalAlign="right" width="100%">
+				<mx:HBox width="100%" height="35" paddingLeft="30"  horizontalGap="15" backgroundColor="#C5E497"  verticalAlign="middle">
+					<mx:Button label="新建" width="80" height="30" styleName="customButton" icon="@Embed(source='../WebContent/resources/common/tools/button_add_icon.png')"   click="addScheduleTask(event);"/>
+					<mx:Button label="修改" width="80" height="30" styleName="customButton" icon="@Embed(source='../WebContent/resources/common/tools/button_edit_icon.png')"  click="editScheduleTask(event);"/> 
+					<mx:Button label="删除" width="80" height="30" styleName="customButton" icon="@Embed(source='../WebContent/resources/common/tools/button_delete_icon.png')"  click="deleteScheduleTask(event);"/>  
+					<mx:Button label="详细" width="80" height="30" styleName="customButton" icon="@Embed(source='../WebContent/resources/common/tools/button_detail_icon.png')" click="detailScheduleTask(event);"/>   
+					<mx:Button label="搜索" width="80" height="30" styleName="customButton" icon="@Embed(source='../WebContent/resources/common/tools/button_search_icon.png')" click="searchScheduleTask(event);"/>   
+					<mx:Button label="打印" width="80" height="30" styleName="customButton" />   
+					<mx:Button label="导出" width="80" height="30" styleName="customButton" />   
+				</mx:HBox>
+			</s:HGroup>
+			<s:HGroup width="100%" height="100%" gap="0">
+				<mx:VBox  width="220" height="100%" verticalAlign="middle" horizontalAlign="center" paddingLeft="0">
+					<mx:Form width="100%" height="100%">		
+						<mx:FormHeading label="搜索条件" fontSize="15" width="100%" textAlign="left"/>
+						<mx:FormItem label="日程视图 ">
+							<s:RadioButtonGroup id="scheduleView"  itemClick="scheduleViewSwitch(event);" />
+							<s:RadioButton label="列表视图"  groupName="scheduleView" id="listView" selected="true" value="list"/>
+							<s:RadioButton label="日视图" groupName="scheduleView" id="dateView" value="date"/>
+							<s:RadioButton label="周视图" groupName="scheduleView" id="weekView" value="week"/>
+							<s:RadioButton label="月视图" groupName="scheduleView" id="monthView" value="month"/>
+							
+						</mx:FormItem>
+						<mx:FormItem label="日程级别 ">
+							<s:CheckBox  label="学校日程" selected="true"/>
+							<s:CheckBox label="部门日程" selected="true"/>
+							<s:CheckBox label="个人日程" selected="true"/>
+						</mx:FormItem>
+						<mx:FormItem label="日程状态 " width="100%">
+							<s:ComboBox width="100%"/>
+						</mx:FormItem>
+						<mx:FormItem label="日程类别 " width="100%">
+							<s:ComboBox width="100%"/>
+						</mx:FormItem>
+						<mx:FormItem label="优先级 " width="100%">
+							<s:ComboBox width="100%"/>
+						</mx:FormItem>
+						<mx:FormItem label="循环日程" width="100%">
+							<s:RadioButtonGroup id="circleFlag" />
+							<s:HGroup gap="0">
+								<s:RadioButton label="全部" groupName="circleFlag" selected="true"/>
+								<s:RadioButton label="是" groupName="circleFlag"/>
+								<s:RadioButton label="否" groupName="circleFlag"/>
+							</s:HGroup>
+							
+						</mx:FormItem>
+						<mx:FormItem label="起始时间" id="beginDateArea">
+							<mx:DateField formatString="YYYY-MM-DD" width="100%"/>
+						</mx:FormItem>	
+						<mx:FormItem label="截止时间"  id="endDateArea">
+							<mx:DateField formatString="YYYY-MM-DD" width="100%"/>
+						</mx:FormItem>
 						
-						<s:VGroup width="85%" height="100%">
-							<mx:HBox backgroundColor="#DCEDC0" width="100%" height="40" verticalAlign="middle" horizontalAlign="left">
+						
+						
+					</mx:Form>
+				</mx:VBox>
+				<s:VGroup  width="100%" height="100%" gap="0" >
+					<mx:ViewStack width="100%" height="100%" id="scheduleViewContainer" paddingRight="5" paddingBottom="5">
+						<s:NavigatorContent label="日程列表" width="100%" height="100%" name="list" id="list">
+							<s:VGroup width="100%" height="100%">
 								
-								<s:Label text="状态:"/>
-								<s:ComboBox/>
-								<mx:Button label="查询" styleName="searchButton" width="70"/>
-							</mx:HBox>
-							<component:WlzxDataGrid width="100%" height="100%" borderVisible="false"   borderAlpha="0.2" verticalAlign="middle">				
-								<component:mygridcolumns>
-									
-									<mx:DataGridColumn textAlign="center" headerText="标记" dataField="loginaccount" width="50">
+								<component:WlzxDataGrid width="100%" height="100%" borderVisible="false"   borderAlpha="0.2" verticalAlign="middle" id="mydg">				
+									<component:mygridcolumns>
 										
-									</mx:DataGridColumn>
-									<mx:DataGridColumn textAlign="center" headerText="开始时间" dataField="type" width="150">
-									</mx:DataGridColumn>
-									<mx:DataGridColumn textAlign="center" headerText="截止时间" dataField="name" width="150">
-									</mx:DataGridColumn>
-									<mx:DataGridColumn textAlign="center" headerText="工作内容" dataField="col3" width="150">
-									</mx:DataGridColumn>
-									<mx:DataGridColumn textAlign="center" headerText="重要度" dataField="col3" width="150">
-									</mx:DataGridColumn>
-									<mx:DataGridColumn textAlign="center" headerText="完成" dataField="col3" width="150">
-									</mx:DataGridColumn>
-									<mx:DataGridColumn textAlign="center" headerText="删除" dataField="col3" width="150">
-									</mx:DataGridColumn>
-								</component:mygridcolumns>
-							</component:WlzxDataGrid>
-						</s:VGroup>
-						<s:VGroup width="15%" height="100"  horizontalAlign="center">
-							<mx:DateChooser width="100%"/>
-						</s:VGroup>
-					</s:HGroup>
-					
-				</s:NavigatorContent>
-				<s:NavigatorContent label="按周查看" width="100%" height="100%">
-					<scheduleComponent:WeekView width="100%" height="100%" horizontalScrollPolicy="off"  currentMonth="4" currentYear="2011"  currentDay="13" showEffect="WipeDown" hideEffect="WipeUp" >
-						
-					</scheduleComponent:WeekView>
-					
-					
-				</s:NavigatorContent>
-				<s:NavigatorContent label="按月查看" width="100%" height="100%">
+										<mx:DataGridColumn textAlign="center" headerText="标记" dataField="loginaccount" width="50">
+											
+										</mx:DataGridColumn>
+										<mx:DataGridColumn textAlign="center" headerText="日程级别" dataField="loginaccount" width="100">
+											
+										</mx:DataGridColumn>
+										<mx:DataGridColumn textAlign="center" headerText="开始时间" dataField="type" width="100">
+										</mx:DataGridColumn>
+										<mx:DataGridColumn textAlign="center" headerText="截止时间" dataField="name" width="100">
+										</mx:DataGridColumn>
+										<mx:DataGridColumn textAlign="center" headerText="主题" dataField="col3" width="150">
+										</mx:DataGridColumn>
+										<mx:DataGridColumn textAlign="center" headerText="日程类别" dataField="loginaccount" width="100">
+											
+										</mx:DataGridColumn>
+										<mx:DataGridColumn textAlign="center" headerText="优先级" dataField="col3" width="100">
+										</mx:DataGridColumn>
+										<mx:DataGridColumn textAlign="center" headerText="完成" dataField="col3" width="50">
+										</mx:DataGridColumn>
+										<mx:DataGridColumn textAlign="center" headerText="删除" dataField="col3" width="50">
+										</mx:DataGridColumn>
+									</component:mygridcolumns>
+								</component:WlzxDataGrid>
+							</s:VGroup>
+							
+						</s:NavigatorContent>
+						<s:NavigatorContent label="按日查看" width="100%" height="100%" name="date" id="date">
+							<s:HGroup width="100%" height="100%" top="10">
+								
+								<s:VGroup width="70%" height="100%">
+									<component:WlzxDataGrid width="100%" height="100%" borderVisible="false"   borderAlpha="0.2" verticalAlign="middle">				
+										<component:mygridcolumns>
+											<mx:DataGridColumn textAlign="center" headerText="标记" dataField="loginaccount" width="50">
+												
+											</mx:DataGridColumn>
+											<mx:DataGridColumn textAlign="center" headerText="日程级别" dataField="loginaccount" width="70">
+												
+											</mx:DataGridColumn>
+											<mx:DataGridColumn textAlign="center" headerText="时间" dataField="type" width="100">
+											</mx:DataGridColumn>
+
+											<mx:DataGridColumn textAlign="center" headerText="主题" dataField="col3" width="150">
+											</mx:DataGridColumn>
+											<mx:DataGridColumn textAlign="center" headerText="日程类别" dataField="loginaccount" width="70">
+												
+											</mx:DataGridColumn>
+											<mx:DataGridColumn textAlign="center" headerText="优先级" dataField="col3" width="70">
+											</mx:DataGridColumn>
+											
+										</component:mygridcolumns>
+									</component:WlzxDataGrid>
+								</s:VGroup>
+								<s:VGroup width="30%" height="100"  horizontalAlign="center">
+									<mx:DateChooser width="100%"/>
+								</s:VGroup>
+							</s:HGroup>
+							
+						</s:NavigatorContent>
+						<s:NavigatorContent label="按周查看" width="100%" height="100%" name="week" id="week">
+							<scheduleComponent:WeekView width="100%" height="100%" horizontalScrollPolicy="off"  currentMonth="4" currentYear="2011"  currentDay="13" showEffect="WipeDown" hideEffect="WipeUp" >
+								
+							</scheduleComponent:WeekView>
+							
+							
+						</s:NavigatorContent>
+						<s:NavigatorContent label="按月查看" width="100%" height="100%" name="month" id="month">
+							
+							<scheduleComponent:MonthView width="100%" height="100%"  horizontalScrollPolicy="off" currentMonth="4" currentYear="2011" showEffect="WipeDown" hideEffect="WipeUp" >
+								
+							</scheduleComponent:MonthView>
+							
+						</s:NavigatorContent>	
+					</mx:ViewStack>
+				</s:VGroup>
+				
+			</s:HGroup>
+		</s:VGroup>
 		
-					<scheduleComponent:MonthView width="100%" height="100%" horizontalScrollPolicy="off" currentMonth="4" currentYear="2011" showEffect="WipeDown" hideEffect="WipeUp" >
-						
-					</scheduleComponent:MonthView>
-					
-				</s:NavigatorContent>	
-			</mx:TabNavigator>
+			
 		
 	</s:Panel>
 </mx:Module>

@@ -33,13 +33,18 @@
 								<mx:DataGridColumn textAlign="center" headerText="标记" dataField="loginaccount" width="50">
 									
 								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="开始时间" dataField="type" width="150">
+								<mx:DataGridColumn textAlign="center" headerText="部门" dataField="loginaccount" width="100">
+									
 								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="截止时间" dataField="name" width="150">
+								<mx:DataGridColumn textAlign="center" headerText="开始时间" dataField="type" width="100">
 								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="工作内容" dataField="col3" width="150">
+								<mx:DataGridColumn textAlign="center" headerText="截止时间" dataField="name" width="100">
 								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="重要度" dataField="col3" width="150">
+								<mx:DataGridColumn textAlign="center" headerText="主题" dataField="col3" width="200">
+								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="日程类别" dataField="col3" width="100">
+								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="优先级" dataField="col3" width="100">
 								</mx:DataGridColumn>
 								
 							</component:mygridcolumns>
