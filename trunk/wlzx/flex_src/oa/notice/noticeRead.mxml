@@ -1,84 +1,132 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Module xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		   xmlns:s="library://ns.adobe.com/flex/spark" 
-		   xmlns:mx="library://ns.adobe.com/flex/mx" layout="absolute"  creationComplete="init();" width="100%" height="100%" xmlns:component="system.component.*">
+		   xmlns:mx="library://ns.adobe.com/flex/mx" layout="absolute" width="100%" height="100%"  creationComplete="initData();" xmlns:component="system.component.*">
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+		<s:ArrayCollection id="postedArray">
+			<fx:Object title="a" type="" department="" priority="" postTime=""/>
+			<fx:Object title="a" type="" department="" priority="" postTime=""/>
+			<fx:Object title="a" type="" department="" priority="" postTime=""/>
+			<fx:Object title="a" type="" department="" priority="" postTime=""/>
+			<fx:Object title="a" type="" department="" priority="" postTime=""/>
+			<fx:Object title="a" type="" department="" priority="" postTime=""/>
+			<fx:Object title="a" type="" department="" priority="" postTime=""/>
+			<fx:Object title="a" type="" department="" priority="" postTime=""/>
+			<fx:Object title="a" type="" department="" priority="" postTime=""/>
+			<fx:Object title="a" type="" department="" priority="" postTime=""/>
+			<fx:Object title="a" type="" department="" priority="" postTime=""/>
+			<fx:Object title="a" type="" department="" priority="" postTime=""/>
+			<fx:Object title="a" type="" department="" priority="" postTime=""/>
+			<fx:Object title="a" type="" department="" priority="" postTime=""/>
+			<fx:Object title="a" type="" department="" priority="" postTime=""/>
+			<fx:Object title="a" type="" department="" priority="" postTime=""/>
+			<fx:Object title="a" type="" department="" priority="" postTime=""/>
+			
+		</s:ArrayCollection>
 	</fx:Declarations>
 	<fx:Script>
 		<![CDATA[
-		import mx.collections.ArrayCollection;
-		public var items:ArrayCollection;
-		private function init():void{
-			items = new  ArrayCollection();
-			for(var i:int =1;i<16;i++){
-				var obj:Object = new Object();
-				obj.loginaccount = "andy";
-				obj.name = "Andy";
-				obj.loginaccount += i;
-				obj.name += i;
-				items.addItem(obj);
-			 }
-			mydg.initdata(items);
- 		}
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.controls.Button;
+			import mx.core.FlexGlobals;
+			import mx.core.INavigatorContent;
+			import mx.events.ItemClickEvent;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.*;
+			
+			import oa.notice.popWin.*;
+			
+			import system.utils.CommonUtils;
+			
+			
+			public function initData():void {
+				postedDG.initdata(postedArray);
+			}
+			
+			public function detailNotice(event:Event):void{
+				var selectedIndex:int=postedDG.cudg.selectedIndex;
+				if(selectedIndex==-1)
+					Alert.show("当前未选中任意行");
+				else{
+					var noticeBrowsePopWin:NoticeBrowsePopWin=NoticeBrowsePopWin(PopUpManager.createPopUp(this,NoticeBrowsePopWin,true));  
+					PopUpManager.centerPopUp(noticeBrowsePopWin);
+					noticeBrowsePopWin.percentHeight=100;
+					noticeBrowsePopWin.percentWidth=100;
+					noticeBrowsePopWin.x=FlexGlobals.topLevelApplication.stage.stageWidth/2-noticeBrowsePopWin.width/2;
+					noticeBrowsePopWin.y=FlexGlobals.topLevelApplication.stage.stageHeight/2-noticeBrowsePopWin.height/2;
+				}
+			}
+		
 		]]>
 	</fx:Script>
-	<s:Panel width="100%" height="100%"  skinClass="system.skins.WlzxPanelSkin" title="公告阅读"  borderVisible="false" dropShadowVisible="false">
-		<s:VGroup gap="20" width="100%" height="100%"  paddingTop="10" paddingBottom="10" paddingLeft="20" paddingRight="20" horizontalAlign="center" verticalAlign="middle">
-			<s:Panel width="100%" height="30%"  skinClass="system.skins.WlzxPanelSkin" title="搜索条件"  borderVisible="true" >
-				<mx:Form width="100%" height="100%" verticalGap="10" >
-					<mx:FormItem label="标题+内容" width="100%">
-						<s:TextInput width="100%"/>
-					</mx:FormItem>
-					<mx:FormItem label="公告类型" width="100%">
-						<s:HGroup  width="100%" gap="20">
-							<s:ComboBox/>
-							<mx:FormItem label="是否紧急">
-								<s:ComboBox/>
-							</mx:FormItem>
-							<mx:FormItem label="是否必读">
-								<s:ComboBox />
-							</mx:FormItem>
-							<mx:Image source="@Embed(source='../WebContent/resources/oa/buttonIcon/search.jpg')" left="50"></mx:Image>
-						</s:HGroup>
-					</mx:FormItem>
-				</mx:Form>
-			</s:Panel>
-			<s:Panel width="100%" height="70%"  skinClass="system.skins.WlzxPanelSkin" title="公告列表"  borderVisible="true">
-				<s:VGroup  width="100%" height="100%" gap="0">
-					<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="false"   borderAlpha="0.2" verticalAlign="middle" id="mydg">				
-						<component:mygridcolumns>
-							<mx:DataGridColumn textAlign="center"  headerText="选择" dataField="loginaccount" width="50">
-								<mx:itemRenderer>
-									<fx:Component>
-										<!-- 演示不依赖于数据源的checkbox的使用 -->
-										<mx:CheckBox label=""  textAlign="center"/>
-										<!--
-										如果name不是属性而是子节点，那直接用data.name就出来了,
-										这里不能用@name来取属性!
-										-->
-									</fx:Component>
-								</mx:itemRenderer>
-							</mx:DataGridColumn>
-							<mx:DataGridColumn textAlign="center" headerText="标记" dataField="loginaccount" width="50">
-							
-							</mx:DataGridColumn>
-							<mx:DataGridColumn textAlign="center" headerText="公告类型" dataField="type" width="150">
-							</mx:DataGridColumn>
-							<mx:DataGridColumn textAlign="center" headerText="公告标题" dataField="name" width="500">
-							</mx:DataGridColumn>
-							<mx:DataGridColumn textAlign="center" headerText="发布时间" dataField="col3" width="150">
-							</mx:DataGridColumn>
-							<mx:DataGridColumn textAlign="center" headerText="发布部门" dataField="col3" width="150">
-							</mx:DataGridColumn>
-							<mx:DataGridColumn textAlign="center" headerText="详细" dataField="col3" width="100">
-							</mx:DataGridColumn>
-							</component:mygridcolumns>
-					</component:WlzxPageDataGrid>
-					
+	<s:Panel width="100%" height="100%"  skinClass="system.skins.WlzxPanelSkin" title="公告管理"  borderVisible="false" dropShadowVisible="false">
+		<s:VGroup width="100%" height="100%">
+			<s:HGroup verticalAlign="middle" horizontalAlign="right" width="100%">
+				<mx:HBox width="100%" height="35" paddingLeft="20"  horizontalGap="10" backgroundColor="#C5E497"  verticalAlign="middle">
+					<mx:Label text="|"/>
+
+					<mx:LinkButton  label="详细" icon="@Embed(source='../WebContent/resources/common/tools/button_detail_icon.png')"  click="detailNotice(event);"/>
+					<mx:Label text="|"/>
+					<mx:LinkButton  label="搜索" icon="@Embed(source='../WebContent/resources/common/tools/button_search_icon.png')" />
+					<mx:Label text="|"/>
+				
+				</mx:HBox>
+			</s:HGroup>
+			<s:HGroup width="100%" height="100%" gap="0">
+				<mx:VBox  width="220" height="100%" verticalAlign="middle" horizontalAlign="center">
+					<mx:Form width="100%" height="100%" >		
+						<mx:FormHeading label="搜索条件" fontSize="15" width="100%" textAlign="left"/>
+						
+						<mx:FormItem label="公告类别" width="100%">
+							<s:ComboBox width="100%"/>
+						</mx:FormItem>
+						<mx:FormItem label="优先级 " width="100%">
+							<s:ComboBox width="100%"/>
+						</mx:FormItem>
+						<mx:FormItem label="发布部门" width="100%">
+							<s:ComboBox width="100%"/>
+						</mx:FormItem>
+						
+						<mx:FormItem label="公告主题 " width="100%">
+							<s:TextInput width="100%"/>
+						</mx:FormItem>
+						<mx:FormItem label="起始时间" id="beginDateArea">
+							<mx:DateField formatString="YYYY-MM-DD" width="100%"/>
+						</mx:FormItem>	
+						<mx:FormItem label="截止时间"  id="endDateArea">
+							<mx:DateField formatString="YYYY-MM-DD" width="100%"/>
+						</mx:FormItem>
+						
+						
+						
+					</mx:Form>
+				</mx:VBox>
+				<s:VGroup  width="100%" height="100%" gap="0" >
+								<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="false"   borderAlpha="0.2" verticalAlign="middle"   id="postedDG" pagecount="13">				
+								<component:mygridcolumns>
+									
+									<mx:DataGridColumn textAlign="center" headerText="发布时间" dataField="postTime" width="100">
+									</mx:DataGridColumn>
+									<mx:DataGridColumn textAlign="center" headerText="公告类型" dataField="type" width="100">
+									</mx:DataGridColumn>
+									<mx:DataGridColumn textAlign="center" headerText="公告标题" dataField="title" width="200">
+									</mx:DataGridColumn>
+									
+									<mx:DataGridColumn textAlign="center" headerText="发布部门" dataField="department" width="100">
+									</mx:DataGridColumn>
+									<mx:DataGridColumn textAlign="center" headerText="优先级" dataField="priority" width="100">
+									</mx:DataGridColumn>
+									
+									
+								</component:mygridcolumns>
+							</component:WlzxPageDataGrid>
+						
 				</s:VGroup>
-			</s:Panel>
+			</s:HGroup>
 		</s:VGroup>
+		
 		
 	</s:Panel>
 </mx:Module>

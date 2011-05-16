@@ -14,11 +14,13 @@
 		
 		<![CDATA[  
 		
-			import mx.managers.PopUpManager;  
+			import mx.managers.PopUpManager;
+			import mx.core.FlexGlobals;
 			import mx.validators.Validator;
 			import mx.events.ValidationResultEvent;
 			import mx.validators.ZipCodeValidatorDomainType;
 			import mx.controls.Alert; 
+			import oa.common.popWin.StaffSelectPopWin;
 			private var validatorArr:Array;
 			
 			private function init():void
@@ -52,11 +54,22 @@
 //				city.text = "";
 //				state.selectedIndex = -1;
 //				zipCode.text = "";
-			} 	
+			} 
+			private var staffSelectPopWin:StaffSelectPopWin=null;
+			private function openStaffSelectPopWin(event:Event):void{
+				if(staffSelectPopWin!=null)PopUpManager.removePopUp(staffSelectPopWin);
+				staffSelectPopWin=StaffSelectPopWin(PopUpManager.createPopUp(this,StaffSelectPopWin,true));  
+				PopUpManager.centerPopUp(staffSelectPopWin);
+				staffSelectPopWin.percentHeight=100;
+				staffSelectPopWin.percentWidth=100;
+				staffSelectPopWin.x=FlexGlobals.topLevelApplication.stage.stageWidth/2-staffSelectPopWin.width/2;
+				staffSelectPopWin.y=FlexGlobals.topLevelApplication.stage.stageHeight/2-staffSelectPopWin.height/2;
+				
+			}
 		]]> 
 		
 	</fx:Script> 
-	<s:TitleWindow  title="岗位新增" width="100%" height="100%"  close="PopUpManager.removePopUp(this);">
+	<s:TitleWindow  title="岗位新增" width="100%" height="100%"  close="PopUpManager.removePopUp(this);" skinClass="system.skins.WlzxTitleWindowSkin">
 		<mx:Form width="100%" height="100%" id="dform">
 			<mx:FormHeading label="岗位信息" fontSize="15" width="100%" textAlign="center"/>
 			
@@ -75,7 +88,7 @@
 				<mx:TextInput id="sequence" width="200"/>
 			</mx:FormItem>
 			<mx:FormItem label="岗位用户 ">
-				<mx:DateField  id="users" width="200" formatString="YYYY-MM-DD"/>
+				<mx:TextInput id="users" width="200" focusIn="openStaffSelectPopWin(event);" editable="false"/>
 			</mx:FormItem>
 			<mx:FormItem label="岗位描述">
 				<s:TextArea id="detail" width="400"/>
