@@ -15,8 +15,9 @@
   <theme themeIsDefault="false" themeIsSDK="false" themeLocation="${EXTERNAL_THEME_DIR}/wlzx"/>
   <applications>
     <application path="home.mxml"/>
-    <application path="login.mxml"/>
     <application path="config.mxml"/>
+    <application path="login.mxml"/>
+    <application path="system/component/checkTree/CheckTreeDemo.mxml"/>
   </applications>
   <modules>
     <module application="flex_src/home.mxml" destPath="oa/task/personTask.swf" optimize="false" sourcePath="flex_src/oa/task/personTask.mxml"/>
