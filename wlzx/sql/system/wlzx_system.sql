@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2011 年 05 月 16 日 09:36
+-- 生成日期: 2011 年 05 月 18 日 19:37
 -- 服务器版本: 5.0.91
 -- PHP 版本: 5.2.13
 
@@ -85,6 +85,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_department` (
   `id` bigint(20) NOT NULL auto_increment,
   `name` varchar(50) NOT NULL,
   `symbol` varchar(100) NOT NULL,
+  `phone` varchar(200) default NULL,
   `sequence` bigint(20) default '0',
   `detail` text,
   `creation_date` datetime NOT NULL,
@@ -97,8 +98,8 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_department` (
 -- 转存表中的数据 `wlzx_system_department`
 --
 
-INSERT INTO `wlzx_system_department` (`id`, `name`, `symbol`, `sequence`, `detail`, `creation_date`, `modified_date`) VALUES
-(1, '温岭中学', 'root', 0, NULL, '2011-05-06 11:50:36', '2011-05-06 11:50:36');
+INSERT INTO `wlzx_system_department` (`id`, `name`, `symbol`, `phone`, `sequence`, `detail`, `creation_date`, `modified_date`) VALUES
+(1, '温岭中学', 'root', NULL, 0, NULL, '2011-05-06 11:50:36', '2011-05-06 11:50:36');
 
 -- --------------------------------------------------------
 

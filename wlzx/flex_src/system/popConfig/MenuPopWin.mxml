@@ -26,7 +26,6 @@
 			import mx.managers.PopUpManager;
 			import mx.rpc.events.*;
 			import mx.validators.Validator;
-			import mx.validators.ZipCodeValidatorDomainType;
 			
 			import system.utils.*;
 			private var validatorArr:Array;

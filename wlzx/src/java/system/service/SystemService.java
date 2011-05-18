@@ -104,6 +104,10 @@ public class SystemService {
 	public DepartmentModel getDepartmentBySymbol(String symbol){		
 		return departmentDAO.getDepartmentBySymbol(symbol);
 	}
+	//获得某部门
+	public DepartmentModel getDepartmentById(String departmentId){		
+		return departmentDAO.get(departmentId);
+	}
 	//获得某角色（岗位）
 	public RoleModel getRoleBySymbol(String symbol){		
 		return roleDAO.getRoleBySymbol(symbol);
@@ -170,6 +174,37 @@ public class SystemService {
 	public boolean moduleRemove(String symbol){
 //		System.out.println(symbol);
 		moduleDAO.removeModuleBySymbol(symbol);
+		return true;		
+	}
+	//新增部门
+	public DepartmentModel departmentAdd(DepartmentModel department,String parentId,String supervisorName){
+			DepartmentModel parentDepartment=departmentDAO.get(parentId);
+			parentDepartment.getSubordinates().add(department);	
+			RoleModel supervisorRole=new RoleModel();
+			supervisorRole.setSymbol(department.getSymbol()+"_supervisor");
+			supervisorRole.setCreationDate(department.getCreationDate());
+			supervisorRole.setName(supervisorName);
+			supervisorRole.setModifiedDate(new Date());
+			supervisorRole.setSupervisorFlag(true);
+			department.getRoles().add(supervisorRole);
+			departmentDAO.saveOrUpdate(parentDepartment);
+			return department;
+		
+	}
+	//更新部门
+	public DepartmentModel departmentUpdate(DepartmentModel department){
+		DepartmentModel newDepartment=departmentDAO.get(department.getId());
+		newDepartment.setSymbol(department.getSymbol());
+		newDepartment.setCreationDate(department.getCreationDate());
+		newDepartment.setDetail(department.getDetail());
+		newDepartment.setName(department.getName());
+		newDepartment.setSequence(department.getSequence());
+		departmentDAO.saveOrUpdate(newDepartment);
+		return newDepartment;
+	}
+	//删除部门
+	public boolean departmentRemove(String id){
+		departmentDAO.remove(departmentDAO.get(id));
 		return true;		
 	}
 	public static void main(String[] args) {

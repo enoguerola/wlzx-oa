@@ -17,6 +17,9 @@
 		<property name="name" type="string">
 			<column name="name" />
 		</property>
+		<property name="phone" type="string">
+			<column name="phone" />
+		</property>
 		<property name="detail" type="string">
 			<column name="detail" />
 		</property>

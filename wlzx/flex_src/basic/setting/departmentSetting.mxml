@@ -7,6 +7,7 @@
 		<!--定义 RemoteObject 组件-->
 		<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 			<mx:method name="getDepartmentBySymbol"  concurrency="last"  result="getDepartmentBySymbolResult(event);" />
+			<mx:method name="getDepartmentById"  concurrency="last"  result="getDepartmentByIdResult(event);" />
 		</mx:RemoteObject>
 	</fx:Declarations>
 	<fx:Script>
@@ -20,6 +21,7 @@
 			import mx.collections.ArrayCollection;
 			import mx.containers.*;
 			import mx.controls.*;
+			import mx.core.FlexGlobals;
 			import mx.events.*;
 			import mx.events.ModuleEvent;
 			import mx.managers.PopUpManager;
@@ -29,29 +31,38 @@
 			import spark.components.*;
 			
 			import system.entity.*;
-			import mx.core.FlexGlobals;
-			
+			import system.utils.*;
+			public var selectedNode:XML;
 			private function init():void {
 				systemServiceRO.getDepartmentBySymbol("root");
+
 			}
 
 			private function systemFaultHandler(event:FaultEvent):void {
 				Alert.show(event.fault.faultString, 'Error');
 			}
 			private function getDepartmentBySymbolResult(event:ResultEvent):void {
-				var department:DepartmentModel=DepartmentModel(event.result);
+				var department:Object=event.result;
 				var resultXML:String=buildSubDepartments(department);
 				var departmentData:XML=new XML(resultXML);
-				this.departments.dataProvider=departmentData;
-				//				var list:ArrayCollection = ArrayCollection(event.result);
+				departments.dataProvider=departmentData;
+				departments.selectedItem=departmentData[0];
+				loadDepartmentDetail(department);
+				selectedNode=departments.selectedItem as XML;
 			}
-			private function buildSubDepartments(department:DepartmentModel):String{
+			private function getDepartmentByIdResult(event:ResultEvent):void {
+				
+//				var department:DepartmentModel=event.result  as DepartmentModel;
+//				Alert.show(department.id);
+				loadDepartmentDetail(event.result);
+			}
+			private function buildSubDepartments(department:Object):String{
 				var resultXML:String="";
 				var list:ArrayCollection = ArrayCollection(department.subordinates);
 				if(list.length>0){
 					resultXML=resultXML.concat("<node label='"+department.name+"' id='"+department.id+"'>");
 					for (var i:int = 0; i < list.length; i++){
-						var _department:DepartmentModel = DepartmentModel(list.getItemAt(i));	
+						var _department:Object = list.getItemAt(i);	
 						resultXML=resultXML.concat(buildSubDepartments(_department));
 					}
 					resultXML=resultXML.concat("</node>");
@@ -63,13 +74,15 @@
 			private function addDepartment():void{
 				var selectId:String=treeSelectedItemId();
 				if(selectId!=null){
-					var pop:DepartmentPopWin=DepartmentPopWin(PopUpManager.createPopUp(this,DepartmentPopWin,true));  
+					var pop:DepartmentPopWin=DepartmentPopWin(PopUpManager.createPopUp(this,DepartmentPopWin,true)); 
+					pop.owner=this;
 					PopUpManager.centerPopUp(pop);
 					pop.percentHeight=100;
 					pop.percentWidth=100;
 					pop.x=FlexGlobals.topLevelApplication.stage.stageWidth/2-pop.width/2;
 					pop.y=FlexGlobals.topLevelApplication.stage.stageHeight/2-pop.height/2;
-//					Alert.show(selectId);
+					pop.id=selectId;//参数传递使用
+					pop.toolTip="Add";
 				}	
 			}
 			private function editDepartment():void{
@@ -96,15 +109,83 @@
 					return null;
 				} 
 			}
+			private function tree_itemClick(evt:Event):void {
+				selectedNode=departments.selectedItem as XML;
+				var id:String=selectedNode.@id;
+				systemServiceRO.getDepartmentById(id);
+					
+			}
+			private function loadDepartmentDetail(department:Object):void{
+				dname.text=department.name;
+				creationDate.text=CommonUtils.formatDate(department.creationDate,"YYYY-MM-DD");
+				symbol.text=department.symbol;
+				sequence.text=department.sequence+"";
+				phone.text=department.phone;
+				detail.text=department.detail;
+				var rolesString:String="";
+				if(department.roles!=null){
+					var list:ArrayCollection = ArrayCollection(department.roles);
+					for (var i:int = 0; i < list.length; i++){
+						var _role:Object = list.getItemAt(i);	
+						if(_role.supervisorFlag==true)
+							rolesString=rolesString.concat(_role.name+"[部门主管]  ");
+						else rolesString=rolesString.concat(_role.name+"  ");
+					}
+				}
+				roles.text=rolesString;
+			}
 			
 		]]>
 	</fx:Script>
 	
 	<s:Panel width="100%" height="100%" title="部门设置" skinClass="system.skins.WlzxPanelSkin">
-		<s:Button label="新增"  width="50" top="-25" right="160" click="addDepartment();"/>
-		<s:Button label="编辑"  width="50" top="-25" right="100" click="editDepartment();"/>
-		<s:Button label="删除"  width="50" top="-25" right="40" click="deleteDepartment();"/>
-		<flexlib:ConvertibleTreeList id="departments" labelField="@label"   width="100%" height="100%">
-		</flexlib:ConvertibleTreeList>
-	</s:Panel>
+		<mx:VBox width="100%" height="100%" verticalGap="0">
+			<mx:HBox width="100%" height="35" paddingLeft="20"  horizontalGap="10" backgroundColor="#C5E497"  verticalAlign="middle" >
+				<mx:Label text="|"/>
+				<mx:LinkButton  label="新建" icon="@Embed(source='../WebContent/resources/common/tools/button_add_icon.png')"  click="addDepartment();"/>
+				<mx:Label text="|"/>
+				<mx:LinkButton  label="编辑" icon="@Embed(source='../WebContent/resources/common/tools/button_edit_icon.png')"  click="editDepartment();"/>
+				<mx:Label text="|"/>
+				<mx:LinkButton  label="删除" icon="@Embed(source='../WebContent/resources/common/tools/button_delete_icon.png')"  click="deleteDepartment();"/>
+				<mx:Label text="|"/>			
+			</mx:HBox>
+			<mx:HBox  width="100%" height="100%" verticalAlign="middle" paddingTop="10" paddingBottom="10"  paddingLeft="10" paddingRight="10">
+				<flexlib:ConvertibleTreeList id="departments" labelField="@label"   width="60%" height="100%"    change="tree_itemClick(event);" >
+				</flexlib:ConvertibleTreeList>
+				<mx:VRule height="95%"/>
+					
+				<mx:VBox  width="40%" height="100%" borderVisible="true">
+					<mx:Form width="100%" height="100%" id="dform" textAlign="center">
+						<mx:FormHeading label="部门详细信息" fontSize="15" width="100%" textAlign="left"/>
+						
+						<mx:FormItem label="部门名称" required="true">
+							<mx:Label id="dname"/>		
+						</mx:FormItem>
+						
+						<mx:FormItem label="创建日期 "  required="true">
+							<mx:Label id="creationDate"/>		
+						</mx:FormItem>
+						
+						<mx:FormItem label="唯一标识"  required="true">
+							<mx:Label id="symbol"/>		
+						</mx:FormItem>	
+						<mx:FormItem label="同级顺序">
+							<mx:Label id="sequence"/>		
+						</mx:FormItem>
+						
+						<mx:FormItem label="部门电话"  >
+							<mx:Label id="phone"/>		
+						</mx:FormItem>
+						<mx:FormItem label="部门描述">
+							<mx:Label id="detail"/>		
+						</mx:FormItem>
+						<mx:FormItem label="部门岗位">
+							<mx:Label id="roles"/>		
+						</mx:FormItem>
+					</mx:Form>
+				</mx:VBox>
+			</mx:HBox>
+			
+		</mx:VBox>
+		</s:Panel>
 </mx:Module>
