@@ -1,40 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:VGroup xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
-		 xmlns:mx="library://ns.adobe.com/flex/mx"  xmlns:flexlib="http://code.google.com/p/flexlib/"   creationComplete="init();" width="800" height="500">
+		 xmlns:mx="library://ns.adobe.com/flex/mx"  xmlns:valueObjects="system.entity.*" xmlns:flexlib="http://code.google.com/p/flexlib/"   creationComplete="init();" width="800" height="500">
 	
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
 		<mx:StringValidator id="name_stringValidator" source="{dname}" property="text"  requiredFieldError="部门名称不能为空"/>
+		<mx:StringValidator id="supervisorName_stringValidator" source="{supervisorName}" property="text"  requiredFieldError="主管头衔不能为空"/>
+		<mx:StringValidator id="symbol_stringValidator" source="{symbol}" property="text"  requiredFieldError="部门唯一标识不能为空"/>
 		<mx:PhoneNumberValidator id="phone_phoneNumberValidator" source="{phone}" required="false" property="text" minDigits="6" requiredFieldError="错误格式的电话"/>
 		<mx:StringValidator id="createDate_dateValidator"  source="{creationDate}" property="text" requiredFieldError="部门创建日期不能为空"/>
 		<mx:NumberValidator id="sequence_numberValidator" source="{sequence}" required="false" property="text" integerError="请输入整数值，同级部门默认排序升序" domain="int"/>
+		<valueObjects:DepartmentModel id="department"/>
+		<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+			<mx:method name="departmentAdd"  concurrency="last"  result="departmentAddResult_resultHandler(event);" />
+			<mx:method name="getDepartmentById"  concurrency="last"  result="getDepartmentById_resultHandler(event);" />
+			<mx:method name="departmentUpdate"  concurrency="last"  result="departmentUpdate_resultHandler(event);" />
+		</mx:RemoteObject>
 	</fx:Declarations>
 	
 	<fx:Script> 
 		
 		<![CDATA[  
 		
-			import mx.managers.PopUpManager;  
-			import mx.validators.Validator;
+			import mx.controls.Alert;
 			import mx.events.ValidationResultEvent;
-			import mx.validators.ZipCodeValidatorDomainType;
-			import mx.controls.Alert; 
+			import mx.formatters.DateFormatter;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.*;
+			import mx.validators.Validator;
+			import basic.setting.*;
+			import system.utils.*;
 			private var validatorArr:Array;
 			
 			private function init():void
 			{
 				validatorArr = new Array();
 				validatorArr.push(name_stringValidator);
+				validatorArr.push(supervisorName_stringValidator);
+				validatorArr.push(symbol_stringValidator);
 				validatorArr.push(phone_phoneNumberValidator);
 				validatorArr.push(createDate_dateValidator);
 				validatorArr.push(sequence_numberValidator);
+				callLater(initDepartmentWin);
 			} 
+			private function initDepartmentWin():void{
+				if(this.toolTip=='Update'){		
+					this.departmentWin.title="部门编辑";
+					var departmentId:String=this.id;//弹出窗口时设定的中转参数
+					systemServiceRO.getDepartmentById(departmentId);
+				}else if(this.toolTip=='Add'){
+					department=new DepartmentModel();
+					this.departmentWin.title="部门新增";					
+					
+				}
+			}
 			private function validateForm(evt:MouseEvent):void {
 				var validatorErrorArray:Array = Validator.validateAll(validatorArr);;
 				var isValidForm:Boolean = validatorErrorArray.length == 0;
 				if (isValidForm) {
-					Alert.show("部门信息!");
+					department.name=dname.text;
+					department.creationDate=DateFormatter.parseDateString(creationDate.text);
+					department.detail=detail.text;
+					department.symbol=symbol.text;
+					department.sequence=parseInt(sequence.text);
+					var supervisor:String =supervisorName.text;
+					if(this.toolTip=='Update'){
+						systemServiceRO.departmentUpdate(department);
+					}else if(this.toolTip=='Add'){
+						var parentId:String=this.id;//弹出窗口时设定的中转参数
+						systemServiceRO.departmentAdd(department,parentId,supervisor);
+						
+					}
 				} else {
 					var err:ValidationResultEvent;
 					var errorMessageArray:Array = [];
@@ -46,6 +83,27 @@
 				}
 			}
 			
+			protected function systemFaultHandler(event:FaultEvent):void {
+				Alert.show(event.fault.faultString, 'Error');
+			}
+			protected function departmentAddResult_resultHandler(event:ResultEvent):void
+			{
+				var department:DepartmentModel=event.result as DepartmentModel;
+				if(department!=null){
+					var departmentData:XML=new XML("<node type='menu' label='"+department.name+"'  id='"+department.id+"'></node>");
+					var parent:departmentSetting = this.owner as departmentSetting;
+					parent.selectedNode.appendChild(departmentData);
+					PopUpManager.removePopUp(this);
+				}else{
+					Alert.show("添加失败");
+				}
+			}
+			protected function getDepartmentById_resultHandler(event:ResultEvent):void
+			{
+			}
+			protected function departmentUpdate_resultHandler(event:ResultEvent):void
+			{
+			}
 			private function resetForm(evt:MouseEvent):void
 			{
 //				e_name.text ="";
@@ -58,31 +116,34 @@
 		]]> 
 		
 	</fx:Script> 
-	<s:TitleWindow  title="部门新增" width="100%" height="100%"  close="PopUpManager.removePopUp(this);" skinClass="system.skins.WlzxTitleWindowSkin">
+	<s:TitleWindow  id="departmentWin" width="100%" height="100%"  close="PopUpManager.removePopUp(this);" skinClass="system.skins.WlzxTitleWindowSkin">
 		<mx:Form width="100%" height="100%" id="dform">
 			<mx:FormHeading label="部门信息" fontSize="15" width="100%" textAlign="center"/>
 			
-			<mx:FormItem label="部门名称">
+			<mx:FormItem label="部门名称" required="true">
 				<mx:TextInput id="dname" width="200"/>
 			</mx:FormItem>
-			
-			<mx:FormItem label="创建日期 ">
+			<mx:FormItem label="主管头衔" required="true">
+				<mx:TextInput id="supervisorName" width="200"/>
+			</mx:FormItem>
+			<mx:FormItem label="创建日期 " required="true">
 				<mx:DateField  id="creationDate" width="200" formatString="YYYY-MM-DD"/>
 			</mx:FormItem>
 			
-			<mx:FormItem label="唯一标识">
+			<mx:FormItem label="唯一标识" required="true">
 				<mx:TextInput id="symbol" width="200"/>
 			</mx:FormItem>	
 			<mx:FormItem label="同级排序顺序">
 				<mx:TextInput id="sequence" width="200"/>
 			</mx:FormItem>
 			
-			<mx:FormItem label="部门电话"  >
+			<mx:FormItem label="部门电话">
 				<mx:TextInput id="phone" width="200"/>
 			</mx:FormItem>
 			<mx:FormItem label="部门描述">
 				<s:TextArea id="detail" width="400"/>
 			</mx:FormItem>
+			
 			<mx:FormItem width="100%">
 				<mx:HBox verticalAlign="middle" horizontalAlign="right" width="100%">
 					<mx:Button label="保存" click="validateForm(event)" />

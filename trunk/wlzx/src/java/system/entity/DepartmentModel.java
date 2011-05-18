@@ -27,6 +27,7 @@ public class DepartmentModel  extends BaseModel{
 	 */
 	private static final long serialVersionUID = -7972036409727505069L;
 	private String detail;
+	private String phone;
 	private Set<DepartmentModel> subordinates=new TreeSet<DepartmentModel>();//直属下级部门
 	private Set<DepartmentModel> leaders=new TreeSet<DepartmentModel>();//直属上级部门
 	private Set<RoleModel> roles=new TreeSet<RoleModel>();//部门角色集
@@ -67,7 +68,13 @@ public class DepartmentModel  extends BaseModel{
 	public Set<DataAccessModeModel> getDataAccessModes() {
 		return dataAccessModes;
 	}
+	public String getPhone() {
+		return phone;
+	}
 
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
 	public void setDataAccessModes(Set<DataAccessModeModel> dataAccessModes) {
 		this.dataAccessModes = dataAccessModes;
 	}
@@ -83,5 +90,7 @@ public class DepartmentModel  extends BaseModel{
 		}
 		return null;
 	}
+
+	
 
 }
