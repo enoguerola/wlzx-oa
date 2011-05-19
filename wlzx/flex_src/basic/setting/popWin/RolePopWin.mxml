@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:VGroup xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
-		 xmlns:mx="library://ns.adobe.com/flex/mx"  xmlns:flexlib="http://code.google.com/p/flexlib/"   creationComplete="init();" width="800" height="500">
+		 xmlns:mx="library://ns.adobe.com/flex/mx"  xmlns:valueObjects="system.entity.*" xmlns:flexlib="http://code.google.com/p/flexlib/"   creationComplete="init();" width="800" height="500">
 	
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
-		<mx:StringValidator id="name_stringValidator" source="{dname}" property="text"  requiredFieldError="岗位名称不能为空"/>
+		<mx:StringValidator id="name_stringValidator" source="{rname}" property="text"  requiredFieldError="岗位名称不能为空"/>
 		<mx:StringValidator id="createDate_dateValidator"  source="{creationDate}" property="text" requiredFieldError="岗位创建日期不能为空"/>
+		<mx:StringValidator id="symbol_stringValidator" source="{symbol}" property="text"  requiredFieldError="岗位唯一标识不能为空"/>
 		<mx:NumberValidator id="sequence_numberValidator" source="{sequence}" required="false" property="text" integerError="请输入整数值，同级岗位默认排序升序" domain="int"/>
+		<valueObjects:RoleModel id="role"/>
+		<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+			<mx:method name="roleAdd"  concurrency="last"  result="roleAddResult_resultHandler(event);" />
+			<mx:method name="getRoleById"  concurrency="last"  result="getRoleById_resultHandler(event);" />
+			<mx:method name="roleUpdate"  concurrency="last"  result="roleUpdate_resultHandler(event);" />
+		</mx:RemoteObject>
 	</fx:Declarations>
 	
 	<fx:Script> 
@@ -16,10 +23,15 @@
 		
 			import mx.managers.PopUpManager;
 			import mx.core.FlexGlobals;
-			import mx.validators.Validator;
+			import basic.setting.*;
+			
+			import mx.controls.Alert;
 			import mx.events.ValidationResultEvent;
-			import mx.validators.ZipCodeValidatorDomainType;
-			import mx.controls.Alert; 
+			import mx.formatters.DateFormatter;
+			import mx.rpc.events.*;
+			import mx.validators.Validator;
+			
+			import system.utils.*;
 			import oa.common.popWin.StaffSelectPopWin;
 			private var validatorArr:Array;
 			
@@ -27,14 +39,76 @@
 			{
 				validatorArr = new Array();
 				validatorArr.push(name_stringValidator);
+				validatorArr.push(symbol_stringValidator);
 				validatorArr.push(createDate_dateValidator);
 				validatorArr.push(sequence_numberValidator);
+				callLater(initRoleWin);
 			} 
+			private function initRoleWin():void{
+				if(this.toolTip=='Update'){		
+					this.roleWin.title="岗位编辑";
+					var roleId:String=this.id;//弹出窗口时设定的中转参数
+					systemServiceRO.getRoleById(roleId);
+				}else if(this.toolTip=='Add'){
+					role=new RoleModel();
+					this.roleWin.title="岗位新增";					
+					
+				}
+			}
+			protected function systemFaultHandler(event:FaultEvent):void {
+				Alert.show(event.fault.faultString, 'Error');
+			}
+			protected function roleAddResult_resultHandler(event:ResultEvent):void
+			{
+				var role:Object=event.result;
+				if(role!=null){
+					var roleData:XML=new XML("<node label='"+role.name+"'  id='"+role.id+"'></node>");
+					var parent:roleSetting = this.owner as roleSetting;
+					parent.selectedNode.appendChild(roleData);
+					PopUpManager.removePopUp(this);
+				}else{
+					Alert.show("添加失败");
+				}
+			}
+			protected function getRoleById_resultHandler(event:ResultEvent):void
+			{
+				role=event.result as RoleModel;
+				rname.text=role.name;
+				creationDate.text=CommonUtils.formatDate(role.creationDate,"YYYY-MM-DD");
+				detail.text=role.detail;
+				symbol.text=role.symbol;
+				sequence.text=role.sequence.toString();
+				
+			}
+			protected function roleUpdate_resultHandler(event:ResultEvent):void
+			{
+				var role:Object=event.result;
+				if(role!=null){
+					var parent:roleSetting = this.owner as roleSetting;
+					parent.selectedNode.@label=role.name;
+					parent.selectedNode.@id=role.id;
+					parent.loadRoleDetail(role);
+					PopUpManager.removePopUp(this);
+				}else{
+					Alert.show("更新失败");
+				}
+			}
 			private function validateForm(evt:MouseEvent):void {
 				var validatorErrorArray:Array = Validator.validateAll(validatorArr);;
 				var isValidForm:Boolean = validatorErrorArray.length == 0;
 				if (isValidForm) {
-					Alert.show("岗位信息!");
+					role.name=rname.text;
+					role.creationDate=DateFormatter.parseDateString(creationDate.text);
+					role.detail=detail.text;
+					role.symbol=symbol.text;
+					role.sequence=parseInt(sequence.text);
+					if(this.toolTip=='Update'){
+						systemServiceRO.roleUpdate(role);
+					}else if(this.toolTip=='Add'){
+						var parentId:String=this.id;//弹出窗口时设定的中转参数
+						systemServiceRO.roleAdd(role,parentId);
+						
+					}
 				} else {
 					var err:ValidationResultEvent;
 					var errorMessageArray:Array = [];
@@ -45,15 +119,23 @@
 					Alert.show(errorMessageArray.join("\n\n"), "请按照以下错误提示信息重新填写", Alert.OK);
 				}
 			}
-			
+		
 			private function resetForm(evt:MouseEvent):void
 			{
-//				e_name.text ="";
-//				address1.text = "";
-//				address2.text = "";
-//				city.text = "";
-//				state.selectedIndex = -1;
-//				zipCode.text = "";
+				if(this.toolTip=='Update'){		
+					rname.text=role.name;
+					creationDate.text=CommonUtils.formatDate(role.creationDate,"YYYY-MM-DD");
+					detail.text=role.detail;
+					symbol.text=role.symbol;
+					sequence.text=role.sequence.toString();
+				}else if(this.toolTip=='Add'){
+					rname.text="";
+					creationDate.text="";
+					detail.text="";
+					symbol.text="";
+					sequence.text="";
+					
+				}
 			} 
 			private var staffSelectPopWin:StaffSelectPopWin=null;
 			private function openStaffSelectPopWin(event:Event):void{
@@ -69,19 +151,19 @@
 		]]> 
 		
 	</fx:Script> 
-	<s:TitleWindow  title="岗位新增" width="100%" height="100%"  close="PopUpManager.removePopUp(this);" skinClass="system.skins.WlzxTitleWindowSkin">
+	<s:TitleWindow  id="roleWin" width="100%" height="100%"  close="PopUpManager.removePopUp(this);" skinClass="system.skins.WlzxTitleWindowSkin">
 		<mx:Form width="100%" height="100%" id="dform">
 			<mx:FormHeading label="岗位信息" fontSize="15" width="100%" textAlign="center"/>
 			
-			<mx:FormItem label="岗位名称">
-				<mx:TextInput id="dname" width="200"/>
+			<mx:FormItem label="岗位名称" required="true">
+				<mx:TextInput id="rname" width="200"/>
 			</mx:FormItem>
 			
-			<mx:FormItem label="创建日期 ">
+			<mx:FormItem label="创建日期 " required="true">
 				<mx:DateField  id="creationDate" width="200" formatString="YYYY-MM-DD"/>
 			</mx:FormItem>
 			
-			<mx:FormItem label="唯一标识">
+			<mx:FormItem label="唯一标识" required="true">
 				<mx:TextInput id="symbol" width="200"/>
 			</mx:FormItem>	
 			<mx:FormItem label="同级排序顺序">

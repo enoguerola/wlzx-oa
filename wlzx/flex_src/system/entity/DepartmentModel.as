@@ -1,5 +1,6 @@
 package system.entity
 {
+	import mx.collections.ArrayCollection;
 	[Bindable]
 	[RemoteClass(alias="system.entity.DepartmentModel")] 
 	public class DepartmentModel extends BaseModel
@@ -14,5 +15,22 @@ package system.entity
 		public function DepartmentModel()
 		{
 		}
+		/** 
+		 * 获取部门主管角色
+		 * @创建时间 2011-4-15 上午10:41:15
+		 */ 
+		public  function getSupervisorRole():Object{
+			var list:ArrayCollection = ArrayCollection(roles);
+			if(list!=null&&list.length>0){
+				for (var i:int = 0; i < list.length; i++){
+					var _role:Object = list.getItemAt(i);	
+					if(_role.supervisorFlag==true)
+						return _role;
+				}
+			}
+			
+			return null;
+		}
+
 	}
 }

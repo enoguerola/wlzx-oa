@@ -167,7 +167,8 @@
 				child.name = title;				
 				child.icon = icon;	
 				child.url = moduleUrl+"?uid=" + new Date().getTime();
-
+				//Flex 使用ModuleLoader调用多模块时出现强制类型转换错误的解决方法
+				child.applicationDomain=ApplicationDomain.currentDomain;
 				callLater(child.loadModule);
 				
 				child.addEventListener( ModuleEvent.READY,function(event:ModuleEvent):void{

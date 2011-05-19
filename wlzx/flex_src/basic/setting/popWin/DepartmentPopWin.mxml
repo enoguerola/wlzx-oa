@@ -23,13 +23,15 @@
 		
 		<![CDATA[  
 		
+			import basic.setting.*;
+			
 			import mx.controls.Alert;
 			import mx.events.ValidationResultEvent;
 			import mx.formatters.DateFormatter;
 			import mx.managers.PopUpManager;
 			import mx.rpc.events.*;
 			import mx.validators.Validator;
-			import basic.setting.*;
+			
 			import system.utils.*;
 			private var validatorArr:Array;
 			
@@ -62,11 +64,12 @@
 					department.name=dname.text;
 					department.creationDate=DateFormatter.parseDateString(creationDate.text);
 					department.detail=detail.text;
+					department.phone=phone.text;
 					department.symbol=symbol.text;
 					department.sequence=parseInt(sequence.text);
 					var supervisor:String =supervisorName.text;
 					if(this.toolTip=='Update'){
-						systemServiceRO.departmentUpdate(department);
+						systemServiceRO.departmentUpdate(department,supervisor);
 					}else if(this.toolTip=='Add'){
 						var parentId:String=this.id;//弹出窗口时设定的中转参数
 						systemServiceRO.departmentAdd(department,parentId,supervisor);
@@ -88,7 +91,7 @@
 			}
 			protected function departmentAddResult_resultHandler(event:ResultEvent):void
 			{
-				var department:DepartmentModel=event.result as DepartmentModel;
+				var department:Object=event.result;
 				if(department!=null){
 					var departmentData:XML=new XML("<node type='menu' label='"+department.name+"'  id='"+department.id+"'></node>");
 					var parent:departmentSetting = this.owner as departmentSetting;
@@ -100,18 +103,49 @@
 			}
 			protected function getDepartmentById_resultHandler(event:ResultEvent):void
 			{
+				department=event.result as DepartmentModel;
+				dname.text=department.name;
+				creationDate.text=CommonUtils.formatDate(department.creationDate,"YYYY-MM-DD");
+				detail.text=department.detail;
+				phone.text=department.phone;
+				symbol.text=department.symbol;
+				sequence.text=department.sequence.toString();
+				supervisorName.text=department.getSupervisorRole().name;
+				
 			}
 			protected function departmentUpdate_resultHandler(event:ResultEvent):void
 			{
+				var department:Object=event.result;
+				if(department!=null){
+					var parent:departmentSetting = this.owner as departmentSetting;
+					parent.selectedNode.@label=department.name;
+					parent.selectedNode.@id=department.id;
+					parent.loadDepartmentDetail(department);
+					PopUpManager.removePopUp(this);
+				}else{
+					Alert.show("更新失败");
+				}
 			}
 			private function resetForm(evt:MouseEvent):void
 			{
-//				e_name.text ="";
-//				address1.text = "";
-//				address2.text = "";
-//				city.text = "";
-//				state.selectedIndex = -1;
-//				zipCode.text = "";
+				if(this.toolTip=='Update'){		
+					dname.text=department.name;
+					creationDate.text=CommonUtils.formatDate(department.creationDate,"YYYY-MM-DD");
+					detail.text=department.detail;
+					phone.text=department.detail;
+					symbol.text=department.symbol;
+					sequence.text=department.sequence.toString();
+					supervisorName.text=department.getSupervisorRole().name;
+				}else if(this.toolTip=='Add'){
+					dname.text="";
+					creationDate.text="";
+					detail.text="";
+					phone.text="";
+					symbol.text="";
+					sequence.text="";
+					supervisorName.text="";			
+					
+				}
 			} 	
 		]]> 
 		

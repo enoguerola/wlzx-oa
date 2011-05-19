@@ -109,6 +109,10 @@ public class SystemService {
 		return departmentDAO.get(departmentId);
 	}
 	//获得某角色（岗位）
+	public RoleModel getRoleById(String roleId){		
+		return roleDAO.get(roleId);
+	}
+	//获得某角色（岗位）
 	public RoleModel getRoleBySymbol(String symbol){		
 		return roleDAO.getRoleBySymbol(symbol);
 	}
@@ -192,7 +196,7 @@ public class SystemService {
 		
 	}
 	//更新部门
-	public DepartmentModel departmentUpdate(DepartmentModel department){
+	public DepartmentModel departmentUpdate(DepartmentModel department,String supervisorName){
 		DepartmentModel newDepartment=departmentDAO.get(department.getId());
 		newDepartment.setSymbol(department.getSymbol());
 		newDepartment.setCreationDate(department.getCreationDate());
@@ -200,11 +204,40 @@ public class SystemService {
 		newDepartment.setName(department.getName());
 		newDepartment.setSequence(department.getSequence());
 		departmentDAO.saveOrUpdate(newDepartment);
+		RoleModel role=newDepartment.getSupervisorRole();
+		role.setSymbol(department.getSymbol()+"_supervisor");
+		role.setName(supervisorName);
+		role.setModifiedDate(new Date());
+		roleDAO.saveOrUpdate(role);
 		return newDepartment;
 	}
 	//删除部门
 	public boolean departmentRemove(String id){
 		departmentDAO.remove(departmentDAO.get(id));
+		return true;		
+	}
+	//新增岗位
+	public RoleModel roleAdd(RoleModel role,String parentId){
+			RoleModel parentRole=roleDAO.get(parentId);
+			parentRole.getSubordinates().add(role);	
+			roleDAO.saveOrUpdate(parentRole);
+			return role;
+		
+	}
+	//更新岗位
+	public RoleModel roleUpdate(RoleModel role){
+		RoleModel newRole=roleDAO.get(role.getId());
+		newRole.setSymbol(role.getSymbol());
+		newRole.setCreationDate(role.getCreationDate());
+		newRole.setDetail(role.getDetail());
+		newRole.setName(role.getName());
+		newRole.setSequence(role.getSequence());
+		roleDAO.saveOrUpdate(newRole);
+		return newRole;
+	}
+	//删除岗位
+	public boolean roleRemove(String id){
+		roleDAO.remove(roleDAO.get(id));
 		return true;		
 	}
 	public static void main(String[] args) {

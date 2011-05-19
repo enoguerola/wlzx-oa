@@ -6,8 +6,10 @@
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
 		<!--定义 RemoteObject 组件-->
 		<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
-			<mx:method name="getRoleBySymbol"  concurrency="last"  result="getRoleBySymbolResult(event);" />
+			<mx:method name="getDepartmentById"  concurrency="last"  result="getDepartmentByIdResult(event);" />
 			<mx:method name="getDepartmentBySymbol"  concurrency="last"  result="getDepartmentBySymbolResult(event);" />
+			<mx:method name="getRoleById"  concurrency="last"  result="getRoleByIdResult(event);" />
+			<mx:method name="roleRemove"  concurrency="last"   result="roleRemove_resultHandler(event);" />
 		</mx:RemoteObject>
 
 	</fx:Declarations>
@@ -32,50 +34,73 @@
 			import spark.components.*;
 			
 			import system.entity.*;
-			
+			import system.utils.*;
+			public var pop:RolePopWin=null;
+			public var selectedNode:XML;
 			private function init():void {
-				systemServiceRO.getRoleBySymbol("root_supervisor");
+//				systemServiceRO.getRoleBySymbol("root_supervisor");
 				systemServiceRO.getDepartmentBySymbol("root");
 			}
 			private function systemFaultHandler(event:FaultEvent):void {
 				Alert.show(event.fault.faultString, 'Error');
 			}
-			private function getRoleBySymbolResult(event:ResultEvent):void {
-				var role:RoleModel=RoleModel(event.result);
+			protected function roleRemove_resultHandler(event:ResultEvent):void{
+				if(event.result==true){
+					delete selectedNode.parent().node[selectedNode.childIndex()];
+					//					disabled();
+				}else{
+					Alert.show("删除岗位失败");
+				}
+			}
+			private function getRoleByIdResult(event:ResultEvent):void {
+				var role:RoleModel=event.result as RoleModel;
+//				Alert.show(role+"");
+				loadRoleDetail(role);
+			}
+			
+			private function getDepartmentByIdResult(event:ResultEvent):void {
+				var department:DepartmentModel=event.result as DepartmentModel;
+				var role:Object=department.getSupervisorRole();
 				var resultXML:String=buildSubRoles(role);
 				var roleData:XML=new XML(resultXML);
-				this.roles.dataProvider=roleData;
-				//				var list:ArrayCollection = ArrayCollection(event.result);
+				roles.dataProvider=roleData;
+				var roleId:String=roleData[0].@id;
+				callLater(function():void{roles.selectedItem=roleData[0];systemServiceRO.getRoleById(roleId);roles.validateNow();roles.expandChildrenOf(roleData[0],true);});
+
 			}
 			private function getDepartmentBySymbolResult(event:ResultEvent):void {
 				var department:Object=event.result;
 				var resultList:ArrayCollection = new ArrayCollection();
-				buildSubDepartments(department,resultList,0);				
+				buildSubDepartments(department,resultList,0);
+				
 				this.departments.dataProvider=resultList;
 				this.departments.selectedIndex=0;
+				systemServiceRO.getDepartmentById(departments.selectedItem.dataField);
 			}
+			
 			private function buildSubDepartments(department:Object,resultList:ArrayCollection,depth:int):void{
 				var headText:String="";
 				for(var j:int = 0;j<depth;j++)
-					headText=headText.concat("-");
+					headText=headText.concat("----");
 				headText=headText.concat(department.name);
-				resultList.addItem( {dataField:department.symbol, headerText:headText})
+				resultList.addItem( {dataField:department.id, headerText:headText})
 				var list:ArrayCollection = ArrayCollection(department.subordinates);			
 				if(list.length>0){
 					for (var i:int = 0; i < list.length; i++){
 						var _department:Object = list.getItemAt(i);	
 						buildSubDepartments(_department,resultList,depth+1);
 					}
+//					CommonUtils.sortBySequence(resultList);
 				}		
 				
 			}
-			private function buildSubRoles(role:RoleModel):String{
+			private function buildSubRoles(role:Object):String{
 				var resultXML:String="";
 				var list:ArrayCollection = ArrayCollection(role.subordinates);
 				if(list.length>0){
 					resultXML=resultXML.concat("<node label='"+role.name+"' id='"+role.id+"'>");
 					for (var i:int = 0; i < list.length; i++){
-						var _role:RoleModel = RoleModel(list.getItemAt(i));	
+						var _role:Object = list.getItemAt(i);	
 						resultXML=resultXML.concat(buildSubRoles(_role));
 					}
 					resultXML=resultXML.concat("</node>");
@@ -87,32 +112,50 @@
 			private function addRole():void{
 				var selectId:String=treeSelectedItemId();
 				if(selectId!=null){
-					var pop:RolePopWin=RolePopWin(PopUpManager.createPopUp(this,RolePopWin,true));  
+					if(pop!=null)PopUpManager.removePopUp(pop);
+					pop=RolePopWin(PopUpManager.createPopUp(this,RolePopWin,true)); 
+					pop.owner=this;
 					PopUpManager.centerPopUp(pop);
 					pop.percentHeight=100;
 					pop.percentWidth=100;
 					pop.x=FlexGlobals.topLevelApplication.stage.stageWidth/2-pop.width/2;
 					pop.y=FlexGlobals.topLevelApplication.stage.stageHeight/2-pop.height/2;
-					//					Alert.show(selectId);
+					pop.id=selectId;//参数传递使用
+					pop.toolTip="Add";
 				}	
 			}
 			private function editRole():void{
 				var selectId:String=treeSelectedItemId();
 				if(selectId!=null){
-					Alert.show(selectId);
+					if(pop!=null)PopUpManager.removePopUp(pop);
+					pop=RolePopWin(PopUpManager.createPopUp(this,RolePopWin,true));  
+					pop.owner=this;
+					PopUpManager.centerPopUp(pop);
+					pop.percentHeight=100;
+					pop.percentWidth=100;
+					pop.x=FlexGlobals.topLevelApplication.stage.stageWidth/2-pop.width/2;
+					pop.y=FlexGlobals.topLevelApplication.stage.stageHeight/2-pop.height/2;
+					pop.id=selectId;//参数传递使用
+					pop.toolTip="Update";
 				}	
 			}
 			private function deleteRole():void{
 				var selectId:String=treeSelectedItemId();
 				if(selectId!=null){
-					Alert.show(selectId);
+					var rolesData:XML=roles.dataProvider as XML;
+					if(selectId==rolesData[0].@id){
+						Alert.show("部门主管岗位不可删除","警告提示",Alert.YES);
+						return;
+					}
+					Alert.show("你确定要删除该岗位及相应子节点岗位信息吗?","确认删除",Alert.NO|Alert.YES,null,function():void{systemServiceRO.roleRemove(selectId);});
+
 				}	
 			}
 			private function saveRole():void{
 				
 			}
 			private function treeSelectedItemId():String{
-				var selectedNode:XML=roles.selectedItem as XML;
+				selectedNode=roles.selectedItem as XML;
 				if(selectedNode!=null)
 					return selectedNode.@id;
 				else{
@@ -120,19 +163,85 @@
 					return null;
 				} 
 			}
-			
+			private function selectionChangedHandler(event:Event):void{
+				
+//				Alert.show(departments.selectedItem.dataField);
+				systemServiceRO.getDepartmentById(departments.selectedItem.dataField);
+				
+			}
+			public function loadRoleDetail(role:Object):void{
+				rname.text=role.name;
+				creationDate.text=CommonUtils.formatDate(role.creationDate,"YYYY-MM-DD");
+				symbol.text=role.symbol;
+				sequence.text=role.sequence+"";
+				detail.text=role.detail;
+				var usersString:String="";
+				if(role.users!=null){
+					var list:ArrayCollection = ArrayCollection(role.users);
+					for (var i:int = 0; i < list.length; i++){
+						var _user:Object = list.getItemAt(i);	
+						usersString=usersString.concat(_user.name+"  ");
+					}
+				}
+				users.text=usersString;
+			}
+			private function tree_itemClick(evt:Event):void {
+				selectedNode=roles.selectedItem as XML;
+				var id:String=selectedNode.@id;
+				systemServiceRO.getRoleById(id);
+				
+			}
 		]]>
 	</fx:Script>
 	
 	<s:Panel width="100%" height="100%" title="岗位设置" skinClass="system.skins.WlzxPanelSkin">
-		<s:HGroup  top="-25"  left="100" verticalAlign="middle"  horizontalAlign="center" >
-			<s:Label text="部门选择" textAlign="center"  />
-			<s:DropDownList  width="200" id="departments" labelField="headerText"  selectedIndex="0" />
-			<s:Button label="新增"  width="50" right="160" click="addRole();"/>
-			<s:Button label="编辑"  width="50" right="100" click="editRole();"/>
-			<s:Button label="删除"  width="50" right="40" click="deleteRole();"/>
-		</s:HGroup>	
-		<flexlib:ConvertibleTreeList id="roles" labelField="@label"   width="100%" height="100%">
-		</flexlib:ConvertibleTreeList>
+		<mx:VBox width="100%" height="100%" verticalGap="0">
+			<mx:HBox width="100%" height="35" paddingLeft="20"  horizontalGap="10" backgroundColor="#C5E497"  verticalAlign="middle" >
+				<mx:Label text="|"/>
+				<mx:LinkButton  label="新建" icon="@Embed(source='../WebContent/resources/common/tools/button_add_icon.png')"  click="addRole();"/>
+				<mx:Label text="|"/>
+				<mx:LinkButton  label="编辑" icon="@Embed(source='../WebContent/resources/common/tools/button_edit_icon.png')"  click="editRole();"/>
+				<mx:Label text="|"/>
+				<mx:LinkButton  label="删除" icon="@Embed(source='../WebContent/resources/common/tools/button_delete_icon.png')"  click="deleteRole();"/>
+				<mx:Label text="|"/>
+				<mx:Label  text="部门选择" textAlign="center" />
+				<s:DropDownList  width="200" id="departments" labelField="headerText" change="selectionChangedHandler(event);" />
+			</mx:HBox>
+			<mx:HBox  width="100%" height="100%" verticalAlign="middle" paddingTop="10" paddingBottom="10"  paddingLeft="10" paddingRight="10">
+				<mx:Tree id="roles"  labelField="@label"  borderVisible="false" width="60%" height="100%" change="tree_itemClick(event);" >
+				</mx:Tree>
+				<mx:VRule height="95%"/>
+				
+				<mx:VBox  width="40%" height="100%" borderVisible="true">
+					<mx:Form width="100%" height="100%" id="dform" textAlign="center">
+						<mx:FormHeading label="岗位详细信息" fontSize="15" width="100%" textAlign="left"/>
+						
+						<mx:FormItem label="岗位名称" required="true">
+							<mx:Label id="rname"/>		
+						</mx:FormItem>
+						
+						<mx:FormItem label="创建日期 "  required="true">
+							<mx:Label id="creationDate"/>		
+						</mx:FormItem>
+						
+						<mx:FormItem label="唯一标识"  required="true">
+							<mx:Label id="symbol"/>		
+						</mx:FormItem>	
+						<mx:FormItem label="同级顺序">
+							<mx:Label id="sequence"/>		
+						</mx:FormItem>
+						<mx:FormItem label="岗位描述">
+							<mx:Label id="detail"/>		
+						</mx:FormItem>
+						<mx:FormItem label="岗位员工">
+							<mx:Label id="users"/>		
+						</mx:FormItem>
+					</mx:Form>
+				</mx:VBox>
+			</mx:HBox>
+			
+		</mx:VBox>
+		
+
 	</s:Panel>
 </mx:Module>
