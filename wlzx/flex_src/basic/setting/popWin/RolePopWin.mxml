@@ -9,6 +9,8 @@
 		<mx:StringValidator id="createDate_dateValidator"  source="{creationDate}" property="text" requiredFieldError="岗位创建日期不能为空"/>
 		<mx:StringValidator id="symbol_stringValidator" source="{symbol}" property="text"  requiredFieldError="岗位唯一标识不能为空"/>
 		<mx:NumberValidator id="sequence_numberValidator" source="{sequence}" required="false" property="text" integerError="请输入整数值，同级岗位默认排序升序" domain="int"/>
+		<mx:NumberValidator id="level_numberValidator" source="{level}" required="true" property="text"  minValue="1" requiredFieldError="岗位级别不能为空" integerError="请输入正整数值" domain="int"/>
+
 		<valueObjects:RoleModel id="role"/>
 		<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 			<mx:method name="roleAdd"  concurrency="last"  result="roleAddResult_resultHandler(event);" />
@@ -42,6 +44,8 @@
 				validatorArr.push(symbol_stringValidator);
 				validatorArr.push(createDate_dateValidator);
 				validatorArr.push(sequence_numberValidator);
+				validatorArr.push(level_numberValidator);
+				
 				callLater(initRoleWin);
 			} 
 			private function initRoleWin():void{
@@ -78,6 +82,7 @@
 				detail.text=role.detail;
 				symbol.text=role.symbol;
 				sequence.text=role.sequence.toString();
+				level.text=role.level.toString();
 				
 			}
 			protected function roleUpdate_resultHandler(event:ResultEvent):void
@@ -102,6 +107,7 @@
 					role.detail=detail.text;
 					role.symbol=symbol.text;
 					role.sequence=parseInt(sequence.text);
+					role.level=parseInt(level.text);
 					if(this.toolTip=='Update'){
 						systemServiceRO.roleUpdate(role);
 					}else if(this.toolTip=='Add'){
@@ -128,12 +134,14 @@
 					detail.text=role.detail;
 					symbol.text=role.symbol;
 					sequence.text=role.sequence.toString();
+					level.text=role.level.toString();
 				}else if(this.toolTip=='Add'){
 					rname.text="";
 					creationDate.text="";
 					detail.text="";
 					symbol.text="";
 					sequence.text="";
+					level.text="";
 					
 				}
 			} 
@@ -158,7 +166,9 @@
 			<mx:FormItem label="岗位名称" required="true">
 				<mx:TextInput id="rname" width="200"/>
 			</mx:FormItem>
-			
+			<mx:FormItem label="岗位级别" required="true">
+				<mx:TextInput id="level" width="200"/>
+			</mx:FormItem>
 			<mx:FormItem label="创建日期 " required="true">
 				<mx:DateField  id="creationDate" width="200" formatString="YYYY-MM-DD"/>
 			</mx:FormItem>

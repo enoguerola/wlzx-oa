@@ -38,6 +38,7 @@
 			<key column="subordinate_id" not-null="true" />
 			<many-to-many  column="leader_id"  class="system.entity.DepartmentModel" /> 
 		</set>
+		
 		<set name="dataAccessModes" lazy="false"  table="wlzx_system_department_dam_relationship">
 			<key column="department_id" not-null="true" />
 			<many-to-many column="dam_id" class="system.entity.DataAccessModeModel" /> 
@@ -46,6 +47,9 @@
 			<key column="department_id" not-null="true" />
 			<many-to-many column="role_id" class="system.entity.RoleModel" /> 
 		</set>
-		
+		<set name="leaderRoles" lazy="false"  table="wlzx_system_role_department_leadership">
+			<key column="department_id" not-null="true" />
+			<many-to-many column="role_id" class="system.entity.RoleModel" /> 
+		</set>
 	</class>
 </hibernate-mapping>

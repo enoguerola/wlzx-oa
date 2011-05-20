@@ -77,4 +77,11 @@ public class UserDAO extends BaseDAOImpl<UserModel>{
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<UserModel> getAllUsers() {
+		DetachedCriteria criteria = DetachedCriteria.forClass(UserModel.class);
+		List<UserModel> result = this.getListByCriteria(criteria);
+		return result;
+	}
+
 }

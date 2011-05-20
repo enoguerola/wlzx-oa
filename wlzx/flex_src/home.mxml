@@ -94,6 +94,6 @@
 
 		]]>    
 	</fx:Script> 
-	<fx:Style source="home.css"/>
+	<fx:Style source="/css/skinPreview.css"/>
 	<mx:ModuleLoader id="currentModule" ready="readyModule(event);"  width="100%"  height="100%" /> 
 </s:Application>

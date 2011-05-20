@@ -7,7 +7,7 @@
 		<!--定义 RemoteObject 组件-->
 		<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 			<mx:method name="getSystemBySymbol"  concurrency="last"  result="getSystemBySymbolResult(event);" />
-			<mx:method name="getDepartmentBySymbol"  concurrency="last"  result="getDepartmentBySymbolResult(event);" />
+			<mx:method name="getAllRoles"  concurrency="last"  result="getAllRolesResult(event);" />
 		</mx:RemoteObject>
 	</fx:Declarations>
 	<fx:Style>
@@ -20,27 +20,101 @@
 		<![CDATA[
 			import basic.setting.popWin.DepartmentPopWin;
 			
+			import cn.org.rapid_framework.flex_security.SecurityControler;
+			
 			import flexlib.controls.SuperTabBar;
 			import flexlib.controls.tabBarClasses.SuperTab;
 			import flexlib.events.TabReorderEvent;
 			
+			import mx.collections.*;
 			import mx.collections.ArrayCollection;
 			import mx.containers.Canvas;
+			import mx.containers.VBox;
 			import mx.controls.Alert;
+			import mx.controls.Tree;
 			import mx.rpc.events.*;
 			
 			import spark.components.*;
 			
+			import system.component.checkTree.*;
 			import system.entity.*;
+			[Bindable]
+			public var folderList:XMLList=
+				<>
+				<folder state="0" label="Marketing Collateral">
+				<folder state="0" label="Media,PR,and Communications" >
+				<folder state="0" label="Article Reprint Disclaimers" />
+				<folder state="0" label="Articles Reprints" />
+				<folder state="0" label="Interviews and Transcripts" />
+				<folder state="0" label="Press Kits" />
+				<folder state="0" label="Press Releases" />
+				<folder state="0" label="Quick Hits" />
+				<folder state="0" label="Rep Talking Points" />
+				<folder state="0" label="Special Updates" />
+				<folder state="0" label="White Papers" />
+				</folder>
+				<folder state="0" label="Forms and Applications" >
+				<folder state="0" label="Applications" />
+				<folder state="0" label="Forms" />
+				</folder>
+				</folder>
+				</>
+				;
 			private var TAB_WIDTH:int=30;
 			private function init():void {
 				systemServiceRO.getSystemBySymbol("root");
-				systemServiceRO.getDepartmentBySymbol("root");
+				systemServiceRO.getAllRoles();
 			}
-			
 			private function systemFaultHandler(event:FaultEvent):void {
 				Alert.show(event.fault.faultString, 'Error');
 			}
+			private function getAllRolesResult(event:ResultEvent):void {
+				var resultList:ArrayCollection = new ArrayCollection();
+				Alert.show(resultList.length+"");
+				var allList:ArrayCollection=event.result as ArrayCollection;
+				if(allList.length>0){
+					for (var i:int = 0; i < allList.length; i++){
+						var _role:RoleModel = allList.getItemAt(i) as RoleModel;
+						var headText:String="";
+						for(var j:int = 0;j<_role.level;j++)
+							headText=headText.concat("--");
+						headText=headText.concat(_role.name);
+						resultList.addItem( {dataField:_role.id, headerText:headText})
+					}
+				}	
+				this.roles.dataProvider=resultList;
+				this.roles.selectedIndex=0;
+			}
+			private function buildRoleStructre(department:DepartmentModel,resultList:ArrayCollection,depth:int):void{
+			
+			}
+//			private function buildSubDepartments(department:DepartmentModel,resultList:ArrayCollection,depth:int):void{
+//				buildSubRoles(department.getSupervisorRole() as RoleModel,resultList,depth);	
+//				var list:ArrayCollection = ArrayCollection(department.subordinates);			
+//				if(list.length>0){
+//					for (var i:int = 0; i < list.length; i++){
+//						var _department:DepartmentModel = list.getItemAt(i) as DepartmentModel;	
+//						buildSubDepartments(_department,resultList,depth+1);
+//					}
+//				}		
+//				
+//			}
+//			private function buildSubRoles(role:RoleModel,resultList:ArrayCollection,depth:int):void{
+//				var headText:String="";
+//				for(var j:int = 0;j<depth;j++)
+//					headText=headText.concat("---");
+//				headText=headText.concat(role.name);
+//				resultList.addItem( {dataField:role.id, headerText:headText})
+//				var list:ArrayCollection = ArrayCollection(role.subordinates);			
+//				if(list.length>0){
+//					for (var i:int = 0; i < list.length; i++){
+//						var _role:RoleModel = list.getItemAt(i) as RoleModel;	
+//						buildSubRoles(_role,resultList,depth+1);
+//					}
+//				}		
+//				
+//			}
+			
 			private function getSystemBySymbolResult(event:ResultEvent):void {
 				var rootSystem:Object =event.result ;
 				//				addTab(rootSystem);
@@ -52,190 +126,192 @@
 				}
 			}
 			
-			private function addTab(_system:Object):void {	
-				var child:mx.containers.VBox = new mx.containers.VBox();								
+			
+			private function addTab(_system:Object):void {
+				var child:HBox = new HBox();
 				child.percentHeight=100;
 				child.percentWidth=100;
+				var tree:CheckTree = new CheckTree();
+				tree.percentHeight=100;
+				tree.percentWidth=100;
+				var folderCollection:XMLListCollection;
+				folderCollection = new XMLListCollection(folderList);
+				tree.dataProvider = folderCollection;		
+				tree.checkBoxStateField="@state";
+				tree.labelField="@label";
+				tree.checkBoxCloseItemsOnUnCheck=true;
+				tree.checkBoxOpenItemsOnCheck=true;
+				tree.checkBoxEnableState=true;
+				tree.checkBoxCascadeOnCheck=true;
+				tree.itemDClickSelect=true;
+				tree.checkBoxBgColor=0x009900;
+				//				tree.checkBoxBgPadding="{checkBoxBgPadding.value}"
+				//				tree.checkBoxBgElips="{checkBoxBgElips.value}"
+				//				tree.checkBoxLeftGap="{checkBoxLeftGap.value}"
+				//				tree.checkBoxRightGap="{checkBoxRightGap.value}"
 				child.label = _system.name;
-				var vGroup:VGroup=new VGroup();
-				buildSubSystem(_system,vGroup,0);
-				child.addChild(vGroup);
-				systems.addChild(child as DisplayObject);
-				
-			}
-			private function buildSubSystem(system:Object,vGroup:VGroup,depth:int):void {
-				var systemList:ArrayCollection = ArrayCollection(system.children);
-				if(systemList.length>0){
-					for (var i:int = 0; i < systemList.length; i++){
-						var _system:Object = systemList.getItemAt(i);	
-						var vSubGroup:VGroup=new VGroup();
-						var hGroup:HGroup=new HGroup();
-						var checkBox:CheckBox=new CheckBox();
-						checkBox.id="system_"+_system.id;
-						var label:Label=new Label();		
-						label.text=_system.name;
-						var tabGroup:HGroup=new HGroup();
-						tabGroup.width=depth*TAB_WIDTH;
-						hGroup.addElement(tabGroup);
-						hGroup.addElement(checkBox);
-						hGroup.addElement(label);
-						vSubGroup.addElement(hGroup);
-						buildSubSystem(_system,vSubGroup,depth+1);
-						vGroup.addElement(vSubGroup);			
-					}
-					
-				}else{
-					var menuList:ArrayCollection = ArrayCollection(system.menus);
-					for (var j:int = 0; j < menuList.length; j++){
-						var menu:Object = menuList.getItemAt(j);	
-						buildSubMenu(menu,vGroup,depth);
-					}
-					
-				}
-			}
-			private function buildSubMenu(menu:Object,vGroup:VGroup,depth:int):void {
-				var vSubGroup:VGroup=new VGroup();
-				var hGroup:HGroup=new HGroup();
-				var checkBox:CheckBox=new CheckBox();
-				checkBox.id="menu_"+menu.id;
-				var label:Label=new Label();		
-				label.text=menu.name;
-				var tabGroup:HGroup=new HGroup();
-				tabGroup.width=depth*TAB_WIDTH;
-				hGroup.addElement(tabGroup);
-				hGroup.addElement(checkBox);
-				hGroup.addElement(label);
-				vSubGroup.addElement(hGroup);
-				var subMenuList:ArrayCollection = ArrayCollection(menu.children);
-				if(subMenuList.length>0){
-					for (var i:int = 0; i < subMenuList.length; i++){
-						var subMenu:Object = subMenuList.getItemAt(i);	
-						buildSubMenu(subMenu,vSubGroup,depth+1);
-					}
-				}else{
-					var subModuleList:ArrayCollection = ArrayCollection(menu.modules);
-					for (var j:int = 0; j < subModuleList.length; j++){
-						var module:Object = subModuleList.getItemAt(j);	
-						buildSubModule(module,vSubGroup,depth+1);
-					}
-				}
-				vGroup.addElement(vSubGroup);			
-				
-			}
-			private function buildSubModule(module:Object,vGroup:VGroup,depth:int):void {
-				var vSubGroup:VGroup=new VGroup();
-				var hGroup:HGroup=new HGroup();
-				var checkBox:CheckBox=new CheckBox();
-				checkBox.id="module_"+module.id;
-				var label:Label=new Label();		
-				label.text=module.name;
-				var tabGroup:HGroup=new HGroup();
-				tabGroup.width=depth*TAB_WIDTH;
-				hGroup.addElement(tabGroup);
-				hGroup.addElement(checkBox);
-				hGroup.addElement(label);
-				vSubGroup.addElement(hGroup);
-				var subModuleList:ArrayCollection = ArrayCollection(module.children);
-				if(subModuleList.length>0){
-					for (var i:int = 0; i < subModuleList.length; i++){
-						var subModule:Object = subModuleList.getItemAt(i);	
-						buildSubModule(subModule,vSubGroup,depth+1);
-					}
-				}else{
-					//					Alert.show("a");
-					var operationList:ArrayCollection = ArrayCollection(module.operations);
-					//					Alert.show(operationList.toString());
-					var hSubGroup:HGroup=new HGroup();
-					for (var j:int = 0; j < operationList.length; j++){
-						var operation:Object = operationList.getItemAt(j);	
-						
-						buildSubOperation(operation,hSubGroup,depth+1);
-						
-					}
-					vSubGroup.addElement(hSubGroup);
-				}
-				vGroup.addElement(vSubGroup);	
-			}
-			private function buildSubOperation(operation:Object,vGroup:HGroup,depth:int):void {
-				var vSubGroup:HGroup=new HGroup();
-				var hGroup:HGroup=new HGroup();
-				var checkBox:CheckBox=new CheckBox();
-				checkBox.id="operation_"+operation.id;
-				var label:Label=new Label();		
-				label.text=operation.name;
-				var tabGroup:HGroup=new HGroup();
-				tabGroup.width=depth*TAB_WIDTH;
-				hGroup.addElement(tabGroup);
-				hGroup.addElement(checkBox);
-				hGroup.addElement(label);
-				vSubGroup.addElement(hGroup);
-				var dataAccessModesList:ArrayCollection = ArrayCollection(operation.dataAccessModes);
-				
-				for (var i:int = 0; i < dataAccessModesList.length; i++){
-					var dataAccessMode:Object = dataAccessModesList.getItemAt(i);
-					var aLabel:Label=new Label();		
-					aLabel.text="->数据[";
-					vSubGroup.addElement(aLabel);
-					buildSubDataAccessMode(dataAccessMode,vSubGroup,depth+1);
-					var bLabel:Label=new Label();		
-					bLabel.text="]";
-					vSubGroup.addElement(bLabel);
-					vSubGroup.verticalAlign="top";
-					vSubGroup.horizontalAlign="center";
-				}
-				
-				vGroup.addElement(vSubGroup);	
-			}
-			private function buildSubDataAccessMode(dataAccessMode:Object,vGroup:HGroup,depth:int):void {
-				var vSubGroup:VGroup=new VGroup();
-				var hGroup:HGroup=new HGroup();
-				
-				var checkBox:RadioButton=new RadioButton();
-				checkBox.id="dataAccessMode_"+dataAccessMode.id;
-				var label:Label=new Label();		
-				label.text=dataAccessMode.name;
-				hGroup.addElement(checkBox);
-				hGroup.addElement(label);
-				vSubGroup.addElement(hGroup);
-				vGroup.addElement(vSubGroup);	
-			}
-			private function getDepartmentBySymbolResult(event:ResultEvent):void {
-				var department:Object=event.result;
-				var resultList:ArrayCollection = new ArrayCollection();
-				buildSubDepartments(department,resultList,0);				
-				this.departments.dataProvider=resultList;
-				this.departments.selectedIndex=0;
-			}
-			private function buildSubDepartments(department:Object,resultList:ArrayCollection,depth:int):void{
-				var headText:String="";
-				for(var j:int = 0;j<depth;j++)
-					headText=headText.concat("-");
-				headText=headText.concat(department.name);
-				resultList.addItem( {dataField:department.symbol, headerText:headText})
-				var list:ArrayCollection = ArrayCollection(department.subordinates);			
-				if(list.length>0){
-					for (var i:int = 0; i < list.length; i++){
-						var _department:Object = list.getItemAt(i);	
-						buildSubDepartments(_department,resultList,depth+1);
-					}
-				}		
+				//				var vGroup:VGroup=new VGroup();
+				//				buildSubSystem(_system,vGroup,0);
+				child.addChild(tree);
+				systems.addChild(child);
 				
 			}
 			
+			//			private function buildSubSystem(system:Object,vGroup:VGroup,depth:int):void {
+			//				var systemList:ArrayCollection = ArrayCollection(system.children);
+			//				if(systemList.length>0){
+			//					for (var i:int = 0; i < systemList.length; i++){
+			//						var _system:Object = systemList.getItemAt(i);	
+			//						var vSubGroup:VGroup=new VGroup();
+			//						var hGroup:HGroup=new HGroup();
+			//						var checkBox:CheckBox=new CheckBox();
+			//						checkBox.id="system_"+_system.id;
+			//						var label:Label=new Label();		
+			//						label.text=_system.name;
+			//						var tabGroup:HGroup=new HGroup();
+			//						tabGroup.width=depth*TAB_WIDTH;
+			//						hGroup.addElement(tabGroup);
+			//						hGroup.addElement(checkBox);
+			//						hGroup.addElement(label);
+			//						vSubGroup.addElement(hGroup);
+			//						buildSubSystem(_system,vSubGroup,depth+1);
+			//						vGroup.addElement(vSubGroup);			
+			//					}
+			//					
+			//				}else{
+			//					var menuList:ArrayCollection = ArrayCollection(system.menus);
+			//					for (var j:int = 0; j < menuList.length; j++){
+			//						var menu:Object = menuList.getItemAt(j);	
+			//						buildSubMenu(menu,vGroup,depth);
+			//					}
+			//					
+			//				}
+			//			}
+			//			private function buildSubMenu(menu:Object,vGroup:VGroup,depth:int):void {
+			//						var vSubGroup:VGroup=new VGroup();
+			//						var hGroup:HGroup=new HGroup();
+			//						var checkBox:CheckBox=new CheckBox();
+			//						checkBox.id="menu_"+menu.id;
+			//						var label:Label=new Label();		
+			//						label.text=menu.name;
+			//						var tabGroup:HGroup=new HGroup();
+			//						tabGroup.width=depth*TAB_WIDTH;
+			//						hGroup.addElement(tabGroup);
+			//						hGroup.addElement(checkBox);
+			//						hGroup.addElement(label);
+			//						vSubGroup.addElement(hGroup);
+			//						var subMenuList:ArrayCollection = ArrayCollection(menu.children);
+			//						if(subMenuList.length>0){
+			//							for (var i:int = 0; i < subMenuList.length; i++){
+			//								var subMenu:Object = subMenuList.getItemAt(i);	
+			//								buildSubMenu(subMenu,vSubGroup,depth+1);
+			//							}
+			//						}else{
+			//							var subModuleList:ArrayCollection = ArrayCollection(menu.modules);
+			//							for (var j:int = 0; j < subModuleList.length; j++){
+			//								var module:Object = subModuleList.getItemAt(j);	
+			//								buildSubModule(module,vSubGroup,depth+1);
+			//							}
+			//						}
+			//						vGroup.addElement(vSubGroup);			
+			//				
+			//			}
+			//			private function buildSubModule(module:Object,vGroup:VGroup,depth:int):void {
+			//				var vSubGroup:VGroup=new VGroup();
+			//				var hGroup:HGroup=new HGroup();
+			//				var checkBox:CheckBox=new CheckBox();
+			//				checkBox.id="module_"+module.id;
+			//				var label:Label=new Label();		
+			//				label.text=module.name;
+			//				var tabGroup:HGroup=new HGroup();
+			//				tabGroup.width=depth*TAB_WIDTH;
+			//				hGroup.addElement(tabGroup);
+			//				hGroup.addElement(checkBox);
+			//				hGroup.addElement(label);
+			//				vSubGroup.addElement(hGroup);
+			//				var subModuleList:ArrayCollection = ArrayCollection(module.children);
+			//				if(subModuleList.length>0){
+			//					for (var i:int = 0; i < subModuleList.length; i++){
+			//						var subModule:Object = subModuleList.getItemAt(i);	
+			//						buildSubModule(subModule,vSubGroup,depth+1);
+			//					}
+			//				}else{
+			////					Alert.show("a");
+			//					var operationList:ArrayCollection = ArrayCollection(module.operations);
+			////					Alert.show(operationList.toString());
+			//					var hSubGroup:HGroup=new HGroup();
+			//					for (var j:int = 0; j < operationList.length; j++){
+			//						var operation:Object = operationList.getItemAt(j);	
+			//						
+			//						buildSubOperation(operation,hSubGroup,depth+1);
+			//						
+			//					}
+			//					vSubGroup.addElement(hSubGroup);
+			//				}
+			//				vGroup.addElement(vSubGroup);	
+			//			}
+			//			private function buildSubOperation(operation:Object,vGroup:HGroup,depth:int):void {
+			//				var vSubGroup:HGroup=new HGroup();
+			//				var hGroup:HGroup=new HGroup();
+			//				var checkBox:CheckBox=new CheckBox();
+			//				checkBox.id="operation_"+operation.id;
+			//				var label:Label=new Label();		
+			//				label.text=operation.name;
+			//				var tabGroup:HGroup=new HGroup();
+			//				tabGroup.width=depth*TAB_WIDTH;
+			//				hGroup.addElement(tabGroup);
+			//				hGroup.addElement(checkBox);
+			//				hGroup.addElement(label);
+			//				vSubGroup.addElement(hGroup);
+			//				var dataAccessModesList:ArrayCollection = ArrayCollection(operation.dataAccessModes);
+			//				
+			//					for (var i:int = 0; i < dataAccessModesList.length; i++){
+			//						var dataAccessMode:Object = dataAccessModesList.getItemAt(i);
+			//						var aLabel:Label=new Label();		
+			//						aLabel.text="->数据[";
+			//						vSubGroup.addElement(aLabel);
+			//						buildSubDataAccessMode(dataAccessMode,vSubGroup,depth+1);
+			//						var bLabel:Label=new Label();		
+			//						bLabel.text="]";
+			//						vSubGroup.addElement(bLabel);
+			//						vSubGroup.verticalAlign="top";
+			//						vSubGroup.horizontalAlign="center";
+			//					}
+			//			
+			//				vGroup.addElement(vSubGroup);	
+			//			}
+			//			private function buildSubDataAccessMode(dataAccessMode:Object,vGroup:HGroup,depth:int):void {
+			//				var vSubGroup:VGroup=new VGroup();
+			//				var hGroup:HGroup=new HGroup();
+			//				
+			//				var checkBox:RadioButton=new RadioButton();
+			//				checkBox.id="dataAccessMode_"+dataAccessMode.id;
+			//				var label:Label=new Label();		
+			//				label.text=dataAccessMode.name;
+			//				hGroup.addElement(checkBox);
+			//				hGroup.addElement(label);
+			//				vSubGroup.addElement(hGroup);
+			//				vGroup.addElement(vSubGroup);	
+			//			}
+			
+			
 		]]>
 	</fx:Script>
-	
-	
-	<s:HGroup   verticalAlign="middle"  horizontalAlign="right" width="100%">
-		<s:Label text="部门选择" textAlign="center"  />
-		<s:DropDownList  width="200" id="departments" labelField="headerText"  selectedIndex="0" />
-		<s:Label text="岗位选择" textAlign="center"  />
-		<s:DropDownList  width="200" id="roles" labelField="headerText"  selectedIndex="0" />
-		<s:Button label="保存"  width="50" />
-	</s:HGroup>	
-	<mx:TabNavigator id="systems"  width="100%" height="100%" tabStyleName="customTabStyles"  horizontalGap="5" borderVisible="false" paddingTop="0" paddingBottom="0" paddingLeft="0" paddingRight="0" tabWidth="120">
+	<s:Panel width="100%" height="100%" title="岗位授权"  skinClass="system.skins.WlzxPanelSkin"   borderVisible="true" dropShadowVisible="false">
+		<mx:VBox width="100%" height="100%" verticalGap="0">
+			<mx:HBox width="100%" height="35" paddingLeft="20"  horizontalGap="10" backgroundColor="#C5E497"  verticalAlign="middle" >
+				<mx:Label text="|"/>
+				<mx:Label text="岗位选择" textAlign="center"  />
+				<mx:ComboBox width="200" id="roles" labelField="headerText"  selectedIndex="0" />
+				<mx:LinkButton  label="保存"  id="roleSave" icon="@Embed(source='../WebContent/resources/common/tools/button_save_icon.png')"/>
+				<mx:Label text="|"/>				
+			</mx:HBox>
+			
+			<mx:TabNavigator id="systems"  width="100%" height="100%" tabStyleName="customTabStyles"  horizontalGap="1" borderVisible="false"  tabWidth="120" paddingTop="0">
+				
+			</mx:TabNavigator>
+		</mx:VBox>
 		
-	</mx:TabNavigator>
-	
+	</s:Panel>
 	
 </mx:Module>

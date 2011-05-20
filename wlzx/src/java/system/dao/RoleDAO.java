@@ -6,6 +6,7 @@ package system.dao;
 import java.util.List;
 
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 import system.BaseDAOImpl;
@@ -94,6 +95,7 @@ public class RoleDAO extends BaseDAOImpl<RoleModel> {
 	@SuppressWarnings("unchecked")
 	public List<RoleModel> getAllRoles() {
 		DetachedCriteria criteria = DetachedCriteria.forClass(RoleModel.class);
+		criteria.addOrder(Order.asc("level"));
 		List<RoleModel> result = this.getListByCriteria(criteria);
 		return result;
 	}

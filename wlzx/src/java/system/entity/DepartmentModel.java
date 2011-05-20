@@ -31,6 +31,7 @@ public class DepartmentModel  extends BaseModel{
 	private Set<DepartmentModel> subordinates=new TreeSet<DepartmentModel>();//直属下级部门
 	private Set<DepartmentModel> leaders=new TreeSet<DepartmentModel>();//直属上级部门
 	private Set<RoleModel> roles=new TreeSet<RoleModel>();//部门角色集
+	private Set<RoleModel> leaderRoles=new TreeSet<RoleModel>();//部门上级领导角色集
 	private Set<DataAccessModeModel> dataAccessModes=new TreeSet<DataAccessModeModel>();//部门数据访问权限
 
 	public String getDetail() {
@@ -89,6 +90,14 @@ public class DepartmentModel  extends BaseModel{
 			}
 		}
 		return null;
+	}
+
+	public Set<RoleModel> getLeaderRoles() {
+		return leaderRoles;
+	}
+
+	public void setLeaderRoles(Set<RoleModel> leaderRoles) {
+		this.leaderRoles = leaderRoles;
 	}
 
 	
