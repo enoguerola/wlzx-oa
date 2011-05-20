@@ -5,6 +5,7 @@ package system.service;
 
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -116,9 +117,17 @@ public class SystemService {
 	public RoleModel getRoleBySymbol(String symbol){		
 		return roleDAO.getRoleBySymbol(symbol);
 	}
+	//获得所有角色（岗位）
+	public List<RoleModel> getAllRoles(){		
+		return roleDAO.getAllRoles();
+	}
 	//获得某用户
 	public UserModel getUserByUserAccount(String userAccount){		
 		return userDAO.getUserByUserAccount(userAccount);
+	}
+	//获得所有用户
+	public List<UserModel> getAllUsers(){		
+		return userDAO.getAllUsers();
 	}
 	//新增菜单
 	public MenuModel menuAdd(MenuModel menu,String parentType,String parentSymbol){
@@ -181,9 +190,11 @@ public class SystemService {
 		return true;		
 	}
 	//新增部门
-	public DepartmentModel departmentAdd(DepartmentModel department,String parentId,String supervisorName){
-			DepartmentModel parentDepartment=departmentDAO.get(parentId);
+	public DepartmentModel departmentAdd(DepartmentModel department,String parentDepartmentId,String supervisorName,String leaderRoleIds){
+			//父亲部门与新部门的关系保存
+			DepartmentModel parentDepartment=departmentDAO.get(parentDepartmentId);
 			parentDepartment.getSubordinates().add(department);	
+			//新部门主管岗位初始化
 			RoleModel supervisorRole=new RoleModel();
 			supervisorRole.setSymbol(department.getSymbol()+"_supervisor");
 			supervisorRole.setCreationDate(department.getCreationDate());
@@ -192,23 +203,46 @@ public class SystemService {
 			supervisorRole.setSupervisorFlag(true);
 			department.getRoles().add(supervisorRole);
 			departmentDAO.saveOrUpdate(parentDepartment);
+			//新部门直属领导保存
+			String[] ids=leaderRoleIds.split(";");
+			for(String leaderRoleId:ids){
+				RoleModel leaderRole=roleDAO.get(leaderRoleId);
+				leaderRole.getLeadingDepartments().add(department);
+				roleDAO.saveOrUpdate(leaderRole);
+			}
+			
 			return department;
 		
 	}
 	//更新部门
-	public DepartmentModel departmentUpdate(DepartmentModel department,String supervisorName){
+	public DepartmentModel departmentUpdate(DepartmentModel department,String supervisorName,String leaderRoleIds){
+		//更新部门信息
 		DepartmentModel newDepartment=departmentDAO.get(department.getId());
 		newDepartment.setSymbol(department.getSymbol());
 		newDepartment.setCreationDate(department.getCreationDate());
+		newDepartment.setModifiedDate(new Date());
 		newDepartment.setDetail(department.getDetail());
 		newDepartment.setName(department.getName());
 		newDepartment.setSequence(department.getSequence());
 		departmentDAO.saveOrUpdate(newDepartment);
+		//更新部门主管信息
 		RoleModel role=newDepartment.getSupervisorRole();
 		role.setSymbol(department.getSymbol()+"_supervisor");
 		role.setName(supervisorName);
 		role.setModifiedDate(new Date());
 		roleDAO.saveOrUpdate(role);
+		//更新部门直属领导
+		for(RoleModel preLeaderRole:newDepartment.getLeaderRoles()){
+			preLeaderRole.getLeadingDepartments().remove(newDepartment);
+			roleDAO.saveOrUpdate(preLeaderRole);
+		}
+		String[] ids=leaderRoleIds.split(";");	
+		for(String leaderRoleId:ids){
+			RoleModel leaderRole=roleDAO.get(leaderRoleId);
+			leaderRole.getLeadingDepartments().add(newDepartment);
+			roleDAO.saveOrUpdate(leaderRole);
+		}
+	
 		return newDepartment;
 	}
 	//删除部门
@@ -229,6 +263,8 @@ public class SystemService {
 		RoleModel newRole=roleDAO.get(role.getId());
 		newRole.setSymbol(role.getSymbol());
 		newRole.setCreationDate(role.getCreationDate());
+		newRole.setModifiedDate(new Date());
+		newRole.setLevel(role.getLevel());
 		newRole.setDetail(role.getDetail());
 		newRole.setName(role.getName());
 		newRole.setSequence(role.getSequence());

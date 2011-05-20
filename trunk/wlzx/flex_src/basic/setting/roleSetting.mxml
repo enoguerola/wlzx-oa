@@ -141,13 +141,18 @@
 			}
 			private function deleteRole():void{
 				var selectId:String=treeSelectedItemId();
+//				Alert.show(selectId+"aa");
 				if(selectId!=null){
-					var rolesData:XML=roles.dataProvider as XML;
+					roles.validateNow();
+					var rolesData:XML=new XML(roles.dataProvider+"");
 					if(selectId==rolesData[0].@id){
 						Alert.show("部门主管岗位不可删除","警告提示",Alert.YES);
 						return;
 					}
-					Alert.show("你确定要删除该岗位及相应子节点岗位信息吗?","确认删除",Alert.NO|Alert.YES,null,function():void{systemServiceRO.roleRemove(selectId);});
+					Alert.show("你确定要删除该岗位及相应子节点岗位信息吗?","确认删除",Alert.NO|Alert.YES,null,function(event:CloseEvent):void{
+							if(event.detail == Alert.YES)
+								systemServiceRO.roleRemove(selectId);
+					},null,Alert.NO);
 
 				}	
 			}
@@ -173,7 +178,7 @@
 				rname.text=role.name;
 				creationDate.text=CommonUtils.formatDate(role.creationDate,"YYYY-MM-DD");
 				symbol.text=role.symbol;
-				sequence.text=role.sequence+"";
+				level.text=role.level+"";
 				detail.text=role.detail;
 				var usersString:String="";
 				if(role.users!=null){
@@ -227,8 +232,8 @@
 						<mx:FormItem label="唯一标识"  required="true">
 							<mx:Label id="symbol"/>		
 						</mx:FormItem>	
-						<mx:FormItem label="同级顺序">
-							<mx:Label id="sequence"/>		
+						<mx:FormItem label="岗位级别">
+							<mx:Label id="level"/>		
 						</mx:FormItem>
 						<mx:FormItem label="岗位描述">
 							<mx:Label id="detail"/>		

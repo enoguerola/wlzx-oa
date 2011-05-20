@@ -52,7 +52,7 @@
 				}
 			}
 			private function getDepartmentBySymbolResult(event:ResultEvent):void {
-				var department:Object=event.result;
+				var department:DepartmentModel=event.result as DepartmentModel;
 				var resultXML:String=buildSubDepartments(department);
 				var departmentData:XML=new XML(resultXML);
 				departments.dataProvider=departmentData;
@@ -65,7 +65,7 @@
 				
 //				var department:DepartmentModel=event.result  as DepartmentModel;
 //				Alert.show(department.id);
-				loadDepartmentDetail(event.result);
+				loadDepartmentDetail(event.result as DepartmentModel);
 			}
 			private function buildSubDepartments(department:Object):String{
 				var resultXML:String="";
@@ -115,13 +115,17 @@
 			private function deleteDepartment():void{
 				var selectId:String=treeSelectedItemId();
 				if(selectId!=null){
-					var departmentsData:XML=departments.dataProvider as XML;
+					departments.validateNow();
+					var departmentsData:XML=new XML(departments.dataProvider+"");
 					if(selectId==departmentsData[0].@id){
 						Alert.show("校园根节点不可删除","警告提示",Alert.YES);
 						return;
 					}
 					// TODO Auto-generated method stub
-					Alert.show("你确定要删除该部门、部门下岗位及相应子部门信息吗?","确认删除",Alert.NO|Alert.YES,null,function():void{systemServiceRO.departmentRemove(selectId);});
+					Alert.show("你确定要删除该部门、部门下岗位及相应子部门信息吗?","确认删除",Alert.YES|Alert.NO,null,function(event:CloseEvent):void{
+						if(event.detail == Alert.YES)
+						systemServiceRO.departmentRemove(selectId);
+					},null,Alert.NO);
 					
 				}	
 			}
@@ -141,7 +145,7 @@
 				systemServiceRO.getDepartmentById(id);
 					
 			}
-			public function loadDepartmentDetail(department:Object):void{
+			public function loadDepartmentDetail(department:DepartmentModel):void{
 				dname.text=department.name;
 				creationDate.text=CommonUtils.formatDate(department.creationDate,"YYYY-MM-DD");
 				symbol.text=department.symbol;
@@ -149,19 +153,21 @@
 				phone.text=department.phone;
 				detail.text=department.detail;
 				var rolesString:String="";
-				if(department.roles!=null){
-					var list:ArrayCollection = ArrayCollection(department.roles);
-					for (var i:int = 0; i < list.length; i++){
-						var _role:Object = list.getItemAt(i);	
-						if(_role.supervisorFlag==true){
-							rolesString=rolesString.concat(_role.name+"");
-							rolesStructure.text=buildRolesStructre(_role,1);
-							break;
-						}
-//						else rolesString=rolesString.concat(_role.name+"  ");
-					}
+				
+				if(department.getSupervisorRole()!=null){
+					var _role:RoleModel = department.getSupervisorRole() as RoleModel;	
+					rolesString=rolesString.concat(_role.name+"");
+					rolesStructure.text=buildRolesStructre(_role,1);
+					roles.text=rolesString;
+//					leader.text=_role.getLeaderRole().name;
 				}
-				roles.text=rolesString;
+				var leadersString:String="";
+				var list:ArrayCollection = ArrayCollection(department.leaderRoles);
+				for (var i:int = 0; i < list.length; i++){
+					var role:RoleModel = list.getItemAt(i) as RoleModel;	
+					leadersString=leadersString.concat(role.name+"\n\n");
+				}
+				leader.text=leadersString;
 			}
 			public function buildRolesStructre(role:Object,depth:int):String{
 				var result:String="";
@@ -233,9 +239,12 @@
 						
 					</mx:Form>
 						
-					<s:VGroup width="100%" height="100%"  gap="5" verticalAlign="middle" horizontalAlign="center"  paddingLeft="10">
-						<s:Label text="部门岗位行政结构图"  fontSize="14" width="100%" textAlign="center" height="30"/>						
-						<s:Label id="rolesStructure"  width="100%" height="100%"/>		
+					<s:VGroup width="100%" height="100%"  gap="5" verticalAlign="top" horizontalAlign="center"  paddingLeft="10">
+						<s:Label text="部门直属领导" fontSize="14" width="100%" textAlign="center" height="30"/>
+						<s:Label id="leader"  width="100%"/>	
+						<s:Label text="部门内部行政结构图"  fontSize="14" width="100%" textAlign="center" height="30"/>
+						
+						<s:Label id="rolesStructure"  width="100%"/>		
 					</s:VGroup>
 									
 				</mx:VBox>

@@ -18,6 +18,7 @@
     <application path="config.mxml"/>
     <application path="login.mxml"/>
     <application path="system/component/checkTree/CheckTreeDemo.mxml"/>
+    <application path="aa.mxml"/>
   </applications>
   <modules>
     <module application="flex_src/home.mxml" destPath="oa/task/personTask.swf" optimize="false" sourcePath="flex_src/oa/task/personTask.mxml"/>

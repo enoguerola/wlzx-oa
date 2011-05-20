@@ -1,15 +1,132 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:VGroup xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		  xmlns:s="library://ns.adobe.com/flex/spark" 
-		  xmlns:mx="library://ns.adobe.com/flex/mx"  xmlns:valueObjects="system.entity.*" xmlns:flexlib="http://code.google.com/p/flexlib/"  width="500" height="500">
+		  xmlns:mx="library://ns.adobe.com/flex/mx"  xmlns:valueObjects="system.entity.*" creationComplete="init();" xmlns:flexlib="http://code.google.com/p/flexlib/"  width="500" height="500">
 	
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+		<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+			<mx:method name="getAllUsers"  concurrency="last"  result="getAllUsers_resultHandler(event);" />
+			<!-- <mx:method name="getDepartmentBySymbol"  concurrency="last"  result="getDepartmentBySymbolResult(event);" /> -->
+			<mx:method name="getDepartmentById"  concurrency="last"  result="getDepartmentByIdResult(event);" />
+			<mx:method name="getDepartmentBySymbol"  concurrency="last"  result="getDepartmentBySymbolResult(event);" />
+		</mx:RemoteObject>
 	</fx:Declarations>
 	
 	<fx:Script> 
 		<![CDATA[  
+			import mx.collections.ArrayCollection;
+			import mx.controls.*;
+			import mx.events.*;
 			import mx.managers.PopUpManager;
+			import mx.rpc.events.*;
+			
+			import system.entity.DepartmentModel;
+			import system.entity.UserModel;
+			import system.index;
+			private var chooseList:ArrayCollection = new ArrayCollection();
+			private function init():void {
+				systemServiceRO.getAllUsers();
+				
+			}
+			private function systemFaultHandler(event:FaultEvent):void {
+				Alert.show(event.fault.faultString, 'Error');
+			}
+			protected function getAllUsers_resultHandler(event:ResultEvent):void{
+				var allList:ArrayCollection=event.result as ArrayCollection;
+				var resultXML:String="<node>";
+				if(allList.length>0){
+					for (var i:int = 0; i < allList.length; i++){
+						var _user:UserModel = allList.getItemAt(i) as UserModel;	
+						resultXML=resultXML.concat("<node label='"+_user.name+"' id='"+_user.id+"'/>");
+					}
+				}		
+				resultXML=resultXML.concat("</node>");
+				var resultXMLData:XML=new XML(resultXML);
+				allListTree.dataProvider=resultXMLData;
+			}
+			private function getDepartmentByIdResult(event:ResultEvent):void {
+								
+			}
+			private function getDepartmentBySymbolResult(event:ResultEvent):void {
+				var department:Object=event.result;
+				var resultList:ArrayCollection = new ArrayCollection();
+				buildSubDepartments(department,resultList,0);
+				
+				this.departments.dataProvider=resultList;
+				this.departments.selectedIndex=0;
+				systemServiceRO.getDepartmentById(departments.selectedItem.dataField);
+			}
+			private function buildSubDepartments(department:Object,resultList:ArrayCollection,depth:int):void{
+				var headText:String="";
+				for(var j:int = 0;j<depth;j++)
+					headText=headText.concat("----");
+				headText=headText.concat(department.name);
+				resultList.addItem( {dataField:department.id, headerText:headText})
+				var list:ArrayCollection = ArrayCollection(department.subordinates);			
+				if(list.length>0){
+					for (var i:int = 0; i < list.length; i++){
+						var _department:Object = list.getItemAt(i);	
+						buildSubDepartments(_department,resultList,depth+1);
+					}
+					//					CommonUtils.sortBySequence(resultList);
+				}		
+				
+			}
+			/*
+				protected function getDepartmentBySymbolResult(event:ResultEvent):void {
+					var department:DepartmentModel=event.result as DepartmentModel;	
+					//				Alert.show(department.name+"a");
+					var resultXML:String="<node>";
+					resultXML=resultXML.concat(buildSubDepartments(department));	
+					resultXML=resultXML.concat("</node>");
+					var resultXMLData:XML=new XML(resultXML);
+					//				callLater(function():void{
+					departmentListTree.dataProvider=resultXMLData;
+					departmentListTree.validateNow();
+					departmentListTree.expandChildrenOf(resultXMLData[0],true);
+					//				});
+					
+					
+					
+					
+				}
+				private function buildSubDepartments(department:DepartmentModel):String{
+					var resultXML:String="<node label='"+department.name+"' id='"+department.id+"'>";
+					var list:ArrayCollection = ArrayCollection(department.subordinates);	
+					
+					if(list.length>0){
+						for (var i:int = 0; i < list.length; i++){
+							var _department:DepartmentModel = list.getItemAt(i) as DepartmentModel;	
+							resultXML=resultXML.concat(buildSubDepartments(_department));
+						}
+					}
+					resultXML=resultXML.concat("</node>");	
+					return resultXML;
+				}
+			*/
+			
+			private function switchViews(event:Event):void{
+				var selectIndex:int=view.selectedIndex;
+//				Alert.show(selectIndex+"");
+				if(selectIndex==0){
+					systemServiceRO.getAllUsers();
+				}else if(selectIndex==1){
+					systemServiceRO.getDepartmentBySymbol("root");
+				}else if(selectIndex==2){
+					
+				}else if(selectIndex==3){
+					
+				}
+			
+			}
+			
+			private function selectionChangedHandler(event:Event):void{
+				
+				//				Alert.show(departments.selectedItem.dataField);
+				systemServiceRO.getDepartmentById(departments.selectedItem.dataField);
+				
+			}
 		]]> 		
 	</fx:Script> 
 <s:Panel width="100%" height="100%"  skinClass="system.skins.WlzxPanelSkin" title="人员选择"   dropShadowVisible="false" borderVisible="true" borderColor="black">
@@ -32,25 +149,30 @@
 						<s:TextInput width="80%"/>	
 						<mx:Image source="@Embed(source='../WebContent/resources/common/tools/button_search_icon.png')" />
 					</s:HGroup>
-					<mx:Accordion    headerStyleName="customAccordionHeadStyles" width="100%"  top="15" height="100%"  selectedIndex="0" id="menus" dropShadowVisible="false" backgroundAlpha="0.0" headerHeight="25" fontSize="15" textAlign="center">
+					<mx:Accordion id="view"    headerStyleName="customAccordionHeadStyles" width="100%"  top="15" height="100%"  selectedIndex="0"  change="switchViews(event);" dropShadowVisible="false" backgroundAlpha="0.0" headerHeight="25" fontSize="15" textAlign="center">
 						<s:NavigatorContent label="所有人员列表" fontSize="20" width="100%" height="100%">
 							<s:layout>
 								<s:VerticalLayout horizontalAlign="center"/>
 							</s:layout>
-							<mx:Tree id="myTree1" iconField="@icon"   width="100%" height="100%" labelField="@label"   textAlign="left"  paddingLeft="10" showRoot="false" />    
+							<mx:Tree id="allListTree" iconField="@icon"   width="100%" height="100%" labelField="@label"   textAlign="left"  paddingLeft="10" showRoot="false" />    
 							
 						</s:NavigatorContent>
-						<s:NavigatorContent label="选择部门" fontSize="20" width="100%" height="100%">
+						<!-- 
+							<s:NavigatorContent label="选择部门" fontSize="20" width="100%" height="100%" visible="false">
 							<s:layout>
-								<s:VerticalLayout horizontalAlign="center"/>
+							<s:VerticalLayout horizontalAlign="center"/>
 							</s:layout>
-							<mx:Tree id="myTree2" iconField="@icon"   width="100%" height="100%" labelField="@label"   textAlign="left"  paddingLeft="10" showRoot="false" />    
+							<mx:Tree id="departmentListTree" iconField="@icon"   width="100%" height="100%" labelField="@label"   textAlign="left"  paddingLeft="10" showRoot="false" />    
 							
-						</s:NavigatorContent>
+							</s:NavigatorContent>
+						
+						-->
+						
 						<s:NavigatorContent label="按部门选择员工" fontSize="20" width="100%" height="100%">
 							<s:layout>
 								<s:VerticalLayout horizontalAlign="center"/>
 							</s:layout>
+							<mx:ComboBox  width="100%" id="departments" labelField="headerText"  textAlign="left" change="selectionChangedHandler(event);" />
 							<mx:Tree id="myTree3" iconField="@icon"   width="100%" height="100%" labelField="@label"   textAlign="left"  paddingLeft="10" showRoot="false" />    
 							
 						</s:NavigatorContent>
@@ -58,7 +180,15 @@
 							<s:layout>
 								<s:VerticalLayout horizontalAlign="center"/>
 							</s:layout>
+							<mx:ComboBox  width="100%" id="roles"  labelField="headerText"  textAlign="left" change="selectionChangedHandler(event);" />
 							<mx:Tree id="myTree4" iconField="@icon"   width="100%" height="100%" labelField="@label"   textAlign="left"  paddingLeft="10" showRoot="false" />    
+							
+						</s:NavigatorContent>
+						<s:NavigatorContent label="未分配岗位员工" fontSize="20" width="100%" height="100%">
+							<s:layout>
+								<s:VerticalLayout horizontalAlign="center"/>
+							</s:layout>
+							<mx:Tree id="myTree5" iconField="@icon"   width="100%" height="100%" labelField="@label"   textAlign="left"  paddingLeft="10" showRoot="false" />    
 							
 						</s:NavigatorContent>
 					</mx:Accordion>

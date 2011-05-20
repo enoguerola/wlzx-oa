@@ -22,19 +22,21 @@
 	<fx:Script> 
 		
 		<![CDATA[  
-		
 			import basic.setting.*;
 			
+			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
+			import mx.controls.CheckBox;
 			import mx.events.ValidationResultEvent;
 			import mx.formatters.DateFormatter;
 			import mx.managers.PopUpManager;
 			import mx.rpc.events.*;
 			import mx.validators.Validator;
 			
+			import system.entity.*;
 			import system.utils.*;
 			private var validatorArr:Array;
-			
+			[Bindable] private var leaderDepartmentRoles:ArrayCollection = new ArrayCollection();
 			private function init():void
 			{
 				validatorArr = new Array();
@@ -53,8 +55,9 @@
 					systemServiceRO.getDepartmentById(departmentId);
 				}else if(this.toolTip=='Add'){
 					department=new DepartmentModel();
-					this.departmentWin.title="部门新增";					
-					
+					this.departmentWin.title="部门新增";
+					var parentId:String=this.id;//弹出窗口时设定的中转参数
+					systemServiceRO.getDepartmentById(parentId);
 				}
 			}
 			private function validateForm(evt:MouseEvent):void {
@@ -68,11 +71,29 @@
 					department.symbol=symbol.text;
 					department.sequence=parseInt(sequence.text);
 					var supervisor:String =supervisorName.text;
+					var  selectedLeaderRolesArray:Array = [];
+					var len:int = leaderDepartmentRoles.length;					
+					for(var idx:int = 0; idx < len; idx++) {
+						var checkbox:CheckBox=checkBox[idx] as CheckBox;
+						if(checkbox.selected) {
+							selectedLeaderRolesArray.push(checkbox.data);
+						}
+					}
+					if(selectedLeaderRolesArray.length==0){
+						Alert.show("请指定部门上级领导岗位\n\n", "请按照以下错误提示信息重新填写", Alert.OK);
+						return;
+					}
+						
+					var selectedLeaderRoles:String = selectedLeaderRolesArray.join(";");
+//					Alert.show(selectedLeaderRoles);
+//					var selectedItem:Object=leaders.selectedItem;
+////					Alert.show(selectedItem.dataField);return;
+//					var leaderRoleId:String=selectedItem.dataField;
 					if(this.toolTip=='Update'){
-						systemServiceRO.departmentUpdate(department,supervisor);
+						systemServiceRO.departmentUpdate(department,supervisor,selectedLeaderRoles);
 					}else if(this.toolTip=='Add'){
 						var parentId:String=this.id;//弹出窗口时设定的中转参数
-						systemServiceRO.departmentAdd(department,parentId,supervisor);
+						systemServiceRO.departmentAdd(department,parentId,supervisor,selectedLeaderRoles);
 						
 					}
 				} else {
@@ -103,23 +124,69 @@
 			}
 			protected function getDepartmentById_resultHandler(event:ResultEvent):void
 			{
-				department=event.result as DepartmentModel;
-				dname.text=department.name;
-				creationDate.text=CommonUtils.formatDate(department.creationDate,"YYYY-MM-DD");
-				detail.text=department.detail;
-				phone.text=department.phone;
-				symbol.text=department.symbol;
-				sequence.text=department.sequence.toString();
-				supervisorName.text=department.getSupervisorRole().name;
+				var resultList:ArrayCollection = new ArrayCollection();//用于存储供选择的上级主管角色
+
+				if(this.toolTip=='Update'){		
+					department=event.result as DepartmentModel;
+					dname.text=department.name;
+					creationDate.text=CommonUtils.formatDate(department.creationDate,"YYYY-MM-DD");
+					detail.text=department.detail;
+					phone.text=department.phone;
+					symbol.text=department.symbol;
+					sequence.text=department.sequence.toString();
+					supervisorName.text=department.getSupervisorRole().name;
+					var parentDepartment:DepartmentModel=department.getLeaderDepartment() as DepartmentModel;
+					buildSubRoles(parentDepartment.getSupervisorRole() as RoleModel);				
+//					this.leaders.dataProvider=resultList;
+//					this.leaders.selectedIndex=0;
+				}else if(this.toolTip=='Add'){
+					var department:DepartmentModel=event.result as DepartmentModel;
+					buildSubRoles(department.getSupervisorRole() as RoleModel);				
+//					this.leaders.dataProvider=resultList;
+//					this.leaders.selectedIndex=0;
+				}
+				
+				
+			}
+			private function buildSubRoles(role:RoleModel):void{
+//				var leader:CheckBox=new CheckBox();
+//				leader.label=role.name;
+//				leader.name="leaders";
+//				leadersContainer.addChild(leader);
+				if(this.toolTip=='Update'){	
+					var leaderRoles:ArrayCollection = ArrayCollection(department.leaderRoles);
+					var contain:Boolean=false;
+					for (var j:int = 0; j < leaderRoles.length; j++){
+						var leaderRole:RoleModel = leaderRoles.getItemAt(j) as RoleModel;
+						if(leaderRole.id==role.id){
+							leaderDepartmentRoles.addItem( {dataField:role.id, headerText:role.name,selected:true});
+							contain=true;
+							break;
+						}
+					}
+					if(contain==false)
+						leaderDepartmentRoles.addItem( {dataField:role.id, headerText:role.name});
+					
+				}else if(this.toolTip=='Add'){
+					leaderDepartmentRoles.addItem( {dataField:role.id, headerText:role.name});
+				}
+				var list:ArrayCollection = ArrayCollection(role.subordinates);			
+				if(list.length>0){
+					for (var i:int = 0; i < list.length; i++){
+						var _role:RoleModel = list.getItemAt(i) as RoleModel;	
+						buildSubRoles(_role);
+					}
+				}		
 				
 			}
 			protected function departmentUpdate_resultHandler(event:ResultEvent):void
 			{
-				var department:Object=event.result;
+				var department:DepartmentModel=event.result as DepartmentModel;
 				if(department!=null){
 					var parent:departmentSetting = this.owner as departmentSetting;
 					parent.selectedNode.@label=department.name;
 					parent.selectedNode.@id=department.id;
+//					Alert.show(parent.selectedNode.@id);
 					parent.loadDepartmentDetail(department);
 					PopUpManager.removePopUp(this);
 				}else{
@@ -157,8 +224,18 @@
 			<mx:FormItem label="部门名称" required="true">
 				<mx:TextInput id="dname" width="200"/>
 			</mx:FormItem>
-			<mx:FormItem label="主管头衔" required="true">
+			<mx:FormItem label="主管岗位名称" required="true">
 				<mx:TextInput id="supervisorName" width="200"/>
+			</mx:FormItem>
+			<mx:FormItem label="上级直属领导" required="true" width="100%" >
+				<s:HGroup width="100%" height="100%" horizontalAlign="left">
+					<mx:Tile width="600" horizontalGap="10" verticalGap="5" id="leadersContainer" >
+						<mx:Repeater id="checkBoxRepeater" dataProvider="{leaderDepartmentRoles}">
+							<mx:CheckBox id="checkBox"   selected="{checkBoxRepeater.currentItem.selected}" label="{checkBoxRepeater.currentItem.headerText}" data="{checkBoxRepeater.currentItem.dataField}"/>
+						</mx:Repeater>
+					</mx:Tile>	
+				</s:HGroup>
+					
 			</mx:FormItem>
 			<mx:FormItem label="创建日期 " required="true">
 				<mx:DateField  id="creationDate" width="200" formatString="YYYY-MM-DD"/>
