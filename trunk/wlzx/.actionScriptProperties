@@ -18,7 +18,6 @@
     <application path="config.mxml"/>
     <application path="login.mxml"/>
     <application path="system/component/checkTree/CheckTreeDemo.mxml"/>
-    <application path="aa.mxml"/>
   </applications>
   <modules>
     <module application="flex_src/home.mxml" destPath="oa/task/personTask.swf" optimize="false" sourcePath="flex_src/oa/task/personTask.mxml"/>
@@ -39,6 +38,8 @@
     <module application="flex_src/home.mxml" destPath="oa/notice/noticeRead.swf" optimize="false" sourcePath="flex_src/oa/notice/noticeRead.mxml"/>
     <module application="flex_src/home.mxml" destPath="oa/communication/publicAddressBook.swf" optimize="false" sourcePath="flex_src/oa/communication/publicAddressBook.mxml"/>
     <module application="flex_src/home.mxml" destPath="oa/notice/postNotice.swf" optimize="false" sourcePath="flex_src/oa/notice/postNotice.mxml"/>
+    <module destPath="basic/staff/staffList.swf" optimize="false" sourcePath="flex_src/basic/staff/staffList.mxml"/>
+    <module destPath="basic/account/accountList.swf" optimize="false" sourcePath="flex_src/basic/account/accountList.mxml"/>
   </modules>
   <buildCSSFiles/>
 </actionScriptProperties>
