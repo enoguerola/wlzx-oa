@@ -11,9 +11,10 @@ package system.entity
 		public var lastLoginTime:Date;
 		public var lastLoginIP:String;
 		public var email:String;
-		public var subordinates:Object;//直属下级角色
-		public var leaders:Object;//直属上级角色
-		public var roles:Object;//角色集
+		public var subordinates:Object=new Array();//直属下级角色
+		public var leaders:Object=new Array();//直属上级角色
+		public var roles:Object=new Array();//角色集
+		public var departments:Object=new Array();//所属部门集
 
 		public function UserModel()
 		{

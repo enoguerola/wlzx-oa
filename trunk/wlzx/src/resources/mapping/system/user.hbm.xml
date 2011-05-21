@@ -47,5 +47,9 @@
 			<key column="user_id" not-null="true" />
 			<many-to-many  column="role_id" class="system.entity.RoleModel" /> 
 		</set>
+		<set name="departments" lazy="false"  table="wlzx_system_department_user_relationship">
+			<key column="user_id" not-null="true" />
+			<many-to-many column="department_id" class="system.entity.DepartmentModel" /> 
+		</set>
 	</class>
 </hibernate-mapping>

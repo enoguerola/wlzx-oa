@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2011 年 05 月 21 日 10:15
+-- 生成日期: 2011 年 05 月 21 日 12:08
 -- 服务器版本: 5.0.91
 -- PHP 版本: 5.2.13
 
@@ -254,8 +254,8 @@ INSERT INTO `wlzx_system_menu` (`id`, `name`, `symbol`, `sequence`, `detail`, `m
 (35, '收文管理', 'document_receipt ', 2, '', '', '2011-05-21 00:00:00', '2011-05-21 09:49:28'),
 (36, '部门设置', 'oa_department_set', 1, '', '', '2011-05-21 00:00:00', '2011-05-21 10:05:48'),
 (37, '岗位设置', 'oa_role_set', 2, '', '', '2011-05-21 00:00:00', '2011-05-21 10:06:23'),
-(38, '部门授权', 'oa_department_authoriation', 2, '', '', '2011-05-21 00:00:00', '2011-05-21 10:07:04'),
-(39, '岗位授权', 'oa_role_authoriation', 3, '', '', '2011-05-21 00:00:00', '2011-05-21 10:07:27');
+(38, '部门授权', 'oa_department_authorization', 2, '', '', '2011-05-21 00:00:00', '2011-05-21 11:20:42'),
+(39, '岗位授权', 'oa_role_authorization', 3, '', '', '2011-05-21 00:00:00', '2011-05-21 11:20:42');
 
 -- --------------------------------------------------------
 
@@ -421,8 +421,8 @@ INSERT INTO `wlzx_system_module` (`id`, `name`, `symbol`, `sequence`, `detail`, 
 (19, '帐号管理主模块', 'system_account_main', 0, '', '2011-05-21 00:00:00', '2011-05-21 09:48:08', 'basic/account/accountList.swf'),
 (20, '部门设置主模块', 'oa_department_set_main', 0, '', '2011-05-21 00:00:00', '2011-05-21 10:08:28', 'basic/setting/roleSetting.swf'),
 (21, '岗位设置主模块', 'oa_role_set_main', 0, '', '2011-05-21 00:00:00', '2011-05-21 10:09:11', 'basic/setting/roleSetting.swf'),
-(22, '部门授权主模块', 'oa_department_authoriation_main', 0, '', '2011-05-21 00:00:00', '2011-05-21 10:10:13', 'basic/authoriation/departmentAuthoriation.swf'),
-(23, '岗位授权主模块', 'oa_role_authoriation_main', 0, '', '2011-05-21 00:00:00', '2011-05-21 10:11:19', 'baisc/authoriation/roleAuthoriation.swf');
+(22, '部门授权主模块', 'oa_department_authoriation_main', 0, '', '2011-05-21 00:00:00', '2011-05-21 12:08:04', 'basic/authoriation/departmentAuthorization.swf'),
+(23, '岗位授权主模块', 'oa_role_authoriation_main', 0, '', '2011-05-21 00:00:00', '2011-05-21 12:08:04', 'baisc/authoriation/roleAuthorization.swf');
 
 -- --------------------------------------------------------
 

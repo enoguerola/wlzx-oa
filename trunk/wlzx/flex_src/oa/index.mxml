@@ -81,7 +81,7 @@
 					nc.percentHeight=100;
 					nc.percentWidth=100;
 					nc.setStyle("borderVisible",false);
-					nc.setStyle("font-size","20");
+					
 					nc.label=_menu.name;
 					//bad code
 					if(_menu.menuIcon=='oa_system_management')nc.icon=oa_system_management;
@@ -94,6 +94,7 @@
 						var menuData:XML=new XML(resultXML);
 						tree=new Tree();
 						tree.setStyle("borderVisible",false);
+						tree.setStyle("fontSize","12");
 						tree.percentWidth=100;
 						tree.percentHeight=100;
 						tree.showRoot=false;
@@ -243,9 +244,9 @@
 		<s:VGroup width="15%" height="100%" verticalAlign="top" paddingTop="7">
 			<s:BorderContainer width="203"  height="60" backgroundImage="@Embed(source='../WebContent/resources/oa/layout/button_bar_bg.png')" borderVisible="false"  alpha="0.5">
 				<s:HGroup  width="100%"  height="100%" verticalAlign="middle"  alpha="2" paddingLeft="20" gap="20">
-					<mx:LinkButton   height="52" icon="@Embed(source='../WebContent/resources/oa/buttonIcon/home_icon.png')" label="首页" fontSize="12" textAlign="center" labelPlacement="bottom" click="homeTab();"/>
-					<mx:LinkButton   height="52" icon="@Embed(source='../WebContent/resources/oa/buttonIcon/help_icon.png')" label="帮助" fontSize="12" textAlign="center" labelPlacement="bottom" click="Alert.show('帮助文档建设中');"/>
-					<mx:LinkButton   height="52" icon="@Embed(source='../WebContent/resources/oa/buttonIcon/exit_icon.png')" label="退出" fontSize="12" textAlign="center" labelPlacement="bottom" click="exitSystem();"/>
+					<mx:LinkButton   height="52" icon="@Embed(source='../WebContent/resources/oa/buttonIcon/home_icon.png')" label="首页" fontSize="13" textAlign="center" labelPlacement="bottom" click="homeTab();"/>
+					<mx:LinkButton   height="52" icon="@Embed(source='../WebContent/resources/oa/buttonIcon/help_icon.png')" label="帮助" fontSize="13" textAlign="center" labelPlacement="bottom" click="Alert.show('帮助文档建设中');"/>
+					<mx:LinkButton   height="52" icon="@Embed(source='../WebContent/resources/oa/buttonIcon/exit_icon.png')" label="退出" fontSize="13" textAlign="center" labelPlacement="bottom" click="exitSystem();"/>
 				</s:HGroup>
 				
 			</s:BorderContainer>
