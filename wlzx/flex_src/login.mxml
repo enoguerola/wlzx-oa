@@ -55,11 +55,11 @@
 			<s:VGroup  gap="20" >
 				<s:HGroup width="100%" textAlign="center" verticalAlign="middle" gap="10">
 					<s:Label text="用户名："   width="60" verticalAlign="middle" textAlign="right"/>
-					<s:TextInput id="j_username" name="j_username"  width="200" />
+					<s:TextInput id="j_username" name="j_username"  width="200"/>
 				</s:HGroup>
 				<s:HGroup width="100%"  top="20" textAlign="center" verticalAlign="middle" gap="10">		
 					<s:Label text="密码："    width="60" verticalAlign="middle" textAlign="right"/>
-					<s:TextInput id="j_password"  name="j_password" width="200" displayAsPassword="true" />
+					<s:TextInput id="j_password"  name="j_password" width="200" displayAsPassword="true"/>
 				</s:HGroup>
 				<s:HGroup width="100%" >
 					<s:HGroup width="60"></s:HGroup>
