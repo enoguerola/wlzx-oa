@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2011 年 05 月 21 日 09:54
+-- 生成日期: 2011 年 05 月 21 日 10:15
 -- 服务器版本: 5.0.91
 -- PHP 版本: 5.2.13
 
@@ -179,6 +179,24 @@ INSERT INTO `wlzx_system_department_role_relationship` (`id`, `department_id`, `
 -- --------------------------------------------------------
 
 --
+-- 表的结构 `wlzx_system_department_user_relationship`
+--
+
+CREATE TABLE IF NOT EXISTS `wlzx_system_department_user_relationship` (
+  `id` bigint(20) NOT NULL auto_increment,
+  `department_id` bigint(20) NOT NULL,
+  `user_id` bigint(20) NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+--
+-- 转存表中的数据 `wlzx_system_department_user_relationship`
+--
+
+
+-- --------------------------------------------------------
+
+--
 -- 表的结构 `wlzx_system_menu`
 --
 
@@ -193,7 +211,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_menu` (
   `modified_date` timestamp NOT NULL default '0000-00-00 00:00:00' on update CURRENT_TIMESTAMP,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `symbol` (`symbol`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=36 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=40 ;
 
 --
 -- 转存表中的数据 `wlzx_system_menu`
@@ -233,7 +251,11 @@ INSERT INTO `wlzx_system_menu` (`id`, `name`, `symbol`, `sequence`, `detail`, `m
 (32, '教师档案', 'staff_file', 0, '', '', '2011-05-21 00:00:00', '2011-05-21 09:44:43'),
 (33, '帐号管理', 'system_account', 0, '', '', '2011-05-21 00:00:00', '2011-05-21 09:46:20'),
 (34, '发文管理', 'document_dispatch ', 1, '', '', '2011-05-21 00:00:00', '2011-05-21 09:48:55'),
-(35, '收文管理', 'document_receipt ', 2, '', '', '2011-05-21 00:00:00', '2011-05-21 09:49:28');
+(35, '收文管理', 'document_receipt ', 2, '', '', '2011-05-21 00:00:00', '2011-05-21 09:49:28'),
+(36, '部门设置', 'oa_department_set', 1, '', '', '2011-05-21 00:00:00', '2011-05-21 10:05:48'),
+(37, '岗位设置', 'oa_role_set', 2, '', '', '2011-05-21 00:00:00', '2011-05-21 10:06:23'),
+(38, '部门授权', 'oa_department_authoriation', 2, '', '', '2011-05-21 00:00:00', '2011-05-21 10:07:04'),
+(39, '岗位授权', 'oa_role_authoriation', 3, '', '', '2011-05-21 00:00:00', '2011-05-21 10:07:27');
 
 -- --------------------------------------------------------
 
@@ -246,7 +268,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_menu_module_relationship` (
   `menu_id` bigint(20) NOT NULL,
   `module_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=20 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=24 ;
 
 --
 -- 转存表中的数据 `wlzx_system_menu_module_relationship`
@@ -270,7 +292,11 @@ INSERT INTO `wlzx_system_menu_module_relationship` (`id`, `menu_id`, `module_id`
 (16, 5, 16),
 (17, 30, 17),
 (18, 32, 18),
-(19, 33, 19);
+(19, 33, 19),
+(20, 36, 20),
+(21, 37, 21),
+(22, 38, 22),
+(23, 39, 23);
 
 -- --------------------------------------------------------
 
@@ -311,7 +337,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_menu_treeship` (
   `parent_id` bigint(20) NOT NULL,
   `child_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=31 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=35 ;
 
 --
 -- 转存表中的数据 `wlzx_system_menu_treeship`
@@ -328,7 +354,6 @@ INSERT INTO `wlzx_system_menu_treeship` (`id`, `parent_id`, `child_id`) VALUES
 (8, 12, 13),
 (9, 12, 14),
 (10, 12, 15),
-(11, 17, 19),
 (12, 19, 3),
 (13, 19, 2),
 (14, 19, 8),
@@ -346,7 +371,11 @@ INSERT INTO `wlzx_system_menu_treeship` (`id`, `parent_id`, `child_id`) VALUES
 (27, 31, 32),
 (28, 18, 33),
 (29, 10, 34),
-(30, 10, 35);
+(30, 10, 35),
+(31, 17, 36),
+(32, 17, 37),
+(33, 18, 38),
+(34, 18, 39);
 
 -- --------------------------------------------------------
 
@@ -365,7 +394,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_module` (
   `url` varchar(500) default NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `symbol` (`symbol`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=20 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=24 ;
 
 --
 -- 转存表中的数据 `wlzx_system_module`
@@ -389,7 +418,11 @@ INSERT INTO `wlzx_system_module` (`id`, `name`, `symbol`, `sequence`, `detail`, 
 (16, '员工数据主模块', 'basic_data_staff_main', 0, '', '2011-05-21 00:00:00', '2011-05-21 09:30:48', 'basic/account/accountList.swf'),
 (17, '帐号数据主模块', 'basic_data_account_main', 0, '', '2011-05-21 00:00:00', '2011-05-21 09:31:31', 'basic/account/accountList.swf'),
 (18, '教师档案主模块', 'staff_file_main', 0, '', '2011-05-21 00:00:00', '2011-05-21 09:47:23', 'basic/staff/staffList.swf'),
-(19, '帐号管理主模块', 'system_account_main', 0, '', '2011-05-21 00:00:00', '2011-05-21 09:48:08', 'basic/account/accountList.swf');
+(19, '帐号管理主模块', 'system_account_main', 0, '', '2011-05-21 00:00:00', '2011-05-21 09:48:08', 'basic/account/accountList.swf'),
+(20, '部门设置主模块', 'oa_department_set_main', 0, '', '2011-05-21 00:00:00', '2011-05-21 10:08:28', 'basic/setting/roleSetting.swf'),
+(21, '岗位设置主模块', 'oa_role_set_main', 0, '', '2011-05-21 00:00:00', '2011-05-21 10:09:11', 'basic/setting/roleSetting.swf'),
+(22, '部门授权主模块', 'oa_department_authoriation_main', 0, '', '2011-05-21 00:00:00', '2011-05-21 10:10:13', 'basic/authoriation/departmentAuthoriation.swf'),
+(23, '岗位授权主模块', 'oa_role_authoriation_main', 0, '', '2011-05-21 00:00:00', '2011-05-21 10:11:19', 'baisc/authoriation/roleAuthoriation.swf');
 
 -- --------------------------------------------------------
 
