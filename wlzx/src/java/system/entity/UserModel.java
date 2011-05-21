@@ -41,6 +41,7 @@ public class UserModel  extends BaseModel implements UserDetails{
 	private Set<UserModel> subordinates=new TreeSet<UserModel>();//直属下属
 	private Set<UserModel> leaders=new TreeSet<UserModel>();//直属领导
 	private Set<RoleModel> roles=new TreeSet<RoleModel>();//所属角色
+	private Set<DepartmentModel> departments=new TreeSet<DepartmentModel>();//用户所在部门集
 	public String getPwd() {
 		return pwd;
 	}
@@ -138,6 +139,12 @@ public class UserModel  extends BaseModel implements UserDetails{
 	public boolean isEnabled() {
 		// TODO Auto-generated method stub
 		return true;
+	}
+	public Set<DepartmentModel> getDepartments() {
+		return departments;
+	}
+	public void setDepartments(Set<DepartmentModel> departments) {
+		this.departments = departments;
 	}
 	
 

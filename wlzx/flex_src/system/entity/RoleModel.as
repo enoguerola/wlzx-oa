@@ -11,12 +11,12 @@ package system.entity
 		public var supervisorFlag:Boolean;
 		public var detail:String;
 		public var level:int;
-		public var subordinates:Object=new Array();;//直属下级角色
-		public var leaders:Object=new Array();;//直属上级角色
-		public var users:Object=new Array();;//角色用户集
-		public var dataAccessModes:Object=new Array();;//角色数据访问权限
-		public var departments:Object=new Array();;//所属部门集
-		public var leadingDepartments:Object=new Array();;//该角色所领导的部门集
+		public var subordinates:Object=new Array();//直属下级角色
+		public var leaders:Object=new Array();//直属上级角色
+		public var users:Object=new Array();//角色用户集
+		public var dataAccessModes:Object=new Array();//角色数据访问权限
+		public var departments:Object=new Array();//所属部门集
+		public var leadingDepartments:Object=new Array();//该角色所领导的部门集
 		public function RoleModel()
 		{
 		}

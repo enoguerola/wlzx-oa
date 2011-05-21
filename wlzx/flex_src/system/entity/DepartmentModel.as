@@ -13,6 +13,7 @@ package system.entity
 		public var leaders:Object=new Array();//直属上级部门
 		public var dataAccessModes:Object=new Array();//部门数据访问权限
 		public var leaderRoles:Object=new Array();//部门上级领导角色集
+		public var users:Object=new Array();//部门用户集
 		public function DepartmentModel()
 		{
 		}

@@ -7,7 +7,7 @@ package system.entity
 
 		public var detail:String;
 		public var value:String;
-		public var operations:Object;//所属操作集
+		public var operations:Object=new Array();//所属操作集
 
 		public function DataAccessModeModel()
 		{
