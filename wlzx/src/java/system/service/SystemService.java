@@ -226,9 +226,11 @@ public class SystemService {
 			systemDAO.saveOrUpdate(parentSystem);
 			return menu;
 		}else if(parentType.equals("menu")){
+			menuDAO.saveOrUpdate(menu);
 			MenuModel parentMenu=menuDAO.getMenuBySymbol(parentSymbol);
+//			System.out.println(menu);
 			parentMenu.getChildren().add(menu);
-			menuDAO.saveOrUpdate(parentMenu);
+			menuDAO.merge(parentMenu);
 			return menu;
 		} else return null;
 		
@@ -253,10 +255,31 @@ public class SystemService {
 	//新增模块
 	public ModuleModel moduleAdd(ModuleModel module,String parentType,String parentSymbol){
 		if(parentType.equals("menu")){
+			 moduleDAO.saveOrUpdate(module);
+			 OperationModel operation=new OperationModel();
+			 operation.setName("页面访问");
+			 operation.setSymbol(module.getSymbol()+"@defaultVisit@");
+			 operation.setRsType("URL");
+			 operation.setRsValue("/"+module.getUrl()+"*");
+			 operation.setCreationDate(module.getCreationDate());
+			 operation.setModifiedDate(module.getModifiedDate());
+			 operationDAO.saveOrUpdate(operation);
+			 DataAccessModeModel dam=new DataAccessModeModel();
+			 dam.setName("全部数据");
+			 dam.setSymbol(operation.getSymbol()+"@noFilter@");
+			 dam.setCreationDate(operation.getCreationDate());
+			 dam.setModifiedDate(operation.getModifiedDate());		
+			 dataAccessModeDAO.saveOrUpdate(dam);
+			 operation.getDataAccessModes().add(dam);
+			 operationDAO.merge(operation);
+			 module.getOperations().add(operation);
+			 moduleDAO.merge(module);
 			MenuModel parentMenu=menuDAO.getMenuBySymbol(parentSymbol);
-			parentMenu.getModules().add(module);
-			menuDAO.saveOrUpdate(parentMenu);
+			parentMenu.getModules().add(module);		 
+			
+			menuDAO.merge(parentMenu);
 			return module;
+			
 		}else return null;
 		
 	}
@@ -265,11 +288,24 @@ public class SystemService {
 		ModuleModel newModule=moduleDAO.get(module.getId());
 		newModule.setSymbol(module.getSymbol());
 		newModule.setCreationDate(module.getCreationDate());
+		newModule.setModifiedDate(new Date());
 		newModule.setDetail(module.getDetail());
 		newModule.setName(module.getName());
 		newModule.setSequence(module.getSequence());
 		newModule.setUrl(module.getUrl());
 		moduleDAO.saveOrUpdate(newModule);	
+		//更新默认访问操作
+		 OperationModel operation=operationDAO.getOperationBySymbol(module.getSymbol()+"@defaultVisit@");
+		 operation.setSymbol(newModule.getSymbol()+"@defaultVisit@");
+		 operation.setRsType("URL");
+		 operation.setRsValue("/"+newModule.getUrl()+"*");
+		 operation.setModifiedDate(newModule.getModifiedDate());
+		 operationDAO.saveOrUpdate(operation);
+		//更新默认访问操作默认数据访问方式
+		 DataAccessModeModel dam=dataAccessModeDAO.getDataAccessModeBySymbol(module.getSymbol()+"@defaultVisit@"+"@noFilter@");
+		 dam.setSymbol(operation.getSymbol()+"@noFilter@");
+		 dam.setModifiedDate(operation.getModifiedDate());
+		 dataAccessModeDAO.saveOrUpdate(dam);
 		return module;		
 	}
 	//删除模块

@@ -172,9 +172,7 @@
 				if(window==null)window=new WlzxLockWin();
 				PopUpManager.addPopUp(window,this,true);
 				window.x=FlexGlobals.topLevelApplication.stage.stageWidth/2-window.width/2;
-				window.y=FlexGlobals.topLevelApplication.stage.stageHeight/2-window.height/2;
-				window.title="岗位授权信息保存中。。。";
-				
+				window.y=FlexGlobals.topLevelApplication.stage.stageHeight/2-window.height/2;				
 				PopUpManager.centerPopUp(window); 
 			}
 			private function unLockWin():void{
