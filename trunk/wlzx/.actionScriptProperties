@@ -38,8 +38,9 @@
     <module application="flex_src/home.mxml" destPath="oa/notice/noticeRead.swf" optimize="false" sourcePath="flex_src/oa/notice/noticeRead.mxml"/>
     <module application="flex_src/home.mxml" destPath="oa/communication/publicAddressBook.swf" optimize="false" sourcePath="flex_src/oa/communication/publicAddressBook.mxml"/>
     <module application="flex_src/home.mxml" destPath="oa/notice/postNotice.swf" optimize="false" sourcePath="flex_src/oa/notice/postNotice.mxml"/>
-    <module destPath="basic/staff/staffList.swf" optimize="false" sourcePath="flex_src/basic/staff/staffList.mxml"/>
-    <module destPath="basic/account/accountList.swf" optimize="false" sourcePath="flex_src/basic/account/accountList.mxml"/>
+    <module application="flex_src/home.mxml" destPath="basic/staff/staffList.swf" optimize="false" sourcePath="flex_src/basic/staff/staffList.mxml"/>
+    <module application="flex_src/home.mxml" destPath="basic/account/accountList.swf" optimize="false" sourcePath="flex_src/basic/account/accountList.mxml"/>
+    <module destPath="basic/account/accountPw.swf" optimize="false" sourcePath="flex_src/basic/account/accountPw.mxml"/>
   </modules>
   <buildCSSFiles/>
 </actionScriptProperties>
