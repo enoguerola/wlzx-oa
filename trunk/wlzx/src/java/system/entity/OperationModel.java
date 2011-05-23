@@ -74,4 +74,5 @@ public class OperationModel extends BaseModel{
 		this.rsType = rsType;
 	}
 	
-}
+	
+	}

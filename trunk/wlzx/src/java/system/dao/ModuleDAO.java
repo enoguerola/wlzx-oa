@@ -89,4 +89,10 @@ public class ModuleDAO extends BaseDAOImpl<ModuleModel> {
 		// TODO Auto-generated method stub
 		remove(getModuleBySymbol(symbol));
 	}
+	@SuppressWarnings("unchecked")
+	public List<ModuleModel> getAllModules(){
+			DetachedCriteria criteria = DetachedCriteria.forClass(ModuleModel.class);
+			List<ModuleModel> result = this.getListByCriteria(criteria);
+			return result;
+	}
 }

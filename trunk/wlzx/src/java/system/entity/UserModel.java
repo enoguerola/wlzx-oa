@@ -97,7 +97,7 @@ public class UserModel  extends BaseModel implements UserDetails{
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		Set<GrantedAuthority> authSet = new HashSet<GrantedAuthority>();  
         Set<RoleModel> roles = this.getRoles();  
-          
+//        System.out.println(roles.size()+"getAuthorities");  
         for(RoleModel role : roles) {  
         	authSet.add(new SimpleGrantedAuthority(role.getSymbol())); 
         }  

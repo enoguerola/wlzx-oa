@@ -94,17 +94,7 @@ public class InitService {
 		this.userDAO = userDAO;
 	}
 	
-	public static void main(String[] args) {
-		 ApplicationContext applicationContext = new ClassPathXmlApplicationContext(new String[]{"system/service/system.xml","system/service/spring-system.xml"});
-		// TODO Auto-generated method stub
-		InitService initService=(InitService)applicationContext.getBean("initService");
-		initService.initSystem();
-		initService.printSystemStructure();
-		initService.initDepartment();
-		initService.printDepartmentStructure();
-//		System.out.println(initService.getModuleDAO().getModuleBySymbol("basic_authorization_department_main").getOperations().size());
-
-	}
+	
 	public void initSystem(){
 		//初始化根系统
 		SystemModel root=systemDAO.getSystemBySymbol("root");
@@ -256,5 +246,16 @@ public class InitService {
 			}
 		}
 		
+	}
+	public static void main(String[] args) {
+		 ApplicationContext applicationContext = new ClassPathXmlApplicationContext(new String[]{"system/service/system.xml","system/service/spring-system.xml"});
+		// TODO Auto-generated method stub
+		InitService initService=(InitService)applicationContext.getBean("initService");
+		initService.initSystem();
+		initService.printSystemStructure();
+		initService.initDepartment();
+		initService.printDepartmentStructure();
+//		System.out.println(initService.getModuleDAO().getModuleBySymbol("basic_authorization_department_main").getOperations().size());
+
 	}
 }

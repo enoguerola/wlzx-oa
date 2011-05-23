@@ -83,6 +83,30 @@ public class MenuModel extends BaseModel{
 		}
 		else return null;
 	}
-
+	public MenuModel getParentMenu(){
+		if(this.getParents()!=null&&this.getParents().size()>0){
+			return this.getParents().iterator().next();
+			
+		}else return null;
+		
+	}
+	public Set<DataAccessModeModel> getDams(){
+		Set<DataAccessModeModel> dams=new TreeSet<DataAccessModeModel>();
+		if(children==null||children.size()==0){
+			for(ModuleModel module:modules){
+				for(DataAccessModeModel dam:module.getDams()){
+					dams.add(dam);
+				}
+			}
+		}else {
+			for(MenuModel menu:children){
+				for(DataAccessModeModel dam:menu.getDams()){
+					dams.add(dam);
+				}
+			}
+		}
+		
+		return dams;
+	}
 	
 }
