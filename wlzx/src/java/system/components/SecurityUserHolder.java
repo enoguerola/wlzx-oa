@@ -1,5 +1,6 @@
 package system.components;
 
+
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import system.entity.RoleModel;
@@ -16,10 +17,16 @@ public class SecurityUserHolder {
 	 * @return
 	 */
 	public static UserModel getCurrentUser(){
-		UserModel user = (UserModel) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		if(user!=null)return user;
-		else return getSuperRootUserModel();
+		UserModel user=null;
+		try{
+			if( SecurityContextHolder.getContext().getAuthentication()!=null)
+			 user= (UserModel) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			return user;
+		}catch(Exception e){
+			return null;
+		}
 	}
+	
 	public static boolean isSuperRootUser(){
 		return isSuperRootUser(SecurityUserHolder.getCurrentUser().getName());
 	}

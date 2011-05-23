@@ -34,8 +34,13 @@
 			import mx.containers.Canvas;
 			import mx.containers.VBox;
 			import mx.controls.Alert;
+			import mx.controls.Image;
 			import mx.controls.Tree;
+			import mx.core.FlexGlobals;
+			import mx.managers.PopUpManager;
 			import mx.rpc.events.*;
+			
+			import system.component.WlzxLockWin;
 			
 			import spark.components.*;
 			
@@ -64,6 +69,7 @@
 			}
 		
 			private function systemFaultHandler(event:FaultEvent):void {
+				unLockWin();
 				Alert.show(event.fault.faultString, 'Error');
 			}
 			private function getAllRolesResult(event:ResultEvent):void {
@@ -111,6 +117,7 @@
 				
 			}
 			private function saveRoleSystemAuthorizationResult(event:ResultEvent):void {
+				unLockWin();
 				if(event.result==true)
 					Alert.show("岗位授权成功");
 			}
@@ -156,7 +163,23 @@
 							removes=removes.concat(item.@id+";");
 					}
 				} 
+				lockWin();
 				systemServiceRO.saveRoleSystemAuthorization(operationRoleId,operationSystemId,adds,removes);
+			}
+			private var window:WlzxLockWin=null;
+			
+			private function lockWin():void{
+				if(window==null)window=new WlzxLockWin();
+				PopUpManager.addPopUp(window,this,true);
+				window.x=FlexGlobals.topLevelApplication.stage.stageWidth/2-window.width/2;
+				window.y=FlexGlobals.topLevelApplication.stage.stageHeight/2-window.height/2;
+				window.title="岗位授权信息保存中。。。";
+				
+				PopUpManager.centerPopUp(window); 
+			}
+			private function unLockWin():void{
+				if(window!=null)
+				PopUpManager.removePopUp(window);
 			}
 			
 			

@@ -35,6 +35,9 @@
 		<property name="email" type="string">
 			<column name="email" />
 		</property>
+		<property name="active" type="boolean">
+			<column name="active" />
+		</property>
 		<set name="subordinates" lazy="false"  table="wlzx_system_user_leadship">
 			<key column="leader_id" not-null="true" />
 			<many-to-many  column="subordinate_id"  class="system.entity.UserModel" /> 

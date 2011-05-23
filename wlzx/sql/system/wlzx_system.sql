@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2011 年 05 月 23 日 09:18
+-- 生成日期: 2011 年 05 月 23 日 18:31
 -- 服务器版本: 5.0.91
 -- PHP 版本: 5.2.13
 
@@ -680,8 +680,7 @@ INSERT INTO `wlzx_system_role_dam_relationship` (`id`, `role_id`, `dam_id`) VALU
 (20, 1, 6),
 (21, 1, 5),
 (22, 1, 4),
-(25, 1, 19),
-(26, 1, 23);
+(25, 1, 19);
 
 -- --------------------------------------------------------
 
@@ -794,6 +793,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_user` (
   `email` varchar(50) default NULL,
   `creation_date` datetime NOT NULL,
   `modified_date` timestamp NOT NULL default '0000-00-00 00:00:00' on update CURRENT_TIMESTAMP,
+  `active` tinyint(1) NOT NULL default '1',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `symbol` (`symbol`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='系统用户' AUTO_INCREMENT=4 ;
@@ -802,10 +802,10 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_user` (
 -- 转存表中的数据 `wlzx_system_user`
 --
 
-INSERT INTO `wlzx_system_user` (`id`, `symbol`, `sequence`, `name`, `password`, `last_login_time`, `last_login_ip`, `person_id`, `email`, `creation_date`, `modified_date`) VALUES
-(1, 'super_root', 0, 'super_root', '134bca5421a15476a1e5ebaebdba1ede', NULL, NULL, NULL, NULL, '2011-05-07 11:04:09', '0000-00-00 00:00:00'),
-(2, 'admin', 0, 'admin', '21232f297a57a5a743894a0e4a801fc3', NULL, NULL, NULL, NULL, '2011-05-07 11:04:22', '0000-00-00 00:00:00'),
-(3, '3', 0, '3', 'eccbc87e4b5ce2fe28308fd9f2a7baf3', '2011-05-23 01:58:58', NULL, NULL, NULL, '2011-05-23 01:59:10', '0000-00-00 00:00:00');
+INSERT INTO `wlzx_system_user` (`id`, `symbol`, `sequence`, `name`, `password`, `last_login_time`, `last_login_ip`, `person_id`, `email`, `creation_date`, `modified_date`, `active`) VALUES
+(1, 'super_root', 0, 'super_root', '134bca5421a15476a1e5ebaebdba1ede', NULL, NULL, NULL, NULL, '2011-05-07 11:04:09', '0000-00-00 00:00:00', 1),
+(2, 'admin', 0, 'admin', '21232f297a57a5a743894a0e4a801fc3', NULL, NULL, NULL, NULL, '2011-05-07 11:04:22', '0000-00-00 00:00:00', 1),
+(3, '3', 0, '3', 'eccbc87e4b5ce2fe28308fd9f2a7baf3', '2011-05-23 01:58:58', NULL, NULL, NULL, '2011-05-23 01:59:10', '0000-00-00 00:00:00', 1);
 
 -- --------------------------------------------------------
 
