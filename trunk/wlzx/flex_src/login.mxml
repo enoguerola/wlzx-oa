@@ -5,6 +5,18 @@
 			   xmlns:s="library://ns.adobe.com/flex/spark" 
 			   xmlns:mx="library://ns.adobe.com/flex/mx"   width="100%" pageTitle="登陆页面"   creationComplete="init();" height="100%" backgroundColor="#ADBF91" xmlns:flexlib="http://code.google.com/p/flexlib/"  xmlns:viewers="flexlib.scheduling.scheduleClasses.viewers.*" xmlns:sliderClasses="flexlib.controls.sliderClasses.*" xmlns:baseClasses="flexlib.baseClasses.*">
 	<fx:Style source="login.css"/>
+	<fx:Declarations>
+		<mx:StringValidator id="name_stringValidator" source="{j_username}" property="text"  requiredFieldError="登陆账号不能为空"/>
+		<mx:StringValidator id="pw_stringValidator" source="{j_password}" property="text"  requiredFieldError="登陆密码不能为空"/>
+
+		<mx:HTTPService id="myHttp" url="j_spring_security_check" showBusyCursor="true" method="POST" result="httpHandle(event);" fault="service_faultHandler(event);" useProxy="false" resultFormat="text">  
+			<mx:request>  
+				<j_username>{j_username.text}</j_username>  
+				<j_password>{j_password.text}</j_password> 
+				<_spring_security_remember_me>{_spring_security_remember_me.selected}</_spring_security_remember_me>  
+			</mx:request>  
+		</mx:HTTPService>  
+	</fx:Declarations>
 	     <fx:Script>    
 			       <![CDATA[   
 					   import flash.display.Stage;
@@ -13,16 +25,25 @@
 					   import mx.controls.Alert;
 					   import mx.rpc.events.FaultEvent;
 					   import mx.rpc.events.ResultEvent;
-			         private function httpHandle(e:ResultEvent):void  
+					   import mx.events.ValidationResultEvent;
+					   import mx.validators.Validator;
+					   private var validatorArr:Array;
+			         private function httpHandle(event:ResultEvent):void  
 			         { 
 //						Alert.show(e.toString());
-						 ExternalInterface.call("function() {" +
-							 "window.location.href='home.html';" +
-//							 "window.open('home.html','FullWnd','fullscreen,scrollbars=no');" +
-//							 "this.parent.opener=null;" +
-//							 "this.parent.close();" +
-							 "}"		 	
-						 ); 
+						 var result:String=event.result as String;
+						 if(result=="success")
+							 ExternalInterface.call("function() {" +
+								 "window.location.href='home.html';" +
+	//							 "window.open('home.html','FullWnd','fullscreen,scrollbars=no');" +
+	//							 "this.parent.opener=null;" +
+	//							 "this.parent.close();" +
+								 "}"		 	
+							 ); 
+						 else{
+							 resultMsg.text=result;
+							 resultArea.visible=true;
+						 }
 	//					Alert.show(e.result.Result); 
 			         } 
 					 private function service_faultHandler(event:FaultEvent):void
@@ -30,40 +51,55 @@
 		                Alert.show("请求异常");
 		             }
 					  private function init():void{
-						  
+						  validatorArr = new Array();
+						  validatorArr.push(name_stringValidator);
+						  validatorArr.push(pw_stringValidator);
 						  focusManager.setFocus(j_username);
 						  
 					  }
-
+					   private function validateForm(evt:MouseEvent):void {
+						   var validatorErrorArray:Array = Validator.validateAll(validatorArr);;
+						   var isValidForm:Boolean = validatorErrorArray.length == 0;
+						   if (isValidForm) {
+							   myHttp.send();
+						   } else {
+							   var err:ValidationResultEvent;
+							   var errorMessageArray:Array = [];
+							   for each (err in validatorErrorArray) {
+								   var errField:String = FormItem(err.currentTarget.source.parent).label
+								   errorMessageArray.push(errField + ": " + err.message);
+							   }
+							   Alert.show(errorMessageArray.join("\n\n"), "请按照以下提示信息填写", Alert.OK);
+						   }
+					   }
 					 
 			         ]]>    
 		 </fx:Script> 
-	<fx:Declarations>
-	     <mx:HTTPService id="myHttp" url="j_spring_security_check" showBusyCursor="true" method="POST" result="httpHandle(event);" fault="service_faultHandler(event);" useProxy="false" resultFormat="text">  
-			 <mx:request>  
-				<j_username>{j_username.text}</j_username>  
-				<j_password>{j_password.text}</j_password> 
-				<_spring_security_remember_me>{_spring_security_remember_me.selected}</_spring_security_remember_me>  
-			 </mx:request>  
-		</mx:HTTPService>  
-	</fx:Declarations>
+	
 	<s:layout>
 		<s:VerticalLayout  horizontalAlign="center" verticalAlign="middle"/>
 	</s:layout>
 	<s:BorderContainer backgroundImage="@Embed(source='../WebContent/resources/oa/login_bg.jpg')" width="1019" height="559">
-		<mx:Form width="400" height="200" left="620" top="200"   backgroundAlpha="0" >
-			<s:VGroup  gap="20" >
-				<s:HGroup width="100%" textAlign="center" verticalAlign="middle" gap="10">
-					<s:Label text="用户名："   width="60" verticalAlign="middle" textAlign="right"/>
-					<s:TextInput id="j_username" name="j_username"  width="200"/>
+		<mx:Form width="400" height="300" left="630" top="170"   backgroundAlpha="0" >
+			
+			<mx:VBox   verticalGap="25" width="100%" height="90%" verticalAlign="middle"   >
+				<mx:FormItem width="100%"  visible="false" height="30" required="true" id="resultArea" horizontalAlign="left" paddingLeft="10" >
+					<s:Label text=""   verticalAlign="bottom" textAlign="center" id="resultMsg"   color="red" fontSize="12"/>
+				</mx:FormItem>
+				<s:HGroup width="100%" textAlign="center" verticalAlign="middle" gap="10" top="-20">
+					<mx:FormItem  label="帐号：" required="true" paddingRight="10">
+						<s:TextInput id="j_username" paddingLeft="10" name="j_username"  width="200"/>
+					</mx:FormItem>
+					
 				</s:HGroup>
 				<s:HGroup width="100%"  top="20" textAlign="center" verticalAlign="middle" gap="10">		
-					<s:Label text="密码："    width="60" verticalAlign="middle" textAlign="right"/>
-					<s:TextInput id="j_password"  name="j_password" width="200" displayAsPassword="true"/>
+					<mx:FormItem  label="密码：" required="true" paddingRight="10">
+						<s:TextInput id="j_password"  paddingLeft="10" name="j_password" width="200" displayAsPassword="true"/>
+					</mx:FormItem>
 				</s:HGroup>
 				<s:HGroup width="100%" >
-					<s:HGroup width="60"></s:HGroup>
-					<mx:Image  source="@Embed(source='../WebContent/resources/oa/login_button_green.jpg')" click="myHttp.send();"></mx:Image>
+					<s:HGroup width="50"></s:HGroup>
+					<mx:Image  source="@Embed(source='../WebContent/resources/oa/login_button_green.jpg')" click="validateForm(event);"></mx:Image>
 					<s:HGroup width="20"></s:HGroup>
 					<mx:Image  source="@Embed(source='../WebContent/resources/oa/login_button_yellow.jpg')"></mx:Image>
 				</s:HGroup>
@@ -74,7 +110,7 @@
 						
 					</mx:Image>
 				</s:HGroup>
-			</s:VGroup>
+			</mx:VBox>
 		
 			
 		</mx:Form>

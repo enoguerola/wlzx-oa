@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Panel xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			 xmlns:s="library://ns.adobe.com/flex/spark" 
+			 xmlns:mx="library://ns.adobe.com/flex/mx" title="操作进行中。。。" width="180" height="60" horizontalAlign="center" verticalAlign="middle">
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[ 
+			
+			
+		]]>
+	</fx:Script>
+	<mx:Image id="gif" width="20" height="20" source="Embed(source='loading.gif')"/>
+
+</mx:Panel>
