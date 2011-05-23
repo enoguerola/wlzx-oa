@@ -29,6 +29,7 @@ public  class BaseModel implements Comparable<BaseModel>,Serializable{
 	private Date creationDate;
 	private Date modifiedDate;
 	private int sequence;
+
 	public String getId(){
 		return id;
 	}
@@ -73,10 +74,15 @@ public  class BaseModel implements Comparable<BaseModel>,Serializable{
 		this.symbol = symbol;
 	}
 
-	public String toString(){
-		return symbol;
-	}
-
+    @Override  
+    public boolean equals(Object obj) {  
+        return getId().equals(((BaseModel)obj).getId());  
+    }
+    @Override  
+    public int hashCode() {  
+        // TODO Auto-generated method stub  
+        return this.getId().hashCode();  
+    } 
 	/* (non-Javadoc)
 	 * @see java.lang.Comparable#compareTo(java.lang.Object)
 	 */

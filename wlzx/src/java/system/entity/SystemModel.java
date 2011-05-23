@@ -97,6 +97,24 @@ public class SystemModel extends BaseModel{
 	public void setSystemIcon(String systemIcon) {
 		this.systemIcon = systemIcon;
 	}
+	public Set<DataAccessModeModel> getDams(){
+		
+		Set<DataAccessModeModel> dams=new TreeSet<DataAccessModeModel>();
+		if(children==null||children.size()==0){
+			for(MenuModel menu:menus){
+				for(DataAccessModeModel dam:menu.getDams()){
+					dams.add(dam);
+				}
+			}
+		}else {
+			for(SystemModel system:children){
+				for(DataAccessModeModel dam:system.getDams()){
+					dams.add(dam);
+				}
+			}
+		}
+		return dams;
+	}
 
 	
 }

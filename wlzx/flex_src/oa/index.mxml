@@ -33,7 +33,7 @@
 			private var _moduleInfo:IModuleInfo;
 			
 			private function init():void {
-				systemServiceRO.getSystemBySymbol("oa");
+				systemServiceRO.getAuthorizationMenusBySystem("oa");
 				initHomeTab();
 //				Alert.show(this.parentApplication.account);
 				account.text=account.text.concat(this.parentApplication.account);
@@ -276,11 +276,11 @@
 			<s:HorizontalLayout verticalAlign="middle" gap="0"/>
 		</s:layout>
 		
-		<mx:Accordion   headerStyleName="customAccordionHeadStyles" width="220"  top="15" height="100%"  selectedIndex="-1" id="menus" dropShadowVisible="false" backgroundAlpha="0.0" headerHeight="35" fontSize="15" textAlign="center">
+		<mx:Accordion   headerStyleName="customAccordionHeadStyles" width="200"  top="15" height="100%"  selectedIndex="-1" id="menus" dropShadowVisible="false" backgroundAlpha="0.0" headerHeight="35" fontSize="15" textAlign="center">
 			
 		</mx:Accordion>
 		
-		<flexlib:DockableToolBar x="215" y="65" height="100%" paddingTop="200" dropShadowVisible="false" borderVisible="false"  doubleClickEnabled="true" doubleClick="showHideLeftbody_handler(event)" toolTip="隐藏/展开左区域菜单"></flexlib:DockableToolBar>
+		<flexlib:DockableToolBar x="200" y="65" height="100%" paddingTop="200" dropShadowVisible="false" borderVisible="false"  doubleClickEnabled="true" doubleClick="showHideLeftbody_handler(event)" toolTip="隐藏/展开左区域菜单"></flexlib:DockableToolBar>
 		<flexlib:SuperTabNavigator id="nav"  tabStyleName="customTabStyles" horizontalGap="1" borderVisible="false" paddingTop="0" paddingBottom="0" paddingLeft="0" paddingRight="0" closePolicy="SuperTab.CLOSE_ROLLOVER|SuperTab.CLOSE_ALWAYS|SuperTab.CLOSE_SELECTED|SuperTab.CLOSE_NEVER" width="100%" height="100%" tabWidth="120"   allowTabSqueezing="false"  dragEnabled="false">
 			
 			

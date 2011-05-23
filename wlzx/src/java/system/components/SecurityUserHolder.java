@@ -2,6 +2,7 @@ package system.components;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import system.entity.RoleModel;
 import system.entity.UserModel;
 import system.utils.CipherUtil;
 import system.utils.StringUtils;
@@ -37,8 +38,17 @@ public class SecurityUserHolder {
 	
 	public static UserModel getSuperRootUserModel(){
 		UserModel superModel = new UserModel();
+		superModel.setId("-1");
 		superModel.setName(WlzxUserDetailsService.superUserName);
 		superModel.setPwd(WlzxUserDetailsService.superUserPwd);
+		superModel.getRoles().add(getSuperRootRoleModel());
+		return superModel;
+	}
+	public static RoleModel getSuperRootRoleModel(){
+		RoleModel superModel = new RoleModel();
+		superModel.setId("-1");
+		superModel.setName(WlzxUserDetailsService.superUserRole);
+		superModel.setSymbol(WlzxUserDetailsService.superUserRole);
 		return superModel;
 	}
 }

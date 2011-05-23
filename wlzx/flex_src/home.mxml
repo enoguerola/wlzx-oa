@@ -19,7 +19,7 @@
 
 			import flash.display.Stage;
 			import flash.display.StageDisplayState;
-			
+			import mx.collections.ArrayCollection;
 			import mx.controls.*;
 			import mx.events.ModuleEvent;
 			import mx.modules.*;
@@ -78,9 +78,10 @@
 			}
 			private function getCurrentUserResult(event:ResultEvent):void  
 			{  
-				var user:Object=event.result;
+				var user:Object=event.result as UserModel;
 				account=user.name;
-				roles=user.getAllRole();
+				roles=user.getAllRoles();
+//				Alert.show(roles);
 				lastLoginTime=CommonUtils.formatDate(user.lastLoginTime);
 //				Alert.show(event.result.name);
 			} 

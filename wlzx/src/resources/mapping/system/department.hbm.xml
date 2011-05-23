@@ -39,7 +39,7 @@
 			<many-to-many  column="leader_id"  class="system.entity.DepartmentModel" /> 
 		</set>
 		
-		<set name="dataAccessModes" lazy="false"  table="wlzx_system_department_dam_relationship">
+		<set name="dataAccessModes" lazy="false"  table="wlzx_system_department_dam_relationship" cascade="all">
 			<key column="department_id" not-null="true" />
 			<many-to-many column="dam_id" class="system.entity.DataAccessModeModel" /> 
 		</set>

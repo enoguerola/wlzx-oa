@@ -6,8 +6,10 @@
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
 		<!--定义 RemoteObject 组件-->
 		<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
-			<mx:method name="getSystemBySymbol"  concurrency="last"  result="getSystemBySymbolResult(event);" />
 			<mx:method name="getDepartmentBySymbol"  concurrency="last"  result="getDepartmentBySymbolResult(event);" />
+			<mx:method name="getSystemBySymbol"  concurrency="last"  result="getSystemBySymbolResult(event);" />
+			<mx:method name="getDepartmentSystemAuthorization"  concurrency="last"  result="getDepartmentSystemAuthorizationResult(event);" />
+			<mx:method name="saveDepartmentSystemAuthorization"  concurrency="last"  result="saveDepartmentSystemAuthorizationResult(event);" />
 		</mx:RemoteObject>
 	</fx:Declarations>
 	<fx:Style>
@@ -32,40 +34,40 @@
 			import mx.containers.VBox;
 			import mx.controls.Alert;
 			import mx.controls.Tree;
+			import mx.events.IndexChangedEvent;
 			import mx.rpc.events.*;
 			
-			import spark.components.*;
+			import org.aswing.util.HashMap;
+			
+			import spark.components.CheckBox;
+			import spark.components.HGroup;
+			import spark.components.RadioButton;
+			import spark.components.VGroup;
 			
 			import system.component.checkTree.*;
 			import system.entity.*;
-			[Bindable]
-			public var folderList:XMLList=
-				<>
-				<folder state="0" label="Marketing Collateral">
-				<folder state="0" label="Media,PR,and Communications" >
-				<folder state="0" label="Article Reprint Disclaimers" />
-				<folder state="0" label="Articles Reprints" />
-				<folder state="0" label="Interviews and Transcripts" />
-				<folder state="0" label="Press Kits" />
-				<folder state="0" label="Press Releases" />
-				<folder state="0" label="Quick Hits" />
-				<folder state="0" label="Rep Talking Points" />
-				<folder state="0" label="Special Updates" />
-				<folder state="0" label="White Papers" />
-				</folder>
-				<folder state="0" label="Forms and Applications" >
-				<folder state="0" label="Applications" />
-				<folder state="0" label="Forms" />
-				</folder>
-				</folder>
-				</>
-				;
+
 			private var TAB_WIDTH:int=30;
+			[Bindable]
+			private var operationTree:CheckTree=new CheckTree();
+			private var operationDepartmentId:String=null;
+			private var operationSystemId:String=null;
 			private function init():void {
+				
 				systemServiceRO.getSystemBySymbol("root");
 				systemServiceRO.getDepartmentBySymbol("root");
-				//增加需要权限保护的UI资源
-				SecurityControler.addSecurityAction(departmentSave);
+				operationTree.percentHeight=100;
+				operationTree.percentWidth=100;
+				operationTree.checkBoxStateField="@state";
+				operationTree.labelField="@label";
+				operationTree.checkBoxCloseItemsOnUnCheck=true;
+				operationTree.checkBoxOpenItemsOnCheck=true;
+				operationTree.checkBoxEnableState=true;
+				operationTree.checkBoxCascadeOnCheck=true;
+				operationTree.itemDClickSelect=true;
+				operationTree.checkBoxBgColor=0x009900;
+//				operationTree.showRoot=false;
+						
 			}
 			private function systemFaultHandler(event:FaultEvent):void {
 				Alert.show(event.fault.faultString, 'Error');
@@ -74,15 +76,15 @@
 				var department:Object=event.result;
 				var resultList:ArrayCollection = new ArrayCollection();
 				buildSubDepartments(department,resultList,0);				
-				this.departments.dataProvider=resultList;
-				this.departments.selectedIndex=0;
+				this.departments.dataProvider=resultList;				
+				switchDepartmentAuthorization();
 			}
 			private function buildSubDepartments(department:Object,resultList:ArrayCollection,depth:int):void{
 				var headText:String="";
 				for(var j:int = 0;j<depth;j++)
 					headText=headText.concat("-");
 				headText=headText.concat(department.name);
-				resultList.addItem( {dataField:department.symbol, headerText:headText})
+				resultList.addItem( {dataField:department.id, headerText:headText})
 				var list:ArrayCollection = ArrayCollection(department.subordinates);			
 				if(list.length>0){
 					for (var i:int = 0; i < list.length; i++){
@@ -92,49 +94,80 @@
 				}		
 				
 			}
-		
 			private function getSystemBySymbolResult(event:ResultEvent):void {
-				var rootSystem:Object =event.result ;
-//				addTab(rootSystem);
+				var rootSystem:SystemModel =event.result as SystemModel ;
 				var systemList:ArrayCollection = ArrayCollection(rootSystem.children);
 				for (var i:int = 0; i < systemList.length; i++){
-//					Alert.show(i+"");
-					addTab(systemList.getItemAt(i));
-//					callLater(closeTab);
+					addTab(systemList.getItemAt(i) as SystemModel);
 				}
+				switchSystemAuthorization();
+			}
+			private function getDepartmentSystemAuthorizationResult(event:ResultEvent):void {
+//				Alert.show("a");
+//				Alert.show(event.result.toString());
+				operationTree.percentHeight=100;
+				operationTree.percentWidth=100;
+				var data:XML=new XML(event.result.toString());
+				operationTree.dataProvider = data;
+				operationTree.validateDisplayList();
+				callLater(function():void{					
+					operationTree.validateNow();
+					operationTree.expandChildrenOf(data[0],true);
+				});
+				
+				var box:HBox=systems.selectedChild as HBox;
+				box.removeAllChildren();
+				box.addChild(operationTree);
+//				Alert.show(box.id);
+//				for (var key:String in event.result)
+//				{
+//					var value:String=event.result[key] as String;
+//					addTab(key,value);
+//				}
+//				systems.selectedIndex=1;
+			}
+			private function saveDepartmentSystemAuthorizationResult(event:ResultEvent):void {
+				if(event.result==true)
+				Alert.show("部门授权成功");
 			}
 			
 			
-			private function addTab(_system:Object):void {
+			private function addTab(_system:SystemModel):void {
 				var child:HBox = new HBox();
+				child.name=_system.id;
 				child.percentHeight=100;
-				child.percentWidth=100;
-				var tree:CheckTree = new CheckTree();
-				tree.percentHeight=100;
-				tree.percentWidth=100;
-				var folderCollection:XMLListCollection;
-				folderCollection = new XMLListCollection(folderList);
-				tree.dataProvider = folderCollection;		
-				tree.checkBoxStateField="@state";
-				tree.labelField="@label";
-				tree.checkBoxCloseItemsOnUnCheck=true;
-				tree.checkBoxOpenItemsOnCheck=true;
-				tree.checkBoxEnableState=true;
-				tree.checkBoxCascadeOnCheck=true;
-				tree.itemDClickSelect=true;
-				tree.checkBoxBgColor=0x009900;
-//				tree.checkBoxBgPadding="{checkBoxBgPadding.value}"
-//				tree.checkBoxBgElips="{checkBoxBgElips.value}"
-//				tree.checkBoxLeftGap="{checkBoxLeftGap.value}"
-//				tree.checkBoxRightGap="{checkBoxRightGap.value}"
+				child.percentWidth=100;			
 				child.label = _system.name;
+				child.id="bb"+_system.name;
+//				var tree:CheckTree=new CheckTree();
+//				tree.name="tree_"+_system.id;
+//				tree.percentHeight=100;
+//				tree.percentWidth=100;
+//				//				operationTree.dataProvider = new XML(value);		
+//				tree.checkBoxStateField="@state";
+//				tree.labelField="@label";
+//				tree.checkBoxCloseItemsOnUnCheck=true;
+//				tree.checkBoxOpenItemsOnCheck=true;
+//				tree.checkBoxEnableState=true;
+//				tree.checkBoxCascadeOnCheck=true;
+//				tree.itemDClickSelect=true;
+//				tree.checkBoxBgColor=0x009900;
+//				tree.showRoot=false;
+//				child.addChild(tree);
+				systems.addChild(child);				
+			}
+//			private function addTab(_system:Object):void {
+//				var child:HBox = new HBox();
+//				child.percentHeight=100;
+//				child.percentWidth=100;			
+//				child.label = _system.name;
 //				var vGroup:VGroup=new VGroup();
 //				buildSubSystem(_system,vGroup,0);
-				child.addChild(tree);
-				systems.addChild(child);
-				
-			}
-		
+//				child.addChild(vGroup);
+//				systems.addChild(child);
+//				
+//			}
+//		
 //			private function buildSubSystem(system:Object,vGroup:VGroup,depth:int):void {
 //				var systemList:ArrayCollection = ArrayCollection(system.children);
 //				if(systemList.length>0){
@@ -271,6 +304,42 @@
 //				vSubGroup.addElement(hGroup);
 //				vGroup.addElement(vSubGroup);	
 //			}
+			private function switchDepartmentAuthorization():void{
+				operationDepartmentId=departments.selectedItem.dataField;
+				if(operationDepartmentId!=null&&operationSystemId!=null){
+					
+					systemServiceRO.getDepartmentSystemAuthorization(operationDepartmentId,operationSystemId);
+				}
+
+//				systemServiceRO.getDepartmentAuthorization(departments.selectedItem.dataField);
+			}
+			private function switchSystemAuthorization():void{
+				operationSystemId=systems.selectedChild.name;
+				if(operationDepartmentId!=null&&operationSystemId!=null){
+					var box:HBox=systems.selectedChild as HBox;
+					
+					systemServiceRO.getDepartmentSystemAuthorization(operationDepartmentId,operationSystemId);
+					
+				}
+			}
+			private function saveDepartmentAuthorization():void{
+//				Alert.show(operationDepartmentId);
+//				Alert.show(operationSystemId);
+				var a:Object=operationTree.dataProvider;
+				var xml:XMLList=new XMLList(a.toString());
+				var adds:String="";
+				var removes:String="";
+				for each (var item:XML in xml..node)
+				{
+					if(item.@type!=null&&item.@type=="dam"){
+						if(item.@state=="1")
+							adds=adds.concat(item.@id+";");
+						else 
+							removes=removes.concat(item.@id+";");
+					}
+				} 
+				systemServiceRO.saveDepartmentSystemAuthorization(operationDepartmentId,operationSystemId,adds,removes);
+			}
 			
 			
 		]]>
@@ -280,12 +349,12 @@
 				<mx:HBox width="100%" height="35" paddingLeft="20"  horizontalGap="10" backgroundColor="#C5E497"  verticalAlign="middle" >
 					<mx:Label text="|"/>
 					<mx:Label text="部门选择" textAlign="center"  />
-					<mx:ComboBox   width="200" id="departments" labelField="headerText"  selectedIndex="0" />
-					<mx:LinkButton  label="保存"  id="departmentSave" icon="@Embed(source='../WebContent/resources/common/tools/button_save_icon.png')"/>
+					<mx:ComboBox   width="200" id="departments" labelField="headerText"  selectedIndex="0" change="switchDepartmentAuthorization();" />
+					<mx:LinkButton  label="保存"  id="departmentSave" icon="@Embed(source='../WebContent/resources/common/tools/button_save_icon.png')" click="saveDepartmentAuthorization();"/>
 					<mx:Label text="|"/>				
 				</mx:HBox>
 				
-				<mx:TabNavigator id="systems"  width="100%" height="100%" tabStyleName="customTabStyles"  horizontalGap="1" borderVisible="false"  tabWidth="120" paddingTop="0">
+				<mx:TabNavigator id="systems"  width="100%" height="100%" tabStyleName="customTabStyles"  horizontalGap="1" borderVisible="false"  tabWidth="120" paddingTop="0"  change="switchSystemAuthorization();">
 					
 				</mx:TabNavigator>
 			</mx:VBox>

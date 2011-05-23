@@ -19,12 +19,12 @@ package system.entity
 		public function UserModel()
 		{
 		}
-		public function getAllRole():String
+		public function getAllRoles():String
 		{	var result:String="";
 			var roleList:ArrayCollection = ArrayCollection(roles);
 			for (var i:int = 0; i < roleList.length; i++){
 				var _role:Object = roleList.getItemAt(i);	
-				result=result.concat(_role.name);
+				result=result.concat(_role.name).concat("  |  ");
 			}
 			return result;
 		}

@@ -95,4 +95,13 @@ public class ModuleModel extends BaseModel{
 	public void setChildren(Set<ModuleModel> children) {
 		this.children = children;
 	}
+	public Set<DataAccessModeModel> getDams(){
+		Set<DataAccessModeModel> dams=new TreeSet<DataAccessModeModel>();
+		for(OperationModel operation:operations){
+			for(DataAccessModeModel dam:operation.getDataAccessModes()){
+				dams.add(dam);
+			}
+		}
+		return dams;
+	}
 }

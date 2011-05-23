@@ -6,10 +6,13 @@ package system.service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import system.components.SecurityUserHolder;
 import system.dao.*;
 import system.entity.*;
 
@@ -88,6 +91,92 @@ public class SystemService {
 	}
 	public void setUserDAO(UserDAO userDAO) {
 		this.userDAO = userDAO;
+	}
+	public Set<DataAccessModeModel> getAuthorizations(){
+		Set<DataAccessModeModel> dams=new TreeSet<DataAccessModeModel>();
+//		UserModel user=userDAO.get("2");
+		UserModel user=SecurityUserHolder.getCurrentUser();
+		if(user!=null){
+			for(RoleModel role:user.getRoles()){
+				for(DataAccessModeModel dam:role.getDataAccessModes()){
+					if(!dams.contains(dam))
+					dams.add(dam);
+				}
+			}
+		}
+		
+		return  dams;
+	}
+	public SystemModel getAuthorizationMenusBySystem(String systemSymbol){
+		SystemModel authSystem=getSystemBySymbol(systemSymbol);
+		Set<DataAccessModeModel> dams=getAuthorizations();
+		if(authSystem.getDams().size()>0){
+			if(dams.containsAll(authSystem.getDams()))
+				return authSystem;
+			else {
+				if(authSystem.getChildren()==null||authSystem.getChildren().size()==0){
+					if(authSystem.getMenus()!=null){
+						StringBuilder filterMenus=new StringBuilder("");
+						for(MenuModel menu:authSystem.getMenus()){
+							boolean filter=true;							
+							for(DataAccessModeModel dam:menu.getDams()){//用户权限含该菜单部分权限集则不用过滤
+								if(dams.contains(dam)){
+									filter=false;
+									break;
+								}
+							}
+							if(filter==false){
+								 filterAuthorization(menu,dams);
+								 continue;
+							}
+							else {
+								if(menu.getParents()==null||menu.getParents().size()==0){
+									filterMenus.append(menu.getId()+";");									
+								}else{
+									 filterAuthorization(menu,dams);
+								}
+									
+							}
+							
+						}
+						for(String filterMenu:filterMenus.toString().split(";")){//移除过滤顶级菜单
+							if(filterMenu!=null&&!filterMenu.equals("")){
+								authSystem.getMenus().remove(menuDAO.get(filterMenu));
+							}
+						}
+						
+					}
+				}
+				
+			}
+		}
+		return  authSystem;
+	}
+	private void filterAuthorization(MenuModel authMenu,Set<DataAccessModeModel> dams){
+		StringBuilder filterMenus=new StringBuilder("");
+		for(MenuModel menu:authMenu.getChildren()){
+			if(menu.getChildren()==null||menu.getChildren().size()==0){
+				boolean filter=true;							
+				for(DataAccessModeModel dam:menu.getDams()){//用户权限含该菜单部分权限集则不用过滤
+					if(dams.contains(dam)){
+						filter=false;
+						break;
+					}
+				}
+				if(filter==false)continue;
+				filterMenus.append(menu.getId()+";");
+			}else{
+				for(MenuModel subMenu:menu.getChildren()){
+					filterAuthorization(subMenu,dams);
+				}
+			}
+			
+		}
+		for(String filterMenu:filterMenus.toString().split(";")){//移除过滤顶级菜单
+			if(filterMenu!=null&&!filterMenu.equals("")){
+				authMenu.getChildren().remove(menuDAO.get(filterMenu));
+			}
+		}
 	}
 	//获得某系统
 	public SystemModel getSystemBySymbol(String symbol){		
@@ -276,15 +365,218 @@ public class SystemService {
 		roleDAO.remove(roleDAO.get(id));
 		return true;		
 	}
-	public static void main(String[] args) {
-		 ApplicationContext applicationContext = new ClassPathXmlApplicationContext(new String[]{"system/service/system.xml","system/service/spring-system.xml"});
-		SystemService systemService=(SystemService)applicationContext.getBean("systemService");
-		ModuleModel module=new ModuleModel();
-		module.setName("a");
-		module.setCreationDate(new Date());
-		module.setDetail("aaa");
-		module.setSymbol("rg22222");
-		module.setSequence(1);
-		systemService.moduleAdd(module,"menu","gweg");
+	/*获得部门各系统权限集*/
+	public String getDepartmentSystemAuthorization(String departmentId,String systemId){
+		System.out.println(departmentId+"--"+systemId);
+		StringBuilder sb=new StringBuilder();
+		SystemModel system=systemDAO.get(systemId);
+		DepartmentModel department=departmentDAO.get(departmentId);
+		Set<DataAccessModeModel> dams=department.getDataAccessModes();
+		int state=0;
+		if(system.getDams().size()>0){
+			if(dams.containsAll(system.getDams()))state=1;
+			else {
+				for(DataAccessModeModel dam:system.getDams()){
+					if(dams.contains(dam)){
+						state=2;break;
+					}
+				}
+			}
+		}
+		
+		sb.append("<node state='"+state+"' type='system' label='"+system.getName()+"'>");
+		if(system.getMenus()!=null)
+			for(MenuModel menu:system.getMenus()){
+				buildMenu(menu,sb,dams);
+			}
+		sb.append("</node>");
+		return sb.toString();	
 	}
+	private void buildMenu(MenuModel menu,StringBuilder sb,Set<DataAccessModeModel> dams){
+		if(menu!=null){
+			int state=0;
+			if(menu.getDams().size()>0){
+				if(dams.containsAll(menu.getDams()))state=1;
+				else {
+					for(DataAccessModeModel dam:menu.getDams()){
+						if(dams.contains(dam)){
+							state=2;break;
+						}
+					}
+				}
+			}
+			sb.append("<node state='"+state+"' type='menu' label='"+menu.getName()+"'>");
+			if(menu.getChildren()!=null&&menu.getChildren().size()>0){
+				for(MenuModel subMenu:menu.getChildren()){
+					buildMenu(subMenu,sb,dams);
+				}
+
+			}else{
+				if(menu.getModules()!=null)
+					for(ModuleModel module:menu.getModules()){
+						buildModule(module,sb,dams);
+					}
+			}
+			sb.append("</node>");
+		}
+		
+	}
+	private void buildModule(ModuleModel module,StringBuilder sb,Set<DataAccessModeModel> dams){
+		if(module!=null){	
+			for(OperationModel operation:module.getOperations()){
+				buildOperation(operation,sb,dams);
+			}
+		}
+		
+	}
+	private void buildOperation(OperationModel operation,StringBuilder sb,Set<DataAccessModeModel> dams){
+		if(operation!=null){
+			int state=0;
+			if(operation.getDataAccessModes().size()>0){
+				if(dams.containsAll(operation.getDataAccessModes()))state=1;
+				else {
+					for(DataAccessModeModel dam:operation.getDataAccessModes()){
+						if(dams.contains(dam)){
+							state=2;break;
+						}
+					}
+				}
+			}
+			sb.append("<node  state='"+state+"' type='operation' label='"+operation.getName()+"'>");
+			if(operation.getDataAccessModes()!=null&&operation.getDataAccessModes().size()>0)
+				for(DataAccessModeModel dam:operation.getDataAccessModes()){
+					buildDAM(dam, sb,dams);
+				}
+			sb.append("</node>");
+		}	
+	}
+	private void buildDAM(DataAccessModeModel dam,StringBuilder sb,Set<DataAccessModeModel> dams){
+		if(dam!=null){
+			int state=0;
+			if(dams.contains(dam))state=1;
+			sb.append("<node  state='"+state+"' type='dam' id='"+dam.getId()+"' label='"+dam.getName()+"'>");
+			sb.append("</node>");
+		}	
+	}
+	/*获得部门各系统权限集*/
+	
+	/*保存部门系统权限集*/
+	public boolean saveDepartmentSystemAuthorization(String departmentId,String systemId,String adds,String removes){
+		System.out.println(adds);
+		System.out.println(removes);
+		DepartmentModel department=departmentDAO.get(departmentId);
+		Set<DataAccessModeModel> dams=department.getDataAccessModes();
+		for(String add:adds.split(";")){
+			if(add!=null&&!add.equals("")){
+				DataAccessModeModel dam=dataAccessModeDAO.get(add);
+				if(!dams.contains(dam))
+					dams.add(dam);
+			}
+			
+		}
+		for(String remove:removes.split(";")){
+			if(remove!=null&&!remove.equals("")){
+				DataAccessModeModel dam=dataAccessModeDAO.get(remove);
+				if(dams.contains(dam))
+					dams.remove(dam);
+			}
+		}
+		departmentDAO.merge(department);
+		return true;
+	}
+	/*获得角色（岗位）各系统权限集*/
+	public String getRoleSystemAuthorization(String roleId,String systemId){
+		System.out.println(roleId+"--"+systemId);
+		StringBuilder sb=new StringBuilder();
+		SystemModel system=systemDAO.get(systemId);
+		RoleModel role=roleDAO.get(roleId);
+		Set<DataAccessModeModel> dams=role.getDataAccessModes();
+		int state=0;
+		if(system.getDams().size()>0){
+			if(dams.containsAll(system.getDams()))state=1;
+			else {
+				for(DataAccessModeModel dam:system.getDams()){
+					if(dams.contains(dam)){
+						state=2;break;
+					}
+				}
+			}
+		}
+		
+		sb.append("<node state='"+state+"' type='system' label='"+system.getName()+"'>");
+		if(system.getMenus()!=null)
+			for(MenuModel menu:system.getMenus()){
+				buildMenu(menu,sb,dams);
+			}
+		sb.append("</node>");
+		return sb.toString();	
+	}
+	
+	/*保存部门系统权限集*/
+	public boolean saveRoleSystemAuthorization(String roleId,String systemId,String adds,String removes){
+		System.out.println(adds);
+		System.out.println(removes);
+		RoleModel role=roleDAO.get(roleId);
+		Set<DataAccessModeModel> dams=role.getDataAccessModes();
+		for(String add:adds.split(";")){
+			if(add!=null&&!add.equals("")){
+				DataAccessModeModel dam=dataAccessModeDAO.get(add);
+				if(!dams.contains(dam))
+					dams.add(dam);
+			}
+			
+		}
+		for(String remove:removes.split(";")){
+			if(remove!=null&&!remove.equals("")){
+				DataAccessModeModel dam=dataAccessModeDAO.get(remove);
+				if(dams.contains(dam))
+					dams.remove(dam);
+			}
+		}
+		roleDAO.merge(role);
+		return true;
+	}
+	
+	
+	
+	public static void main(String[] args) {
+		 ApplicationContext applicationContext = new ClassPathXmlApplicationContext(new String[]{"system/service/system.xml","system/service/spring-system.xml"});	 
+		 SystemService systemService=(SystemService)applicationContext.getBean("systemService");
+		 System.out.println(systemService.getAuthorizationMenusBySystem("oa"));
+//		 System.out.println(systemService.getDepartmentSystemAuthorization("3","2"));
+//		 systemService.saveDepartmentSystemAuthorization("1","3",";14;",";3;");
+//		Set<DataAccessModeModel> dams= systemService.getDepartmentById("1").getDataAccessModes();
+//		DataAccessModeModel dam=systemService.dataAccessModeDAO.get("14");
+//		systemService.dataAccessModeDAO.merge(dam);
+//		System.out.println(dams.contains(dam));
+//		 List<ModuleModel> list=systemService.getModuleDAO().getAllModules();
+//		 System.out.println(list.size());
+//		 for(ModuleModel module:list){
+//			 OperationModel operation=new OperationModel();
+//			 operation.setName("默认模块访问");
+//			 operation.setSymbol(module.getSymbol()+"@defaultVisit@");
+//			 operation.setRsType("URL");
+//			 operation.setRsValue("/"+module.getUrl()+"*");
+//			 operation.setCreationDate(module.getCreationDate());
+//			 operation.setModifiedDate(module.getModifiedDate());
+//			 DataAccessModeModel dam=new DataAccessModeModel();
+//			 dam.setName("默认数据访问");
+//			 dam.setSymbol(operation.getSymbol()+"@noFilter@");
+//			 dam.setCreationDate(operation.getCreationDate());
+//			 dam.setModifiedDate(operation.getModifiedDate());
+//			 operation.getDataAccessModes().add(dam);
+//			 module.getOperations().add(operation);
+//			 
+//			 systemService.getModuleDAO().saveOrUpdate(module);
+//		 }
+		 
+//		ModuleModel module=new ModuleModel();
+//		module.setName("a");
+//		module.setCreationDate(new Date());
+//		module.setDetail("aaa");
+//		module.setSymbol("rg22222");
+//		module.setSequence(1);
+//		systemService.moduleAdd(module,"menu","gweg");
+	}
+
 }
