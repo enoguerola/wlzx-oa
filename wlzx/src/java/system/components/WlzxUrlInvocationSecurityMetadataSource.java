@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
@@ -40,32 +38,33 @@ public class WlzxUrlInvocationSecurityMetadataSource
     	if(resourceMap == null) {  
     		 resourceMap = new HashMap<String, Collection<ConfigAttribute>>();
     		 //配置超级用户资源
-    		 RoleModel superRole=SecurityUserHolder.getSuperRootRoleModel();
-    		 Collection<ConfigAttribute> super_atts = new ArrayList<ConfigAttribute>();  
-             ConfigAttribute super_ca = new SecurityConfig(superRole.getSymbol());  
-             super_atts.add(super_ca);  
-             List<DataAccessModeModel> super_resources =resourcesDao.getAllResources();  
-             for(DataAccessModeModel super_resource:super_resources){ 
-             	if(super_resource.getBelongOperation().getRsType().equals("URL")){
-	                	System.out.println("角色：["+superRole.getSymbol()+"]拥有的URL资源有："+super_resource.getBelongOperation().getRsValue());  
-	                    resourceMap.put(super_resource.getBelongOperation().getRsValue(), super_atts); 
-                 }
-             }  
-             //加载用户资源
-            for (RoleModel role:roleDao.getAllRoles()){
-            	System.out.println("角色：["+role.getSymbol()+"]");  
-                Collection<ConfigAttribute> atts = new ArrayList<ConfigAttribute>();  
-                ConfigAttribute ca = new SecurityConfig(role.getSymbol());  
-                atts.add(ca);  
-                Set<DataAccessModeModel> resources = role.getDataAccessModes();  
-                //把资源放入到spring security的resouceMap中  
-                for(DataAccessModeModel resource:resources){ 
-                	if(resource.getBelongOperation().getRsType().equals("URL")){
-	                	System.out.println("角色：["+role.getSymbol()+"]拥有的URL资源有："+resource.getBelongOperation().getRsValue());  
-	                    resourceMap.put(resource.getBelongOperation().getRsValue(), atts); 
-                    }
-                }  
-            }  
+    		 RoleModel superRole=SecurityUserHolder.getSuperRootRoleModel(); 		
+	           for(DataAccessModeModel super_resource:resourcesDao.getAllResources()){
+	        	   
+	           		if(super_resource.getBelongOperation().getRsType().equals("URL")){
+	           			String key=super_resource.getBelongOperation().getRsValue();
+		                System.out.println("角色：["+superRole.getSymbol()+"]拥有的URL资源有："+key); 
+		                if(!resourceMap.containsKey(key)){
+		                	Collection<ConfigAttribute> atts = new ArrayList<ConfigAttribute>();
+		                	ConfigAttribute super_ca = new SecurityConfig(superRole.getSymbol());  
+			        	   	atts.add(super_ca);  
+		                	resourceMap.put(key, atts); 
+		                }
+		                 
+	               }
+	           } 
+	           //加载用户资源
+	            for (RoleModel role:roleDao.getAllRoles()){
+	                for(DataAccessModeModel resource:role.getDataAccessModes()){ 
+	                	if(resource.getBelongOperation().getRsType().equals("URL")){
+	                		 String key=resource.getBelongOperation().getRsValue();
+		                	System.out.println("角色：["+role.getSymbol()+"]拥有的URL资源有："+key); 
+		                	ConfigAttribute ca = new SecurityConfig(role.getSymbol());  
+		                	resourceMap.get(key).add(ca);
+	                    }
+	                }  
+	            }  
+    		 
         }
     }
 

@@ -14,7 +14,9 @@
 			import flexlib.controls.iconLoaderClasses.IconParserFactory;
 			import flexlib.controls.tabBarClasses.SuperTab;
 			import flexlib.events.TabReorderEvent;
-			
+			import mx.managers.PopUpManager;
+			import mx.core.FlexGlobals;
+			import system.component.WlzxLockWin;
 			import mx.collections.ArrayCollection;
 			import mx.containers.*;
 			import mx.controls.*;
@@ -33,6 +35,7 @@
 			private var _moduleInfo:IModuleInfo;
 			
 			private function init():void {
+				lockWin();
 				systemServiceRO.getAuthorizationMenusBySystem("oa");
 				initHomeTab();
 //				Alert.show(this.parentApplication.account);
@@ -55,10 +58,13 @@
 //				Alert.show();
 				menus.historyManagementEnabled = true;
 				makeAccordion(menuList);
+				unLockWin();
 			}
 			
 			private function systemFaultHandler(event:FaultEvent):void {
+				unLockWin();
 				Alert.show(event.fault.faultString, 'Error');
+				
 			}
 			[Embed(source="../WebContent/resources/oa/menuIcon/oa_inside_affair.png")]
 			private const oa_inside_affair:Class;
@@ -207,8 +213,19 @@
 //			protected function onModuleProgress (e:ModuleEvent) : void {    
 //				ProgressBashow("[MyFlexHero]:ModuleEvent.PROGRESS 当前已经加载了: " + e.bytesLoaded + " of " + e.bytesTotal + " loaded.");   
 //			} 
-			
-			
+			private var window:WlzxLockWin=null;
+			private function lockWin():void{
+				
+				window=WlzxLockWin(PopUpManager.createPopUp(this,WlzxLockWin,true)); 
+				PopUpManager.centerPopUp(window);
+				window.percentHeight=100;
+				window.percentWidth=100;			
+				
+			}
+			private function unLockWin():void{
+				if(window!=null)
+					PopUpManager.removePopUp(window);
+			}
 			private function homeTab():void{
 				// TODO Auto-generated method stub
 				initHomeTab();
