@@ -6,18 +6,18 @@
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
 		<mx:StringValidator id="oldPW_stringValidator" source="{oldPW}" property="text"  requiredFieldError="原密码不能为空"/>
 		<mx:StringValidator id="newPW_stringValidator" source="{newPW}" property="text"  requiredFieldError="新密码不能为空"/>
-		<mx:StringValidator id="newPWConfirm_stringValidator" source="{newPWConfirm}" property="text"  requiredFieldError="前后密码不一致"/>
 
 	</fx:Declarations>
 	<fx:Script> 
 		
 		<![CDATA[  
 			
-			import mx.managers.PopUpManager;
+			import mx.controls.Alert;
 			import mx.core.FlexGlobals;
 			import mx.events.ValidationResultEvent;
+			import mx.managers.PopUpManager;
 			import mx.validators.Validator;
-			import mx.controls.Alert;
+			
 			import system.component.WlzxLockWin;
 			private var validatorArr:Array;
 			private function init():void
@@ -25,7 +25,6 @@
 				validatorArr = new Array();
 				validatorArr.push(oldPW_stringValidator);
 				validatorArr.push(newPW_stringValidator);
-				validatorArr.push(newPWConfirm_stringValidator);	
 			} 
 			private function validateForm(evt:MouseEvent):void {
 				var validatorErrorArray:Array = Validator.validateAll(validatorArr);;
@@ -45,34 +44,173 @@
 			private var window:WlzxLockWin=null;
 			
 			private function lockWin():void{
-				if(window==null)window=new WlzxLockWin();
-				PopUpManager.addPopUp(window,this,true);
-							
-				PopUpManager.centerPopUp(window); 
+				
+				window=WlzxLockWin(PopUpManager.createPopUp(this,WlzxLockWin,true)); 
+				PopUpManager.centerPopUp(window);
+				window.percentHeight=100;
+				window.percentWidth=100;			
+				 
 			}
 			private function unLockWin():void{
 				if(window!=null)
 					PopUpManager.removePopUp(window);
 			}
+			 public function csCheck(passString:String):uint{
+				if(!passString)return 0;
+					var count:uint = 0;
+					count += passString.length<=4?5:(passString.length>=8?25:10);
+					count += !passString.match(/[a-z]/i)?0:(passString.match(/[a-z]/) && passString.match(/[A-Z]/)?20:10);
+					count += !passString.match(/[0-9]/)?0:(passString.match(/[0-9]/g).length >= 3?20:10);
+					count += !passString.match(/\W/)?0:(passString.match(/\W/g).length > 1?25:10);
+					count += !passString.match(/[0-9]/)||!passString.match(/[a-z]/i)?0:(!passString.match(/\W/)?2:(!passString.match(/[a-z]/) || !passString.match(/[A-Z]/)?3:5));
+					return count
+			}
+			
+			protected function newPW_focusOutHandler(event:FocusEvent):void
+			{
+				var count:int=csCheck(newPW.text);
+				pwCount.text=count+"";
+//				Alert.show(count+"");
+				textInput7.setStyle("backgroundColor","#d7d6d6");
+				textInput6.setStyle("backgroundColor","#d7d6d6");
+				textInput5.setStyle("backgroundColor","#d7d6d6");
+				textInput4.setStyle("backgroundColor","#d7d6d6");
+				textInput3.setStyle("backgroundColor","#d7d6d6");
+				textInput2.setStyle("backgroundColor","#d7d6d6");
+				textInput1.setStyle("backgroundColor","#d7d6d6");
+				
+					
+				if(count>=90){
+					textInput7.setStyle("backgroundColor","red");
+				}else if(count>= 80){
+					textInput6.setStyle("backgroundColor","red");
+				}else if(count>= 70){
+					textInput5.setStyle("backgroundColor","red");
+				}else if(count>= 60){
+					textInput4.setStyle("backgroundColor","red");
+				}else if(count>= 50){
+					textInput3.setStyle("backgroundColor","red");
+				}else if(count>= 20){
+					textInput2.setStyle("backgroundColor","red");
+				}else if(count>= 0){
+					textInput1.setStyle("backgroundColor","red");
+				}
+				
+			}
+			private function switchPassWordDisplay():void{
+				oldPW.displayAsPassword=isShowPass.selected;
+				newPW.displayAsPassword=isShowPass.selected;
+				newPWConfirm.displayAsPassword=isShowPass.selected;
+			}
+
 		]]> 
 		
 	</fx:Script> 
+	
 	<s:Panel width="100%" height="100%" title="密码修改"  skinClass="system.skins.WlzxPanelSkin"   borderVisible="true" dropShadowVisible="false">
+		<mx:HBox width="100%" height="100%">
+			<mx:VBox width="100%" height="100%">
+				<mx:HBox width="100%"  height="30"   horizontalGap="10"   paddingLeft="10" verticalAlign="middle" >
+					<mx:HBox width="70" height="20" id="textInput1"  horizontalAlign="center" verticalAlign="middle" backgroundColor="#d7d6d6">
+						<mx:Label text="非常弱" textAlign="center"  height="100%"/>
+					</mx:HBox>
+					<mx:HBox width="70" height="20" id="textInput2"  horizontalAlign="center" verticalAlign="middle" backgroundColor="#d7d6d6">
+						<mx:Label text="弱" textAlign="center" height="100%"/>
+					</mx:HBox>
+					<mx:HBox width="70" height="20" id="textInput3"  horizontalAlign="center" verticalAlign="middle" backgroundColor="#d7d6d6">
+						<mx:Label text="一般" textAlign="center" height="100%"/>
+					</mx:HBox>
+					<mx:HBox width="70" height="20" id="textInput4"  horizontalAlign="center" verticalAlign="middle" backgroundColor="#d7d6d6">
+						<mx:Label text="强" textAlign="center" height="100%"/>
+					</mx:HBox>
+					<mx:HBox width="70" height="20" id="textInput5"  horizontalAlign="center" verticalAlign="middle" backgroundColor="#d7d6d6">
+						<mx:Label text="非常强" textAlign="center" height="100%"/>
+					</mx:HBox>
+					<mx:HBox width="70" height="20" id="textInput6"  horizontalAlign="center" verticalAlign="middle" backgroundColor="#d7d6d6">
+						<mx:Label text="安全" textAlign="center" height="100%"/>
+					</mx:HBox>
+					<mx:HBox width="70" height="20" id="textInput7"  horizontalAlign="center" verticalAlign="middle" backgroundColor="#d7d6d6">
+						<mx:Label text="非常安全" textAlign="center" height="100%"/>
+					</mx:HBox>
+					
+					<mx:CheckBox id="isShowPass" label="以密码显示" selected="true" width="120" click="switchPassWordDisplay();"/>
+				</mx:HBox>
+				<mx:HBox width="100%" height="100%"  verticalAlign="middle" horizontalAlign="center">
+						<mx:Form  width="60%" height="100%"  verticalGap="20">
+							
+							<mx:FormItem label="原密码：" required="true" width="100%" >
+								<s:TextInput width="70%" id="oldPW" displayAsPassword="true"/>
+							</mx:FormItem>
+							<mx:FormItem label="新密码：" required="true" width="100%">
+								<s:TextInput width="70%" id="newPW"   displayAsPassword="true" focusOut="newPW_focusOutHandler(event)"/>
+							</mx:FormItem>
+							<mx:FormItem label="新密码确认：" required="true" width="100%">
+								<s:TextInput width="70%" id="newPWConfirm" displayAsPassword="true"/>
+							</mx:FormItem>
+							<mx:HBox horizontalAlign="right" paddingTop="30" paddingRight="10" width="100%">
+								<s:Button label="保存" click="validateForm(event);"/>
+								
+							</mx:HBox>
+							
+						</mx:Form>
+						<mx:VBox  width="40%" height="100%" verticalAlign="middle" horizontalAlign="center">
+							<mx:HBox  width="100%" color="red" fontWeight="bold" horizontalAlign="center" verticalAlign="middle">
+								
+							<mx:Label text="新密码安全系数："/><mx:Label  id="pwCount" text=""/>
+								
+							</mx:HBox>
+							<mx:Form  width="100%" height="100%"  textAlign="left">
+								<mx:VBox width="100%" height="100%" verticalAlign="top" horizontalAlign="center">
+									<mx:FormHeading label="安全系数评分标准" textAlign="left"/>
+									<mx:FormItemLabel width="80%" text=">= 90: 非常安全" textAlign="left"/>
+									<mx:FormItemLabel width="80%"  text=">= 80: 安全（Secure）" textAlign="left"/>
+									<mx:FormItemLabel width="80%"  text=">= 70: 非常强" textAlign="left"/>
+									<mx:FormItemLabel width="80%"  text=">= 50: 一般（Average）" textAlign="left"/>
+									<mx:FormItemLabel width="80%" text=">= 25: 弱（Weak） " textAlign="left"/>
+									<mx:FormItemLabel width="80%"  text=">= 0: 非常弱 " textAlign="left"/>
+								</mx:VBox>
+								
+							</mx:Form>
+							
+						</mx:VBox>
+					
+					
+					
+				</mx:HBox>
+				
+			</mx:VBox>
+			<mx:HBox width="30%"   backgroundColor="#d7d6d6" height="100%"  paddingTop="10" paddingRight="10" paddingLeft="10" paddingBottom="10">
+				
+				<mx:Form  width="100%" height="100%"  verticalGap="0" paddingTop="0">
+					<mx:FormItemLabel text="一、密码长度"/>
+					<mx:FormItemLabel text="5 分: 小于等于 4 个字符"/>
+					<mx:FormItemLabel text="10 分: 5 到 7 字符"/>
+					<mx:FormItemLabel text="25 分: 大于等于 8 个字符"/>
+					<mx:FormItemLabel text="二、字母:"/>
+					<mx:FormItemLabel text="0 分: 没有字母 "/>
+					<mx:FormItemLabel text="10 分: 全都是小（大）写字母 "/>
+					<mx:FormItemLabel text="20 分: 大小写混合字母 "/>
+					<mx:FormItemLabel text="三、数字: "/>
+					<mx:FormItemLabel text="0 分: 没有数字 "/>
+					<mx:FormItemLabel text="10 分: 1 个数字"/>
+					<mx:FormItemLabel text="20 分: 大于等于 3 个数字"/>
+					<mx:FormItemLabel text="四、符号: "/>
+					<mx:FormItemLabel text="0 分: 没有符号"/>
+					<mx:FormItemLabel text="10 分: 1 个符号 "/>
+					<mx:FormItemLabel text="25 分: 大于 1 个符号"/>
+					<mx:FormItemLabel text="五、奖励:"/>
+					<mx:FormItemLabel text="2 分: 字母和数字"/>
+					<mx:FormItemLabel text="3 分: 字母、数字和符号 "/>
+					<mx:FormItemLabel text="5 分: 大小写字母、数字和符号"/>
+				</mx:Form>
+				
+				
+			</mx:HBox>
+		</mx:HBox>
+		
 
-	<mx:Form  width="100%" height="100%" >
-		<mx:FormItem label="原密码：" required="true" width="350">
-			<s:TextInput width="70%" id="oldPW"/>
-		</mx:FormItem>
-		<mx:FormItem label="新密码：" required="true" width="350">
-			<s:TextInput width="70%" id="newPW"/>
-		</mx:FormItem>
-		<mx:FormItem label="新密码确认：" required="true" width="350">
-			<s:TextInput width="70%" id="newPWConfirm"/>
-		</mx:FormItem>
-		<mx:FormItem  horizontalAlign="right" width="350">
-			<s:Button label="保存" click="validateForm(event);"/>
-		</mx:FormItem>
-	</mx:Form>
+	
+	
 	</s:Panel>
 
 </mx:Module>

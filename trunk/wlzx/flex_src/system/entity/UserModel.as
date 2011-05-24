@@ -8,6 +8,7 @@ package system.entity
 	{
 
 		public var pwd:String;
+		public var active:Boolean;
 		public var lastLoginTime:Date;
 		public var lastLoginIP:String;
 		public var email:String;

@@ -1,10 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Module xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		   xmlns:s="library://ns.adobe.com/flex/spark" 
-		   xmlns:mx="library://ns.adobe.com/flex/mx" layout="vertical" width="100%" height="100%"  xmlns:component="system.component.*">
+		   xmlns:mx="library://ns.adobe.com/flex/mx" layout="vertical" width="100%" height="100%"   creationComplete="init();" xmlns:component="system.component.*">
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+		<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+			<mx:method name="getAllUsers"  concurrency="last"  result="getAllUsers_resultHandler(event);" />
+		</mx:RemoteObject>
 	</fx:Declarations>
+	<fx:Script> 
+		<![CDATA[  
+			import mx.collections.ArrayCollection;
+			import mx.controls.*;
+			import mx.events.*;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.*;
+			
+			import system.entity.DepartmentModel;
+			import system.entity.UserModel;
+			import system.index;
+			import system.utils.CommonUtils;
+			private function init():void {
+				systemServiceRO.getAllUsers();
+				
+			}
+			private function systemFaultHandler(event:FaultEvent):void {
+				Alert.show(event.fault.faultString, 'Error');
+			}
+			protected function getAllUsers_resultHandler(event:ResultEvent):void{
+				var allList:ArrayCollection=event.result as ArrayCollection;
+				accountTable.initdata(allList);
+			}
+			public function formatDate(date:Date):String{
+				return CommonUtils.formatDate(date);
+
+			}
+
+		]]> 		
+	</fx:Script> 
 	<s:Panel width="100%" height="100%"  skinClass="system.skins.WlzxPanelSkin" title="帐号管理"  borderVisible="false" dropShadowVisible="false">
 		<s:VGroup width="100%" height="100%">
 			<s:HGroup verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12">
@@ -20,34 +53,103 @@
 					<mx:Label text="|"/>
 				</mx:HBox>
 			</s:HGroup>
-			<s:VGroup width="100%" height="100%" gap="0">
-				<mx:HBox  width="100%" height="60" verticalAlign="middle" horizontalAlign="left"  horizontalGap="10" borderVisible="true">
-					<s:HGroup verticalAlign="middle">
-						<s:Label  text="帐号"/>
-						<s:TextInput/>
-					</s:HGroup>	
-					<s:HGroup verticalAlign="middle">
-						<s:Label  text="状态"/>
-						<s:ComboBox />
-					</s:HGroup>
-					<mx:Button  label="搜索"  styleName="customButton" width="60"/>
+			<s:VGroup width="100%" height="100%" gap="10" verticalAlign="middle" horizontalAlign="center" >
+				<mx:HBox width="100%" height="60"   horizontalGap="10" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
+							<mx:FormHeading label="条件查询">
+								
+							</mx:FormHeading>
+						
+						<s:HGroup verticalAlign="middle">
+							<s:Label  text="帐号"/>
+							<s:TextInput/>
+						</s:HGroup>	
+						<s:HGroup verticalAlign="middle">
+							<s:Label  text="状态"/>
+							<s:ComboBox />
+						</s:HGroup>
+						<mx:Button  label="搜索"  width="80" icon="@Embed(source='../WebContent/resources/common/tools/button_search_icon.png')"/>
+					
+					
 				</mx:HBox>
-				<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="false"   paddingLeft="10" paddingRight="10" paddingBottom="10" borderAlpha="0.2" verticalAlign="middle"   id="postedDG" pagecount="13">				
+				<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="false"   paddingLeft="10" paddingRight="10" paddingBottom="10" borderAlpha="0.2" verticalAlign="middle"   id="accountTable" pagecount="10">				
 					<component:mygridcolumns>
 
-						<mx:DataGridColumn textAlign="center" headerText="帐号" dataField="type" width="100">
+						<mx:DataGridColumn textAlign="center" headerText="帐号" dataField="name" width="100">
 						</mx:DataGridColumn>
-						<mx:DataGridColumn textAlign="center" headerText="邮箱" dataField="title" width="200">
+						<mx:DataGridColumn textAlign="center" headerText="邮箱" dataField="email" width="170">
+							<mx:itemRenderer>
+								<fx:Component>
+									<mx:Label text="{data.email==null?'未填写':data.email}"/>
+								</fx:Component>
+							</mx:itemRenderer>
 						</mx:DataGridColumn>
-						<mx:DataGridColumn textAlign="center" headerText="状态" dataField="type" width="100">
+						
+						<mx:DataGridColumn textAlign="center" headerText="创建日期" dataField="creationDate" width="120">
+							<mx:itemRenderer>
+								<fx:Component>
+									<mx:Label text="{this.outerDocument.formatDate(data.creationDate as Date)}"/>
+								</fx:Component>
+							</mx:itemRenderer>
 						</mx:DataGridColumn>
-						<mx:DataGridColumn textAlign="center" headerText="创建日期" dataField="department" width="100">
+						<mx:DataGridColumn textAlign="center" headerText="最后编辑日期" dataField="modifiedDate" width="120">
+							<mx:itemRenderer>
+								<fx:Component>
+									<mx:Label text="{this.outerDocument.formatDate(data.modifiedDate as Date)}"/>
+								</fx:Component>
+							</mx:itemRenderer>
 						</mx:DataGridColumn>
-						<mx:DataGridColumn textAlign="center" headerText="最后编辑日期" dataField="priority" width="100">
+						<mx:DataGridColumn textAlign="center" headerText="最后登陆日期" dataField="lastLoginTime" width="120">
+							<mx:itemRenderer>
+								<fx:Component>
+									<mx:Label text="{data.lastLoginTime==null?'从未登录':this.outerDocument.formatDate(data.lastLoginTime as Date)}"/>
+								</fx:Component>
+							</mx:itemRenderer>
 						</mx:DataGridColumn>
-						<mx:DataGridColumn textAlign="center" headerText="最后登陆日期" dataField="priority" width="100">
+						<mx:DataGridColumn textAlign="center" headerText="最后登陆IP" dataField="lastLoginIP" width="110">
+							<mx:itemRenderer>
+							<fx:Component>
+								<mx:Label text="{data.lastLoginIP==null?'从未登录':data.lastLoginIP}"/>
+							</fx:Component>
+							</mx:itemRenderer>
 						</mx:DataGridColumn>
-						<mx:DataGridColumn textAlign="center" headerText="最后登陆IP" dataField="priority" width="100">
+						<mx:DataGridColumn textAlign="center" headerText="状态" dataField="active" width="60">
+							<mx:itemRenderer>
+								<fx:Component>
+									<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+										<mx:Image source="{activeSource(data)}"  toolTip="{activeSourceTip(data)}" width="20" height="20">
+											<fx:Script>
+												<![CDATA[
+													
+													private function activeSource(data:Object):String{
+														if(data!=null){
+															if(data.active==true){
+																return "resources/common/ui/gou.png";
+															}
+															else {
+																return "resources/common/ui/cha.png";
+															}
+														}
+														return null;
+														
+													}
+													//提示信息
+													private function activeSourceTip(data:Object):String{
+														if(data!=null){
+															if(data.active==true){
+																return "正常使用中";
+															}else{
+																return "已冻结停用";
+															}
+														}
+														return null;
+													}
+												]]>
+											</fx:Script>
+										</mx:Image>
+									</mx:HBox>
+									
+								</fx:Component>
+							</mx:itemRenderer>
 						</mx:DataGridColumn>
 					</component:mygridcolumns>
 				</component:WlzxPageDataGrid>
