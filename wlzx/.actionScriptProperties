@@ -20,27 +20,29 @@
     <application path="system/component/checkTree/CheckTreeDemo.mxml"/>
   </applications>
   <modules>
-    <module application="flex_src/home.mxml" destPath="oa/task/personTask.swf" optimize="false" sourcePath="flex_src/oa/task/personTask.mxml"/>
-    <module application="flex_src/home.mxml" destPath="oa/notice/noticeSign.swf" optimize="false" sourcePath="flex_src/oa/notice/noticeSign.mxml"/>
-    <module application="flex_src/home.mxml" destPath="oa/notice/noticeList.swf" optimize="false" sourcePath="flex_src/oa/notice/noticeList.mxml"/>
-    <module application="flex_src/home.mxml" destPath="oa/task/staffTask.swf" optimize="false" sourcePath="flex_src/oa/task/staffTask.mxml"/>
-    <module application="flex_src/home.mxml" destPath="oa/schedule/staffSchedule.swf" optimize="false" sourcePath="flex_src/oa/schedule/staffSchedule.mxml"/>
-    <module application="flex_src/home.mxml" destPath="basic/authorization/roleAuthorization.swf" optimize="true" sourcePath="flex_src/basic/authorization/roleAuthorization.mxml"/>
-    <module application="flex_src/home.mxml" destPath="basic/index.swf" optimize="true" sourcePath="flex_src/basic/index.mxml"/>
-    <module application="flex_src/home.mxml" destPath="oa/index.swf" optimize="true" sourcePath="flex_src/oa/index.mxml"/>
     <module application="flex_src/home.mxml" destPath="oa/schedule/departmentSchedule.swf" optimize="false" sourcePath="flex_src/oa/schedule/departmentSchedule.mxml"/>
-    <module application="flex_src/home.mxml" destPath="oa/schedule/schoolSchedule.swf" optimize="false" sourcePath="flex_src/oa/schedule/schoolSchedule.mxml"/>
+    <module application="flex_src/home.mxml" destPath="basic/account/accountPw.swf" optimize="false" sourcePath="flex_src/basic/account/accountPw.mxml"/>
+    <module application="flex_src/home.mxml" destPath="basic/setting/roleSetting.swf" optimize="false" sourcePath="flex_src/basic/setting/roleSetting.mxml"/>
+    <module application="flex_src/home.mxml" destPath="oa/communication/publicAddressBook.swf" optimize="false" sourcePath="flex_src/oa/communication/publicAddressBook.mxml"/>
+    <module application="flex_src/home.mxml" destPath="oa/notice/noticeList.swf" optimize="false" sourcePath="flex_src/oa/notice/noticeList.mxml"/>
+    <module application="flex_src/home.mxml" destPath="oa/notice/noticeSign.swf" optimize="false" sourcePath="flex_src/oa/notice/noticeSign.mxml"/>
+    <module application="flex_src/home.mxml" destPath="basic/account/accountList.swf" optimize="false" sourcePath="flex_src/basic/account/accountList.mxml"/>
+    <module application="flex_src/home.mxml" destPath="basic/staff/staffList.swf" optimize="false" sourcePath="flex_src/basic/staff/staffList.mxml"/>
+    <module application="flex_src/home.mxml" destPath="oa/index.swf" optimize="true" sourcePath="flex_src/oa/index.mxml"/>
+    <module destPath="basic/place/placeList.swf" optimize="false" sourcePath="flex_src/basic/place/placeList.mxml"/>
+    <module application="flex_src/home.mxml" destPath="oa/indexMainHomeBody.swf" optimize="false" sourcePath="flex_src/oa/indexMainHomeBody.mxml"/>
+    <module application="flex_src/home.mxml" destPath="basic/authorization/roleAuthorization.swf" optimize="true" sourcePath="flex_src/basic/authorization/roleAuthorization.mxml"/>
+    <module application="flex_src/home.mxml" destPath="oa/schedule/staffSchedule.swf" optimize="false" sourcePath="flex_src/oa/schedule/staffSchedule.mxml"/>
+    <module application="flex_src/home.mxml" destPath="basic/setting/departmentSetting.swf" optimize="false" sourcePath="flex_src/basic/setting/departmentSetting.mxml"/>
+    <module application="flex_src/home.mxml" destPath="basic/index.swf" optimize="true" sourcePath="flex_src/basic/index.mxml"/>
     <module application="flex_src/home.mxml" destPath="system/index.swf" optimize="true" sourcePath="flex_src/system/index.mxml"/>
     <module application="flex_src/home.mxml" destPath="basic/authorization/departmentAuthorization.swf" optimize="false" sourcePath="flex_src/basic/authorization/departmentAuthorization.mxml"/>
-    <module application="flex_src/home.mxml" destPath="basic/setting/departmentSetting.swf" optimize="false" sourcePath="flex_src/basic/setting/departmentSetting.mxml"/>
-    <module application="flex_src/home.mxml" destPath="basic/setting/roleSetting.swf" optimize="false" sourcePath="flex_src/basic/setting/roleSetting.mxml"/>
-    <module application="flex_src/home.mxml" destPath="oa/indexMainHomeBody.swf" optimize="false" sourcePath="flex_src/oa/indexMainHomeBody.mxml"/>
+    <module application="flex_src/home.mxml" destPath="oa/task/staffTask.swf" optimize="false" sourcePath="flex_src/oa/task/staffTask.mxml"/>
+    <module destPath="oa/conference/conferenceList.swf" optimize="false" sourcePath="flex_src/oa/conference/conferenceList.mxml"/>
+    <module application="flex_src/home.mxml" destPath="oa/schedule/schoolSchedule.swf" optimize="false" sourcePath="flex_src/oa/schedule/schoolSchedule.mxml"/>
     <module application="flex_src/home.mxml" destPath="oa/notice/noticeRead.swf" optimize="false" sourcePath="flex_src/oa/notice/noticeRead.mxml"/>
-    <module application="flex_src/home.mxml" destPath="oa/communication/publicAddressBook.swf" optimize="false" sourcePath="flex_src/oa/communication/publicAddressBook.mxml"/>
+    <module application="flex_src/home.mxml" destPath="oa/task/personTask.swf" optimize="false" sourcePath="flex_src/oa/task/personTask.mxml"/>
     <module application="flex_src/home.mxml" destPath="oa/notice/postNotice.swf" optimize="false" sourcePath="flex_src/oa/notice/postNotice.mxml"/>
-    <module application="flex_src/home.mxml" destPath="basic/staff/staffList.swf" optimize="false" sourcePath="flex_src/basic/staff/staffList.mxml"/>
-    <module application="flex_src/home.mxml" destPath="basic/account/accountList.swf" optimize="false" sourcePath="flex_src/basic/account/accountList.mxml"/>
-    <module destPath="basic/account/accountPw.swf" optimize="false" sourcePath="flex_src/basic/account/accountPw.mxml"/>
   </modules>
   <buildCSSFiles/>
 </actionScriptProperties>
