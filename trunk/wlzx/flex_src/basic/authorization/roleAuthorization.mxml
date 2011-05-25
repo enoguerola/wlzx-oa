@@ -12,6 +12,9 @@
 			<mx:method name="saveRoleSystemAuthorization"  concurrency="last"  result="saveRoleSystemAuthorizationResult(event);" />
 
 		</mx:RemoteObject>
+		<mx:HTTPService id="reloadAuthHttp" url="reloadSpringSecurityAuthServlet" showBusyCursor="false" method="POST"  fault="systemFaultHandler(event);">  
+			
+		</mx:HTTPService>  
 	</fx:Declarations>
 	<fx:Style>
 		.customTabStyles {
@@ -119,8 +122,10 @@
 			}
 			private function saveRoleSystemAuthorizationResult(event:ResultEvent):void {
 				unLockWin();
-				if(event.result==true)
+				if(event.result==true){
 					Alert.show("岗位授权成功");
+					reloadAuthHttp.send();					
+				}
 			}
 			private function addTab(_system:SystemModel):void {
 				var child:HBox = new HBox();

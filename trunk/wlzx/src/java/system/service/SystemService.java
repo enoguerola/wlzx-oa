@@ -9,8 +9,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+
 
 import system.components.SecurityUserHolder;
 import system.dao.*;
@@ -33,7 +35,8 @@ import system.utils.CipherUtil;
  *
  */
 
-public class SystemService {
+public class SystemService{
+	
 	private SystemDAO systemDAO;
 	private MenuDAO menuDAO;
 	private ModuleDAO moduleDAO;
@@ -42,9 +45,7 @@ public class SystemService {
 	private DepartmentDAO departmentDAO;
 	private RoleDAO roleDAO;
 	private UserDAO userDAO;
-	/**
-	 * @param args
-	 */
+
 	public SystemDAO getSystemDAO() {
 		return systemDAO;
 	}
@@ -93,6 +94,7 @@ public class SystemService {
 	public void setUserDAO(UserDAO userDAO) {
 		this.userDAO = userDAO;
 	}
+	//获得当前登录用户所有权限集
 	public Set<DataAccessModeModel> getAuthorizations(){
 		Set<DataAccessModeModel> dams=new TreeSet<DataAccessModeModel>();
 //		UserModel user=userDAO.get("2");
@@ -108,6 +110,7 @@ public class SystemService {
 		
 		return  dams;
 	}
+	//获得当前登录用户某系统权限集
 	public SystemModel getAuthorizationMenusBySystem(String systemSymbol){
 		SystemModel authSystem=getSystemBySymbol(systemSymbol);
 		Set<DataAccessModeModel> dams=getAuthorizations();
@@ -131,11 +134,11 @@ public class SystemService {
 								 continue;
 							}
 							else {
-								if(menu.getParents()==null||menu.getParents().size()==0){
+//								if(menu.getParents()==null||menu.getParents().size()==0){
 									filterMenus.append(menu.getId()+";");									
-								}else{
-									 filterAuthorization(menu,dams);
-								}
+//								}else{
+//									 filterAuthorization(menu,dams);
+//								}
 									
 							}
 							
@@ -156,20 +159,20 @@ public class SystemService {
 	private void filterAuthorization(MenuModel authMenu,Set<DataAccessModeModel> dams){
 		StringBuilder filterMenus=new StringBuilder("");
 		for(MenuModel menu:authMenu.getChildren()){
-			if(menu.getChildren()==null||menu.getChildren().size()==0){
-				boolean filter=true;							
-				for(DataAccessModeModel dam:menu.getDams()){//用户权限含该菜单部分权限集则不用过滤
-					if(dams.contains(dam)){
-						filter=false;
-						break;
-					}
-				}
-				if(filter==false)continue;
-				filterMenus.append(menu.getId()+";");
-			}else{
+			if(menu.getChildren()!=null&&menu.getChildren().size()>0){
 				for(MenuModel subMenu:menu.getChildren()){
 					filterAuthorization(subMenu,dams);
 				}
+			}
+			boolean filter=true;							
+			for(DataAccessModeModel dam:menu.getDams()){//用户权限含该菜单部分权限集则不用过滤
+				if(dams.contains(dam)){
+					filter=false;
+					break;
+				}
+			}
+			if(filter==true){
+				filterMenus.append(menu.getId()+";");
 			}
 			
 		}
@@ -590,7 +593,7 @@ public class SystemService {
 		return sb.toString();	
 	}
 	
-	/*保存部门系统权限集*/
+	/*保存角色系统权限集*/
 	public boolean saveRoleSystemAuthorization(String roleId,String systemId,String adds,String removes){
 		System.out.println(adds);
 		System.out.println(removes);
@@ -612,6 +615,8 @@ public class SystemService {
 			}
 		}
 		roleDAO.merge(role);
+		
+
 		return true;
 	}
 	
@@ -656,5 +661,5 @@ public class SystemService {
 //		module.setSequence(1);
 //		systemService.moduleAdd(module,"menu","gweg");
 	}
-
+	
 }

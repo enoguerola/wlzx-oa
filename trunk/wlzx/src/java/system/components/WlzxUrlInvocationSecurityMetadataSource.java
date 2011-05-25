@@ -33,9 +33,8 @@ public class WlzxUrlInvocationSecurityMetadataSource
     private static Map<String, Collection<ConfigAttribute>> resourceMap = null;
 
   //加载所有资源与权限的关系
-    @SuppressWarnings("unused")
-	private void loadResourceDefine() {
-    	if(resourceMap == null) {  
+    public void loadResourceDefine() {
+//    	if(resourceMap == null) {  
     		 resourceMap = new HashMap<String, Collection<ConfigAttribute>>();
     		 //配置超级用户资源
     		 RoleModel superRole=SecurityUserHolder.getSuperRootRoleModel(); 		
@@ -65,7 +64,7 @@ public class WlzxUrlInvocationSecurityMetadataSource
 	                }  
 	            }  
     		 
-        }
+//        }
     }
 
     //返回所请求资源所需要的权限  

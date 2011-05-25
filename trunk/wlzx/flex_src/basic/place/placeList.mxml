@@ -68,16 +68,16 @@
 			}
 			public function formatDate(date:Date):String{
 				return CommonUtils.formatDate(date);
-
+				
 			}
-
-
+			
+			
 			protected function search():void
 			{
 				// TODO Auto-generated method stub
 				var account:String=search_account.text;
 				var state:Object=search_state.selectedItem.data;
-//				Alert.show(state+"");
+				//				Alert.show(state+"");
 				systemServiceRO.getUsersByCondition(account,state);
 			}
 			protected function activeAccount():void
@@ -119,124 +119,64 @@
 			
 		]]> 		
 	</fx:Script> 
-	<s:Panel width="100%" height="100%"  skinClass="system.skins.WlzxPanelSkin" title="帐号管理"  borderVisible="false" dropShadowVisible="false">
+	<s:Panel width="100%" height="100%"  skinClass="system.skins.WlzxPanelSkin" title="场所管理"  borderVisible="false" dropShadowVisible="false">
 		<s:VGroup width="100%" height="100%">
 			<s:HGroup verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12">
 				<mx:HBox width="100%" height="30" paddingLeft="20"  horizontalGap="0" backgroundColor="#C5E497"  verticalAlign="middle">
 					<mx:Label text="|"/>
-					<mx:LinkButton  label="激活" icon="@Embed(source='../WebContent/resources/common/tools/button_add_icon.png')"  click="activeAccount()"/>
+					<mx:LinkButton  label="新增" icon="@Embed(source='../WebContent/resources/common/tools/button_add_icon.png')"  click="activeAccount()"/>
 					<mx:Label text="|"/>
-					<mx:LinkButton  label="冻结" icon="@Embed(source='../WebContent/resources/common/tools/button_edit_icon.png')" click="freezeAccount()" />
+					<mx:LinkButton  label="编辑" icon="@Embed(source='../WebContent/resources/common/tools/button_edit_icon.png')" click="freezeAccount()" />
 					<mx:Label text="|"/>
-					<mx:LinkButton  label="密码重置" icon="@Embed(source='../WebContent/resources/common/tools/button_delete_icon.png')" click="resetAccountPW()"/>
+					<mx:LinkButton  label="删除" icon="@Embed(source='../WebContent/resources/common/tools/button_delete_icon.png')" click="resetAccountPW()"/>
 					<mx:Label text="|"/>
-					<mx:LinkButton  label="详细" icon="@Embed(source='../WebContent/resources/common/tools/button_detail_icon.png')" click="checkDetail()" />
+					<mx:LinkButton  label="查看使用记录" icon="@Embed(source='../WebContent/resources/common/tools/button_detail_icon.png')" click="checkDetail()" />
 					<mx:Label text="|"/>
 				</mx:HBox>
 			</s:HGroup>
 			<s:VGroup width="100%" height="100%" gap="10" verticalAlign="middle" horizontalAlign="center" >
 				<mx:HBox width="100%" height="60"   horizontalGap="10" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
-							<mx:FormHeading label="条件查询">
-								
-							</mx:FormHeading>
+					<mx:FormHeading label="条件查询">
 						
-						<s:HGroup verticalAlign="middle">
-							<s:Label  text="帐号" />
-							<component:AutoComplete id="search_account"  IsfocusInDropDown="true"  IsAutoComplete="true" styleName="ChineseFont">
-								
-							</component:AutoComplete>
-						</s:HGroup>	
-						<s:HGroup verticalAlign="middle">
-							<s:Label  text="状态" />
-							<mx:ComboBox id="search_state"  dataProvider="{status}" selectedIndex="0"  editable="false"/>
-						</s:HGroup>
-						<mx:Button  label="搜索"  width="80" icon="@Embed(source='../WebContent/resources/common/tools/button_search_icon.png')"  click="search()"/>
+					</mx:FormHeading>
+					
+					<s:HGroup verticalAlign="middle">
+						<s:Label  text="名称" />
+						<component:AutoComplete id="search_account"  IsfocusInDropDown="true"  IsAutoComplete="true" styleName="ChineseFont">
+							
+						</component:AutoComplete>
+					</s:HGroup>	
+					<s:HGroup verticalAlign="middle">
+						<s:Label  text="类型" />
+						<s:ComboBox id="search_state"  dataProvider="{status}" selectedIndex="0"/>
+					</s:HGroup>
+					<mx:Button  label="搜索"  width="80" icon="@Embed(source='../WebContent/resources/common/tools/button_search_icon.png')"  click="search()"/>
 					
 					
 				</mx:HBox>
 				<mx:HBox width="100%" height="100%" paddingLeft="10" paddingRight="10" paddingBottom="10">
-					<s:Panel width="100%" height="100%"  skinClass="system.skins.WlzxPanelSkin" title="查询结果"  cornerRadius="5" borderVisible="false" dropShadowVisible="false">
+					<s:Panel width="100%" height="100%"  skinClass="system.skins.WlzxPanelSkin" title="场所列表"  cornerRadius="5" borderVisible="false" dropShadowVisible="false">
 						
 						<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="false"   borderAlpha="0.2" verticalAlign="middle"   id="accountTable" pagecount="10"  >				
 							<component:mygridcolumns>
 								
-								<mx:DataGridColumn textAlign="center" headerText="帐号" dataField="name" width="100">
+								<mx:DataGridColumn textAlign="center" headerText="编号" dataField="name" width="100">
 								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="邮箱" dataField="email" width="170">
-									<mx:itemRenderer>
-										<fx:Component>
-											<mx:Label text="{data.email==null?'未填写':data.email}"/>
-										</fx:Component>
-									</mx:itemRenderer>
+								<mx:DataGridColumn textAlign="center" headerText="名称" dataField="name" width="100">
+								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="类型" dataField="name" width="100">
+								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="位置" dataField="name" width="100">
+								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="功能" dataField="name" width="100">
+								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="面积" dataField="name" width="100">
+								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="容纳人数" dataField="name" width="100">
+								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="操作" dataField="name" width="100">
 								</mx:DataGridColumn>
 								
-								<mx:DataGridColumn textAlign="center" headerText="创建日期" dataField="creationDate" width="120">
-									<mx:itemRenderer>
-										<fx:Component>
-											<mx:Label text="{this.outerDocument.formatDate(data.creationDate as Date)}"/>
-										</fx:Component>
-									</mx:itemRenderer>
-								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="最后编辑日期" dataField="modifiedDate" width="120">
-									<mx:itemRenderer>
-										<fx:Component>
-											<mx:Label text="{this.outerDocument.formatDate(data.modifiedDate as Date)}"/>
-										</fx:Component>
-									</mx:itemRenderer>
-								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="最后登陆日期" dataField="lastLoginTime" width="120">
-									<mx:itemRenderer>
-										<fx:Component>
-											<mx:Label text="{data.lastLoginTime==null?'从未登录':this.outerDocument.formatDate(data.lastLoginTime as Date)}"/>
-										</fx:Component>
-									</mx:itemRenderer>
-								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="最后登陆IP" dataField="lastLoginIP" width="110">
-									<mx:itemRenderer>
-										<fx:Component>
-											<mx:Label text="{data.lastLoginIP==null?'从未登录':data.lastLoginIP}"/>
-										</fx:Component>
-									</mx:itemRenderer>
-								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="状态" dataField="active" width="60">
-									<mx:itemRenderer>
-										<fx:Component>
-											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
-												<mx:Image source="{activeSource(data)}"  toolTip="{activeSourceTip(data)}" width="20" height="20">
-													<fx:Script>
-														<![CDATA[
-															
-															private function activeSource(data:Object):String{
-																if(data!=null){
-																	if(data.active==true){
-																		return "resources/common/ui/gou.png";
-																	}
-																	else {
-																		return "resources/common/ui/cha.png";
-																	}
-																}
-																return null;
-																
-															}
-															//提示信息
-															private function activeSourceTip(data:Object):String{
-																if(data!=null){
-																	if(data.active==true){
-																		return "正常使用中";
-																	}else{
-																		return "已冻结停用";
-																	}
-																}
-																return null;
-															}
-														]]>
-													</fx:Script>
-												</mx:Image>
-											</mx:HBox>
-											
-										</fx:Component>
-									</mx:itemRenderer>
-								</mx:DataGridColumn>
 							</component:mygridcolumns>
 						</component:WlzxPageDataGrid>
 					</s:Panel>
