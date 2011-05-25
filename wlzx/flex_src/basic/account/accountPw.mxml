@@ -6,16 +6,21 @@
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
 		<mx:StringValidator id="oldPW_stringValidator" source="{oldPW}" property="text"  requiredFieldError="原密码不能为空"/>
 		<mx:StringValidator id="newPW_stringValidator" source="{newPW}" property="text"  requiredFieldError="新密码不能为空"/>
-
+		<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+			<mx:method name="saveUserPW"  concurrency="last"  result="saveUserPW_resultHandler(event);" />
+	</mx:RemoteObject>
 	</fx:Declarations>
 	<fx:Script> 
 		
 		<![CDATA[  
 			
+			import mx.controls.*;
 			import mx.controls.Alert;
 			import mx.core.FlexGlobals;
+			import mx.events.*;
 			import mx.events.ValidationResultEvent;
 			import mx.managers.PopUpManager;
+			import mx.rpc.events.*;
 			import mx.validators.Validator;
 			
 			import system.component.WlzxLockWin;
@@ -26,11 +31,33 @@
 				validatorArr.push(oldPW_stringValidator);
 				validatorArr.push(newPW_stringValidator);
 			} 
+			private function systemFaultHandler(event:FaultEvent):void {
+				unLockWin();
+				Alert.show(event.fault.faultString, 'Error');
+			}
+			private function saveUserPW_resultHandler(event:ResultEvent):void {
+				unLockWin();
+				var result:int =event.result as int;
+				if(result==0){
+					Alert.show("系统错误","失败");
+				}else if(result==1){
+					Alert.show("原密码错误，请重试","失败");
+				}else if(result==2){
+					Alert.show("新密码设置成功","成功");
+				}
+				
+			}
 			private function validateForm(evt:MouseEvent):void {
 				var validatorErrorArray:Array = Validator.validateAll(validatorArr);;
 				var isValidForm:Boolean = validatorErrorArray.length == 0;
 				if (isValidForm) {
-					lockWin();
+					if(newPWConfirm.text!=newPW.text){
+						Alert.show("新密码两次输入不一致", 'Error');
+					}else{
+						lockWin();
+						systemServiceRO.saveUserPW(oldPW.text,newPW.text);
+					}
+					
 				} else {
 					var err:ValidationResultEvent;
 					var errorMessageArray:Array = [];
@@ -179,7 +206,7 @@
 				</mx:HBox>
 				
 			</mx:VBox>
-			<mx:HBox width="30%"   backgroundColor="#d7d6d6" height="100%"  paddingTop="10" paddingRight="10" paddingLeft="10" paddingBottom="10">
+			<mx:HBox width="30%"   backgroundColor="#d7d6d6" height="100%"  visible="false" paddingTop="10" paddingRight="10" paddingLeft="10" paddingBottom="10">
 				
 				<mx:Form  width="100%" height="100%"  verticalGap="0" paddingTop="0">
 					<mx:FormItemLabel text="一、密码长度"/>

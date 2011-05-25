@@ -3,16 +3,8 @@
 		 xmlns:wlzxComponent="*" width="400" height="300" xmlns:component="system.component.*" >
 <mx:Script>
 	 <![CDATA[
-	 /*
-	    自定义datagrid控件元素
-	     总共的页数
-	     当前页面的页码
-	    所有的记录数
-	      当前也的记录
-	      没有翻页的记录
-	     
-	  */
-	    import mx.collections.ArrayCollection;
+		 import mx.collections.ArrayCollection;
+		 import mx.events.ListEvent;
 	    [Bindable]
 	    private var mypagedata:ArrayCollection = new ArrayCollection();//当前也没种该显示的记录
 	    [Bindable]
@@ -22,19 +14,18 @@
 	    public var curpage:int;//当前的页码
 	    public var totalpage:int;//一共的页数
 	    public var totalcount:int;//一共的记录条数
-	      
+	    public var selectedRowId:String=null;  
 	    public function initdata(value:ArrayCollection):void{
-	      mydata = value;//将所有数据都赋值给mydata变量
-	      mypagedata.removeAll();//移出当前页面中所有数据记录
-	     
-	      if(mydata.length>0 && null!=mydata)
-	         {
-	                 totalcount = mydata.length;
-	                  totalpage = (totalcount + pagecount - 1) / pagecount;
-	                  setPager(0);
-	                 inputpage.minimum=1;
-	                  inputpage.maximum=totalpage;
-	            }else{
+		      mydata = value;//将所有数据都赋值给mydata变量
+		      mypagedata.removeAll();//移出当前页面中所有数据记录
+		     
+		      if(mydata.length>0 && null!=mydata){
+		                 totalcount = mydata.length;
+		                  totalpage = (totalcount + pagecount - 1) / pagecount;
+		                  setPager(0);
+		                 inputpage.minimum=1;
+		                  inputpage.maximum=totalpage;
+		      }else{
 	                     totalcount = 0;
 	                      totalpage = 0;
 	                      curpage = 0;
@@ -42,6 +33,7 @@
 	                       inputpage.maximum = 0;
 	                      pagedetail.text = "第0页/共0页   共0条纪录";
 	                  }
+			  selectedRowId=null;
 	      }
 	      public function setPager(value:int):void{
 	            if(value<0 || value>totalpage) return;
@@ -56,10 +48,17 @@
 	           pagedetail.text = "第"+temp+"页/共"+totalpage+"页   共条"+totalcount+"记录";
 	      }
 		
+
+		 protected function cudg_itemClickHandler(event:ListEvent):void
+		 {
+			 // TODO Auto-generated method stub
+			 selectedRowId=cudg.selectedItem.id;
+		 }
+
 	]]>
    </mx:Script>
 
-   <component:WlzxDataGrid id="cudg" dataProvider="{mypagedata}"  columns="{mygridcolumns}" width="100%" height="100%">
+   <component:WlzxDataGrid id="cudg" dataProvider="{mypagedata}"  columns="{mygridcolumns}" width="100%" height="100%" itemClick="cudg_itemClickHandler(event)">
 	   
 	 
 

@@ -15,6 +15,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import system.components.SecurityUserHolder;
 import system.dao.*;
 import system.entity.*;
+import system.utils.CipherUtil;
 
 
 
@@ -217,6 +218,47 @@ public class SystemService {
 	//获得所有用户
 	public List<UserModel> getAllUsers(){		
 		return userDAO.getAllUsers();
+	}
+	//按条件查询用户
+	public List<UserModel> getUsersByCondition(String account,Boolean status){
+		System.out.println(status);
+		return userDAO.getUsersByCondition(account,status);
+	}
+	//激活用户
+	public UserModel activeUser(String account){
+		UserModel user=userDAO.get(account);
+		user.setActive(true);
+		userDAO.saveOrUpdate(user);
+		return user;
+	}
+	//冻结用户
+	public UserModel freezeUser(String account){
+		UserModel user=userDAO.get(account);
+		user.setActive(false);
+		userDAO.saveOrUpdate(user);
+		return user;
+	}
+	//重置用户密码
+	public UserModel resetUserPW(String account){
+		UserModel user=userDAO.get(account);
+		user.setPwd(CipherUtil.encodeByMD5(user.getName()));
+		userDAO.saveOrUpdate(user);
+		return user;
+	}
+	//修改个人用户密码【0:失败；1：原密码错误；2：修改成功】
+	public int saveUserPW(String oldPW,String newPW){
+		UserModel user=SecurityUserHolder.getCurrentUser();
+		if(user==null)return 0;
+		else{
+			if(!user.getPwd().equals(CipherUtil.encodeByMD5(oldPW)))
+				return 1;
+			else{
+				user.setPwd(CipherUtil.encodeByMD5(newPW));
+				userDAO.saveOrUpdate(user);
+				return 2;
+			}
+		}
+		
 	}
 	//新增菜单
 	public MenuModel menuAdd(MenuModel menu,String parentType,String parentSymbol){

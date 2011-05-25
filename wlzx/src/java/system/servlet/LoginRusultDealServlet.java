@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.context.MessageSource;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.security.core.SpringSecurityMessageSource;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -56,11 +57,12 @@ public class LoginRusultDealServlet extends HttpServlet{
 			if(user.getActive()){
 				result="success";
 			}else{
-				result=messages.getMessage("UserDetailsService.expired");
+//				result=messages.getMessage("UserDetailsService.credentialsExpired");
+				result="用户帐号已经锁定,请联系管理员";
 			}
 		}else{
-			result=messages.getMessage("PasswordComparisonAuthenticator.badCredentials");
-			
+//			result=messages.getMessage("PasswordComparisonAuthenticator.badCredentials");
+			result="用户名密码错误";
 		}
 		System.out.println(result);
 		response.setCharacterEncoding("UTF-8");
@@ -95,4 +97,8 @@ public class LoginRusultDealServlet extends HttpServlet{
 			return null;
 		}
 	}
+	public void setMessageSource(MessageSource messageSource) {
+		this.messages = new MessageSourceAccessor(messageSource);
+	}
+
 }
