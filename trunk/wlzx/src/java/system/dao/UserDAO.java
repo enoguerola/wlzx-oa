@@ -83,5 +83,17 @@ public class UserDAO extends BaseDAOImpl<UserModel>{
 		List<UserModel> result = this.getListByCriteria(criteria);
 		return result;
 	}
+	@SuppressWarnings("unchecked")
+	public List<UserModel> getUsersByCondition(String account, Boolean status) {
+		DetachedCriteria criteria = DetachedCriteria.forClass(UserModel.class);
+		if(StringUtils.isNotEmpty(account)){
+			criteria.add(Restrictions.eq("name", account));
+		}
+		if(StringUtils.isNotEmpty(status)){
+			criteria.add(Restrictions.eq("active", status));
+		}
+		List<UserModel> result = this.getListByCriteria(criteria);
+		return result;
+	}
 
 }

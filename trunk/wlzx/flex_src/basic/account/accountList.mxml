@@ -1,13 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Module xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		   xmlns:s="library://ns.adobe.com/flex/spark" 
-		   xmlns:mx="library://ns.adobe.com/flex/mx" layout="vertical" width="100%" height="100%"   creationComplete="init();" xmlns:component="system.component.*">
+		   xmlns:mx="library://ns.adobe.com/flex/mx" layout="vertical" width="100%" height="100%"   creationComplete="init();" xmlns:component="system.component.*" >
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
 		<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+			<mx:method name="getUsersByCondition"  concurrency="last"  result="getUsersByCondition_resultHandler(event);" />
 			<mx:method name="getAllUsers"  concurrency="last"  result="getAllUsers_resultHandler(event);" />
+			<mx:method name="activeUser"  concurrency="last"  result="activeUser_resultHandler(event);" />
+			<mx:method name="freezeUser"  concurrency="last"  result="freezeUser_resultHandler(event);" />
+			<mx:method name="resetUserPW"  concurrency="last"  result="resetUserPW_resultHandler(event);" />
 		</mx:RemoteObject>
 	</fx:Declarations>
+	<fx:Style> 
+		.ChineseFont{ 
+			fontFamily:'Verdana','宋体'; 
+			fontSize:12; 
+		}
+		
+	</fx:Style>
 	<fx:Script> 
 		<![CDATA[  
 			import mx.collections.ArrayCollection;
@@ -20,14 +31,38 @@
 			import system.entity.UserModel;
 			import system.index;
 			import system.utils.CommonUtils;
-			private function init():void {
+			[Bindable] 
+			public var status:ArrayCollection = new ArrayCollection( 
+				[ {label:"全部", data:null},  
+					{label:"激活", data:true},  
+					{label:"冻结", data:false} ]); 
+			public var selectedAccount:String=null;
+			public var accounts:ArrayCollection = new ArrayCollection();
+			private function init():void {	
+				accounts.addItem("  ");
 				systemServiceRO.getAllUsers();
-				
+				search();
+			}
+			protected function getAllUsers_resultHandler(event:ResultEvent):void{
+				var users:ArrayCollection=event.result as ArrayCollection;
+				for(var i:int=0;i<users.length;i++){
+					accounts.addItem(users.getItemAt(i).name);
+				}
+				search_account.dataProvider=accounts;
 			}
 			private function systemFaultHandler(event:FaultEvent):void {
 				Alert.show(event.fault.faultString, 'Error');
 			}
-			protected function getAllUsers_resultHandler(event:ResultEvent):void{
+			private function activeUser_resultHandler(event:ResultEvent):void {
+				search();
+			}
+			private function freezeUser_resultHandler(event:ResultEvent):void {
+				search();
+			}
+			private function resetUserPW_resultHandler(event:ResultEvent):void {
+				Alert.show("密码重置成功");
+			}
+			protected function getUsersByCondition_resultHandler(event:ResultEvent):void{
 				var allList:ArrayCollection=event.result as ArrayCollection;
 				accountTable.initdata(allList);
 			}
@@ -36,6 +71,52 @@
 
 			}
 
+
+			protected function search():void
+			{
+				// TODO Auto-generated method stub
+				var account:String=search_account.text;
+				var state:Object=search_state.selectedItem.data;
+//				Alert.show(state+"");
+				systemServiceRO.getUsersByCondition(account,state);
+			}
+			protected function activeAccount():void
+			{
+				selectedAccount=accountTable.selectedRowId;
+				if(selectedAccount!=null){
+					systemServiceRO.activeUser(selectedAccount);
+				}else {
+					Alert.show("请先选择需要激活的帐号记录");
+				}
+			}
+			protected function freezeAccount():void
+			{
+				selectedAccount=accountTable.selectedRowId;
+				if(selectedAccount!=null){
+					systemServiceRO.freezeUser(selectedAccount);
+				}else {
+					Alert.show("请先选择需要冻结的帐号记录");
+				}
+			}
+			protected function resetAccountPW():void
+			{
+				selectedAccount=accountTable.selectedRowId;
+				if(selectedAccount!=null){
+					systemServiceRO.resetUserPW(selectedAccount);
+				}else {
+					Alert.show("请先选择需要重置密码的帐号记录");
+				}
+			}
+			protected function checkDetail():void
+			{
+				selectedAccount=accountTable.selectedRowId;
+				if(selectedAccount!=null){
+					Alert.show(selectedAccount);
+				}else {
+					Alert.show("请先选择需要查看详细信息的帐号记录");
+				}
+			}
+			
 		]]> 		
 	</fx:Script> 
 	<s:Panel width="100%" height="100%"  skinClass="system.skins.WlzxPanelSkin" title="帐号管理"  borderVisible="false" dropShadowVisible="false">
@@ -43,13 +124,13 @@
 			<s:HGroup verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12">
 				<mx:HBox width="100%" height="30" paddingLeft="20"  horizontalGap="0" backgroundColor="#C5E497"  verticalAlign="middle">
 					<mx:Label text="|"/>
-					<mx:LinkButton  label="激活" icon="@Embed(source='../WebContent/resources/common/tools/button_add_icon.png')" />
+					<mx:LinkButton  label="激活" icon="@Embed(source='../WebContent/resources/common/tools/button_add_icon.png')"  click="activeAccount()"/>
 					<mx:Label text="|"/>
-					<mx:LinkButton  label="冻结" icon="@Embed(source='../WebContent/resources/common/tools/button_edit_icon.png')" />
+					<mx:LinkButton  label="冻结" icon="@Embed(source='../WebContent/resources/common/tools/button_edit_icon.png')" click="freezeAccount()" />
 					<mx:Label text="|"/>
-					<mx:LinkButton  label="密码重置" icon="@Embed(source='../WebContent/resources/common/tools/button_delete_icon.png')" />
+					<mx:LinkButton  label="密码重置" icon="@Embed(source='../WebContent/resources/common/tools/button_delete_icon.png')" click="resetAccountPW()"/>
 					<mx:Label text="|"/>
-					<mx:LinkButton  label="详细" icon="@Embed(source='../WebContent/resources/common/tools/button_detail_icon.png')"  />
+					<mx:LinkButton  label="详细" icon="@Embed(source='../WebContent/resources/common/tools/button_detail_icon.png')" click="checkDetail()" />
 					<mx:Label text="|"/>
 				</mx:HBox>
 			</s:HGroup>
@@ -60,100 +141,107 @@
 							</mx:FormHeading>
 						
 						<s:HGroup verticalAlign="middle">
-							<s:Label  text="帐号"/>
-							<s:TextInput/>
+							<s:Label  text="帐号" />
+							<component:AutoComplete id="search_account"  IsfocusInDropDown="true"  IsAutoComplete="true" styleName="ChineseFont">
+								
+							</component:AutoComplete>
 						</s:HGroup>	
 						<s:HGroup verticalAlign="middle">
-							<s:Label  text="状态"/>
-							<s:ComboBox />
+							<s:Label  text="状态" />
+							<s:ComboBox id="search_state"  dataProvider="{status}" selectedIndex="0"/>
 						</s:HGroup>
-						<mx:Button  label="搜索"  width="80" icon="@Embed(source='../WebContent/resources/common/tools/button_search_icon.png')"/>
+						<mx:Button  label="搜索"  width="80" icon="@Embed(source='../WebContent/resources/common/tools/button_search_icon.png')"  click="search()"/>
 					
 					
 				</mx:HBox>
-				<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="false"   paddingLeft="10" paddingRight="10" paddingBottom="10" borderAlpha="0.2" verticalAlign="middle"   id="accountTable" pagecount="10">				
-					<component:mygridcolumns>
-
-						<mx:DataGridColumn textAlign="center" headerText="帐号" dataField="name" width="100">
-						</mx:DataGridColumn>
-						<mx:DataGridColumn textAlign="center" headerText="邮箱" dataField="email" width="170">
-							<mx:itemRenderer>
-								<fx:Component>
-									<mx:Label text="{data.email==null?'未填写':data.email}"/>
-								</fx:Component>
-							</mx:itemRenderer>
-						</mx:DataGridColumn>
+				<mx:HBox width="100%" height="100%" paddingLeft="10" paddingRight="10" paddingBottom="10">
+					<s:Panel width="100%" height="100%"  skinClass="system.skins.WlzxPanelSkin" title="查询结果"  cornerRadius="5" borderVisible="false" dropShadowVisible="false">
 						
-						<mx:DataGridColumn textAlign="center" headerText="创建日期" dataField="creationDate" width="120">
-							<mx:itemRenderer>
-								<fx:Component>
-									<mx:Label text="{this.outerDocument.formatDate(data.creationDate as Date)}"/>
-								</fx:Component>
-							</mx:itemRenderer>
-						</mx:DataGridColumn>
-						<mx:DataGridColumn textAlign="center" headerText="最后编辑日期" dataField="modifiedDate" width="120">
-							<mx:itemRenderer>
-								<fx:Component>
-									<mx:Label text="{this.outerDocument.formatDate(data.modifiedDate as Date)}"/>
-								</fx:Component>
-							</mx:itemRenderer>
-						</mx:DataGridColumn>
-						<mx:DataGridColumn textAlign="center" headerText="最后登陆日期" dataField="lastLoginTime" width="120">
-							<mx:itemRenderer>
-								<fx:Component>
-									<mx:Label text="{data.lastLoginTime==null?'从未登录':this.outerDocument.formatDate(data.lastLoginTime as Date)}"/>
-								</fx:Component>
-							</mx:itemRenderer>
-						</mx:DataGridColumn>
-						<mx:DataGridColumn textAlign="center" headerText="最后登陆IP" dataField="lastLoginIP" width="110">
-							<mx:itemRenderer>
-							<fx:Component>
-								<mx:Label text="{data.lastLoginIP==null?'从未登录':data.lastLoginIP}"/>
-							</fx:Component>
-							</mx:itemRenderer>
-						</mx:DataGridColumn>
-						<mx:DataGridColumn textAlign="center" headerText="状态" dataField="active" width="60">
-							<mx:itemRenderer>
-								<fx:Component>
-									<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
-										<mx:Image source="{activeSource(data)}"  toolTip="{activeSourceTip(data)}" width="20" height="20">
-											<fx:Script>
-												<![CDATA[
-													
-													private function activeSource(data:Object):String{
-														if(data!=null){
-															if(data.active==true){
-																return "resources/common/ui/gou.png";
+						<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="false"   borderAlpha="0.2" verticalAlign="middle"   id="accountTable" pagecount="10"  >				
+							<component:mygridcolumns>
+								
+								<mx:DataGridColumn textAlign="center" headerText="帐号" dataField="name" width="100">
+								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="邮箱" dataField="email" width="170">
+									<mx:itemRenderer>
+										<fx:Component>
+											<mx:Label text="{data.email==null?'未填写':data.email}"/>
+										</fx:Component>
+									</mx:itemRenderer>
+								</mx:DataGridColumn>
+								
+								<mx:DataGridColumn textAlign="center" headerText="创建日期" dataField="creationDate" width="120">
+									<mx:itemRenderer>
+										<fx:Component>
+											<mx:Label text="{this.outerDocument.formatDate(data.creationDate as Date)}"/>
+										</fx:Component>
+									</mx:itemRenderer>
+								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="最后编辑日期" dataField="modifiedDate" width="120">
+									<mx:itemRenderer>
+										<fx:Component>
+											<mx:Label text="{this.outerDocument.formatDate(data.modifiedDate as Date)}"/>
+										</fx:Component>
+									</mx:itemRenderer>
+								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="最后登陆日期" dataField="lastLoginTime" width="120">
+									<mx:itemRenderer>
+										<fx:Component>
+											<mx:Label text="{data.lastLoginTime==null?'从未登录':this.outerDocument.formatDate(data.lastLoginTime as Date)}"/>
+										</fx:Component>
+									</mx:itemRenderer>
+								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="最后登陆IP" dataField="lastLoginIP" width="110">
+									<mx:itemRenderer>
+										<fx:Component>
+											<mx:Label text="{data.lastLoginIP==null?'从未登录':data.lastLoginIP}"/>
+										</fx:Component>
+									</mx:itemRenderer>
+								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="状态" dataField="active" width="60">
+									<mx:itemRenderer>
+										<fx:Component>
+											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+												<mx:Image source="{activeSource(data)}"  toolTip="{activeSourceTip(data)}" width="20" height="20">
+													<fx:Script>
+														<![CDATA[
+															
+															private function activeSource(data:Object):String{
+																if(data!=null){
+																	if(data.active==true){
+																		return "resources/common/ui/gou.png";
+																	}
+																	else {
+																		return "resources/common/ui/cha.png";
+																	}
+																}
+																return null;
+																
 															}
-															else {
-																return "resources/common/ui/cha.png";
+															//提示信息
+															private function activeSourceTip(data:Object):String{
+																if(data!=null){
+																	if(data.active==true){
+																		return "正常使用中";
+																	}else{
+																		return "已冻结停用";
+																	}
+																}
+																return null;
 															}
-														}
-														return null;
-														
-													}
-													//提示信息
-													private function activeSourceTip(data:Object):String{
-														if(data!=null){
-															if(data.active==true){
-																return "正常使用中";
-															}else{
-																return "已冻结停用";
-															}
-														}
-														return null;
-													}
-												]]>
-											</fx:Script>
-										</mx:Image>
-									</mx:HBox>
-									
-								</fx:Component>
-							</mx:itemRenderer>
-						</mx:DataGridColumn>
-					</component:mygridcolumns>
-				</component:WlzxPageDataGrid>
-					
+														]]>
+													</fx:Script>
+												</mx:Image>
+											</mx:HBox>
+											
+										</fx:Component>
+									</mx:itemRenderer>
+								</mx:DataGridColumn>
+							</component:mygridcolumns>
+						</component:WlzxPageDataGrid>
+					</s:Panel>
+				</mx:HBox>
+				
 			</s:VGroup>
 		</s:VGroup>
 		

@@ -42,7 +42,7 @@ public class UserModel  extends BaseModel implements UserDetails{
 	private Set<UserModel> leaders=new TreeSet<UserModel>();//直属领导
 	private Set<RoleModel> roles=new TreeSet<RoleModel>();//所属角色
 	private Set<DepartmentModel> departments=new TreeSet<DepartmentModel>();//用户所在部门集
-	private boolean active;
+	private Boolean active;
 	public String getPwd() {
 		return pwd;
 	}
@@ -147,10 +147,10 @@ public class UserModel  extends BaseModel implements UserDetails{
 	public void setDepartments(Set<DepartmentModel> departments) {
 		this.departments = departments;
 	}
-	public boolean getActive() {
+	public Boolean getActive() {
 		return active;
 	}
-	public void setActive(boolean active) {
+	public void setActive(Boolean active) {
 		this.active = active;
 	}
 	

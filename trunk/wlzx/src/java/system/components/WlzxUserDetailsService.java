@@ -27,9 +27,10 @@ public class WlzxUserDetailsService implements UserDetailsService{
 	                logger.error(message);  
 	                throw new UsernameNotFoundException(message);  
 	            }  
-	            else if(SecurityUserHolder.isSuperRootUser(userAccount))
-	            	return SecurityUserHolder.getSuperRootUserModel();
-	            else return userModel;
+	            else if(SecurityUserHolder.isSuperRootUser(userAccount)){
+	            	userModel.getRoles().add(SecurityUserHolder.getSuperRootRoleModel());
+	            }
+	           return userModel;
 	}
 //	
 //	    //取得用户的权限  
