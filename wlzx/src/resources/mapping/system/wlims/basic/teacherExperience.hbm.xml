@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="system.wlims.basic.entity.teacher.TeacherExperience" table="basic_teacher_work_experience">
+		<id name="id">
+			<column name="experience_id" />
+			<generator class="native" />
+		</id>
+		<property name="company" type="string">
+			<column name="experience_company" />
+		</property>
+		<property name="position" type="string">
+			<column name="experience_position" />
+		</property>
+		<property name="startDate" type="java.sql.Date">
+			<column name="experience_start_date" />
+		</property>
+		<property name="endDate" type="java.sql.Date">
+			<column name="experience_end_date" />
+		</property>
+		<many-to-one class="system.wlims.basic.entity.teacher.TeacherModel" 
+			name="teacher" 
+			column="teacher_id" lazy="proxy"/>	
+	</class>
+</hibernate-mapping>

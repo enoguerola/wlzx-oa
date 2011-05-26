@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="system.wlims.basic.entity.teacher.TeacherRelation" table="basic_teacher_social_relation">
+		<id name="id">
+			<column name="relation_id" />
+			<generator class="native" />
+		</id>
+		<property name="name" type="string">
+			<column name="relation_name" />
+		</property>
+		<property name="relation" type="string">
+			<column name="relation_with" />
+		</property>
+		<property name="company" type="string">
+			<column name="relation_company" />
+		</property>
+		<property name="phone" type="string">
+			<column name="relation_phone" />
+		</property>
+		<many-to-one class="system.wlims.basic.entity.teacher.TeacherModel" 
+			name="teacher" 
+			column="teacher_id" lazy="proxy"/>		
+	</class>
+</hibernate-mapping>
