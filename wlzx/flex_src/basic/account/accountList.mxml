@@ -150,7 +150,7 @@
 							<s:Label  text="状态" />
 							<mx:ComboBox id="search_state"  dataProvider="{status}" selectedIndex="0"  editable="false"/>
 						</s:HGroup>
-						<mx:Button  label="搜索"  width="80" icon="@Embed(source='../WebContent/resources/common/tools/button_search_icon.png')"  click="search()"/>
+						<mx:Button  label="搜索"  width="80"   click="search()"/>
 					
 					
 				</mx:HBox>

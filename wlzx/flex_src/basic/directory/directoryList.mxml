@@ -1,8 +1,204 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Module xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		   xmlns:s="library://ns.adobe.com/flex/spark" 
-		   xmlns:mx="library://ns.adobe.com/flex/mx" layout="vertical" width="100%" height="100%">
+		   xmlns:mx="library://ns.adobe.com/flex/mx" layout="vertical" width="100%" height="100%"  creationComplete="init();"   xmlns:component="system.component.*" >
 	<fx:Declarations>
+		<mx:StringValidator id="name_stringValidator" source="{itemName}" property="text"  requiredFieldError="字典条目名称不能为空"/>
+		<mx:StringValidator id="value_stringValidator" source="{value}" property="text"  requiredFieldError="字典条目值不能为空"/>
+		<mx:NumberValidator id="sequence_numberValidator" source="{sequence}" required="true" property="text" integerError="请输入整数值，默认排序升序" domain="int"/>
+
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+		<mx:RemoteObject id="directoryServiceRO" destination="directoryServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+			<mx:method name="getDirectoryItemsByType"  concurrency="last"  result="getDirectoryItemsByType_resultHandler(event);" />
+			<mx:method name="saveDirectoryItem"  concurrency="last"  result="saveDirectoryItem_resultHandler(event);" />
+			<mx:method name="deleteDirectoryItem"  concurrency="last"  result="deleteDirectoryItem_resultHandler(event);" />
+		</mx:RemoteObject>
 	</fx:Declarations>
+	
+	<fx:Script> 
+		<![CDATA[  
+			import mx.collections.ArrayCollection;
+			import mx.controls.*;
+			import mx.events.*;
+			import mx.events.ValidationResultEvent;
+			import mx.rpc.events.*;
+			import mx.validators.Validator;
+			
+			import spark.events.TextOperationEvent;
+			
+			import system.utils.CommonUtils;
+			private var validatorArr:Array;
+			public var directoryDb:ArrayCollection = new ArrayCollection( 
+				[
+					{label:"场所类型", data:"场所类型"} ,
+					{label:"教学楼", data:"教学楼"}
+				]); 
+			private function init():void {
+				validatorArr = new Array();
+				validatorArr.push(name_stringValidator);
+				validatorArr.push(value_stringValidator);
+				validatorArr.push(sequence_numberValidator);
+				type.dataProvider=directoryDb;
+				search();
+			}
+			private function systemFaultHandler(event:FaultEvent):void {
+				Alert.show(event.fault.faultString, 'Error');
+			}
+			private function getDirectoryItemsByType_resultHandler(event:ResultEvent):void{
+				var allList:ArrayCollection=event.result as ArrayCollection;
+				directoryTable.initdata(allList);
+			}
+			private function saveDirectoryItem_resultHandler(event:ResultEvent):void{
+				itemId.text="";
+				itemName.text="";
+				value.text="";
+				sequence.text="";
+				search();
+			}
+			private function deleteDirectoryItem_resultHandler(event:ResultEvent):void{
+				itemId.text="";
+				itemName.text="";
+				value.text="";
+				sequence.text="";
+				search();
+			}
+			
+			protected function search():void
+			{
+				var	chooseType:Object=type.selectedItem.data;
+				directoryServiceRO.getDirectoryItemsByType(chooseType);
+			}
+			public function formatDate(date:Date):String{
+				return CommonUtils.formatDate(date);
+				
+			}
+
+			protected function save_clickHandler(event:MouseEvent):void
+			{
+				var validatorErrorArray:Array = Validator.validateAll(validatorArr);;
+				var isValidForm:Boolean = validatorErrorArray.length == 0;
+				if (isValidForm) {
+					var	chooseType:Object=type.selectedItem.data;
+					directoryServiceRO.saveDirectoryItem(itemId.text,chooseType,itemName.text,value.text,sequence.text);
+				} else {
+					var err:ValidationResultEvent;
+					var errorMessageArray:Array = [];
+					for each (err in validatorErrorArray) {
+						var errField:String = FormItem(err.currentTarget.source.parent).label
+						errorMessageArray.push(errField + ": " + err.message);
+					}
+					Alert.show(errorMessageArray.join("\n\n"), "请按照以下错误提示信息重新输入", Alert.OK);
+				}
+			
+			}
+			public function enterEdit(item_id:String,item_name:String,item_value:String,item_sequence:String):void{
+				itemId.text=item_id;
+				itemName.text=item_name;
+				value.text=item_value;
+				sequence.text=item_sequence;
+			}
+			public function deleteDirectoryItem(item_id:String):void{
+				Alert.show("你确定要删除该字典条目吗?","确认删除",Alert.NO|Alert.YES,null,function(event:CloseEvent):void{
+					if(event.detail == Alert.YES)
+						directoryServiceRO.deleteDirectoryItem(item_id);
+				},null,Alert.NO);
+				
+			}
+
+			protected function itemName_changingHandler(event:TextOperationEvent):void
+			{
+				value.text=itemName.text;
+			}
+
+
+
+
+			protected function itemName_changeHandler(event:TextOperationEvent):void
+			{
+				value.text=itemName.text;
+			}
+
+		]]> 		
+	</fx:Script> 
+	<s:Panel width="100%" height="100%"  skinClass="system.skins.WlzxPanelSkin" title="数据字典"  borderVisible="false" dropShadowVisible="false">
+		<s:HGroup width="100%" height="100%">
+			<s:HGroup verticalAlign="middle" horizontalAlign="center" height="100%" width="250" fontSize="12">
+				<mx:VBox width="100%" height="100%"    verticalAlign="top" horizontalAlign="center">
+					<mx:Form width="100%"  verticalGap="20">
+						<mx:FormHeading label="字典库" fontSize="15" width="100%" textAlign="left"/>
+						<mx:FormItem  visible="false">
+							<s:TextInput  id="itemId" text=""/>					
+						</mx:FormItem>
+						<mx:FormItem label="字典类型 " width="100%" required="true">
+							<mx:ComboBox  id="type" labelField="label"  width="120" selectedIndex="0" change="search();" />						
+						</mx:FormItem>
+						
+						<mx:FormItem label="条目名称" required="true">
+							<s:TextInput id="itemName"     change="itemName_changeHandler(event)"/>
+						</mx:FormItem>
+						<mx:FormItem label="条目值" required="true">
+							<s:TextInput id="value"/>
+						</mx:FormItem>
+						<mx:FormItem label="显示顺序" required="true">
+							<s:TextInput  id="sequence" text="0"/>
+						</mx:FormItem>
+						<mx:FormItem  horizontalAlign="right" width="100%">
+							<mx:Button  label="保存"  click="save_clickHandler(event)"/>
+						</mx:FormItem>
+					</mx:Form>
+					
+					
+				</mx:VBox>
+			</s:HGroup>
+			<s:VGroup width="100%" height="100%" gap="10" verticalAlign="middle" horizontalAlign="center" >
+				
+				<s:Panel width="100%" height="100%"  skinClass="system.skins.WlzxPanelSkin" title="字典项"  cornerRadius="5" borderVisible="false" dropShadowVisible="false">
+					
+					<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="false"   borderAlpha="0.2" verticalAlign="middle"   id="directoryTable" pagecount="15"  >				
+						<component:mygridcolumns>
+							<mx:DataGridColumn textAlign="center" headerText="字典类型" dataField="type" width="100">
+							</mx:DataGridColumn>
+							<mx:DataGridColumn textAlign="center" headerText="条目名称" dataField="name" width="100">
+							</mx:DataGridColumn>
+							<mx:DataGridColumn textAlign="center" headerText="条目值" dataField="value" width="100">
+							</mx:DataGridColumn>							
+							<mx:DataGridColumn textAlign="center" headerText="创建日期" dataField="creationDate" width="120">
+								<mx:itemRenderer>
+									<fx:Component>
+										<mx:Label text="{this.outerDocument.formatDate(data.creationDate as Date)}"/>
+									</fx:Component>
+								</mx:itemRenderer>
+							</mx:DataGridColumn>
+							<mx:DataGridColumn textAlign="center" headerText="最后编辑日期" dataField="modifiedDate" width="120">
+								<mx:itemRenderer>
+									<fx:Component>
+										<mx:Label text="{this.outerDocument.formatDate(data.modifiedDate as Date)}"/>
+									</fx:Component>
+								</mx:itemRenderer>
+							</mx:DataGridColumn>
+							<mx:DataGridColumn textAlign="center" headerText="编辑" dataField="modifiedDate"  width="60">
+								<mx:itemRenderer>
+									<fx:Component>
+										<mx:LinkButton  label="[编辑]"   click="{this.outerDocument.enterEdit(data.id,data.name,data.value,data.sequence);}">											
+										</mx:LinkButton>										
+									</fx:Component>
+								</mx:itemRenderer>
+							</mx:DataGridColumn>
+							<mx:DataGridColumn textAlign="center" headerText="删除" dataField="modifiedDate" width="60">
+								<mx:itemRenderer>
+									<fx:Component>
+										<mx:LinkButton  label="[删除]"   click="{this.outerDocument.deleteDirectoryItem(data.id);}">											
+										</mx:LinkButton>										
+									</fx:Component>
+								</mx:itemRenderer>
+							</mx:DataGridColumn>
+						</component:mygridcolumns>
+					</component:WlzxPageDataGrid>
+				</s:Panel>
+				
+			</s:VGroup>
+		</s:HGroup>
+		
+		
+	</s:Panel>
 </mx:Module>
