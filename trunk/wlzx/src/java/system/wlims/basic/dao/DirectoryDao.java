@@ -1,5 +1,8 @@
 package system.wlims.basic.dao;
 
-public interface DirectoryDao {
+import system.BaseDAO;
+import system.wlims.basic.entity.DirectoryModel;
+
+public interface DirectoryDao extends BaseDAO<DirectoryModel>{
 
 }

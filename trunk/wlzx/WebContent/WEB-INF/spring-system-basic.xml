@@ -16,27 +16,20 @@
 	<flex:message-broker />
 
 	<!-- 配置JDBC、Hibernate -->
-	<bean id="basicPropertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-		<property name="locations">
-			<list>
-				<value>classpath:config/system/wlims/basic/jdbc.properties</value>
-				<value>classpath:config/system/wlims/basic/hibernate.properties</value>
-			</list>
-		</property>
-	</bean>
+	
 
 	<bean id="basicDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-		<property name="driverClassName" value="${jdbc.driverClassName}" />
-		<property name="url" value="${jdbc.url}" />
-		<property name="username" value="${jdbc.username}" />
-		<property name="password" value="${jdbc.password}" />
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://localhost:3306/wlzx_basic?useUnicode=true&amp;characterEncoding=utf8&amp;zeroDateTimeBehavior=convertToNull" />
+		<property name="username" value="root" />
+		<property name="password" value="root" />
 	</bean>
 
 	<bean id="basicHibernateProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
 		<property name="properties">
 			<props>
-				<prop key="hibernate.dialect">${hibernate.dialect}</prop>
-				<prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+				<prop key="hibernate.show_sql">true</prop>
 				<prop key="jdbc.fetch_size">50</prop>
 				<prop key="jdbc.batch_size">25</prop>
 				<prop key="hibernate.query.substitutions">true 1,false 0</prop>
@@ -68,7 +61,7 @@
 		</tx:attributes>
 	</tx:advice>
 	<aop:config>
-		<aop:pointcut id="serviceOperation" expression="execution(* com.sample.service.*.*(..))" />
-		<aop:advisor advice-ref="basicTxAdvice" pointcut-ref="serviceOperation" />
+		<aop:pointcut id="basicOperation" expression="execution(* system.wlims.basic.service.*.*(..))" />
+		<aop:advisor advice-ref="basicTxAdvice" pointcut-ref="basicOperation" />
 	</aop:config>
 </beans>

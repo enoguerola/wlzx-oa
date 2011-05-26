@@ -1,10 +1,8 @@
 package system.wlims.basic.entity;
 
-import java.util.Set;
-import java.util.TreeSet;
 
-import system.entity.BaseModel;
-import system.entity.SystemModel;
+import java.util.Date;
+
 
 public class DirectoryModel extends BaseModel {
 
@@ -12,12 +10,13 @@ public class DirectoryModel extends BaseModel {
 	 * 
 	 */
 	private static final long serialVersionUID = -917530983550918568L;
+	private int sequence;
+	private String name;
 	private String value;
 	private String type;
-	private String description;
 	private String extraValue;
-	private Set<SystemModel> children=new TreeSet<SystemModel>();//子字典集
-	private Set<SystemModel> parents=new TreeSet<SystemModel>();//父亲字典集 
+	private Date creationDate;
+	private Date modifiedDate;
 	public String getValue() {
 		return value;
 	}
@@ -30,28 +29,40 @@ public class DirectoryModel extends BaseModel {
 	public void setType(String type) {
 		this.type = type;
 	}
-	public String getDescription() {
-		return description;
-	}
-	public void setDescription(String description) {
-		this.description = description;
-	}
+	
 	public String getExtraValue() {
 		return extraValue;
 	}
 	public void setExtraValue(String extraValue) {
 		this.extraValue = extraValue;
 	}
-	public Set<SystemModel> getChildren() {
-		return children;
+
+	public int getSequence() {
+		return sequence;
 	}
-	public void setChildren(Set<SystemModel> children) {
-		this.children = children;
+	public void setSequence(int sequence) {
+		this.sequence = sequence;
 	}
-	public Set<SystemModel> getParents() {
-		return parents;
+	public String getName() {
+		return name;
 	}
-	public void setParents(Set<SystemModel> parents) {
-		this.parents = parents;
+	public void setName(String name) {
+		this.name = name;
 	}
+	public Date getCreationDate() {
+		return creationDate;
+	}
+
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
+	}
+
+	public Date getModifiedDate() {
+		return modifiedDate;
+	}
+
+	public void setModifiedDate(Date modifiedDate) {
+		this.modifiedDate = modifiedDate;
+	}
+
 }
