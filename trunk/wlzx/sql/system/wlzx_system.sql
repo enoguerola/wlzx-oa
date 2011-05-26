@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2011 年 05 月 23 日 18:31
+-- 生成日期: 2011 年 05 月 26 日 09:46
 -- 服务器版本: 5.0.91
 -- PHP 版本: 5.2.13
 
@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_data_access_mode` (
   `modified_date` timestamp NOT NULL default '0000-00-00 00:00:00' on update CURRENT_TIMESTAMP,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `symbol` (`symbol`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=25 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=28 ;
 
 --
 -- 转存表中的数据 `wlzx_system_data_access_mode`
@@ -93,7 +93,9 @@ INSERT INTO `wlzx_system_data_access_mode` (`id`, `name`, `symbol`, `sequence`, 
 (21, '全部数据', 'oa_department_set_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-21 00:00:00', '2011-05-22 15:05:30'),
 (22, '全部数据', 'oa_role_set_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-21 00:00:00', '2011-05-22 15:05:30'),
 (23, '全部数据', 'oa_department_authoriation_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-21 00:00:00', '2011-05-22 15:05:30'),
-(24, '全部数据', 'oa_role_authorization_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-21 00:00:00', '2011-05-22 15:05:30');
+(24, '全部数据', 'oa_role_authorization_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-21 00:00:00', '2011-05-22 15:05:30'),
+(25, '全部数据', 'oa_pw_change_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-23 00:00:00', '2011-05-23 23:11:11'),
+(27, '全部数据', 'places_manage_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-25 00:00:00', '2011-05-25 16:19:12');
 
 -- --------------------------------------------------------
 
@@ -254,7 +256,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_menu` (
   `modified_date` timestamp NOT NULL default '0000-00-00 00:00:00' on update CURRENT_TIMESTAMP,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `symbol` (`symbol`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=40 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=42 ;
 
 --
 -- 转存表中的数据 `wlzx_system_menu`
@@ -292,13 +294,15 @@ INSERT INTO `wlzx_system_menu` (`id`, `name`, `symbol`, `sequence`, `detail`, `m
 (30, '帐号数据', 'basic_data_account', 1, '', '', '2011-05-21 00:00:00', '2011-05-21 09:27:24'),
 (31, '人事管理', 'human_resource', 4, '', '', '2011-05-21 00:00:00', '2011-05-21 09:40:29'),
 (32, '教师档案', 'staff_file', 0, '', '', '2011-05-21 00:00:00', '2011-05-21 09:44:43'),
-(33, '帐号管理', 'system_account', 0, '', '', '2011-05-21 00:00:00', '2011-05-21 09:46:20'),
+(33, '帐号管理', 'system_account', 1, '', '', '2011-05-21 00:00:00', '2011-05-21 09:46:20'),
 (34, '发文管理', 'document_dispatch ', 1, '', '', '2011-05-21 00:00:00', '2011-05-21 09:48:55'),
 (35, '收文管理', 'document_receipt ', 2, '', '', '2011-05-21 00:00:00', '2011-05-21 09:49:28'),
 (36, '部门设置', 'oa_department_set', 1, '', '', '2011-05-21 00:00:00', '2011-05-21 10:05:48'),
 (37, '岗位设置', 'oa_role_set', 2, '', '', '2011-05-21 00:00:00', '2011-05-21 10:06:23'),
 (38, '部门授权', 'oa_department_authorization', 2, '', '', '2011-05-21 00:00:00', '2011-05-21 11:20:42'),
-(39, '岗位授权', 'oa_role_authorization', 3, '', '', '2011-05-21 00:00:00', '2011-05-21 11:20:42');
+(39, '岗位授权', 'oa_role_authorization', 3, '', '', '2011-05-21 00:00:00', '2011-05-21 11:20:42'),
+(40, '密码修改', 'oa_pw_change', 0, '', '', '2011-05-23 00:00:00', '2011-05-23 22:45:32'),
+(41, '场所管理', 'places_manage', 0, '', '', '2011-05-25 00:00:00', '2011-05-25 10:16:25');
 
 -- --------------------------------------------------------
 
@@ -311,7 +315,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_menu_module_relationship` (
   `menu_id` bigint(20) NOT NULL,
   `module_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=24 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=27 ;
 
 --
 -- 转存表中的数据 `wlzx_system_menu_module_relationship`
@@ -339,7 +343,9 @@ INSERT INTO `wlzx_system_menu_module_relationship` (`id`, `menu_id`, `module_id`
 (20, 36, 20),
 (21, 37, 21),
 (22, 38, 22),
-(23, 39, 23);
+(23, 39, 23),
+(24, 40, 28),
+(26, 41, 30);
 
 -- --------------------------------------------------------
 
@@ -380,7 +386,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_menu_treeship` (
   `parent_id` bigint(20) NOT NULL,
   `child_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=35 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=37 ;
 
 --
 -- 转存表中的数据 `wlzx_system_menu_treeship`
@@ -418,7 +424,9 @@ INSERT INTO `wlzx_system_menu_treeship` (`id`, `parent_id`, `child_id`) VALUES
 (31, 17, 36),
 (32, 17, 37),
 (33, 18, 38),
-(34, 18, 39);
+(34, 18, 39),
+(35, 18, 40),
+(36, 17, 41);
 
 -- --------------------------------------------------------
 
@@ -437,7 +445,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_module` (
   `url` varchar(500) default NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `symbol` (`symbol`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=24 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=31 ;
 
 --
 -- 转存表中的数据 `wlzx_system_module`
@@ -465,7 +473,9 @@ INSERT INTO `wlzx_system_module` (`id`, `name`, `symbol`, `sequence`, `detail`, 
 (20, '部门设置主模块', 'oa_department_set_main', 0, '', '2011-05-21 00:00:00', '2011-05-21 14:06:34', 'basic/setting/departmentSetting.swf'),
 (21, '岗位设置主模块', 'oa_role_set_main', 0, '', '2011-05-21 00:00:00', '2011-05-21 10:09:11', 'basic/setting/roleSetting.swf'),
 (22, '部门授权主模块', 'oa_department_authoriation_main', 0, '', '2011-05-21 00:00:00', '2011-05-21 14:02:58', 'basic/authorization/departmentAuthorization.swf'),
-(23, '岗位授权主模块', 'oa_role_authorization_main', 0, '', '2011-05-21 00:00:00', '2011-05-21 14:04:54', 'basic/authorization/roleAuthorization.swf');
+(23, '岗位授权主模块', 'oa_role_authorization_main', 0, '', '2011-05-21 00:00:00', '2011-05-21 14:04:54', 'basic/authorization/roleAuthorization.swf'),
+(28, '密码修改主模块', 'oa_pw_change_main', 0, '', '2011-05-23 00:00:00', '2011-05-23 23:11:11', 'basic/account/accountPw.swf'),
+(30, '场所管理主模块', 'places_manage_main', 0, '', '2011-05-25 00:00:00', '2011-05-25 16:19:12', 'basic/place/placeList.swf');
 
 -- --------------------------------------------------------
 
@@ -478,7 +488,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_module_operation_relationship` (
   `module_id` bigint(20) NOT NULL,
   `operation_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=25 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=28 ;
 
 --
 -- 转存表中的数据 `wlzx_system_module_operation_relationship`
@@ -508,7 +518,9 @@ INSERT INTO `wlzx_system_module_operation_relationship` (`id`, `module_id`, `ope
 (21, 20, 21),
 (22, 21, 22),
 (23, 22, 23),
-(24, 23, 24);
+(24, 23, 24),
+(25, 28, 25),
+(27, 30, 27);
 
 -- --------------------------------------------------------
 
@@ -546,7 +558,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_operation` (
   `modified_date` timestamp NOT NULL default '0000-00-00 00:00:00' on update CURRENT_TIMESTAMP,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `symbol` (`symbol`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=25 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=28 ;
 
 --
 -- 转存表中的数据 `wlzx_system_operation`
@@ -574,7 +586,9 @@ INSERT INTO `wlzx_system_operation` (`id`, `name`, `symbol`, `sequence`, `rs_typ
 (21, '页面访问', 'oa_department_set_main@defaultVisit@', 0, 'URL', '/basic/setting/departmentSetting.swf*', NULL, '2011-05-21 00:00:00', '2011-05-22 15:06:06'),
 (22, '页面访问', 'oa_role_set_main@defaultVisit@', 0, 'URL', '/basic/setting/roleSetting.swf*', NULL, '2011-05-21 00:00:00', '2011-05-22 15:06:06'),
 (23, '页面访问', 'oa_department_authoriation_main@defaultVisit@', 0, 'URL', '/basic/authorization/departmentAuthorization.swf*', NULL, '2011-05-21 00:00:00', '2011-05-22 15:06:06'),
-(24, '页面访问', 'oa_role_authorization_main@defaultVisit@', 0, 'URL', '/basic/authorization/roleAuthorization.swf*', NULL, '2011-05-21 00:00:00', '2011-05-22 15:06:06');
+(24, '页面访问', 'oa_role_authorization_main@defaultVisit@', 0, 'URL', '/basic/authorization/roleAuthorization.swf*', NULL, '2011-05-21 00:00:00', '2011-05-22 15:06:06'),
+(25, '页面访问', 'oa_pw_change_main@defaultVisit@', 0, 'URL', '/basic/account/accountPw.swf*', NULL, '2011-05-23 00:00:00', '2011-05-23 23:11:11'),
+(27, '页面访问', 'places_manage_main@defaultVisit@', 0, 'URL', '/basic/place/placeList.swf*', NULL, '2011-05-25 00:00:00', '2011-05-25 16:19:12');
 
 -- --------------------------------------------------------
 
@@ -587,7 +601,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_operation_dam_relationship` (
   `operation_id` bigint(20) NOT NULL,
   `dam_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=25 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=28 ;
 
 --
 -- 转存表中的数据 `wlzx_system_operation_dam_relationship`
@@ -615,7 +629,9 @@ INSERT INTO `wlzx_system_operation_dam_relationship` (`id`, `operation_id`, `dam
 (21, 21, 21),
 (22, 22, 22),
 (23, 23, 23),
-(24, 24, 24);
+(24, 24, 24),
+(25, 25, 25),
+(27, 27, 27);
 
 -- --------------------------------------------------------
 
@@ -665,7 +681,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_role_dam_relationship` (
   `role_id` bigint(20) NOT NULL,
   `dam_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=27 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=68 ;
 
 --
 -- 转存表中的数据 `wlzx_system_role_dam_relationship`
@@ -680,7 +696,46 @@ INSERT INTO `wlzx_system_role_dam_relationship` (`id`, `role_id`, `dam_id`) VALU
 (20, 1, 6),
 (21, 1, 5),
 (22, 1, 4),
-(25, 1, 19);
+(25, 1, 19),
+(27, 1, 25),
+(28, 19, 3),
+(29, 19, 6),
+(30, 19, 5),
+(31, 19, 4),
+(32, 19, 17),
+(33, 19, 18),
+(34, 1, 21),
+(35, 1, 22),
+(38, 19, 19),
+(39, 19, 22),
+(40, 19, 23),
+(41, 19, 15),
+(42, 19, 24),
+(43, 19, 16),
+(44, 19, 25),
+(45, 19, 13),
+(46, 19, 26),
+(47, 19, 14),
+(48, 19, 11),
+(49, 19, 12),
+(50, 19, 21),
+(51, 19, 20),
+(52, 19, 10),
+(53, 19, 7),
+(54, 19, 9),
+(55, 19, 8),
+(56, 1, 23),
+(57, 1, 15),
+(58, 1, 16),
+(59, 1, 13),
+(60, 1, 26),
+(61, 1, 14),
+(62, 1, 11),
+(63, 1, 12),
+(64, 1, 10),
+(65, 1, 7),
+(66, 1, 9),
+(67, 1, 8);
 
 -- --------------------------------------------------------
 
@@ -796,16 +851,16 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_user` (
   `active` tinyint(1) NOT NULL default '1',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `symbol` (`symbol`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='系统用户' AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='系统用户' AUTO_INCREMENT=5 ;
 
 --
 -- 转存表中的数据 `wlzx_system_user`
 --
 
 INSERT INTO `wlzx_system_user` (`id`, `symbol`, `sequence`, `name`, `password`, `last_login_time`, `last_login_ip`, `person_id`, `email`, `creation_date`, `modified_date`, `active`) VALUES
-(1, 'super_root', 0, 'super_root', '134bca5421a15476a1e5ebaebdba1ede', NULL, NULL, NULL, NULL, '2011-05-07 11:04:09', '0000-00-00 00:00:00', 1),
-(2, 'admin', 0, 'admin', '21232f297a57a5a743894a0e4a801fc3', NULL, NULL, NULL, NULL, '2011-05-07 11:04:22', '0000-00-00 00:00:00', 1),
-(3, '3', 0, '3', 'eccbc87e4b5ce2fe28308fd9f2a7baf3', '2011-05-23 01:58:58', NULL, NULL, NULL, '2011-05-23 01:59:10', '0000-00-00 00:00:00', 1);
+(2, 'admin', 0, 'admin', 'c81e728d9d4c2f636f067f89cc14862c', '2011-05-25 16:13:00', '127.0.0.1', NULL, NULL, '2011-05-07 11:04:22', '2011-05-25 01:32:00', 1),
+(3, '3', 0, '3', 'eccbc87e4b5ce2fe28308fd9f2a7baf3', '2011-05-23 01:58:58', NULL, NULL, NULL, '2011-05-23 01:59:10', '2011-05-25 00:42:21', 1),
+(4, 'super_root', 0, 'super_root', '134bca5421a15476a1e5ebaebdba1ede', NULL, NULL, NULL, NULL, '2011-05-25 00:58:45', '0000-00-00 00:00:00', 1);
 
 -- --------------------------------------------------------
 

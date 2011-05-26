@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="system.wlims.basic.entity.DirectoryModel" table="wlzx_basic_directory">
+		<id name="id">
+			<column name="id" />
+			<generator class="native" />
+		</id>
+		<property name="symbol" type="string" unique="true">
+			<column name="symbol" />
+		</property>
+		<property name="sequence" type="int">
+			<column name="sequence" />
+		</property>
+		<property name="name" type="string">
+			<column name="name" />
+		</property>
+		<property name="value" type="string">
+			<column name="value" />
+		</property>
+		<property name="type" type="string">
+			<column name="type" />
+		</property>
+		<property name="description" type="string">
+			<column name="description" />
+		</property>
+		<property name="extraValue" type="string">
+			<column name="extra_value" />
+		</property>
+		<property name="creationDate" type="java.util.Date">
+			<column name="creation_date" />
+		</property>
+		<property name="modifiedDate" type="java.util.Date">
+			<column name="modified_date" />
+		</property>
+		<set name="children" lazy="false"  table="wlzx_basic_directory_leadship" cascade="all">
+			<key column="parent_id"  />
+			<many-to-many column="child_id" class="system.wlims.basic.entity.DirectoryModel" /> 
+		</set>
+		<set name="parents" lazy="false"  table="wlzx_basic_directory_leadship">
+			<key column="child_id"  />
+			<many-to-many column="parent_id" class="system.wlims.basic.entity.DirectoryModel" /> 
+		</set>		
+	</class>
+</hibernate-mapping>
