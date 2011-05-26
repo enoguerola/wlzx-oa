@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Module xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		   xmlns:s="library://ns.adobe.com/flex/spark" 
+		   xmlns:mx="library://ns.adobe.com/flex/mx" layout="vertical" width="100%" height="100%" creationComplete="init();">
+
+	<fx:Script>
+		<![CDATA[
+			import mx.validators.Validator;
+			
+			private var validatorArr:Array;
+			
+			private function init():void
+			{
+				validatorArr = new Array();
+				validatorArr.push(name_stringValidator);
+				validatorArr.push(phone_phoneNumberValidator);
+				//callLater(initDepartmentWin);
+			}
+			
+			protected function validateForm(event:MouseEvent):void
+			{
+
+			}
+		]]>
+	</fx:Script>
+
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+		<mx:StringValidator id="name_stringValidator" source="{teacherName}" property="text"  requiredFieldError="不能为空"/>
+		<mx:PhoneNumberValidator id="phone_phoneNumberValidator" source="{homePhone}" required="false" property="text" minDigits="6" requiredFieldError="错误格式的电话"/>
+	</fx:Declarations>
+	<s:Panel width="100%" height="100%" title="教师信息录入"  skinClass="system.skins.WlzxPanelSkin"   borderVisible="true" dropShadowVisible="false">
+		<s:VGroup width="100%" height="100%">
+			<mx:TabNavigator id="systems"  width="100%" height="100%" tabStyleName="customTabStyles"  horizontalGap="1" borderVisible="false"  tabWidth="120" paddingTop="0">
+				<s:NavigatorContent label="基础信息">
+					<s:layout>
+						<s:VerticalLayout/>
+					</s:layout>
+					<mx:Form width="100%" height="100%" textAlign="left" labelWidth="70">
+						<s:HGroup width="100%" height="40%">
+							<s:Label>
+								<s:text>基本信息</s:text>
+							</s:Label>
+							<s:VGroup width="40%" height="100%">
+								<s:HGroup width="100%">
+									<mx:FormItem label="姓名" width="50%">
+										<s:TextInput id="teacherName" width="100%"/>
+									</mx:FormItem>
+									<mx:FormItem label="性别" width="50%">
+										<s:ComboBox 
+											id="sex" 
+											selectedIndex="0" 
+											labelField="" width="100%"/> 
+									</mx:FormItem>
+								</s:HGroup>
+								<s:HGroup width="100%">
+									<mx:FormItem label="婚姻状况" width="50%">
+										<s:ComboBox 
+											id="marriage" 
+											width="100%" 
+											selectedIndex="0" 
+											labelField=""/>
+									</mx:FormItem>
+									<mx:FormItem label="民族" width="50%">
+										<mx:TextInput id="nation" width="100%"/>
+									</mx:FormItem>
+								</s:HGroup>
+								<mx:FormItem label="身份证号" width="100%">
+									<mx:TextInput id="idCode" width="100%"/>
+								</mx:FormItem>
+								<mx:FormItem label="邮箱" width="100%">
+									<mx:TextInput id="mail" width="100%"/>
+								</mx:FormItem>
+								<mx:FormItem label="家庭地址" width="100%">
+									<mx:TextInput id="address" width="100%"/>
+								</mx:FormItem>
+							</s:VGroup>
+							<s:VGroup width="35%">
+								<s:HGroup width="100%">
+									<mx:FormItem label="出生年月" width="100%">
+										<mx:DateField id="birthday" width="100%"/>
+									</mx:FormItem>
+								</s:HGroup>
+								<mx:FormItem label="政治面貌" width="100%">
+									<s:ComboBox 
+										id="politicStatus" 
+										width="100%" 
+										selectedIndex="0" 
+										labelField=""/> 
+								</mx:FormItem>
+								<mx:FormItem label="籍贯" width="100%">
+									<mx:TextInput id="nativePlace" width="100%"/>
+								</mx:FormItem>
+								<mx:FormItem label="家庭电话" width="100%">
+									<mx:TextInput id="homePhone" width="100%"/>
+								</mx:FormItem>
+								<mx:FormItem label="手机" width="100%">
+									<mx:TextInput id="cellPhone" width="100%"/>
+								</mx:FormItem>
+							</s:VGroup>
+							<s:VGroup width="25%">
+								<mx:FormItem label="照片" width="100%" height="200%">
+									<mx:Image/>
+								</mx:FormItem>
+								<mx:FormItem label="短号" width="100%">
+									<mx:TextInput id="teacherno" width="100%"/>
+								</mx:FormItem>
+							</s:VGroup>
+						</s:HGroup>
+						<s:HGroup width="100%" height="20%">
+							<s:Label>
+								<s:text>教育背景</s:text>
+							</s:Label>
+							<s:VGroup width="20%">
+								<mx:FormItem label="学历" width="100%">
+									<mx:TextInput id='education' width="100%"/>
+								</mx:FormItem>
+								<mx:FormItem label="职称" width="100%">
+									<mx:TextInput id='professionalTitle' width="100%"/>
+								</mx:FormItem>
+							</s:VGroup>
+							<s:VGroup width="30%">
+								<mx:FormItem label="专业" width="100%">
+									<mx:TextInput id='profession' width="100%"/>
+								</mx:FormItem>
+								<mx:FormItem label="技能等级" width="100%">
+									<mx:TextInput id='skillLevel' width="100%"/>
+								</mx:FormItem>
+							</s:VGroup>
+							<s:VGroup width="50%">
+								<mx:FormItem label="毕业院校" width="100%">
+									<mx:TextInput id='school'/>
+								</mx:FormItem>
+								<mx:FormItem label="技能鉴定时间" width="100%">
+									<mx:DateField id="skillLevelDate" width="100%"/>
+								</mx:FormItem>
+							</s:VGroup>
+						</s:HGroup>
+						<s:HGroup width="100%">
+							<s:Label>
+								<s:text>温中聘请信息</s:text>
+							</s:Label>
+							<s:VGroup width="100%">
+								<s:HGroup width="100%">
+									<mx:FormItem label="部门" width="20%">
+										<mx:TextInput id='department' width="100%"/>
+									</mx:FormItem>
+									<mx:FormItem label="职务" width="30%">
+										<mx:TextInput id='position' width="100%"/>
+									</mx:FormItem>
+									<mx:FormItem label="办公电话" width="50%">
+										<mx:TextInput id='officePhone' width="100%"/>
+									</mx:FormItem>
+								</s:HGroup>
+								<s:HGroup width="100%">
+									<mx:FormItem label="紧要联络电话" width="20%">
+										<mx:TextInput id='contactPhone' width="100%"/>
+									</mx:FormItem>
+									<mx:FormItem label="何时工作" width="30%">
+										<mx:DateField id='workDate' width="100%"/>
+									</mx:FormItem>
+									<mx:FormItem label="工龄" width="50%">
+										<mx:TextInput id='workPeriod' width="100%"/>
+									</mx:FormItem>
+								</s:HGroup>
+								<s:HGroup width="100%">
+									<mx:FormItem label="入校时间" width="20%">
+										<mx:DateField id="attendDate" width="100%"/>
+									</mx:FormItem>
+									<mx:FormItem label="校龄" width="30%">
+										<mx:TextInput id='attendPeriod' width="100%"/>
+									</mx:FormItem>
+									<mx:FormItem label="状态" width="50%">
+										<s:ComboBox id='status' width="100%"/>
+									</mx:FormItem>
+									<s:Button click="validateForm(event)"/>
+								</s:HGroup>
+								<s:HGroup width="100%">
+									<s:Label width="8%" height="30" verticalAlign="middle">
+										<s:text>其他部门</s:text>
+									</s:Label>
+									<s:Button label="增加"/>
+									<s:VGroup>
+										
+									</s:VGroup>
+								</s:HGroup>
+							</s:VGroup>
+						</s:HGroup>
+					</mx:Form>
+				</s:NavigatorContent>
+				<s:NavigatorContent label="其他信息">
+					<s:layout>
+						<s:VerticalLayout/>
+					</s:layout>
+				</s:NavigatorContent>
+			</mx:TabNavigator>
+		</s:VGroup>
+	</s:Panel>
+</mx:Module>

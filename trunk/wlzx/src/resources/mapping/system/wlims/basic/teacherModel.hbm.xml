@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="system.wlims.basic.entity.teacher.TeacherModel" table="basic_teacher">
+		<id name="id">
+			<column name="teacher_id" />
+			<generator class="native" />
+		</id>
+		<property name="teacherCName" type="string">
+			<column name="teacher_cname" />
+		</property>
+		<property name="teacherSex" type="boolean">
+			<column name="teacher_sex" />
+		</property>
+		<property name="teacherBirthday" type="java.sql.Date">
+			<column name="teacher_birthday" />
+		</property>
+		<property name="teacherMarried" type="boolean">
+			<column name="teacher_marrage" />
+		</property>
+		<property name="teacherNation" type="string">
+			<column name="teacher_nation" />
+		</property>
+		<property name="teacherPoliticsStatus" type="int">
+			<column name="teacher_politics_status" />
+		</property>
+		<property name="teacherID" type="string">
+			<column name="teacher_identify" />
+		</property>
+		<property name="teacherNativePlace" type="string">
+			<column name="teacher_native_place" />
+		</property>
+		<property name="teacherMail" type="string">
+			<column name="teacher_email" />
+		</property>
+		<property name="teacherHomePhone" type="string">
+			<column name="teacher_home_phone" />
+		</property>
+		<property name="teacherNo" type="string">
+			<column name="teacher_no" />
+		</property>
+		<property name="teacherEducation" type="string">
+			<column name="teacher_education" />
+		</property>
+		<property name="teacherProfession" type="string">
+			<column name="teacher_profession" />
+		</property>
+		<property name="teacherGraduateSchool" type="string">
+			<column name="teacher_graduate_school" />
+		</property>
+		<property name="teacherProfessionTitle" type="string">
+			<column name="teacher_professional_title" />
+		</property>
+		<property name="teacherSkillLevel" type="string">
+			<column name="teacher_skill_level" />
+		</property>
+		<property name="teacherSkillLevelDate" type="java.sql.Date">
+			<column name="teacher_skill_level_date" />
+		</property>
+		<property name="teacherDepartment" type="string">
+			<column name="teacher_department" />
+		</property>
+		<property name="teacherPosition" type="string">
+			<column name="teacher_position" />
+		</property>
+		<property name="teacherContactPhone" type="string">
+			<column name="teacher_contact_phone" />
+		</property>
+		<property name="teacherOfficePhone" type="string">
+			<column name="teacher_office_phone" />
+		</property>
+		<property name="teacherWorkDate" type="java.sql.Date">
+			<column name="teacher_work_date" />
+		</property>
+		<property name="teacherWorkPeriod" type="string">
+			<column name="teacher_work_period" />
+		</property>
+		<property name="teacherAddress" type="string">
+			<column name="teacher_address" />
+		</property>
+		<property name="teacherPhoto" type="string">
+			<column name="teacher_photo_src" />
+		</property>
+		<property name="teacherStaus" type="int">
+			<column name="teacher_status" />
+		</property>
+		<property name="teacherAttendDate" type="java.sql.Date">
+			<column name="teacher_attend_date" />
+		</property>
+		<property name="teacherAttendPeriod" type="string">
+			<column name="teacher_attend_period" />
+		</property>
+		<property name="creationDate" type="java.sql.Date">
+			<column name="teacher_create_date" />
+		</property>
+		<property name="modifiedDate" type="java.sql.Date">
+			<column name="teacher_modified_date" />
+		</property>
+		<set name="otherDepartments" lazy="false"  table="basic_teacher_department" cascade="delete">
+			<key column="teacher_id"  />
+			<one-to-many class="system.wlims.basic.entity.teacher.TeacherDepartment" />  
+		</set>
+		<set name="relations" lazy="false"  table="basic_teacher_social_relation" cascade="delete">
+			<key column="teacher_id"  />
+			<one-to-many class="system.wlims.basic.entity.teacher.TeacherRelation" /> 
+		</set>	
+		<set name="experiences" lazy="false"  table="basic_teacher_work_experience" cascade="delete">
+			<key column="teacher_id"  />
+			<one-to-many class="system.wlims.basic.entity.teacher.TeacherExperience" />  
+		</set>	
+	</class>
+</hibernate-mapping>
