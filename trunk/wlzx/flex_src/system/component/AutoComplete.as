@@ -19,7 +19,7 @@ package system.component
 			init();
 		}
 		
-		private function init(){
+		private function init():void{
 			editable=true;
 			rowCount=5;
 			selectedIndex=-1;
