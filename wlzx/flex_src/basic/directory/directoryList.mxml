@@ -30,8 +30,8 @@
 			private var validatorArr:Array;
 			public var directoryDb:ArrayCollection = new ArrayCollection( 
 				[
-					{label:"场所类型", data:"场所类型"} ,
-					{label:"教学楼", data:"教学楼"}
+					{label:"场所类型", data:"placeType"} ,
+					{label:"教学楼", data:"building"}
 				]); 
 			private function init():void {
 				validatorArr = new Array();

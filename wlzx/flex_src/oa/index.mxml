@@ -198,9 +198,10 @@
 					if(!child.contains(bar))child.addChild(bar);
 					bar.mode=ProgressBarMode.POLLED;
 					
-					bar.label = "当前加载进度："+Math.round(e.bytesLoaded * 100 / e.bytesTotal) + "%";
+					bar.label = "当前模块加载进度："+Math.round(e.bytesLoaded * 100 / e.bytesTotal) + "%";
 //					Alert.show(bar.label);
-					bar.setProgress(e.bytesLoaded,e.bytesTotal);				
+					bar.setProgress(e.bytesLoaded,e.bytesTotal);	
+					bar.validateNow();
 				});
 			
 				navigator.addChild(child as DisplayObject);
