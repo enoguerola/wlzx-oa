@@ -23,6 +23,10 @@
 	
 	<fx:Script> 
 		<![CDATA[  
+			import basic.place.popWin.PlacePopWin;	
+			import mx.core.FlexGlobals;
+			import mx.managers.PopUpManager;
+			
 			import mx.collections.ArrayCollection;
 			import mx.containers.*;
 			import mx.controls.*;
@@ -63,11 +67,11 @@
 				for(var i:int=0;i<list.length;i++){
 					var directoryItem:Object=list.getItemAt(i);
 					if(directoryItem.type=='placeType'){
-						placeTypes.addItem({label:directoryItem.name, data:directoryItem.id});
+						placeTypes.addItem({label:directoryItem.name, data:directoryItem.value});
 						if(i==list.length-1)search_type.dataProvider=placeTypes;
 						
 					}else if(directoryItem.type=='building'){
-						buildings.addItem({label:directoryItem.name, data:directoryItem.id});
+						buildings.addItem({label:directoryItem.name, data:directoryItem.value});
 						if(i==list.length-1)search_building.dataProvider=buildings;
 					}
 				}
@@ -99,24 +103,25 @@
 			}
 			
 			
-			protected function search():void
+			public function search():void
 			{
 				// TODO Auto-generated method stub
 				var validatorErrorArray:Array = Validator.validateAll(validatorArr);;
 				var isValidForm:Boolean = validatorErrorArray.length == 0;
 				if (isValidForm) {
 					var searchName:String=search_name.text;
-					var searchPlace:Object=search_type.selectedItem.data;
+					var searchType:Object=search_type.selectedItem.data;
 					var searchBuilding:Object=search_building.selectedItem.data;
 					var areaBegin:Object=null;
-					if(area_begin.text!="")areaBegin=area_begin.text as int;
+					if(area_begin.text!="")areaBegin=parseFloat(area_begin.text);
 					var areaEnd:Object=null;
-					if(area_end.text!="")areaEnd=area_end.text as int;
+					if(area_end.text!="")areaEnd=parseFloat(area_end.text);
 					var containBegin:Object=null;
-					if(contain_begin.text!="")containBegin=contain_begin.text as int;
+					if(contain_begin.text!="")containBegin=parseInt(contain_begin.text);
 					var containEnd:Object=null;
-					if(contain_end.text!="")containEnd=contain_end.text as int;
-					placeServiceRO.getPlacesByCondition(searchName,searchPlace,searchBuilding,areaBegin,areaEnd,containBegin,containEnd);
+					if(contain_end.text!="")containEnd=parseInt(contain_end.text);
+					
+					placeServiceRO.getPlacesByCondition(searchName,searchType,searchBuilding,areaBegin,areaEnd,containBegin,containEnd);
 				} else {
 					var err:ValidationResultEvent;
 					var errorMessageArray:Array = [];
@@ -131,17 +136,38 @@
 //				//				Alert.show(state+"");
 //				systemServiceRO.getUsersByCondition(place,state);
 			}
+			public var pop:PlacePopWin=null;
 			protected function addPlace():void
 			{
-				
+				if(pop!=null)PopUpManager.removePopUp(pop);
+				pop=PlacePopWin(PopUpManager.createPopUp(this,PlacePopWin,true)); 
+				pop.owner=this;
+				PopUpManager.centerPopUp(pop);
+				pop.percentHeight=100;
+				pop.percentWidth=100;
+				pop.x=FlexGlobals.topLevelApplication.stage.stageWidth/2-pop.width/2;
+				pop.y=FlexGlobals.topLevelApplication.stage.stageHeight/2-pop.height/2;
+				pop.toolTip="Add";
 			}
 			public function enterEdit(place_id:String):void{
-				
+				if(place_id!=null){
+					if(pop!=null)PopUpManager.removePopUp(pop);
+					pop=PlacePopWin(PopUpManager.createPopUp(this,PlacePopWin,true));  
+					pop.owner=this;
+					PopUpManager.centerPopUp(pop);
+					pop.percentHeight=100;
+					pop.percentWidth=100;
+					pop.x=FlexGlobals.topLevelApplication.stage.stageWidth/2-pop.width/2;
+					pop.y=FlexGlobals.topLevelApplication.stage.stageHeight/2-pop.height/2;
+					pop.id=place_id;//参数传递使用
+					pop.toolTip="Update";
+				}	
 			}
 			public function deletePlace(place_id:String):void{
 				Alert.show("你确定要删除该场所吗?","确认删除",Alert.NO|Alert.YES,null,function(event:CloseEvent):void{
 					if(event.detail == Alert.YES)
-						placeServiceRO.deletePlace_resultHandler(place_id);
+						placeServiceRO.deletePlace(place_id);
+						placeServiceRO.getAllPlaces();
 				},null,Alert.NO);
 				
 			}
@@ -157,7 +183,7 @@
 					<s:HGroup verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12">
 						<mx:HBox width="100%" height="30" paddingLeft="20"  horizontalGap="0" backgroundColor="#C5E497"  verticalAlign="middle">
 							<mx:Label text="|"/>
-							<mx:LinkButton  label="新增" icon="@Embed(source='../WebContent/resources/common/tools/button_add_icon.png')"  />
+							<mx:LinkButton  label="新增" icon="@Embed(source='../WebContent/resources/common/tools/button_add_icon.png')"   click="addPlace();"/>
 							<mx:Label text="|"/>
 							
 							<mx:LinkButton  label="查看使用记录" icon="@Embed(source='../WebContent/resources/common/tools/button_detail_icon.png')"  />
@@ -210,21 +236,31 @@
 								<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="false"   borderAlpha="0.2" verticalAlign="middle"   id="placeTable" pagecount="10"  >				
 									<component:mygridcolumns>
 										
-										<mx:DataGridColumn textAlign="center" headerText="编号" dataField="name" width="100">
+										<mx:DataGridColumn textAlign="center" headerText="编号" dataField="symbol" width="100">
 										</mx:DataGridColumn>
 										<mx:DataGridColumn textAlign="center" headerText="名称" dataField="name" width="100">
 										</mx:DataGridColumn>
-										<mx:DataGridColumn textAlign="center" headerText="类型" dataField="name" width="100">
+										<mx:DataGridColumn textAlign="center" headerText="类型" dataField="type" width="100">
 										</mx:DataGridColumn>
-										<mx:DataGridColumn textAlign="center" headerText="位置" dataField="name" width="100">
+										<mx:DataGridColumn textAlign="center" headerText="位置" dataField="position" width="100">
 										</mx:DataGridColumn>
-										<mx:DataGridColumn textAlign="center" headerText="功能" dataField="name" width="100">
+										<mx:DataGridColumn textAlign="center" headerText="功能" dataField="functions" width="100">
 										</mx:DataGridColumn>
-										<mx:DataGridColumn textAlign="center" headerText="面积" dataField="name" width="100">
+										<mx:DataGridColumn textAlign="center" headerText="面积[m2]"  width="100">
+											<mx:itemRenderer>
+												<fx:Component>
+													<mx:Label  text="{data.areaBegin+'-'+data.areaEnd}" />											
+												</fx:Component>
+											</mx:itemRenderer>
 										</mx:DataGridColumn>
-										<mx:DataGridColumn textAlign="center" headerText="容纳人数" dataField="name" width="100">
+										<mx:DataGridColumn textAlign="center" headerText="容纳人数[人]" width="100">
+											<mx:itemRenderer>
+												<fx:Component>
+													<mx:Label  text="{data.containBegin+'-'+data.containEnd}" />											
+												</fx:Component>
+											</mx:itemRenderer>
 										</mx:DataGridColumn>
-										<mx:DataGridColumn textAlign="center" headerText="编辑" dataField="modifiedDate"  width="60">
+										<mx:DataGridColumn textAlign="center" headerText="编辑" width="60">
 											<mx:itemRenderer>
 												<fx:Component>
 													<mx:LinkButton  label="[编辑]"   click="{this.outerDocument.enterEdit(data.id);}">											
@@ -232,7 +268,7 @@
 												</fx:Component>
 											</mx:itemRenderer>
 										</mx:DataGridColumn>
-										<mx:DataGridColumn textAlign="center" headerText="删除" dataField="modifiedDate" width="60">
+										<mx:DataGridColumn textAlign="center" headerText="删除"  width="60">
 											<mx:itemRenderer>
 												<fx:Component>
 													<mx:LinkButton  label="[删除]"   click="{this.outerDocument.deletePlace(data.id);}">											

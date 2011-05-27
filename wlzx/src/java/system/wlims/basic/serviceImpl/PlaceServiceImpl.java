@@ -1,8 +1,10 @@
 package system.wlims.basic.serviceImpl;
 
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
@@ -39,29 +41,29 @@ public class PlaceServiceImpl implements PlaceService {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<PlaceModel> getPlacesByCondition(String searchName,
-			String searchPlace, String searchBuilding, Integer areaBegin,
-			Integer areaEnd, Integer containBegin, Integer containEnd) {
+			String searchType, String searchBuilding, Float areaBegin,
+			Float areaEnd, Integer containBegin, Integer containEnd) {
 		DetachedCriteria criteria = DetachedCriteria.forClass(PlaceModel.class);
 		if(!StringUtils.isEmpty(searchName)){
 			criteria.add(Restrictions.eq("name", searchName));
 		}
-		if(!StringUtils.isEmpty(searchPlace)){
-			criteria.add(Restrictions.eq("place", searchPlace));
+		if(!StringUtils.isEmpty(searchType)){
+			criteria.add(Restrictions.eq("type", searchType));
 		}
 		if(!StringUtils.isEmpty(searchBuilding)){
-			criteria.add(Restrictions.eq("position", searchBuilding));
+			criteria.add(Restrictions.like("position", searchBuilding,MatchMode.ANYWHERE));
 		}
 		if(areaBegin!=null){
-			criteria.add(Restrictions.sizeGe("areaNum", areaBegin));
+			criteria.add(Restrictions.ge("areaBegin", areaBegin));
 		}
 		if(areaEnd!=null){
-			criteria.add(Restrictions.sizeLe("areaNum", areaEnd));
+			criteria.add(Restrictions.le("areaEnd", areaEnd));
 		}
 		if(containBegin!=null){
-			criteria.add(Restrictions.sizeGe("containNum", containBegin));
+			criteria.add(Restrictions.ge("containBegin", containBegin));
 		}
 		if(containEnd!=null){
-			criteria.add(Restrictions.sizeLe("containNum", containEnd));
+			criteria.add(Restrictions.le("containEnd", containEnd));
 		}
 		
 		criteria.addOrder(Order.asc("symbol"));
@@ -77,6 +79,34 @@ public class PlaceServiceImpl implements PlaceService {
 		List<PlaceModel> result = placeDao.getListByCriteria(criteria);
 		return result;
 	}
+
+	@Override
+	public PlaceModel getPlaceById(String id) {
+		// TODO Auto-generated method stub
+		if(!StringUtils.isEmpty(id)){
+			return placeDao.get(id);
+		}
+		return null;
+	}
+
+	@Override
+	public PlaceModel placeAdd(PlaceModel place) {
+		// TODO Auto-generated method stub
+		place.setCreationDate(new Date());
+		place.setModifiedDate(new Date());
+		placeDao.saveOrUpdate(place);
+		return place;
+	}
+
+	@Override
+	public PlaceModel placeUpdate(PlaceModel place) {
+		// TODO Auto-generated method stub
+		place.setModifiedDate(new Date());
+		placeDao.saveOrUpdate(place);
+		return place;
+	}
+
+	
 
 	
 }

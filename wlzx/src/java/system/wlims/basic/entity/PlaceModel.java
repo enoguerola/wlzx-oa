@@ -17,9 +17,11 @@ public class PlaceModel extends BaseModel {
 	private String name;
 	private String type;
 	private String position;
-	private String function;
-	private String areaNum;
-	private String containNum;
+	private String functions;
+	private Float areaBegin;
+	private Float areaEnd;
+	private Integer containBegin;
+	private Integer containEnd;
 	private String remarks;
 	private Date creationDate;
 	private Date modifiedDate;
@@ -41,24 +43,8 @@ public class PlaceModel extends BaseModel {
 	public void setPosition(String position) {
 		this.position = position;
 	}
-	public String getFunction() {
-		return function;
-	}
-	public void setFunction(String function) {
-		this.function = function;
-	}
-	public String getAreaNum() {
-		return areaNum;
-	}
-	public void setAreaNum(String areaNum) {
-		this.areaNum = areaNum;
-	}
-	public String getContainNum() {
-		return containNum;
-	}
-	public void setContainNum(String containNum) {
-		this.containNum = containNum;
-	}
+	
+	
 	public String getRemarks() {
 		return remarks;
 	}
@@ -82,6 +68,36 @@ public class PlaceModel extends BaseModel {
 	}
 	public void setSymbol(String symbol) {
 		this.symbol = symbol;
+	}
+	public String getFunctions() {
+		return functions;
+	}
+	public void setFunctions(String functions) {
+		this.functions = functions;
+	}
+	public Float getAreaBegin() {
+		return areaBegin;
+	}
+	public void setAreaBegin(Float areaBegin) {
+		this.areaBegin = areaBegin;
+	}
+	public Float getAreaEnd() {
+		return areaEnd;
+	}
+	public void setAreaEnd(Float areaEnd) {
+		this.areaEnd = areaEnd;
+	}
+	public Integer getContainBegin() {
+		return containBegin;
+	}
+	public void setContainBegin(Integer containBegin) {
+		this.containBegin = containBegin;
+	}
+	public Integer getContainEnd() {
+		return containEnd;
+	}
+	public void setContainEnd(Integer containEnd) {
+		this.containEnd = containEnd;
 	}
 	
 }

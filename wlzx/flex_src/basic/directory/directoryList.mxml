@@ -53,6 +53,7 @@
 				itemName.text="";
 				value.text="";
 				sequence.text="";
+				extraValue.text="";
 				search();
 			}
 			private function deleteDirectoryItem_resultHandler(event:ResultEvent):void{
@@ -60,6 +61,7 @@
 				itemName.text="";
 				value.text="";
 				sequence.text="";
+				extraValue.text="";
 				search();
 			}
 			
@@ -79,7 +81,7 @@
 				var isValidForm:Boolean = validatorErrorArray.length == 0;
 				if (isValidForm) {
 					var	chooseType:Object=type.selectedItem.data;
-					directoryServiceRO.saveDirectoryItem(itemId.text,chooseType,itemName.text,value.text,sequence.text);
+					directoryServiceRO.saveDirectoryItem(itemId.text,chooseType,itemName.text,value.text,sequence.text,extraValue.text);
 				} else {
 					var err:ValidationResultEvent;
 					var errorMessageArray:Array = [];
@@ -91,11 +93,12 @@
 				}
 			
 			}
-			public function enterEdit(item_id:String,item_name:String,item_value:String,item_sequence:String):void{
+			public function enterEdit(item_id:String,item_name:String,item_value:String,item_sequence:String,item_extraValue:String):void{
 				itemId.text=item_id;
 				itemName.text=item_name;
 				value.text=item_value;
 				sequence.text=item_sequence;
+				extraValue.text=item_extraValue;
 			}
 			public function deleteDirectoryItem(item_id:String):void{
 				Alert.show("你确定要删除该字典条目吗?","确认删除",Alert.NO|Alert.YES,null,function(event:CloseEvent):void{
@@ -142,6 +145,9 @@
 						<mx:FormItem label="显示顺序" required="true">
 							<s:TextInput  id="sequence" text="0"/>
 						</mx:FormItem>
+						<mx:FormItem label="编号" required="false">
+							<s:TextInput  id="extraValue" text=""/>
+						</mx:FormItem>
 						<mx:FormItem  horizontalAlign="right" width="100%">
 							<mx:Button  label="保存"  click="save_clickHandler(event)"/>
 						</mx:FormItem>
@@ -156,12 +162,14 @@
 					
 					<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="false"   borderAlpha="0.2" verticalAlign="middle"   id="directoryTable" pagecount="15"  >				
 						<component:mygridcolumns>
-							<mx:DataGridColumn textAlign="center" headerText="字典类型" dataField="type" width="100">
+							<mx:DataGridColumn textAlign="center" headerText="字典类型" dataField="type" width="80">
 							</mx:DataGridColumn>
 							<mx:DataGridColumn textAlign="center" headerText="条目名称" dataField="name" width="100">
 							</mx:DataGridColumn>
 							<mx:DataGridColumn textAlign="center" headerText="条目值" dataField="value" width="100">
-							</mx:DataGridColumn>							
+							</mx:DataGridColumn>
+							<mx:DataGridColumn textAlign="center" headerText="编号" dataField="extraValue" width="60">
+							</mx:DataGridColumn>
 							<mx:DataGridColumn textAlign="center" headerText="创建日期" dataField="creationDate" width="120">
 								<mx:itemRenderer>
 									<fx:Component>
@@ -179,7 +187,7 @@
 							<mx:DataGridColumn textAlign="center" headerText="编辑" dataField="modifiedDate"  width="60">
 								<mx:itemRenderer>
 									<fx:Component>
-										<mx:LinkButton  label="[编辑]"   click="{this.outerDocument.enterEdit(data.id,data.name,data.value,data.sequence);}">											
+										<mx:LinkButton  label="[编辑]"   click="{this.outerDocument.enterEdit(data.id,data.name,data.value,data.sequence,data.extraValue);}">											
 										</mx:LinkButton>										
 									</fx:Component>
 								</mx:itemRenderer>
