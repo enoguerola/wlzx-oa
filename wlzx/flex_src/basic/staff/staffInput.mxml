@@ -1,25 +1,133 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Module xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		   xmlns:s="library://ns.adobe.com/flex/spark" 
-		   xmlns:mx="library://ns.adobe.com/flex/mx" layout="vertical" width="100%" height="100%" creationComplete="init();">
+		   xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:valueObjects="basic.entity.*" layout="vertical" width="100%" height="100%" creationComplete="init();">
 
 	<fx:Script>
 		<![CDATA[
 			import mx.validators.Validator;
+			import mx.collections.ArrayCollection;
+			import basic.entity.*;
+			import mx.formatters.DateFormatter;
+			import mx.controls.Alert;
+			import mx.events.ValidationResultEvent;
 			
 			private var validatorArr:Array;
+			public var sexArr:ArrayCollection = new ArrayCollection(
+				[    
+					{value:"0", name:"男"}, 
+					{value:"1", name:"女"}
+				]                
+			);
+			public var marriageArr:ArrayCollection = new ArrayCollection(
+				[    
+					{value:"0", name:"未婚"}, 
+					{value:"1", name:"已婚"}
+				]                
+			);
+			
+			public var politicArr:ArrayCollection = new ArrayCollection(
+				[    
+					{value:"0", name:"党员"}, 
+					{value:"1", name:"团员"},
+					{value:"2", name:"其他"}
+				]                
+			);
+			
+			public var educationArr:ArrayCollection = new ArrayCollection(
+				[    
+					{value:"0", name:"本科"}, 
+					{value:"1", name:"高中"},
+					{value:"2", name:"大专"}
+				]                
+			);
+			
+			public var departmentArr:ArrayCollection = new ArrayCollection(
+				[    
+					{value:"0", name:"教务处"}, 
+					{value:"1", name:"其他"}
+				]                
+			);
+			
+			public var statusArr:ArrayCollection = new ArrayCollection(
+				[    
+					{value:"0", name:"正式"}, 
+					{value:"1", name:"适用"},
+					{value:"2", name:"离职"},
+					{value:"3", name:"离休"}
+				]                
+			);
+
 			
 			private function init():void
 			{
 				validatorArr = new Array();
 				validatorArr.push(name_stringValidator);
-				validatorArr.push(phone_phoneNumberValidator);
-				//callLater(initDepartmentWin);
+				validatorArr.push(birthday_dateValidator);
+				validatorArr.push(nation_stringValidator);
+				validatorArr.push(idCode_stringValidator);
+				validatorArr.push(nativePlace_stringValidator);
+				validatorArr.push(department_stringValidator);
+				validatorArr.push(position_stringValidator);
+				validatorArr.push(cellphone_phoneNumberValidator);
+				validatorArr.push(homephone_phoneNumberValidator);
+				validatorArr.push(department_stringValidator);
+				callLater(initStaffWin);
+			}
+			
+			private function initStaffWin():void{
+				if(this.toolTip=='Update'){		
+					//var departmentId:String=this.id;//弹出窗口时设定的中转参数
+					//systemServiceRO.getDepartmentById(departmentId);
+				}else{
+					teacher = new TeacherModel();
+					//var parentId:String=this.id;//弹出窗口时设定的中转参数
+					//systemServiceRO.getDepartmentById(parentId);
+				}
 			}
 			
 			protected function validateForm(event:MouseEvent):void
 			{
-
+				var validatorErrorArray:Array = Validator.validateAll(validatorArr);;
+				var isValidForm:Boolean = validatorErrorArray.length == 0;
+				if (isValidForm) {
+					teacher.name = teacherName.text;
+					teacher.sex = sex.selectedItem.value;
+					teacher.birthday = DateFormatter.parseDateString(birthday.text);
+					teacher.teacherMarried = marriage.selectedItem.value;
+					teacher.nation = nation.text;
+					teacher.politicsStatus = politicStatus.selectedItem.value;
+					teacher.teacherID = idCode.text;
+					teacher.teacherNativePlace = nativePlace.text;
+					teacher.teacherMail = mail.text;
+					teacher.homePhone = homePhone.text;
+					teacher.teacherNo = teacherno.text;
+					teacher.teacherEducation = education.selectedItem.value;
+					teacher.teacherProfession = profession.text;
+					teacher.teacherGraduateSchool = school.text;
+					teacher.teacherProfessionTitle = professionalTitle.text;
+					teacher.teacherSkillLevel = skillLevel.text;
+					teacher.teacherSkillLevelDate = DateFormatter.parseDateString(skillLevelDate.text);
+					teacher.teacherDepartment = department.selectedItem.value;
+					teacher.teacherPosition = position.text;
+					teacher.teacherContactPhone = contactPhone.text;
+					teacher.teacherOfficePhone = officePhone.text;
+					teacher.teacherWorkDate = DateFormatter.parseDateString(workDate.text);
+					teacher.teacherAddress = address.text;
+					//teacher.teacherPhoto = status.text;
+					teacher.teacherStatus = status.selectedItem.value;
+					teacher.teacherAttendDate = DateFormatter.parseDateString(attendDate.text);
+					
+					//systemServiceRO.departmentAdd(department,parentId,supervisor,selectedLeaderRoles);
+				} else {
+					var err:ValidationResultEvent;
+					var errorMessageArray:Array = [];
+					for each (err in validatorErrorArray) {
+						var errField:String = FormItem(err.currentTarget.source.parent).label
+						errorMessageArray.push(errField + ": " + err.message);
+					}
+					Alert.show(errorMessageArray.join("\n\n"), "请按照以下错误提示信息重新填写", Alert.OK);
+				}
 			}
 		]]>
 	</fx:Script>
@@ -27,9 +135,19 @@
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
 		<mx:StringValidator id="name_stringValidator" source="{teacherName}" property="text"  requiredFieldError="不能为空"/>
-		<mx:PhoneNumberValidator id="phone_phoneNumberValidator" source="{homePhone}" required="false" property="text" minDigits="6" requiredFieldError="错误格式的电话"/>
+		<mx:DateValidator id="birthday_dateValidator" source="{birthday}" property="text"  requiredFieldError="请选择"/>
+		<mx:StringValidator id="nation_stringValidator" source="{nation}" property="text"  requiredFieldError="不能为空"/>
+		<mx:StringValidator id="idCode_stringValidator" source="{idCode}" property="text"  requiredFieldError="不能为空"/>
+		<mx:StringValidator id="nativePlace_stringValidator" source="{nativePlace}" property="text"  requiredFieldError="不能为空"/>
+		<mx:StringValidator id="department_stringValidator" source="{department}" property="text"  requiredFieldError="不能为空"/>
+		<mx:StringValidator id="position_stringValidator" source="{position}" property="text"  requiredFieldError="不能为空"/>
+		<mx:PhoneNumberValidator id="cellphone_phoneNumberValidator" source="{cellPhone}" property="text" minDigits="6" requiredFieldError="错误格式的电话"/>
+		<mx:PhoneNumberValidator id="homephone_phoneNumberValidator" source="{homePhone}" required="false" property="text" minDigits="6" requiredFieldError="错误格式的电话"/>
+		<mx:DateValidator id="work_dateValidator" source="{workDate}" property="text"  requiredFieldError="请选择"/>
+		<mx:DateValidator id="attend_dateValidator" source="{attendDate}" property="text"  requiredFieldError="请选择"/>
+		<valueObjects:TeacherModel id="teacher"/>
 	</fx:Declarations>
-	<s:Panel width="100%" height="100%" title="教师信息录入"  skinClass="system.skins.WlzxPanelSkin"   borderVisible="true" dropShadowVisible="false">
+	<s:Panel width="100%" height="100%" title="教师信息编辑"  skinClass="system.skins.WlzxPanelSkin"   borderVisible="true" dropShadowVisible="false">
 		<s:VGroup width="100%" height="100%">
 			<mx:TabNavigator id="systems"  width="100%" height="100%" tabStyleName="customTabStyles"  horizontalGap="1" borderVisible="false"  tabWidth="120" paddingTop="0">
 				<s:NavigatorContent label="基础信息">
@@ -37,29 +155,34 @@
 						<s:VerticalLayout/>
 					</s:layout>
 					<mx:Form width="100%" height="100%" textAlign="left" labelWidth="70">
-						<s:HGroup width="100%" height="40%">
-							<s:Label>
-								<s:text>基本信息</s:text>
-							</s:Label>
+						<s:HGroup width="100%" height="40%" >
+							<s:VGroup width="10%" height="100%">
+								<s:Label>
+									<s:text>基本信息</s:text>
+								</s:Label>
+							</s:VGroup>
 							<s:VGroup width="40%" height="100%">
 								<s:HGroup width="100%">
 									<mx:FormItem label="姓名" width="50%">
 										<s:TextInput id="teacherName" width="100%"/>
 									</mx:FormItem>
 									<mx:FormItem label="性别" width="50%">
-										<s:ComboBox 
+										<s:DropDownList 
 											id="sex" 
 											selectedIndex="0" 
-											labelField="" width="100%"/> 
+											width="100%"
+											dataProvider="{sexArr}" 
+											labelField="name"/> 
 									</mx:FormItem>
 								</s:HGroup>
 								<s:HGroup width="100%">
 									<mx:FormItem label="婚姻状况" width="50%">
-										<s:ComboBox 
+										<s:DropDownList 
 											id="marriage" 
 											width="100%" 
 											selectedIndex="0" 
-											labelField=""/>
+											dataProvider="{marriageArr}" 
+											labelField="name"/>
 									</mx:FormItem>
 									<mx:FormItem label="民族" width="50%">
 										<mx:TextInput id="nation" width="100%"/>
@@ -75,14 +198,14 @@
 									<mx:TextInput id="address" width="100%"/>
 								</mx:FormItem>
 							</s:VGroup>
-							<s:VGroup width="35%">
+							<s:VGroup width="30%">
 								<s:HGroup width="100%">
 									<mx:FormItem label="出生年月" width="100%">
 										<mx:DateField id="birthday" width="100%"/>
 									</mx:FormItem>
 								</s:HGroup>
 								<mx:FormItem label="政治面貌" width="100%">
-									<s:ComboBox 
+									<s:DropDownList 
 										id="politicStatus" 
 										width="100%" 
 										selectedIndex="0" 
@@ -98,7 +221,7 @@
 									<mx:TextInput id="cellPhone" width="100%"/>
 								</mx:FormItem>
 							</s:VGroup>
-							<s:VGroup width="25%">
+							<s:VGroup width="20%">
 								<mx:FormItem label="照片" width="100%" height="200%">
 									<mx:Image/>
 								</mx:FormItem>
@@ -108,12 +231,19 @@
 							</s:VGroup>
 						</s:HGroup>
 						<s:HGroup width="100%" height="20%">
-							<s:Label>
-								<s:text>教育背景</s:text>
-							</s:Label>
+							<s:VGroup width="10%" height="100%">
+								<s:Label>
+									<s:text>教育背景</s:text>
+								</s:Label>
+							</s:VGroup>
 							<s:VGroup width="20%">
 								<mx:FormItem label="学历" width="100%">
-									<mx:TextInput id='education' width="100%"/>
+									<s:ComboBox 
+										id="education" 
+										width="100%" 
+										selectedIndex="0" 
+										dataProvider="{educationArr}" 
+										labelField="name"/>
 								</mx:FormItem>
 								<mx:FormItem label="职称" width="100%">
 									<mx:TextInput id='professionalTitle' width="100%"/>
@@ -137,13 +267,20 @@
 							</s:VGroup>
 						</s:HGroup>
 						<s:HGroup width="100%">
-							<s:Label>
-								<s:text>温中聘请信息</s:text>
-							</s:Label>
+							<s:VGroup width="10%" height="100%">
+								<s:Label>
+									<s:text>温中聘请信息</s:text>
+								</s:Label>
+							</s:VGroup>
 							<s:VGroup width="100%">
 								<s:HGroup width="100%">
 									<mx:FormItem label="部门" width="20%">
-										<mx:TextInput id='department' width="100%"/>
+										<s:ComboBox 
+											id="department" 
+											width="100%" 
+											selectedIndex="0" 
+											dataProvider="{departmentArr}" 
+											labelField="name"/>
 									</mx:FormItem>
 									<mx:FormItem label="职务" width="30%">
 										<mx:TextInput id='position' width="100%"/>
@@ -170,10 +307,10 @@
 									<mx:FormItem label="校龄" width="30%">
 										<mx:TextInput id='attendPeriod' width="100%"/>
 									</mx:FormItem>
-									<mx:FormItem label="状态" width="50%">
-										<s:ComboBox id='status' width="100%"/>
+									<mx:FormItem label="状态" width="20%">
+										<s:DropDownList id='status' width="100%"/>
 									</mx:FormItem>
-									<s:Button click="validateForm(event)"/>
+									<s:Button click="validateForm(event)" label="保存"/>
 								</s:HGroup>
 								<s:HGroup width="100%">
 									<s:Label width="8%" height="30" verticalAlign="middle">

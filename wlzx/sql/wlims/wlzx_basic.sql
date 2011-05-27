@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2011 年 05 月 27 日 14:34
+-- 生成日期: 2011 年 05 月 27 日 20:18
 -- 服务器版本: 5.0.91
 -- PHP 版本: 5.2.13
 
@@ -18,6 +18,123 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 --
 -- 数据库: `wlzx_basic`
 --
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `basic_teacher`
+--
+
+CREATE TABLE IF NOT EXISTS `basic_teacher` (
+  `teacher_id` int(20) NOT NULL auto_increment COMMENT '系统自增编号',
+  `user_id` bigint(20) NOT NULL COMMENT '账号外键',
+  `teacher_cname` varchar(50) NOT NULL COMMENT '中文名',
+  `teacher_sex` smallint(2) NOT NULL COMMENT '性别',
+  `teacher_birthday` date NOT NULL COMMENT '出生日期',
+  `teacher_marrage` smallint(2) NOT NULL COMMENT '婚姻',
+  `teacher_nation` varchar(10) NOT NULL COMMENT '民族',
+  `teacher_politics_status` smallint(2) NOT NULL COMMENT '政治面貌',
+  `teacher_identify` char(14) NOT NULL COMMENT '身份证',
+  `teacher_native_place` varchar(50) NOT NULL COMMENT '籍贯',
+  `teacher_email` varchar(50) NOT NULL COMMENT '邮箱',
+  `teacher_home_phone` varchar(20) NOT NULL COMMENT '家庭电话',
+  `teacher_address` varchar(200) NOT NULL COMMENT '家庭地址',
+  `teacher_mobile_phone` varchar(20) NOT NULL COMMENT '手机',
+  `teacher_no` varchar(20) NOT NULL COMMENT '短号',
+  `teacher_education` varchar(10) NOT NULL COMMENT '最高学历',
+  `teacher_profession` varchar(50) NOT NULL COMMENT '专业',
+  `teacher_graduate_school` varchar(100) NOT NULL COMMENT '毕业院校',
+  `teacher_professional_title` varchar(50) NOT NULL COMMENT '职称',
+  `teacher_skill_level` varchar(20) NOT NULL COMMENT '技能等级',
+  `teacher_skill_level_date` date NOT NULL COMMENT '技能鉴定时间',
+  `teacher_department` varchar(50) NOT NULL COMMENT '部门',
+  `teacher_position` varchar(50) NOT NULL COMMENT '职务',
+  `teacher_office_phone` varchar(20) default NULL COMMENT '办公电话',
+  `teacher_contact_phone` varchar(50) default NULL COMMENT '紧要联络电话',
+  `teacher_work_date` date default NULL COMMENT '何时工作',
+  `teacher_work_period` varchar(10) default NULL COMMENT '工龄',
+  `teacher_attend_date` date default NULL COMMENT '入校时间',
+  `teacher_attend_period` varchar(10) default NULL COMMENT '校龄',
+  `teacher_status` tinyint(4) NOT NULL COMMENT '员工状态',
+  `teacher_photo_src` varchar(200) NOT NULL COMMENT '照片地址',
+  `teacher_create_date` date NOT NULL COMMENT '创建日期',
+  `teacher_modified_date` date NOT NULL COMMENT '修改日期',
+  PRIMARY KEY  (`teacher_id`),
+  KEY `teacher_no` (`teacher_no`),
+  KEY `user_id` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='教师记录' AUTO_INCREMENT=1 ;
+
+--
+-- 转存表中的数据 `basic_teacher`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `basic_teacher_department`
+--
+
+CREATE TABLE IF NOT EXISTS `basic_teacher_department` (
+  `department_id` int(20) NOT NULL auto_increment COMMENT '系统自增编号',
+  `teacher_id` bigint(20) NOT NULL COMMENT '教师外键',
+  `teacher_department` varchar(50) NOT NULL COMMENT '部门',
+  `teacher_position` varchar(50) NOT NULL COMMENT '职务',
+  PRIMARY KEY  (`department_id`),
+  KEY `department_id` (`department_id`),
+  KEY `teacher_id` (`teacher_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='教师所在其他部门' AUTO_INCREMENT=1 ;
+
+--
+-- 转存表中的数据 `basic_teacher_department`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `basic_teacher_social_relation`
+--
+
+CREATE TABLE IF NOT EXISTS `basic_teacher_social_relation` (
+  `relation_id` int(20) NOT NULL auto_increment COMMENT '系统自增编号',
+  `teacher_id` bigint(20) NOT NULL COMMENT '教师外键',
+  `relation_name` varchar(20) NOT NULL COMMENT '姓名',
+  `relation_with` varchar(20) NOT NULL COMMENT '与本人关系',
+  `relation_company` varchar(50) NOT NULL COMMENT '所在工作单位',
+  `relation_phone` varchar(20) NOT NULL COMMENT '联系电话',
+  PRIMARY KEY  (`relation_id`),
+  KEY `relation_id` (`relation_id`),
+  KEY `teacher_id` (`teacher_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='社会关系' AUTO_INCREMENT=1 ;
+
+--
+-- 转存表中的数据 `basic_teacher_social_relation`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `basic_teacher_work_experience`
+--
+
+CREATE TABLE IF NOT EXISTS `basic_teacher_work_experience` (
+  `experience_id` int(20) NOT NULL auto_increment COMMENT '系统自增编号',
+  `teacher_id` bigint(20) NOT NULL COMMENT '教师外键',
+  `experience_start_date` date NOT NULL COMMENT '开始时间',
+  `experience_end_date` date NOT NULL COMMENT '结束时间',
+  `experience_company` varchar(50) NOT NULL COMMENT '工作单位',
+  `experience_position` varchar(50) NOT NULL COMMENT '职务',
+  PRIMARY KEY  (`experience_id`),
+  KEY `experience_id` (`experience_id`),
+  KEY `teacher_id` (`teacher_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='教师工作经历' AUTO_INCREMENT=1 ;
+
+--
+-- 转存表中的数据 `basic_teacher_work_experience`
+--
+
 
 -- --------------------------------------------------------
 

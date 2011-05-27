@@ -8,22 +8,22 @@
 			<column name="teacher_id" />
 			<generator class="native" />
 		</id>
-		<property name="teacherCName" type="string">
+		<property name="name" type="string">
 			<column name="teacher_cname" />
 		</property>
-		<property name="teacherSex" type="boolean">
+		<property name="sex" type="boolean">
 			<column name="teacher_sex" />
 		</property>
-		<property name="teacherBirthday" type="java.sql.Date">
+		<property name="birthday" type="java.sql.Date">
 			<column name="teacher_birthday" />
 		</property>
 		<property name="teacherMarried" type="boolean">
 			<column name="teacher_marrage" />
 		</property>
-		<property name="teacherNation" type="string">
+		<property name="nation" type="string">
 			<column name="teacher_nation" />
 		</property>
-		<property name="teacherPoliticsStatus" type="int">
+		<property name="politicsStatus" type="int">
 			<column name="teacher_politics_status" />
 		</property>
 		<property name="teacherID" type="string">
@@ -35,7 +35,7 @@
 		<property name="teacherMail" type="string">
 			<column name="teacher_email" />
 		</property>
-		<property name="teacherHomePhone" type="string">
+		<property name="homePhone" type="string">
 			<column name="teacher_home_phone" />
 		</property>
 		<property name="teacherNo" type="string">
@@ -77,13 +77,13 @@
 		<property name="teacherWorkPeriod" type="string">
 			<column name="teacher_work_period" />
 		</property>
-		<property name="teacherAddress" type="string">
+		<property name="address" type="string">
 			<column name="teacher_address" />
 		</property>
 		<property name="teacherPhoto" type="string">
 			<column name="teacher_photo_src" />
 		</property>
-		<property name="teacherStaus" type="int">
+		<property name="teacherStatus" type="int">
 			<column name="teacher_status" />
 		</property>
 		<property name="teacherAttendDate" type="java.sql.Date">
