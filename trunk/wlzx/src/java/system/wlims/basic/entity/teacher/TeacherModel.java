@@ -5,23 +5,16 @@ import java.util.HashSet;
 import java.util.Set;
 
 
-import system.entity.UserModel;
-import system.wlims.basic.entity.BaseModel;
+import system.entity.PersonModel;
 
-public class TeacherModel extends BaseModel{
+public class TeacherModel extends PersonModel{
 
 	private static final long serialVersionUID = -8699764053458317416L;
 	
-	private String teacherCName;
-	private Boolean teacherSex;
-	private Date teacherBirthday;
 	private Boolean teacherMarried;
-	private String teacherNation;
-	private Integer teacherPoliticsStatus;
 	private String teacherID;
 	private String teacherNativePlace;
 	private String teacherMail;
-	private String teacherHomePhone;
 	private String teacherNo;
 	private String teacherEducation;
 	private String teacherProfession;
@@ -37,54 +30,20 @@ public class TeacherModel extends BaseModel{
 	private String teacherWorkPeriod;
 	private String teacherAddress;
 	private String teacherPhoto;
-	private Integer teacherStaus;
+	private Integer teacherStatus;
 	
 	private Date teacherAttendDate;
 	private String teacherAttendPeriod;
-	private Date creationDate;
-	private Date modifiedDate;
-	
-	private UserModel user;
 	
 	private Set<TeacherDepartment> otherDepartments = new HashSet<TeacherDepartment>();
 	private Set<TeacherRelation> relations = new HashSet<TeacherRelation>();
 	private Set<TeacherExperience> experiences = new HashSet<TeacherExperience>();
 
-	public String getTeacherCName() {
-		return teacherCName;
-	}
-	public void setTeacherCName(String teacherCName) {
-		this.teacherCName = teacherCName;
-	}
-	public Boolean getTeacherSex() {
-		return teacherSex;
-	}
-	public void setTeacherSex(Boolean teacherSex) {
-		this.teacherSex = teacherSex;
-	}
-	public Date getTeacherBirthday() {
-		return teacherBirthday;
-	}
-	public void setTeacherBirthday(Date teacherBirthday) {
-		this.teacherBirthday = teacherBirthday;
-	}
 	public Boolean getTeacherMarried() {
 		return teacherMarried;
 	}
 	public void setTeacherMarried(Boolean teacherMarried) {
 		this.teacherMarried = teacherMarried;
-	}
-	public String getTeacherNation() {
-		return teacherNation;
-	}
-	public void setTeacherNation(String teacherNation) {
-		this.teacherNation = teacherNation;
-	}
-	public Integer getTeacherPoliticsStatus() {
-		return teacherPoliticsStatus;
-	}
-	public void setTeacherPoliticsStatus(Integer teacherPoliticsStatus) {
-		this.teacherPoliticsStatus = teacherPoliticsStatus;
 	}
 	public String getTeacherID() {
 		return teacherID;
@@ -103,12 +62,6 @@ public class TeacherModel extends BaseModel{
 	}
 	public void setTeacherMail(String teacherMail) {
 		this.teacherMail = teacherMail;
-	}
-	public String getTeacherHomePhone() {
-		return teacherHomePhone;
-	}
-	public void setTeacherHomePhone(String teacherHomePhone) {
-		this.teacherHomePhone = teacherHomePhone;
 	}
 	public String getTeacherNo() {
 		return teacherNo;
@@ -200,24 +153,6 @@ public class TeacherModel extends BaseModel{
 	public void setTeacherPhoto(String teacherPhoto) {
 		this.teacherPhoto = teacherPhoto;
 	}
-	public Integer getTeacherStaus() {
-		return teacherStaus;
-	}
-	public void setTeacherStaus(Integer teacherStaus) {
-		this.teacherStaus = teacherStaus;
-	}
-	public Date getCreationDate() {
-		return creationDate;
-	}
-	public void setCreationDate(Date creationDate) {
-		this.creationDate = creationDate;
-	}
-	public Date getModifiedDate() {
-		return modifiedDate;
-	}
-	public void setModifiedDate(Date modifiedDate) {
-		this.modifiedDate = modifiedDate;
-	}
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
@@ -239,12 +174,6 @@ public class TeacherModel extends BaseModel{
 	public Set<TeacherExperience> getExperiences() {
 		return experiences;
 	}
-	public void setUser(UserModel user) {
-		this.user = user;
-	}
-	public UserModel getUser() {
-		return user;
-	}
 	public void setTeacherAttendDate(Date teacherAttendDate) {
 		this.teacherAttendDate = teacherAttendDate;
 	}
@@ -256,6 +185,12 @@ public class TeacherModel extends BaseModel{
 	}
 	public String getTeacherAttendPeriod() {
 		return teacherAttendPeriod;
+	}
+	public void setTeacherStatus(Integer teacherStatus) {
+		this.teacherStatus = teacherStatus;
+	}
+	public Integer getTeacherStatus() {
+		return teacherStatus;
 	}
 
 }
