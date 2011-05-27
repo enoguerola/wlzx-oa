@@ -48,12 +48,13 @@ public class DirectoryServiceImpl implements DirectoryService {
 
 	@Override
 	public boolean saveDirectoryItem(String id, String type, String name,
-			String value, int sequence) {
+			String value, int sequence,String extraValue) {
 		if(StringUtils.isEmpty(id)){
 			DirectoryModel model=new DirectoryModel();
 			model.setType(type);
 			model.setName(name);
 			model.setValue(value);
+			model.setExtraValue(extraValue);
 			model.setSequence(sequence);
 			model.setCreationDate(new Date());
 			model.setModifiedDate(model.getCreationDate());
@@ -62,6 +63,7 @@ public class DirectoryServiceImpl implements DirectoryService {
 			DirectoryModel model=directoryDao.get(id);
 			model.setName(name);
 			model.setValue(value);
+			model.setExtraValue(extraValue);
 			model.setSequence(sequence);
 			model.setModifiedDate(new Date());
 			directoryDao.saveOrUpdate(model);

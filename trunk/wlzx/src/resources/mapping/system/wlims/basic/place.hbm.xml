@@ -21,15 +21,22 @@
 		<property name="symbol" type="string">
 			<column name="symbol" />
 		</property>
-		<property name="function" type="string">
-			<column name="function" />
+		<property name="functions" type="string">
+			<column name="functions" />
 		</property>
-		<property name="areaNum" type="string">
-			<column name="area_num" />
+		<property name="areaBegin" type="float">
+			<column name="area_begin" />
 		</property>
-		<property name="containNum" type="string">
-			<column name="contain_num" />
+		<property name="areaEnd" type="float">
+			<column name="area_end" />
 		</property>
+		<property name="containBegin" type="int">
+			<column name="contain_begin" />
+		</property>
+		<property name="containEnd" type="int">
+			<column name="contain_end" />
+		</property>
+		
 		<property name="remarks" type="string">
 			<column name="remarks" />
 		</property>
