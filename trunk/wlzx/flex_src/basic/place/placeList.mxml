@@ -1,70 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Module xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		   xmlns:s="library://ns.adobe.com/flex/spark" 
-		   xmlns:mx="library://ns.adobe.com/flex/mx" layout="vertical" width="100%" height="100%"   creationComplete="init();" xmlns:component="system.component.*" >
+		   xmlns:mx="library://ns.adobe.com/flex/mx" layout="vertical"  width="100%" height="100%"   creationComplete="init();" xmlns:component="system.component.*" >
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
-		<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
-			<mx:method name="getUsersByCondition"  concurrency="last"  result="getUsersByCondition_resultHandler(event);" />
-			<mx:method name="getAllUsers"  concurrency="last"  result="getAllUsers_resultHandler(event);" />
-			<mx:method name="activeUser"  concurrency="last"  result="activeUser_resultHandler(event);" />
-			<mx:method name="freezeUser"  concurrency="last"  result="freezeUser_resultHandler(event);" />
-			<mx:method name="resetUserPW"  concurrency="last"  result="resetUserPW_resultHandler(event);" />
+		<mx:NumberValidator id="area_begin_numberValidator" source="{area_begin}" required="false" property="text"   invalidCharError="请输入数值" domain="real"/>
+		<mx:NumberValidator id="area_end_numberValidator" source="{area_end}" required="false" property="text" invalidCharError="请输入数值" domain="real"/>
+		<mx:NumberValidator id="contain_begin_numberValidator" source="{contain_begin}" required="false" property="text" integerError="请输入正整数" domain="int" minValue="0"/>
+		<mx:NumberValidator id="contain_end_numberValidator" source="{contain_end}" required="false" property="text" integerError="请输入正整数" domain="int" minValue="0"/>
+
+		
+		
+		<mx:RemoteObject id="placeServiceRO" destination="placeServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+			<mx:method name="getPlacesByCondition"  concurrency="last"  result="getPlacesByCondition_resultHandler(event);" />
+			<mx:method name="getAllPlaces"  concurrency="last"  result="getAllPlaces_resultHandler(event);" />
+			<mx:method name="deletePlace"  concurrency="last"  result="deletePlace_resultHandler(event);" />
+		</mx:RemoteObject>
+		<mx:RemoteObject id="directoryServiceRO" destination="directoryServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+			<mx:method name="getDirectoryItemsByType"  concurrency="multiple"  result="getDirectoryItemsByType_resultHandler(event);" />
 		</mx:RemoteObject>
 	</fx:Declarations>
-	<fx:Style> 
-		.ChineseFont{ 
-			fontFamily:'Verdana','宋体'; 
-			fontSize:12; 
-		}
-		
-	</fx:Style>
+	
 	<fx:Script> 
 		<![CDATA[  
 			import mx.collections.ArrayCollection;
+			import mx.containers.*;
 			import mx.controls.*;
 			import mx.events.*;
+			import mx.events.ValidationResultEvent;
 			import mx.managers.PopUpManager;
 			import mx.rpc.events.*;
+			import mx.validators.Validator;
 			
 			import system.entity.DepartmentModel;
 			import system.entity.UserModel;
 			import system.index;
 			import system.utils.CommonUtils;
 			[Bindable] 
-			public var status:ArrayCollection = new ArrayCollection( 
-				[ {label:"全部", data:null},  
-					{label:"激活", data:true},  
-					{label:"冻结", data:false} ]); 
-			public var selectedAccount:String=null;
-			public var accounts:ArrayCollection = new ArrayCollection();
+			private var validatorArr:Array;
+			public var places:ArrayCollection = new ArrayCollection();
+			public var placeTypes:ArrayCollection = new ArrayCollection(); 
+			public var buildings:ArrayCollection = new ArrayCollection(); 
 			private function init():void {	
-				accounts.addItem("");
-				systemServiceRO.getAllUsers();
+				validatorArr = new Array();
+				validatorArr.push(area_begin_numberValidator);
+				validatorArr.push(area_end_numberValidator);
+				validatorArr.push(contain_begin_numberValidator);
+				validatorArr.push(contain_end_numberValidator);
+				placeServiceRO.getAllPlaces();
+				directoryServiceRO.getDirectoryItemsByType("placeType");
+				directoryServiceRO.getDirectoryItemsByType("building");
+				places.addItem("");
+				placeTypes.addItem({label:"全部", data:null});
+				buildings.addItem({label:"全部", data:null});
+				
+				search_type.dataProvider=placeTypes;
+				search_building.dataProvider=buildings;
 				search();
 			}
-			protected function getAllUsers_resultHandler(event:ResultEvent):void{
-				var users:ArrayCollection=event.result as ArrayCollection;
-				for(var i:int=0;i<users.length;i++){
-					accounts.addItem(users.getItemAt(i).name);
+			protected function getDirectoryItemsByType_resultHandler(event:ResultEvent):void{
+				var list:ArrayCollection=event.result as ArrayCollection;
+				for(var i:int=0;i<list.length;i++){
+					var directoryItem:Object=list.getItemAt(i);
+					if(directoryItem.type=='placeType'){
+						placeTypes.addItem({label:directoryItem.name, data:directoryItem.id});
+						if(i==list.length-1)search_type.dataProvider=placeTypes;
+						
+					}else if(directoryItem.type=='building'){
+						buildings.addItem({label:directoryItem.name, data:directoryItem.id});
+						if(i==list.length-1)search_building.dataProvider=buildings;
+					}
 				}
-				search_account.dataProvider=accounts;
+				
+				
+				
+			}
+			protected function getAllPlaces_resultHandler(event:ResultEvent):void{
+				var placeList:ArrayCollection=event.result as ArrayCollection;
+				for(var i:int=0;i<placeList.length;i++){
+					places.addItem(placeList.getItemAt(i).name);
+				}
+				search_name.dataProvider=places;
 			}
 			private function systemFaultHandler(event:FaultEvent):void {
 				Alert.show(event.fault.faultString, 'Error');
 			}
-			private function activeUser_resultHandler(event:ResultEvent):void {
-				search();
-			}
-			private function freezeUser_resultHandler(event:ResultEvent):void {
-				search();
-			}
-			private function resetUserPW_resultHandler(event:ResultEvent):void {
-				Alert.show("密码重置成功");
-			}
-			protected function getUsersByCondition_resultHandler(event:ResultEvent):void{
+			
+			protected function getPlacesByCondition_resultHandler(event:ResultEvent):void{
 				var allList:ArrayCollection=event.result as ArrayCollection;
-				accountTable.initdata(allList);
+				placeTable.initdata(allList);
+			}
+			private function deletePlace_resultHandler(event:ResultEvent):void{				
+				search();
 			}
 			public function formatDate(date:Date):String{
 				return CommonUtils.formatDate(date);
@@ -75,116 +102,156 @@
 			protected function search():void
 			{
 				// TODO Auto-generated method stub
-				var account:String=search_account.text;
-				var state:Object=search_state.selectedItem.data;
-				//				Alert.show(state+"");
-				systemServiceRO.getUsersByCondition(account,state);
-			}
-			protected function activeAccount():void
-			{
-				selectedAccount=accountTable.selectedRowId;
-				if(selectedAccount!=null){
-					systemServiceRO.activeUser(selectedAccount);
-				}else {
-					Alert.show("请先选择需要激活的帐号记录");
+				var validatorErrorArray:Array = Validator.validateAll(validatorArr);;
+				var isValidForm:Boolean = validatorErrorArray.length == 0;
+				if (isValidForm) {
+					var searchName:String=search_name.text;
+					var searchPlace:Object=search_type.selectedItem.data;
+					var searchBuilding:Object=search_building.selectedItem.data;
+					var areaBegin:Object=null;
+					if(area_begin.text!="")areaBegin=area_begin.text as int;
+					var areaEnd:Object=null;
+					if(area_end.text!="")areaEnd=area_end.text as int;
+					var containBegin:Object=null;
+					if(contain_begin.text!="")containBegin=contain_begin.text as int;
+					var containEnd:Object=null;
+					if(contain_end.text!="")containEnd=contain_end.text as int;
+					placeServiceRO.getPlacesByCondition(searchName,searchPlace,searchBuilding,areaBegin,areaEnd,containBegin,containEnd);
+				} else {
+					var err:ValidationResultEvent;
+					var errorMessageArray:Array = [];
+					for each (err in validatorErrorArray) {
+						var errField:String = FormItem(err.currentTarget.source.parent).label
+						errorMessageArray.push(errField + ": " + err.message);
+					}
+					Alert.show(errorMessageArray.join("\n\n"), "搜索条件有误，错误信息如下", Alert.OK);
 				}
+				
+				
+//				//				Alert.show(state+"");
+//				systemServiceRO.getUsersByCondition(place,state);
 			}
-			protected function freezeAccount():void
+			protected function addPlace():void
 			{
-				selectedAccount=accountTable.selectedRowId;
-				if(selectedAccount!=null){
-					systemServiceRO.freezeUser(selectedAccount);
-				}else {
-					Alert.show("请先选择需要冻结的帐号记录");
-				}
+				
 			}
-			protected function resetAccountPW():void
-			{
-				selectedAccount=accountTable.selectedRowId;
-				if(selectedAccount!=null){
-					systemServiceRO.resetUserPW(selectedAccount);
-				}else {
-					Alert.show("请先选择需要重置密码的帐号记录");
-				}
+			public function enterEdit(place_id:String):void{
+				
 			}
-			protected function checkDetail():void
-			{
-				selectedAccount=accountTable.selectedRowId;
-				if(selectedAccount!=null){
-					Alert.show(selectedAccount);
-				}else {
-					Alert.show("请先选择需要查看详细信息的帐号记录");
-				}
+			public function deletePlace(place_id:String):void{
+				Alert.show("你确定要删除该场所吗?","确认删除",Alert.NO|Alert.YES,null,function(event:CloseEvent):void{
+					if(event.detail == Alert.YES)
+						placeServiceRO.deletePlace_resultHandler(place_id);
+				},null,Alert.NO);
+				
 			}
+		
 			
+
+
 		]]> 		
 	</fx:Script> 
-	<s:Panel width="100%" height="100%"  skinClass="system.skins.WlzxPanelSkin" title="场所管理"  borderVisible="false" dropShadowVisible="false">
-		<s:VGroup width="100%" height="100%">
-			<s:HGroup verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12">
-				<mx:HBox width="100%" height="30" paddingLeft="20"  horizontalGap="0" backgroundColor="#C5E497"  verticalAlign="middle">
-					<mx:Label text="|"/>
-					<mx:LinkButton  label="新增" icon="@Embed(source='../WebContent/resources/common/tools/button_add_icon.png')"  click="activeAccount()"/>
-					<mx:Label text="|"/>
-					<mx:LinkButton  label="编辑" icon="@Embed(source='../WebContent/resources/common/tools/button_edit_icon.png')" click="freezeAccount()" />
-					<mx:Label text="|"/>
-					<mx:LinkButton  label="删除" icon="@Embed(source='../WebContent/resources/common/tools/button_delete_icon.png')" click="resetAccountPW()"/>
-					<mx:Label text="|"/>
-					<mx:LinkButton  label="查看使用记录" icon="@Embed(source='../WebContent/resources/common/tools/button_detail_icon.png')" click="checkDetail()" />
-					<mx:Label text="|"/>
-				</mx:HBox>
-			</s:HGroup>
-			<s:VGroup width="100%" height="100%" gap="10" verticalAlign="middle" horizontalAlign="center" >
-				<mx:HBox width="100%" height="60"   horizontalGap="10" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
-					<mx:FormHeading label="条件查询">
-						
-					</mx:FormHeading>
-					
-					<s:HGroup verticalAlign="middle">
-						<s:Label  text="名称" />
-						<component:AutoComplete id="search_account"  IsfocusInDropDown="true"  IsAutoComplete="true" styleName="ChineseFont">
+	
+			<s:Panel width="100%" height="100%"  skinClass="system.skins.WlzxPanelSkin" title="场所管理"  borderVisible="false" dropShadowVisible="false">
+				<s:VGroup width="100%" height="100%">
+					<s:HGroup verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12">
+						<mx:HBox width="100%" height="30" paddingLeft="20"  horizontalGap="0" backgroundColor="#C5E497"  verticalAlign="middle">
+							<mx:Label text="|"/>
+							<mx:LinkButton  label="新增" icon="@Embed(source='../WebContent/resources/common/tools/button_add_icon.png')"  />
+							<mx:Label text="|"/>
 							
-						</component:AutoComplete>
-					</s:HGroup>	
-					<s:HGroup verticalAlign="middle">
-						<s:Label  text="类型" />
-						<s:ComboBox id="search_state"  dataProvider="{status}" selectedIndex="0"/>
+							<mx:LinkButton  label="查看使用记录" icon="@Embed(source='../WebContent/resources/common/tools/button_detail_icon.png')"  />
+							<mx:Label text="|"/>
+						</mx:HBox>
 					</s:HGroup>
-					<mx:Button  label="搜索"  width="80" icon="@Embed(source='../WebContent/resources/common/tools/button_search_icon.png')"  click="search()"/>
-					
-					
-				</mx:HBox>
-				<mx:HBox width="100%" height="100%" paddingLeft="10" paddingRight="10" paddingBottom="10">
-					<s:Panel width="100%" height="100%"  skinClass="system.skins.WlzxPanelSkin" title="场所列表"  cornerRadius="5" borderVisible="false" dropShadowVisible="false">
+					<s:VGroup width="100%" height="100%" gap="10" verticalAlign="middle" horizontalAlign="center" >
 						
-						<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="false"   borderAlpha="0.2" verticalAlign="middle"   id="accountTable" pagecount="10"  >				
-							<component:mygridcolumns>
+						
+						
+							<mx:VBox width="100%" height="60" verticalAlign="middle" horizontalAlign="left"   verticalGap="0" borderVisible="true"    paddingLeft="10" paddingRight="10">
+								<s:Label text="条件查询"  height="30" width="100%" textAlign="left" fontWeight="bold"/>
+								<mx:HBox width="100%" height="30"   horizontalGap="10" >
+									<s:HGroup verticalAlign="middle">
+										<s:Label  text="名称" />
+										<component:AutoComplete id="search_name"  IsfocusInDropDown="true"  IsAutoComplete="true">
+											
+										</component:AutoComplete>
+									</s:HGroup>	
+									<s:HGroup verticalAlign="middle">
+										<s:Label  text="类型" />
+										<mx:ComboBox  id="search_type" labelField="label"  width="120" selectedIndex="0"/>						
+									</s:HGroup>
+									<s:HGroup verticalAlign="middle">
+										<s:Label  text="位置" />
+										<mx:ComboBox  id="search_building" labelField="label"  width="120" selectedIndex="0"/>	
+									</s:HGroup>
+									<s:HGroup verticalAlign="middle">
+										<s:Label  text="面积" />
+										<s:TextInput id="area_begin" width="30"/>
+										<s:Label  text="-" />
+										<s:TextInput id="area_end" width="30"/>
+									</s:HGroup>	
+									<s:HGroup verticalAlign="middle">
+										<s:Label  text="容纳人数" />
+										<s:TextInput id="contain_begin" width="30"/>
+										<s:Label  text="-" />
+										<s:TextInput id="contain_end" width="30"/>
+									</s:HGroup>	
+									<mx:Button  label="搜索"  width="80"  click="search()"/>
+									
+									
+								</mx:HBox>
+							</mx:VBox>
+							
+							
+						<mx:HBox width="100%" height="100%" paddingLeft="10" paddingRight="10" paddingBottom="10">
+							<s:Panel width="100%" height="100%"  skinClass="system.skins.WlzxPanelSkin" title="场所列表"  cornerRadius="5" borderVisible="false" dropShadowVisible="false">
 								
-								<mx:DataGridColumn textAlign="center" headerText="编号" dataField="name" width="100">
-								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="名称" dataField="name" width="100">
-								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="类型" dataField="name" width="100">
-								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="位置" dataField="name" width="100">
-								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="功能" dataField="name" width="100">
-								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="面积" dataField="name" width="100">
-								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="容纳人数" dataField="name" width="100">
-								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="操作" dataField="name" width="100">
-								</mx:DataGridColumn>
-								
-							</component:mygridcolumns>
-						</component:WlzxPageDataGrid>
-					</s:Panel>
-				</mx:HBox>
+								<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="false"   borderAlpha="0.2" verticalAlign="middle"   id="placeTable" pagecount="10"  >				
+									<component:mygridcolumns>
+										
+										<mx:DataGridColumn textAlign="center" headerText="编号" dataField="name" width="100">
+										</mx:DataGridColumn>
+										<mx:DataGridColumn textAlign="center" headerText="名称" dataField="name" width="100">
+										</mx:DataGridColumn>
+										<mx:DataGridColumn textAlign="center" headerText="类型" dataField="name" width="100">
+										</mx:DataGridColumn>
+										<mx:DataGridColumn textAlign="center" headerText="位置" dataField="name" width="100">
+										</mx:DataGridColumn>
+										<mx:DataGridColumn textAlign="center" headerText="功能" dataField="name" width="100">
+										</mx:DataGridColumn>
+										<mx:DataGridColumn textAlign="center" headerText="面积" dataField="name" width="100">
+										</mx:DataGridColumn>
+										<mx:DataGridColumn textAlign="center" headerText="容纳人数" dataField="name" width="100">
+										</mx:DataGridColumn>
+										<mx:DataGridColumn textAlign="center" headerText="编辑" dataField="modifiedDate"  width="60">
+											<mx:itemRenderer>
+												<fx:Component>
+													<mx:LinkButton  label="[编辑]"   click="{this.outerDocument.enterEdit(data.id);}">											
+													</mx:LinkButton>										
+												</fx:Component>
+											</mx:itemRenderer>
+										</mx:DataGridColumn>
+										<mx:DataGridColumn textAlign="center" headerText="删除" dataField="modifiedDate" width="60">
+											<mx:itemRenderer>
+												<fx:Component>
+													<mx:LinkButton  label="[删除]"   click="{this.outerDocument.deletePlace(data.id);}">											
+													</mx:LinkButton>										
+												</fx:Component>
+											</mx:itemRenderer>
+										</mx:DataGridColumn>
+										
+										
+									</component:mygridcolumns>
+								</component:WlzxPageDataGrid>
+							</s:Panel>
+						</mx:HBox>
+						
+					</s:VGroup>
+				</s:VGroup>
 				
-			</s:VGroup>
-		</s:VGroup>
-		
-		
-	</s:Panel>
+				
+			</s:Panel>
+	
+	
 </mx:Module>

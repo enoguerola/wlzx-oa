@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="system.wlims.basic.entity.PlaceModel" table="wlzx_basic_place">
+		<id name="id">
+			<column name="id" />
+			<generator class="native" />
+		</id>
+		<property name="name" type="string">
+			<column name="name" />
+		</property>
+		<property name="position" type="string">
+			<column name="position" />
+		</property>
+		<property name="type" type="string">
+			<column name="type" />
+		</property>
+		
+		<property name="symbol" type="string">
+			<column name="symbol" />
+		</property>
+		<property name="function" type="string">
+			<column name="function" />
+		</property>
+		<property name="areaNum" type="string">
+			<column name="area_num" />
+		</property>
+		<property name="containNum" type="string">
+			<column name="contain_num" />
+		</property>
+		<property name="remarks" type="string">
+			<column name="remarks" />
+		</property>
+		<property name="creationDate" type="java.util.Date">
+			<column name="creation_date" />
+		</property>
+		<property name="modifiedDate" type="java.util.Date">
+			<column name="modified_date" />
+		</property>
+		
+	</class>
+</hibernate-mapping>
