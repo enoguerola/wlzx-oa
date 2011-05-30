@@ -56,14 +56,10 @@
 					{label:"音乐", data:"音乐"},
 					{label:"电脑", data:"电脑"},
 					{label:"其他", data:"其他"}]);
-			public var dayTimeTypes:ArrayCollection = new ArrayCollection( 
-				[	{dataField:"上午", headerText:"上午"},  
-					{dataField:"下午", headerText:"下午"},
-					{dataField:"晚上", headerText:"晚上"}]); 
+			 
 			private function init():void {	
 				applyType.dataProvider=applyTypes;
 				courseType.dataProvider=courseTypes;
-				checkBoxRepeater.dataProvider=dayTimeTypes;
 			}
 			public function cancleApply(id:String):void{
 				
@@ -74,6 +70,80 @@
 			public function detailApply(id:String):void{
 			
 			}
+			protected function removeItem_clickHandler(event:MouseEvent):void{
+				var target:LinkButton=event.target as LinkButton;
+				var owner:GridRow=target.owner as GridRow;
+				container.removeElement(owner);
+			}
+			protected function addItem_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+			
+				var row1:GridRow=new GridRow();
+				
+				var rowItem_class:GridItem=new GridItem();
+				var aClass:Label=new Label();
+				aClass.text="班级";
+				aClass.percentWidth=100;
+				rowItem_class.addElement(aClass);
+				row1.addElement(rowItem_class);
+				var rowItem_classInput:GridItem=new GridItem();
+				var aClassInut:TextInput=new TextInput();
+				aClassInut.percentWidth=100;
+				rowItem_classInput.addElement(aClassInut);
+				row1.addElement(rowItem_classInput);
+
+				var rowItem_course:GridItem=new GridItem();
+				var course:Label=new Label();
+				course.text="科目";
+				course.percentWidth=100;
+				rowItem_course.addElement(course);
+				row1.addElement(rowItem_course);
+				var rowItem_courseCombo:GridItem=new GridItem();
+				var courseComb:ComboBox=new ComboBox();
+				courseComb.percentWidth=100;
+				courseComb.id="courseType";
+				rowItem_courseCombo.addElement(courseComb);
+				row1.addElement(rowItem_courseCombo);
+				
+				var rowItem_preClassTime:GridItem=new GridItem();
+				var preClassTime:Label=new Label();
+				preClassTime.text="原课时";
+				preClassTime.percentWidth=100;
+				rowItem_preClassTime.addElement(preClassTime);
+				row1.addElement(rowItem_preClassTime);
+				var rowItem_preClassTimes:GridItem=new GridItem();
+				var preClassDate:DateField=new DateField();
+				preClassDate.percentWidth=60;
+				var preClassDateTextInput:TextInput=new TextInput();
+				preClassDateTextInput.percentWidth=40;
+				rowItem_preClassTimes.addElement(preClassDate);
+				rowItem_preClassTimes.addElement(preClassDateTextInput);
+				row1.addElement(rowItem_preClassTimes);
+				
+				var row1Item_empty:GridItem=new GridItem();
+				row1Item_empty.colSpan=2;
+				row1.addElement(row1Item_empty);
+				
+				var row1Item_add:GridItem=new GridItem();
+				var row1Item_addButton:LinkButton=new LinkButton();
+				row1Item_addButton.label="添加";
+//				row1Item_addButton.icon='../WebContent/resources/common/tools/button_add_icon.png';
+				row1Item_addButton.addEventListener(MouseEvent.CLICK,addItem_clickHandler);
+				row1Item_add.addElement(row1Item_addButton);
+				var row1Item_removeButton:LinkButton=new LinkButton();
+				row1Item_removeButton.label="删除";
+//				row1Item_addButton.icon='../WebContent/resources/common/tools/button_add_icon.png';
+				row1Item_removeButton.owner=row1;
+				row1Item_removeButton.addEventListener(MouseEvent.CLICK,removeItem_clickHandler);
+				row1Item_add.addElement(row1Item_removeButton);
+				row1Item_add.rowSpan=2;
+				row1.addElement(row1Item_add);
+				container.addElement(row1);
+				container.validateNow();
+			
+			}
+
 		]]> 		
 	</mx:Script> 
 
@@ -153,44 +223,105 @@
 			</mx:HBox>
 			<mx:VBox width="100%" height="50%"   horizontalGap="10" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
 				<mx:HBox width="100%" horizontalAlign="center">
-					<mx:Label  text="申请单"  fontWeight="bold" />
-					<mx:Label  text="申请人" />
-					<mx:TextInput editable="false"/>
+					<mx:Label  text="申请单"   width="100%" textAlign="center" fontWeight="bold" height="50" />
 				</mx:HBox>
 				
-				<mx:VBox>
-					<mx:HBox>
-						<mx:HBox verticalAlign="middle">
-							<mx:Label  text="申请类型" />
-							<mx:ComboBox id="applyType"  selectedIndex="0"  editable="false"/>
-						</mx:HBox>
-						<mx:HBox verticalAlign="middle">
-							<mx:Label  text="班级" />
-							<mx:TextInput/>
-						</mx:HBox>
-						<mx:HBox verticalAlign="middle">
-							<mx:Label  text="科目" />
-							<mx:ComboBox id="courseType"  selectedIndex="0"  editable="false"/>
-						</mx:HBox>
-						<mx:HBox verticalAlign="middle">
-							<mx:Label  text="原课时" />
-							<mx:DateField/>
-							<mx:TextInput/>
-						</mx:HBox>
-					</mx:HBox>
-					<mx:HBox>
-						<mx:HBox verticalAlign="middle">
-							<mx:Label  text="意向时间" />
-							<mx:DateField/>
-						</mx:HBox>
-						<mx:Repeater id="checkBoxRepeater">
-							<mx:CheckBox id="dayTimeType"   selected="{checkBoxRepeater.currentItem.selected}" label="{checkBoxRepeater.currentItem.headerText}" data="{checkBoxRepeater.currentItem.dataField}"/>
-						</mx:Repeater>
-						<mx:HBox verticalAlign="middle">
-							<mx:Label  text="意向老师" />
-							<mx:TextInput/>
-						</mx:HBox>
-					</mx:HBox>
+				<mx:VBox width="100%" horizontalAlign="left" height="100%" verticalAlign="middle"   borderVisible="true">
+					
+					<mx:Grid width="100%" height="100%" id="container"  verticalGap="10" horizontalGap="5">
+						
+						<mx:GridRow width="100%" height="30" >
+							<mx:GridItem  borderStyle="none"  verticalAlign="middle" horizontalAlign="right">
+								
+								<mx:Label  text="申请人" width="100%"/>
+								
+							</mx:GridItem>
+							<mx:GridItem  borderStyle="none"  verticalAlign="middle" horizontalAlign="center">
+								
+								<mx:TextInput editable="false" width="100%"/>
+								
+							</mx:GridItem>
+							<mx:GridItem  borderStyle="none"  verticalAlign="middle" horizontalAlign="right">
+								
+								<mx:Label  text="申请类型" width="100%"/>
+								
+							</mx:GridItem>
+							<mx:GridItem  borderStyle="none"  verticalAlign="middle" horizontalAlign="center">
+								
+								<mx:ComboBox id="applyType"  selectedIndex="0"  editable="false" width="100%"/>
+								
+							</mx:GridItem>
+							<mx:GridItem  borderStyle="none"  verticalAlign="middle" horizontalAlign="center" colSpan="3">
+								
+								
+							</mx:GridItem>
+						</mx:GridRow>
+						<mx:GridRow width="100%" height="30" >
+							
+							<mx:GridItem  borderStyle="none"  verticalAlign="middle" horizontalAlign="right">
+								
+								<mx:Label  text="班级" width="100%"/>
+								
+							</mx:GridItem>
+							
+							<mx:GridItem  borderStyle="none"  verticalAlign="middle" horizontalAlign="center" >
+								
+								<mx:TextInput width="100%"/>
+								
+							</mx:GridItem>
+							<mx:GridItem  borderStyle="none"  verticalAlign="middle" horizontalAlign="left">
+								
+								<mx:Label  text="科目" width="100%"/>
+								
+							</mx:GridItem>
+							
+							<mx:GridItem  borderStyle="none"  verticalAlign="middle" horizontalAlign="center">
+								
+								<mx:ComboBox id="courseType"  selectedIndex="0"  editable="false" width="100%"/>
+								
+							</mx:GridItem>
+							<mx:GridItem  borderStyle="none"  verticalAlign="middle" horizontalAlign="left">
+								
+								<mx:Label  text="原课时" width="100%"/>
+								
+							</mx:GridItem>
+							
+							<mx:GridItem  borderStyle="none"  verticalAlign="middle" horizontalAlign="center">
+								
+								<mx:DateField width="60%"/>
+								<mx:TextInput width="40%"/>
+								
+							</mx:GridItem>
+							<mx:GridItem  borderStyle="none"  verticalAlign="middle" horizontalAlign="center" colSpan="2">
+								
+							
+							</mx:GridItem>
+							<mx:GridItem  borderStyle="none" rowSpan="2"  verticalAlign="middle" horizontalAlign="center">
+								<mx:LinkButton  label="添加" icon="@Embed(source='../WebContent/resources/common/tools/button_add_icon.png')"  click="addItem_clickHandler(event)" />
+
+							</mx:GridItem>
+							
+						</mx:GridRow>
+						<mx:GridRow width="100%" height="30" >
+							<mx:GridItem  borderStyle="none"  verticalAlign="middle" horizontalAlign="left">
+								<mx:Label  text="意向时间" width="100%"/>
+								
+							</mx:GridItem>
+							<mx:GridItem  borderStyle="none"  verticalAlign="middle" horizontalAlign="center">
+								<mx:DateField width="100%"/>
+								
+							</mx:GridItem>
+							<mx:GridItem  borderStyle="none"  verticalAlign="middle" horizontalAlign="left">
+								<mx:Label  text="意向老师" width="100%"/>
+								
+							</mx:GridItem>
+							<mx:GridItem  borderStyle="none"  verticalAlign="middle" horizontalAlign="center">
+								<mx:TextInput width="100%"/>
+								
+							</mx:GridItem>
+						</mx:GridRow>
+						
+					</mx:Grid>
 				</mx:VBox>
 				
 				
