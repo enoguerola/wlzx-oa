@@ -3,7 +3,7 @@ package basic.entity
 	import system.entity.PersonModel;
 	
 	[Bindable]
-	[RemoteClass(alias="system.wlims.basic.entity.TeacherModel")] 
+	[RemoteClass(alias="system.wlims.basic.entity.teacher.TeacherModel")] 
 	public class TeacherModel extends PersonModel
 	{
 		public var  teacherMarried:String;
@@ -22,12 +22,10 @@ package basic.entity
 		public var  teacherContactPhone:String;
 		public var  teacherOfficePhone:String;
 		public var  teacherWorkDate:Date;
-		public var  teacherWorkPeriod:String;
 		public var  teacherAddress:String;
 		public var  teacherPhoto:String;
 		public var  teacherStatus:String;
 		public var  teacherAttendDate:Date;
-		public var  teacherAttendPeriod:String;
 		
 		//public var  teacherStaus:String;
 		//public var  teacherStaus:String;

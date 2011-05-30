@@ -27,13 +27,13 @@ public class TeacherModel extends PersonModel{
 	private String teacherContactPhone;
 	private String teacherOfficePhone;
 	private Date teacherWorkDate;
-	private String teacherWorkPeriod;
+	//private String teacherWorkPeriod;
 	private String teacherAddress;
 	private String teacherPhoto;
 	private Integer teacherStatus;
 	
 	private Date teacherAttendDate;
-	private String teacherAttendPeriod;
+	//private String teacherAttendPeriod;
 	
 	private Set<TeacherDepartment> otherDepartments = new HashSet<TeacherDepartment>();
 	private Set<TeacherRelation> relations = new HashSet<TeacherRelation>();
@@ -135,12 +135,6 @@ public class TeacherModel extends PersonModel{
 	public void setTeacherWorkDate(Date teacherWorkDate) {
 		this.teacherWorkDate = teacherWorkDate;
 	}
-	public String getTeacherWorkPeriod() {
-		return teacherWorkPeriod;
-	}
-	public void setTeacherWorkPeriod(String teacherWorkPeriod) {
-		this.teacherWorkPeriod = teacherWorkPeriod;
-	}
 	public String getTeacherAddress() {
 		return teacherAddress;
 	}
@@ -179,12 +173,6 @@ public class TeacherModel extends PersonModel{
 	}
 	public Date getTeacherAttendDate() {
 		return teacherAttendDate;
-	}
-	public void setTeacherAttendPeriod(String teacherAttendPeriod) {
-		this.teacherAttendPeriod = teacherAttendPeriod;
-	}
-	public String getTeacherAttendPeriod() {
-		return teacherAttendPeriod;
 	}
 	public void setTeacherStatus(Integer teacherStatus) {
 		this.teacherStatus = teacherStatus;

@@ -39,6 +39,34 @@ public class PersonModel extends BaseModel{
 	private Date modifiedDate;
 	
 	private UserModel user;
+	
+	public static enum PersonStyle{
+		Teacher(0, "教师");
+		
+		private int style;
+		private String name;
+		
+		private PersonStyle(int style, String name){
+			this.setStyle(style);
+			this.setName(name);
+		}
+
+		public void setStyle(int style) {
+			this.style = style;
+		}
+
+		public int getStyle() {
+			return style;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+
+		public String getName() {
+			return name;
+		}
+	}
 
 	public String getName() {
 		return name;
