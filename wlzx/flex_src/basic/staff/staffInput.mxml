@@ -5,12 +5,14 @@
 
 	<fx:Script>
 		<![CDATA[
-			import mx.validators.Validator;
-			import mx.collections.ArrayCollection;
 			import basic.entity.*;
-			import mx.formatters.DateFormatter;
+			
+			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
 			import mx.events.ValidationResultEvent;
+			import mx.formatters.DateFormatter;
+			import mx.rpc.events.*;
+			import mx.validators.Validator;
 			
 			private var validatorArr:Array;
 			public var sexArr:ArrayCollection = new ArrayCollection(
@@ -63,15 +65,14 @@
 			{
 				validatorArr = new Array();
 				validatorArr.push(name_stringValidator);
-				validatorArr.push(birthday_dateValidator);
+				/*validatorArr.push(birthday_dateValidator);
 				validatorArr.push(nation_stringValidator);
 				validatorArr.push(idCode_stringValidator);
 				validatorArr.push(nativePlace_stringValidator);
 				validatorArr.push(department_stringValidator);
 				validatorArr.push(position_stringValidator);
 				validatorArr.push(cellphone_phoneNumberValidator);
-				validatorArr.push(homephone_phoneNumberValidator);
-				validatorArr.push(department_stringValidator);
+				validatorArr.push(homephone_phoneNumberValidator);*/
 				callLater(initStaffWin);
 			}
 			
@@ -88,20 +89,22 @@
 			
 			protected function validateForm(event:MouseEvent):void
 			{
-				var validatorErrorArray:Array = Validator.validateAll(validatorArr);;
+				
+				var validatorErrorArray:Array = Validator.validateAll(validatorArr);
 				var isValidForm:Boolean = validatorErrorArray.length == 0;
 				if (isValidForm) {
+					Alert.show("添加 + bb");
 					teacher.name = teacherName.text;
-					teacher.sex = sex.selectedItem.value;
+					teacher.teacherMail = mail.text;
+					teacher.teacherNo = teacherno.text;
+					/*teacher.sex = sex.selectedItem.value;
 					teacher.birthday = DateFormatter.parseDateString(birthday.text);
 					teacher.teacherMarried = marriage.selectedItem.value;
 					teacher.nation = nation.text;
 					teacher.politicsStatus = politicStatus.selectedItem.value;
 					teacher.teacherID = idCode.text;
 					teacher.teacherNativePlace = nativePlace.text;
-					teacher.teacherMail = mail.text;
 					teacher.homePhone = homePhone.text;
-					teacher.teacherNo = teacherno.text;
 					teacher.teacherEducation = education.selectedItem.value;
 					teacher.teacherProfession = profession.text;
 					teacher.teacherGraduateSchool = school.text;
@@ -116,10 +119,11 @@
 					teacher.teacherAddress = address.text;
 					//teacher.teacherPhoto = status.text;
 					teacher.teacherStatus = status.selectedItem.value;
-					teacher.teacherAttendDate = DateFormatter.parseDateString(attendDate.text);
-					
-					//systemServiceRO.departmentAdd(department,parentId,supervisor,selectedLeaderRoles);
+					teacher.teacherAttendDate = DateFormatter.parseDateString(attendDate.text);*/
+					Alert.show("添加");
+					teacherServiceRO.save(teacher);
 				} else {
+					Alert.show("添加错误");
 					var err:ValidationResultEvent;
 					var errorMessageArray:Array = [];
 					for each (err in validatorErrorArray) {
@@ -129,15 +133,35 @@
 					Alert.show(errorMessageArray.join("\n\n"), "请按照以下错误提示信息重新填写", Alert.OK);
 				}
 			}
+			
+			protected function systemFaultHandler(event:FaultEvent):void {
+				Alert.show(event.fault.faultString, 'Error');
+			}
+			
+			protected function teacherAddResult_resultHandler(event:ResultEvent):void
+			{
+				var teacher:Object=event.result;
+				if(teacher!=null){
+					Alert.show("添加成功");
+				}else{
+					Alert.show("添加失败");
+				}
+			}
+
+			protected function teacherno_focusOutHandler(event:FocusEvent):void
+			{
+				// TODO Auto-generated method stub
+			}
+
 		]]>
 	</fx:Script>
 
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
 		<mx:StringValidator id="name_stringValidator" source="{teacherName}" property="text"  requiredFieldError="不能为空"/>
-		<mx:DateValidator id="birthday_dateValidator" source="{birthday}" property="text"  requiredFieldError="请选择"/>
+		<mx:DateValidator id="birthday_dateValidator" inputFormat="YYYY-MM-DD" source="{birthday}" property="text"  requiredFieldError="请选择"/>
 		<mx:StringValidator id="nation_stringValidator" source="{nation}" property="text"  requiredFieldError="不能为空"/>
-		<mx:StringValidator id="idCode_stringValidator" source="{idCode}" property="text"  requiredFieldError="不能为空"/>
+		<mx:RegExpValidator id="idCode_stringValidator" expression="^[0-9]\{18\}[\w]?$" noMatchError="格式错误" source="{idCode}" property="text"  requiredFieldError="不能为空"/>
 		<mx:StringValidator id="nativePlace_stringValidator" source="{nativePlace}" property="text"  requiredFieldError="不能为空"/>
 		<mx:StringValidator id="department_stringValidator" source="{department}" property="text"  requiredFieldError="不能为空"/>
 		<mx:StringValidator id="position_stringValidator" source="{position}" property="text"  requiredFieldError="不能为空"/>
@@ -146,6 +170,11 @@
 		<mx:DateValidator id="work_dateValidator" source="{workDate}" property="text"  requiredFieldError="请选择"/>
 		<mx:DateValidator id="attend_dateValidator" source="{attendDate}" property="text"  requiredFieldError="请选择"/>
 		<valueObjects:TeacherModel id="teacher"/>
+		<mx:RemoteObject id="teacherServiceRO" destination="teacherServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+			<mx:method name="save"  concurrency="last"  result="teacherAddResult_resultHandler(event);" />
+		</mx:RemoteObject>
+		<mx:HTTPService id="teacherNoValidate" url="/servlet/teacherNoValidate" showBusyCursor="true" method="POST">  
+		</mx:HTTPService> 
 	</fx:Declarations>
 	<s:Panel width="100%" height="100%" title="教师信息编辑"  styleName="customPanel"   borderVisible="true" dropShadowVisible="false">
 		<s:VGroup width="100%" height="100%">
@@ -201,15 +230,15 @@
 							<s:VGroup width="30%">
 								<s:HGroup width="100%">
 									<mx:FormItem label="出生年月" width="100%">
-										<mx:DateField id="birthday" width="100%"/>
+										<mx:DateField id="birthday" width="100%" yearNavigationEnabled="true" formatString="YYYY-MM-DD"/>
 									</mx:FormItem>
 								</s:HGroup>
 								<mx:FormItem label="政治面貌" width="100%">
 									<s:DropDownList 
 										id="politicStatus" 
-										width="100%" 
+										width="100%" dataProvider="{politicArr}"
 										selectedIndex="0" 
-										labelField=""/> 
+										labelField="name"/> 
 								</mx:FormItem>
 								<mx:FormItem label="籍贯" width="100%">
 									<mx:TextInput id="nativePlace" width="100%"/>
@@ -226,7 +255,7 @@
 									<mx:Image/>
 								</mx:FormItem>
 								<mx:FormItem label="短号" width="100%">
-									<mx:TextInput id="teacherno" width="100%"/>
+									<mx:TextInput id="teacherno" width="100%" focusOut="teacherno_focusOutHandler(event)"/>
 								</mx:FormItem>
 							</s:VGroup>
 						</s:HGroup>
@@ -329,6 +358,9 @@
 					<s:layout>
 						<s:VerticalLayout/>
 					</s:layout>
+					<s:VGroup>
+						
+					</s:VGroup>
 				</s:NavigatorContent>
 			</mx:TabNavigator>
 		</s:VGroup>
