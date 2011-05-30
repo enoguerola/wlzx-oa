@@ -4,6 +4,7 @@
 package system.service;
 
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -18,6 +19,7 @@ import system.components.SecurityUserHolder;
 import system.dao.*;
 import system.entity.*;
 import system.utils.CipherUtil;
+import system.utils.StringUtils;
 
 
 
@@ -213,6 +215,28 @@ public class SystemService{
 	//获得所有角色（岗位）
 	public List<RoleModel> getAllRoles(){		
 		return roleDAO.getAllRoles();
+	}
+	//获得某角色（岗位）用户
+	public Set<UserModel> getRoleUsers(String roleId){	
+		RoleModel role=roleDAO.get(roleId);
+		return role.getUsers();
+	}
+	//获得某部门用户
+	public Set<UserModel> getDepartmentUsers(String departmentId){	
+		DepartmentModel department=departmentDAO.get(departmentId);
+		return department.getUsers();
+	}
+	//获得未授权用户
+	public List<UserModel> getUnAuthUsers(){	
+		List<UserModel> unAuthUsers=new ArrayList<UserModel>();
+		List<UserModel> allUsers=userDAO.getAllUsers();
+		for(UserModel user:allUsers){
+			if(user.getRoles()==null||user.getRoles().size()==0){
+				unAuthUsers.add(user);
+			}
+		}
+		return unAuthUsers;
+		
 	}
 	//获得某用户
 	public UserModel getUserByUserAccount(String userAccount){		
@@ -421,15 +445,23 @@ public class SystemService{
 		return true;		
 	}
 	//新增岗位
-	public RoleModel roleAdd(RoleModel role,String parentId){
+	public RoleModel roleAdd(RoleModel role,String parentId,String userIds){
+			roleDAO.saveOrUpdate(role);
 			RoleModel parentRole=roleDAO.get(parentId);
 			parentRole.getSubordinates().add(role);	
 			roleDAO.saveOrUpdate(parentRole);
+			if(!StringUtils.isEmpty(userIds))
+				for(String userId:userIds.split(";")){
+					UserModel user=userDAO.get(userId);
+					role.getUsers().add(user);
+					
+				}
+			roleDAO.saveOrUpdate(role);
 			return role;
 		
 	}
 	//更新岗位
-	public RoleModel roleUpdate(RoleModel role){
+	public RoleModel roleUpdate(RoleModel role,String userIds){
 		RoleModel newRole=roleDAO.get(role.getId());
 		newRole.setSymbol(role.getSymbol());
 		newRole.setCreationDate(role.getCreationDate());
@@ -438,6 +470,15 @@ public class SystemService{
 		newRole.setDetail(role.getDetail());
 		newRole.setName(role.getName());
 		newRole.setSequence(role.getSequence());
+		for(UserModel preUser:role.getUsers()){
+			newRole.getUsers().remove(preUser);
+		}
+		if(!StringUtils.isEmpty(userIds))
+		for(String userId:userIds.split(";")){
+			UserModel user=userDAO.get(userId);
+			newRole.getUsers().add(user);
+			
+		}
 		roleDAO.saveOrUpdate(newRole);
 		return newRole;
 	}
