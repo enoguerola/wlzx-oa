@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2011 年 05 月 27 日 20:18
+-- 生成日期: 2011 年 05 月 30 日 23:10
 -- 服务器版本: 5.0.91
 -- PHP 版本: 5.2.13
 
@@ -52,9 +52,7 @@ CREATE TABLE IF NOT EXISTS `basic_teacher` (
   `teacher_office_phone` varchar(20) default NULL COMMENT '办公电话',
   `teacher_contact_phone` varchar(50) default NULL COMMENT '紧要联络电话',
   `teacher_work_date` date default NULL COMMENT '何时工作',
-  `teacher_work_period` varchar(10) default NULL COMMENT '工龄',
   `teacher_attend_date` date default NULL COMMENT '入校时间',
-  `teacher_attend_period` varchar(10) default NULL COMMENT '校龄',
   `teacher_status` tinyint(4) NOT NULL COMMENT '员工状态',
   `teacher_photo_src` varchar(200) NOT NULL COMMENT '照片地址',
   `teacher_create_date` date NOT NULL COMMENT '创建日期',
