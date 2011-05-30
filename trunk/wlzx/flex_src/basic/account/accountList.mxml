@@ -119,7 +119,7 @@
 			
 		]]> 		
 	</fx:Script> 
-	<s:Panel width="100%" height="100%"  skinClass="system.skins.WlzxPanelSkin" title="帐号管理"  borderVisible="false" dropShadowVisible="false">
+	<s:Panel width="100%" height="100%"  styleName="customPanel" title="帐号管理"  borderVisible="false" dropShadowVisible="false">
 		<s:VGroup width="100%" height="100%">
 			<s:HGroup verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12">
 				<mx:HBox width="100%" height="30" paddingLeft="20"  horizontalGap="0" backgroundColor="#C5E497"  verticalAlign="middle">
@@ -155,7 +155,7 @@
 					
 				</mx:HBox>
 				<mx:HBox width="100%" height="100%" paddingLeft="10" paddingRight="10" paddingBottom="10">
-					<s:Panel width="100%" height="100%"  skinClass="system.skins.WlzxPanelSkin" title="查询结果"  cornerRadius="5" borderVisible="false" dropShadowVisible="false">
+					<s:Panel width="100%" height="100%"  styleName="customPanel" title="查询结果"  cornerRadius="5" borderVisible="false" dropShadowVisible="false">
 						
 						<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="false"   borderAlpha="0.2" verticalAlign="middle"   id="accountTable" pagecount="10"  >				
 							<component:mygridcolumns>

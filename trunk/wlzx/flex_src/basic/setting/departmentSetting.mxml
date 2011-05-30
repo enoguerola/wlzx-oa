@@ -188,7 +188,7 @@
 		]]>
 	</fx:Script>
 	
-	<s:Panel width="100%" height="100%" title="部门设置" skinClass="system.skins.WlzxPanelSkin">
+	<s:Panel width="100%" height="100%" title="部门设置" styleName="customPanel">
 		<mx:VBox width="100%" height="100%" verticalGap="0">
 			<mx:HBox width="100%" height="35" paddingLeft="20"  horizontalGap="10" backgroundColor="#C5E497"  verticalAlign="middle" >
 				<mx:Label text="|"/>

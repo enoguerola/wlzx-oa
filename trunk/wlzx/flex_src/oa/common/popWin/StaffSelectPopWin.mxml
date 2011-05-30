@@ -370,7 +370,7 @@
 		
 		]]> 		
 	</fx:Script> 
-<s:Panel width="100%" height="100%"  skinClass="system.skins.WlzxPanelSkin" title="人员选择"   dropShadowVisible="false" borderVisible="true" borderColor="black">
+<s:Panel width="100%" height="100%"  styleName="customPanel" title="人员选择"   dropShadowVisible="false" borderVisible="true" borderColor="black">
 	<s:VGroup width="100%" height="100%"  verticalAlign="middle">
 		<s:HGroup  verticalAlign="middle"   horizontalAlign="right" width="100%"  height="30" top="40">
 			<s:Label text="|"/>
