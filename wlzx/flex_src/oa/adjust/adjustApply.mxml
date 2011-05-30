@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Module xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		   xmlns:s="library://ns.adobe.com/flex/spark" 
+		   xmlns:mx="library://ns.adobe.com/flex/mx" layout="vertical" width="100%"  creationComplete="init();" height="100%" xmlns:component="system.component.*">
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+	<fx:Script> 
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			public var applyTypes:ArrayCollection = new ArrayCollection( 
+				[	{label:"调课", data:"调课"},  
+					{label:"代课", data:"代课"} ]); 
+			public var courseTypes:ArrayCollection = new ArrayCollection( 
+				[	{label:"语文", data:"语文"},  
+					{label:"数学", data:"数学"}, 
+					{label:"英语", data:"英语"},
+					{label:"化学", data:"化学"},
+					{label:"体育", data:"体育"},
+					{label:"生物", data:"生物"},
+					{label:"物理", data:"物理"},
+					{label:"地理", data:"地理"},
+					{label:"音乐", data:"音乐"},
+					{label:"电脑", data:"电脑"},
+					{label:"其他", data:"其他"}]);
+			public var dayTimeTypes:ArrayCollection = new ArrayCollection( 
+				[	{dataField:"上午", headerText:"上午"},  
+					{dataField:"下午", headerText:"下午"},
+					{dataField:"晚上", headerText:"晚上"}]); 
+			private function init():void {	
+				applyType.dataProvider=applyTypes;
+				courseType.dataProvider=courseTypes;
+				checkBoxRepeater.dataProvider=dayTimeTypes;
+			}
+			public function cancleApply(id:String):void{
+				
+			}
+			public function enterEdit(id:String):void{
+				
+			}
+			public function detailApply(id:String):void{
+			
+			}
+		]]> 		
+	</fx:Script> 
+	<s:Panel width="100%" height="100%"  skinClass="system.skins.WlzxPanelSkin" title="调课申请"  borderVisible="false" dropShadowVisible="false">
+		<s:VGroup width="100%" height="100%">
+			<s:HGroup verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12">
+				<mx:HBox width="100%" height="30" paddingLeft="20"  horizontalGap="0" backgroundColor="#C5E497"  verticalAlign="middle">
+					<mx:Label text="|"/>
+					<mx:LinkButton  label="添加" icon="@Embed(source='../WebContent/resources/common/tools/button_add_icon.png')" />
+					<mx:Label text="|"/>
+				</mx:HBox>
+			</s:HGroup>
+			<s:VGroup width="100%" height="100%" gap="10" verticalAlign="middle" horizontalAlign="center" >
+				<mx:VBox width="100%" height="50%"   horizontalGap="10" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
+					<mx:HBox width="100%" horizontalAlign="center">
+						<s:Label  text="申请单"  fontWeight="bold" />
+						<s:Label  text="申请人" />
+						<s:TextInput editable="false"/>
+					</mx:HBox>
+					
+					<s:VGroup>
+						<s:HGroup>
+							<s:HGroup verticalAlign="middle">
+								<s:Label  text="申请类型" />
+								<mx:ComboBox id="applyType"  selectedIndex="0"  editable="false"/>
+							</s:HGroup>
+							<s:HGroup verticalAlign="middle">
+								<s:Label  text="班级" />
+								<s:TextInput/>
+							</s:HGroup>
+							<s:HGroup verticalAlign="middle">
+								<s:Label  text="科目" />
+								<mx:ComboBox id="courseType"  selectedIndex="0"  editable="false"/>
+							</s:HGroup>
+							<s:HGroup verticalAlign="middle">
+								<s:Label  text="原课时" />
+								<mx:DateField/>
+								<s:TextInput/>
+							</s:HGroup>
+						</s:HGroup>
+						<mx:HBox>
+							<s:HGroup verticalAlign="middle">
+								<s:Label  text="意向时间" />
+								<mx:DateField/>
+							</s:HGroup>
+							<mx:Repeater id="checkBoxRepeater">
+								<mx:CheckBox id="dayTimeType"   selected="{checkBoxRepeater.currentItem.selected}" label="{checkBoxRepeater.currentItem.headerText}" data="{checkBoxRepeater.currentItem.dataField}"/>
+							</mx:Repeater>
+							<s:HGroup verticalAlign="middle">
+								<s:Label  text="意向老师" />
+								<s:TextInput/>
+							</s:HGroup>
+						</mx:HBox>
+					</s:VGroup>
+					
+					
+					
+				</mx:VBox>
+				<mx:HBox width="100%" height="100%" paddingLeft="10" paddingRight="10" paddingBottom="10">
+					<s:Panel width="100%" height="100%"  skinClass="system.skins.WlzxPanelSkin" title="申请记录"  cornerRadius="5" borderVisible="false" dropShadowVisible="false">
+						
+						<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="false"   borderAlpha="0.2" verticalAlign="middle"   id="accountTable" pagecount="10"  >				
+							<component:mygridcolumns>
+								
+								<mx:DataGridColumn textAlign="center" headerText="申请时间" dataField="name" width="100">
+								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="申请类型" dataField="email" width="170">
+									
+								</mx:DataGridColumn>
+								
+								<mx:DataGridColumn textAlign="center" headerText="班级" dataField="creationDate" width="120">
+								
+								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="原课时" dataField="creationDate" width="120">
+									
+								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="新课时" dataField="creationDate" width="120">
+									
+								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="代课老师" dataField="creationDate" width="120">
+									
+								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="编辑" width="60">
+									<mx:itemRenderer>
+										<fx:Component>
+											<mx:LinkButton  label="[编辑]"   click="{this.outerDocument.enterEdit(data.id);}">											
+											</mx:LinkButton>										
+										</fx:Component>
+									</mx:itemRenderer>
+								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="取消"  width="60">
+									<mx:itemRenderer>
+										<fx:Component>
+											<mx:LinkButton  label="[取消]"   click="{this.outerDocument.cancleApply(data.id);}">											
+											</mx:LinkButton>										
+										</fx:Component>
+									</mx:itemRenderer>
+								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="详细"  width="60">
+									<mx:itemRenderer>
+										<fx:Component>
+											<mx:LinkButton  label="[详细]"   click="{this.outerDocument.detailApply(data.id);}">											
+											</mx:LinkButton>										
+										</fx:Component>
+									</mx:itemRenderer>
+								</mx:DataGridColumn>
+							</component:mygridcolumns>
+						</component:WlzxPageDataGrid>
+					</s:Panel>
+				</mx:HBox>
+				
+			</s:VGroup>
+		</s:VGroup>
+		
+		
+	</s:Panel>
+</mx:Module>

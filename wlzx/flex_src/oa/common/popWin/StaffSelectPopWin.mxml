@@ -1,15 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:VGroup xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		  xmlns:s="library://ns.adobe.com/flex/spark" 
-		  xmlns:mx="library://ns.adobe.com/flex/mx"  xmlns:valueObjects="system.entity.*" creationComplete="init();" xmlns:flexlib="http://code.google.com/p/flexlib/"  width="500" height="500">
+		  xmlns:mx="library://ns.adobe.com/flex/mx"  xmlns:valueObjects="system.entity.*" creationComplete="init();" xmlns:component="system.component.*" xmlns:flexlib="http://code.google.com/p/flexlib/"  width="600" height="500">
 	
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
 		<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 			<mx:method name="getAllUsers"  concurrency="last"  result="getAllUsers_resultHandler(event);" />
+			<mx:method name="getAllRoles"  concurrency="last"  result="getAllRolesResult_resultHandler(event);" />
 			<!-- <mx:method name="getDepartmentBySymbol"  concurrency="last"  result="getDepartmentBySymbolResult(event);" /> -->
-			<mx:method name="getDepartmentById"  concurrency="last"  result="getDepartmentByIdResult(event);" />
 			<mx:method name="getDepartmentBySymbol"  concurrency="last"  result="getDepartmentBySymbolResult(event);" />
+			<mx:method name="getUnAuthUsers"  concurrency="last"  result="getUnAuthUsers_resultHandler(event);" />
+			<mx:method name="getDepartmentUsers"  concurrency="last"  result="getDepartmentUsers_resultHandler(event);" />
+			<mx:method name="getRoleUsers"  concurrency="last"  result="getRoleUsers_resultHandler(event);" />
+			<mx:method name="getUsersByCondition"  concurrency="last"  result="getUsersByCondition_resultHandler(event);" />
+
 		</mx:RemoteObject>
 	</fx:Declarations>
 	
@@ -22,32 +27,99 @@
 			import mx.rpc.events.*;
 			
 			import system.entity.DepartmentModel;
+			import system.entity.RoleModel;
 			import system.entity.UserModel;
 			import system.index;
-			private var chooseList:ArrayCollection = new ArrayCollection();
+			private var winParent:Object;
+			private var alreadyChoose:Array = new Array();
+			public var accounts:ArrayCollection = new ArrayCollection();
+
 			private function init():void {
+				accounts.addItem("");
 				systemServiceRO.getAllUsers();
+				callLater(initWin);
 				
+			}
+			private function initWin():void{
+				winParent=this.owner as Object
+				for(var i:int=0;i<winParent.usersSelected.length;i++){
+					alreadyChoose.push({data:winParent.usersSelected[i].data,id:winParent.usersSelected[i].id});
+				}
+				
+				alreadyChooseListTree.dataProvider=organzizeChooseUsers(alreadyChoose);
+				alreadyChooseListTree.validateNow();
+				//				Alert.show(winParent.usersSelected[0].data);
 			}
 			private function systemFaultHandler(event:FaultEvent):void {
 				Alert.show(event.fault.faultString, 'Error');
 			}
-			protected function getAllUsers_resultHandler(event:ResultEvent):void{
+			private function getAllUsers_resultHandler(event:ResultEvent):void{
+				var allList:ArrayCollection=event.result as ArrayCollection;				
+				allListTree.dataProvider=organzizeUsers(allList);
+				for(var i:int=0;i<allList.length;i++){
+					accounts.addItem(allList.getItemAt(i).name);
+				}
+				search_account.dataProvider=accounts;
+			}
+			protected function getUsersByCondition_resultHandler(event:ResultEvent):void{
 				var allList:ArrayCollection=event.result as ArrayCollection;
-				var resultXML:String="<node>";
+				allListTree.dataProvider=organzizeUsers(allList);
+			}
+			public function organzizeChooseUsers(chooseList:Array):XML{			
+				if(chooseList.length>0){
+					var resultXML:String="";
+					resultXML=resultXML.concat("<node>");
+					for (var i:int = 0; i < chooseList.length; i++){
+						resultXML=resultXML.concat("<node label='"+chooseList[i].data+"' id='"+chooseList[i].id+"'/>");
+					}
+					resultXML=resultXML.concat("</node>");
+					var resultXMLData:XML=new XML(resultXML);
+					return resultXMLData;
+				}	else return null;
+				
+			}
+			public function organzizeUsers(allList:ArrayCollection):XML{
+				
 				if(allList.length>0){
+					var resultXML:String="";
+					resultXML=resultXML.concat("<node>");
 					for (var i:int = 0; i < allList.length; i++){
-						var _user:UserModel = allList.getItemAt(i) as UserModel;	
+						var _user:UserModel = allList.getItemAt(i) as UserModel;
+						var exist:Boolean=false;
+						for (var j:int = 0; j < alreadyChoose.length; j++){
+							if(alreadyChoose[j].id==_user.id){
+								exist=true;
+								break;
+							}
+						}
+						if(exist==true)continue;
 						resultXML=resultXML.concat("<node label='"+_user.name+"' id='"+_user.id+"'/>");
 					}
-				}		
-				resultXML=resultXML.concat("</node>");
-				var resultXMLData:XML=new XML(resultXML);
-				allListTree.dataProvider=resultXMLData;
+					resultXML=resultXML.concat("</node>");
+					if(resultXML=="<node></node>")return null
+					else{
+						var resultXMLData:XML=new XML(resultXML);
+						return resultXMLData;
+					}
+					
+				}	else return null;
+			
 			}
-			private function getDepartmentByIdResult(event:ResultEvent):void {
-								
+			
+			
+			private function getDepartmentUsers_resultHandler(event:ResultEvent):void {
+				var allList:ArrayCollection=event.result as ArrayCollection;				
+				departmentListTree.dataProvider=organzizeUsers(allList);		
 			}
+			private function getRoleUsers_resultHandler(event:ResultEvent):void {
+				var allList:ArrayCollection=event.result as ArrayCollection;				
+				roleListTree.dataProvider=organzizeUsers(allList);
+			}
+			private function getUnAuthUsers_resultHandler(event:ResultEvent):void {
+				var allList:ArrayCollection=event.result as ArrayCollection;				
+				unAuthListTree.dataProvider=organzizeUsers(allList);
+			}
+			
 			private function getDepartmentBySymbolResult(event:ResultEvent):void {
 				var department:Object=event.result;
 				var resultList:ArrayCollection = new ArrayCollection();
@@ -55,7 +127,7 @@
 				
 				this.departments.dataProvider=resultList;
 				this.departments.selectedIndex=0;
-				systemServiceRO.getDepartmentById(departments.selectedItem.dataField);
+				systemServiceRO.getDepartmentUsers(departments.selectedItem.dataField);
 			}
 			private function buildSubDepartments(department:Object,resultList:ArrayCollection,depth:int):void{
 				var headText:String="";
@@ -71,6 +143,25 @@
 					}
 					//					CommonUtils.sortBySequence(resultList);
 				}		
+				
+			}
+			private function getAllRolesResult_resultHandler(event:ResultEvent):void {
+				var resultList:ArrayCollection = new ArrayCollection();
+				var allList:ArrayCollection=event.result as ArrayCollection;
+				if(allList.length>0){
+					for (var i:int = 0; i < allList.length; i++){
+						var _role:RoleModel = allList.getItemAt(i) as RoleModel;
+						var headText:String="";
+						for(var j:int = 0;j<_role.level;j++)
+							headText=headText.concat("--");
+						headText=headText.concat(_role.name);
+						resultList.addItem( {dataField:_role.id, headerText:headText})
+					}
+				}	
+				this.roles.dataProvider=resultList;	
+				this.roles.selectedIndex=0;
+				systemServiceRO.getRoleUsers(roles.selectedItem.dataField);
+				//				switchRoleAuthorization();
 				
 			}
 			/*
@@ -114,40 +205,192 @@
 				}else if(selectIndex==1){
 					systemServiceRO.getDepartmentBySymbol("root");
 				}else if(selectIndex==2){
-					
+					systemServiceRO.getAllRoles();
 				}else if(selectIndex==3){
-					
+					systemServiceRO.getUnAuthUsers();
 				}
 			
 			}
 			
-			private function selectionChangedHandler(event:Event):void{
+			private function departmentSelectionChangedHandler(event:Event):void{
 				
 				//				Alert.show(departments.selectedItem.dataField);
-				systemServiceRO.getDepartmentById(departments.selectedItem.dataField);
+				systemServiceRO.getDepartmentUsers(departments.selectedItem.dataField);
 				
 			}
+			private function roleSelectionChangedHandler(event:Event):void{
+				
+				//				Alert.show(departments.selectedItem.dataField);
+				systemServiceRO.getRoleUsers(roles.selectedItem.dataField);
+				
+			}
+			private function addOneUser():void{
+				var selectIndex:int=view.selectedIndex;
+				if(selectIndex==0){
+					if(allListTree.selectedItem){
+//						Alert.show(allListTree.selectedItem.label);
+						alreadyChoose.push({data:allListTree.selectedItem.@label,id:allListTree.selectedItem.@id});
+						alreadyChooseListTree.dataProvider=organzizeChooseUsers(alreadyChoose);
+						delete allListTree.selectedItem.parent().node[allListTree.selectedIndex];
+					}
+				}else if(selectIndex==1){
+					if(departmentListTree.selectedItem){
+//						Alert.show(departmentListTree.selectedItem.@label);
+						alreadyChoose.push({data:departmentListTree.selectedItem.@label,id:departmentListTree.selectedItem.@id});
+						alreadyChooseListTree.dataProvider=organzizeChooseUsers(alreadyChoose);
+						delete departmentListTree.selectedItem.parent().node[departmentListTree.selectedIndex];
+
+					}
+				}else if(selectIndex==2){
+					if(roleListTree.selectedItem){
+//						Alert.show(roleListTree.selectedItem.@label);
+						alreadyChoose.push({data:roleListTree.selectedItem.@label,id:roleListTree.selectedItem.@id});
+						alreadyChooseListTree.dataProvider=organzizeChooseUsers(alreadyChoose);
+						delete roleListTree.selectedItem.parent().node[roleListTree.selectedIndex];
+
+					}
+				}else if(selectIndex==3){
+					if(unAuthListTree.selectedItem){
+//						Alert.show(unAuthListTree.selectedItem.@label);
+						alreadyChoose.push({data:unAuthListTree.selectedItem.@label,id:unAuthListTree.selectedItem.@id});
+						alreadyChooseListTree.dataProvider=organzizeChooseUsers(alreadyChoose);
+						delete unAuthListTree.selectedItem.parent().node[unAuthListTree.selectedIndex];
+
+					}
+				}
+			}
+			private function removeOneUser():void{
+				if(alreadyChooseListTree.selectedItem){
+					alreadyChoose.splice(alreadyChooseListTree.selectedIndex,1);
+					alreadyChooseListTree.dataProvider=organzizeChooseUsers(alreadyChoose);
+					var selectIndex:int=view.selectedIndex;
+					if(selectIndex==0){
+						systemServiceRO.getAllUsers();
+					}else if(selectIndex==1){
+						systemServiceRO.getDepartmentBySymbol("root");
+					}else if(selectIndex==2){
+						systemServiceRO.getAllRoles();
+					}else if(selectIndex==3){
+						systemServiceRO.getUnAuthUsers();
+					}
+				
+				}
+				
+			}
+			private function addAllUser():void{
+				var selectIndex:int=view.selectedIndex;
+				var root:XML=null;
+				if(selectIndex==0){
+					root = <root>{allListTree.dataProvider.source}</root>
+					for each(var xml:XML in root.elements()){
+						for each(var item:XML in xml.elements()){
+							//打印每个节点的标签
+//							Alert.show(item.@label);
+							alreadyChoose.push({data:item.@label,id:item.@id});
+						}
+						
+
+					}
+					alreadyChooseListTree.dataProvider=organzizeChooseUsers(alreadyChoose);
+					allListTree.dataProvider=null;
+				}else if(selectIndex==1){
+					root = <root>{departmentListTree.dataProvider.source}</root>
+					for each(var xml:XML in root.elements()){
+						for each(var item:XML in xml.elements()){
+							//打印每个节点的标签
+							//							Alert.show(item.@label);
+							alreadyChoose.push({data:item.@label,id:item.@id});
+						}
+						
+						
+					}
+					alreadyChooseListTree.dataProvider=organzizeChooseUsers(alreadyChoose);
+					departmentListTree.dataProvider=null;
+				}else if(selectIndex==2){
+					root = <root>{roleListTree.dataProvider.source}</root>
+					for each(var xml:XML in root.elements()){
+						for each(var item:XML in xml.elements()){
+							//打印每个节点的标签
+							//							Alert.show(item.@label);
+							alreadyChoose.push({data:item.@label,id:item.@id});
+						}
+						
+						
+					}
+					alreadyChooseListTree.dataProvider=organzizeChooseUsers(alreadyChoose);
+					roleListTree.dataProvider=null;
+				}else if(selectIndex==3){
+					root = <root>{unAuthListTree.dataProvider.source}</root>
+					for each(var xml:XML in root.elements()){
+						for each(var item:XML in xml.elements()){
+							//打印每个节点的标签
+							//							Alert.show(item.@label);
+							alreadyChoose.push({data:item.@label,id:item.@id});
+						}
+						
+						
+					}
+					alreadyChooseListTree.dataProvider=organzizeChooseUsers(alreadyChoose);
+					unAuthListTree.dataProvider=null;
+
+				}
+			}
+			private function removeAllUser():void{
+					alreadyChoose.splice(0);
+					alreadyChooseListTree.dataProvider=organzizeChooseUsers(alreadyChoose);
+					var selectIndex:int=view.selectedIndex;
+					if(selectIndex==0){
+						systemServiceRO.getAllUsers();
+					}else if(selectIndex==1){
+						systemServiceRO.getDepartmentBySymbol("root");
+					}else if(selectIndex==2){
+						systemServiceRO.getAllRoles();
+					}else if(selectIndex==3){
+						systemServiceRO.getUnAuthUsers();
+					}
+					
+			}
+			private function confirmSelect():void{
+				winParent.usersSelected=new Array();
+				for(var i:int=0;i<alreadyChoose.length;i++){
+					winParent.usersSelected.push({data:alreadyChoose[i].data,id:alreadyChoose[i].id});
+				}
+				winParent.organizedUsersSelected();
+				PopUpManager.removePopUp(this);
+			}
+			
+
+			protected function search():void
+			{
+				view.selectedIndex=0;
+				var account:String=search_account.text;
+				systemServiceRO.getUsersByCondition(account,null);
+				
+			}
+		
 		]]> 		
 	</fx:Script> 
 <s:Panel width="100%" height="100%"  skinClass="system.skins.WlzxPanelSkin" title="人员选择"   dropShadowVisible="false" borderVisible="true" borderColor="black">
 	<s:VGroup width="100%" height="100%"  verticalAlign="middle">
 		<s:HGroup  verticalAlign="middle"   horizontalAlign="right" width="100%"  height="30" top="40">
 			<s:Label text="|"/>
-			<mx:LinkButton label="全体人员" color="0x3380DD"  textDecoration="underline" fontWeight="normal" />
+			<!-- <mx:LinkButton label="全体人员" color="0x3380DD"  textDecoration="underline" fontWeight="normal" />
+			<s:Label text="|"/>-->
+			<mx:LinkButton label="确认选择" color="0x3380DD" click="confirmSelect();" textDecoration="underline" fontWeight="normal" />
 			<s:Label text="|"/>
-			<mx:LinkButton label="确认选择" color="0x3380DD" click="PopUpManager.removePopUp(this);this.parentApplication.menuPopWin=null;" textDecoration="underline" fontWeight="normal" />
-			<s:Label text="|"/>
-			<mx:LinkButton label="关闭" color="0x3380DD" click="PopUpManager.removePopUp(this);this.parentApplication.menuPopWin=null;" textDecoration="underline" fontWeight="normal" />
+			<mx:LinkButton label="关闭" color="0x3380DD" click="PopUpManager.removePopUp(this);" textDecoration="underline" fontWeight="normal" />
 
 			<s:Label text="|"/>
 			
 		</s:HGroup>
-		<s:HGroup  verticalAlign="middle" width="100%" height="100%" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10">
-			<s:BorderContainer borderVisible="true" width="45%" height="100%" borderColor="0xD0E8AA">
+		<s:HGroup  verticalAlign="middle" width="100%" height="100%" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" horizontalAlign="center">
+			<s:BorderContainer borderVisible="true" width="250" height="100%" borderColor="0xD0E8AA">
 				<s:VGroup width="100%" height="100%">
 					<s:HGroup  verticalAlign="middle"   horizontalAlign="center" width="100%" height="40">
-						<s:TextInput width="80%"/>	
-						<mx:Image source="@Embed(source='../WebContent/resources/common/tools/button_search_icon.png')" />
+						<component:AutoComplete id="search_account"  IsfocusInDropDown="true"  IsAutoComplete="true">
+							
+						</component:AutoComplete>
+						<mx:LinkButton icon="@Embed(source='../WebContent/resources/common/tools/button_search_icon.png')"  click="search();"/>
 					</s:HGroup>
 					<mx:Accordion id="view"    headerStyleName="customAccordionHeadStyles" width="100%"  top="15" height="100%"  selectedIndex="0"  change="switchViews(event);" dropShadowVisible="false" backgroundAlpha="0.0" headerHeight="25" fontSize="15" textAlign="center">
 						<s:NavigatorContent label="所有人员列表" fontSize="20" width="100%" height="100%">
@@ -172,40 +415,45 @@
 							<s:layout>
 								<s:VerticalLayout horizontalAlign="center"/>
 							</s:layout>
-							<mx:ComboBox  width="100%" id="departments" labelField="headerText"  textAlign="left" change="selectionChangedHandler(event);" />
-							<mx:Tree id="myTree3" iconField="@icon"   width="100%" height="100%" labelField="@label"   textAlign="left"  paddingLeft="10" showRoot="false" />    
+							<mx:ComboBox  width="100%" id="departments"  fontSize="12" labelField="headerText"  textAlign="left" change="departmentSelectionChangedHandler(event);" />
+							<mx:Tree id="departmentListTree" iconField="@icon"   width="100%" height="100%" labelField="@label"   textAlign="left"  paddingLeft="10" showRoot="false" />    
 							
 						</s:NavigatorContent>
 						<s:NavigatorContent label="按岗位选择员工" fontSize="20" width="100%" height="100%">
 							<s:layout>
 								<s:VerticalLayout horizontalAlign="center"/>
 							</s:layout>
-							<mx:ComboBox  width="100%" id="roles"  labelField="headerText"  textAlign="left" change="selectionChangedHandler(event);" />
-							<mx:Tree id="myTree4" iconField="@icon"   width="100%" height="100%" labelField="@label"   textAlign="left"  paddingLeft="10" showRoot="false" />    
+							<mx:ComboBox  width="100%" id="roles"    fontSize="12" labelField="headerText"  textAlign="left" change="roleSelectionChangedHandler(event);"/>
+							<mx:Tree id="roleListTree" iconField="@icon"   width="100%" height="100%" labelField="@label"   textAlign="left"  paddingLeft="10" showRoot="false" />    
 							
 						</s:NavigatorContent>
 						<s:NavigatorContent label="未分配岗位员工" fontSize="20" width="100%" height="100%">
 							<s:layout>
 								<s:VerticalLayout horizontalAlign="center"/>
 							</s:layout>
-							<mx:Tree id="myTree5" iconField="@icon"   width="100%" height="100%" labelField="@label"   textAlign="left"  paddingLeft="10" showRoot="false" />    
+							<mx:Tree id="unAuthListTree" iconField="@icon"   width="100%" height="100%" labelField="@label"   textAlign="left"  paddingLeft="10" showRoot="false" />    
 							
 						</s:NavigatorContent>
 					</mx:Accordion>
 				</s:VGroup>	
 			</s:BorderContainer>	
 			<s:VGroup width="5%" height="100%" verticalAlign="middle" horizontalAlign="center" gap="10">
-				<mx:Image source="@Embed(source='../WebContent/resources/common/tools/button_next_icon.png')" />
-				<mx:Image source="@Embed(source='../WebContent/resources/common/tools/button_pre_icon.png')" />
-				<mx:Image source="@Embed(source='../WebContent/resources/common/tools/button_nextPlus_icon.png')" />
-				<mx:Image source="@Embed(source='../WebContent/resources/common/tools/button_prePlus_icon.png')" />
+				<mx:LinkButton icon="@Embed(source='../WebContent/resources/common/tools/button_next_icon.png')"  click="addOneUser();"/>
+				<mx:LinkButton icon="@Embed(source='../WebContent/resources/common/tools/button_pre_icon.png')"  click="removeOneUser();"/>
+				<mx:LinkButton icon="@Embed(source='../WebContent/resources/common/tools/button_nextPlus_icon.png')" click="addAllUser();"/>
+				<mx:LinkButton icon="@Embed(source='../WebContent/resources/common/tools/button_prePlus_icon.png')" click="removeAllUser();"/>
 
 			</s:VGroup>	
-			<s:BorderContainer borderVisible="true"  width="45%" height="100%" borderColor="0xD0E8AA">
-				<s:HGroup  verticalAlign="middle"   horizontalAlign="left" width="100%" height="40">					
-					<mx:Image source="@Embed(source='../WebContent/resources/common/tools/button_hook_icon.png')" />
-					<s:Label text="已选人员"/>	
-				</s:HGroup>
+			<s:BorderContainer borderVisible="true"  width="250" height="100%" borderColor="0xD0E8AA">
+				<s:VGroup width="100%" height="100%">
+					<s:HGroup  verticalAlign="middle"   horizontalAlign="left" width="100%" height="40">					
+						<mx:Image source="@Embed(source='../WebContent/resources/common/tools/button_hook_icon.png')" />
+						<s:Label text="已选人员"/>	
+					</s:HGroup>
+					<mx:Tree id="alreadyChooseListTree" iconField="@icon"   width="100%" height="100%" labelField="@label"   textAlign="left"  paddingLeft="10" showRoot="false" />    
+
+				</s:VGroup>
+				
 			</s:BorderContainer>
 		</s:HGroup>
 	</s:VGroup>

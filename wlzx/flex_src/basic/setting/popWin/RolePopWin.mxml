@@ -22,21 +22,23 @@
 	<fx:Script> 
 		
 		<![CDATA[  
-		
-			import mx.managers.PopUpManager;
-			import mx.core.FlexGlobals;
 			import basic.setting.*;
-			
+			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
+			import mx.core.FlexGlobals;
 			import mx.events.ValidationResultEvent;
 			import mx.formatters.DateFormatter;
+			import mx.managers.PopUpManager;
 			import mx.rpc.events.*;
 			import mx.validators.Validator;
 			
-			import system.utils.*;
 			import oa.common.popWin.StaffSelectPopWin;
-			private var validatorArr:Array;
 			
+			import system.entity.UserModel;
+			import system.utils.*;
+			private var validatorArr:Array;
+			[Binary]
+			public var usersSelected:Array= new Array();
 			private function init():void
 			{
 				validatorArr = new Array();
@@ -58,6 +60,20 @@
 					this.roleWin.title="岗位新增";					
 					
 				}
+			}
+			public function organizedUsersSelected():void{
+				var str:String="";
+				for (var i:int = 0; i < usersSelected.length; i++){
+					str=str.concat(usersSelected[i].data+";");
+				}
+				users.text=str;
+			}
+			private function canculateUsersSelected():void{
+				var str:String="";
+				for(var i:int=0;i<usersSelected.length;i++){
+					str=str.concat(usersSelected[i].id+";");
+				}
+				usersIds.text=str;
 			}
 			protected function systemFaultHandler(event:FaultEvent):void {
 				Alert.show(event.fault.faultString, 'Error');
@@ -83,7 +99,13 @@
 				symbol.text=role.symbol;
 				sequence.text=role.sequence.toString();
 				level.text=role.level.toString();
-				
+				var userList:ArrayCollection=role.users as ArrayCollection;
+				for (var i:int = 0; i < userList.length; i++){
+					var user:UserModel=userList.getItemAt(i) as UserModel;
+					usersSelected.push({data:user.name,id:user.id});
+				}
+				organizedUsersSelected();
+				canculateUsersSelected();
 			}
 			protected function roleUpdate_resultHandler(event:ResultEvent):void
 			{
@@ -102,6 +124,7 @@
 				var validatorErrorArray:Array = Validator.validateAll(validatorArr);;
 				var isValidForm:Boolean = validatorErrorArray.length == 0;
 				if (isValidForm) {
+					canculateUsersSelected();
 					role.name=rname.text;
 					role.creationDate=DateFormatter.parseDateString(creationDate.text);
 					role.detail=detail.text;
@@ -109,10 +132,10 @@
 					role.sequence=parseInt(sequence.text);
 					role.level=parseInt(level.text);
 					if(this.toolTip=='Update'){
-						systemServiceRO.roleUpdate(role);
+						systemServiceRO.roleUpdate(role,usersIds.text);
 					}else if(this.toolTip=='Add'){
 						var parentId:String=this.id;//弹出窗口时设定的中转参数
-						systemServiceRO.roleAdd(role,parentId);
+						systemServiceRO.roleAdd(role,parentId,usersIds.text);
 						
 					}
 				} else {
@@ -148,14 +171,17 @@
 			private var staffSelectPopWin:StaffSelectPopWin=null;
 			private function openStaffSelectPopWin(event:Event):void{
 				if(staffSelectPopWin!=null)PopUpManager.removePopUp(staffSelectPopWin);
-				staffSelectPopWin=StaffSelectPopWin(PopUpManager.createPopUp(this,StaffSelectPopWin,true));  
+				staffSelectPopWin=StaffSelectPopWin(PopUpManager.createPopUp(this,StaffSelectPopWin,true)); 
 				PopUpManager.centerPopUp(staffSelectPopWin);
 				staffSelectPopWin.percentHeight=100;
 				staffSelectPopWin.percentWidth=100;
 				staffSelectPopWin.x=FlexGlobals.topLevelApplication.stage.stageWidth/2-staffSelectPopWin.width/2;
 				staffSelectPopWin.y=FlexGlobals.topLevelApplication.stage.stageHeight/2-staffSelectPopWin.height/2;
+				staffSelectPopWin.owner=this;
+
 				
 			}
+			
 		]]> 
 		
 	</fx:Script> 
@@ -180,7 +206,10 @@
 				<mx:TextInput id="sequence" width="200"/>
 			</mx:FormItem>
 			<mx:FormItem label="岗位用户 ">
-				<mx:TextInput id="users" width="200" focusIn="openStaffSelectPopWin(event);" editable="false"/>
+				<mx:HBox width="100%">
+					<mx:TextInput id="users" width="200" focusIn="openStaffSelectPopWin(event);" editable="false"/>
+					<mx:TextInput id="usersIds" visible="false"/>
+				</mx:HBox>
 			</mx:FormItem>
 			<mx:FormItem label="岗位描述">
 				<s:TextArea id="detail" width="400"/>
