@@ -21,6 +21,8 @@
 			classpath:spring/system/*.xml,
 			 /WEB-INF/spring-system-basic.xml,
 			classpath:spring/system/wlims/basic/*.xml,
+			 /WEB-INF/spring-system-oa.xml,
+			classpath:spring/system/wlims/oa/*.xml,
             /WEB-INF/spring-security.xml     
         </param-value>
 	</context-param>
