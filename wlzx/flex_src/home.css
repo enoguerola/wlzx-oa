@@ -23,6 +23,7 @@ global
 	downSkin:Embed(source="../WebContent/resources/common/ui/tabClose.swf", symbol="firefox_close_down"); 
 	overSkin:Embed(source="../WebContent/resources/common/ui/tabClose.swf", symbol="firefox_close_over"); 
 }
+
 .customAccordionHeadStyles {
 	skin: ClassReference("system.skins.WlzxAccordionHeaderSkin");
 	font-size:13;
