@@ -18,7 +18,7 @@ public class TeacherService {
 	private UserDAO userDAO;
 	
 	public TeacherModel save(TeacherModel model)throws ServiceException{
-		if(model.getCreationDate() != null)
+		if(model.getCreationDate() == null)
 			model.setCreationDate(Date.valueOf(UtilDateTime.nowDateString()));
 		
 		model.setModifiedDate(Date.valueOf(UtilDateTime.nowDateString()));
@@ -37,11 +37,10 @@ public class TeacherService {
 			user.setModifiedDate(null);
 			user.setName(model.getTeacherNo());
 			user.setPwd(CipherUtil.encodeByMD5(user.getName()));
-			user.setSequence(2190);
-			user.setSymbol("");
+			user.setSequence(0);
+			user.setSymbol(user.getName());
 			userDAO.saveOrUpdate(user);
-			System.out.println(user.getId());
-			model.setUser(user);
+			model.setUserID(user.getId());
 			teacherDAO.saveOrUpdate(model);
 		}else{
 			teacherDAO.saveOrUpdate(model);

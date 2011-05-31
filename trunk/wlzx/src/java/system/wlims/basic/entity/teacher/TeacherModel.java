@@ -11,10 +11,12 @@ public class TeacherModel extends PersonModel{
 
 	private static final long serialVersionUID = -8699764053458317416L;
 	
-	private Boolean teacherMarried;
+	private Integer teacherMarried;
+	//身份证
 	private String teacherID;
 	private String teacherNativePlace;
 	private String teacherMail;
+	//短号
 	private String teacherNo;
 	private String teacherEducation;
 	private String teacherProfession;
@@ -24,6 +26,7 @@ public class TeacherModel extends PersonModel{
 	private Date teacherSkillLevelDate;
 	private String teacherDepartment;
 	private String teacherPosition;
+	private String teacherMobilePhone;
 	private String teacherContactPhone;
 	private String teacherOfficePhone;
 	private Date teacherWorkDate;
@@ -39,12 +42,6 @@ public class TeacherModel extends PersonModel{
 	private Set<TeacherRelation> relations = new HashSet<TeacherRelation>();
 	private Set<TeacherExperience> experiences = new HashSet<TeacherExperience>();
 
-	public Boolean getTeacherMarried() {
-		return teacherMarried;
-	}
-	public void setTeacherMarried(Boolean teacherMarried) {
-		this.teacherMarried = teacherMarried;
-	}
 	public String getTeacherID() {
 		return teacherID;
 	}
@@ -179,6 +176,18 @@ public class TeacherModel extends PersonModel{
 	}
 	public Integer getTeacherStatus() {
 		return teacherStatus;
+	}
+	public void setTeacherMobilePhone(String teacherMobilePhone) {
+		this.teacherMobilePhone = teacherMobilePhone;
+	}
+	public String getTeacherMobilePhone() {
+		return teacherMobilePhone;
+	}
+	public void setTeacherMarried(Integer teacherMarried) {
+		this.teacherMarried = teacherMarried;
+	}
+	public Integer getTeacherMarried() {
+		return teacherMarried;
 	}
 
 }
