@@ -18,7 +18,7 @@ package system.entity
 		public var creationDate:Date;
 		public var modifiedDate:Date;
 		
-		public var user:UserModel;
+		public var userID:String;
 		
 		public function PersonModel()
 		{

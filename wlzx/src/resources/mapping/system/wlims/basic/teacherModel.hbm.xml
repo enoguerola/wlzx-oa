@@ -8,16 +8,19 @@
 			<column name="teacher_id" />
 			<generator class="native" />
 		</id>
+		<property name="userID" type="string">
+			<column name="user_id" />
+		</property>
 		<property name="name" type="string">
 			<column name="teacher_cname" />
 		</property>
-		<property name="sex" type="boolean">
+		<property name="sex" type="int">
 			<column name="teacher_sex" />
 		</property>
 		<property name="birthday" type="java.sql.Date">
 			<column name="teacher_birthday" />
 		</property>
-		<property name="teacherMarried" type="boolean">
+		<property name="teacherMarried" type="int">
 			<column name="teacher_marrage" />
 		</property>
 		<property name="nation" type="string">
@@ -37,6 +40,9 @@
 		</property>
 		<property name="homePhone" type="string">
 			<column name="teacher_home_phone" />
+		</property>
+		<property name="teacherMobilePhone" type="string">
+			<column name="teacher_mobile_phone" />
 		</property>
 		<property name="teacherNo" type="string">
 			<column name="teacher_no" />
@@ -104,8 +110,5 @@
 			<key column="teacher_id"  />
 			<one-to-many class="system.wlims.basic.entity.teacher.TeacherExperience" />  
 		</set>	
-		<!-- <many-to-one class="system.entity.UserModel" 
-			name="user" 
-			column="user_id" lazy="proxy"/> -->
 	</class>
 </hibernate-mapping>

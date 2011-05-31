@@ -27,7 +27,7 @@ public class PersonModel extends BaseModel{
 	private static final long serialVersionUID = 6869991706996571288L;
 	
 	private String name;
-	private Boolean sex;
+	private Integer sex;
 	private Date birthday;
 	private String nation;
 	private Integer politicsStatus;
@@ -38,7 +38,7 @@ public class PersonModel extends BaseModel{
 	private Date creationDate;
 	private Date modifiedDate;
 	
-	private UserModel user;
+	private String userID;
 	
 	public static enum PersonStyle{
 		Teacher(0, "教师");
@@ -74,14 +74,6 @@ public class PersonModel extends BaseModel{
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public Boolean getSex() {
-		return sex;
-	}
-
-	public void setSex(Boolean sex) {
-		this.sex = sex;
 	}
 
 	public Date getBirthday() {
@@ -132,14 +124,6 @@ public class PersonModel extends BaseModel{
 		this.modifiedDate = modifiedDate;
 	}
 
-	public UserModel getUser() {
-		return user;
-	}
-
-	public void setUser(UserModel user) {
-		this.user = user;
-	}
-
 	public void setStyle(Integer style) {
 		this.style = style;
 	}
@@ -154,5 +138,21 @@ public class PersonModel extends BaseModel{
 
 	public String getAddress() {
 		return address;
+	}
+
+	public void setUserID(String userID) {
+		this.userID = userID;
+	}
+
+	public String getUserID() {
+		return userID;
+	}
+
+	public void setSex(Integer sex) {
+		this.sex = sex;
+	}
+
+	public Integer getSex() {
+		return sex;
 	}
 }

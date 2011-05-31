@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2011 年 05 月 30 日 23:10
+-- 生成日期: 2011 年 05 月 31 日 23:22
 -- 服务器版本: 5.0.91
 -- PHP 版本: 5.2.13
 
@@ -36,17 +36,17 @@ CREATE TABLE IF NOT EXISTS `basic_teacher` (
   `teacher_politics_status` smallint(2) NOT NULL COMMENT '政治面貌',
   `teacher_identify` char(14) NOT NULL COMMENT '身份证',
   `teacher_native_place` varchar(50) NOT NULL COMMENT '籍贯',
-  `teacher_email` varchar(50) NOT NULL COMMENT '邮箱',
+  `teacher_email` varchar(50) default NULL COMMENT '邮箱',
   `teacher_home_phone` varchar(20) NOT NULL COMMENT '家庭电话',
-  `teacher_address` varchar(200) NOT NULL COMMENT '家庭地址',
+  `teacher_address` varchar(200) default NULL COMMENT '家庭地址',
   `teacher_mobile_phone` varchar(20) NOT NULL COMMENT '手机',
   `teacher_no` varchar(20) NOT NULL COMMENT '短号',
   `teacher_education` varchar(10) NOT NULL COMMENT '最高学历',
   `teacher_profession` varchar(50) NOT NULL COMMENT '专业',
   `teacher_graduate_school` varchar(100) NOT NULL COMMENT '毕业院校',
-  `teacher_professional_title` varchar(50) NOT NULL COMMENT '职称',
-  `teacher_skill_level` varchar(20) NOT NULL COMMENT '技能等级',
-  `teacher_skill_level_date` date NOT NULL COMMENT '技能鉴定时间',
+  `teacher_professional_title` varchar(50) default NULL COMMENT '职称',
+  `teacher_skill_level` varchar(20) default NULL COMMENT '技能等级',
+  `teacher_skill_level_date` date default NULL COMMENT '技能鉴定时间',
   `teacher_department` varchar(50) NOT NULL COMMENT '部门',
   `teacher_position` varchar(50) NOT NULL COMMENT '职务',
   `teacher_office_phone` varchar(20) default NULL COMMENT '办公电话',
@@ -54,18 +54,17 @@ CREATE TABLE IF NOT EXISTS `basic_teacher` (
   `teacher_work_date` date default NULL COMMENT '何时工作',
   `teacher_attend_date` date default NULL COMMENT '入校时间',
   `teacher_status` tinyint(4) NOT NULL COMMENT '员工状态',
-  `teacher_photo_src` varchar(200) NOT NULL COMMENT '照片地址',
+  `teacher_photo_src` varchar(200) default NULL COMMENT '照片地址',
   `teacher_create_date` date NOT NULL COMMENT '创建日期',
   `teacher_modified_date` date NOT NULL COMMENT '修改日期',
   PRIMARY KEY  (`teacher_id`),
   KEY `teacher_no` (`teacher_no`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='教师记录' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='教师记录' AUTO_INCREMENT=1 ;
 
 --
 -- 转存表中的数据 `basic_teacher`
 --
-
 
 -- --------------------------------------------------------
 

@@ -6,12 +6,12 @@ package basic.entity
 	[RemoteClass(alias="system.wlims.basic.entity.teacher.TeacherModel")] 
 	public class TeacherModel extends PersonModel
 	{
-		public var  teacherMarried:String;
+		public var  teacherMarried:int;
 		public var  teacherID:String;
 		public var  teacherNativePlace:String;
 		public var  teacherMail:String;
 		public var  teacherNo:String;
-		public var  teacherEducation:int;
+		public var  teacherEducation:String;
 		public var  teacherProfession:String;
 		public var  teacherGraduateSchool:String;
 		public var  teacherProfessionTitle:String;
@@ -19,12 +19,13 @@ package basic.entity
 		public var  teacherSkillLevelDate:Date;
 		public var  teacherDepartment:String;
 		public var  teacherPosition:String;
+		public var  teacherMobilePhone:String;
 		public var  teacherContactPhone:String;
 		public var  teacherOfficePhone:String;
 		public var  teacherWorkDate:Date;
 		public var  teacherAddress:String;
 		public var  teacherPhoto:String;
-		public var  teacherStatus:String;
+		public var  teacherStatus:int;
 		public var  teacherAttendDate:Date;
 		
 		//public var  teacherStaus:String;
