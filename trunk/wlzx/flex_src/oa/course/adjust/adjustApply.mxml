@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Module  xmlns:mx="http://www.adobe.com/2006/mxml"   layout="vertical" width="100%"  creationComplete="init();" height="100%" xmlns:component="system.component.*" currentState="list">
-
+<mx:Module  xmlns:mx="http://www.adobe.com/2006/mxml"   layout="vertical" width="100%"  creationComplete="init();" height="100%" xmlns:mutiComboBox="system.component.mutiComboBox.*" xmlns:component="system.component.*" currentState="list">
+	<mx:StringValidator id="aClass_stringValidator" source="{aClass}" property="text" required="true" requiredFieldError="班级不能为空"/>
+	<mx:DateValidator  id="aCourseDate_stringValidator" source="{aCourseDate}" property="text"  required="true" requiredFieldError="原课时不能为空"/>
+	<mx:StringValidator id="aCourseSection_stringValidator" source="{aCourseSection.myText}" property="text" required="true" requiredFieldError="课时节次不能为空"/>
+	<mx:DateValidator  id="adjustDate_stringValidator" source="{adjustDate}" property="text" required="true" requiredFieldError="意向时间不能为空"/>
+	<mx:StringValidator id="adjustTeacher_stringValidator" source="{adjustTeacher}" property="text" required="true" requiredFieldError="意向老师不能为空"/>	
+	
 	<mx:states>
 		<mx:State name="list">           
 			<mx:RemoveChild target="{addPanel}"/>
@@ -18,7 +23,6 @@
 				<mx:WipeLeft duration="800">
 					
 				</mx:WipeLeft>
-				
 			</mx:Parallel>
 			
 			
@@ -30,7 +34,6 @@
 				<mx:WipeRight duration="800">
 					
 				</mx:WipeRight>
-				
 			</mx:Parallel>
 			
 			
@@ -41,16 +44,25 @@
 	<mx:Script> 
 		<![CDATA[
 			import mx.collections.ArrayCollection;
+			import mx.events.ListEvent;
 			
+			import system.component.AutoComplete;
+			import system.component.mutiComboBox.MyDropList;
 			import system.utils.CommonUtils;
+			import mx.containers.FormItem;
+			import mx.controls.Alert;
+			import mx.validators.Validator;
+			import mx.events.ValidationResultEvent;
+			private var validatorArr:Array;
+			
 			[Embed(source="../WebContent/resources/common/tools/button_add_icon.png")]
 			private const button_add:Class;
 			[Embed(source="../WebContent/resources/common/tools/button_delete_icon.png")]
 			private const button_delete:Class;
-			public var applyTypes:ArrayCollection = new ArrayCollection( 
+			public const applyTypes:ArrayCollection = new ArrayCollection( 
 				[	{label:"调课", data:"调课"},  
 					{label:"代课", data:"代课"} ]); 
-			public var courseTypes:ArrayCollection = new ArrayCollection( 
+			public const courseTypes:ArrayCollection = new ArrayCollection( 
 				[	{label:"语文", data:"语文"},  
 					{label:"数学", data:"数学"}, 
 					{label:"英语", data:"英语"},
@@ -62,10 +74,27 @@
 					{label:"音乐", data:"音乐"},
 					{label:"电脑", data:"电脑"},
 					{label:"其他", data:"其他"}]);
-			 
+			public const courseSections:ArrayCollection = new ArrayCollection([{label:"全选",value:"all",selected:false},
+				{label:"第一节",value:"1",selected:false},
+				{label:"第二节",value:"2",selected:false},
+				{label:"第三节",value:"3",selected:false},
+				{label:"第四节",value:"4",selected:false},
+				{label:"第五节",value:"5",selected:false},
+				{label:"第六节",value:"6",selected:false},
+				{label:"第七节",value:"7",selected:false},
+				{label:"第八节",value:"8",selected:false},
+				{label:"第九节",value:"9",selected:false}
+				
+			]);
+			
 			private function init():void {	
+				validatorArr = new Array();
+				validatorArr.push(aClass_stringValidator);
+				validatorArr.push(aCourseDate_stringValidator);
+				validatorArr.push(aCourseSection_stringValidator);
+				validatorArr.push(adjustDate_stringValidator);
+				validatorArr.push(adjustTeacher_stringValidator);
 				applyType.dataProvider=applyTypes;
-				courseType.dataProvider=courseTypes;
 			}
 			public function cancleApply(id:String):void{
 				
@@ -98,6 +127,8 @@
 				row1.addElement(rowItem_class);
 				var rowItem_classInput:GridItem=new GridItem();
 				var aClassInut:TextInput=new TextInput();
+				aClassInut.name="aClass";
+				aClassInut.id="aClass";
 				aClassInut.width=120;
 				rowItem_classInput.addElement(aClassInut);
 				row1.addElement(rowItem_classInput);
@@ -111,8 +142,10 @@
 				row1.addElement(rowItem_course);
 				var rowItem_courseCombo:GridItem=new GridItem();
 				var courseComb:ComboBox=new ComboBox();
-				courseComb.id="courseType";
+				courseComb.dataProvider=new ArrayCollection(courseTypes.toArray());
 				courseComb.width=120;
+				courseComb.name="aCourse";
+				courseComb.id="aCourse";
 				rowItem_courseCombo.addElement(courseComb);
 				row1.addElement(rowItem_courseCombo);
 				
@@ -125,21 +158,22 @@
 				row1.addElement(rowItem_preClassTime);
 				var rowItem_preClassTimes:GridItem=new GridItem();
 				var preClassDate:DateField=new DateField();
+				preClassDate.formatString="YYYY-MM-DD";
 				preClassDate.width=120;
-				var preClassDateTextInput:TextInput=new TextInput();
-				preClassDateTextInput.width=120;
+				preClassDate.name="aCourseDate";
+				preClassDate.id="aCourseDate";
+				var preClassDateMutiCombobox:MyDropList=new MyDropList();
+				preClassDateMutiCombobox.width=200;
+				preClassDateMutiCombobox.name="aCourseSection";
+				preClassDateMutiCombobox.id="aCourseSection";
+				preClassDateMutiCombobox.dataProvider=new ArrayCollection(courseSections.toArray());
 				rowItem_preClassTimes.addElement(preClassDate);
-				rowItem_preClassTimes.addElement(preClassDateTextInput);
+				rowItem_preClassTimes.addElement(preClassDateMutiCombobox);
 				row1.addElement(rowItem_preClassTimes);
 				
 			
 				
 				var row1Item_add:GridItem=new GridItem();
-//				var row1Item_addButton:LinkButton=new LinkButton();
-//				row1Item_addButton.label="添加";
-//				row1Item_addButton.setStyle("icon", button_add);
-//				row1Item_addButton.addEventListener(MouseEvent.CLICK,addItem_clickHandler);
-//				row1Item_add.addElement(row1Item_addButton);
 				var row1Item_removeButton:LinkButton=new LinkButton();
 				row1Item_removeButton.label="删除";
 				row1Item_removeButton.setStyle("icon", button_delete);
@@ -148,7 +182,7 @@
 				row1Item_removeButton.addEventListener(MouseEvent.CLICK,removeItem_clickHandler);
 				row1Item_add.addElement(row1Item_removeButton);
 				row1.addElement(row1Item_add);
-				container.addElement(row1);
+				container.addElementAt(row1,container.getChildren().length-1);
 				
 				var row2:GridRow=new GridRow();
 				
@@ -161,7 +195,10 @@
 				row2.addElement(rowItem_adjustTime);
 				var rowItem_adjustTimeDate:GridItem=new GridItem();
 				var adjustTimeDate:DateField=new DateField();
+				adjustTimeDate.formatString="YYYY-MM-DD";
 				adjustTimeDate.width=120;
+				adjustTimeDate.name="adjustDate";
+				adjustTimeDate.id="adjustDate";
 				rowItem_adjustTimeDate.addElement(adjustTimeDate);
 				row2.addElement(rowItem_adjustTimeDate);
 				
@@ -174,8 +211,12 @@
 				row2.addElement(rowItem_adjustTeacher);
 				
 				var rowItem_adjustTeacherInput:GridItem=new GridItem();
-				var adjustTeacherInput:TextInput=new TextInput();
+				var adjustTeacherInput:AutoComplete=new AutoComplete();
 				adjustTeacherInput.width=120;
+				adjustTeacherInput.name="adjustTeacher";
+				adjustTeacherInput.id="adjustTeacher";
+				adjustTeacherInput.IsfocusInDropDown=true;
+				adjustTeacherInput.IsAutoComplete=true;
 				rowItem_adjustTeacherInput.addElement(adjustTeacherInput);
 				row2.addElement(rowItem_adjustTeacherInput);
 
@@ -185,15 +226,44 @@
 				row2.addElement(row2Item_empty);
 				row1.owner=row2;//标记删除行的下一行
 				
-				container.addElement(row2);
+				container.addElementAt(row2,container.getChildren().length-1);
 				container.validateNow();
 			
+			}
+
+
+			protected function courseSection_changeHandler(event:ListEvent):void
+			{
+//				courseSectionSelect.text="";
+//				for each(var item:int in courseSection.selectedIndices){
+//					if(courseSection.selectedItems[item].selected==true)
+//					courseSectionSelect.text+=courseSection.selectedItems[item].label+";";
+//				}
+			}
+
+
+			protected function save_clickHandler(event:MouseEvent):void
+			{
+//				Alert.show(container.toString());
+				var validatorErrorArray:Array = Validator.validateAll(validatorArr);;
+				var isValidForm:Boolean = validatorErrorArray.length == 0;
+				if (isValidForm) {
+					
+				} else {
+					var err:ValidationResultEvent;
+					var errorMessageArray:Array = [];
+					for each (err in validatorErrorArray) {
+						var errField:String = FormItem(err.currentTarget.source.parent).label
+						errorMessageArray.push(errField + ": " + err.message);
+					}
+					Alert.show(errorMessageArray.join("\n\n"), "请按照以下错误提示信息重新填写", Alert.OK);
+				}
 			}
 
 		]]> 		
 	</mx:Script> 
 
-	<mx:Panel width="100%" height="100%"   title="调课申请"  borderVisible="false" dropShadowVisible="false" >
+	<mx:Panel width="100%" height="100%"   title="调课申请"  borderVisible="false" id="panel" dropShadowVisible="false">
 		<mx:VBox width="100%" height="100%" id="listPanel">
 			<mx:HBox verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12" >
 				<mx:HBox width="100%" height="30" paddingLeft="20"  horizontalGap="0" backgroundColor="#C5E497"  verticalAlign="middle">
@@ -305,13 +375,13 @@
 							
 							<mx:GridItem    verticalAlign="middle" horizontalAlign="right">
 								
-								<mx:Label  text="班级" width="60"  textAlign="right"/>
+								<mx:Label  text="班级" width="60"  textAlign="right" />
 								
 							</mx:GridItem>
 							
 							<mx:GridItem  verticalAlign="middle" horizontalAlign="center" >
 								
-								<mx:TextInput width="120"/>
+								<mx:TextInput width="120" name="aClass" id="aClass"/>
 								
 							</mx:GridItem>
 							<mx:GridItem    verticalAlign="middle" horizontalAlign="left">
@@ -322,7 +392,7 @@
 							
 							<mx:GridItem    verticalAlign="middle" horizontalAlign="center">
 								
-								<mx:ComboBox id="courseType"  selectedIndex="0"  editable="false" width="120"/>
+								<mx:ComboBox id="aCourse"  selectedIndex="0"   prompt="请选择" editable="false" width="120"  name="aCourse" dataProvider="{courseTypes}"/>
 								
 							</mx:GridItem>
 							<mx:GridItem   verticalAlign="middle" horizontalAlign="left">
@@ -333,8 +403,8 @@
 							
 							<mx:GridItem  verticalAlign="middle" horizontalAlign="center">
 								
-								<mx:DateField width="120"/>
-								<mx:TextInput width="120"/>
+								<mx:DateField width="120" formatString="YYYY-MM-DD"  name="aCourseDate" id="aCourseDate"/>
+								<mutiComboBox:MyDropList width="200"    dataProvider="{new ArrayCollection(courseSections.toArray())}" name="aCourseSection" id="aCourseSection"/>
 								
 							</mx:GridItem>
 							
@@ -350,7 +420,7 @@
 								
 							</mx:GridItem>
 							<mx:GridItem  verticalAlign="middle" horizontalAlign="center">
-								<mx:DateField width="120"/>
+								<mx:DateField width="120" formatString="YYYY-MM-DD" name="adjustDate" id="adjustDate"/>
 								
 							</mx:GridItem>
 							<mx:GridItem   verticalAlign="middle" horizontalAlign="left">
@@ -358,17 +428,29 @@
 								
 							</mx:GridItem>
 							<mx:GridItem    verticalAlign="middle" horizontalAlign="center">
-								<mx:TextInput width="120"/>
-								
+								<component:AutoComplete id="adjustTeacher" width="120" IsfocusInDropDown="true"  IsAutoComplete="true"  name="adjustTeacher">
+									
+								</component:AutoComplete>
 							</mx:GridItem>
 							<mx:GridItem     colSpan="2" verticalAlign="middle" horizontalAlign="center">
 								
 							</mx:GridItem>
 						</mx:GridRow>
-						
+						<mx:GridRow width="100%">
+							<mx:GridItem    verticalAlign="middle" horizontalAlign="center">
+								<mx:Label  text="事由" width="60"  textAlign="right"/>
+							</mx:GridItem>
+							<mx:GridItem    verticalAlign="middle"  colSpan="5" horizontalAlign="center">
+								<mx:TextArea width="100%" height="100"/>
+							</mx:GridItem>
+							<mx:GridItem     verticalAlign="middle" horizontalAlign="center">
+								
+							</mx:GridItem>
+						</mx:GridRow>
 					</mx:Grid>
+					
 					<mx:HBox width="100%"  horizontalAlign="right">
-						<mx:Button label="保存" width="60"/>
+						<mx:Button label="保存" width="60" click="save_clickHandler(event)"/>
 					</mx:HBox>
 				</mx:VBox>
 				

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"  height="24"
+		 creationComplete="init()" >
+	<fx:Declarations>
+		<mx:WipeDown id="downwipe"  duration="500"/>
+		<mx:WipeUp id="upwipe" />
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import flash.utils.setInterval;
+			
+			import mx.collections.ArrayCollection;
+			import mx.events.DropdownEvent;
+			import mx.events.FlexEvent;
+			import mx.events.FlexMouseEvent;
+			import mx.events.ListEvent;
+			import mx.events.SandboxMouseEvent;
+			import mx.managers.PopUpManager;
+
+			[Bindable]
+			public var dataProvider:ArrayCollection=new ArrayCollection(); 
+			private var mylist:List;
+			private var flag:Boolean;
+			
+			protected function init():void
+			{
+				mylist = this.removeChild(list) as List;
+				mylist.addEventListener(FlexMouseEvent.MOUSE_DOWN_OUTSIDE,
+					dropdown_mouseDownOutsideHandler);
+				mylist.addEventListener(FlexMouseEvent.MOUSE_WHEEL_OUTSIDE,
+					dropdown_mouseDownOutsideHandler);
+				mylist.addEventListener(SandboxMouseEvent.MOUSE_DOWN_SOMEWHERE,
+					dropdown_mouseDownOutsideHandler);
+				mylist.addEventListener(SandboxMouseEvent.MOUSE_WHEEL_SOMEWHERE,
+					dropdown_mouseDownOutsideHandler);
+			}
+			protected function doClick():void
+			{
+				if(flag){
+					PopUpManager.removePopUp(list);
+					flag = false;
+				}else{
+					PopUpManager.addPopUp(mylist,this.parent);
+					var point:Point = this.localToGlobal(new Point(0,this.height-1));
+					flag = true;
+					mylist.move(point.x,point.y);
+				}    
+			}
+			private function dropdown_mouseDownOutsideHandler(event:Event):void
+			{
+				if (event is MouseEvent)
+				{
+					var mouseEvent:MouseEvent = MouseEvent(event);
+					
+					if (! hitTestPoint(mouseEvent.stageX, mouseEvent.stageY, true))
+					{
+						PopUpManager.removePopUp(list);
+						flag = false;
+					}
+				}
+				else if (event is SandboxMouseEvent) 
+				{
+					PopUpManager.removePopUp(list);
+					flag = false;
+				}
+				
+			}
+			private var len:int;
+			protected function list_changeHandler():void
+			{
+				var arr:Array = selectItems;
+				
+				if(arr.length != len){
+					len =  arr.length;
+					var str:String ="";
+					for each(var obj:Object in arr){
+						str += obj.label+" ";
+					}
+					myText.text = str;
+					myText.toolTip = str;
+				}           
+			}
+			
+			public function get selectItems():Array{
+				var arr:Array =[];
+				for(var i:int = 1;i<dataProvider.length; i++){
+					var obj:Object = dataProvider.getItemAt(i);
+					if(obj.selected){
+						arr.push(obj);
+					}
+				}
+				return arr;   
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<mx:HBox horizontalGap="0" horizontalScrollPolicy="off" width="100%">
+		<mx:TextInput id="myText"  width="100%" editable="false"/>
+		<mx:Button label="选择" click="doClick()"  height="23" width="50"/>
+	</mx:HBox>       
+	<mx:List id="list" itemRenderer="system.component.mutiComboBox.CheckBoxItemRenderer"
+			 dataProvider="{dataProvider}"
+			 allowMultipleSelection="true"
+			 showEffect="{downwipe}"
+			 removedEffect="{upwipe}"
+			 width="{this.width}"
+			 borderStyle="inset"
+			 change="list_changeHandler()" >
+		
+	</mx:List>   
+	
+</mx:VBox>
