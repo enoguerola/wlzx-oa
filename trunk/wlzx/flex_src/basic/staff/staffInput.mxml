@@ -7,34 +7,15 @@
 		</mx:State>
 		<mx:State name="add">           
 		</mx:State>
+		<mx:State name="relation_list">           
+		</mx:State>
+		<mx:State name="relation_add">           
+		</mx:State>
+		<mx:State name="department_list">           
+		</mx:State>
+		<mx:State name="department_add">           
+		</mx:State>
 	</mx:states>
-	<mx:transitions>
-		
-		<mx:Transition id="myTransition1" fromState="list" toState="add" >
-			
-			<mx:Parallel id="t1" target="{work_experience_addPanel}" >
-				
-				<mx:WipeLeft duration="800">
-					
-				</mx:WipeLeft>
-			</mx:Parallel>
-			
-			
-		</mx:Transition>
-		<mx:Transition id="myTransition2" fromState="add" toState="list" >
-			
-			<mx:Parallel id="t2" target="{work_experience_listPanel}" >
-				
-				<mx:WipeRight duration="800">
-					
-				</mx:WipeRight>
-			</mx:Parallel>
-			
-			
-		</mx:Transition>
-		
-		
-	</mx:transitions>
 	<fx:Script>
 		<![CDATA[
 			import basic.entity.*;
@@ -103,6 +84,7 @@
 			
 			private function init():void
 			{
+				teacherId = '3';
 				validatorArr = new Array();
 				validatorArr.push(name_stringValidator);
 				validatorArr.push(birthday_dateValidator);
@@ -198,40 +180,184 @@
 					Alert.show("添加失败");
 				}
 			}
+			
 
 			protected function teacherno_focusOutHandler(event:FocusEvent):void
 			{
 				// TODO Auto-generated method stub
 			}
 			
-			public const courseSections:ArrayCollection = new ArrayCollection([{label:"全选",value:"all",selected:false},
-				{label:"第一节",value:"1",selected:false},
-				{label:"第二节",value:"2",selected:false},
-				{label:"第三节",value:"3",selected:false},
-				{label:"第四节",value:"4",selected:false},
-				{label:"第五节",value:"5",selected:false},
-				{label:"第六节",value:"6",selected:false},
-				{label:"第七节",value:"7",selected:false},
-				{label:"第八节",value:"8",selected:false},
-				{label:"第九节",value:"9",selected:false}
-				
-			]);
-			
 			private const button_add:Class;
 			
-			public function cancleApply(id:String):void{
+			public function work_cancleApply(id:String):void{
 				
 			}
-			public function enterEdit(id:String):void{
+			public function work_enterEdit(id:String):void{
 				
 			}
 			
-			protected function addItem_clickHandler(event:MouseEvent):void
+			protected function work_addItem_clickHandler(event:MouseEvent):void
 			{
 				
 			}
 			
-			protected function save_clickHandler(event:MouseEvent):void
+			protected function work_save_clickHandler(event:MouseEvent):void
+			{
+				if(validateWorkInput()){
+					var experience:TeacherExperience = new TeacherExperience();
+					experience.company = workCompany.text;
+					experience.endDate = DateFormatter.parseDateString(workEndDate.text);
+					experience.position = workPosition.text;
+					experience.startDate = DateFormatter.parseDateString(workEndDate.text);
+					teacherExperienceServiceRO.save(experience, teacherId);
+				}
+			}
+			private function validateWorkInput():Boolean
+			{	
+				validatorArr = new Array();
+				validatorArr.push(workCompany_stringValidator);
+				validatorArr.push(workPosition_stringValidator);
+				validatorArr.push(workStart_dateValidator);
+				validatorArr.push(workEnd_dateValidator);
+
+				var validatorErrorArray:Array = Validator.validateAll(validatorArr);
+				var isValidForm:Boolean = validatorErrorArray.length == 0;
+				if (isValidForm) {
+					if(teacherId != null)
+						return true;
+					else{
+						Alert.show("请先保存教师信息");
+						return false;
+					}
+				} else {
+					var err:ValidationResultEvent;
+					var errorMessageArray:Array = [];
+					for each (err in validatorErrorArray) {
+						var errField:String = FormItem(err.currentTarget.source.parent).label
+						errorMessageArray.push(errField + ": " + err.message);
+					}
+					Alert.show(errorMessageArray.join("\n\n"), "请按照以下错误提示信息重新填写", Alert.OK);
+					return false;
+				}
+			}
+			
+			protected function teacherExperienceAddResult_resultHandler(event:ResultEvent):void
+			{
+				
+			}
+			
+			public function relation_cancleApply(id:String):void{
+				
+			}
+			public function relation_enterEdit(id:String):void{
+				
+			}
+			
+			protected function relation_addItem_clickHandler(event:MouseEvent):void
+			{
+				
+			}
+			
+			protected function relation_save_clickHandler(event:MouseEvent):void
+			{
+				if(validateWorkInput()){
+					var experience:TeacherExperience = new TeacherExperience();
+					experience.company = workCompany.text;
+					experience.endDate = DateFormatter.parseDateString(workEndDate.text);
+					experience.position = workPosition.text;
+					experience.startDate = DateFormatter.parseDateString(workEndDate.text);
+					teacherExperienceServiceRO.save(experience, teacherId);
+				}
+			}
+			private function validateRelationInput():Boolean
+			{	
+				validatorArr = new Array();
+				validatorArr.push(workCompany_stringValidator);
+				validatorArr.push(workPosition_stringValidator);
+				validatorArr.push(workStart_dateValidator);
+				validatorArr.push(workEnd_dateValidator);
+				
+				var validatorErrorArray:Array = Validator.validateAll(validatorArr);
+				var isValidForm:Boolean = validatorErrorArray.length == 0;
+				if (isValidForm) {
+					if(teacherId != null)
+						return true;
+					else{
+						Alert.show("请先保存教师信息");
+						return false;
+					}
+				} else {
+					var err:ValidationResultEvent;
+					var errorMessageArray:Array = [];
+					for each (err in validatorErrorArray) {
+						var errField:String = FormItem(err.currentTarget.source.parent).label
+						errorMessageArray.push(errField + ": " + err.message);
+					}
+					Alert.show(errorMessageArray.join("\n\n"), "请按照以下错误提示信息重新填写", Alert.OK);
+					return false;
+				}
+			}
+			
+			protected function teacherRelationAddResult_resultHandler(event:ResultEvent):void
+			{
+				
+			}
+			
+			public function department_cancleApply(id:String):void
+			{
+				
+			}
+			public function department_enterEdit(id:String):void
+			{
+				
+			}
+			
+			protected function department_addItem_clickHandler(event:MouseEvent):void
+			{
+				
+			}
+			
+			protected function department_save_clickHandler(event:MouseEvent):void
+			{
+				if(validateWorkInput()){
+					var experience:TeacherExperience = new TeacherExperience();
+					experience.company = workCompany.text;
+					experience.endDate = DateFormatter.parseDateString(workEndDate.text);
+					experience.position = workPosition.text;
+					experience.startDate = DateFormatter.parseDateString(workEndDate.text);
+					teacherExperienceServiceRO.save(experience, teacherId);
+				}
+			}
+			private function validateDepartmentInput():Boolean
+			{	
+				validatorArr = new Array();
+				validatorArr.push(workCompany_stringValidator);
+				validatorArr.push(workPosition_stringValidator);
+				validatorArr.push(workStart_dateValidator);
+				validatorArr.push(workEnd_dateValidator);
+				
+				var validatorErrorArray:Array = Validator.validateAll(validatorArr);
+				var isValidForm:Boolean = validatorErrorArray.length == 0;
+				if (isValidForm) {
+					if(teacherId != null)
+						return true;
+					else{
+						Alert.show("请先保存教师信息");
+						return false;
+					}
+				} else {
+					var err:ValidationResultEvent;
+					var errorMessageArray:Array = [];
+					for each (err in validatorErrorArray) {
+						var errField:String = FormItem(err.currentTarget.source.parent).label
+						errorMessageArray.push(errField + ": " + err.message);
+					}
+					Alert.show(errorMessageArray.join("\n\n"), "请按照以下错误提示信息重新填写", Alert.OK);
+					return false;
+				}
+			}
+			
+			protected function teacherDepartmentAddResult_resultHandler(event:ResultEvent):void
 			{
 				
 			}
@@ -251,9 +377,18 @@
 		<mx:PhoneNumberValidator id="homephone_phoneNumberValidator" source="{homePhone}" required="false" property="text" minDigits="6" requiredFieldError="错误格式的电话"/>
 		<mx:DateValidator id="work_dateValidator" inputFormat="YYYY-MM-DD" source="{workDate}" property="text"  requiredFieldError="请选择"/>
 		<mx:DateValidator id="attend_dateValidator" inputFormat="YYYY-MM-DD" source="{attendDate}" property="text"  requiredFieldError="请选择"/>
+		
+		<mx:StringValidator id="workCompany_stringValidator" source="{workCompany}" property="text"  requiredFieldError="不能为空"/>
+		<mx:StringValidator id="workPosition_stringValidator" source="{workPosition}" property="text"  requiredFieldError="不能为空"/>
+		<mx:DateValidator id="workStart_dateValidator" inputFormat="YYYY-MM-DD" source="{workStartDate}" property="text"  requiredFieldError="请选择"/>
+		<mx:DateValidator id="workEnd_dateValidator" inputFormat="YYYY-MM-DD" source="{workEndDate}" property="text"  requiredFieldError="请选择"/>
+		
 		<valueObjects:TeacherModel id="teacher"/>
 		<mx:RemoteObject id="teacherServiceRO" destination="teacherServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 			<mx:method name="save"  concurrency="last"  result="teacherAddResult_resultHandler(event);" />
+		</mx:RemoteObject>
+		<mx:RemoteObject id="teacherExperienceServiceRO" destination="teacherExperienceServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+			<mx:method name="save"  concurrency="last"  result="teacherExperienceAddResult_resultHandler(event);" />
 		</mx:RemoteObject>
 		<mx:HTTPService id="teacherNoValidate" url="/servlet/teacherNoValidate" showBusyCursor="true" method="POST">  
 		</mx:HTTPService> 
@@ -426,13 +561,79 @@
 									<s:Button click="validateForm(event)" label="保存"/>
 								</s:HGroup>
 								<s:HGroup width="100%">
-									<s:Label width="8%" height="30" verticalAlign="middle">
-										<s:text>其他部门</s:text>
-									</s:Label>
-									<s:Button label="增加"/>
-									<s:VGroup>
-										
-									</s:VGroup>
+									<s:Panel width="100%" height="100%" title="其他单位"  borderVisible="false" id="departments" dropShadowVisible="false">
+										<s:VGroup width="100%" height="100%" id="department_listPanel" excludeFrom="department_add">
+											<s:HGroup verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12" height="30" paddingLeft="20">
+												<s:Label text="|"/>
+												<mx:LinkButton  label="添加" icon="@Embed(source='../WebContent/resources/common/tools/button_add_icon.png')" click=" this.currentState='department_add'" />
+												<s:Label text="|"/>
+											</s:HGroup>
+											<s:VGroup width="100%" height="100%"  gap="10" verticalAlign="middle" horizontalAlign="center">
+												<s:HGroup width="100%" height="100%" paddingLeft="10" paddingRight="10" paddingBottom="10">
+													<s:Panel width="100%" height="100%"  styleName="customPanel" title="部门记录"  cornerRadius="5" borderVisible="false" dropShadowVisible="false">
+														<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="false"   borderAlpha="0.2" verticalAlign="middle"   id="departments_table" pagecount="10"  >				
+															<component:mygridcolumns>
+																
+																<mx:DataGridColumn textAlign="center" headerText="部门" dataField="name" width="100"></mx:DataGridColumn>
+																<mx:DataGridColumn textAlign="center" headerText="职务" dataField="email" width="170"></mx:DataGridColumn>
+																
+																<mx:DataGridColumn textAlign="center" headerText="编辑" width="60">
+																	<mx:itemRenderer>
+																		<fx:Component>
+																			<mx:LinkButton  label="[编辑]"   click="{this.outerDocument.department_enterEdit(data.id);}">											
+																			</mx:LinkButton>										
+																		</fx:Component>
+																	</mx:itemRenderer>
+																</mx:DataGridColumn>
+																<mx:DataGridColumn textAlign="center" headerText="取消"  width="60">
+																	<mx:itemRenderer>
+																		<fx:Component>
+																			<mx:LinkButton  label="[取消]"   click="{this.outerDocument.department_cancleApply(data.id);}">											
+																			</mx:LinkButton>										
+																		</fx:Component>
+																	</mx:itemRenderer>
+																</mx:DataGridColumn>
+															</component:mygridcolumns>
+														</component:WlzxPageDataGrid>
+													</s:Panel>
+												</s:HGroup>
+											</s:VGroup>
+										</s:VGroup>
+										<s:VGroup width="100%" height="100%" id="department_addPanel" excludeFrom="list">
+											<s:HGroup verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12">
+												<s:HGroup width="100%" height="30" paddingLeft="20"  gap="0"  verticalAlign="middle">
+													<s:Label text="|"/>
+													<mx:LinkButton  label="返回" icon="@Embed(source='../WebContent/resources/common/tools/button_back_icon.png')" click="currentState='department_list';" />
+													<s:Label text="|"/>
+												</s:HGroup>
+											</s:HGroup>
+											<s:VGroup width="100%" height="50%" gap="10" verticalAlign="middle" horizontalAlign="left" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
+												<s:VGroup width="100%" horizontalAlign="center" height="100%" verticalAlign="middle" paddingLeft="20" paddingRight="20">
+													<mx:Grid width="80%" height="100%" id="department_container"  verticalGap="10" horizontalGap="5"   borderStyle="solid" paddingBottom="10" paddingTop="10" paddingLeft="10" paddingRight="10">
+														
+														<mx:GridRow width="100%" height="30"  >
+															<mx:GridItem    verticalAlign="middle" horizontalAlign="right">
+																<mx:Label  text="部门" width="60"  textAlign="right" />
+															</mx:GridItem>
+															<mx:GridItem  verticalAlign="middle" horizontalAlign="center">
+																<mx:TextInput width="120" id="departmentName"/>
+															</mx:GridItem>
+															<mx:GridItem    verticalAlign="middle" horizontalAlign="right">
+																<mx:Label  text="职务" width="60"  textAlign="right" />
+															</mx:GridItem>
+															<mx:GridItem  verticalAlign="middle" horizontalAlign="center">
+																<mx:TextInput width="120" id="departmentPostion"/>
+															</mx:GridItem>
+															
+														</mx:GridRow>
+													</mx:Grid>
+													<mx:HBox width="100%"  horizontalAlign="right">
+														<mx:Button label="保存" width="60" click="department_save_clickHandler(event)"/>
+													</mx:HBox>
+												</s:VGroup>
+											</s:VGroup>
+										</s:VGroup>
+									</s:Panel>
 								</s:HGroup>
 							</s:VGroup>
 						</s:HGroup>
@@ -445,7 +646,7 @@
 					<s:VGroup width="100%">
 						<s:HGroup width="100%" height="50%">
 							<s:Panel width="100%" height="100%" title="工作经历"  borderVisible="false" id="work_experience" dropShadowVisible="false">
-								<s:VGroup width="100%" height="100%" id="work_experience_listPanel">
+								<s:VGroup width="100%" height="100%" id="work_experience_listPanel" excludeFrom="add">
 									<s:HGroup verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12" height="30" paddingLeft="20">
 										<s:Label text="|"/>
 										<mx:LinkButton  label="添加" icon="@Embed(source='../WebContent/resources/common/tools/button_add_icon.png')" click=" this.currentState='add'" />
@@ -472,7 +673,7 @@
 														<mx:DataGridColumn textAlign="center" headerText="编辑" width="60">
 															<mx:itemRenderer>
 																<fx:Component>
-																	<mx:LinkButton  label="[编辑]"   click="{this.outerDocument.enterEdit(data.id);}">											
+																	<mx:LinkButton  label="[编辑]"   click="{this.outerDocument.work_enterEdit(data.id);}">											
 																	</mx:LinkButton>										
 																</fx:Component>
 															</mx:itemRenderer>
@@ -480,7 +681,7 @@
 														<mx:DataGridColumn textAlign="center" headerText="取消"  width="60">
 															<mx:itemRenderer>
 																<fx:Component>
-																	<mx:LinkButton  label="[取消]"   click="{this.outerDocument.cancleApply(data.id);}">											
+																	<mx:LinkButton  label="[取消]"   click="{this.outerDocument.work_cancleApply(data.id);}">											
 																	</mx:LinkButton>										
 																</fx:Component>
 															</mx:itemRenderer>
@@ -491,7 +692,7 @@
 										</s:HGroup>
 									</s:VGroup>
 								</s:VGroup>
-								<s:VGroup width="100%" height="100%" id="work_experience_addPanel">
+								<s:VGroup width="100%" height="100%" id="work_experience_addPanel" excludeFrom="list">
 									<s:HGroup verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12">
 										<s:HGroup width="100%" height="30" paddingLeft="20"  gap="0"  verticalAlign="middle">
 											<s:Label text="|"/>
@@ -500,65 +701,137 @@
 										</s:HGroup>
 									</s:HGroup>
 									<s:VGroup width="100%" height="50%" gap="10" verticalAlign="middle" horizontalAlign="left" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
-										<s:HGroup width="100%" horizontalAlign="center">
-											<s:Label  text="调课申请单" width="100%"  textAlign="center" fontSize="14"  fontWeight="bold" height="30" />
-										</s:HGroup>
 										<s:VGroup width="100%" horizontalAlign="center" height="100%" verticalAlign="middle" paddingLeft="20" paddingRight="20">
 											<mx:Grid width="80%" height="100%" id="container"  verticalGap="10" horizontalGap="5"   borderStyle="solid" paddingBottom="10" paddingTop="10" paddingLeft="10" paddingRight="10">
 												
-												<mx:GridRow width="100%" height="30" >
-													<mx:GridItem  borderStyle="none"  verticalAlign="bottom" horizontalAlign="left" colSpan="2">
-														
-														<mx:Label  text="申请时间"  textAlign="right"/>
-														<mx:Label  text="{CommonUtils.formatDate(new Date())}"  textAlign="left"/>
-													</mx:GridItem>
-													<mx:GridItem  borderStyle="none"  verticalAlign="bottom" horizontalAlign="left" colSpan="2">
-														
-														<mx:Label  text="截止时间"  textAlign="right"/>
-														<mx:Label  text="{CommonUtils.formatDate(new Date())}"  textAlign="left"/>
-													</mx:GridItem>
-													
-												</mx:GridRow>
-												<mx:GridRow width="100%" height="10" >
-													<mx:GridItem  borderStyle="none"  verticalAlign="middle" horizontalAlign="right" colSpan="7">
-														<mx:HRule  width="98%" />
-													</mx:GridItem>
-												</mx:GridRow>
 												<mx:GridRow width="100%" height="30"  >
-													
 													<mx:GridItem    verticalAlign="middle" horizontalAlign="right">
-														
+														<mx:Label  text="开始时间" width="60"  textAlign="right" />
+													</mx:GridItem>
+													<mx:GridItem  verticalAlign="middle" horizontalAlign="center">
+														<mx:DateField width="120" formatString="YYYY-MM-DD"  name="workStartDate" id="workStartDate"/>
+													</mx:GridItem>
+													<mx:GridItem    verticalAlign="middle" horizontalAlign="right">
+														<mx:Label  text="截止时间" width="60"  textAlign="right" />
+													</mx:GridItem>
+													<mx:GridItem  verticalAlign="middle" horizontalAlign="center">
+														<mx:DateField width="120" formatString="YYYY-MM-DD"  name="workEndDate" id="workEndDate"/>
+													</mx:GridItem>
+													<mx:GridItem    verticalAlign="middle" horizontalAlign="right">
 														<mx:Label  text="工作单位" width="60"  textAlign="right" />
-														
 													</mx:GridItem>
 													
 													<mx:GridItem  verticalAlign="middle" horizontalAlign="center" >
-														
-														<mx:TextInput width="120" name="aClass" id="aClass"/>
-														
+														<mx:TextInput width="120" name="workDepartment" id="workCompany"/>
 													</mx:GridItem>
 													<mx:GridItem    verticalAlign="middle" horizontalAlign="left">
-														
 														<mx:Label  text="职务" width="60"  textAlign="right"/>
-														
 													</mx:GridItem>
-													
+													<mx:GridItem  verticalAlign="middle" horizontalAlign="center" >
+														<mx:TextInput width="120" name="workPosition" id="workPosition"/>
+													</mx:GridItem>
+							
+												</mx:GridRow>
+											</mx:Grid>
+											<mx:HBox width="100%"  horizontalAlign="right">
+												<mx:Button label="保存" width="60" click="work_save_clickHandler(event)"/>
+											</mx:HBox>
+										</s:VGroup>
+									</s:VGroup>
+								</s:VGroup>
+							</s:Panel>
+						</s:HGroup>
+						<s:HGroup width="100%" height="50%">
+							<s:Panel width="100%" height="100%" title="社会关系"  borderVisible="false" id="relations" dropShadowVisible="false">
+								<s:VGroup width="100%" height="100%" id="relation_listPanel" excludeFrom="relation_add">
+									<s:HGroup verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12" height="30" paddingLeft="20">
+										<s:Label text="|"/>
+										<mx:LinkButton  label="添加" icon="@Embed(source='../WebContent/resources/common/tools/button_add_icon.png')" click=" this.currentState='add_relation'" />
+										<s:Label text="|"/>
+									</s:HGroup>
+									<s:VGroup width="100%" height="100%"  gap="10" verticalAlign="middle" horizontalAlign="center">
+										<s:HGroup width="100%" height="100%" paddingLeft="10" paddingRight="10" paddingBottom="10">
+											<s:Panel width="100%" height="100%"  styleName="customPanel" title="关系记录"  cornerRadius="5" borderVisible="false" dropShadowVisible="false">
+												<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="false"   borderAlpha="0.2" verticalAlign="middle"   id="relations_table" pagecount="10"  >				
+													<component:mygridcolumns>
+														
+														<mx:DataGridColumn textAlign="center" headerText="姓名" dataField="name" width="100">
+														</mx:DataGridColumn>
+														<mx:DataGridColumn textAlign="center" headerText="与本人关系" dataField="email" width="170">
+															
+														</mx:DataGridColumn>
+														
+														<mx:DataGridColumn textAlign="center" headerText="工作单位" dataField="creationDate" width="120">
+															
+														</mx:DataGridColumn>
+														<mx:DataGridColumn textAlign="center" headerText="联系电话" dataField="creationDate" width="120">
+															
+														</mx:DataGridColumn>
+														<mx:DataGridColumn textAlign="center" headerText="编辑" width="60">
+															<mx:itemRenderer>
+																<fx:Component>
+																	<mx:LinkButton  label="[编辑]"   click="{this.outerDocument.relation_enterEdit(data.id);}">											
+																	</mx:LinkButton>										
+																</fx:Component>
+															</mx:itemRenderer>
+														</mx:DataGridColumn>
+														<mx:DataGridColumn textAlign="center" headerText="取消"  width="60">
+															<mx:itemRenderer>
+																<fx:Component>
+																	<mx:LinkButton  label="[取消]"   click="{this.outerDocument.relation_cancleApply(data.id);}">											
+																	</mx:LinkButton>										
+																</fx:Component>
+															</mx:itemRenderer>
+														</mx:DataGridColumn>
+													</component:mygridcolumns>
+												</component:WlzxPageDataGrid>
+											</s:Panel>
+										</s:HGroup>
+									</s:VGroup>
+								</s:VGroup>
+								<s:VGroup width="100%" height="100%" id="relation_addPanel" excludeFrom="list">
+									<s:HGroup verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12">
+										<s:HGroup width="100%" height="30" paddingLeft="20"  gap="0"  verticalAlign="middle">
+											<s:Label text="|"/>
+											<mx:LinkButton  label="返回" icon="@Embed(source='../WebContent/resources/common/tools/button_back_icon.png')" click="currentState='list';" />
+											<s:Label text="|"/>
+										</s:HGroup>
+									</s:HGroup>
+									<s:VGroup width="100%" height="50%" gap="10" verticalAlign="middle" horizontalAlign="left" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
+										<s:VGroup width="100%" horizontalAlign="center" height="100%" verticalAlign="middle" paddingLeft="20" paddingRight="20">
+											<mx:Grid width="80%" height="100%" id="relation_container"  verticalGap="10" horizontalGap="5"   borderStyle="solid" paddingBottom="10" paddingTop="10" paddingLeft="10" paddingRight="10">
+												
+												<mx:GridRow width="100%" height="30"  >
+													<mx:GridItem    verticalAlign="middle" horizontalAlign="right">
+														<mx:Label  text="姓名" width="60"  textAlign="right" />
+													</mx:GridItem>
 													<mx:GridItem  verticalAlign="middle" horizontalAlign="center">
-														
-														<mx:DateField width="120" formatString="YYYY-MM-DD"  name="aCourseDate" id="aCourseDate"/>
-														<mutiComboBox:MyDropList width="200"    dataProvider="{new ArrayCollection(courseSections.toArray())}" name="aCourseSection" id="aCourseSection"/>
-														
+														<mx:TextInput width="120" id="relationName"/>
+													</mx:GridItem>
+													<mx:GridItem    verticalAlign="middle" horizontalAlign="right">
+														<mx:Label  text="与本人关系" width="60"  textAlign="right" />
+													</mx:GridItem>
+													<mx:GridItem  verticalAlign="middle" horizontalAlign="center">
+														<mx:TextInput width="120" id="relationWith"/>
+													</mx:GridItem>
+													<mx:GridItem    verticalAlign="middle" horizontalAlign="right">
+														<mx:Label  text="工作单位" width="60"  textAlign="right" />
 													</mx:GridItem>
 													
-													<mx:GridItem  rowSpan="2"  verticalAlign="middle" horizontalAlign="center">
-														<mx:LinkButton  label="添加" icon="{button_add}"  click="addItem_clickHandler(event)" />
-														
+													<mx:GridItem  verticalAlign="middle" horizontalAlign="center" >
+														<mx:TextInput width="120" id="relationCompany"/>
+													</mx:GridItem>
+													<mx:GridItem    verticalAlign="middle" horizontalAlign="left">
+														<mx:Label  text="联系电话" width="60"  textAlign="right"/>
+													</mx:GridItem>
+													<mx:GridItem  verticalAlign="middle" horizontalAlign="center" >
+														<mx:TextInput width="120" id="relationPhone"/>
 													</mx:GridItem>
 													
 												</mx:GridRow>
 											</mx:Grid>
 											<mx:HBox width="100%"  horizontalAlign="right">
-												<mx:Button label="保存" width="60" click="save_clickHandler(event)"/>
+												<mx:Button label="保存" width="60" click="relation_save_clickHandler(event)"/>
 											</mx:HBox>
 										</s:VGroup>
 									</s:VGroup>
