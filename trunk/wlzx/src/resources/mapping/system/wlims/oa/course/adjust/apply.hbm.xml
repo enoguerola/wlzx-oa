@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="system.wlims.oa.entity.course.adjust.ApplyModel" table="wlzx_oa_course_adjust_apply">
+		<id name="id">
+			<column name="id" />
+			<generator class="native" />
+		</id>
+		<property name="applyNo" type="string" unique="true">
+			<column name="apply_no" />
+		</property>
+		<property name="applyType" type="int">
+			<column name="apply_type" />
+		</property>
+		<property name="applyTeacherId" type="string">
+			<column name="apply_teacher_id" />
+		</property>
+		<property name="applyReason" type="string">
+			<column name="apply_reason" />
+		</property>
+		<property name="applyStatus" type="int">
+			<column name="apply_status" />
+		</property>
+		<property name="approveTeacherId" type="string">
+			<column name="approve_teacher_id" />
+		</property>
+		<property name="approveRemark" type="string">
+			<column name="approve_remark" />
+		</property>
+		<property name="approveDate" type="java.util.Date">
+			<column name="approve_date" />
+		</property>
+		<property name="applyCreationDate" type="java.util.Date">
+			<column name="apply_creation_date" />
+		</property>
+		
+		<set name="applyItems" lazy="false" table="wlzx_oa_course_adjust_apply_item" cascade="all" inverse="true">
+        	<key column="apply_id" not-null="true" />
+        	<one-to-many class="system.wlims.oa.entity.course.adjust.ApplyItemModel" /> 
+        </set>		
+	</class>
+</hibernate-mapping>
