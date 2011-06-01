@@ -17,7 +17,7 @@
 	<!-- 注入配置 -->
 	
 	<bean id="applyDAO" class="system.wlims.oa.daoImpl.course.adjust.ApplyDAOImpl">
-		<property name="sessionFactory" ref="basicSessionFactory" />
+		<property name="sessionFactory" ref="oaSessionFactory" />
 	</bean>
 	<bean id="applyServiceDest" class="system.wlims.oa.serviceImpl.course.adjust.ApplyServiceImpl">
 		<flex:remoting-destination />
