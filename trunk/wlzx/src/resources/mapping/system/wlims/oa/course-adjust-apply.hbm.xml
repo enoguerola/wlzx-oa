@@ -38,7 +38,7 @@
 		
 		<set name="applyItems" lazy="false" table="wlzx_oa_course_adjust_apply_item" cascade="all" inverse="true">
         	<key column="apply_id" not-null="true" />
-        	<one-to-many class="system.wlims.oa.entity.course.adjust.ApplyItemModel" /> 
+        	<one-to-many  class="system.wlims.oa.entity.course.adjust.ApplyItemModel" /> 
         </set>		
 	</class>
 </hibernate-mapping>

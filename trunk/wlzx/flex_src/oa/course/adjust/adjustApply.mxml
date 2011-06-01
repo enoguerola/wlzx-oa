@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Module  xmlns:mx="http://www.adobe.com/2006/mxml"   layout="vertical" width="100%"  creationComplete="init();" height="100%" xmlns:mutiComboBox="system.component.mutiComboBox.*" xmlns:component="system.component.*" currentState="list">
-	<mx:StringValidator id="aClass_stringValidator" source="{aClass}" property="text" required="true" requiredFieldError="班级不能为空"/>
-	<mx:DateValidator  id="aCourseDate_stringValidator" source="{aCourseDate}" property="text"  required="true" requiredFieldError="原课时不能为空"/>
-	<mx:StringValidator id="aCourseSection_stringValidator" source="{aCourseSection.myText}" property="text" required="true" requiredFieldError="课时节次不能为空"/>
-	<mx:DateValidator  id="adjustDate_stringValidator" source="{adjustDate}" property="text" required="true" requiredFieldError="意向时间不能为空"/>
-	<mx:StringValidator id="adjustTeacher_stringValidator" source="{adjustTeacher}" property="text" required="true" requiredFieldError="意向老师不能为空"/>	
-	
+	<mx:StringValidator id="aClass_stringValidator"  property="text" required="true" requiredFieldError="班级不能为空"/>
+	<mx:StringValidator  id="aCourseDate_stringValidator" property="text"  required="true" requiredFieldError="原课时不能为空"/>
+	<mx:StringValidator id="aCourseSection_stringValidator"  property="text" required="true" requiredFieldError="课时节次不能为空"/>
+	<mx:StringValidator  id="adjustDate_stringValidator"  property="text" required="true" requiredFieldError="意向时间不能为空"/>
+	<mx:StringValidator id="adjustTeacher_stringValidator"  property="text" required="true" requiredFieldError="意向老师不能为空"/>	
+	<mx:StringValidator  id="applyReason_stringValidator"   property="text" required="true" requiredFieldError="申请理由不能为空"/>
+	<mx:StringValidator id="applyTeacher_stringValidator"  property="text" required="true" requiredFieldError="申请人不能为空"/>	
+
 	<mx:states>
 		<mx:State name="list">           
 			<mx:RemoveChild target="{addPanel}"/>
@@ -20,7 +22,7 @@
 			
 			<mx:Parallel id="t1" target="{addPanel}" >
 				
-				<mx:WipeLeft duration="800">
+				<mx:WipeLeft duration="1500">
 					
 				</mx:WipeLeft>
 			</mx:Parallel>
@@ -41,18 +43,27 @@
 		
 		
 	</mx:transitions>
+	
+	<mx:RemoteObject id="applyServiceRO" destination="applyServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+		<mx:method name="applyAdd"  concurrency="last"  result="applyAddResult_resultHandler(event);" />
+	</mx:RemoteObject>
+	
 	<mx:Script> 
 		<![CDATA[
 			import mx.collections.ArrayCollection;
+			import mx.containers.FormItem;
+			import mx.controls.Alert;
+			import mx.controls.DateField;
 			import mx.events.ListEvent;
+			import mx.events.ValidationResultEvent;
+			import mx.validators.Validator;
+			import mx.formatters.DateFormatter;
+			import mx.rpc.events.*;
+			import oa.entity.course.adjust.*;
 			
 			import system.component.AutoComplete;
 			import system.component.mutiComboBox.MyDropList;
 			import system.utils.CommonUtils;
-			import mx.containers.FormItem;
-			import mx.controls.Alert;
-			import mx.validators.Validator;
-			import mx.events.ValidationResultEvent;
 			private var validatorArr:Array;
 			
 			[Embed(source="../WebContent/resources/common/tools/button_add_icon.png")]
@@ -60,8 +71,8 @@
 			[Embed(source="../WebContent/resources/common/tools/button_delete_icon.png")]
 			private const button_delete:Class;
 			public const applyTypes:ArrayCollection = new ArrayCollection( 
-				[	{label:"调课", data:"调课"},  
-					{label:"代课", data:"代课"} ]); 
+				[	{label:"调课", data:"0"},  
+					{label:"代课", data:"1"} ]); 
 			public const courseTypes:ArrayCollection = new ArrayCollection( 
 				[	{label:"语文", data:"语文"},  
 					{label:"数学", data:"数学"}, 
@@ -86,15 +97,47 @@
 				{label:"第九节",value:"9",selected:false}
 				
 			]);
-			
+			private var itemIndex:int=0;
+			private var itemCount:int=0;
+			private var hashTable:Dictionary=new Dictionary();
 			private function init():void {	
-				validatorArr = new Array();
-				validatorArr.push(aClass_stringValidator);
-				validatorArr.push(aCourseDate_stringValidator);
-				validatorArr.push(aCourseSection_stringValidator);
-				validatorArr.push(adjustDate_stringValidator);
-				validatorArr.push(adjustTeacher_stringValidator);
 				applyType.dataProvider=applyTypes;
+				
+			}
+			private function addInit():void{
+				validatorArr=null;
+				for(var i:int=1;i<=itemIndex;i++){
+					if(hashTable["1row" + i]&&hashTable["2row" + i]){
+						var row1:GridRow=hashTable["1row"+i];
+						var row2:GridRow=hashTable["2row"+i];
+						container.removeElement(row2);
+						container.removeElement(row1);
+						hashTable["1row"+i]=null;
+						hashTable["2row"+i]=null;
+						hashTable["aClass"+i]=null;
+						hashTable["aCourse"+i]=null;
+						hashTable["aCourseDate"+i]=null;
+						hashTable["aCourseSection"+i]=null;
+						hashTable["aCourseSection"+i].dataProvider=null;
+						hashTable["adjustDate"+i]=null;
+						hashTable["adjustTeacher"+i]=null;
+					}
+				}
+				applyReason.text="";
+				applyTeacher.text="";
+				itemIndex=0;
+				itemCount=0;
+				hashTable=new Dictionary();
+				addItem();
+				this.currentState='add';
+			}
+			protected function systemFaultHandler(event:FaultEvent):void {
+				Alert.show(event.fault.faultString, 'Error');
+			}
+			protected function applyAddResult_resultHandler(event:ResultEvent):void
+			{
+				Alert.show("添加成功");
+				this.currentState='list';
 			}
 			public function cancleApply(id:String):void{
 				
@@ -106,18 +149,29 @@
 			
 			}
 			protected function removeItem_clickHandler(event:MouseEvent):void{
+				itemCount--;
 				var target:LinkButton=event.target as LinkButton;
-				var row1:GridRow=target.owner as GridRow;
-				var row2:GridRow=row1.owner as GridRow;
+				var row1:GridRow=hashTable["1row"+target.id];
+				var row2:GridRow=hashTable["2row"+target.id];
 				container.removeElement(row2);
 				container.removeElement(row1);
+				hashTable["1row"+target.id]=null;
+				hashTable["2row"+target.id]=null;
+				hashTable["aClass"+target.id]=null;
+				hashTable["aCourse"+target.id]=null;
+				hashTable["aCourseDate"+target.id]=null;
+				hashTable["aCourseSection"+target.id]=null;
+				hashTable["adjustDate"+target.id]=null;
+				hashTable["adjustTeacher"+target.id]=null;
 			}
-			protected function addItem_clickHandler(event:MouseEvent):void
+			protected function addItem():void
 			{
 				// TODO Auto-generated method stub
-			
+				itemIndex++;
+				itemCount++;
 				var row1:GridRow=new GridRow();
-				
+				row1.id="1row"+itemIndex;
+				hashTable[row1.id]=row1;
 				var rowItem_class:GridItem=new GridItem();
 				var aClass:Label=new Label();
 				aClass.text="班级";
@@ -128,7 +182,8 @@
 				var rowItem_classInput:GridItem=new GridItem();
 				var aClassInut:TextInput=new TextInput();
 				aClassInut.name="aClass";
-				aClassInut.id="aClass";
+				aClassInut.id="aClass"+itemIndex;
+				hashTable[aClassInut.id]=aClassInut;
 				aClassInut.width=120;
 				rowItem_classInput.addElement(aClassInut);
 				row1.addElement(rowItem_classInput);
@@ -145,7 +200,8 @@
 				courseComb.dataProvider=new ArrayCollection(courseTypes.toArray());
 				courseComb.width=120;
 				courseComb.name="aCourse";
-				courseComb.id="aCourse";
+				courseComb.id="aCourse"+itemIndex;
+				hashTable[courseComb.id]=courseComb;
 				rowItem_courseCombo.addElement(courseComb);
 				row1.addElement(rowItem_courseCombo);
 				
@@ -161,11 +217,13 @@
 				preClassDate.formatString="YYYY-MM-DD";
 				preClassDate.width=120;
 				preClassDate.name="aCourseDate";
-				preClassDate.id="aCourseDate";
+				preClassDate.id="aCourseDate"+itemIndex;
+				hashTable[preClassDate.id]=preClassDate;
 				var preClassDateMutiCombobox:MyDropList=new MyDropList();
 				preClassDateMutiCombobox.width=200;
 				preClassDateMutiCombobox.name="aCourseSection";
-				preClassDateMutiCombobox.id="aCourseSection";
+				preClassDateMutiCombobox.id="aCourseSection"+itemIndex;
+				hashTable[preClassDateMutiCombobox.id]=preClassDateMutiCombobox;
 				preClassDateMutiCombobox.dataProvider=new ArrayCollection(courseSections.toArray());
 				rowItem_preClassTimes.addElement(preClassDate);
 				rowItem_preClassTimes.addElement(preClassDateMutiCombobox);
@@ -174,18 +232,31 @@
 			
 				
 				var row1Item_add:GridItem=new GridItem();
-				var row1Item_removeButton:LinkButton=new LinkButton();
-				row1Item_removeButton.label="删除";
-				row1Item_removeButton.setStyle("icon", button_delete);
-				row1Item_removeButton.owner=row1;//标记删除行
+				if(itemIndex==1){
+					var row1Item_addButton:LinkButton=new LinkButton();
+					row1Item_addButton.label="添加";
+					row1Item_addButton.setStyle("icon", button_add);
+					row1Item_addButton.id=itemIndex+"";				
+					
+					row1Item_addButton.addEventListener(MouseEvent.CLICK,function():void{
+						addItem();
+					});
+					row1Item_add.addElement(row1Item_addButton);
+				}else{
+					var row1Item_removeButton:LinkButton=new LinkButton();
+					row1Item_removeButton.label="删除";
+					row1Item_removeButton.setStyle("icon", button_delete);
+					row1Item_removeButton.id=itemIndex+"";				
+					row1Item_removeButton.addEventListener(MouseEvent.CLICK,removeItem_clickHandler);
+					row1Item_add.addElement(row1Item_removeButton);
+				}
 				
-				row1Item_removeButton.addEventListener(MouseEvent.CLICK,removeItem_clickHandler);
-				row1Item_add.addElement(row1Item_removeButton);
 				row1.addElement(row1Item_add);
 				container.addElementAt(row1,container.getChildren().length-1);
 				
 				var row2:GridRow=new GridRow();
-				
+				row2.id="2row"+itemIndex;
+				hashTable[row2.id]=row2;
 				var rowItem_adjustTime:GridItem=new GridItem();
 				var adjustTime:Label=new Label();
 				adjustTime.text="意向时间";
@@ -198,7 +269,8 @@
 				adjustTimeDate.formatString="YYYY-MM-DD";
 				adjustTimeDate.width=120;
 				adjustTimeDate.name="adjustDate";
-				adjustTimeDate.id="adjustDate";
+				adjustTimeDate.id="adjustDate"+itemIndex;
+				hashTable[adjustTimeDate.id]=adjustTimeDate;
 				rowItem_adjustTimeDate.addElement(adjustTimeDate);
 				row2.addElement(rowItem_adjustTimeDate);
 				
@@ -214,7 +286,8 @@
 				var adjustTeacherInput:AutoComplete=new AutoComplete();
 				adjustTeacherInput.width=120;
 				adjustTeacherInput.name="adjustTeacher";
-				adjustTeacherInput.id="adjustTeacher";
+				adjustTeacherInput.id="adjustTeacher"+itemIndex;
+				hashTable[adjustTeacherInput.id]=adjustTeacherInput;
 				adjustTeacherInput.IsfocusInDropDown=true;
 				adjustTeacherInput.IsAutoComplete=true;
 				rowItem_adjustTeacherInput.addElement(adjustTeacherInput);
@@ -244,20 +317,67 @@
 
 			protected function save_clickHandler(event:MouseEvent):void
 			{
-//				Alert.show(container.toString());
-				var validatorErrorArray:Array = Validator.validateAll(validatorArr);;
-				var isValidForm:Boolean = validatorErrorArray.length == 0;
-				if (isValidForm) {
+				if(validateInput()){
+					var apply:ApplyModel=new ApplyModel();
 					
-				} else {
-					var err:ValidationResultEvent;
-					var errorMessageArray:Array = [];
-					for each (err in validatorErrorArray) {
-						var errField:String = FormItem(err.currentTarget.source.parent).label
-						errorMessageArray.push(errField + ": " + err.message);
+					apply.applyType=parseInt(applyType.selectedItem.data);
+					apply.applyTeacherId=applyTeacher.text;
+					apply.applyReason=applyReason.text;
+					for(var i:int=1;i<=itemIndex;i++){
+						if(hashTable["1row" + i]&&hashTable["2row" + i]){
+							var applyItem:ApplyItemModel=new ApplyItemModel();
+							applyItem.applyClass=hashTable["aClass" + i].text;
+							applyItem.applyCourse=hashTable["aCourse" + i].selectedItem.data;
+							applyItem.applyCourseDate=DateFormatter.parseDateString(hashTable["aCourseDate" + i].text);
+							applyItem.applyCourseTime=hashTable["aCourseSection" + i].myText.text;
+							applyItem.adjustMeanDate=DateFormatter.parseDateString(hashTable["adjustDate" + i].text);
+							applyItem.adjustMeanTeacherId=hashTable["adjustTeacher" + i].text;
+							applyItem.apply=apply;
+							apply.applyItems.push(applyItem);
+						}
 					}
-					Alert.show(errorMessageArray.join("\n\n"), "请按照以下错误提示信息重新填写", Alert.OK);
+
+					applyServiceRO.applyAdd(apply);
 				}
+			}
+			private function validateInput():Boolean
+			{	
+				for(var i:int=1;i<=itemIndex;i++){
+					if(hashTable["1row" + i]&&hashTable["2row" + i]){
+						aClass_stringValidator.source=hashTable["aClass" + i];
+						aCourseDate_stringValidator.source=hashTable["aCourseDate" + i];
+						aCourseSection_stringValidator.source=hashTable["aCourseSection" + i].myText;
+						adjustDate_stringValidator.source=hashTable["adjustDate" + i];
+						adjustTeacher_stringValidator.source=hashTable["adjustTeacher" + i];
+						applyReason_stringValidator.source=applyReason;
+						applyTeacher_stringValidator.source=applyTeacher;
+						validatorArr = new Array();
+						validatorArr.push(aClass_stringValidator);
+						validatorArr.push(aCourseDate_stringValidator);
+						validatorArr.push(aCourseSection_stringValidator);
+						validatorArr.push(adjustDate_stringValidator);
+						validatorArr.push(adjustTeacher_stringValidator);
+						validatorArr.push(applyReason_stringValidator);
+						validatorArr.push(applyTeacher_stringValidator);
+						var validatorErrorArray:Array = Validator.validateAll(validatorArr);
+						var isValidForm:Boolean = validatorErrorArray.length == 0;
+						if (isValidForm) {
+							continue;
+						} else {
+							var err:ValidationResultEvent;
+							var errorMessageArray:Array = [];
+							for each (err in validatorErrorArray) {
+								var errField:String = FormItem(err.currentTarget.source.parent).label
+								errorMessageArray.push(errField + ": " + err.message);
+							}
+							Alert.show(errorMessageArray.join("\n\n"), "请按照以下错误提示信息重新填写", Alert.OK);
+							return false;
+						}
+					
+					}
+					
+				}
+				return true;
 			}
 
 		]]> 		
@@ -268,7 +388,7 @@
 			<mx:HBox verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12" >
 				<mx:HBox width="100%" height="30" paddingLeft="20"  horizontalGap="0" backgroundColor="#C5E497"  verticalAlign="middle">
 					<mx:Label text="|"/>
-					<mx:LinkButton  label="添加" icon="@Embed(source='../WebContent/resources/common/tools/button_add_icon.png')" click=" this.currentState='add'" />
+					<mx:LinkButton  label="添加" icon="@Embed(source='../WebContent/resources/common/tools/button_add_icon.png')" click="addInit();" />
 					<mx:Label text="|"/>
 				</mx:HBox>
 			</mx:HBox>
@@ -333,7 +453,7 @@
 			<mx:HBox verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12">
 				<mx:HBox width="100%" height="30" paddingLeft="20"  horizontalGap="0" backgroundColor="#C5E497"  verticalAlign="middle">
 					<mx:Label text="|"/>
-					<mx:LinkButton  label="返回" icon="@Embed(source='../WebContent/resources/common/tools/button_back_icon.png')" click="currentState='list';" />
+					<mx:LinkButton  label="返回" icon="@Embed(source='../WebContent/resources/common/tools/button_back_icon.png')" click="this.currentState='list';" />
 					<mx:Label text="|"/>
 				</mx:HBox>
 			</mx:HBox>
@@ -355,7 +475,7 @@
 							<mx:GridItem  borderStyle="none"  verticalAlign="bottom" horizontalAlign="left" colSpan="2">
 								
 								<mx:Label  text="申请人"  textAlign="right"/>
-								<mx:TextInput width="120"   alpha="0.5"/>
+								<mx:TextInput width="120"   alpha="0.5" id="applyTeacher"/>
 							</mx:GridItem>
 							
 							
@@ -371,77 +491,13 @@
 								<mx:HRule  width="98%" />
 							</mx:GridItem>
 						</mx:GridRow>
-						<mx:GridRow width="100%" height="30"  >
-							
-							<mx:GridItem    verticalAlign="middle" horizontalAlign="right">
-								
-								<mx:Label  text="班级" width="60"  textAlign="right" />
-								
-							</mx:GridItem>
-							
-							<mx:GridItem  verticalAlign="middle" horizontalAlign="center" >
-								
-								<mx:TextInput width="120" name="aClass" id="aClass"/>
-								
-							</mx:GridItem>
-							<mx:GridItem    verticalAlign="middle" horizontalAlign="left">
-								
-								<mx:Label  text="科目" width="60"  textAlign="right"/>
-								
-							</mx:GridItem>
-							
-							<mx:GridItem    verticalAlign="middle" horizontalAlign="center">
-								
-								<mx:ComboBox id="aCourse"  selectedIndex="0"   prompt="请选择" editable="false" width="120"  name="aCourse" dataProvider="{courseTypes}"/>
-								
-							</mx:GridItem>
-							<mx:GridItem   verticalAlign="middle" horizontalAlign="left">
-								
-								<mx:Label  text="原课时" width="60"  textAlign="right"/>
-								
-							</mx:GridItem>
-							
-							<mx:GridItem  verticalAlign="middle" horizontalAlign="center">
-								
-								<mx:DateField width="120" formatString="YYYY-MM-DD"  name="aCourseDate" id="aCourseDate"/>
-								<mutiComboBox:MyDropList width="200"    dataProvider="{new ArrayCollection(courseSections.toArray())}" name="aCourseSection" id="aCourseSection"/>
-								
-							</mx:GridItem>
-							
-							<mx:GridItem  rowSpan="2"  verticalAlign="middle" horizontalAlign="center">
-								<mx:LinkButton  label="添加" icon="{button_add}"  click="addItem_clickHandler(event)" />
-
-							</mx:GridItem>
-							
-						</mx:GridRow>
-						<mx:GridRow width="100%" height="30">
-							<mx:GridItem   verticalAlign="middle" horizontalAlign="left">
-								<mx:Label  text="意向时间" width="60"  textAlign="right"/>
-								
-							</mx:GridItem>
-							<mx:GridItem  verticalAlign="middle" horizontalAlign="center">
-								<mx:DateField width="120" formatString="YYYY-MM-DD" name="adjustDate" id="adjustDate"/>
-								
-							</mx:GridItem>
-							<mx:GridItem   verticalAlign="middle" horizontalAlign="left">
-								<mx:Label  text="意向老师" width="60"  textAlign="right"/>
-								
-							</mx:GridItem>
-							<mx:GridItem    verticalAlign="middle" horizontalAlign="center">
-								<component:AutoComplete id="adjustTeacher" width="120" IsfocusInDropDown="true"  IsAutoComplete="true"  name="adjustTeacher">
-									
-								</component:AutoComplete>
-							</mx:GridItem>
-							<mx:GridItem     colSpan="2" verticalAlign="middle" horizontalAlign="center">
-								
-							</mx:GridItem>
-						</mx:GridRow>
+						
 						<mx:GridRow width="100%">
 							<mx:GridItem    verticalAlign="middle" horizontalAlign="center">
 								<mx:Label  text="事由" width="60"  textAlign="right"/>
 							</mx:GridItem>
 							<mx:GridItem    verticalAlign="middle"  colSpan="5" horizontalAlign="center">
-								<mx:TextArea width="100%" height="100"/>
+								<mx:TextArea width="100%" height="100" id="applyReason"/>
 							</mx:GridItem>
 							<mx:GridItem     verticalAlign="middle" horizontalAlign="center">
 								
