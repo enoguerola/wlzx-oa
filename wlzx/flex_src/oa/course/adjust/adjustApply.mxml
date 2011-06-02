@@ -87,6 +87,12 @@
 			private const button_add:Class;
 			[Embed(source="../WebContent/resources/common/tools/button_delete_icon.png")]
 			private const button_delete:Class;
+			public var status:ArrayCollection = new ArrayCollection( 
+				[ {label:"全部", data:null},  
+					{label:"待审批", data:0},  
+					{label:"审批通过", data:1},
+					{label:"审批未通过", data:2},
+					{label:"取消", data:3}]); 
 			public var applyTypes:ArrayCollection = new ArrayCollection( 
 				[	{label:"调课", data:"0"},  
 					{label:"代课", data:"1"} ]); 
@@ -126,8 +132,8 @@
 //				Alert.show("a");
 				applyReason.text="";
 				applyCreationDate.text=CommonUtils.formatDate(new Date());
-//				var parent:Module=this.owner as Module;
-//				applyTeacher.text=parent.parentApplication.account;
+
+				applyTeacher.text=this.parentApplication.account
 				lockWin();
 
 				addItem();
@@ -167,15 +173,16 @@
 			protected function getApplyById_resultHandler(event:ResultEvent):void
 			{
 				apply=event.result as ApplyModel;
-				detail_applyType.text=applyTypes.getItemAt(apply.applyType).data;
+				detail_applyType.text=applyTypes.getItemAt(apply.applyType).label;
 				detail_applyNo.text="调课申请单[编号："+apply.applyNo+"]";
 				detail_applyTeacher.text=apply.applyTeacherId;
-				detail_applyStatus.text=apply.applyStatus+"";
+				detail_applyStatus.text=status.getItemAt(apply.applyStatus).label;
 				detail_applyReason.text=apply.applyReason;
 				detailApplyItemsRepeater.dataProvider=apply.applyItems;
 				detailApplyItemsRepeater.validateNow();
 				detail_approveDate.text=CommonUtils.formatDate(apply.approveDate);
-				detail_approveStatusDescribe.text=apply.applyStatus+"";
+				if(apply.applyStatus==0||apply.applyStatus==3)detail_approveStatusDescribe.text="--";
+				else detail_approveStatusDescribe.text=status.getItemAt(apply.applyStatus+1).label;
 				detail_approveTeacher.text=apply.approveTeacherId;
 				detail_approveRemark.text=apply.approveRemark;
 			}
