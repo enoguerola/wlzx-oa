@@ -51,7 +51,8 @@ public class ApplyModel extends BaseModel {
 	public static enum ApplyStatus{
 		WAITING(0, "待审批"),
 		PASS(1, "审批通过"),
-		DENY(2, "审批未通过");
+		DENY(2, "审批未通过"),
+		CANCLE(3, "取消");
 		private int status;
 		private String name;
 		

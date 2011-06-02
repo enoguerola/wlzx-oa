@@ -38,7 +38,6 @@
 		
 		<many-to-one class="system.wlims.oa.entity.course.adjust.ApplyModel" 
 			name="apply" 
-			column="apply_id" 
-		/>	
+			column="apply_id"/>	
 	</class>
 </hibernate-mapping>
