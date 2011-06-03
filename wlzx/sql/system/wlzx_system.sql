@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2011 年 05 月 27 日 22:42
+-- 生成日期: 2011 年 06 月 03 日 11:44
 -- 服务器版本: 5.0.91
 -- PHP 版本: 5.2.13
 
@@ -259,7 +259,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_menu` (
   `modified_date` timestamp NOT NULL default '0000-00-00 00:00:00' on update CURRENT_TIMESTAMP,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `symbol` (`symbol`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=50 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=59 ;
 
 --
 -- 转存表中的数据 `wlzx_system_menu`
@@ -274,16 +274,16 @@ INSERT INTO `wlzx_system_menu` (`id`, `name`, `symbol`, `sequence`, `detail`, `m
 (6, '系统设置', 'basic_setting', 0, NULL, NULL, '2011-05-06 11:50:32', '2011-05-06 11:50:32'),
 (7, '部门设置', 'basic_setting_department', 1, '', NULL, '2011-05-06 00:00:00', '2011-05-06 11:50:32'),
 (8, '岗位设置', 'basic_setting_role', 2, '', NULL, '2011-05-06 00:00:00', '2011-05-06 11:50:32'),
-(9, '内部事务管理', 'oa_inside_affair', 1, '', 'oa_inside_affair', '2011-05-06 00:00:00', '2011-05-07 22:40:33'),
-(10, '公文管理', 'oa_official_document', 2, '', 'oa_official_document', '2011-05-06 00:00:00', '2011-05-07 22:40:33'),
-(11, '公共事务管理', 'oa_public_affair', 0, NULL, 'oa_public_affair', '2011-05-06 11:50:32', '2011-05-07 22:40:33'),
+(9, '内部事务管理', 'oa_inside_affair', 2, '', 'oa_inside_affair', '2011-05-06 00:00:00', '2011-05-07 22:40:33'),
+(10, '公文管理', 'oa_official_document', 3, '', 'oa_official_document', '2011-05-06 00:00:00', '2011-05-07 22:40:33'),
+(11, '公共事务管理', 'oa_public_affair', 1, '', 'oa_public_affair', '2011-05-06 00:00:00', '2011-05-07 22:40:33'),
 (12, '公告管理', 'notice_manage', 0, NULL, NULL, '2011-05-06 11:50:32', '2011-05-06 11:50:32'),
 (13, '公告管理', 'notice_list', 2, '', NULL, '2011-05-06 00:00:00', '2011-05-06 11:50:32'),
 (14, '公告发布', 'notice_post', 0, NULL, NULL, '2011-05-06 11:50:32', '2011-05-06 11:50:32'),
 (15, '公告签批', 'notice_sign', 3, '', NULL, '2011-05-06 00:00:00', '2011-05-06 11:50:32'),
 (16, '日程管理', 'scheduleManage', 0, NULL, NULL, '2011-05-06 11:50:32', '2011-05-06 11:50:32'),
-(17, '学校管理', 'oa_school_affair', 3, '', 'oa_school_affair', '2011-05-06 00:00:00', '2011-05-07 22:40:33'),
-(18, '系统管理', 'oa_system_management', 5, '', 'oa_system_management', '2011-05-06 00:00:00', '2011-05-07 22:40:33'),
+(17, '学校管理', 'oa_school_affair', 4, '', 'oa_school_affair', '2011-05-06 00:00:00', '2011-05-07 22:40:33'),
+(18, '系统管理', 'oa_system_management', 6, '', 'oa_system_management', '2011-05-06 00:00:00', '2011-05-07 22:40:33'),
 (19, '部门与岗位', 'oa_school_affair_department_role', 0, NULL, NULL, '2011-05-06 11:50:33', '2011-05-06 11:50:33'),
 (20, '公告阅读', 'notice_read', 1, '', '', '2011-05-07 00:00:00', '2011-05-07 11:06:17'),
 (21, '部门日程', 'department_schedule', 0, '', '', '2011-05-10 00:00:00', '2011-05-10 11:18:04'),
@@ -295,7 +295,7 @@ INSERT INTO `wlzx_system_menu` (`id`, `name`, `symbol`, `sequence`, `detail`, `m
 (28, '工作指派', 'staff_work_assign', 3, '', '', '2011-05-10 00:00:00', '2011-05-10 11:26:18'),
 (29, '公共通讯录', 'public_address_book', 0, '', '', '2011-05-10 00:00:00', '2011-05-10 11:28:18'),
 (30, '帐号数据', 'basic_data_account', 1, '', '', '2011-05-21 00:00:00', '2011-05-21 09:27:24'),
-(31, '人事管理', 'human_resource', 4, '', '', '2011-05-21 00:00:00', '2011-05-21 09:40:29'),
+(31, '人事管理', 'human_resource', 5, '', '', '2011-05-21 00:00:00', '2011-05-21 09:40:29'),
 (32, '教师档案', 'staff_file', 1, '', '', '2011-05-21 00:00:00', '2011-05-21 09:44:43'),
 (33, '帐号管理', 'system_account', 1, '', '', '2011-05-21 00:00:00', '2011-05-21 09:46:20'),
 (34, '发文管理', 'document_dispatch ', 1, '', '', '2011-05-21 00:00:00', '2011-05-21 09:48:55'),
@@ -312,7 +312,16 @@ INSERT INTO `wlzx_system_menu` (`id`, `name`, `symbol`, `sequence`, `detail`, `m
 (46, '考勤管理', 'attendance_manager', 0, '', '', '2011-05-27 00:00:00', '2011-05-27 22:30:15'),
 (47, '调课申请', 'adjust_class_apply', 0, '', '', '2011-05-27 00:00:00', '2011-05-27 22:32:02'),
 (48, '调课审批', 'adjust_class_apply_approve', 1, '', '', '2011-05-27 00:00:00', '2011-05-27 22:33:09'),
-(49, '教师管理', 'teacher_manager', 0, '', '', '2011-05-27 00:00:00', '2011-05-27 22:38:31');
+(49, '教师管理', 'teacher_manager', 0, '', '', '2011-05-27 00:00:00', '2011-05-27 22:38:31'),
+(50, '个人办公', 'personal_office', 0, '', '', '2011-06-03 00:00:00', '2011-06-03 11:27:21'),
+(51, '请假出差', 'personal_office_takeLeaveApply', 2, '', '', '2011-06-03 00:00:00', '2011-06-03 11:28:47'),
+(52, '加班调休', 'personal_office_overWork Apply', 3, '', '', '2011-06-03 00:00:00', '2011-06-03 11:29:51'),
+(53, '考勤统计', 'personal_office_canculateAttendance', 4, '', '', '2011-06-03 00:00:00', '2011-06-03 11:31:08'),
+(54, '我的工作', 'personal_office_workDeal', 0, '', '', '2011-06-03 00:00:00', '2011-06-03 11:32:05'),
+(55, '请假出差审批', 'attendance_manager_takeLeaveApprove', 0, '', '', '2011-06-03 00:00:00', '2011-06-03 11:33:25'),
+(56, '加班调休审批', 'attendance_manager_overWorkApprove', 1, '', '', '2011-06-03 00:00:00', '2011-06-03 11:34:01'),
+(57, '考勤统计', 'attendance_manager_canculateAttendance', 2, '', '', '2011-06-03 00:00:00', '2011-06-03 11:34:50'),
+(58, '我的消息', 'personal_office_messageDeal', 1, '', '', '2011-06-03 00:00:00', '2011-06-03 11:36:28');
 
 -- --------------------------------------------------------
 
@@ -372,7 +381,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_menu_relationship` (
   `system_id` bigint(20) NOT NULL,
   `menu_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=10 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=11 ;
 
 --
 -- 转存表中的数据 `wlzx_system_menu_relationship`
@@ -387,7 +396,8 @@ INSERT INTO `wlzx_system_menu_relationship` (`id`, `system_id`, `menu_id`) VALUE
 (6, 3, 11),
 (7, 3, 17),
 (8, 3, 18),
-(9, 3, 31);
+(9, 3, 31),
+(10, 3, 50);
 
 -- --------------------------------------------------------
 
@@ -400,7 +410,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_menu_treeship` (
   `parent_id` bigint(20) NOT NULL,
   `child_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=45 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=53 ;
 
 --
 -- 转存表中的数据 `wlzx_system_menu_treeship`
@@ -447,7 +457,15 @@ INSERT INTO `wlzx_system_menu_treeship` (`id`, `parent_id`, `child_id`) VALUES
 (41, 9, 46),
 (42, 44, 47),
 (43, 44, 48),
-(44, 31, 49);
+(44, 31, 49),
+(45, 50, 51),
+(46, 50, 52),
+(47, 50, 53),
+(48, 50, 54),
+(49, 46, 55),
+(50, 46, 56),
+(51, 46, 57),
+(52, 50, 58);
 
 -- --------------------------------------------------------
 
@@ -687,14 +705,14 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_role` (
   `supervisor_flag` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `symbol` (`symbol`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='系统角色' AUTO_INCREMENT=23 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='系统角色' AUTO_INCREMENT=24 ;
 
 --
 -- 转存表中的数据 `wlzx_system_role`
 --
 
 INSERT INTO `wlzx_system_role` (`id`, `symbol`, `sequence`, `name`, `level`, `detail`, `creation_date`, `modified_date`, `supervisor_flag`) VALUES
-(1, 'root_supervisor', 0, '校长', 1, '', '2011-05-06 00:00:00', '2011-05-20 18:45:35', 1),
+(1, 'root_supervisor', 0, '校长', 1, '', '2011-05-06 00:00:00', '2011-05-30 14:57:54', 1),
 (3, 'moral_education_office_supervisor', 0, '德育处处长', 3, '', '2011-05-10 00:00:00', '2011-05-20 18:47:06', 1),
 (6, 'headmaster_office_supervisor', 0, '校长办公室主任', 3, '', '2011-05-18 00:00:00', '2011-05-20 18:47:00', 1),
 (15, 'grade_committee_supervisor', 0, '段长', 3, '', '2011-05-19 00:00:00', '2011-05-20 18:46:54', 1),
@@ -702,9 +720,10 @@ INSERT INTO `wlzx_system_role` (`id`, `symbol`, `sequence`, `name`, `level`, `de
 (17, 'resources_office_supervisor', 0, '资源处处长', 3, '', '2011-05-19 00:00:00', '2011-05-20 18:46:41', 1),
 (18, 'executive_vice_president', 1, '行政副校长', 2, '', '2011-05-19 00:00:00', '2011-05-20 18:45:51', 0),
 (19, 'moral_education_vice_president', 2, '德育副校长', 2, '', '2011-05-19 00:00:00', '2011-05-20 18:46:10', 0),
-(20, 'teaching_vice_president', 3, '教学副校长', 2, '', '2011-05-19 00:00:00', '2011-05-20 18:45:57', 0),
-(21, 'logistical_vice_president', 4, '后勤副校长', 2, '', '2011-05-19 00:00:00', '2011-05-20 18:46:04', 0),
-(22, 'course_office_supervisor', 0, '课程处处长', 3, '', '2011-05-20 00:00:00', '2011-05-20 18:46:47', 1);
+(20, 'teaching_vice_president', 3, '教学副校长', 2, '', '2011-05-19 00:00:00', '2011-05-30 14:57:40', 0),
+(21, 'logistical_vice_president', 4, '后勤副校长', 2, '', '2011-05-19 00:00:00', '2011-05-30 15:38:26', 0),
+(22, 'course_office_supervisor', 0, '课程处处长', 3, '', '2011-05-20 00:00:00', '2011-05-20 18:46:47', 1),
+(23, 'a', 0, 'a', 2, '', '2011-05-30 00:00:00', '2011-05-30 15:11:24', 0);
 
 -- --------------------------------------------------------
 
@@ -717,7 +736,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_role_dam_relationship` (
   `role_id` bigint(20) NOT NULL,
   `dam_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=71 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=73 ;
 
 --
 -- 转存表中的数据 `wlzx_system_role_dam_relationship`
@@ -774,7 +793,9 @@ INSERT INTO `wlzx_system_role_dam_relationship` (`id`, `role_id`, `dam_id`) VALU
 (67, 1, 8),
 (68, 1, 28),
 (69, 1, 31),
-(70, 1, 27);
+(70, 1, 27),
+(71, 1, 33),
+(72, 1, 32);
 
 -- --------------------------------------------------------
 
@@ -815,7 +836,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_role_leadship` (
   `leader_id` bigint(20) NOT NULL,
   `subordinate_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=11 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=12 ;
 
 --
 -- 转存表中的数据 `wlzx_system_role_leadship`
@@ -825,7 +846,8 @@ INSERT INTO `wlzx_system_role_leadship` (`id`, `leader_id`, `subordinate_id`) VA
 (7, 1, 18),
 (8, 1, 19),
 (9, 1, 20),
-(10, 1, 21);
+(10, 1, 21),
+(11, 1, 23);
 
 -- --------------------------------------------------------
 
@@ -838,15 +860,20 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_role_user_relationship` (
   `role_id` bigint(20) NOT NULL,
   `user_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=11 ;
 
 --
 -- 转存表中的数据 `wlzx_system_role_user_relationship`
 --
 
 INSERT INTO `wlzx_system_role_user_relationship` (`id`, `role_id`, `user_id`) VALUES
-(1, 1, 2),
-(2, 18, 2);
+(2, 18, 2),
+(4, 1, 2),
+(5, 20, 3),
+(7, 1, 3),
+(8, 23, 3),
+(9, 23, 2),
+(10, 21, 2);
 
 -- --------------------------------------------------------
 
@@ -890,16 +917,15 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_user` (
   `active` tinyint(1) NOT NULL default '1',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `symbol` (`symbol`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='系统用户' AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='系统用户' AUTO_INCREMENT=4 ;
 
 --
 -- 转存表中的数据 `wlzx_system_user`
 --
 
 INSERT INTO `wlzx_system_user` (`id`, `symbol`, `sequence`, `name`, `password`, `last_login_time`, `last_login_ip`, `person_id`, `email`, `creation_date`, `modified_date`, `active`) VALUES
-(2, 'admin', 0, 'admin', 'c81e728d9d4c2f636f067f89cc14862c', '2011-05-27 22:21:23', '127.0.0.1', NULL, NULL, '2011-05-07 11:04:22', '2011-05-25 01:32:00', 1),
-(3, '3', 0, '3', 'eccbc87e4b5ce2fe28308fd9f2a7baf3', '2011-05-23 01:58:58', NULL, NULL, NULL, '2011-05-23 01:59:10', '2011-05-25 00:42:21', 1),
-(4, 'super_root', 0, 'super_root', '134bca5421a15476a1e5ebaebdba1ede', NULL, NULL, NULL, NULL, '2011-05-25 00:58:45', '0000-00-00 00:00:00', 1);
+(2, 'admin', 0, 'admin', 'c81e728d9d4c2f636f067f89cc14862c', '2011-06-03 11:42:10', '127.0.0.1', NULL, NULL, '2011-05-07 11:04:22', '2011-05-25 01:32:00', 1),
+(3, '3', 0, '3', 'eccbc87e4b5ce2fe28308fd9f2a7baf3', '2011-05-30 14:52:46', '127.0.0.1', NULL, NULL, '2011-05-23 01:59:10', '2011-05-25 00:42:21', 1);
 
 -- --------------------------------------------------------
 

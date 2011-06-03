@@ -290,6 +290,7 @@ public class SystemService{
 	//新增菜单
 	public MenuModel menuAdd(MenuModel menu,String parentType,String parentSymbol){
 		if(parentType.equals("system")){
+			menuDAO.saveOrUpdate(menu);
 			SystemModel parentSystem=systemDAO.getSystemBySymbol(parentSymbol);
 			parentSystem.getMenus().add(menu);
 			systemDAO.saveOrUpdate(parentSystem);
