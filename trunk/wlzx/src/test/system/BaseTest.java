@@ -8,6 +8,6 @@ public abstract class BaseTest{
 	
 	protected static ApplicationContext applicationContext = 
 		new ClassPathXmlApplicationContext(
-				new String[]{"spring/system/*.xml"});
+				new String[]{"system/spring-system-basic.xml", "system/wlims/basic/teacher.xml"});
 	
 }

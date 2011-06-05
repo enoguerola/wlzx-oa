@@ -28,9 +28,9 @@ package basic.entity
 		public var  teacherStatus:int;
 		public var  teacherAttendDate:Date;
 		
-		//public var  teacherStaus:String;
-		//public var  teacherStaus:String;
-		//public var  teacherStaus:String;
+		public var  otherDepartments:Object = new Array();
+		public var  relations:Object = new Array();
+		public var  experiences:Object = new Array();
 		
 		public function TeacherModel()
 		{

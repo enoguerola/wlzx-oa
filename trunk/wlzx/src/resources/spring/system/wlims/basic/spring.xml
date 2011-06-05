@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+
+	 <bean id="handlerMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping" >
+	  <property name="mappings">
+	   <props>
+	    <prop key="/messagebroker/basic/upload/teachers">BasicTeacherExcelImportAction</prop>
+	    <prop key="/messagebroker/basic/export/teachers">BasicTeacherExcelExportAction</prop>
+	   </props>
+	  </property>
+	 </bean>
+ 
+	 <bean id="BasicTeacherExcelImportAction" class="system.wlims.basic.action.TeacherExcelImportAction"></bean>
+	 <bean id="BasicTeacherExcelExportAction" class="system.wlims.basic.action.TeacherExcelExportAction"></bean>
+
+</beans>

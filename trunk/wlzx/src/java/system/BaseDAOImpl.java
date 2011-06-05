@@ -227,7 +227,7 @@ public abstract class BaseDAOImpl<T> extends HibernateDaoSupport implements Base
 	 * @see ims.mary.dao.BaseDAO#execUpdateByHSQL(java.lang.String)
 	 */
 	public int execUpdateByHSQL(String hsql) throws DAOException{
-		return getSession().createSQLQuery(hsql).executeUpdate();
+		return getSession().createQuery(hsql).executeUpdate();
 	}
 	
 	/*

@@ -78,7 +78,7 @@
 	<servlet>
 		<servlet-name>ReloadSpringSecurityAuthServlet</servlet-name>
 		<servlet-class>system.servlet.ReloadSpringSecurityAuthServlet</servlet-class>
-		<load-on-startup>1</load-on-startup>
+		<load-on-startup>2</load-on-startup>
 	</servlet>
 	
 	<servlet-mapping>
@@ -91,9 +91,9 @@
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
 		<init-param>
 			<param-name>contextConfigLocation</param-name>
-			<param-value></param-value>
+			<param-value>classpath:spring/system/wlims/basic/spring.xml,</param-value>
 		</init-param>
-		<load-on-startup>1</load-on-startup>
+		<load-on-startup>3</load-on-startup>
 	</servlet>
 
 	<servlet-mapping>
