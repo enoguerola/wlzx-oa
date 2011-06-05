@@ -8,6 +8,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RequestMapping("/image") 
 public class TeacherExcelImportAction {
+	TeacherExcelImportAction(){
+		System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+	}
 
 	public class ImageController {
 	    @RequestMapping("/imageUpload")   
