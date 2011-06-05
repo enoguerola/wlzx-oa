@@ -1,64 +1,226 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Module xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		   xmlns:s="library://ns.adobe.com/flex/spark" 
-		   xmlns:mx="library://ns.adobe.com/flex/mx" layout="vertical" width="100%" height="100%" creationComplete="initData();" xmlns:component="system.component.*">
+		   xmlns:mx="library://ns.adobe.com/flex/mx" layout="vertical" width="100%" height="100%" creationComplete="initData();" xmlns:valueObjects="basic.entity.*" xmlns:component="system.component.*">
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
-		<s:ArrayCollection id="postedArray">
-			<fx:Object title="a" type="" department="" priority="" postTime=""/>
-			<fx:Object title="a" type="" department="" priority="" postTime=""/>
-			<fx:Object title="a" type="" department="" priority="" postTime=""/>
-			<fx:Object title="a" type="" department="" priority="" postTime=""/>
-			<fx:Object title="a" type="" department="" priority="" postTime=""/>
-			<fx:Object title="a" type="" department="" priority="" postTime=""/>
-			<fx:Object title="a" type="" department="" priority="" postTime=""/>
-			<fx:Object title="a" type="" department="" priority="" postTime=""/>
-			<fx:Object title="a" type="" department="" priority="" postTime=""/>
-			<fx:Object title="a" type="" department="" priority="" postTime=""/>
-			<fx:Object title="a" type="" department="" priority="" postTime=""/>
-			<fx:Object title="a" type="" department="" priority="" postTime=""/>
-			<fx:Object title="a" type="" department="" priority="" postTime=""/>
-			<fx:Object title="a" type="" department="" priority="" postTime=""/>
-			<fx:Object title="a" type="" department="" priority="" postTime=""/>
-			<fx:Object title="a" type="" department="" priority="" postTime=""/>
-			<fx:Object title="a" type="" department="" priority="" postTime=""/>
-			
-		</s:ArrayCollection>
+		<valueObjects:TeacherModel id="teacher"/>
+		<mx:RemoteObject id="teacherServiceRO" destination="teacherServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+			<mx:method name="getTeacherModels"  concurrency="last"  result="searchResult_resultHandler(event);" />
+			<mx:method name="remove"  concurrency="last"  result="removeResult_resultHandler(event);" />
+			<mx:method name="changeStatus"  concurrency="last"  result="changeResult_resultHandler(event);" />
+		</mx:RemoteObject>
 	</fx:Declarations>
 	
 	<fx:Script>
 		<![CDATA[
+			import basic.utils.DateUtil;
+			
 			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
 			import mx.controls.Button;
 			import mx.core.FlexGlobals;
 			import mx.core.INavigatorContent;
+			import mx.events.CloseEvent;
 			import mx.events.ItemClickEvent;
+			import mx.formatters.DateFormatter;
 			import mx.managers.PopUpManager;
 			import mx.rpc.events.*;
+			import mx.utils.StringUtil;
+			
+			[Bindable]   
+			private var filename:String; 
+			[Bindable]   
+			private var file:FileReference=new FileReference(); 
 			
 			import oa.notice.popWin.*;
 			
 			import system.utils.CommonUtils;
 			
+			import basic.utils.Excel;
+			private var excel:Excel = new Excel;
 			
-			public function initData():void {
-				postedDG.initdata(postedArray);
+			public var departmentArr:ArrayCollection = new ArrayCollection(
+				[    
+					{value:"0", name:"教务处"}, 
+					{value:"1", name:"其他"}
+				]                
+			);
+			
+			public var statusArr:ArrayCollection = new ArrayCollection(
+				[    
+					{value:"0", name:"正式"}, 
+					{value:"1", name:"适用"},
+					{value:"2", name:"离职"},
+					{value:"3", name:"离休"}
+				]                
+			);
+			
+			protected function searchResult_resultHandler(event:ResultEvent):void
+			{
+				var allList:ArrayCollection = event.result as ArrayCollection;
+				teacherDG.initdata(allList);
 			}
 			
-			public function detailNotice(event:Event):void{
-				var selectedIndex:int=postedDG.cudg.selectedIndex;
+			public function initData():void {
+				search();
+			}
+			
+			public function detail(event:Event):void{
+				var selectedIndex:int = teacherDG.cudg.selectedIndex;
 				if(selectedIndex==-1)
 					Alert.show("当前未选中任意行");
 				else{
-					var noticeBrowsePopWin:NoticeBrowsePopWin=NoticeBrowsePopWin(PopUpManager.createPopUp(this,NoticeBrowsePopWin,true));  
-					PopUpManager.centerPopUp(noticeBrowsePopWin);
-					noticeBrowsePopWin.percentHeight=100;
-					noticeBrowsePopWin.percentWidth=100;
-					noticeBrowsePopWin.x=FlexGlobals.topLevelApplication.stage.stageWidth/2-noticeBrowsePopWin.width/2;
-					noticeBrowsePopWin.y=FlexGlobals.topLevelApplication.stage.stageHeight/2-noticeBrowsePopWin.height/2;
+					
 				}
 			}
+			
+			public function search():void{
+				teacher = new TeacherModel();
+				teacher.name = _name.text;
+				teacher.teacherDepartment = department.selectedItem.value;
+				teacher.teacherStatus = parseInt(status.selectedItem.value);
+				teacher.teacherAttendDate = DateFormatter.parseDateString(attendDate.text);
+				teacherServiceRO.getTeacherModels(teacher, teacherDG.curpage, teacherDG.pagecount);
+			}
+			
+			private function creationCompletedHandler():void
+			{
+				Security.allowDomain("*");   
+				this.addEventListener(Event.CLOSE, TitleWindowClose);   
+				file.addEventListener(ProgressEvent.PROGRESS,progressHandler);   
+				file.addEventListener(Event.SELECT,selectedHandler);   
+				file.addEventListener(IOErrorEvent.IO_ERROR,ioErrorHandler); 
+			}
+			
+			private function ioErrorHandler(e:IOErrorEvent):void   
+			{   
+				Alert.show(e.toString());   
+			}  
+			
+			private function progressHandler(e:ProgressEvent):void   
+			{   
+				lblProgress.text = " 已上传 " + e.bytesLoaded   + " 字节，共 " + e.bytesTotal + " 字节";    
+				var proc: uint = e.bytesLoaded / e.bytesTotal * 100;    
+				uploadbar.setProgress(proc, 100);    
+				uploadbar.label= "当前进度: " + " " + proc + "%";   
+			}
+			
+			/**Event事件监听处理函数，弹出上传提示窗口   
+			 * @param e，Event类型事件参数   
+			 * @author  54cwf@163.com   
+			 * * @return void   
+			 **/   
+			private function selectedHandler(e:Event):void   
+			{   
+				Alert.show("上传 " + file.name + " (共 "+Math.round(file.size/1024)+"KB)?",     
+					"确认上传",  
+					Alert.YES|Alert.NO,      
+					null,      
+					proceedWithUpload);   
+			}  
+			
+			
+			/**CloseEvent事件监听处理函数，访问upload的servlet服务   
+			 * @param e，Event类型事件参数   
+			 * @author  54cwf@163.com               
+			 * * @return void   
+			 * */   
+			private function proceedWithUpload(e:CloseEvent): void
+			{      
+				if (e.detail == Alert.YES)   
+				{      
+						filename = file.name;   
+						var request:URLRequest = new URLRequest();
+						request.url = "/messagebroker/basic/upload/teachers";      
+						try    
+						{      
+							file.upload(request);      
+						}    
+						catch (error:Error)    
+						{      
+							Alert.show("上传失败","错误"); 
+						}      
+				}      
+			}   
+			
+			/**CloseEvent事件监听处理函数，关闭TitleWindow弹出窗口   
+			 * @param e，事件参数   
+			 * @author  54cwf@163.com  
+			 * * @return void   
+			 * */   
+			private function TitleWindowClose(e:CloseEvent):void   
+			{   
+				PopUpManager.removePopUp(this);   
+			}  
+
+			
+			public function importExcel(event:Event):void
+			{
+				var typefiter:FileFilter = new FileFilter("Excel","*.xls");
+				file.browse([typefiter]); 
+			}
+			
+			public function exportExcel(event:Event):void
+			{
+				excel.load("", "");
+			}
+			
+			protected function systemFaultHandler(event:FaultEvent):void {
+				Alert.show(event.fault.faultString, 'Error');
+			}
+			
+			/**
+			 * Called to format dates in the data grid.
+			 */          
+			private function formatDate(data:Object, column:DataGridColumn):String
+			{
+				return DateUtil.formatDate(data[column.dataField] as Date, "YYYY-MM-DD");
+			}
+			         
+			private function formatSex(data:Object, column:DataGridColumn):String
+			{
+				if(data[column.dataField] == 0)
+					return "男";
+				else
+					return "女";
+			}
+			
+			private function formatPhone(data:Object, column:DataGridColumn):String
+			{
+				if(data[column.dataField] == 0)
+					return "男";
+				else
+					return "女";
+			}
+			
+			public function deleteItem(item_id:String):void
+			{
+				Alert.show("你确定要删除该项吗?","确认删除",Alert.NO|Alert.YES,null,function(event:CloseEvent):void{
+					if(event.detail == Alert.YES)
+						teacherServiceRO.deleteDirectoryItem(item_id);
+				},null,Alert.NO);
+			}
+			
+			protected function removeResult_resultHandler(event:ResultEvent):void
+			{
+				search();
+			}
+			
+			public function editItem(item_id:String):void
+			{
+			}
+			
+			public function changestatus(item_id:String, status:int):void
+			{
+				teacherServiceRO.changeStatus(item_id, status);
+			}
+			
+			protected function changeResult_resultHandler(event:ResultEvent):void
+			{
+				search();
+			}
+
 			
 		]]>
 	</fx:Script>
@@ -69,58 +231,104 @@
 				<mx:HBox width="100%" height="35" paddingLeft="20"  horizontalGap="10" backgroundColor="#C5E497"  verticalAlign="middle">
 					<mx:Label text="|"/>
 					
-					<mx:LinkButton  label="详细" icon="@Embed(source='../WebContent/resources/common/tools/button_detail_icon.png')"  click="detailNotice(event);"/>
+					<mx:LinkButton  label="详细" icon="@Embed(source='../WebContent/resources/common/tools/button_detail_icon.png')"  click="detail(event);"/>
 					<mx:Label text="|"/>
-					<mx:LinkButton  label="搜索" icon="@Embed(source='../WebContent/resources/common/tools/button_search_icon.png')" />
+					<mx:LinkButton  label="搜索" icon="@Embed(source='../WebContent/resources/common/tools/button_search_icon.png')" click="search();"/>
 					<mx:Label text="|"/>
-					
+					<mx:LinkButton  label="导入" icon="@Embed(source='../WebContent/resources/common/tools/button_down_icon.png')" click="importExcel(event);"/>
+					<mx:Label text="|"/>
+					<mx:LinkButton  label="导出" icon="@Embed(source='../WebContent/resources/common/tools/button_down_icon.png')" click="exportExcel(event);"/>
+					<mx:Label text="|"/>
+					<mx:ProgressBar id="uploadbar" labelPlacement="bottom" color="#F20D7A"
+									minimum="0" visible="true" maximum="100" label="当前进度: 0%" direction="right" mode="manual" width="200"/> 
+					<mx:Label id="lblProgress" text="上传"/>
 				</mx:HBox>
 			</s:HGroup>
 			<s:HGroup width="100%" height="100%" gap="0">
-				<mx:VBox  width="220" height="100%" verticalAlign="middle" horizontalAlign="center">
+				<s:VGroup  width="220" height="100%" verticalAlign="middle" horizontalAlign="center">
 					<mx:Form width="100%" height="100%" >		
 						<mx:FormHeading label="搜索条件" fontSize="15" width="100%" textAlign="left"/>
-						
-						<mx:FormItem label="公告类别" width="100%">
-							<s:ComboBox width="100%"/>
+						<mx:FormItem label="姓名" width="100%">
+							<s:TextInput width="100%" id="_name"/>
 						</mx:FormItem>
-						<mx:FormItem label="优先级 " width="100%">
-							<s:ComboBox width="100%"/>
+						<mx:FormItem label="部门" width="100%">
+							<s:ComboBox width="100%" id="department" dataProvider="{departmentArr}" selectedIndex="0" labelField="name"/>
 						</mx:FormItem>
-						<mx:FormItem label="发布部门" width="100%">
-							<s:ComboBox width="100%"/>
+						<mx:FormItem label="状态 " width="100%">
+							<s:ComboBox width="100%" id="status" dataProvider="{statusArr}" selectedIndex="0" labelField="name"/>
 						</mx:FormItem>
-						
-						<mx:FormItem label="公告主题 " width="100%">
-							<s:TextInput width="100%"/>
-						</mx:FormItem>
-						<mx:FormItem label="起始时间" id="beginDateArea">
-							<mx:DateField formatString="YYYY-MM-DD" width="100%"/>
-						</mx:FormItem>	
-						<mx:FormItem label="截止时间"  id="endDateArea">
-							<mx:DateField formatString="YYYY-MM-DD" width="100%"/>
-						</mx:FormItem>
-						
-						
+						<mx:FormItem label="入校时间" >
+							<mx:DateField formatString="YYYY-MM-DD" width="100%" id="attendDate"/>
+						</mx:FormItem>						
 						
 					</mx:Form>
-				</mx:VBox>
+				</s:VGroup>
 				<s:VGroup  width="100%" height="100%" gap="0" >
-					<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="false"   borderAlpha="0.2" verticalAlign="middle"   id="postedDG" pagecount="13">				
+					<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="false"   borderAlpha="0.2" verticalAlign="middle"   id="teacherDG" pagecount="13">				
 						<component:mygridcolumns>
 							
-							<mx:DataGridColumn textAlign="center" headerText="发布时间" dataField="postTime" width="100">
+							<mx:DataGridColumn textAlign="center" headerText="姓名" dataField="name" width="100">
 							</mx:DataGridColumn>
-							<mx:DataGridColumn textAlign="center" headerText="公告类型" dataField="type" width="100">
+							<mx:DataGridColumn textAlign="center" headerText="性别" dataField="sex" width="50" labelFunction="formatSex">
 							</mx:DataGridColumn>
-							<mx:DataGridColumn textAlign="center" headerText="公告标题" dataField="title" width="200">
+							<mx:DataGridColumn textAlign="center" headerText="出生年月" dataField="birthday" width="150" labelFunction="formatDate">
 							</mx:DataGridColumn>
-							
-							<mx:DataGridColumn textAlign="center" headerText="发布部门" dataField="department" width="100">
+							<mx:DataGridColumn textAlign="center" headerText="手机/短号" width="100">
+								<mx:itemRenderer>
+									<fx:Component>
+										<mx:Label htmlText="{data.teacherMobilePhone + '/' + data.teacherNo}"/>									
+									</fx:Component>
+								</mx:itemRenderer>
 							</mx:DataGridColumn>
-							<mx:DataGridColumn textAlign="center" headerText="优先级" dataField="priority" width="100">
+							<mx:DataGridColumn textAlign="center" headerText="家庭电话" dataField="homePhone" width="100">
 							</mx:DataGridColumn>
-							
+							<mx:DataGridColumn textAlign="center" headerText="部门" dataField="teacherDepartment" width="100">
+							</mx:DataGridColumn>
+							<mx:DataGridColumn textAlign="center" headerText="家庭电话" dataField="homePhone" width="100">
+							</mx:DataGridColumn>
+							<mx:DataGridColumn textAlign="center" headerText="办公电话" dataField="teacherOfficePhone" width="100">
+							</mx:DataGridColumn>
+							<mx:DataGridColumn textAlign="center" headerText="入校时间" dataField="teacherAttendDate" width="100">
+							</mx:DataGridColumn>
+							<mx:DataGridColumn textAlign="center" headerText="离职"  width="60">
+								<mx:itemRenderer>
+									<fx:Component>
+										<mx:LinkButton  label="[离职]" click="{this.outerDocument.changestatus(data.id, 2);}"></mx:LinkButton>										
+									</fx:Component>
+								</mx:itemRenderer>
+							</mx:DataGridColumn>
+							<mx:DataGridColumn textAlign="center" headerText="退休"  width="60">
+								<mx:itemRenderer>
+									<fx:Component>
+										<mx:LinkButton  label="[退休]" click="{this.outerDocument.changestatus(data.id, 3);}">											
+										</mx:LinkButton>										
+									</fx:Component>
+								</mx:itemRenderer>
+							</mx:DataGridColumn>
+							<mx:DataGridColumn textAlign="center" headerText="转正"  width="60">
+								<mx:itemRenderer>
+									<fx:Component>
+										<mx:LinkButton  label="[转正]" click="{this.outerDocument.changestatus(data.id, 0);}">											
+										</mx:LinkButton>										
+									</fx:Component>
+								</mx:itemRenderer>
+							</mx:DataGridColumn>
+							<mx:DataGridColumn textAlign="center" headerText="编辑" width="60">
+								<mx:itemRenderer>
+									<fx:Component>
+										<mx:LinkButton  label="[编辑]" click="{this.outerDocument.editItem(data.id);}">											
+										</mx:LinkButton>										
+									</fx:Component>
+								</mx:itemRenderer>
+							</mx:DataGridColumn>
+							<mx:DataGridColumn textAlign="center" headerText="删除"  width="60">
+								<mx:itemRenderer>
+									<fx:Component>
+										<mx:LinkButton  label="[删除]" click="{this.outerDocument.deleteItem(data.id);}">											
+										</mx:LinkButton>										
+									</fx:Component>
+								</mx:itemRenderer>
+							</mx:DataGridColumn>
 							
 						</component:mygridcolumns>
 					</component:WlzxPageDataGrid>

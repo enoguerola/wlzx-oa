@@ -11,7 +11,7 @@
 	    public var mygridcolumns:Array;
 	    public var mydata:ArrayCollection;//所有的数据
 	    public var pagecount:int=10;//表示每页记录的条数,默认10条,可以由用户自行定义
-	    public var curpage:int;//当前的页码
+	    public var curpage:int = 1;//当前的页码
 	    public var totalpage:int;//一共的页数
 	    public var totalcount:int;//一共的记录条数
 	    public var selectedRowId:String=null;  

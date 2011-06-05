@@ -30,21 +30,17 @@
 	</bean>
 	
 	<bean id="teacherServiceDest" class="system.wlims.basic.service.teacher.TeacherService">
-		<flex:remoting-destination />
 		<property name="teacherDAO" ref="teacherDAO" />
 	</bean>
 	<bean id="teacherDepartmentServiceDest" class="system.wlims.basic.service.teacher.TeacherDepartmentService">
-		<flex:remoting-destination />
 		<property name="teacherDAO" ref="teacherDAO" />
 		<property name="teacherDepartmentDAO" ref="teacherDepartmentDAO" />
 	</bean>
 	<bean id="teacherExperienceServiceDest" class="system.wlims.basic.service.teacher.TeacherExperienceService">
-	    <flex:remoting-destination />
 		<property name="teacherDAO" ref="teacherDAO" />
 		<property name="teacherExperienceDAO" ref="teacherExperienceDAO" />
 	</bean>
 	<bean id="teacherRelationServiceDest" class="system.wlims.basic.service.teacher.TeacherRelationService">
-		<flex:remoting-destination />
 		<property name="teacherDAO" ref="teacherDAO" />
 		<property name="teacherRelationDAO" ref="teacherRelationDAO" />
 	</bean>
