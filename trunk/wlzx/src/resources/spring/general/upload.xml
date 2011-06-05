@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+<bean class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter"></bean>
+	 <bean id="action1"  class="system.wlims.basic.action.TeacherExcelExportAction">	</bean>
+	 <bean id="handlerMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+	  <property name="mappings">
+	   <props>
+	    <prop key="/general/export/teachers.action">action1</prop>
+	   </props>
+	  </property>
+	 </bean>
+ 
+
+</beans>
