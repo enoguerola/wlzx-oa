@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Module xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		   xmlns:s="library://ns.adobe.com/flex/spark" 
+		   xmlns:mx="library://ns.adobe.com/flex/mx" layout="vertical" creationComplete="init();" width="100%" height="100%" xmlns:component="system.component.*" >
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+		<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+			<mx:method name="getSelfReceivedNotReadMessages"  concurrency="last"  result="getSelfReceivedNotReadMessages_resultHandler(event);" />
+			<mx:method name="getSelfReceivedAlreadyReadMessages"  concurrency="last"  result="getSelfReceivedAlreadyReadMessages_resultHandler(event);" />
+			<mx:method name="getSelfPostedMessages"  concurrency="last"  result="getSelfPostedMessages_resultHandler(event);" />
+
+		</mx:RemoteObject>
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.controls.*;
+			import mx.events.*;
+			import mx.rpc.events.*;
+			import system.utils.CommonUtils;
+			private function init():void {	
+				switchMessagesView();
+			}
+			private function systemFaultHandler(event:FaultEvent):void {
+				Alert.show(event.fault.faultString, 'Error');
+			}
+			
+			protected function getSelfReceivedNotReadMessages_resultHandler(event:ResultEvent):void{
+				var allList:ArrayCollection=event.result as ArrayCollection;
+				notReadTable.initdata(allList);
+			}
+			protected function getSelfReceivedAlreadyReadMessages_resultHandler(event:ResultEvent):void{
+				var allList:ArrayCollection=event.result as ArrayCollection;
+				readTable.initdata(allList);
+			}
+			protected function getSelfPostedMessages_resultHandler(event:ResultEvent):void{
+				var allList:ArrayCollection=event.result as ArrayCollection;
+				postTable.initdata(allList);
+			}
+			private function switchMessagesView():void{
+				var index:int=messagesView.selectedIndex;
+				if(index==0)systemServiceRO.getSelfReceivedNotReadMessages();
+				else if(index==1)systemServiceRO.getSelfReceivedAlreadyReadMessages();
+				else if(index==2)systemServiceRO.getSelfPostedMessages();
+				
+			}
+			public function formatDate(date:Date):String{
+				return CommonUtils.formatDate(date);
+				
+			}
+		]]>
+	</fx:Script>
+	<s:Panel width="100%" height="100%"  styleName="customPanel" title="我的消息"  borderVisible="false" dropShadowVisible="false">
+		<s:VGroup width="100%" height="100%">
+			<s:HGroup verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12">
+				<mx:HBox width="100%" height="30" paddingLeft="20"  horizontalGap="0" backgroundColor="#C5E497"  verticalAlign="middle">
+					<mx:Label text="|"/>
+					<mx:LinkButton  label="发消息" icon="@Embed(source='../WebContent/resources/common/tools/button_add_icon.png')" />
+					<mx:Label text="|"/>
+					<mx:LinkButton  label="已读" icon="@Embed(source='../WebContent/resources/common/tools/button_detail_icon.png')" />
+					<mx:Label text="|"/>
+					<mx:LinkButton  label="删除" icon="@Embed(source='../WebContent/resources/common/tools/button_delete_icon.png')"  />
+					<mx:Label text="|"/>
+				</mx:HBox>
+			</s:HGroup>
+			<s:VGroup width="100%" height="100%" gap="10" verticalAlign="middle" horizontalAlign="center" >
+				<mx:TabNavigator id="messagesView"  width="100%" height="100%" tabStyleName="customTabStyles"  horizontalGap="1" borderVisible="false"  tabWidth="120" paddingTop="0"  change="switchMessagesView();">
+					<mx:HBox label="收件箱-未读" width="100%" height="100%">
+						<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="false"   borderAlpha="0.2" verticalAlign="middle"   id="notReadTable" pagecount="10"  >				
+							<component:mygridcolumns>
+								
+								<mx:DataGridColumn textAlign="center" headerText="选择"  width="50">
+									<mx:itemRenderer>
+										<fx:Component>
+											<mx:CheckBox name="{data.id}"/>
+										</fx:Component>
+									</mx:itemRenderer>
+								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="发送人"  width="100">
+									<mx:itemRenderer>
+										<fx:Component>
+											<mx:Label text="{data.from==null?'系统':data.from.name}"/>
+										</fx:Component>
+									</mx:itemRenderer>
+								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="类型"  width="100">
+									<mx:itemRenderer>
+										<fx:Component>
+											<mx:Label text="{data.type}"/>
+										</fx:Component>
+									</mx:itemRenderer>
+								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="内容" dataField="content" width="300">
+									
+								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="发送时间" width="100">
+									<mx:itemRenderer>
+									<fx:Component>
+										<mx:Label text="{this.outerDocument.formatDate(data.modifiedDate as Date)}"/>
+									</fx:Component>
+									</mx:itemRenderer>
+								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="操作"  width="150">
+									
+								</mx:DataGridColumn>
+							</component:mygridcolumns>
+						</component:WlzxPageDataGrid>
+					</mx:HBox>
+					<mx:HBox label="收件箱-已读" width="100%" height="100%">
+						<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="false"   borderAlpha="0.2" verticalAlign="middle"   id="readTable" pagecount="10"  >				
+							<component:mygridcolumns>
+								
+								<mx:DataGridColumn textAlign="center" headerText="选择"  width="50">
+									<mx:itemRenderer>
+										<fx:Component>
+											<mx:CheckBox name="{data.id}"/>
+										</fx:Component>
+									</mx:itemRenderer>
+								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="发送人"  width="100">
+									<mx:itemRenderer>
+										<fx:Component>
+											<mx:Label text="{data.from==null?'系统':data.from.name}"/>
+										</fx:Component>
+									</mx:itemRenderer>
+								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="类型"  width="100">
+									<mx:itemRenderer>
+										<fx:Component>
+											<mx:Label text="{data.type}"/>
+										</fx:Component>
+									</mx:itemRenderer>
+								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="内容" dataField="content" width="300">
+									
+								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="发送时间" width="100">
+									<mx:itemRenderer>
+										<fx:Component>
+											<mx:Label text="{this.outerDocument.formatDate(data.modifiedDate as Date)}"/>
+										</fx:Component>
+									</mx:itemRenderer>
+								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="操作"  width="150">
+									
+								</mx:DataGridColumn>
+							</component:mygridcolumns>
+						</component:WlzxPageDataGrid>
+					</mx:HBox>
+					<mx:HBox label="发件箱" width="100%" height="100%">
+						<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="false"   borderAlpha="0.2" verticalAlign="middle"   id="postTable" pagecount="10"  >				
+							<component:mygridcolumns>
+								
+								<mx:DataGridColumn textAlign="center" headerText="选择"  width="50">
+									<mx:itemRenderer>
+										<fx:Component>
+											<mx:CheckBox name="{data.id}"/>
+										</fx:Component>
+									</mx:itemRenderer>
+								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="发送人"  width="100">
+									<mx:itemRenderer>
+										<fx:Component>
+											<mx:Label text="{data.from==null?'系统':data.from.name}"/>
+										</fx:Component>
+									</mx:itemRenderer>
+								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="类型"  width="100">
+									<mx:itemRenderer>
+										<fx:Component>
+											<mx:Label text="{data.type}"/>
+										</fx:Component>
+									</mx:itemRenderer>
+								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="内容" dataField="content" width="300">
+									
+								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="发送时间" width="100">
+									<mx:itemRenderer>
+										<fx:Component>
+											<mx:Label text="{this.outerDocument.formatDate(data.modifiedDate as Date)}"/>
+										</fx:Component>
+									</mx:itemRenderer>
+								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="状态"  width="100">
+									<mx:itemRenderer>
+										<fx:Component>
+											<mx:Label text="{data.status}"/>
+										</fx:Component>
+									</mx:itemRenderer>
+								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="操作"  width="150">
+									
+								</mx:DataGridColumn>
+							</component:mygridcolumns>
+						</component:WlzxPageDataGrid>
+					</mx:HBox>
+				</mx:TabNavigator>
+			</s:VGroup>
+		</s:VGroup>
+		
+		
+	</s:Panel>
+</mx:Module>
