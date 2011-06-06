@@ -28,7 +28,7 @@ public class TeacherExcelImportController{
 		System.out.println("cccasas");
 	}
 
-    @RequestMapping("/spring/imageUpload") 
+    @RequestMapping("/spring/imageUpload.action") 
     public void upload()
     {
     	System.out.println("cccasaaaaas");

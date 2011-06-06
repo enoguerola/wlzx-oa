@@ -47,7 +47,7 @@ public class SystemService{
 	private DepartmentDAO departmentDAO;
 	private RoleDAO roleDAO;
 	private UserDAO userDAO;
-
+	private MessageDAO messageDAO;
 	public SystemDAO getSystemDAO() {
 		return systemDAO;
 	}
@@ -95,6 +95,12 @@ public class SystemService{
 	}
 	public void setUserDAO(UserDAO userDAO) {
 		this.userDAO = userDAO;
+	}
+	public MessageDAO getMessageDAO() {
+		return messageDAO;
+	}
+	public void setMessageDAO(MessageDAO messageDAO) {
+		this.messageDAO = messageDAO;
 	}
 	//获得当前登录用户所有权限集
 	public Set<DataAccessModeModel> getAuthorizations(){
@@ -661,7 +667,46 @@ public class SystemService{
 
 		return true;
 	}
-	
+	//获得自身接受未读消息
+	public List<MessageModel> getSelfReceivedNotReadMessages(){
+		UserModel user=SecurityUserHolder.getCurrentUser();
+		if(user!=null){
+			return messageDAO.getMessagesByConditions(null, user.getId(), MessageModel.MessageStatus.NOT_READ.getValue());
+		}else return null;
+		
+	}
+	//获得自身接受未读消息
+	public List<MessageModel> getSelfReceivedAlreadyReadMessages(){
+		UserModel user=SecurityUserHolder.getCurrentUser();
+		if(user!=null){
+			return messageDAO.getMessagesByConditions(null, user.getId(), MessageModel.MessageStatus.ALREADY_READ.getValue());
+		}else return null;
+		
+	}
+	//获得自身所有发送消息
+	public List<MessageModel> getSelfPostedMessages(){
+		UserModel user=SecurityUserHolder.getCurrentUser();
+		if(user!=null){
+			return messageDAO.getMessagesByConditions(user.getId(),null, null);
+		}else return null;
+		
+	}
+	//发送消息
+	public boolean sendMessage(String fromId,String toId,int type,String content){
+		MessageModel message=new MessageModel();
+		if(StringUtils.isNotEmpty(fromId)){
+			message.setFrom(userDAO.get(fromId));
+		}
+		if(StringUtils.isNotEmpty(toId)){
+			message.setTo(userDAO.get(toId));
+		}else return false;
+		message.setType(type);
+		message.setContent(content);
+		message.setCreationDate(new Date());
+		message.setStatus(MessageModel.MessageStatus.NOT_READ.getValue());
+		messageDAO.saveOrUpdate(message);
+		return true;
+	}
 	
 	
 	public static void main(String[] args) {
