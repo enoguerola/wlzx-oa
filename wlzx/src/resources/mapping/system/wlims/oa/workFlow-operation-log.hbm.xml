@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+<class name="system.wlims.oa.entity.workFlow.WorkFlowLogModel" table="wlzx_oa_workflow_log">
+        <id name="id" type="string">
+            <column name="id" />
+            <generator class="native" />
+        </id>
+       <discriminator column="operation_object_type" type="string" />
+        <property name="operationTeacherId" type="string">
+            <column name="operation_teacher_id" />
+        </property>
+        
+        <property name="operationName" type="string">
+            <column name="operation_name" />
+        </property>
+        
+        <property name="operationTime" type="timestamp">
+            <column name="operation_time" />
+        </property>
+        
+         <property name="operationResult" type="string">
+            <column name="operation_result" />
+        </property>
+        
+        <subclass name="system.wlims.oa.entity.workFlow.takeLeave.TakeLeaveWorkFlowLog" discriminator-value="TakeLeaveWorkFlowLog">
+			<many-to-one name="takeLeaveWorkFlow" class="system.wlims.oa.entity.workFlow.takeLeave.TakeLeaveForm" column="operation_object_id" /> 
+		</subclass>
+      
+    </class>
+</hibernate-mapping>

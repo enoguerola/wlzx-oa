@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="system.wlims.oa.entity.workFlow.takeLeave.TakeLeaveForm" table="wlzx_oa_takeleave_apply">
+		<id name="id">
+			<column name="id" />
+			<generator class="native" />
+		</id>
+		<property name="type" type="int">
+			<column name="takeLeave_type" />
+		</property>
+		<property name="teacherId" type="string">
+			<column name="takeLeave_teacher_id" />
+		</property>
+		<property name="beginDate" type="date">
+			<column name="takeLeave_beginDate" />
+		</property>
+		<property name="endDate" type="date">
+			<column name="takeLeave_endDate" />
+		</property>
+		<property name="reason" type="string">
+			<column name="takeLeave_reason" />
+		</property>
+		<property name="arrangeTech" type="string">
+			<column name="takeLeave_arrange_tech" />
+		</property>
+		<property name="arrangeService" type="string">
+			<column name="takeLeave_arrange_service" />
+		</property>
+		<property name="arrangeManage" type="string">
+			<column name="takeLeave_arrange_manage" />
+		</property>
+		<property name="officeChiefApproverId" type="string">
+			<column name="takeLeave_officeChief_approver_id" />
+		</property>
+		<property name="officeChiefApproveTime" type="date">
+			<column name="takeLeave_officeChief_approve_time" />
+		</property>
+		<property name="officeChiefApproveOption" type="string">
+			<column name="takeLeave_officeChief_approve_option" />
+		</property>
+		<property name="vicePrincipalApproverId" type="string">
+			<column name="takeLeave_vicePrincipal_approver_id" />
+		</property>
+		<property name="vicePrincipalApproveTime" type="date">
+			<column name="takeLeave_vicePrincipal_approve_time" />
+		</property>
+		<property name="vicePrincipalApproveOption" type="string">
+			<column name="takeLeave_vicePrincipal_approve_option" />
+		</property>
+		<property name="principalApproverId" type="string">
+			<column name="takeLeave_principal_approver_id" />
+		</property>
+		<property name="principalApproveTime" type="date">
+			<column name="takeLeave_principal_approve_time" />
+		</property>
+		<property name="principalApproveOption" type="string">
+			<column name="takeLeave_principal_approve_option" />
+		</property>
+		<property name="remark" type="string">
+			<column name="takeLeave_remark" />
+		</property>
+		<property name="status" type="int">
+			<column name="takeLeave_status" />
+		</property>
+		<set name="logs" lazy="false" table="wlzx_oa_workflow_log" cascade="all-delete-orphan" inverse="true">
+        	<key column="operation_object_id" not-null="true" />
+        	<one-to-many  class="system.wlims.oa.entity.workFlow.takeLeave.TakeLeaveWorkFlowLog" /> 
+        </set>		
+	</class>
+</hibernate-mapping>
