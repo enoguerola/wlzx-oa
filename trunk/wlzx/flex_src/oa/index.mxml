@@ -6,6 +6,8 @@
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
 		<!--定义 RemoteObject 组件-->
 		<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" result="systemResultHandler(event);" fault="systemFaultHandler(event);"/>
+		<s:Move id="hideEffect" xTo="{-this.stage.width}" />
+		<s:Move id="showEffect" xFrom="{this.stage.width}"/> 
 	</fx:Declarations>
 	<fx:Script>
 		<![CDATA[
@@ -32,6 +34,11 @@
 			
 			import system.entity.*;
 			import system.utils.CommonUtils;  
+			import mx.effects.easing.*;
+			import mx.effects.Fade;
+			import mx.effects.Rotate;
+			private var fade:Fade;
+			private var rotate:Rotate;
 			private var _moduleInfo:IModuleInfo;
 			
 			private function init():void {
@@ -205,6 +212,24 @@
 					bar.validateNow();
 				});
 			
+//				fade = new Fade();
+				// Rotate effect
+//				rotate = new Rotate();
+//				rotate.angleFrom = -180;
+//				rotate.angleTo = 0;
+//				rotate.easingFunction = Elastic.easeInOut;
+//				rotate.duration = 1000;
+				var fadeIn:Fade = new Fade();
+				fadeIn.duration=1000;
+				fadeIn.alphaFrom=0;
+				fadeIn.alphaTo=1;
+				var fadeOut:Fade = new Fade();
+				fadeOut.duration=1000;
+				fadeOut.alphaFrom=1;
+				fadeOut.alphaTo=0;
+				child.setStyle("showEffect", fadeIn);
+				child.setStyle("hideEffect", fadeOut);
+				
 				navigator.addChild(child as DisplayObject);
 				navigator.selectedIndex = navigator.getChildIndex(child);
 				navigator.setClosePolicyForTab(0, SuperTab.CLOSE_NEVER);
