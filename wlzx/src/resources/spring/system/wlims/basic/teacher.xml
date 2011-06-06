@@ -33,6 +33,9 @@
 		<flex:remoting-destination />
 		<property name="teacherDAO" ref="teacherDAO" />
 	</bean>
+	<bean id="teacherService" class="system.wlims.basic.service.teacher.TeacherService">
+		<property name="teacherDAO" ref="teacherDAO" />
+	</bean>
 	<bean id="teacherDepartmentServiceDest" class="system.wlims.basic.service.teacher.TeacherDepartmentService">
 		<flex:remoting-destination />
 		<property name="teacherDAO" ref="teacherDAO" />

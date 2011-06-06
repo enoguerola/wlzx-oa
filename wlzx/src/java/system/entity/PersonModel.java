@@ -26,14 +26,14 @@ public class PersonModel extends BaseModel{
 
 	private static final long serialVersionUID = 6869991706996571288L;
 	
-	private String name;
-	private Integer sex;
-	private Date birthday;
-	private String nation;
-	private Integer politicsStatus;
-	private String homePhone;
-	private Integer style;
-	private String address;
+	protected String name;
+	protected Integer sex;
+	protected Date birthday;
+	protected String nation;
+	protected Integer politicsStatus;
+	protected String homePhone;
+	protected Integer style;
+	protected String address;
 	
 	private Date creationDate;
 	private Date modifiedDate;

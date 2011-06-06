@@ -3,7 +3,9 @@ package system.utils;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import system.wlims.basic.entity.teacher.TeacherModel;
 
@@ -14,16 +16,30 @@ public class ReflectUtils {
 		HashMap<String, Object> data = new HashMap<String, Object>();
 		if (f != null) {
 			Field[] fields = f.getClass().getDeclaredFields();
-			for(int i = 0 , len = fields.length; i < len; i++) {
-				String varName = fields[i].getName();
+			List<Field> list = new ArrayList<Field>();
+			for(Field field:fields)
+				list.add(field);
+			
+			Class parent = f.getClass().getSuperclass();  
+			// 如果有父类并且父类不是Object 
+			if (parent != null && !((Class) parent).getName().equals("Object")) {  
+				Field[] pfields = parent.getDeclaredFields();
+				
+				for(Field field:pfields)
+					list.add(field);
+			}  
+			 
+
+			for(int i = 0 , len = list.size(); i < len; i++) {
+				String varName = list.get(i).getName();
 				try {
-					boolean accessFlag = fields[i].isAccessible();
-					fields[i].setAccessible(true);
+					boolean accessFlag = list.get(i).isAccessible();
+					list.get(i).setAccessible(true);
 					Method method = f.getClass().getMethod(
 							"get" + varName.substring(0,1).toUpperCase() + varName.substring(1), new Class[]{});
 					if (method != null) {
 						data.put(preKey + varName, method.invoke(f, new Object[]{}));
-						fields[i].setAccessible(accessFlag);
+						list.get(i).setAccessible(accessFlag);
 					}
 				} catch (IllegalArgumentException ex) {
 					ex.printStackTrace();
