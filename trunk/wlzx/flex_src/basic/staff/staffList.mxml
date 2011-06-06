@@ -215,6 +215,10 @@
 			
 			public function editItem(item_id:String):void
 			{
+				Alert.show(item_id);
+				var parent:Object=(Object)(((Object)(this.owner)).owner);
+//				Alert.show(parent.nav);
+				parent.addTab("教师编辑",parent.nav,"basic/staff/staffInput.swf");
 			}
 			
 			public function changestatus(item_id:String, status:int):void

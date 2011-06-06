@@ -162,7 +162,7 @@
 				
 			}
 			
-			private function addTab(title:String, navigator:SuperTabNavigator, moduleUrl:String=null, icon:Class=null):void {
+			public function addTab(title:String, navigator:SuperTabNavigator, moduleUrl:String=null, icon:Class=null):void {
 				for(var i:int=0;i<navigator.getChildren().length;i++){
 					// 将对象转换为一个泛型
 					var obj:* = navigator.getChildAt(i);

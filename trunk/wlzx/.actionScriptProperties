@@ -46,10 +46,11 @@
     <module application="flex_src/home.mxml" destPath="oa/notice/noticeSign.swf" optimize="false" sourcePath="flex_src/oa/notice/noticeSign.mxml"/>
     <module application="flex_src/home.mxml" destPath="oa/notice/postNotice.swf" optimize="false" sourcePath="flex_src/oa/notice/postNotice.mxml"/>
     <module application="flex_src/home.mxml" destPath="basic/authorization/roleAuthorization.swf" optimize="false" sourcePath="flex_src/basic/authorization/roleAuthorization.mxml"/>
-    <module destPath="system/message/messageList.swf" optimize="false" sourcePath="flex_src/system/message/messageList.mxml"/>
-    <module destPath="oa/attendance/takeLeaveApply.swf" optimize="false" sourcePath="flex_src/oa/attendance/takeLeaveApply.mxml"/>
-    <module destPath="oa/attendance/overWorkApply.swf" optimize="false" sourcePath="flex_src/oa/attendance/overWorkApply.mxml"/>
-    <module destPath="oa/attendance/canculateAttendance.swf" optimize="false" sourcePath="flex_src/oa/attendance/canculateAttendance.mxml"/>
+    <module application="flex_src/home.mxml" destPath="system/message/messageList.swf" optimize="false" sourcePath="flex_src/system/message/messageList.mxml"/>
+    <module application="flex_src/home.mxml" destPath="oa/attendance/takeLeaveApply.swf" optimize="false" sourcePath="flex_src/oa/attendance/takeLeaveApply.mxml"/>
+    <module application="flex_src/home.mxml" destPath="oa/attendance/overWorkApply.swf" optimize="false" sourcePath="flex_src/oa/attendance/overWorkApply.mxml"/>
+    <module application="flex_src/home.mxml" destPath="oa/attendance/canculateAttendance.swf" optimize="false" sourcePath="flex_src/oa/attendance/canculateAttendance.mxml"/>
+    <module application="flex_src/home.mxml" destPath="basic/staff/staffInput.swf" optimize="false" sourcePath="flex_src/basic/staff/staffInput.mxml"/>
   </modules>
   <buildCSSFiles/>
 </actionScriptProperties>
