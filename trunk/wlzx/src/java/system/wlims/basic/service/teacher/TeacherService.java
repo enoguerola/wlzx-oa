@@ -3,12 +3,10 @@ package system.wlims.basic.service.teacher;
 import java.sql.Date;
 import java.util.List;
 
-import org.hibernate.Hibernate;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 
 import system.ServiceException;
-import system.constants.Constants;
 import system.dao.UserDAO;
 import system.entity.UserModel;
 import system.entity.PersonModel.PersonStyle;

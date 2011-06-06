@@ -138,7 +138,7 @@
 				{      
 						filename = file.name;   
 						var request:URLRequest = new URLRequest();
-						request.url = "/general/import/teachers.action";
+						request.url = "/spring/imageUpload.action";
 						try    
 						{      
 							file.upload(request);      

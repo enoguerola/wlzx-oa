@@ -31,7 +31,6 @@ public class TeacherModel extends PersonModel{
 	private String teacherOfficePhone;
 	private Date teacherWorkDate;
 	//private String teacherWorkPeriod;
-	private String teacherAddress;
 	private String teacherPhoto;
 	private Integer teacherStatus;
 	
@@ -135,12 +134,6 @@ public class TeacherModel extends PersonModel{
 	}
 	public void setTeacherWorkDate(Date teacherWorkDate) {
 		this.teacherWorkDate = teacherWorkDate;
-	}
-	public String getTeacherAddress() {
-		return teacherAddress;
-	}
-	public void setTeacherAddress(String teacherAddress) {
-		this.teacherAddress = teacherAddress;
 	}
 	public String getTeacherPhoto() {
 		return teacherPhoto;
