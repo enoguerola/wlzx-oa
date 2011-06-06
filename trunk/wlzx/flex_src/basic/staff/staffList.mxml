@@ -28,10 +28,15 @@
 			import mx.rpc.events.*;
 			import mx.utils.StringUtil;
 			
+			import flash.events.*;
+			import flash.net.FileFilter;
+			import flash.net.FileReference;
+			import flash.net.URLRequest;
+			
 			[Bindable]   
 			private var filename:String; 
 			[Bindable]   
-			private var file:FileReference=new FileReference(); 
+			private var file:FileReference = new FileReference(); 
 			
 			import oa.notice.popWin.*;
 			
@@ -64,6 +69,7 @@
 			
 			public function initData():void {
 				search();
+				creationCompletedHandler();
 			}
 			
 			public function detail(event:Event):void{
@@ -89,7 +95,7 @@
 				Security.allowDomain("*");   
 				this.addEventListener(Event.CLOSE, TitleWindowClose);   
 				file.addEventListener(ProgressEvent.PROGRESS,progressHandler);   
-				file.addEventListener(Event.SELECT,selectedHandler);   
+				file.addEventListener(Event.SELECT, selectedHandler);   
 				file.addEventListener(IOErrorEvent.IO_ERROR,ioErrorHandler); 
 			}
 			
@@ -132,7 +138,7 @@
 				{      
 						filename = file.name;   
 						var request:URLRequest = new URLRequest();
-						request.url = "/messagebroker/basic/upload/teachers";      
+						request.url = "/general/import/teachers.action";
 						try    
 						{      
 							file.upload(request);      
@@ -163,7 +169,7 @@
 			
 			public function exportExcel(event:Event):void
 			{
-				excel.load("", "");
+				excel.load("general/export/teachers.action", "");
 			}
 			
 			protected function systemFaultHandler(event:FaultEvent):void {

@@ -41,6 +41,10 @@ public class TeacherModel extends PersonModel{
 	private Set<TeacherDepartment> otherDepartments = new HashSet<TeacherDepartment>();
 	private Set<TeacherRelation> relations = new HashSet<TeacherRelation>();
 	private Set<TeacherExperience> experiences = new HashSet<TeacherExperience>();
+	
+	//for excel info
+	private String teacherMarriedText;
+	private String sexText;
 
 	public String getTeacherID() {
 		return teacherID;
@@ -188,6 +192,26 @@ public class TeacherModel extends PersonModel{
 	}
 	public Integer getTeacherMarried() {
 		return teacherMarried;
+	}
+	public String getTeacherMarriedText() {
+		if(teacherMarried == null ||  teacherMarried == 0)
+			teacherMarriedText = "未婚";
+		else
+			teacherMarriedText = "已婚";
+		return teacherMarriedText;
+	}
+	public void setTeacherMarriedText(String teacherMarriedText) {
+		this.teacherMarriedText = teacherMarriedText;
+	}
+	public String getSexText() {
+		if(this.getSex() == null || getSex() == 0 )
+			sexText = "男";
+		else
+			sexText = "女";
+		return sexText;
+	}
+	public void setSexText(String sexText) {
+		this.sexText = sexText;
 	}
 
 }

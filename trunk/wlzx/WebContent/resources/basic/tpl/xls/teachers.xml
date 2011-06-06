@@ -2,7 +2,7 @@
 <xls-fields data-row-index="4" column-row-index="2" column-row-span="2">
 	<field-title rowspan="2">
 		<field-cell>A1</field-cell>
-		<field-text>企业详细信息</field-text>
+		<field-text>详细信息</field-text>
 		<field-key-data>xls.title</field-key-data>
 	</field-title>
 	<field-columns>

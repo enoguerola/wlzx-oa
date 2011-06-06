@@ -254,6 +254,7 @@ public class ExcelTemplateSupport {
 		Map<String, Object> ents = new HashMap<String, Object>();
 		TeacherModel base = new TeacherModel();
 		base.setAddress("address");
+		base.setName("name");
 		base.setBirthday(Date.valueOf("2011-11-11"));
 		base.setCreationDate(Date.valueOf("2011-11-11"));
 		base.setHomePhone("122");
