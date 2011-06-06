@@ -1,5 +1,9 @@
 package system.wlims.basic.service.teacher;
 
+import java.util.List;
+
+import org.hibernate.criterion.DetachedCriteria;
+
 import system.DAOException;
 import system.ServiceException;
 import system.wlims.basic.dao.teacher.TeacherDAO;
@@ -23,6 +27,18 @@ public class TeacherRelationService {
 			e.printStackTrace();
 			return 0;
 		}
+	}
+	
+	public List<TeacherRelation> get(int pageCount)throws ServiceException{
+		DetachedCriteria criteria = DetachedCriteria.forClass(TeacherRelation.class);
+		List<TeacherRelation> list = teacherRelationDAO.getListByCriteria(criteria, 0, pageCount);
+		for(TeacherRelation model:list)
+			model.setTeacher(null);
+		return list;
+	}
+	
+	public void remove(String id)throws ServiceException{
+		teacherRelationDAO.remove(id);
 	}
 	
 	public void setTeacherDAO(TeacherDAO teacherDAO) {

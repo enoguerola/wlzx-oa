@@ -16,8 +16,10 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.Controller;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import system.ServiceException;
 import system.constants.Constants;
@@ -27,16 +29,13 @@ import system.utils.ResourcesUtils;
 import system.wlims.basic.entity.teacher.TeacherModel;
 import system.wlims.basic.service.teacher.TeacherService;
 
-public class TeacherExcelExportAction  implements Controller{
+@Controller
+public class TeacherExcelExportAction{
 	
 	private TeacherService teacherService;
 	
-	TeacherExcelExportAction(){
-		System.out.println("CCCCCCCCCCCCCCCCCCCCCCCCc");
-	}
-	
-	@Override
-	public ModelAndView handleRequest(HttpServletRequest request,
+	@RequestMapping("/general/export/teachers")
+	public void handleRequest(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		// TODO Auto-generated method stub
 		response.setCharacterEncoding("UTF-8");
@@ -89,12 +88,10 @@ public class TeacherExcelExportAction  implements Controller{
 	                excelStream.close();
                     //释放资源
 	                excelStream = null;
-					return null;
 				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-				return null;
 			}finally{
 				
                 try{
@@ -111,7 +108,6 @@ public class TeacherExcelExportAction  implements Controller{
             }
 
 		}
-		return null;
 	}
 	
 	private void insertData(List<Map<String, Object>> data){
@@ -129,7 +125,8 @@ public class TeacherExcelExportAction  implements Controller{
 		}
 	}
 
-	public void setTeacherService(TeacherService teacherService) {
+	@Autowired
+	public void setTeacherService(@Qualifier("teacherService")TeacherService teacherService) {
 		this.teacherService = teacherService;
 	}
 

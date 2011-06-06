@@ -35,6 +35,28 @@
 	                  }
 			  selectedRowId=null;
 	      }
+		 
+		 public function insertData(value:Object):void{
+			 mydata.addItem(value); 
+				 
+			 if(mydata.length>0 && null!=mydata){
+				 totalcount = mydata.length + 1;
+				 totalpage = (totalcount + pagecount) / pagecount;
+				 setPager(0);
+				 inputpage.minimum = 1;
+				 inputpage.maximum = totalpage;
+				 
+			 }else{
+				 totalcount = 1;
+				 totalpage = 1;
+				 curpage = 1;
+				 inputpage.minimum = 1;
+				 inputpage.maximum = 1;
+				 pagedetail.text = "第1页/共1页   共1条纪录";
+			 }
+			 selectedRowId=null;
+		 }
+		 
 	      public function setPager(value:int):void{
 	            if(value<0 || value>totalpage) return;
 	             curpage = value;
