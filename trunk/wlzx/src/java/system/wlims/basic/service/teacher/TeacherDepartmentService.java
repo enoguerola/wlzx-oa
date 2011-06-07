@@ -3,6 +3,7 @@ package system.wlims.basic.service.teacher;
 import java.util.List;
 
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 
 import system.DAOException;
 import system.ServiceException;
@@ -30,9 +31,14 @@ public class TeacherDepartmentService {
 		}
 	}
 	
-	public List<TeacherDepartment> get(int pageCount)throws ServiceException{
+	public List<TeacherDepartment> get(String id, int page, int pageCount)throws ServiceException{
 		DetachedCriteria criteria = DetachedCriteria.forClass(TeacherDepartment.class);
-		List<TeacherDepartment> list = teacherDepartmentDAO.getListByCriteria(criteria, 0, pageCount);
+		
+		criteria.createCriteria("teacher").add(Restrictions.eq("id", id));
+		
+		List<TeacherDepartment> list = teacherDepartmentDAO.getListByCriteria(criteria, page, pageCount);
+		System.out.println(list.size());
+		System.out.println(id);
 		for(TeacherDepartment model:list)
 			model.setTeacher(null);
 		return list;

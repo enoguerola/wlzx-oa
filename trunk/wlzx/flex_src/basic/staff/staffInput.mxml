@@ -19,14 +19,17 @@
 	<fx:Script>
 		<![CDATA[
 			import basic.entity.*;
+			import basic.utils.DateUtil;
 			
 			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
 			import mx.events.CloseEvent;
+			import mx.events.FlexEvent;
 			import mx.events.ValidationResultEvent;
 			import mx.formatters.DateFormatter;
 			import mx.rpc.events.*;
 			import mx.validators.Validator;
+			import mx.modules.*;
 			
 			import system.utils.CommonUtils;
 			
@@ -36,6 +39,7 @@
 			private var style:int;
 			private var teacherId:String;
 			private var userID:String;
+			private var showFirst:Boolean;
 			
 			public var sexArr:ArrayCollection = new ArrayCollection(
 				[    
@@ -85,7 +89,8 @@
 			
 			private function init():void
 			{
-				teacherId = '3';
+				showFirst = true;
+				
 				validatorArr = new Array();
 				validatorArr.push(name_stringValidator);
 				validatorArr.push(birthday_dateValidator);
@@ -96,20 +101,57 @@
 				validatorArr.push(position_stringValidator);
 				//validatorArr.push(cellphone_phoneNumberValidator);
 				//validatorArr.push(homephone_phoneNumberValidator);
-				callLater(initStaffWin);
-				
-				getDepartment();
+				callLater(initStaffWin);				
 			}
 			
 			private function initStaffWin():void{
 				if(this.toolTip=='Update'){		
-					//var departmentId:String=this.id;//弹出窗口时设定的中转参数
-					//systemServiceRO.getDepartmentById(departmentId);
+					//teacherId = this.id;//弹出窗口时设定的中转参数
+					//teacherServiceRO.get(teacherId);
 				}else{
 					teacher = new TeacherModel();
-					//var parentId:String=this.id;//弹出窗口时设定的中转参数
+					teacherId = "3";
+					//teacherId = ((ModuleLoader)(this.owner)).id;//弹出窗口时设定的中转参数
 					//systemServiceRO.getDepartmentById(parentId);
 				}
+				getDepartment();
+			}
+			
+			protected function teacherGetResult_resultHandler(event:ResultEvent):void
+			{
+				var teacher:TeacherModel = event.result as TeacherModel;
+				style = teacher.style;
+				createDate = teacher.creationDate;
+				modifiedDate = teacher.modifiedDate;
+				userID = teacher.userID;
+				
+				teacherName.text = teacher.name;
+				mail.text = teacher.teacherMail;
+				teacherno.text = teacher.teacherNo;
+				sex.selectedItem.value = teacher.sex;
+				birthday.text = DateUtil.formatDate(teacher.birthday as Date, "YYYY-MM-DD");
+				marriage.selectedItem.value = teacher.teacherMarried;
+				nation.text = teacher.nation;
+				politicStatus.selectedItem.value = teacher.politicsStatus;
+				idCode.text = teacher.teacherID;
+				nativePlace.text = teacher.teacherNativePlace;
+				homePhone.text = teacher.homePhone;
+				cellPhone.text = teacher.teacherMobilePhone;
+				education.selectedItem.value = teacher.teacherEducation;
+				profession.text = teacher.teacherProfession;
+				school.text = teacher.teacherGraduateSchool;
+				professionalTitle.text = teacher.teacherProfessionTitle;
+				skillLevel.text = teacher.teacherSkillLevel;
+				skillLevelDate.text = DateUtil.formatDate(teacher.teacherSkillLevelDate as Date, "YYYY-MM-DD");
+				department.selectedItem.value = teacher.teacherDepartment;
+				position.text = teacher.teacherPosition;
+				contactPhone.text = teacher.teacherContactPhone;
+				officePhone.text = teacher.teacherOfficePhone;
+				workDate.text = DateUtil.formatDate(teacher.teacherWorkDate as Date, "YYYY-MM-DD");
+				teacherAddress.text = teacher.teacherAddress;
+				
+				//teacher.teacherPhoto = status.text;
+				status.selectedItem.value = teacher.teacherStatus;
 			}
 			
 			protected function validateForm(event:MouseEvent):void
@@ -192,21 +234,24 @@
 			
 			private const button_add:Class;
 			
-			public function work_cancleApply(id:String):void{
-				
+			/******************
+			 *   work experience
+			 * */
+			public function work_cancleApply(id:String):void
+			{
+				Alert.show("你确定要删除该项吗?","确认删除",Alert.NO|Alert.YES,null,function(event:CloseEvent):void{
+					if(event.detail == Alert.YES)
+						teacherExperienceServiceRO.remove(id);
+				},null,Alert.NO);
 			}
 			public function work_enterEdit(data:Object):void
 			{
 				workCompany.text = data.company;
 				workPosition.text = data.position;
-				workStartDate.text = data.startDate;
-				workEndDate.text = data.endDate;
-				this.currentState = "relation_add";
-			}
-			
-			protected function work_addItem_clickHandler(event:MouseEvent):void
-			{
-				
+				workStartDate.text = DateUtil.formatDate(data.startDate as Date, "YYYY-MM-DD");
+				workEndDate.text = DateUtil.formatDate(data.endDate as Date, "YYYY-MM-DD");
+				workId.text = data.id;
+				this.currentState = "add";
 			}
 			
 			protected function work_save_clickHandler(event:MouseEvent):void
@@ -217,6 +262,7 @@
 					experience.endDate = DateFormatter.parseDateString(workEndDate.text);
 					experience.position = workPosition.text;
 					experience.startDate = DateFormatter.parseDateString(workEndDate.text);
+					experience.id = workId.text;
 					teacherExperienceServiceRO.save(experience, teacherId);
 				}
 			}
@@ -248,28 +294,41 @@
 					return false;
 				}
 			}
-			
+		
 			protected function teacherExperienceAddResult_resultHandler(event:ResultEvent):void
 			{
-				
-			}
-			
-			protected function teacherExperienceGetResult_resultHandler(event:ResultEvent):void
-			{
-				
+				this.currentState = "list";
+				getExperience();
 			}
 			
 			protected function teacherExperienceRemoveResult_resultHandler(event:ResultEvent):void
 			{
-				
+				this.currentState = "list";
+				getExperience();
+			}
+			
+			protected function teacherExperienceGetResult_resultHandler(event:ResultEvent):void
+			{
+				this.currentState = "list";
+				var allList:ArrayCollection = event.result as ArrayCollection;
+				experiences_table.initdata(allList);
+			}
+						
+			private function getExperience():void
+			{
+				teacherExperienceServiceRO.get(experiences_table.pagecount);
 			}
 			
 			/**********************
 			 *   relation
 			 * */
 			
-			public function relation_cancleApply(id:String):void{
-				
+			public function relation_cancleApply(id:String):void
+			{
+				Alert.show("你确定要删除该项吗?","确认删除",Alert.NO|Alert.YES,null,function(event:CloseEvent):void{
+					if(event.detail == Alert.YES)
+						teacherRelationServiceRO.remove(id);
+				},null,Alert.NO);	
 			}
 			public function relation_enterEdit(data:Object):void
 			{
@@ -277,18 +336,21 @@
 				relationWith.text = data.relation;
 				relationCompany.text = data.company;
 				relationPhone.text = data.phone;
+				relationId.text = data.id;
+				this.currentState = "relation_add";
 			}
 			
 			
 			protected function relation_save_clickHandler(event:MouseEvent):void
 			{
 				if(validateRelationInput()){
-					var experience:TeacherExperience = new TeacherExperience();
-					experience.company = workCompany.text;
-					experience.endDate = DateFormatter.parseDateString(workEndDate.text);
-					experience.position = workPosition.text;
-					experience.startDate = DateFormatter.parseDateString(workEndDate.text);
-					teacherExperienceServiceRO.save(experience, teacherId);
+					var relation:TeacherRelation = new TeacherRelation();
+					relation.name = relationName.text;
+					relation.relation = relationWith.text;
+					relation.company = relationCompany.text;
+					relation.phone = relationPhone.text;
+					relation.id = relationId.text;
+					teacherRelationServiceRO.save(relation, teacherId);
 				}
 			}
 			private function validateRelationInput():Boolean
@@ -322,27 +384,32 @@
 			
 			protected function teacherRelationAddResult_resultHandler(event:ResultEvent):void
 			{
-				
-			}
-			
-			protected function teacherRelationGetResult_resultHandler(event:ResultEvent):void
-			{
-				this.currentState = "department_list";
-				getDepartment();
+				this.currentState = "relation_list";
+				getRelation();
 			}
 			
 			protected function teacherRelationRemoveResult_resultHandler(event:ResultEvent):void
 			{
-				this.currentState = "department_list";
-				getDepartment();
+				this.currentState = "relation_list";
+				getRelation();
+			}
+			
+			protected function teacherRelationGetResult_resultHandler(event:ResultEvent):void
+			{
+				this.currentState = "relation_list";
+				var allList:ArrayCollection = event.result as ArrayCollection;
+				relations_table.initdata(allList);
+			}
+			
+			private function getRelation()
+			{
+				teacherRelationServiceRO.get(relations_table.pagecount);
 			}
 			
 			
 			/**********************
 			 *   department
 			 * */
-			
-			
 			public function department_cancleApply(id:String):void
 			{
 				Alert.show("你确定要删除该项吗?","确认删除",Alert.NO|Alert.YES,null,function(event:CloseEvent):void{
@@ -352,6 +419,12 @@
 			}
 			
 			protected function teacherDepartmentRemoveResult_resultHandler(event:ResultEvent):void
+			{
+				this.currentState = "department_list";
+				getDepartment();
+			}
+			
+			protected function teacherDepartmentAddResult_resultHandler(event:ResultEvent):void
 			{
 				this.currentState = "department_list";
 				getDepartment();
@@ -367,7 +440,7 @@
 			
 			private function getDepartment():void
 			{
-				teacherDepartmentServiceRO.get(departments_table.pagecount);
+				teacherDepartmentServiceRO.get(teacherId, departments_table.curpage, departments_table.pagecount);
 			}
 			
 			protected function department_save_clickHandler(event:MouseEvent):void
@@ -415,17 +488,35 @@
 				}
 			}
 			
-			protected function teacherDepartmentAddResult_resultHandler(event:ResultEvent):void
-			{
-				this.currentState = "department_list";
-				getDepartment();
-			}
 
-
-			protected function navigatorcontent1_clickHandler(event:MouseEvent):void
+			/*
+			*  tab页 跳转到  其他信息时显示
+			*/
+			protected function navigatorcontent1_activateHandler(event:Event):void
 			{
 				// TODO Auto-generated method stub
 				this.currentState = "list";
+				if(showFirst)
+				{
+					getExperience();
+					getRelation();
+					showFirst = false;
+				}
+			}
+			
+			/**
+			 * Called to format dates in the data grid.
+			 */          
+			private function formatDate(data:Object, column:DataGridColumn):String
+			{
+				return DateUtil.formatDate(data[column.dataField] as Date, "YYYY-MM-DD");
+			}
+
+
+			protected function navigatorcontent2_showHandler(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				this.currentState = "department_list";
 			}
 
 		]]>
@@ -460,6 +551,7 @@
 		<valueObjects:TeacherModel id="teacher"/>
 		<mx:RemoteObject id="teacherServiceRO" destination="teacherServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 			<mx:method name="save"  concurrency="last"  result="teacherAddResult_resultHandler(event);" />
+			<mx:method name="get"  concurrency="last"  result="teacherGetResult_resultHandler(event);" />
 		</mx:RemoteObject>
 		<mx:RemoteObject id="teacherExperienceServiceRO" destination="teacherExperienceServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 			<mx:method name="save"  concurrency="last"  result="teacherExperienceAddResult_resultHandler(event);" />
@@ -482,11 +574,11 @@
 	<s:Panel width="100%" height="100%" title="教师信息编辑"  styleName="customPanel"   borderVisible="true" dropShadowVisible="false">
 		<s:VGroup width="100%" height="100%">
 			<mx:TabNavigator id="systems"  width="100%" height="100%" tabStyleName="customTabStyles"  horizontalGap="1" borderVisible="false"  tabWidth="120" paddingTop="0">
-				<s:NavigatorContent label="基础信息">
+				<s:NavigatorContent label="基础信息" show="navigatorcontent2_showHandler(event)">
 					<s:layout>
 						<s:VerticalLayout/>
 					</s:layout>
-					<mx:Form width="100%" height="100%" textAlign="left" labelWidth="70">
+					<mx:Form width="100%" height="100%" textAlign="left" labelWidth="70" id="teacherForm">
 						<s:Scroller width="100%" height="100%" verticalScrollPolicy="on">
 							<s:VGroup width="100%" height="100%">							
 							<s:HGroup  width="100%" height="40%">
@@ -664,7 +756,6 @@
 																	
 																	<mx:DataGridColumn textAlign="center" headerText="部门" dataField="department" width="100"></mx:DataGridColumn>
 																	<mx:DataGridColumn textAlign="center" headerText="职务" dataField="position" width="170"></mx:DataGridColumn>
-																	
 																	<mx:DataGridColumn textAlign="center" headerText="编辑" width="60">
 																		<mx:itemRenderer>
 																			<fx:Component>
@@ -729,7 +820,7 @@
 						</s:Scroller>
 					</mx:Form>
 				</s:NavigatorContent>
-				<s:NavigatorContent label="其他信息" click="navigatorcontent1_clickHandler(event)">
+				<s:NavigatorContent label="其他信息" show="navigatorcontent1_activateHandler(event)">
 					<s:layout>
 						<s:VerticalLayout/>
 					</s:layout>
@@ -745,22 +836,12 @@
 										</s:HGroup>
 										<s:VGroup width="100%" height="100%"  gap="10" verticalAlign="middle" horizontalAlign="center">
 											<s:HGroup width="100%" height="100%" paddingLeft="10" paddingRight="10" paddingBottom="10">
-												<s:Panel width="100%" height="100%"  styleName="customPanel" title="工作记录"  cornerRadius="5" borderVisible="false" dropShadowVisible="false">
-													<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="false"   borderAlpha="0.2" verticalAlign="middle"   id="accountTable" pagecount="10"  >				
+													<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="false"   borderAlpha="0.2" verticalAlign="middle"   id="experiences_table" pagecount="10" >				
 														<component:mygridcolumns>
-															
-															<mx:DataGridColumn textAlign="center" headerText="开始时间" dataField="name" width="100">
-															</mx:DataGridColumn>
-															<mx:DataGridColumn textAlign="center" headerText="截止时间" dataField="email" width="170">
-																
-															</mx:DataGridColumn>
-															
-															<mx:DataGridColumn textAlign="center" headerText="工作单位" dataField="creationDate" width="120">
-																
-															</mx:DataGridColumn>
-															<mx:DataGridColumn textAlign="center" headerText="职务" dataField="creationDate" width="120">
-																
-															</mx:DataGridColumn>
+															<mx:DataGridColumn textAlign="center" headerText="开始时间" dataField="startDate" width="100" labelFunction="formatDate"></mx:DataGridColumn>
+															<mx:DataGridColumn textAlign="center" headerText="截止时间" dataField="endDate" width="170" labelFunction="formatDate"></mx:DataGridColumn>
+															<mx:DataGridColumn textAlign="center" headerText="工作单位" dataField="company" width="120"></mx:DataGridColumn>
+															<mx:DataGridColumn textAlign="center" headerText="职务" dataField="position" width="120"></mx:DataGridColumn>
 															<mx:DataGridColumn textAlign="center" headerText="编辑" width="60">
 																<mx:itemRenderer>
 																	<fx:Component>
@@ -779,11 +860,10 @@
 															</mx:DataGridColumn>
 														</component:mygridcolumns>
 													</component:WlzxPageDataGrid>
-												</s:Panel>
 											</s:HGroup>
 										</s:VGroup>
 									</s:VGroup>
-									<s:VGroup width="100%" height="100%" id="work_experience_addPanel" excludeFrom="list">
+									<s:VGroup width="100%" height="100%" id="work_experience_addPanel" excludeFrom="list, relation_add, relation_list">
 										<s:HGroup verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12">
 											<s:HGroup width="100%" height="30" paddingLeft="20"  gap="0"  verticalAlign="middle">
 												<s:Label text="|"/>
@@ -843,45 +923,33 @@
 										</s:HGroup>
 										<s:VGroup width="100%" height="100%"  gap="10" verticalAlign="middle" horizontalAlign="center">
 											<s:HGroup width="100%" height="100%" paddingLeft="10" paddingRight="10" paddingBottom="10">
-												<s:Panel width="100%" height="100%"  styleName="customPanel" title="关系记录"  cornerRadius="5" borderVisible="false" dropShadowVisible="false">
 													<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="false"   borderAlpha="0.2" verticalAlign="middle"   id="relations_table" pagecount="10"  >				
 														<component:mygridcolumns>
 															
-															<mx:DataGridColumn textAlign="center" headerText="姓名" dataField="name" width="100">
-															</mx:DataGridColumn>
-															<mx:DataGridColumn textAlign="center" headerText="与本人关系" dataField="email" width="170">
-																
-															</mx:DataGridColumn>
-															
-															<mx:DataGridColumn textAlign="center" headerText="工作单位" dataField="creationDate" width="120">
-																
-															</mx:DataGridColumn>
-															<mx:DataGridColumn textAlign="center" headerText="联系电话" dataField="creationDate" width="120">
-																
-															</mx:DataGridColumn>
+															<mx:DataGridColumn textAlign="center" headerText="姓名" dataField="name" width="100"></mx:DataGridColumn>
+															<mx:DataGridColumn textAlign="center" headerText="与本人关系" dataField="relation" width="170"></mx:DataGridColumn>
+															<mx:DataGridColumn textAlign="center" headerText="工作单位" dataField="company" width="120"></mx:DataGridColumn>
+															<mx:DataGridColumn textAlign="center" headerText="联系电话" dataField="phone" width="120"></mx:DataGridColumn>
 															<mx:DataGridColumn textAlign="center" headerText="编辑" width="60">
 																<mx:itemRenderer>
 																	<fx:Component>
-																		<mx:LinkButton  label="[编辑]"   click="{this.outerDocument.relation_enterEdit(data);}">											
-																		</mx:LinkButton>										
+																		<mx:LinkButton  label="[编辑]"   click="{this.outerDocument.relation_enterEdit(data);}">											</mx:LinkButton>										
 																	</fx:Component>
 																</mx:itemRenderer>
 															</mx:DataGridColumn>
 															<mx:DataGridColumn textAlign="center" headerText="删除"  width="60">
 																<mx:itemRenderer>
 																	<fx:Component>
-																		<mx:LinkButton  label="[删除]"   click="{this.outerDocument.relation_cancleApply(data.id);}">											
-																		</mx:LinkButton>										
+																		<mx:LinkButton  label="[删除]"   click="{this.outerDocument.relation_cancleApply(data.id);}">											</mx:LinkButton>										
 																	</fx:Component>
 																</mx:itemRenderer>
 															</mx:DataGridColumn>
 														</component:mygridcolumns>
 													</component:WlzxPageDataGrid>
-												</s:Panel>
 											</s:HGroup>
 										</s:VGroup>
 									</s:VGroup>
-									<s:VGroup width="100%" height="100%" id="relation_addPanel" excludeFrom="relation_list">
+									<s:VGroup width="100%" height="100%" id="relation_addPanel" excludeFrom="relation_list, list, add">
 										<s:HGroup verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12">
 											<s:HGroup width="100%" height="30" paddingLeft="20"  gap="0"  verticalAlign="middle">
 												<s:Label text="|"/>

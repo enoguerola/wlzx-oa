@@ -102,6 +102,12 @@ public class TeacherService {
 		teacherDAO.remove(id);
 	}
     
+    /**
+     * 
+     * @param id
+     * @return
+     * @throws ServiceException
+     */
     public TeacherModel get(String id)throws ServiceException{
     	return teacherDAO.get(id);
     }
