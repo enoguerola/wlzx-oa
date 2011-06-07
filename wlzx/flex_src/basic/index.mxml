@@ -18,9 +18,10 @@
 			import mx.containers.*;
 			import mx.controls.*;
 			import mx.events.*;
-			import mx.rpc.events.*;
-			import mx.modules.*;
 			import mx.events.ModuleEvent;
+			import mx.modules.*;
+			import mx.rpc.events.*;
+			
 			import spark.components.*;
 			
 			import system.entity.*;
@@ -127,8 +128,10 @@
 				child.label = title;
 				child.name = title;				
 				child.icon = icon;	
+				child.toolTip = "s";
 				child.url = moduleUrl+"?uid=" + new Date().getTime();
-				child.loadModule();    
+				child.loadModule();
+				
 				navigator.addChild(child as DisplayObject);
 				navigator.selectedIndex = navigator.getChildIndex(child);
 				navigator.setClosePolicyForTab(0, SuperTab.CLOSE_NEVER);

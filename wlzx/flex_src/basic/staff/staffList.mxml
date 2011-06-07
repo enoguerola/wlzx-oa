@@ -215,9 +215,7 @@
 			
 			public function editItem(item_id:String):void
 			{
-				Alert.show(item_id);
 				var parent:Object=(Object)(((Object)(this.owner)).owner);
-//				Alert.show(parent.nav);
 				parent.addTab("教师编辑",parent.nav,"basic/staff/staffInput.swf");
 			}
 			
@@ -277,12 +275,9 @@
 					<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="false"   borderAlpha="0.2" verticalAlign="middle"   id="teacherDG" pagecount="13">				
 						<component:mygridcolumns>
 							
-							<mx:DataGridColumn textAlign="center" headerText="姓名" dataField="name" width="100">
-							</mx:DataGridColumn>
-							<mx:DataGridColumn textAlign="center" headerText="性别" dataField="sex" width="50" labelFunction="formatSex">
-							</mx:DataGridColumn>
-							<mx:DataGridColumn textAlign="center" headerText="出生年月" dataField="birthday" width="150" labelFunction="formatDate">
-							</mx:DataGridColumn>
+							<mx:DataGridColumn textAlign="center" headerText="姓名" dataField="name" width="100"></mx:DataGridColumn>
+							<mx:DataGridColumn textAlign="center" headerText="性别" dataField="sex" width="50" labelFunction="formatSex"></mx:DataGridColumn>
+							<mx:DataGridColumn textAlign="center" headerText="出生年月" dataField="birthday" width="150" labelFunction="formatDate"></mx:DataGridColumn>
 							<mx:DataGridColumn textAlign="center" headerText="手机/短号" width="100">
 								<mx:itemRenderer>
 									<fx:Component>
@@ -290,16 +285,11 @@
 									</fx:Component>
 								</mx:itemRenderer>
 							</mx:DataGridColumn>
-							<mx:DataGridColumn textAlign="center" headerText="家庭电话" dataField="homePhone" width="100">
-							</mx:DataGridColumn>
-							<mx:DataGridColumn textAlign="center" headerText="部门" dataField="teacherDepartment" width="100">
-							</mx:DataGridColumn>
-							<mx:DataGridColumn textAlign="center" headerText="家庭电话" dataField="homePhone" width="100">
-							</mx:DataGridColumn>
-							<mx:DataGridColumn textAlign="center" headerText="办公电话" dataField="teacherOfficePhone" width="100">
-							</mx:DataGridColumn>
-							<mx:DataGridColumn textAlign="center" headerText="入校时间" dataField="teacherAttendDate" width="100">
-							</mx:DataGridColumn>
+							<mx:DataGridColumn textAlign="center" headerText="家庭电话" dataField="homePhone" width="100"></mx:DataGridColumn>
+							<mx:DataGridColumn textAlign="center" headerText="部门" dataField="teacherDepartment" width="100"></mx:DataGridColumn>
+							<mx:DataGridColumn textAlign="center" headerText="家庭电话" dataField="homePhone" width="100"></mx:DataGridColumn>
+							<mx:DataGridColumn textAlign="center" headerText="办公电话" dataField="teacherOfficePhone" width="100"></mx:DataGridColumn>
+							<mx:DataGridColumn textAlign="center" headerText="入校时间" dataField="teacherAttendDate" width="100"></mx:DataGridColumn>
 							<mx:DataGridColumn textAlign="center" headerText="离职"  width="60">
 								<mx:itemRenderer>
 									<fx:Component>
