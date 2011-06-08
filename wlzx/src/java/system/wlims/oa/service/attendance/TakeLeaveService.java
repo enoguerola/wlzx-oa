@@ -8,6 +8,7 @@ public interface TakeLeaveService {
 	public void addTakeLeaveApply(TakeLeaveForm takeLeave);
 	public boolean updateTakeLeaveApply(TakeLeaveForm takeLeave);
 	public List<TakeLeaveForm> getUserTakeLeaveApplies(String userId);
-	public TakeLeaveForm getTakeLeaveFormById(String id);
+	public TakeLeaveForm loadApplyInfoById(String id);
+	public TakeLeaveForm getDetailInfoById(String id);
 	public boolean cancleTakeLeaveApplyById(String id);
 }

@@ -2,18 +2,18 @@ package system.wlims.oa.entity.workFlow;
 
 import java.util.Date;
 
-public class WorkFlowLogModel {
-	private String id;
+import system.wlims.oa.entity.BaseModel;
+
+public class WorkFlowLogModel  extends BaseModel{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3614857749991830281L;
 	private String operationTeacherId;
 	private Date operationTime;
 	private String operationName;
 	private String operationResult;
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
+	
 	public String getOperationTeacherId() {
 		return operationTeacherId;
 	}

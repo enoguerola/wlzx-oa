@@ -7,9 +7,8 @@ package oa.entity
 
 	[Bindable]
 	[RemoteClass(alias="system.wlims.oa.entity.workFlow.takeLeave.TakeLeaveForm")] 
-	public class TakeLeaveForm
+	public class TakeLeaveForm extends BaseModel
 	{
-		public var id:String;
 		public var applyNo:String;
 		public var type:int;
 		public var teacherId:String;
