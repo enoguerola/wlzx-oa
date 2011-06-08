@@ -330,7 +330,7 @@
 			}
 			private function buildOperation(operation:Object):String{
 				var resultXML:String="";
-				if(operation.rsType=="URL")return resultXML;//过滤模块访问操作
+//				if(operation.rsType=="URL")return resultXML;//过滤模块访问操作
 				resultXML=resultXML.concat("<node type='operation' label='"+operation.name+"[操作]' symbol='"+operation.symbol+"' id='"+operation.id+"'>");
 				
 				var o:OperationModel=operation as OperationModel;

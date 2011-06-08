@@ -11,4 +11,6 @@ public interface TakeLeaveService {
 	public TakeLeaveForm loadApplyInfoById(String id);
 	public TakeLeaveForm getDetailInfoById(String id);
 	public boolean cancleTakeLeaveApplyById(String id);
+	public List<TakeLeaveForm> getTakeLeaveAppliesByConditions(String teacherId,String type,String status,String submitBeginDate,String submitEndDate,String takeLeaveBeginDate,String takeLeaveEndDate);
+
 }

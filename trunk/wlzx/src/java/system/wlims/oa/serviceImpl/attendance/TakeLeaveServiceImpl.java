@@ -89,6 +89,15 @@ public class TakeLeaveServiceImpl implements TakeLeaveService {
 		// TODO Auto-generated method stub
 		return takeLeaveDAO.get(id);
 	}
+	@Override
+	public List<TakeLeaveForm> getTakeLeaveAppliesByConditions(
+			String teacherId, String type, String status,
+			String submitBeginDate, String submitEndDate,
+			String takeLeaveBeginDate, String takeLeaveEndDate) {
+		// TODO Auto-generated method stub
+		List<TakeLeaveForm> list=takeLeaveDAO.getTakeLeaveAppliesByConditions(teacherId,type,status,submitBeginDate,submitEndDate,takeLeaveBeginDate,takeLeaveEndDate);
+		return list;
+	}
 
 
 }

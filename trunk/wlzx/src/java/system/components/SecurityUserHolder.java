@@ -71,11 +71,11 @@ public class SecurityUserHolder {
 		return superModel;
 	}
 
-	public TeacherDAO getTeacherDAO() {
+	public  TeacherDAO getTeacherDAO() {
 		return teacherDAO;
 	}
 
-	public void setTeacherDAO(TeacherDAO teacherDAO) {
+	public  void setTeacherDAO(TeacherDAO teacherDAO) {
 		this.teacherDAO = teacherDAO;
 	}
 }
