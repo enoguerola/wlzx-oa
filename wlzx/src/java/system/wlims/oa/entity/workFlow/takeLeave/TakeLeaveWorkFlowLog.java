@@ -5,14 +5,16 @@ import system.wlims.oa.entity.workFlow.WorkFlowLogModel;
 
 public class TakeLeaveWorkFlowLog extends WorkFlowLogModel {
 	
-	private TakeLeaveWorkFlow takeLeaveWorkFlow;
+	private TakeLeaveForm takeLeaveForm;
 
-	public TakeLeaveWorkFlow getTakeLeaveWorkFlow() {
-		return takeLeaveWorkFlow;
+	public TakeLeaveForm getTakeLeaveForm() {
+		return takeLeaveForm;
 	}
 
-	public void setTakeLeaveWorkFlow(TakeLeaveWorkFlow takeLeaveWorkFlow) {
-		this.takeLeaveWorkFlow = takeLeaveWorkFlow;
+	public void setTakeLeaveForm(TakeLeaveForm takeLeaveForm) {
+		this.takeLeaveForm = takeLeaveForm;
 	}
+
+	
 
 }

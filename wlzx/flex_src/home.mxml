@@ -16,23 +16,26 @@
 	<fx:Script>    
 		<![CDATA[   
 			import cn.org.rapid_framework.flex_security.SecurityControler;
-
+			
 			import flash.display.Stage;
 			import flash.display.StageDisplayState;
+			
 			import mx.collections.ArrayCollection;
 			import mx.controls.*;
 			import mx.events.ModuleEvent;
 			import mx.modules.*;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
+			
+			import system.entity.*;
 			import system.event.BaseEvent;
 			import system.implement.BaseImpl;
-			import system.entity.*;
 			import system.utils.CommonUtils;
 			public var default_url:String="oa/index.swf";
 			public var account:String;
 			public var roles:String;
 			public var lastLoginTime:String;
+			public var currentUser:UserModel;
 			private function init():void{
 				securityUserHolder.getCurrentUser();
 				loadModule(default_url);
@@ -78,11 +81,11 @@
 			}
 			private function getCurrentUserResult(event:ResultEvent):void  
 			{  
-				var user:Object=event.result as UserModel;
-				account=user.name;
-				roles=user.getAllRoles();
+				currentUser=event.result as UserModel;
+				account=currentUser.person.name;
+				roles=currentUser.getAllRoles();
 //				Alert.show(roles);
-				lastLoginTime=CommonUtils.formatDate(user.lastLoginTime);
+				lastLoginTime=CommonUtils.formatDate(currentUser.lastLoginTime);
 //				Alert.show(event.result.name);
 			} 
 			private function securityUserHolder_fault_handler(event:FaultEvent):void

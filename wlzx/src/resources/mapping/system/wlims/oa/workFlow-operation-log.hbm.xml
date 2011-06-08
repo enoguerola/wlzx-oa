@@ -26,7 +26,7 @@
         </property>
         
         <subclass name="system.wlims.oa.entity.workFlow.takeLeave.TakeLeaveWorkFlowLog" discriminator-value="TakeLeaveWorkFlowLog">
-			<many-to-one name="takeLeaveWorkFlow" class="system.wlims.oa.entity.workFlow.takeLeave.TakeLeaveForm" column="operation_object_id" /> 
+			<many-to-one name="takeLeaveForm" class="system.wlims.oa.entity.workFlow.takeLeave.TakeLeaveForm" column="operation_object_id" insert="false" update="false"/> 
 		</subclass>
       
     </class>

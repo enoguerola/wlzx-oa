@@ -3,15 +3,18 @@ package system.components;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import system.entity.PersonModel;
 import system.entity.RoleModel;
 import system.entity.UserModel;
 import system.utils.CipherUtil;
 import system.utils.StringUtils;
+import system.wlims.basic.dao.teacher.TeacherDAO;
+import system.wlims.basic.entity.teacher.TeacherModel;
 
 
 public class SecurityUserHolder {
 	
-	
+	private static TeacherDAO teacherDAO;
 	/**
 	 * 获取当前系统登录用户信息
 	 * @return
@@ -21,6 +24,15 @@ public class SecurityUserHolder {
 		try{
 			if( SecurityContextHolder.getContext().getAuthentication()!=null)
 			 user= (UserModel) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			if(user.getAccountStyle()==PersonModel.PersonStyle.Teacher.getStyle()){
+				TeacherModel teacher=teacherDAO.getTeacherByUserId(user.getId());
+				/**针对BlazeDS不支持延迟加载的临时解决方案*/
+				teacher.setExperiences(null);
+				teacher.setRelations(null);
+				teacher.setOtherDepartments(null);
+				user.setPerson(teacher);
+			}
+			 
 			return user;
 		}catch(Exception e){
 			return null;
@@ -57,5 +69,13 @@ public class SecurityUserHolder {
 		superModel.setName(WlzxUserDetailsService.superUserRole);
 		superModel.setSymbol(WlzxUserDetailsService.superUserRole);
 		return superModel;
+	}
+
+	public TeacherDAO getTeacherDAO() {
+		return teacherDAO;
+	}
+
+	public void setTeacherDAO(TeacherDAO teacherDAO) {
+		this.teacherDAO = teacherDAO;
 	}
 }

@@ -14,6 +14,9 @@
 		<property name="sequence" type="int">
 			<column name="sequence" />
 		</property>
+		<property name="accountStyle" type="int">
+			<column name="account_style" />
+		</property>
 		<property name="name" type="string">
 			<column name="name" />
 		</property>

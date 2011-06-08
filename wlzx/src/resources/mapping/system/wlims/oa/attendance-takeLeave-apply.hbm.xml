@@ -8,17 +8,20 @@
 			<column name="id" />
 			<generator class="native" />
 		</id>
+		<property name="applyNo" type="string">
+			<column name="takeLeave_applyNo" />
+		</property>
 		<property name="type" type="int">
 			<column name="takeLeave_type" />
 		</property>
 		<property name="teacherId" type="string">
 			<column name="takeLeave_teacher_id" />
 		</property>
-		<property name="beginDate" type="date">
-			<column name="takeLeave_beginDate" />
+		<property name="beginTime" type="string">
+			<column name="takeLeave_beginTime" />
 		</property>
-		<property name="endDate" type="date">
-			<column name="takeLeave_endDate" />
+		<property name="endTime" type="string">
+			<column name="takeLeave_endTime" />
 		</property>
 		<property name="reason" type="string">
 			<column name="takeLeave_reason" />
@@ -65,7 +68,7 @@
 		<property name="status" type="int">
 			<column name="takeLeave_status" />
 		</property>
-		<set name="logs" lazy="false" table="wlzx_oa_workflow_log" cascade="all-delete-orphan" inverse="true">
+		<set name="logs" lazy="false" table="wlzx_oa_workflow_log" cascade="all-delete-orphan">
         	<key column="operation_object_id" not-null="true" />
         	<one-to-many  class="system.wlims.oa.entity.workFlow.takeLeave.TakeLeaveWorkFlowLog" /> 
         </set>		

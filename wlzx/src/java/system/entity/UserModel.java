@@ -37,6 +37,7 @@ public class UserModel  extends BaseModel implements UserDetails{
 	private Date lastLoginTime;
 	private String lastLoginIP;
 	private String email;
+	private int accountStyle;
 	private PersonModel person;
 	private Set<UserModel> subordinates=new TreeSet<UserModel>();//直属下属
 	private Set<UserModel> leaders=new TreeSet<UserModel>();//直属领导
@@ -152,6 +153,12 @@ public class UserModel  extends BaseModel implements UserDetails{
 	}
 	public void setActive(Boolean active) {
 		this.active = active;
+	}
+	public int getAccountStyle() {
+		return accountStyle;
+	}
+	public void setAccountStyle(int accountStyle) {
+		this.accountStyle = accountStyle;
 	}
 	
 

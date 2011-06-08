@@ -54,7 +54,5 @@
 		<property name="userDAO" ref="userDAO" />
 		<property name="messageDAO" ref="messageDAO" />
 	</bean>
-	<bean id="securityUserHolder" class="system.components.SecurityUserHolder">
-		<flex:remoting-destination />
-	</bean>
+	
 </beans>
