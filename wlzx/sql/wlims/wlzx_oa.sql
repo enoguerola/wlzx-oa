@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2011 年 06 月 06 日 12:06
+-- 生成日期: 2011 年 06 月 08 日 18:33
 -- 服务器版本: 5.0.91
 -- PHP 版本: 5.2.13
 
@@ -84,10 +84,11 @@ INSERT INTO `wlzx_oa_course_adjust_apply_item` (`id`, `apply_id`, `apply_class`,
 
 CREATE TABLE IF NOT EXISTS `wlzx_oa_takeleave_apply` (
   `id` bigint(20) NOT NULL auto_increment,
+  `takeLeave_applyNo` varchar(200) NOT NULL,
   `takeLeave_type` int(11) NOT NULL default '0',
   `takeLeave_teacher_id` bigint(20) NOT NULL,
-  `takeLeave_beginDate` date NOT NULL,
-  `takeLeave_endDate` date NOT NULL,
+  `takeLeave_beginTime` varchar(200) NOT NULL,
+  `takeLeave_endTime` varchar(200) NOT NULL,
   `takeLeave_reason` text,
   `takeLeave_arrange_tech` text,
   `takeLeave_arrange_service` text,
@@ -104,12 +105,17 @@ CREATE TABLE IF NOT EXISTS `wlzx_oa_takeleave_apply` (
   `takeLeave_remark` text,
   `takeLeave_status` int(11) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
 
 --
 -- 转存表中的数据 `wlzx_oa_takeleave_apply`
 --
 
+INSERT INTO `wlzx_oa_takeleave_apply` (`id`, `takeLeave_applyNo`, `takeLeave_type`, `takeLeave_teacher_id`, `takeLeave_beginTime`, `takeLeave_endTime`, `takeLeave_reason`, `takeLeave_arrange_tech`, `takeLeave_arrange_service`, `takeLeave_arrange_manage`, `takeLeave_officeChief_approver_id`, `takeLeave_officeChief_approve_time`, `takeLeave_officeChief_approve_option`, `takeLeave_vicePrincipal_approver_id`, `takeLeave_vicePrincipal_approve_time`, `takeLeave_vicePrincipal_approve_option`, `takeLeave_principal_approver_id`, `takeLeave_principal_approve_time`, `takeLeave_principal_approve_option`, `takeLeave_remark`, `takeLeave_status`) VALUES
+(1, '20110608081756', 0, 2, '2011-06-08 0', '2011-06-23 0', NULL, '1', '2', '3', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0),
+(2, '20110608082544', 0, 2, '2011-06-16 1', '2011-06-22 0', NULL, '2', '3', '4', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 5),
+(3, '20110608093112', 1, 2, '2011-06-08 0', '2011-06-16 0', '1', '1', '1', '1', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0),
+(4, '20110608111304', 0, 2, '2011-06-08 1', '2011-06-23 0', '22222222', '', '', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -118,7 +124,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_oa_takeleave_apply` (
 --
 
 CREATE TABLE IF NOT EXISTS `wlzx_oa_workflow_log` (
-  `id` int(11) NOT NULL auto_increment,
+  `id` bigint(20) NOT NULL auto_increment,
   `operation_object_type` varchar(200) NOT NULL,
   `operation_object_id` bigint(20) NOT NULL,
   `operation_teacher_id` bigint(20) NOT NULL,
@@ -126,9 +132,16 @@ CREATE TABLE IF NOT EXISTS `wlzx_oa_workflow_log` (
   `operation_name` varchar(200) NOT NULL,
   `operation_result` text,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
 
 --
 -- 转存表中的数据 `wlzx_oa_workflow_log`
 --
 
+INSERT INTO `wlzx_oa_workflow_log` (`id`, `operation_object_type`, `operation_object_id`, `operation_teacher_id`, `operation_time`, `operation_name`, `operation_result`) VALUES
+(1, 'TakeLeaveWorkFlowLog', 2, 2, '2011-06-08 08:25:44', '发起申请', '生成编号为20110608082544的申请记录'),
+(2, 'TakeLeaveWorkFlowLog', 3, 2, '2011-06-08 09:31:12', '发起申请', '生成编号为20110608093112的申请记录'),
+(3, 'TakeLeaveWorkFlowLog', 2, 2, '2011-06-08 10:49:44', '取消申请', '取消编号为20110608082544的申请记录'),
+(4, 'TakeLeaveWorkFlowLog', 4, 2, '2011-06-08 11:13:04', '发起申请', '生成编号为20110608111304的申请记录'),
+(5, 'TakeLeaveWorkFlowLog', 4, 2, '2011-06-08 11:33:57', '编辑申请', '编辑编号为20110608111304的申请记录'),
+(6, 'TakeLeaveWorkFlowLog', 4, 2, '2011-06-08 11:34:07', '编辑申请', '编辑编号为20110608111304的申请记录');
