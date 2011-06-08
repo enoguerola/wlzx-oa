@@ -63,4 +63,9 @@ public class OperationDAO extends BaseDAOImpl<OperationModel> {
 		}
 		return null;
 	}
+
+	public void removeOperationBySymbol(String symbol) {
+		// TODO Auto-generated method stub
+		remove(getOperationBySymbol(symbol));
+	}
 }

@@ -12,6 +12,7 @@
 			<mx:method name="getSystemBySymbol"  concurrency="last"  result="getSystemBySymbolResult(event);" />
 			<mx:method name="menuRemove"  concurrency="last"   result="menuRemove_resultHandler(event);" />
 			<mx:method name="moduleRemove"  concurrency="last"   result="moduleRemove_resultHandler(event);" />
+			<mx:method name="operationRemove"  concurrency="last"   result="operationRemove_resultHandler(event);" />
 		</mx:RemoteObject>
 	</fx:Declarations>
 	<fx:Script>
@@ -456,14 +457,41 @@
 				
 			}
 			private function addOperation(event:Event):void{
-				
+				var operationPopWin:OperationPopWin=OperationPopWin(PopUpManager.createPopUp(this,OperationPopWin,true));  
+				PopUpManager.centerPopUp(operationPopWin);
+				operationPopWin.percentHeight=100;
+				operationPopWin.percentWidth=100;
+				operationPopWin.x=FlexGlobals.topLevelApplication.stage.stageWidth/2-operationPopWin.width/2;
+				operationPopWin.y=FlexGlobals.topLevelApplication.stage.stageHeight/2-operationPopWin.height/2;
+				operationPopWin.id=selectedNode.@type;//参数传递使用
+				operationPopWin.name=selectedNode.@symbol;//参数传递使用
+				operationPopWin.toolTip="Add";
 			}
 			private function deleteOperation(event:Event):void{
-				
+				var symbol:String=selectedNode.@symbol;
+				systemServiceRO.operationRemove(symbol);
 			}
 			private function updateOperation(event:Event):void{
-				
+				var operationPopWin:OperationPopWin=OperationPopWin(PopUpManager.createPopUp(this,OperationPopWin,true));  
+				PopUpManager.centerPopUp(operationPopWin);
+				operationPopWin.percentHeight=100;
+				operationPopWin.percentWidth=100;
+				operationPopWin.x=FlexGlobals.topLevelApplication.stage.stageWidth/2-operationPopWin.width/2;
+				operationPopWin.y=FlexGlobals.topLevelApplication.stage.stageHeight/2-operationPopWin.height/2;
+				operationPopWin.id=selectedNode.@type;//参数传递使用
+				operationPopWin.name=selectedNode.@symbol;//参数传递使用
+				operationPopWin.toolTip="Update";
 			}
+			protected function operationRemove_resultHandler(event:ResultEvent):void{
+				if(event.result==true){
+					//					Alert.show(selectedNode.childIndex());
+					delete selectedNode.parent().node[selectedNode.childIndex()];
+					disabled();
+				}else{
+					Alert.show("删除操作失败");
+				}
+			}
+			
 			private function upOperation(event:Event):void{
 				
 			}

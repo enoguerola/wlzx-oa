@@ -362,6 +362,9 @@ public class SystemService{
 	//更新模块
 	public ModuleModel moduleUpdate(ModuleModel module){
 		ModuleModel newModule=moduleDAO.get(module.getId());
+		 OperationModel operation=operationDAO.getOperationBySymbol(newModule.getSymbol()+"@defaultVisit@");
+		 DataAccessModeModel dam=dataAccessModeDAO.getDataAccessModeBySymbol(newModule.getSymbol()+"@defaultVisit@"+"@noFilter@");
+
 		newModule.setSymbol(module.getSymbol());
 		newModule.setCreationDate(module.getCreationDate());
 		newModule.setModifiedDate(new Date());
@@ -371,14 +374,12 @@ public class SystemService{
 		newModule.setUrl(module.getUrl());
 		moduleDAO.saveOrUpdate(newModule);	
 		//更新默认访问操作
-		 OperationModel operation=operationDAO.getOperationBySymbol(module.getSymbol()+"@defaultVisit@");
 		 operation.setSymbol(newModule.getSymbol()+"@defaultVisit@");
 		 operation.setRsType("URL");
 		 operation.setRsValue("/"+newModule.getUrl()+"*");
 		 operation.setModifiedDate(newModule.getModifiedDate());
 		 operationDAO.saveOrUpdate(operation);
 		//更新默认访问操作默认数据访问方式
-		 DataAccessModeModel dam=dataAccessModeDAO.getDataAccessModeBySymbol(module.getSymbol()+"@defaultVisit@"+"@noFilter@");
 		 dam.setSymbol(operation.getSymbol()+"@noFilter@");
 		 dam.setModifiedDate(operation.getModifiedDate());
 		 dataAccessModeDAO.saveOrUpdate(dam);
@@ -389,6 +390,60 @@ public class SystemService{
 //		System.out.println(symbol);
 		moduleDAO.removeModuleBySymbol(symbol);
 		return true;		
+	}
+	//新增操作
+	public OperationModel operationAdd(OperationModel operation,String parentType,String parentSymbol){
+		if(parentType.equals("module")){
+			 operationDAO.saveOrUpdate(operation);
+			
+			 DataAccessModeModel dam=new DataAccessModeModel();
+			 dam.setName("全部数据");
+			 dam.setSymbol(operation.getSymbol()+"@noFilter@");
+			 dam.setCreationDate(operation.getCreationDate());
+			 dam.setModifiedDate(operation.getModifiedDate());		
+			 dataAccessModeDAO.saveOrUpdate(dam);
+			 operation.getDataAccessModes().add(dam);
+			 operationDAO.merge(operation);
+
+			ModuleModel parentModule=moduleDAO.getModuleBySymbol(parentSymbol);
+			parentModule.getOperations().add(operation);		 
+			
+			moduleDAO.merge(parentModule);
+			return operation;
+			
+		}else return null;
+		
+	}
+	//更新操作
+	public OperationModel operationUpdate(OperationModel operation){
+		OperationModel newOperation=operationDAO.get(operation.getId());
+		DataAccessModeModel dam=dataAccessModeDAO.getDataAccessModeBySymbol(newOperation.getSymbol()+"@noFilter@");
+
+		newOperation.setSymbol(operation.getSymbol());
+		newOperation.setCreationDate(operation.getCreationDate());
+		newOperation.setModifiedDate(new Date());
+		newOperation.setDetail(operation.getDetail());
+		newOperation.setName(operation.getName());
+		newOperation.setSequence(operation.getSequence());
+		newOperation.setRsType(operation.getRsType());
+		newOperation.setRsValue(operation.getRsValue());
+		operationDAO.saveOrUpdate(newOperation);	
+		
+		//更新默认访问操作默认数据访问方式
+		 dam.setSymbol(operation.getSymbol()+"@noFilter@");
+		 dam.setModifiedDate(operation.getModifiedDate());
+		 dataAccessModeDAO.saveOrUpdate(dam);
+		return operation;		
+	}
+	//删除操作
+	public boolean operationRemove(String symbol){
+//		System.out.println(symbol);
+		operationDAO.removeOperationBySymbol(symbol);
+		return true;		
+	}
+	//获得操作
+	public OperationModel getOperationBySymbol(String symbol){		
+		return operationDAO.getOperationBySymbol(symbol);
 	}
 	//新增部门
 	public DepartmentModel departmentAdd(DepartmentModel department,String parentDepartmentId,String supervisorName,String leaderRoleIds){

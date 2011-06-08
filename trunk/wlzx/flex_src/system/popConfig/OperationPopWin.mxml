@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:VGroup xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx"  xmlns:valueObjects="system.entity.*" xmlns:flexlib="http://code.google.com/p/flexlib/"   creationComplete="init();" width="800" height="500">
+	
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+		<mx:StringValidator id="name_stringValidator" source="{operationName}" property="text"  requiredFieldError="操作名称不能为空"/>
+		<mx:StringValidator id="createDate_dateValidator"  source="{creationDate}" property="text" requiredFieldError="操作创建日期不能为空"/>
+		<mx:NumberValidator id="sequence_numberValidator" source="{sequence}" required="false" property="text" integerError="请输入整数值，同级操作默认排序升序" domain="int"/>
+		<valueObjects:OperationModel id="operation"/>
+		<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+			<mx:method name="operationAdd"  concurrency="last"  result="operationAddResult_resultHandler(event);" />
+			<mx:method name="getOperationBySymbol"  concurrency="last"  result="getOperationBySymbol_resultHandler(event);" />
+			<mx:method name="operationUpdate"  concurrency="last"  result="operationUpdate_resultHandler(event);" />
+		</mx:RemoteObject>
+	</fx:Declarations>
+	
+	<fx:Script> 
+		
+		<![CDATA[  
+		
+			import mx.controls.Alert;
+			import mx.events.ValidationResultEvent;
+			import mx.formatters.DateFormatter;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.*;
+			import mx.validators.Validator;
+			import mx.validators.ZipCodeValidatorDomainType;
+			
+			import system.utils.*;
+			private var validatorArr:Array;
+			
+			private function init():void
+			{
+				
+				validatorArr = new Array();
+				validatorArr.push(name_stringValidator);
+				validatorArr.push(createDate_dateValidator);
+				validatorArr.push(sequence_numberValidator);
+				callLater(initoperationWin);
+				
+			} 
+			private function initoperationWin():void{
+				if(this.toolTip=='Update'){		
+					this.operationWin.title="操作编辑";
+					var operationSymbol:String=this.name;//弹出窗口时设定的中转参数
+					systemServiceRO.getOperationBySymbol(operationSymbol);
+				}else if(this.toolTip=='Add'){
+					operation=new OperationModel();
+					this.operationWin.title="操作新增";					
+					
+				}
+			}
+			private function validateForm(evt:MouseEvent):void {
+				var validatorErrorArray:Array = Validator.validateAll(validatorArr);;
+				var isValidForm:Boolean = validatorErrorArray.length == 0;
+				if (isValidForm) {
+					operation.name=operationName.text;
+					operation.creationDate=DateFormatter.parseDateString(creationDate.text);
+					operation.detail=detail.text;
+					operation.symbol=symbol.text;
+					operation.sequence=parseInt(sequence.text);
+					operation.rsValue=operationUrl.text;
+					operation.rsType="METHOD";
+					if(this.toolTip=='Update'){
+						systemServiceRO.operationUpdate(operation);
+					}else if(this.toolTip=='Add'){
+						var parentType:String=this.id;//弹出窗口时设定的中转参数
+						var parentSymbol:String=this.name;//弹出窗口时设定的中转参数
+						systemServiceRO.operationAdd(operation,parentType,parentSymbol);
+						
+					}
+					
+				} else {
+					var err:ValidationResultEvent;
+					var errorMessageArray:Array = [];
+					for each (err in validatorErrorArray) {
+						var errField:String = FormItem(err.currentTarget.source.parent).label
+						errorMessageArray.push(errField + ": " + err.message);
+					}
+					Alert.show(errorMessageArray.join("\n\n"), "请按照以下错误提示信息重新填写", Alert.OK);
+				}
+			}
+			protected function operationAddResult_resultHandler(event:ResultEvent):void
+			{
+				var operation:OperationModel=event.result as OperationModel;
+				if(operation!=null){
+					var operationData:XML=new XML("<node type='operation' label='"+operation.name+"[操作]'  symbol='"+operation.symbol+"' id='"+operation.id+"'></node>");
+					this.parentApplication.selectedNode.appendChild(operationData);
+					PopUpManager.removePopUp(this);
+				}else{
+					Alert.show("添加失败");
+				}
+			}
+			protected function getOperationBySymbol_resultHandler(event:ResultEvent):void
+			{
+				operation=event.result as OperationModel;
+				operationName.text=operation.name;
+				creationDate.text=CommonUtils.formatDate(operation.creationDate,"YYYY-MM-DD");
+				detail.text=operation.detail;
+				symbol.text=operation.symbol;
+				sequence.text=operation.sequence.toString();
+				operationUrl.text=operation.rsValue;
+				
+			}
+			protected function operationUpdate_resultHandler(event:ResultEvent):void
+			{
+				var operation:OperationModel=event.result as OperationModel;
+				if(operation!=null){
+					this.parentApplication.selectedNode.@label=operation.name+"[操作]";
+					this.parentApplication.selectedNode.@symbol=operation.symbol;
+					this.parentApplication.selectedNode.@id=operation.id;
+					PopUpManager.removePopUp(this);
+				}else{
+					Alert.show("更新失败");
+				}
+			}
+			
+			protected function systemFaultHandler(event:FaultEvent):void {
+				Alert.show(event.fault.faultString, 'Error');
+			}
+			private function resetForm(evt:MouseEvent):void{
+				if(this.toolTip=='Update'){		
+					operationName.text=operation.name;
+					creationDate.text=CommonUtils.formatDate(operation.creationDate,"YYYY-MM-DD");
+					detail.text=operation.detail;
+					symbol.text=operation.symbol;
+					sequence.text=operation.sequence.toString();
+					operationUrl.text=operation.rsValue;
+				}else if(this.toolTip=='Add'){
+					operationName.text="";
+					creationDate.text="";
+					detail.text="";
+					symbol.text="";
+					sequence.text="";
+					operationUrl.text="";			
+					
+				}
+			} 	
+		]]> 
+		
+	</fx:Script> 
+	<s:TitleWindow  id="operationWin" width="100%" height="100%"  close="PopUpManager.removePopUp(this);this.parentApplication.operationPopWin=null;">
+		<mx:Form width="100%" height="100%" id="dform">
+			<mx:FormHeading label="操作信息" fontSize="15" width="100%" textAlign="center"/>
+			
+			<mx:FormItem label="操作名称">
+				<mx:TextInput id="operationName" width="200"/>
+			</mx:FormItem>
+			
+			<mx:FormItem label="创建日期 ">
+				<mx:DateField  id="creationDate" width="200" formatString="YYYY-MM-DD" />
+			</mx:FormItem>
+			
+			<mx:FormItem label="唯一标识">
+				<mx:TextInput id="symbol" width="200"/>
+			</mx:FormItem>	
+			<mx:FormItem label="同级排序顺序">
+				<mx:TextInput id="sequence" width="200"/>
+			</mx:FormItem>
+			
+			<mx:FormItem label="操作方法"  >
+				<mx:TextInput id="operationUrl" width="200"/>
+			</mx:FormItem>
+			<mx:FormItem label="操作描述">
+				<s:TextArea id="detail" width="400"/>
+			</mx:FormItem>
+			<mx:FormItem width="100%">
+				<mx:HBox verticalAlign="middle" horizontalAlign="right" width="100%">
+					<mx:Button label="保存" click="validateForm(event)" />
+					<mx:Button label="重置" click="resetForm(event);" />
+				</mx:HBox>
+			</mx:FormItem> 
+		</mx:Form>
+		
+	</s:TitleWindow>
+	
+</s:VGroup>
