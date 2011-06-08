@@ -4,11 +4,12 @@
 
 <hibernate-mapping>
 <class name="system.wlims.oa.entity.workFlow.WorkFlowLogModel" table="wlzx_oa_workflow_log">
-        <id name="id" type="string">
+        <id name="id">
             <column name="id" />
             <generator class="native" />
         </id>
        <discriminator column="operation_object_type" type="string" />
+       
         <property name="operationTeacherId" type="string">
             <column name="operation_teacher_id" />
         </property>

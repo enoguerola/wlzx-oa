@@ -27,15 +27,22 @@ public class TakeLeaveServiceImpl implements TakeLeaveService {
 	@Override
 	public boolean updateTakeLeaveApply(TakeLeaveForm takeLeave) {
 		// TODO Auto-generated method stub
-		if(takeLeave.getStatus()!=TakeLeaveForm.Status.Waiting.getValue())return false;
+		TakeLeaveForm newTakeLeave=takeLeaveDAO.get(takeLeave.getId());		
+		if(newTakeLeave.getStatus()!=TakeLeaveForm.Status.Waiting.getValue())return false;
 		else{
+			newTakeLeave.setBeginTime(takeLeave.getBeginTime());
+			newTakeLeave.setEndTime(takeLeave.getEndTime());
+			newTakeLeave.setArrangeManage(takeLeave.getArrangeManage());
+			newTakeLeave.setArrangeService(takeLeave.getArrangeService());
+			newTakeLeave.setArrangeTech(takeLeave.getArrangeTech());
+			newTakeLeave.setReason(takeLeave.getReason());
 			TakeLeaveWorkFlowLog log=new TakeLeaveWorkFlowLog();
 			log.setOperationName("编辑申请");
 			log.setOperationResult("编辑编号为"+takeLeave.getApplyNo()+"的申请记录");
 			log.setOperationTime(new Date());
 			log.setOperationTeacherId(takeLeave.getTeacherId());
-			takeLeave.getLogs().add(log);
-			takeLeaveDAO.merge(takeLeave);
+			newTakeLeave.getLogs().add(log);
+			takeLeaveDAO.saveOrUpdate(newTakeLeave);
 			return true;
 		}
 	}
@@ -58,11 +65,6 @@ public class TakeLeaveServiceImpl implements TakeLeaveService {
 		}
 	}
 
-	@Override
-	public TakeLeaveForm getTakeLeaveFormById(String id) {
-		// TODO Auto-generated method stub
-		return takeLeaveDAO.get(id);
-	}
 
 	@Override
 	public List<TakeLeaveForm> getUserTakeLeaveApplies(String userId) {
@@ -76,6 +78,16 @@ public class TakeLeaveServiceImpl implements TakeLeaveService {
 
 	public void setTakeLeaveDAO(TakeLeaveDAO takeLeaveDAO) {
 		this.takeLeaveDAO = takeLeaveDAO;
+	}
+	@Override
+	public TakeLeaveForm getDetailInfoById(String id) {
+		// TODO Auto-generated method stub
+		return takeLeaveDAO.get(id);
+	}
+	@Override
+	public TakeLeaveForm loadApplyInfoById(String id) {
+		// TODO Auto-generated method stub
+		return takeLeaveDAO.get(id);
 	}
 
 
