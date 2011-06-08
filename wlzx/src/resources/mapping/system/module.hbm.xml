@@ -40,7 +40,7 @@
 		
 		<set name="operations" lazy="false"  table="wlzx_system_module_operation_relationship" cascade="all-delete-orphan">
 			<key column="module_id" not-null="true" />
-			<many-to-many column="operation_id" class="system.entity.OperationModel" /> 
+			<many-to-many column="operation_id" class="system.entity.OperationModel"  order-by="sequence asc"/> 
 		</set>
 		<set name="menus" lazy="false"  table="wlzx_system_menu_module_relationship">
 			<key column="module_id" not-null="true" />

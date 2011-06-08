@@ -42,7 +42,7 @@
 		</set>
 		<set name="menus" lazy="false"  table="wlzx_system_menu_relationship" cascade="all">
 			<key column="system_id"  />
-			<many-to-many column="menu_id" class="system.entity.MenuModel" /> 
+			<many-to-many column="menu_id" class="system.entity.MenuModel" order-by="sequence asc" /> 
 		</set>
 	</class>
 </hibernate-mapping>
