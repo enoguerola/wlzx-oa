@@ -77,4 +77,8 @@ public class DataAccessModeDAO extends BaseDAOImpl<DataAccessModeModel> {
 		List<DataAccessModeModel> result = this.getListByCriteria(criteria);
 		return result;
 	}
+
+	public void removeDataAccessModeBySymbol(String symbol) {
+		this.remove(getDataAccessModeBySymbol(symbol));	
+	}
 }

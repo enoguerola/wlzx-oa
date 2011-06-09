@@ -13,6 +13,8 @@
 			<mx:method name="menuRemove"  concurrency="last"   result="menuRemove_resultHandler(event);" />
 			<mx:method name="moduleRemove"  concurrency="last"   result="moduleRemove_resultHandler(event);" />
 			<mx:method name="operationRemove"  concurrency="last"   result="operationRemove_resultHandler(event);" />
+			<mx:method name="dataAccessModeRemove"  concurrency="last"   result="dataAccessModeRemove_resultHandler(event);" />
+			
 		</mx:RemoteObject>
 	</fx:Declarations>
 	<fx:Script>
@@ -207,7 +209,7 @@
 					SecurityControler.removePerm("moduleUpdate");
 					SecurityControler.removePerm("moduleUp");
 					SecurityControler.removePerm("moduleDown");
-					SecurityControler.addPerm("operationAdd");
+					SecurityControler.removePerm("operationAdd");
 					SecurityControler.addPerm("operationDelete");
 					SecurityControler.addPerm("operationUpdate");
 					SecurityControler.addPerm("operationUp");
@@ -491,6 +493,7 @@
 					Alert.show("删除操作失败");
 				}
 			}
+
 			
 			private function upOperation(event:Event):void{
 				
@@ -498,14 +501,41 @@
 			private function downOperation(event:Event):void{
 				
 			}
+			
+			protected function dataAccessModeRemove_resultHandler(event:ResultEvent):void{
+				if(event.result==true){
+					//					Alert.show(selectedNode.childIndex());
+					delete selectedNode.parent().node[selectedNode.childIndex()];
+					disabled();
+				}else{
+					Alert.show("删除数据访问方式失败");
+				}
+			}
 			private function addDam(event:Event):void{
-				
+				var dataAccessModePopWin:DataAccessModePopWin=DataAccessModePopWin(PopUpManager.createPopUp(this,DataAccessModePopWin,true));  
+				PopUpManager.centerPopUp(dataAccessModePopWin);
+				dataAccessModePopWin.percentHeight=100;
+				dataAccessModePopWin.percentWidth=100;
+				dataAccessModePopWin.x=FlexGlobals.topLevelApplication.stage.stageWidth/2-dataAccessModePopWin.width/2;
+				dataAccessModePopWin.y=FlexGlobals.topLevelApplication.stage.stageHeight/2-dataAccessModePopWin.height/2;
+				dataAccessModePopWin.id=selectedNode.@type;//参数传递使用
+				dataAccessModePopWin.name=selectedNode.@symbol;//参数传递使用
+				dataAccessModePopWin.toolTip="Add";
 			}
 			private function deleteDam(event:Event):void{
-				
+				var symbol:String=selectedNode.@symbol;
+				systemServiceRO.dataAccessModeRemove(symbol);
 			}
 			private function updateDam(event:Event):void{
-				
+				var dataAccessModePopWin:DataAccessModePopWin=DataAccessModePopWin(PopUpManager.createPopUp(this,DataAccessModePopWin,true));  
+				PopUpManager.centerPopUp(dataAccessModePopWin);
+				dataAccessModePopWin.percentHeight=100;
+				dataAccessModePopWin.percentWidth=100;
+				dataAccessModePopWin.x=FlexGlobals.topLevelApplication.stage.stageWidth/2-dataAccessModePopWin.width/2;
+				dataAccessModePopWin.y=FlexGlobals.topLevelApplication.stage.stageHeight/2-dataAccessModePopWin.height/2;
+				dataAccessModePopWin.id=selectedNode.@type;//参数传递使用
+				dataAccessModePopWin.name=selectedNode.@symbol;//参数传递使用
+				dataAccessModePopWin.toolTip="Update";
 			}
 			private function upDam(event:Event):void{
 				

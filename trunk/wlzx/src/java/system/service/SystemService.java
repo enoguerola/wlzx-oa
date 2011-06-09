@@ -445,6 +445,44 @@ public class SystemService{
 	public OperationModel getOperationBySymbol(String symbol){		
 		return operationDAO.getOperationBySymbol(symbol);
 	}
+	//新增数据访问方式
+	public DataAccessModeModel dataAccessModeAdd(DataAccessModeModel dataAccessMode,String parentType,String parentSymbol){
+		if(parentType.equals("operation")){
+			dataAccessModeDAO.saveOrUpdate(dataAccessMode);
+			OperationModel parentOperation=operationDAO.getOperationBySymbol(parentSymbol);
+			parentOperation.getDataAccessModes().add(dataAccessMode);		 			
+			operationDAO.merge(parentOperation);
+			return dataAccessMode;
+			
+		}else return null;
+		
+	}
+	//更新数据访问方式
+	public DataAccessModeModel dataAccessModeUpdate(DataAccessModeModel dataAccessMode){
+		DataAccessModeModel newDataAccessMode=dataAccessModeDAO.get(dataAccessMode.getId());
+//		DataAccessModeModel dam=dataAccessModeDAO.getDataAccessModeBySymbol(newDataAccessMode.getSymbol()+"@noFilter@");
+
+		newDataAccessMode.setSymbol(dataAccessMode.getSymbol());
+		newDataAccessMode.setCreationDate(dataAccessMode.getCreationDate());
+		newDataAccessMode.setModifiedDate(new Date());
+		newDataAccessMode.setDetail(dataAccessMode.getDetail());
+		newDataAccessMode.setName(dataAccessMode.getName());
+		newDataAccessMode.setSequence(dataAccessMode.getSequence());
+		
+		dataAccessModeDAO.saveOrUpdate(newDataAccessMode);	
+		
+		return newDataAccessMode;		
+	}
+	//删除数据访问方式
+	public boolean dataAccessModeRemove(String symbol){
+//		System.out.println(symbol);
+		dataAccessModeDAO.removeDataAccessModeBySymbol(symbol);
+		return true;		
+	}
+	//获得数据访问方式
+	public DataAccessModeModel getDataAccessModeBySymbol(String symbol){		
+		return dataAccessModeDAO.getDataAccessModeBySymbol(symbol);
+	}
 	//新增部门
 	public DepartmentModel departmentAdd(DepartmentModel department,String parentDepartmentId,String supervisorName,String leaderRoleIds){
 			//父亲部门与新部门的关系保存

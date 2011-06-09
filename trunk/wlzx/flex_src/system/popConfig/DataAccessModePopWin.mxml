@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:VGroup xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx"  xmlns:valueObjects="system.entity.*" xmlns:flexlib="http://code.google.com/p/flexlib/"   creationComplete="init();" width="800" height="500">
+	
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+		<mx:StringValidator id="name_stringValidator" source="{dataAccessModeName}" property="text"  requiredFieldError="数据访问方式名称不能为空"/>
+		<mx:StringValidator id="createDate_dateValidator"  source="{creationDate}" property="text" requiredFieldError="数据访问方式创建日期不能为空"/>
+		<mx:NumberValidator id="sequence_numberValidator" source="{sequence}" required="false" property="text" integerError="请输入整数值，同级数据访问方式默认排序升序" domain="int"/>
+		<valueObjects:DataAccessModeModel id="dataAccessMode"/>
+		<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+			<mx:method name="dataAccessModeAdd"  concurrency="last"  result="dataAccessModeAddResult_resultHandler(event);" />
+			<mx:method name="getDataAccessModeBySymbol"  concurrency="last"  result="getDataAccessModeBySymbol_resultHandler(event);" />
+			<mx:method name="dataAccessModeUpdate"  concurrency="last"  result="dataAccessModeUpdate_resultHandler(event);" />
+		</mx:RemoteObject>
+	</fx:Declarations>
+	
+	<fx:Script> 
+		
+		<![CDATA[  
+		
+			import mx.controls.Alert;
+			import mx.events.ValidationResultEvent;
+			import mx.formatters.DateFormatter;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.*;
+			import mx.validators.Validator;
+			import mx.validators.ZipCodeValidatorDomainType;
+			
+			import system.utils.*;
+			private var validatorArr:Array;
+			
+			private function init():void
+			{
+				
+				validatorArr = new Array();
+				validatorArr.push(name_stringValidator);
+				validatorArr.push(createDate_dateValidator);
+				validatorArr.push(sequence_numberValidator);
+				callLater(initdataAccessModeWin);
+				
+			} 
+			private function initdataAccessModeWin():void{
+				if(this.toolTip=='Update'){		
+					this.dataAccessModeWin.title="数据访问方式编辑";
+					var dataAccessModeSymbol:String=this.name;//弹出窗口时设定的中转参数
+					systemServiceRO.getDataAccessModeBySymbol(dataAccessModeSymbol);
+				}else if(this.toolTip=='Add'){
+					dataAccessMode=new DataAccessModeModel();
+					this.dataAccessModeWin.title="数据访问方式新增";					
+					
+				}
+			}
+			private function validateForm(evt:MouseEvent):void {
+				var validatorErrorArray:Array = Validator.validateAll(validatorArr);;
+				var isValidForm:Boolean = validatorErrorArray.length == 0;
+				if (isValidForm) {
+					dataAccessMode.name=dataAccessModeName.text;
+					dataAccessMode.creationDate=DateFormatter.parseDateString(creationDate.text);
+					dataAccessMode.detail=detail.text;
+					dataAccessMode.symbol=symbol.text;
+					dataAccessMode.sequence=parseInt(sequence.text);
+//					dataAccessMode.rsValue=dataAccessModeUrl.text;
+//					dataAccessMode.rsType="METHOD";
+					if(this.toolTip=='Update'){
+						systemServiceRO.dataAccessModeUpdate(dataAccessMode);
+					}else if(this.toolTip=='Add'){
+						var parentType:String=this.id;//弹出窗口时设定的中转参数
+						var parentSymbol:String=this.name;//弹出窗口时设定的中转参数
+						systemServiceRO.dataAccessModeAdd(dataAccessMode,parentType,parentSymbol);
+						
+					}
+					
+				} else {
+					var err:ValidationResultEvent;
+					var errorMessageArray:Array = [];
+					for each (err in validatorErrorArray) {
+						var errField:String = FormItem(err.currentTarget.source.parent).label
+						errorMessageArray.push(errField + ": " + err.message);
+					}
+					Alert.show(errorMessageArray.join("\n\n"), "请按照以下错误提示信息重新填写", Alert.OK);
+				}
+			}
+			protected function dataAccessModeAddResult_resultHandler(event:ResultEvent):void
+			{
+				var dataAccessMode:DataAccessModeModel=event.result as DataAccessModeModel;
+				if(dataAccessMode!=null){
+					var dataAccessModeData:XML=new XML("<node type='dataAccessMode' label='"+dataAccessMode.name+"[数据访问方式]'  symbol='"+dataAccessMode.symbol+"' id='"+dataAccessMode.id+"'></node>");
+					this.parentApplication.selectedNode.appendChild(dataAccessModeData);
+					PopUpManager.removePopUp(this);
+				}else{
+					Alert.show("添加失败");
+				}
+			}
+			protected function getDataAccessModeBySymbol_resultHandler(event:ResultEvent):void
+			{
+				dataAccessMode=event.result as DataAccessModeModel;
+				dataAccessModeName.text=dataAccessMode.name;
+				creationDate.text=CommonUtils.formatDate(dataAccessMode.creationDate,"YYYY-MM-DD");
+				detail.text=dataAccessMode.detail;
+				symbol.text=dataAccessMode.symbol;
+				sequence.text=dataAccessMode.sequence.toString();
+//				dataAccessModeUrl.text=dataAccessMode.rsValue;
+				
+			}
+			protected function dataAccessModeUpdate_resultHandler(event:ResultEvent):void
+			{
+				var dataAccessMode:DataAccessModeModel=event.result as DataAccessModeModel;
+				if(dataAccessMode!=null){
+					this.parentApplication.selectedNode.@label=dataAccessMode.name+"[数据访问方式]";
+					this.parentApplication.selectedNode.@symbol=dataAccessMode.symbol;
+					this.parentApplication.selectedNode.@id=dataAccessMode.id;
+					PopUpManager.removePopUp(this);
+				}else{
+					Alert.show("更新失败");
+				}
+			}
+			
+			protected function systemFaultHandler(event:FaultEvent):void {
+				Alert.show(event.fault.faultString, 'Error');
+			}
+			private function resetForm(evt:MouseEvent):void{
+				if(this.toolTip=='Update'){		
+					dataAccessModeName.text=dataAccessMode.name;
+					creationDate.text=CommonUtils.formatDate(dataAccessMode.creationDate,"YYYY-MM-DD");
+					detail.text=dataAccessMode.detail;
+					symbol.text=dataAccessMode.symbol;
+					sequence.text=dataAccessMode.sequence.toString();
+//					dataAccessModeUrl.text=dataAccessMode.rsValue;
+				}else if(this.toolTip=='Add'){
+					dataAccessModeName.text="";
+					creationDate.text="";
+					detail.text="";
+					symbol.text="";
+					sequence.text="";
+//					dataAccessModeUrl.text="";			
+					
+				}
+			} 	
+		]]> 
+		
+	</fx:Script> 
+	<s:TitleWindow  id="dataAccessModeWin" width="100%" height="100%"  close="PopUpManager.removePopUp(this);this.parentApplication.dataAccessModePopWin=null;">
+		<mx:Form width="100%" height="100%" id="dform">
+			<mx:FormHeading label="数据访问方式信息" fontSize="15" width="100%" textAlign="center"/>
+			
+			<mx:FormItem label="数据访问方式名称">
+				<mx:TextInput id="dataAccessModeName" width="200"/>
+			</mx:FormItem>
+			
+			<mx:FormItem label="创建日期 ">
+				<mx:DateField  id="creationDate" width="200" formatString="YYYY-MM-DD" />
+			</mx:FormItem>
+			
+			<mx:FormItem label="唯一标识">
+				<mx:TextInput id="symbol" width="200"/>
+			</mx:FormItem>	
+			<mx:FormItem label="同级排序顺序">
+				<mx:TextInput id="sequence" width="200"/>
+			</mx:FormItem>
+			
+			<mx:FormItem label="数据访问方式描述">
+				<s:TextArea id="detail" width="400"/>
+			</mx:FormItem>
+			<mx:FormItem width="100%">
+				<mx:HBox verticalAlign="middle" horizontalAlign="right" width="100%">
+					<mx:Button label="保存" click="validateForm(event)" />
+					<mx:Button label="重置" click="resetForm(event);" />
+				</mx:HBox>
+			</mx:FormItem> 
+		</mx:Form>
+		
+	</s:TitleWindow>
+	
+</s:VGroup>
