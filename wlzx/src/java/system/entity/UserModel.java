@@ -6,6 +6,7 @@ package system.entity;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -141,6 +142,47 @@ public class UserModel  extends BaseModel implements UserDetails{
 	public boolean isEnabled() {
 		// TODO Auto-generated method stub
 		return true;
+	}
+	//获得用户所有权限
+	@SuppressWarnings("unchecked")
+	public Set<String>  getAllDams(){
+		Set<String> damList=new HashSet();
+		Set<RoleModel> roleList=getRoles();
+		Iterator<RoleModel> iterator=roleList.iterator();
+		while(iterator.hasNext()){
+			RoleModel _role=iterator.next();	
+			Iterator<DataAccessModeModel> iterator2=_role.getDataAccessModes().iterator();
+			while(iterator2.hasNext()){
+				DataAccessModeModel _dam =iterator2.next();	
+				damList.add(_dam.getSymbol());
+			}
+			
+		}
+		return damList;
+	}
+	//判断用户是否含有某权限
+	public boolean hasDam(String symbol)
+	{	
+		boolean has=false;
+		Set<String> damList =getAllDams();
+		Iterator<String> iterator=damList.iterator();
+		while(iterator.hasNext()){
+			String _symbol=iterator.next();	
+			if(_symbol.equals(symbol)){
+				has=true;
+				break;
+			}
+		}
+		return has;
+		
+	}
+	//获得用户所在处室【不推荐在此写-need provided by yufeng;说明一级部门行政组，二级部门处室定死；分别用level标记数字1,2体现】
+	public DepartmentModel belongMainOfficeDepartment(){
+		return null;
+	}
+	//获得用户所在处室分管副校长【不推荐在此写-need provided by yufeng;说明一级角色校长，二级角色分管校长定死；分别用level标记数字1,2体现;处室主管角色level3标记】
+	public Set<RoleModel> belongMainOfficeDepartmentMasterVicePrincipal(){
+		return null;
 	}
 	public Set<DepartmentModel> getDepartments() {
 		return departments;
