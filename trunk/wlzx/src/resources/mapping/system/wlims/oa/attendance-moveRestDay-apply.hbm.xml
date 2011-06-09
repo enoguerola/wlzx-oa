@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="system.wlims.oa.entity.workFlow.moveRestDay.MoveRestDayForm" table="wlzx_oa_moverestday_apply">
+		<id name="id">
+			<column name="id" />
+			<generator class="native" />
+		</id>
+		<property name="applyNo" type="string">
+			<column name="moveRestDay_applyNo" />
+		</property>
+		
+		<property name="teacherId" type="string">
+			<column name="moveRestDay_teacher_id" />
+		</property>
+		<property name="beginTime" type="string">
+			<column name="moveRestDay_beginTime" />
+		</property>
+		<property name="endTime" type="string">
+			<column name="moveRestDay_endTime" />
+		</property>
+		
+		<property name="officeChiefApproverId" type="string">
+			<column name="moveRestDay_officeChief_approver_id" />
+		</property>
+		<property name="officeChiefApproveTime" type="date">
+			<column name="moveRestDay_officeChief_approve_time" />
+		</property>
+		<property name="officeChiefApproveOption" type="string">
+			<column name="moveRestDay_officeChief_approve_option" />
+		</property>
+		<property name="officeChiefStatus" type="int">
+			<column name="moveRestDay_officeChief_status" />
+		</property>
+		<property name="vicePrincipalApproverId" type="string">
+			<column name="moveRestDay_vicePrincipal_approver_id" />
+		</property>
+		<property name="vicePrincipalApproveTime" type="date">
+			<column name="moveRestDay_vicePrincipal_approve_time" />
+		</property>
+		<property name="vicePrincipalApproveOption" type="string">
+			<column name="moveRestDay_vicePrincipal_approve_option" />
+		</property>
+		<property name="vicePrincipalStatus" type="int">
+			<column name="moveRestDay_vicePrincipal_status" />
+		</property>
+		<property name="status" type="int">
+			<column name="moveRestDay_status" />
+		</property>
+		<set name="logs" lazy="false" table="wlzx_oa_workflow_log" cascade="all-delete-orphan">
+        	<key column="operation_object_id" not-null="true" />
+        	<one-to-many  class="system.wlims.oa.entity.workFlow.moveRestDay.MoveRestDayWorkFlowLog" /> 
+        </set>		
+	</class>
+</hibernate-mapping>

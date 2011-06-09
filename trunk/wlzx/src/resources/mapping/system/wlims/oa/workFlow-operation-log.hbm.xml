@@ -29,6 +29,12 @@
         <subclass name="system.wlims.oa.entity.workFlow.takeLeave.TakeLeaveWorkFlowLog" discriminator-value="TakeLeaveWorkFlowLog">
 			<many-to-one name="takeLeaveForm" class="system.wlims.oa.entity.workFlow.takeLeave.TakeLeaveForm" column="operation_object_id" insert="false" update="false"/> 
 		</subclass>
+		 <subclass name="system.wlims.oa.entity.workFlow.overWork.OverWorkWorkFlowLog" discriminator-value="OverWorkWorkFlowLog">
+			<many-to-one name="overWorkForm" class="system.wlims.oa.entity.workFlow.overWork.OverWorkForm" column="operation_object_id" insert="false" update="false"/> 
+		</subclass>
+		 <subclass name="system.wlims.oa.entity.workFlow.moveRestDay.MoveRestDayWorkFlowLog" discriminator-value="MoveRestDayWorkFlowLog">
+			<many-to-one name="moveRestDayForm" class="system.wlims.oa.entity.workFlow.moveRestDay.MoveRestDayForm" column="operation_object_id" insert="false" update="false"/> 
+		</subclass>
       
     </class>
 </hibernate-mapping>

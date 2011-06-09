@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2011 年 06 月 09 日 16:40
+-- 生成日期: 2011 年 06 月 09 日 22:19
 -- 服务器版本: 5.0.91
 -- PHP 版本: 5.2.13
 
@@ -79,6 +79,60 @@ INSERT INTO `wlzx_oa_course_adjust_apply_item` (`id`, `apply_id`, `apply_class`,
 -- --------------------------------------------------------
 
 --
+-- 表的结构 `wlzx_oa_moverestday_apply`
+--
+
+CREATE TABLE IF NOT EXISTS `wlzx_oa_moverestday_apply` (
+  `id` bigint(20) NOT NULL auto_increment,
+  `moveRestDay_applyNo` varchar(200) NOT NULL,
+  `moveRestDay_teacher_id` bigint(20) NOT NULL,
+  `moveRestDay_beginTime` varchar(100) NOT NULL,
+  `moveRestDay_endTime` varchar(100) NOT NULL,
+  `moveRestDay_officeChief_approver_id` bigint(20) default NULL,
+  `moveRestDay_officeChief_approve_time` datetime default NULL,
+  `moveRestDay_officeChief_approve_option` text,
+  `moveRestDay_officeChief_status` tinyint(1) default NULL,
+  `moveRestDay_vicePrincipal_approver_id` bigint(20) default NULL,
+  `moveRestDay_vicePrincipal_approve_time` datetime default NULL,
+  `moveRestDay_vicePrincipal_approve_option` text,
+  `moveRestDay_vicePrincipal_status` tinyint(1) default NULL,
+  `moveRestDay_status` int(11) NOT NULL default '0',
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+--
+-- 转存表中的数据 `wlzx_oa_moverestday_apply`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `wlzx_oa_overwork_apply`
+--
+
+CREATE TABLE IF NOT EXISTS `wlzx_oa_overwork_apply` (
+  `id` bigint(20) NOT NULL auto_increment,
+  `overWork_applyNo` varchar(200) NOT NULL,
+  `overWork_teacher_id` bigint(20) NOT NULL,
+  `overWork_times` text NOT NULL,
+  `overWork_reason` text NOT NULL,
+  `overWork_officeChief_approver_id` bigint(20) default NULL,
+  `overWork_officeChief_approve_time` datetime default NULL,
+  `overWork_officeChief_approve_option` text,
+  `overWork_officeChief_status` tinyint(1) default NULL,
+  `overWork_status` int(11) NOT NULL default '0',
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+--
+-- 转存表中的数据 `wlzx_oa_overwork_apply`
+--
+
+
+-- --------------------------------------------------------
+
+--
 -- 表的结构 `wlzx_oa_takeleave_apply`
 --
 
@@ -111,7 +165,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_oa_takeleave_apply` (
   `takeLeave_remark` text,
   `takeLeave_status` int(11) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
 
 --
 -- 转存表中的数据 `wlzx_oa_takeleave_apply`
@@ -137,7 +191,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_oa_workflow_log` (
   `operation_name` varchar(200) NOT NULL,
   `operation_result` text,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
 
 --
 -- 转存表中的数据 `wlzx_oa_workflow_log`

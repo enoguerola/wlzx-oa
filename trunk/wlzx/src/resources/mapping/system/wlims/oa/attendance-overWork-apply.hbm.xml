@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="system.wlims.oa.entity.workFlow.overWork.OverWorkForm" table="wlzx_oa_overwork_apply">
+		<id name="id">
+			<column name="id" />
+			<generator class="native" />
+		</id>
+		<property name="applyNo" type="string">
+			<column name="overWork_applyNo" />
+		</property>
+		
+		<property name="teacherId" type="string">
+			<column name="overWork_teacher_id" />
+		</property>
+		<property name="times" type="string">
+			<column name="overWork_times" />
+		</property>
+		<property name="reason" type="string">
+			<column name="overWork_reason" />
+		</property>
+		
+		<property name="officeChiefApproverId" type="string">
+			<column name="overWork_officeChief_approver_id" />
+		</property>
+		<property name="officeChiefApproveTime" type="date">
+			<column name="overWork_officeChief_approve_time" />
+		</property>
+		<property name="officeChiefApproveOption" type="string">
+			<column name="overWork_officeChief_approve_option" />
+		</property>
+		<property name="officeChiefStatus" type="int">
+			<column name="overWork_officeChief_status" />
+		</property>
+		<property name="status" type="int">
+			<column name="overWork_status" />
+		</property>
+		
+		<set name="logs" lazy="false" table="wlzx_oa_workflow_log" cascade="all-delete-orphan">
+        	<key column="operation_object_id" not-null="true" />
+        	<one-to-many  class="system.wlims.oa.entity.workFlow.overWork.OverWorkWorkFlowLog" /> 
+        </set>		
+	</class>
+</hibernate-mapping>

@@ -8,6 +8,10 @@ import system.entity.workFlow.AbstractForm;
 
 public class TakeLeaveForm extends AbstractForm {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4962937018669042405L;
 	public TakeLeaveForm() {
 		name = "请假/出差申请单";
 	}
