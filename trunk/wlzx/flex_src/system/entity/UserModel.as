@@ -31,5 +31,31 @@ package system.entity
 			}
 			return result;
 		}
+		public function getAllDams():Array
+		{	
+			var damList:Array = new Array();
+			var roleList:ArrayCollection = ArrayCollection(roles);
+			for (var i:int = 0; i < roleList.length; i++){
+				var _role:Object = roleList.getItemAt(i);	
+				for (var j:int = 0; j < _role.dataAccessModes.length; j++){
+					var _dam:Object = _role.dataAccessModes.getItemAt(j);	
+					damList.push(_dam.symbol);
+				}
+			}
+			return damList;
+		}
+		public function hasDam(symbol:String):Boolean
+		{	
+			var has:Boolean=false;
+			var damList:Array =getAllDams();
+			for (var i:int = 0; i < damList.length; i++){
+				if(damList[i]==symbol){
+					has=true;
+					break;
+				}
+			}
+			return has;
+			
+		}
 	}
 }
