@@ -48,8 +48,8 @@
 	</mx:transitions>
 	<mx:RemoteObject id="takeLeaveServiceRO" destination="takeLeaveServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 		<mx:method name="addTakeLeaveApply"  concurrency="last"  result="addTakeLeaveApplyResult_resultHandler(event);" />
-		<mx:method name="updateTakeLeaveApply"  concurrency="last"  result="updateTakeLeaveApplyResult_resultHandler(event);" />
-		<mx:method name="cancleTakeLeaveApplyById"  concurrency="last"  result="cancleTakeLeaveApplyByIdResult_resultHandler(event);" />
+		<mx:method name="approveTakeLeave"  concurrency="last"  result="approveTakeLeaveResult_resultHandler(event);" />
+		<mx:method name="deleteTakeLeaveById"  concurrency="last"  result="deleteTakeLeaveByIdResult_resultHandler(event);" />
 		<mx:method name="loadApplyInfoById"  concurrency="last"  result="loadApplyInfoById_resultHandler(event);" />
 		<mx:method name="getDetailInfoById"  concurrency="last"  result="getDetailInfoByIdById_resultHandler(event);" />
 		<mx:method name="getTakeLeaveAppliesByConditions"  concurrency="last"  result="getTakeLeaveAppliesByConditions_resultHandler(event);" />
@@ -101,18 +101,18 @@
 				this.currentState='list';
 				search();
 			}
-			protected function updateTakeLeaveApplyResult_resultHandler(event:ResultEvent):void
+			protected function approveTakeLeaveResult_resultHandler(event:ResultEvent):void
 			{
 				Alert.show("更新成功");
 				this.currentState='list';
 				search();
 			}
-			protected function cancleTakeLeaveApplyByIdResult_resultHandler(event:ResultEvent):void
+			protected function deleteTakeLeaveByIdResult_resultHandler(event:ResultEvent):void
 			{
 				if(event.result as Boolean==true){
-					Alert.show("取消成功");
+					Alert.show("删除成功");
 				}else{
-					Alert.show("无法取消");
+					Alert.show("无法删除");
 				}
 				
 				search();
@@ -131,41 +131,25 @@
 				endDate_section.selectedIndex=parseInt(form.endTime.split(" ")[1]);
 				reason.text=form.reason;
 				arrange_tech.text=form.arrangeTech;
-//				arrange_tech_already.selected=false;
+				arrange_tech_already.selected=form.arrangeTechDealAlready;
 				arrange_service.text=form.arrangeService;
-//				arrange_service_already.selected=false;
+				arrange_service_already.selected=form.arrangeServiceDealAlready;
 				arrange_manage.text=form.arrangeManage;
-//				arrange_manage_already.selected=false;
-				//权限控制部分
-				if(this.parentApplication.currentUser.hasDam("takeLeaveWorkDeal@noFilter@")){
-					arrange_tech_already.enabled=true;
-					arrange_manage_already.enabled=true;
-					arrange_service_already.enabled=true;
-				}
-				if(this.parentApplication.currentUser.hasDam("takeLeaveOfficeApprove@noFilter@")){
-					officeChief_approver_name.enabled=true;
-					officeChief_approver_id.enabled=true;
-					officeChief_approve_time.enabled=true;
-					officeChief_approve_status_pass.enabled=true;
-					officeChief_approve_status_deny.enabled=true;
-					remark.enabled=true;
-				}
-				if(this.parentApplication.currentUser.hasDam("takeLeaveVicePrincipalApprove@noFilter@")){
-					vicePrincipal_approver_name.enabled=true;
-					vicePrincipal_approver_id.enabled=true;
-					vicePrincipal_approve_time.enabled=true;
-					vicePrincipal_approve_status_pass.enabled=true;
-					vicePrincipal_approve_status_deny.enabled=true;
-					remark.enabled=true;
-				}
-				if(this.parentApplication.currentUser.hasDam("takeLeavePrincipalApprove@noFilter@")){
-					principal_approver_name.enabled=true;
-					principal_approver_id.enabled=true;
-					principal_approve_time.enabled=true;
-					principal_approve_status_pass.enabled=true;
-					principal_approve_status_deny.enabled=true;
-					remark.enabled=true;
-				}
+				arrange_manage_already.selected=form.arrangeManageDealAlready;
+				officeChief_approve_option.text=form.officeChiefApproveOption;
+				officeChief_approve_time.text=CommonUtils.formatDate(form.officeChiefApproveTime,"YYYY-MM-DD");
+				officeChief_approver_id.text=form.officeChiefApproverId;
+				officeChief_approve_status.selectedValue=form.officeChiefStatus;
+				vicePrincipal_approve_option.text=form.vicePrincipalApproveOption;
+				vicePrincipal_approve_time.text=CommonUtils.formatDate(form.vicePrincipalApproveTime,"YYYY-MM-DD");
+				vicePrincipal_approver_id.text=form.vicePrincipalApproverId;
+				vicePrincipal_approve_status.selectedValue=form.vicePrincipalStatus;
+				principal_approve_option.text=form.principalApproveOption;
+				principal_approve_time.text=CommonUtils.formatDate(form.principalApproveTime,"YYYY-MM-DD");
+				principal_approver_id.text=form.principalApproverId;
+				principal_approve_status.selectedValue=form.principalStatus;
+				remark.text=form.remark;
+				
 				
 			}
 			protected function getDetailInfoByIdById_resultHandler(event:ResultEvent):void{
@@ -181,11 +165,25 @@
 				detail_endDate_section.selectedIndex=parseInt(form.endTime.split(" ")[1]);
 				detail_reason.text=form.reason;
 				detail_arrange_tech.text=form.arrangeTech;
-				//				arrange_tech_already.selected=false;
+				detail_arrange_tech_already.selected=form.arrangeTechDealAlready;
 				detail_arrange_service.text=form.arrangeService;
-				//				arrange_service_already.selected=false;
+				detail_arrange_service_already.selected=form.arrangeServiceDealAlready;
 				detail_arrange_manage.text=form.arrangeManage;
-				//				arrange_manage_already.selected=false;
+				detail_arrange_manage_already.selected=form.arrangeManageDealAlready;
+				detail_officeChief_approve_option.text=form.officeChiefApproveOption;
+				detail_officeChief_approve_time.text=CommonUtils.formatDate(form.officeChiefApproveTime,"YYYY-MM-DD");
+				detail_officeChief_approver_id.text=form.officeChiefApproverId;
+				detail_officeChief_approve_status.selectedValue=form.officeChiefStatus;
+				detail_vicePrincipal_approve_option.text=form.vicePrincipalApproveOption;
+				detail_vicePrincipal_approve_time.text=CommonUtils.formatDate(form.vicePrincipalApproveTime,"YYYY-MM-DD");
+				detail_vicePrincipal_approver_id.text=form.vicePrincipalApproverId;
+				detail_vicePrincipal_approve_status.selectedValue=form.vicePrincipalStatus;
+				detail_principal_approve_option.text=form.principalApproveOption;
+				detail_principal_approve_time.text=CommonUtils.formatDate(form.principalApproveTime,"YYYY-MM-DD");
+				detail_principal_approver_id.text=form.principalApproverId;
+				detail_principal_approve_status.selectedValue=form.principalStatus;
+				detail_remark.text=form.remark;
+				
 				logTable.initdata(form.logs as ArrayCollection);
 				this.currentState='detail';
 				
@@ -281,11 +279,11 @@
 				this.currentState='add';
 				
 			}
-			public function cancleApply(applyId:String):void{
-				Alert.show("你确定要取消该调课申请吗?","确认",Alert.YES | Alert.NO,null,function(event:CloseEvent):void{
+			public function deleteApply(applyId:String):void{
+				Alert.show("你确定要删除该调课申请及相关所有记录吗?","确认",Alert.YES | Alert.NO,null,function(event:CloseEvent):void{
 					if(event.detail == Alert.YES)
 					{
-						takeLeaveServiceRO.cancleTakeLeaveApplyById(applyId);
+						takeLeaveServiceRO.deleteTakeLeaveById(applyId);
 					}
 				});
 			}
@@ -302,7 +300,39 @@
 				else {
 					var applyId:String=addUpdateFlag.text.split("_")[1];
 					editInit(applyId);
-					
+					//权限控制部分
+					if(this.parentApplication.currentUser.hasDam("takeLeaveWorkDeal@noFilter@")){
+						arrange_tech_already.enabled=true;
+						arrange_manage_already.enabled=true;
+						arrange_service_already.enabled=true;
+					}
+					if(this.parentApplication.currentUser.hasDam("takeLeaveOfficeApprove@noFilter@")){
+						officeChief_approver_name.enabled=true;
+						officeChief_approver_id.enabled=true;
+						officeChief_approve_time.enabled=true;
+						officeChief_approve_status_pass.enabled=true;
+						officeChief_approve_status_deny.enabled=true;
+						officeChief_approve_option.enabled=true;
+						remark.enabled=true;
+					}
+					if(this.parentApplication.currentUser.hasDam("takeLeaveVicePrincipalApprove@noFilter@")){
+						vicePrincipal_approver_name.enabled=true;
+						vicePrincipal_approver_id.enabled=true;
+						vicePrincipal_approve_time.enabled=true;
+						vicePrincipal_approve_status_pass.enabled=true;
+						vicePrincipal_approve_status_deny.enabled=true;
+						vicePrincipal_approve_option.enabled=true;
+						remark.enabled=true;
+					}
+					if(this.parentApplication.currentUser.hasDam("takeLeavePrincipalApprove@noFilter@")){
+						principal_approver_name.enabled=true;
+						principal_approver_id.enabled=true;
+						principal_approve_time.enabled=true;
+						principal_approve_status_pass.enabled=true;
+						principal_approve_status_deny.enabled=true;
+						principal_approve_option.enabled=true;
+						remark.enabled=true;
+					}
 				}
 			}
 			
@@ -313,27 +343,60 @@
 			}
 			protected function save_clickHandler(event:MouseEvent):void
 			{
+				
 				if(validateInput()){
 					if(addUpdateFlag.text=="add"){
-						form=new TakeLeaveForm();
-						form.reason=reason.text;
-						form.type=parseInt(applyType.text);
-						form.beginTime=beginDate.text+" "+beginDate_section.selectedItem.data;
-						form.endTime=endDate.text+" "+endDate_section.selectedItem.data;
-						form.arrangeTech=arrange_tech.text;
-						form.arrangeManage=arrange_manage.text;
-						form.arrangeService=arrange_service.text;
-						form.teacherId=teacher_id.text;
-						takeLeaveServiceRO.addTakeLeaveApply(form);
+//						form=new TakeLeaveForm();
+//						form.reason=reason.text;
+//						form.type=parseInt(applyType.text);
+//						form.beginTime=beginDate.text+" "+beginDate_section.selectedItem.data;
+//						form.endTime=endDate.text+" "+endDate_section.selectedItem.data;
+//						form.arrangeTech=arrange_tech.text;
+//						form.arrangeManage=arrange_manage.text;
+//						form.arrangeService=arrange_service.text;
+//						form.teacherId=teacher_id.text;
+//						takeLeaveServiceRO.addTakeLeaveApply(form);
 					}else if(addUpdateFlag.text=="update"+"_"+form.id){
-						form.reason=reason.text;
-						form.beginTime=beginDate.text+" "+beginDate_section.selectedItem.data;
-						form.endTime=endDate.text+" "+endDate_section.selectedItem.data;
-						form.arrangeTech=arrange_tech.text;
-						form.arrangeManage=arrange_manage.text;
-						form.arrangeService=arrange_service.text;
-						form.teacherId=teacher_id.text;
-						takeLeaveServiceRO.updateTakeLeaveApply(form);
+//						form.reason=reason.text;
+//						form.beginTime=beginDate.text+" "+beginDate_section.selectedItem.data;
+//						form.endTime=endDate.text+" "+endDate_section.selectedItem.data;
+//						form.arrangeTech=arrange_tech.text;
+//						form.arrangeManage=arrange_manage.text;
+//						form.arrangeService=arrange_service.text;
+//						form.teacherId=teacher_id.text;
+//						form.arrangeTech=arrange_tech.text;
+						form.arrangeTechDealAlready=arrange_tech_already.selected;
+//						form.arrangeService=arrange_service.text;
+						form.arrangeServiceDealAlready=arrange_service_already.selected;
+//						form.arrangeManage=arrange_manage.text;
+						form.arrangeManageDealAlready=arrange_manage_already.selected;
+						form.officeChiefApproveOption=officeChief_approve_option.text;
+						if(officeChief_approve_time.text!="")
+						form.officeChiefApproveTime=DateFormatter.parseDateString(officeChief_approve_time.text);
+//						officeChief_approve_time.text=CommonUtils.formatDate(form.officeChiefApproveTime,"YYYY-MM-DD");
+						if(officeChief_approver_id.text!="")
+						form.officeChiefApproverId=officeChief_approver_id.text;
+						if(officeChief_approve_status.selectedValue!=null)
+						form.officeChiefStatus=parseInt(officeChief_approve_status.selectedValue.toString());
+						form.vicePrincipalApproveOption=vicePrincipal_approve_option.text;
+						if(vicePrincipal_approve_time.text!="")
+						form.vicePrincipalApproveTime=DateFormatter.parseDateString(vicePrincipal_approve_time.text);
+//						vicePrincipal_approve_time.text=CommonUtils.formatDate(form.vicePrincipalApproveTime,"YYYY-MM-DD");
+						if(vicePrincipal_approver_id.text!="")
+						form.vicePrincipalApproverId=vicePrincipal_approver_id.text;
+						if(vicePrincipal_approve_status.selectedValue!=null)
+						form.vicePrincipalStatus=parseInt(vicePrincipal_approve_status.selectedValue.toString());
+						form.principalApproveOption=principal_approve_option.text;
+						if(principal_approve_time.text!="")
+						form.principalApproveTime=DateFormatter.parseDateString(principal_approve_time.text);
+//						principal_approve_time.text=CommonUtils.formatDate(form.principalApproveTime,"YYYY-MM-DD");
+						if(principal_approver_id.text!="")
+						form.principalApproverId=principal_approver_id.text;
+						if(principal_approve_status.selectedValue!=null)
+						form.principalStatus=parseInt(principal_approve_status.selectedValue.toString());
+						form.remark=remark.text;
+						Alert.show(addUpdateFlag.text+"aaa");
+						takeLeaveServiceRO.approveTakeLeave(form);
 						
 					}
 					
@@ -342,9 +405,9 @@
 			private function validateInput():Boolean
 			{	
 				validatorArr = new Array();
-				validatorArr.push(beginDate_stringValidator);
-				validatorArr.push(endDate_stringValidator);
-				validatorArr.push(reason_stringValidator);
+//				validatorArr.push(beginDate_stringValidator);
+//				validatorArr.push(endDate_stringValidator);
+//				validatorArr.push(reason_stringValidator);
 				var validatorErrorArray:Array = Validator.validateAll(validatorArr);
 				var isValidForm:Boolean = validatorErrorArray.length == 0;
 				if (isValidForm) {
@@ -392,17 +455,17 @@
 						</mx:HBox>
 					</mx:HBox>
 					<mx:HBox>
-						<mx:HBox verticalAlign="middle" width="40%">
+						<mx:HBox verticalAlign="middle">
 							<mx:Label  text="提交日期"  width="100"  textAlign="right"/>
 							<mx:DateField id="search_date_begin"   formatString="YYYY-MM-DD"  editable="false" width="120"/>
-							<mx:Label  text="--"  width="100" textAlign="right"/>
+							<mx:Label  text="--"  width="20" textAlign="center"/>
 							<mx:DateField id="search_date_end"  formatString="YYYY-MM-DD" editable="false" width="120"/>
 						</mx:HBox>	
 						
-						<mx:HBox verticalAlign="middle" width="40%">
+						<mx:HBox verticalAlign="middle">
 							<mx:Label  text="请假日期"  width="100"  textAlign="right"/>
 							<mx:DateField id="search_takeLeave_date_begin"   formatString="YYYY-MM-DD"  editable="false" width="120"/>
-							<mx:Label  text="--"  width="100"  textAlign="right"/>
+							<mx:Label  text="--"  width="20"  textAlign="center"/>
 							<mx:DateField id="search_takeLeave_date_end"  formatString="YYYY-MM-DD" editable="false" width="120"/>
 						</mx:HBox>	
 						
@@ -521,7 +584,7 @@
 														}else if(data.status==4){
 															return "审批不通过";
 														}else if(data.status==5){
-															return "取消";
+															return "删除";
 														}
 														
 														}
@@ -541,7 +604,7 @@
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0">
 												<mx:LinkButton  label="[审批]"   click="{this.outerDocument.enterEdit(data.id);}" enabled="{checkAuth(data)}">											
 												</mx:LinkButton>
-												<mx:LinkButton  label="[删除]"   click="{this.outerDocument.cancleApply(data.id);}" enabled="{checkAuth(data)}">											
+												<mx:LinkButton  label="[删除]"   click="{this.outerDocument.deleteApply(data.id);}" enabled="{checkAuth(data)}">											
 												</mx:LinkButton>
 												<mx:Script>
 													<![CDATA[
@@ -631,17 +694,17 @@
 								<mx:Label  text="请假时间"  textAlign="center" id="time_label"/>
 							</mx:GridItem>
 							<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5"    verticalAlign="middle" horizontalAlign="left"  width="100%">
-								<mx:DateField width="120" id="beginDate" formatString="YYYY-MM-DD"/>
-								<mx:ComboBox width="60" id="beginDate_section" dataProvider="{sections}"/>
+								<mx:DateField width="120" id="beginDate" formatString="YYYY-MM-DD" enabled="false"/>
+								<mx:ComboBox width="60" id="beginDate_section" dataProvider="{sections}" enabled="false"/>
 								<mx:Label width="40"   text="----"/>
-								<mx:DateField width="120" id="endDate" formatString="YYYY-MM-DD"/>
-								<mx:ComboBox width="60" id="endDate_section" dataProvider="{sections}"/>
+								<mx:DateField width="120" id="endDate" formatString="YYYY-MM-DD" enabled="false"/>
+								<mx:ComboBox width="60" id="endDate_section" dataProvider="{sections}" enabled="false"/>
 							</mx:GridItem>
 							
 						</mx:GridRow>
 						<mx:GridRow width="100%">
 							<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5"     verticalAlign="middle" horizontalAlign="center">
-								<mx1:Text text="请假事由"  textAlign="center" width="80" id="reason_label"/>
+								<mx1:Text text="请假事由"  textAlign="center" width="80" id="reason_label" enabled="false"/>
 							</mx:GridItem>
 							<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5"     verticalAlign="middle"  colSpan="3" horizontalAlign="center">
 								<mx:TextArea width="100%" height="50" id="reason">
@@ -656,7 +719,7 @@
 							</mx:GridItem>
 							<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5"     verticalAlign="middle"  colSpan="3" horizontalAlign="center">
 								<mx:Label  text="教学工作："  textAlign="center"/>
-								<mx:TextArea width="100%" height="30" id="arrange_tech">
+								<mx:TextArea width="100%" height="30" id="arrange_tech" enabled="false">
 									
 								</mx:TextArea>
 								<mx:CheckBox label="已落实" selected="false" id="arrange_tech_already" enabled="false"/>
@@ -667,7 +730,7 @@
 							
 							<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5"     verticalAlign="middle"  colSpan="3" horizontalAlign="center">
 								<mx:Label  text="服务工作："  textAlign="center"/>
-								<mx:TextArea width="100%" height="30" id="arrange_service">
+								<mx:TextArea width="100%" height="30" id="arrange_service" enabled="false">
 									
 								</mx:TextArea>
 								<mx:CheckBox label="已落实" selected="false" id="arrange_service_already" enabled="false"/>
@@ -678,7 +741,7 @@
 							
 							<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5"     verticalAlign="middle"  colSpan="3" horizontalAlign="center">
 								<mx:Label  text="管理工作："  textAlign="center"/>
-								<mx:TextArea width="100%" height="30" id="arrange_manage">
+								<mx:TextArea width="100%" height="30" id="arrange_manage" enabled="false">
 									
 								</mx:TextArea>
 								<mx:CheckBox label="已落实" selected="false" id="arrange_manage_already" enabled="false"/>

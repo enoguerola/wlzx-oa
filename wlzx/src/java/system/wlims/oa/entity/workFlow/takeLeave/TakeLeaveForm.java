@@ -13,7 +13,7 @@ public class TakeLeaveForm extends AbstractForm {
 	}
 	private String id;
 	private String applyNo;
-	private int type;
+	private Integer type;
 	private String teacherId;
 	private String beginTime;
 	private String endTime;
@@ -21,7 +21,13 @@ public class TakeLeaveForm extends AbstractForm {
 	private String arrangeTech;
 	private String arrangeService;
 	private String arrangeManage;
+	private Boolean arrangeTechDealAlready;
+	private Boolean arrangeServiceDealAlready;
+	private Boolean arrangeManageDealAlready;
 	private String officeChiefApproverId;
+	private Integer officeChiefStatus;
+	private Integer vicePrincipalStatus;
+	private Integer principalStatus;
 	private Date officeChiefApproveTime;
 	private String officeChiefApproveOption;
 	private String vicePrincipalApproverId;
@@ -31,7 +37,7 @@ public class TakeLeaveForm extends AbstractForm {
 	private Date principalApproveTime;
 	private String principalApproveOption; 
 	private String remark;
-	private int status;
+	private Integer status;
 	private Set<TakeLeaveWorkFlowLog> logs=new TreeSet<TakeLeaveWorkFlowLog>();
 	public static enum Status{
 		Waiting(0, "待审批"),
@@ -40,19 +46,19 @@ public class TakeLeaveForm extends AbstractForm {
 		Pass(3, "审批通过"),
 		Deny(4, "审批不通过"),
 		Cancle(5, "取消");
-		private int value;
+		private Integer value;
 		private String name;
 		
-		private Status(int value, String name){
+		private Status(Integer value, String name){
 			this.setValue(value);
 			this.setName(name);
 		}
 
-		public void setValue(int value) {
+		public void setValue(Integer value) {
 			this.value = value;
 		}
 
-		public int getValue() {
+		public Integer getValue() {
 			return value;
 		}
 
@@ -70,10 +76,10 @@ public class TakeLeaveForm extends AbstractForm {
 	public void setId(String id) {
 		this.id = id;
 	}
-	public int getType() {
+	public Integer getType() {
 		return type;
 	}
-	public void setType(int type) {
+	public void setType(Integer type) {
 		this.type = type;
 	}
 	public String getTeacherId() {
@@ -167,10 +173,10 @@ public class TakeLeaveForm extends AbstractForm {
 	public void setRemark(String remark) {
 		this.remark = remark;
 	}
-	public int getStatus() {
+	public Integer getStatus() {
 		return status;
 	}
-	public void setStatus(int status) {
+	public void setStatus(Integer status) {
 		this.status = status;
 	}
 	public Set<TakeLeaveWorkFlowLog> getLogs() {
@@ -196,5 +202,41 @@ public class TakeLeaveForm extends AbstractForm {
 	}
 	public void setEndTime(String endTime) {
 		this.endTime = endTime;
+	}
+	public Boolean getArrangeTechDealAlready() {
+		return arrangeTechDealAlready;
+	}
+	public void setArrangeTechDealAlready(Boolean arrangeTechDealAlready) {
+		this.arrangeTechDealAlready = arrangeTechDealAlready;
+	}
+	public Boolean getArrangeServiceDealAlready() {
+		return arrangeServiceDealAlready;
+	}
+	public void setArrangeServiceDealAlready(Boolean arrangeServiceDealAlready) {
+		this.arrangeServiceDealAlready = arrangeServiceDealAlready;
+	}
+	public Boolean getArrangeManageDealAlready() {
+		return arrangeManageDealAlready;
+	}
+	public void setArrangeManageDealAlready(Boolean arrangeManageDealAlready) {
+		this.arrangeManageDealAlready = arrangeManageDealAlready;
+	}
+	public Integer getOfficeChiefStatus() {
+		return officeChiefStatus;
+	}
+	public void setOfficeChiefStatus(Integer officeChiefStatus) {
+		this.officeChiefStatus = officeChiefStatus;
+	}
+	public Integer getVicePrincipalStatus() {
+		return vicePrincipalStatus;
+	}
+	public void setVicePrincipalStatus(Integer vicePrincipalStatus) {
+		this.vicePrincipalStatus = vicePrincipalStatus;
+	}
+	public Integer getPrincipalStatus() {
+		return principalStatus;
+	}
+	public void setPrincipalStatus(Integer principalStatus) {
+		this.principalStatus = principalStatus;
 	}
 }

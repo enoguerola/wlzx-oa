@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2011 年 06 月 08 日 18:34
+-- 生成日期: 2011 年 06 月 09 日 16:40
 -- 服务器版本: 5.0.91
 -- PHP 版本: 5.2.13
 
@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_data_access_mode` (
   `modified_date` timestamp NOT NULL default '0000-00-00 00:00:00' on update CURRENT_TIMESTAMP,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `symbol` (`symbol`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=44 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=46 ;
 
 --
 -- 转存表中的数据 `wlzx_system_data_access_mode`
@@ -108,7 +108,9 @@ INSERT INTO `wlzx_system_data_access_mode` (`id`, `name`, `symbol`, `sequence`, 
 (39, '全部数据', 'takeLeaveWorkDeal@noFilter@', 0, NULL, NULL, '2011-06-08 00:00:00', '2011-06-08 13:32:46'),
 (40, '全部数据', 'takeLeaveOfficeApprove@noFilter@', 0, NULL, NULL, '2011-06-08 00:00:00', '2011-06-08 13:26:23'),
 (41, '全部数据', 'takeLeaveVicePrincipalApprove@noFilter@', 0, NULL, NULL, '2011-06-08 00:00:00', '2011-06-08 13:32:34'),
-(42, '全部数据', 'takeLeavePrincipalApprove@noFilter@', 0, NULL, NULL, '2011-06-08 00:00:00', '2011-06-08 13:32:40');
+(42, '全部数据', 'takeLeavePrincipalApprove@noFilter@', 0, NULL, NULL, '2011-06-08 00:00:00', '2011-06-08 13:32:40'),
+(43, '本处室请假出差数据（处室领导级别有效）', 'takeLeaveApprove_main@defaultVisit@@notSelfOfficeFilter@', 1, NULL, '', '2011-06-09 00:00:00', '2011-06-09 11:14:42'),
+(44, '分管处室请假出差数据（副校长级别有效）', 'takeLeaveApprove_main@defaultVisit@@notSelfManagerFilter@', 2, NULL, '', '2011-06-09 00:00:00', '2011-06-09 11:14:09');
 
 -- --------------------------------------------------------
 
@@ -572,7 +574,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_module_operation_relationship` (
   `module_id` bigint(20) NOT NULL,
   `operation_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=44 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=43 ;
 
 --
 -- 转存表中的数据 `wlzx_system_module_operation_relationship`
@@ -655,7 +657,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_operation` (
   `modified_date` timestamp NOT NULL default '0000-00-00 00:00:00' on update CURRENT_TIMESTAMP,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `symbol` (`symbol`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=44 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=43 ;
 
 --
 -- 转存表中的数据 `wlzx_system_operation`
@@ -711,7 +713,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_operation_dam_relationship` (
   `operation_id` bigint(20) NOT NULL,
   `dam_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=44 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=46 ;
 
 --
 -- 转存表中的数据 `wlzx_system_operation_dam_relationship`
@@ -754,7 +756,9 @@ INSERT INTO `wlzx_system_operation_dam_relationship` (`id`, `operation_id`, `dam
 (39, 39, 39),
 (40, 40, 40),
 (41, 41, 41),
-(42, 42, 42);
+(42, 42, 42),
+(43, 38, 43),
+(44, 38, 44);
 
 -- --------------------------------------------------------
 
@@ -774,7 +778,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_role` (
   `supervisor_flag` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `symbol` (`symbol`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='系统角色' AUTO_INCREMENT=24 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='系统角色' AUTO_INCREMENT=23 ;
 
 --
 -- 转存表中的数据 `wlzx_system_role`
@@ -870,7 +874,6 @@ INSERT INTO `wlzx_system_role_dam_relationship` (`id`, `role_id`, `dam_id`) VALU
 (76, 1, 37),
 (77, 1, 39),
 (78, 1, 38),
-(79, 1, 42),
 (80, 1, 41),
 (81, 1, 40);
 
@@ -913,7 +916,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_role_leadship` (
   `leader_id` bigint(20) NOT NULL,
   `subordinate_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=12 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=11 ;
 
 --
 -- 转存表中的数据 `wlzx_system_role_leadship`
@@ -1000,7 +1003,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_user` (
 --
 
 INSERT INTO `wlzx_system_user` (`id`, `symbol`, `sequence`, `name`, `password`, `last_login_time`, `last_login_ip`, `account_style`, `person_id`, `person_name`, `email`, `creation_date`, `modified_date`, `active`) VALUES
-(2, 'admin', 0, 'admin', 'c81e728d9d4c2f636f067f89cc14862c', '2011-06-08 18:22:26', '127.0.0.1', 0, NULL, NULL, NULL, '2011-05-07 11:04:22', '2011-05-25 01:32:00', 1),
+(2, 'admin', 0, 'admin', 'c81e728d9d4c2f636f067f89cc14862c', '2011-06-09 16:18:58', '127.0.0.1', 0, NULL, NULL, NULL, '2011-05-07 11:04:22', '2011-05-25 01:32:00', 1),
 (3, '3', 0, '3', 'eccbc87e4b5ce2fe28308fd9f2a7baf3', '2011-05-30 14:52:46', '127.0.0.1', 0, NULL, NULL, NULL, '2011-05-23 01:59:10', '2011-05-25 00:42:21', 1);
 
 -- --------------------------------------------------------

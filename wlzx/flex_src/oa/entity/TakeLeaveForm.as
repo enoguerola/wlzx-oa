@@ -18,6 +18,9 @@ package oa.entity
 		public var arrangeTech:String;
 		public var arrangeService:String;
 		public var arrangeManage:String;
+		public var arrangeTechDealAlready:Boolean;
+		public var arrangeServiceDealAlready:Boolean;
+		public var arrangeManageDealAlready:Boolean;
 		public var officeChiefApproverId:String;
 		public var officeChiefApproveTime:Date;
 		public var officeChiefApproveOption:String;
@@ -29,6 +32,9 @@ package oa.entity
 		public var principalApproveOption:String; 
 		public var remark:String;
 		public var status:int;
+		public var officeChiefStatus:int;
+		public var vicePrincipalStatus:int;
+		public var principalStatus:int;
 		public var logs:Object=new Array();
 		
 		public function TakeLeaveForm()

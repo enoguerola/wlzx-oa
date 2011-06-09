@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2011 年 06 月 08 日 18:33
+-- 生成日期: 2011 年 06 月 09 日 16:40
 -- 服务器版本: 5.0.91
 -- PHP 版本: 5.2.13
 
@@ -91,17 +91,23 @@ CREATE TABLE IF NOT EXISTS `wlzx_oa_takeleave_apply` (
   `takeLeave_endTime` varchar(200) NOT NULL,
   `takeLeave_reason` text,
   `takeLeave_arrange_tech` text,
+  `takeLeave_arrange_tech_deal_already` tinyint(1) default NULL,
   `takeLeave_arrange_service` text,
+  `takeLeave_arrange_service_deal_already` tinyint(1) default NULL,
   `takeLeave_arrange_manage` text,
+  `takeLeave_arrange_manage_deal_already` tinyint(1) default NULL,
   `takeLeave_officeChief_approver_id` bigint(20) default NULL,
   `takeLeave_officeChief_approve_time` datetime default NULL,
   `takeLeave_officeChief_approve_option` text,
+  `takeLeave_officeChief_status` tinyint(1) default NULL,
   `takeLeave_vicePrincipal_approver_id` bigint(20) default NULL,
   `takeLeave_vicePrincipal_approve_time` datetime default NULL,
   `takeLeave_vicePrincipal_approve_option` text,
+  `takeLeave_vicePrincipal_status` tinyint(1) default NULL,
   `takeLeave_principal_approver_id` bigint(20) default NULL,
   `takeLeave_principal_approve_time` datetime default NULL,
   `takeLeave_principal_approve_option` text,
+  `takeLeave_principal_status` tinyint(1) default NULL,
   `takeLeave_remark` text,
   `takeLeave_status` int(11) NOT NULL,
   PRIMARY KEY  (`id`)
@@ -111,11 +117,10 @@ CREATE TABLE IF NOT EXISTS `wlzx_oa_takeleave_apply` (
 -- 转存表中的数据 `wlzx_oa_takeleave_apply`
 --
 
-INSERT INTO `wlzx_oa_takeleave_apply` (`id`, `takeLeave_applyNo`, `takeLeave_type`, `takeLeave_teacher_id`, `takeLeave_beginTime`, `takeLeave_endTime`, `takeLeave_reason`, `takeLeave_arrange_tech`, `takeLeave_arrange_service`, `takeLeave_arrange_manage`, `takeLeave_officeChief_approver_id`, `takeLeave_officeChief_approve_time`, `takeLeave_officeChief_approve_option`, `takeLeave_vicePrincipal_approver_id`, `takeLeave_vicePrincipal_approve_time`, `takeLeave_vicePrincipal_approve_option`, `takeLeave_principal_approver_id`, `takeLeave_principal_approve_time`, `takeLeave_principal_approve_option`, `takeLeave_remark`, `takeLeave_status`) VALUES
-(1, '20110608081756', 0, 2, '2011-06-08 0', '2011-06-23 0', NULL, '1', '2', '3', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0),
-(2, '20110608082544', 0, 2, '2011-06-16 1', '2011-06-22 0', NULL, '2', '3', '4', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 5),
-(3, '20110608093112', 1, 2, '2011-06-08 0', '2011-06-16 0', '1', '1', '1', '1', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0),
-(4, '20110608111304', 0, 2, '2011-06-08 1', '2011-06-23 0', '22222222', '', '', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0);
+INSERT INTO `wlzx_oa_takeleave_apply` (`id`, `takeLeave_applyNo`, `takeLeave_type`, `takeLeave_teacher_id`, `takeLeave_beginTime`, `takeLeave_endTime`, `takeLeave_reason`, `takeLeave_arrange_tech`, `takeLeave_arrange_tech_deal_already`, `takeLeave_arrange_service`, `takeLeave_arrange_service_deal_already`, `takeLeave_arrange_manage`, `takeLeave_arrange_manage_deal_already`, `takeLeave_officeChief_approver_id`, `takeLeave_officeChief_approve_time`, `takeLeave_officeChief_approve_option`, `takeLeave_officeChief_status`, `takeLeave_vicePrincipal_approver_id`, `takeLeave_vicePrincipal_approve_time`, `takeLeave_vicePrincipal_approve_option`, `takeLeave_vicePrincipal_status`, `takeLeave_principal_approver_id`, `takeLeave_principal_approve_time`, `takeLeave_principal_approve_option`, `takeLeave_principal_status`, `takeLeave_remark`, `takeLeave_status`) VALUES
+(1, '20110608081756', 0, 2, '2011-06-08 0', '2011-06-23 0', NULL, '1', 0, '2', 0, '3', 0, NULL, NULL, NULL, 0, NULL, NULL, NULL, 0, NULL, NULL, NULL, 0, NULL, 0),
+(2, '20110608082544', 0, 2, '2011-06-16 1', '2011-06-22 0', NULL, '2', 0, '3', 0, '4', 0, NULL, NULL, NULL, 0, NULL, NULL, NULL, 0, NULL, NULL, NULL, 0, NULL, 5),
+(3, '20110608093112', 1, 2, '2011-06-08 0', '2011-06-16 0', '1', '1', 1, '1', 1, '1', 1, NULL, NULL, '', 0, NULL, NULL, '', 0, NULL, NULL, '', 0, NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -141,7 +146,4 @@ CREATE TABLE IF NOT EXISTS `wlzx_oa_workflow_log` (
 INSERT INTO `wlzx_oa_workflow_log` (`id`, `operation_object_type`, `operation_object_id`, `operation_teacher_id`, `operation_time`, `operation_name`, `operation_result`) VALUES
 (1, 'TakeLeaveWorkFlowLog', 2, 2, '2011-06-08 08:25:44', '发起申请', '生成编号为20110608082544的申请记录'),
 (2, 'TakeLeaveWorkFlowLog', 3, 2, '2011-06-08 09:31:12', '发起申请', '生成编号为20110608093112的申请记录'),
-(3, 'TakeLeaveWorkFlowLog', 2, 2, '2011-06-08 10:49:44', '取消申请', '取消编号为20110608082544的申请记录'),
-(4, 'TakeLeaveWorkFlowLog', 4, 2, '2011-06-08 11:13:04', '发起申请', '生成编号为20110608111304的申请记录'),
-(5, 'TakeLeaveWorkFlowLog', 4, 2, '2011-06-08 11:33:57', '编辑申请', '编辑编号为20110608111304的申请记录'),
-(6, 'TakeLeaveWorkFlowLog', 4, 2, '2011-06-08 11:34:07', '编辑申请', '编辑编号为20110608111304的申请记录');
+(3, 'TakeLeaveWorkFlowLog', 2, 2, '2011-06-08 10:49:44', '取消申请', '取消编号为20110608082544的申请记录');

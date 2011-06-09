@@ -35,6 +35,15 @@
 		<property name="arrangeManage" type="string">
 			<column name="takeLeave_arrange_manage" />
 		</property>
+		<property name="arrangeTechDealAlready" type="boolean">
+			<column name="takeLeave_arrange_tech_deal_already" />
+		</property>
+		<property name="arrangeServiceDealAlready" type="boolean">
+			<column name="takeLeave_arrange_service_deal_already" />
+		</property>
+		<property name="arrangeManageDealAlready" type="boolean">
+			<column name="takeLeave_arrange_manage_deal_already" />
+		</property>
 		<property name="officeChiefApproverId" type="string">
 			<column name="takeLeave_officeChief_approver_id" />
 		</property>
@@ -43,6 +52,9 @@
 		</property>
 		<property name="officeChiefApproveOption" type="string">
 			<column name="takeLeave_officeChief_approve_option" />
+		</property>
+		<property name="officeChiefStatus" type="int">
+			<column name="takeLeave_officeChief_status" />
 		</property>
 		<property name="vicePrincipalApproverId" type="string">
 			<column name="takeLeave_vicePrincipal_approver_id" />
@@ -53,6 +65,9 @@
 		<property name="vicePrincipalApproveOption" type="string">
 			<column name="takeLeave_vicePrincipal_approve_option" />
 		</property>
+		<property name="vicePrincipalStatus" type="int">
+			<column name="takeLeave_vicePrincipal_status" />
+		</property>
 		<property name="principalApproverId" type="string">
 			<column name="takeLeave_principal_approver_id" />
 		</property>
@@ -61,6 +76,9 @@
 		</property>
 		<property name="principalApproveOption" type="string">
 			<column name="takeLeave_principal_approve_option" />
+		</property>
+		<property name="principalStatus" type="int">
+			<column name="takeLeave_principal_status" />
 		</property>
 		<property name="remark" type="string">
 			<column name="takeLeave_remark" />
