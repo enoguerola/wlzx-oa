@@ -30,7 +30,7 @@ public class TakeLeaveServiceImpl implements TakeLeaveService {
 	public boolean updateTakeLeaveApply(TakeLeaveForm takeLeave) {
 		// TODO Auto-generated method stub
 		TakeLeaveForm newTakeLeave=takeLeaveDAO.get(takeLeave.getId());		
-		if(newTakeLeave.getStatus()!=TakeLeaveForm.Status.Waiting.getValue())return false;
+		if(newTakeLeave.getStatus().intValue()!=TakeLeaveForm.Status.Waiting.getValue().intValue())return false;
 		else{
 			newTakeLeave.setBeginTime(takeLeave.getBeginTime());
 			newTakeLeave.setEndTime(takeLeave.getEndTime());
@@ -52,7 +52,7 @@ public class TakeLeaveServiceImpl implements TakeLeaveService {
 	public boolean approveTakeLeave(TakeLeaveForm takeLeave) {
 		// TODO Auto-generated method stub
 		TakeLeaveForm newTakeLeave=takeLeaveDAO.get(takeLeave.getId());		
-		if(newTakeLeave.getStatus()==TakeLeaveForm.Status.Cancle.getValue()||newTakeLeave.getStatus()==TakeLeaveForm.Status.Deny.getValue())return false;
+		if(newTakeLeave.getStatus().intValue()==TakeLeaveForm.Status.Cancle.getValue().intValue()||newTakeLeave.getStatus().intValue()==TakeLeaveForm.Status.Deny.getValue().intValue())return false;
 		else{
 			newTakeLeave.setArrangeTech(takeLeave.getArrangeTech());
 			newTakeLeave.setArrangeTechDealAlready(takeLeave.getArrangeTechDealAlready());
@@ -98,7 +98,7 @@ public class TakeLeaveServiceImpl implements TakeLeaveService {
 				log.setOperationTeacherId(user.getId());
 				newTakeLeave.getLogs().add(log);
 			}
-			if(newTakeLeave.getOfficeChiefStatus()!=takeLeave.getOfficeChiefStatus()){
+			if(newTakeLeave.getOfficeChiefStatus().intValue()!=takeLeave.getOfficeChiefStatus().intValue()){
 				TakeLeaveWorkFlowLog log=new TakeLeaveWorkFlowLog();
 				log.setOperationName("处室审批");
 				if(newTakeLeave.getOfficeChiefStatus()==1){
@@ -113,14 +113,14 @@ public class TakeLeaveServiceImpl implements TakeLeaveService {
 				log.setOperationTeacherId(takeLeave.getOfficeChiefApproverId());
 				newTakeLeave.getLogs().add(log);
 			}
-			if(newTakeLeave.getVicePrincipalStatus()!=takeLeave.getVicePrincipalStatus()){
+			if(newTakeLeave.getVicePrincipalStatus().intValue()!=takeLeave.getVicePrincipalStatus().intValue()){
 				TakeLeaveWorkFlowLog log=new TakeLeaveWorkFlowLog();
 				log.setOperationName("分管副校长审批");
-				if(newTakeLeave.getVicePrincipalStatus()==1){
+				if(newTakeLeave.getVicePrincipalStatus().intValue()==1){
 					log.setOperationResult("分管副校长审批编号为"+takeLeave.getApplyNo()+"的申请通过");
 					newTakeLeave.setStatus(TakeLeaveForm.Status.VicePrincipalPass.getValue());	
 				}
-				else if(newTakeLeave.getVicePrincipalStatus()==0){
+				else if(newTakeLeave.getVicePrincipalStatus().intValue()==0){
 					log.setOperationResult("分管副校长审批编号为"+takeLeave.getApplyNo()+"的申请不通过");
 					newTakeLeave.setStatus(TakeLeaveForm.Status.Deny.getValue());	
 				}
@@ -128,14 +128,14 @@ public class TakeLeaveServiceImpl implements TakeLeaveService {
 				log.setOperationTeacherId(takeLeave.getVicePrincipalApproverId());
 				newTakeLeave.getLogs().add(log);
 			}
-			if(newTakeLeave.getPrincipalStatus()!=takeLeave.getPrincipalStatus()){
+			if(newTakeLeave.getPrincipalStatus().intValue()!=takeLeave.getPrincipalStatus().intValue()){
 				TakeLeaveWorkFlowLog log=new TakeLeaveWorkFlowLog();
 				log.setOperationName("校长审批");
-				if(newTakeLeave.getPrincipalStatus()==1){
+				if(newTakeLeave.getPrincipalStatus().intValue()==1){
 					log.setOperationResult("校长审批编号为"+takeLeave.getApplyNo()+"的申请通过");
 					newTakeLeave.setStatus(TakeLeaveForm.Status.Pass.getValue());	
 				}
-				else if(newTakeLeave.getPrincipalStatus()==0){
+				else if(newTakeLeave.getPrincipalStatus().intValue()==0){
 					log.setOperationResult("校长审批编号为"+takeLeave.getApplyNo()+"的申请不通过");
 					newTakeLeave.setStatus(TakeLeaveForm.Status.Deny.getValue());	
 				}
@@ -153,7 +153,7 @@ public class TakeLeaveServiceImpl implements TakeLeaveService {
 	public boolean cancleTakeLeaveApplyById(String id) {
 		// TODO Auto-generated method stub
 		TakeLeaveForm takeLeave=takeLeaveDAO.get(id);
-		if(takeLeave.getStatus()!=TakeLeaveForm.Status.Waiting.getValue())return false;
+		if(takeLeave.getStatus().intValue()!=TakeLeaveForm.Status.Waiting.getValue().intValue())return false;
 		else{
 			takeLeave.setStatus(TakeLeaveForm.Status.Cancle.getValue());
 			TakeLeaveWorkFlowLog log=new TakeLeaveWorkFlowLog();

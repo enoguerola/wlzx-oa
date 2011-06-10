@@ -52,6 +52,10 @@
     <module application="flex_src/home.mxml" destPath="oa/attendance/canculateAttendance.swf" optimize="false" sourcePath="flex_src/oa/attendance/canculateAttendance.mxml"/>
     <module application="flex_src/home.mxml" destPath="basic/staff/staffInput.swf" optimize="false" sourcePath="flex_src/basic/staff/staffInput.mxml"/>
     <module application="flex_src/home.mxml" destPath="oa/attendance/takeLeaveApprove.swf" optimize="false" sourcePath="flex_src/oa/attendance/takeLeaveApprove.mxml"/>
+    <module application="flex_src/home.mxml" destPath="oa/attendance/moveRestDayApply.swf" optimize="false" sourcePath="flex_src/oa/attendance/moveRestDayApply.mxml"/>
+    <module destPath="oa/attendance/overWorkApprove.swf" optimize="false" sourcePath="flex_src/oa/attendance/overWorkApprove.mxml"/>
+    <module destPath="oa/attendance/moveRestDayApprove.swf" optimize="false" sourcePath="flex_src/oa/attendance/moveRestDayApprove.mxml"/>
+    <module destPath="oa/attendance/selfCanculateAttendance.swf" optimize="false" sourcePath="flex_src/oa/attendance/selfCanculateAttendance.mxml"/>
   </modules>
   <buildCSSFiles/>
 </actionScriptProperties>

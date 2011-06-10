@@ -28,7 +28,7 @@ public class OverWorkServiceImpl implements OverWorkService {
 	public boolean updateOverWorkApply(OverWorkForm overWork) {
 		// TODO Auto-generated method stub
 		OverWorkForm newOverWork=overWorkDAO.get(overWork.getId());		
-		if(newOverWork.getStatus()!=OverWorkForm.Status.Waiting.getValue()){
+		if(newOverWork.getStatus().intValue()!=OverWorkForm.Status.Waiting.getValue().intValue()){
 			return false;
 		}else{
 		
@@ -48,7 +48,7 @@ public class OverWorkServiceImpl implements OverWorkService {
 	public boolean approveOverWork(OverWorkForm overWork) {
 		// TODO Auto-generated method stub
 		OverWorkForm newOverWork=overWorkDAO.get(overWork.getId());		
-		if(newOverWork.getStatus()==OverWorkForm.Status.Cancle.getValue()||newOverWork.getStatus()==OverWorkForm.Status.OfficeDeny.getValue())return false;
+		if(newOverWork.getStatus().intValue()==OverWorkForm.Status.Cancle.getValue().intValue()||newOverWork.getStatus().intValue()==OverWorkForm.Status.OfficeDeny.getValue().intValue())return false;
 		else{
 		
 			newOverWork.setOfficeChiefApproveOption(overWork.getOfficeChiefApproveOption());
@@ -57,7 +57,7 @@ public class OverWorkServiceImpl implements OverWorkService {
 			newOverWork.setOfficeChiefStatus(overWork.getOfficeChiefStatus());
 			newOverWork.setReason(overWork.getReason());
 			
-			if(newOverWork.getOfficeChiefStatus()!=overWork.getOfficeChiefStatus()){
+			if(newOverWork.getOfficeChiefStatus().intValue()!=overWork.getOfficeChiefStatus().intValue()){
 				OverWorkWorkFlowLog log=new OverWorkWorkFlowLog();
 				log.setOperationName("处室审批");
 				if(newOverWork.getOfficeChiefStatus()==1){
@@ -83,9 +83,9 @@ public class OverWorkServiceImpl implements OverWorkService {
 	public boolean cancleOverWorkApplyById(String id) {
 		// TODO Auto-generated method stub
 		OverWorkForm overWork=overWorkDAO.get(id);
-		if(overWork.getStatus()!=OverWorkForm.Status.Waiting.getValue())return false;
+		if(overWork.getStatus().intValue()!=OverWorkForm.Status.Waiting.getValue().intValue())return false;
 		else{
-			overWork.setOfficeChiefStatus(OverWorkForm.Status.Cancle.getValue());
+			overWork.setStatus(OverWorkForm.Status.Cancle.getValue());
 			OverWorkWorkFlowLog log=new OverWorkWorkFlowLog();
 			log.setOperationName("取消申请");
 			log.setOperationResult("取消编号为"+overWork.getApplyNo()+"的申请记录");

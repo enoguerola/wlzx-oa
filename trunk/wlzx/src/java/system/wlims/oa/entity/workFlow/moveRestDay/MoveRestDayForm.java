@@ -23,8 +23,7 @@ public class MoveRestDayForm extends AbstractForm {
 	private String id;
 	private String applyNo;
 	private String teacherId;
-	private String beginTime;
-	private String endTime;
+	private String times;
 	private String reason;
 	
 	private String officeChiefApproverId;
@@ -42,9 +41,9 @@ public class MoveRestDayForm extends AbstractForm {
 	public static enum Status{
 		Waiting(0, "待审批"),
 		OfficePass(1, "审批中-处室通过"),
-		Pass(3, "审批通过"),
-		Deny(4, "审批不通过"),
-		Cancle(5, "取消");
+		Pass(2, "审批通过"),
+		Deny(3, "审批不通过"),
+		Cancle(4, "取消");
 		private Integer value;
 		private String name;
 		
@@ -143,21 +142,7 @@ public class MoveRestDayForm extends AbstractForm {
 		this.logs = logs;
 	}
 
-	public String getBeginTime() {
-		return beginTime;
-	}
 
-	public void setBeginTime(String beginTime) {
-		this.beginTime = beginTime;
-	}
-
-	public String getEndTime() {
-		return endTime;
-	}
-
-	public void setEndTime(String endTime) {
-		this.endTime = endTime;
-	}
 
 	public String getVicePrincipalApproverId() {
 		return vicePrincipalApproverId;
@@ -197,6 +182,14 @@ public class MoveRestDayForm extends AbstractForm {
 
 	public void setStatus(Integer status) {
 		this.status = status;
+	}
+
+	public String getTimes() {
+		return times;
+	}
+
+	public void setTimes(String times) {
+		this.times = times;
 	}
 	
 	

@@ -11,8 +11,7 @@ package oa.entity
 	{
 		public var applyNo:String;
 		public var teacherId:String;
-		public var beginTime:String;
-		public var endTime:String;
+		public var times:String;
 
 		public var officeChiefApproverId:String;
 		public var officeChiefApproveTime:Date;

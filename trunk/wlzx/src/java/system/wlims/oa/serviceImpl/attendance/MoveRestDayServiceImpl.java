@@ -29,11 +29,9 @@ public class MoveRestDayServiceImpl implements MoveRestDayService {
 	public boolean updateMoveRestDayApply(MoveRestDayForm moveRestDay) {
 		// TODO Auto-generated method stub
 		MoveRestDayForm newMoveRestDay=moveRestDayDAO.get(moveRestDay.getId());		
-		if(newMoveRestDay.getStatus()!=MoveRestDayForm.Status.Waiting.getValue())return false;
+		if(newMoveRestDay.getStatus().intValue()!=MoveRestDayForm.Status.Waiting.getValue().intValue())return false;
 		else{
-			newMoveRestDay.setBeginTime(moveRestDay.getBeginTime());
-			newMoveRestDay.setEndTime(moveRestDay.getEndTime());
-			
+			newMoveRestDay.setTimes(moveRestDay.getTimes());
 			newMoveRestDay.setReason(moveRestDay.getReason());
 			MoveRestDayWorkFlowLog log=new MoveRestDayWorkFlowLog();
 			log.setOperationName("编辑申请");
@@ -49,7 +47,7 @@ public class MoveRestDayServiceImpl implements MoveRestDayService {
 	public boolean approveMoveRestDay(MoveRestDayForm moveRestDay) {
 		// TODO Auto-generated method stub
 		MoveRestDayForm newMoveRestDay=moveRestDayDAO.get(moveRestDay.getId());		
-		if(newMoveRestDay.getStatus()==MoveRestDayForm.Status.Cancle.getValue()||newMoveRestDay.getStatus()==MoveRestDayForm.Status.Deny.getValue())return false;
+		if(newMoveRestDay.getStatus().intValue()==MoveRestDayForm.Status.Cancle.getValue().intValue()||newMoveRestDay.getStatus().intValue()==MoveRestDayForm.Status.Deny.getValue().intValue())return false;
 		else{
 			newMoveRestDay.setOfficeChiefApproveOption(moveRestDay.getOfficeChiefApproveOption());
 			newMoveRestDay.setOfficeChiefApproverId(moveRestDay.getOfficeChiefApproverId());
@@ -62,14 +60,14 @@ public class MoveRestDayServiceImpl implements MoveRestDayService {
 		
 			newMoveRestDay.setReason(moveRestDay.getReason());
 			
-			if(newMoveRestDay.getOfficeChiefStatus()!=moveRestDay.getOfficeChiefStatus()){
+			if(newMoveRestDay.getOfficeChiefStatus().intValue()!=moveRestDay.getOfficeChiefStatus().intValue()){
 				MoveRestDayWorkFlowLog log=new MoveRestDayWorkFlowLog();
 				log.setOperationName("处室审批");
-				if(newMoveRestDay.getOfficeChiefStatus()==1){
+				if(newMoveRestDay.getOfficeChiefStatus().intValue()==1){
 					log.setOperationResult("处室审批编号为"+moveRestDay.getApplyNo()+"的申请通过");
 					newMoveRestDay.setStatus(MoveRestDayForm.Status.OfficePass.getValue());
 				}
-				else if(newMoveRestDay.getOfficeChiefStatus()==0){
+				else if(newMoveRestDay.getOfficeChiefStatus().intValue()==0){
 					log.setOperationResult("处室审批编号为"+moveRestDay.getApplyNo()+"的申请不通过");
 					newMoveRestDay.setStatus(MoveRestDayForm.Status.Deny.getValue());	
 				}
@@ -77,14 +75,14 @@ public class MoveRestDayServiceImpl implements MoveRestDayService {
 				log.setOperationTeacherId(moveRestDay.getOfficeChiefApproverId());
 				newMoveRestDay.getLogs().add(log);
 			}
-			if(newMoveRestDay.getVicePrincipalStatus()!=moveRestDay.getVicePrincipalStatus()){
+			if(newMoveRestDay.getVicePrincipalStatus().intValue()!=moveRestDay.getVicePrincipalStatus().intValue()){
 				MoveRestDayWorkFlowLog log=new MoveRestDayWorkFlowLog();
 				log.setOperationName("分管副校长审批");
-				if(newMoveRestDay.getVicePrincipalStatus()==1){
+				if(newMoveRestDay.getVicePrincipalStatus().intValue()==1){
 					log.setOperationResult("分管副校长审批编号为"+moveRestDay.getApplyNo()+"的申请通过");
 					newMoveRestDay.setStatus(MoveRestDayForm.Status.Pass.getValue());	
 				}
-				else if(newMoveRestDay.getVicePrincipalStatus()==0){
+				else if(newMoveRestDay.getVicePrincipalStatus().intValue()==0){
 					log.setOperationResult("分管副校长审批编号为"+moveRestDay.getApplyNo()+"的申请不通过");
 					newMoveRestDay.setStatus(MoveRestDayForm.Status.Deny.getValue());	
 				}
@@ -103,7 +101,7 @@ public class MoveRestDayServiceImpl implements MoveRestDayService {
 	public boolean cancleMoveRestDayApplyById(String id) {
 		// TODO Auto-generated method stub
 		MoveRestDayForm moveRestDay=moveRestDayDAO.get(id);
-		if(moveRestDay.getStatus()!=MoveRestDayForm.Status.Waiting.getValue())return false;
+		if(moveRestDay.getStatus().intValue()!=MoveRestDayForm.Status.Waiting.getValue().intValue())return false;
 		else{
 			moveRestDay.setStatus(MoveRestDayForm.Status.Cancle.getValue());
 			MoveRestDayWorkFlowLog log=new MoveRestDayWorkFlowLog();
