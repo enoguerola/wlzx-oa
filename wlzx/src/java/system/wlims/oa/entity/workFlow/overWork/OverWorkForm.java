@@ -32,7 +32,7 @@ public class OverWorkForm extends AbstractForm {
 		Waiting(0, "待审批"),
 		OfficePass(1, "审批通过"),
 		OfficeDeny(2, "审批不通过"),
-		Cancle(2, "取消");
+		Cancle(3, "取消");
 		private Integer value;
 		private String name;
 		

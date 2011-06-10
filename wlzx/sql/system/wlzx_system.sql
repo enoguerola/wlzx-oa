@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2011 年 06 月 09 日 22:19
+-- 生成日期: 2011 年 06 月 10 日 21:34
 -- 服务器版本: 5.0.91
 -- PHP 版本: 5.2.13
 
@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_data_access_mode` (
   `modified_date` timestamp NOT NULL default '0000-00-00 00:00:00' on update CURRENT_TIMESTAMP,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `symbol` (`symbol`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=45 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=49 ;
 
 --
 -- 转存表中的数据 `wlzx_system_data_access_mode`
@@ -102,15 +102,19 @@ INSERT INTO `wlzx_system_data_access_mode` (`id`, `name`, `symbol`, `sequence`, 
 (33, '全部数据', 'adjust_class_apply_approve_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-27 00:00:00', '2011-05-27 22:37:40'),
 (34, '全部数据', 'personal_message_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-06-06 00:00:00', '2011-06-06 17:19:37'),
 (35, '全部数据', 'takeLeaveApply_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-06-06 00:00:00', '2011-06-06 17:21:58'),
-(36, '全部数据', 'overWorkApply_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-06-06 00:00:00', '2011-06-06 17:22:56'),
-(37, '全部数据', 'canculateAttendance_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-06-06 00:00:00', '2011-06-06 17:24:47'),
+(36, '全部数据', 'overWorkApply_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-06-06 00:00:00', '2011-06-10 16:09:35'),
+(37, '全部数据', 'selfCanculateAttendance_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-06-06 00:00:00', '2011-06-10 21:22:21'),
 (38, '全部数据', 'takeLeaveApprove_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-06-08 00:00:00', '2011-06-08 11:45:47'),
 (39, '全部数据', 'takeLeaveWorkDeal@noFilter@', 0, NULL, NULL, '2011-06-08 00:00:00', '2011-06-08 13:32:46'),
 (40, '全部数据', 'takeLeaveOfficeApprove@noFilter@', 0, NULL, NULL, '2011-06-08 00:00:00', '2011-06-08 13:26:23'),
 (41, '全部数据', 'takeLeaveVicePrincipalApprove@noFilter@', 0, NULL, NULL, '2011-06-08 00:00:00', '2011-06-08 13:32:34'),
 (42, '全部数据', 'takeLeavePrincipalApprove@noFilter@', 0, NULL, NULL, '2011-06-08 00:00:00', '2011-06-08 13:32:40'),
 (43, '本处室请假出差数据（处室领导级别有效）', 'takeLeaveApprove_main@defaultVisit@@notSelfOfficeFilter@', 1, NULL, '', '2011-06-09 00:00:00', '2011-06-09 11:14:42'),
-(44, '分管处室请假出差数据（副校长级别有效）', 'takeLeaveApprove_main@defaultVisit@@notSelfManagerFilter@', 2, NULL, '', '2011-06-09 00:00:00', '2011-06-09 11:14:09');
+(44, '分管处室请假出差数据（副校长级别有效）', 'takeLeaveApprove_main@defaultVisit@@notSelfManagerFilter@', 2, NULL, '', '2011-06-09 00:00:00', '2011-06-09 11:14:09'),
+(45, '全部数据', 'moveRestDay_apply_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-06-10 00:00:00', '2011-06-10 16:11:49'),
+(46, '全部数据', 'overWork_approve_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-06-10 00:00:00', '2011-06-10 21:15:45'),
+(47, '全部数据', 'moveRestDay_approve_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-06-10 00:00:00', '2011-06-10 21:16:34'),
+(48, '全部数据', 'staffCanculateAttendance_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-06-10 00:00:00', '2011-06-10 21:23:26');
 
 -- --------------------------------------------------------
 
@@ -270,7 +274,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_menu` (
   `modified_date` timestamp NOT NULL default '0000-00-00 00:00:00' on update CURRENT_TIMESTAMP,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `symbol` (`symbol`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=59 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=61 ;
 
 --
 -- 转存表中的数据 `wlzx_system_menu`
@@ -326,13 +330,15 @@ INSERT INTO `wlzx_system_menu` (`id`, `name`, `symbol`, `sequence`, `detail`, `m
 (49, '教师管理', 'teacher_manager', 0, '', '', '2011-05-27 00:00:00', '2011-05-27 22:38:31'),
 (50, '个人办公', 'personal_office', 0, '', '', '2011-06-03 00:00:00', '2011-06-03 11:27:21'),
 (51, '请假出差', 'personal_office_takeLeaveApply', 2, '', '', '2011-06-03 00:00:00', '2011-06-03 11:28:47'),
-(52, '加班调休', 'personal_office_overWork Apply', 3, '', '', '2011-06-03 00:00:00', '2011-06-03 11:29:51'),
-(53, '考勤统计', 'personal_office_canculateAttendance', 4, '', '', '2011-06-03 00:00:00', '2011-06-03 11:31:08'),
+(52, '加班申请', 'personal_office_overWork Apply', 3, '', '', '2011-06-03 00:00:00', '2011-06-03 11:29:51'),
+(53, '个人考勤', 'personal_office_canculateAttendance', 5, '', '', '2011-06-03 00:00:00', '2011-06-03 11:31:08'),
 (54, '我的工作', 'personal_office_workDeal', 0, '', '', '2011-06-03 00:00:00', '2011-06-03 11:32:05'),
 (55, '请假出差审批', 'attendance_manager_takeLeaveApprove', 0, '', '', '2011-06-03 00:00:00', '2011-06-03 11:33:25'),
-(56, '加班调休审批', 'attendance_manager_overWorkApprove', 1, '', '', '2011-06-03 00:00:00', '2011-06-03 11:34:01'),
-(57, '考勤统计', 'attendance_manager_canculateAttendance', 2, '', '', '2011-06-03 00:00:00', '2011-06-03 11:34:50'),
-(58, '我的消息', 'personal_office_messageDeal', 1, '', '', '2011-06-03 00:00:00', '2011-06-03 11:36:28');
+(56, '加班审批', 'attendance_manager_overWorkApprove', 1, '', '', '2011-06-03 00:00:00', '2011-06-03 11:34:01'),
+(57, '考勤统计', 'attendance_manager_canculateAttendance', 3, '', '', '2011-06-03 00:00:00', '2011-06-03 11:34:50'),
+(58, '我的消息', 'personal_office_messageDeal', 1, '', '', '2011-06-03 00:00:00', '2011-06-03 11:36:28'),
+(59, '调休申请', 'moveRestDay_apply', 4, '', '', '2011-06-10 00:00:00', '2011-06-10 16:10:32'),
+(60, '调休审批', 'moveRestDay_approve', 2, '', '', '2011-06-10 00:00:00', '2011-06-10 21:14:42');
 
 -- --------------------------------------------------------
 
@@ -345,7 +351,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_menu_module_relationship` (
   `menu_id` bigint(20) NOT NULL,
   `module_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=38 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=42 ;
 
 --
 -- 转存表中的数据 `wlzx_system_menu_module_relationship`
@@ -384,7 +390,11 @@ INSERT INTO `wlzx_system_menu_module_relationship` (`id`, `menu_id`, `module_id`
 (34, 51, 38),
 (35, 52, 39),
 (36, 53, 40),
-(37, 55, 41);
+(37, 55, 41),
+(38, 59, 42),
+(39, 56, 43),
+(40, 60, 44),
+(41, 57, 45);
 
 -- --------------------------------------------------------
 
@@ -426,7 +436,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_menu_treeship` (
   `parent_id` bigint(20) NOT NULL,
   `child_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=53 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=55 ;
 
 --
 -- 转存表中的数据 `wlzx_system_menu_treeship`
@@ -481,7 +491,9 @@ INSERT INTO `wlzx_system_menu_treeship` (`id`, `parent_id`, `child_id`) VALUES
 (49, 46, 55),
 (50, 46, 56),
 (51, 46, 57),
-(52, 50, 58);
+(52, 50, 58),
+(53, 50, 59),
+(54, 46, 60);
 
 -- --------------------------------------------------------
 
@@ -523,7 +535,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_module` (
   `url` varchar(500) default NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `symbol` (`symbol`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=42 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=46 ;
 
 --
 -- 转存表中的数据 `wlzx_system_module`
@@ -559,9 +571,13 @@ INSERT INTO `wlzx_system_module` (`id`, `name`, `symbol`, `sequence`, `detail`, 
 (36, '调课审批主模块', 'adjust_class_apply_approve_main', 0, '', '2011-05-27 00:00:00', '2011-05-27 22:37:40', 'oa/course/adjust/adjustApprove.swf'),
 (37, '我的消息主模块', 'personal_message_main', 0, '', '2011-06-06 00:00:00', '2011-06-06 17:19:37', 'system/message/messageList.swf'),
 (38, '请假出差主模块', 'takeLeaveApply_main', 0, '', '2011-06-06 00:00:00', '2011-06-06 17:21:58', 'oa/attendance/takeLeaveApply.swf'),
-(39, '加班调修主模块', 'overWorkApply_main', 0, '', '2011-06-06 00:00:00', '2011-06-06 17:22:56', 'oa/attendance/overWorkApply.swf'),
-(40, '考勤统计主模块', 'canculateAttendance_main', 0, '', '2011-06-06 00:00:00', '2011-06-06 17:24:47', 'oa/attendance/canculateAttendance.swf'),
-(41, '请假出差审批主模块', 'takeLeaveApprove_main', 0, '', '2011-06-08 00:00:00', '2011-06-08 11:45:47', 'oa/attendance/takeLeaveApprove.swf');
+(39, '加班申请主模块', 'overWorkApply_main', 0, '', '2011-06-06 00:00:00', '2011-06-10 16:09:35', 'oa/attendance/overWorkApply.swf'),
+(40, '考勤统计主模块', 'selfCanculateAttendance_main', 0, '', '2011-06-06 00:00:00', '2011-06-10 21:22:21', 'oa/attendance/selfCanculateAttendance.swf'),
+(41, '请假出差审批主模块', 'takeLeaveApprove_main', 0, '', '2011-06-08 00:00:00', '2011-06-08 11:45:47', 'oa/attendance/takeLeaveApprove.swf'),
+(42, '调休申请主模块', 'moveRestDay_apply_main', 0, '', '2011-06-10 00:00:00', '2011-06-10 16:11:49', 'oa/attendance/moveRestDayApply.swf'),
+(43, '加班审批主模块', 'overWork_approve_main', 0, '', '2011-06-10 00:00:00', '2011-06-10 21:15:45', 'oa/attendance/overWorkApprove.swf'),
+(44, '调休审批主模块', 'moveRestDay_approve_main', 0, '', '2011-06-10 00:00:00', '2011-06-10 21:16:34', 'oa/attendance/moveRestDayApprove.swf'),
+(45, '员工考勤统计主模块', 'staffCanculateAttendance_main', 0, '', '2011-06-10 00:00:00', '2011-06-10 21:23:26', 'oa/attendance/canculateAttendance.swf');
 
 -- --------------------------------------------------------
 
@@ -574,7 +590,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_module_operation_relationship` (
   `module_id` bigint(20) NOT NULL,
   `operation_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=43 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=47 ;
 
 --
 -- 转存表中的数据 `wlzx_system_module_operation_relationship`
@@ -619,7 +635,11 @@ INSERT INTO `wlzx_system_module_operation_relationship` (`id`, `module_id`, `ope
 (39, 41, 39),
 (40, 41, 40),
 (41, 41, 41),
-(42, 41, 42);
+(42, 41, 42),
+(43, 42, 43),
+(44, 43, 44),
+(45, 44, 45),
+(46, 45, 46);
 
 -- --------------------------------------------------------
 
@@ -657,7 +677,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_operation` (
   `modified_date` timestamp NOT NULL default '0000-00-00 00:00:00' on update CURRENT_TIMESTAMP,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `symbol` (`symbol`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=43 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=47 ;
 
 --
 -- 转存表中的数据 `wlzx_system_operation`
@@ -694,13 +714,17 @@ INSERT INTO `wlzx_system_operation` (`id`, `name`, `symbol`, `sequence`, `rs_typ
 (33, '页面访问', 'adjust_class_apply_approve_main@defaultVisit@', 0, 'URL', '/oa/course/adjust/adjustApprove.swf*', NULL, '2011-05-27 00:00:00', '2011-05-27 22:37:40'),
 (34, '页面访问', 'personal_message_main@defaultVisit@', 0, 'URL', '/system/message/messageList.swf*', NULL, '2011-06-06 00:00:00', '2011-06-06 17:19:37'),
 (35, '页面访问', 'takeLeaveApply_main@defaultVisit@', 0, 'URL', '/oa/attendance/takeLeaveApply.swf*', NULL, '2011-06-06 00:00:00', '2011-06-06 17:21:58'),
-(36, '页面访问', 'overWorkApply_main@defaultVisit@', 0, 'URL', '/oa/attendance/overWorkApply.swf*', NULL, '2011-06-06 00:00:00', '2011-06-06 17:22:56'),
-(37, '页面访问', 'canculateAttendance_main@defaultVisit@', 0, 'URL', '/oa/attendance/canculateAttendance.swf*', NULL, '2011-06-06 00:00:00', '2011-06-06 17:24:47'),
+(36, '页面访问', 'overWorkApply_main@defaultVisit@', 0, 'URL', '/oa/attendance/overWorkApply.swf*', NULL, '2011-06-06 00:00:00', '2011-06-10 16:09:35'),
+(37, '页面访问', 'selfCanculateAttendance_main@defaultVisit@', 0, 'URL', '/oa/attendance/selfCanculateAttendance.swf*', NULL, '2011-06-06 00:00:00', '2011-06-10 21:22:21'),
 (38, '页面访问', 'takeLeaveApprove_main@defaultVisit@', 0, 'URL', '/oa/attendance/takeLeaveApprove.swf*', NULL, '2011-06-08 00:00:00', '2011-06-08 11:45:47'),
 (39, '请假出差工作落实', 'takeLeaveWorkDeal', 4, 'METHOD', 'takeLeaveWorkDeal()', '', '2011-06-08 00:00:00', '2011-06-08 15:27:48'),
 (40, '请假出差处室审批', 'takeLeaveOfficeApprove', 1, 'METHOD', 'takeLeaveOfficeApprove()', '', '2011-06-08 00:00:00', '2011-06-08 15:27:31'),
 (41, '请假出差副校长审批', 'takeLeaveVicePrincipalApprove', 2, 'METHOD', 'takeLeaveVicePrincipalApprove()', '', '2011-06-08 00:00:00', '2011-06-08 15:27:37'),
-(42, '请假出差校长审批', 'takeLeavePrincipalApprove', 3, 'METHOD', 'takeLeavePrincipalApprove()', '', '2011-06-08 00:00:00', '2011-06-08 15:27:42');
+(42, '请假出差校长审批', 'takeLeavePrincipalApprove', 3, 'METHOD', 'takeLeavePrincipalApprove()', '', '2011-06-08 00:00:00', '2011-06-08 15:27:42'),
+(43, '页面访问', 'moveRestDay_apply_main@defaultVisit@', 0, 'URL', '/oa/attendance/moveRestDay.swf*', NULL, '2011-06-10 00:00:00', '2011-06-10 16:11:49'),
+(44, '页面访问', 'overWork_approve_main@defaultVisit@', 0, 'URL', '/oa/attendance/overWorkApprove.swf*', NULL, '2011-06-10 00:00:00', '2011-06-10 21:15:45'),
+(45, '页面访问', 'moveRestDay_approve_main@defaultVisit@', 0, 'URL', '/oa/attendance/moveRestDayApprove.swf*', NULL, '2011-06-10 00:00:00', '2011-06-10 21:16:34'),
+(46, '页面访问', 'staffCanculateAttendance_main@defaultVisit@', 0, 'URL', '/oa/attendance/canculateAttendance.swf*', NULL, '2011-06-10 00:00:00', '2011-06-10 21:23:26');
 
 -- --------------------------------------------------------
 
@@ -713,7 +737,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_operation_dam_relationship` (
   `operation_id` bigint(20) NOT NULL,
   `dam_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=45 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=49 ;
 
 --
 -- 转存表中的数据 `wlzx_system_operation_dam_relationship`
@@ -758,7 +782,11 @@ INSERT INTO `wlzx_system_operation_dam_relationship` (`id`, `operation_id`, `dam
 (41, 41, 41),
 (42, 42, 42),
 (43, 38, 43),
-(44, 38, 44);
+(44, 38, 44),
+(45, 43, 45),
+(46, 44, 46),
+(47, 45, 47),
+(48, 46, 48);
 
 -- --------------------------------------------------------
 
@@ -808,7 +836,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_role_dam_relationship` (
   `role_id` bigint(20) NOT NULL,
   `dam_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=82 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=89 ;
 
 --
 -- 转存表中的数据 `wlzx_system_role_dam_relationship`
@@ -875,7 +903,14 @@ INSERT INTO `wlzx_system_role_dam_relationship` (`id`, `role_id`, `dam_id`) VALU
 (77, 1, 39),
 (78, 1, 38),
 (80, 1, 41),
-(81, 1, 40);
+(81, 1, 40),
+(82, 1, 43),
+(83, 1, 42),
+(84, 1, 45),
+(85, 1, 44),
+(86, 1, 47),
+(87, 1, 46),
+(88, 1, 48);
 
 -- --------------------------------------------------------
 
@@ -1003,7 +1038,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_user` (
 --
 
 INSERT INTO `wlzx_system_user` (`id`, `symbol`, `sequence`, `name`, `password`, `last_login_time`, `last_login_ip`, `account_style`, `person_id`, `person_name`, `email`, `creation_date`, `modified_date`, `active`) VALUES
-(2, 'admin', 0, 'admin', 'c81e728d9d4c2f636f067f89cc14862c', '2011-06-09 16:18:58', '127.0.0.1', 0, NULL, NULL, NULL, '2011-05-07 11:04:22', '2011-05-25 01:32:00', 1),
+(2, 'admin', 0, 'admin', 'c81e728d9d4c2f636f067f89cc14862c', '2011-06-10 21:24:51', '127.0.0.1', 0, NULL, NULL, NULL, '2011-05-07 11:04:22', '2011-05-25 01:32:00', 1),
 (3, '3', 0, '3', 'eccbc87e4b5ce2fe28308fd9f2a7baf3', '2011-05-30 14:52:46', '127.0.0.1', 0, NULL, NULL, NULL, '2011-05-23 01:59:10', '2011-05-25 00:42:21', 1);
 
 -- --------------------------------------------------------

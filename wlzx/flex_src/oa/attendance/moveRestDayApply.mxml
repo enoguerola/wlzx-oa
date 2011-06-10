@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Module xmlns:mx="http://www.adobe.com/2006/mxml" layout="vertical" width="100%" creationComplete="init();" height="100%" xmlns:valueObjects="oa.entity.*" xmlns:component="system.component.*" currentState="list" xmlns:mx1="library://ns.adobe.com/flex/mx">
-	<mx:StringValidator id="date_stringValidator"   property="text" required="true" requiredFieldError="加班日期不能为空"/>
-	<mx:StringValidator id="reason_stringValidator" source="{reason}"  property="text" required="true" requiredFieldError="加班事由不能为空"/>
-	<valueObjects:OverWorkForm id="form"/>
+	<mx:StringValidator id="date_stringValidator"   property="text" required="true" requiredFieldError="调休日期不能为空"/>
+	<valueObjects:MoveRestDayForm id="form"/>
 	<mx:states>
 		<mx:State name="list">           
 			<mx:RemoveChild target="{addPanel}"/>
@@ -45,13 +44,13 @@
 		
 		
 	</mx:transitions>
-	<mx:RemoteObject id="overWorkServiceRO" destination="overWorkServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
-		<mx:method name="addOverWorkApply"  concurrency="last"  result="addOverWorkApplyResult_resultHandler(event);" />
-		<mx:method name="updateOverWorkApply"  concurrency="last"  result="updateOverWorkApplyResult_resultHandler(event);" />
-		<mx:method name="cancleOverWorkApplyById"  concurrency="last"  result="cancleOverWorkApplyByIdResult_resultHandler(event);" />
+	<mx:RemoteObject id="moveRestDayServiceRO" destination="moveRestDayServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+		<mx:method name="addMoveRestDayApply"  concurrency="last"  result="addMoveRestDayApplyResult_resultHandler(event);" />
+		<mx:method name="updateMoveRestDayApply"  concurrency="last"  result="updateMoveRestDayApplyResult_resultHandler(event);" />
+		<mx:method name="cancleMoveRestDayApplyById"  concurrency="last"  result="cancleMoveRestDayApplyByIdResult_resultHandler(event);" />
 		<mx:method name="loadApplyInfoById"  concurrency="last"  result="loadApplyInfoById_resultHandler(event);" />
 		<mx:method name="getDetailInfoById"  concurrency="last"  result="getDetailInfoByIdById_resultHandler(event);" />
-		<mx:method name="getUserOverWorkApplies"  concurrency="last"  result="getUserOverWorkApplies_resultHandler(event);" />
+		<mx:method name="getUserMoveRestDayApplies"  concurrency="last"  result="getUserMoveRestDayApplies_resultHandler(event);" />
 	</mx:RemoteObject>
 	<mx:Script> 
 		<![CDATA[
@@ -87,19 +86,19 @@
 				Alert.show(event.fault.faultString, 'Error');
 				
 			}
-			protected function addOverWorkApplyResult_resultHandler(event:ResultEvent):void
+			protected function addMoveRestDayApplyResult_resultHandler(event:ResultEvent):void
 			{
 				Alert.show("添加成功");
 				this.currentState='list';
 				search();
 			}
-			protected function updateOverWorkApplyResult_resultHandler(event:ResultEvent):void
+			protected function updateMoveRestDayApplyResult_resultHandler(event:ResultEvent):void
 			{
 				Alert.show("更新成功");
 				this.currentState='list';
 				search();
 			}
-			protected function cancleOverWorkApplyByIdResult_resultHandler(event:ResultEvent):void
+			protected function cancleMoveRestDayApplyByIdResult_resultHandler(event:ResultEvent):void
 			{
 				if(event.result as Boolean==true){
 					Alert.show("取消成功");
@@ -111,7 +110,7 @@
 			}
 			
 			protected function loadApplyInfoById_resultHandler(event:ResultEvent):void{
-				form=event.result as OverWorkForm;
+				form=event.result as MoveRestDayForm;
 				applyNo.text=form.applyNo;
 				teacher_name.text=form.teacherId; 
 				teacher_id.text=form.teacherId;
@@ -124,13 +123,13 @@
 						addItem(time);						
 					}
 				}
-				reason.text=form.reason;
+//				reason.text=form.reason;
 				
 				
 				
 			}
 			protected function getDetailInfoByIdById_resultHandler(event:ResultEvent):void{
-				form=event.result as OverWorkForm;
+				form=event.result as MoveRestDayForm;
 				detail_applyNo.text=form.applyNo;
 				detail_teacher_name.text=form.teacherId; 
 				detail_teacher_id.text=form.teacherId;
@@ -139,7 +138,7 @@
 			//	detail_beginDate_section.selectedIndex=parseInt(form.beginTime.split(" ")[1]);
 			//	detail_endDate.text=form.endTime.split(" ")[0];
 			//	detail_endDate_section.selectedIndex=parseInt(form.endTime.split(" ")[1]);
-				detail_reason.text=form.reason;
+//				detail_reason.text=form.reason;
 				
 				logTable.initdata(form.logs as ArrayCollection);
 				this.currentState='detail';
@@ -174,13 +173,13 @@
 					
 			}
 			
-			protected function getUserOverWorkApplies_resultHandler(event:ResultEvent):void
+			protected function getUserMoveRestDayApplies_resultHandler(event:ResultEvent):void
 			{
 				var allList:ArrayCollection=event.result as ArrayCollection;
 				applyTable.initdata(allList);
 			}
 			private function search():void{
-				overWorkServiceRO.getUserOverWorkApplies(this.parentApplication.currentUser.id);
+				moveRestDayServiceRO.getUserMoveRestDayApplies(this.parentApplication.currentUser.id);
 			}
 			private function addInit():void{
 				applyNo.text="";
@@ -189,7 +188,6 @@
 				//beginDate.text="";
 				//beginDate_section.selectedIndex=0
 		
-				reason.text="";
 				
 				officeChief_approve_option.text=""; 
 				officeChief_approver_name.text=""; 
@@ -272,7 +270,7 @@
 			public function editInit(applyId:String):void{
 				
 				saveButton.label="更新";
-				overWorkServiceRO.loadApplyInfoById(applyId);
+				moveRestDayServiceRO.loadApplyInfoById(applyId);
 			}
 			public function enterEdit(applyId:String):void{
 				addUpdateFlag.text="update"+"_"+applyId;
@@ -283,12 +281,12 @@
 				Alert.show("你确定要取消该调课申请吗?","确认",Alert.YES | Alert.NO,null,function(event:CloseEvent):void{
 					if(event.detail == Alert.YES)
 					{
-						overWorkServiceRO.cancleOverWorkApplyById(applyId);
+						moveRestDayServiceRO.cancleMoveRestDayApplyById(applyId);
 					}
 				});
 			}
 			public function detailApply(applyId:String):void{
-				overWorkServiceRO.getDetailInfoById(applyId);
+				moveRestDayServiceRO.getDetailInfoById(applyId);
 			}
 			public function sendApply(applyId:String):void{
 				
@@ -313,16 +311,16 @@
 			{
 				if(validateInput()){
 					if(addUpdateFlag.text=="add"){
-						form=new OverWorkForm();
-						form.reason=reason.text;
+						form=new MoveRestDayForm();
+//						form.reason=reason.text;
 						form.times=getTimes();
 						form.teacherId=teacher_id.text;
-						overWorkServiceRO.addOverWorkApply(form);
+						moveRestDayServiceRO.addMoveRestDayApply(form);
 					}else if(addUpdateFlag.text=="update"+"_"+form.id){
-						form.reason=reason.text;
+//						form.reason=reason.text;
 						form.times=getTimes();	
 						form.teacherId=teacher_id.text;
-						overWorkServiceRO.updateOverWorkApply(form);
+						moveRestDayServiceRO.updateMoveRestDayApply(form);
 						
 					}
 					
@@ -358,14 +356,12 @@
 						
 						validatorArr = new Array();
 						date_stringValidator.source=date;
-						reason_stringValidator.source=reason;
 						validatorArr.push(date_stringValidator);
-						validatorArr.push(reason_stringValidator);
 						var validatorErrorArray:Array = Validator.validateAll(validatorArr);
 						var isValidForm:Boolean = validatorErrorArray.length == 0;
 						if (isValidForm) {
 							if(morning.selected==false&&afternoon.selected==false&&evening.selected==false){
-								Alert.show("请至少制定一个'"+date.text+"'当天的加班时间段");
+								Alert.show("请至少制定一个'"+date.text+"'当天的调休时间段");
 								return false;
 							}
 							continue;
@@ -385,14 +381,14 @@
 			}
 		]]> 		
 	</mx:Script> 
-	<mx:Panel width="100%" height="100%"   title="加班登记"  borderVisible="false" id="panel" dropShadowVisible="false" >
+	<mx:Panel width="100%" height="100%"   title="调休登记"  borderVisible="false" id="panel" dropShadowVisible="false" >
 		
 		
 		<mx:VBox width="100%" height="100%" id="listPanel">
 			<mx:HBox verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12" >
 				<mx:HBox width="100%" height="30" paddingLeft="20"  horizontalGap="0" backgroundColor="#C5E497"  verticalAlign="middle">
 					<mx:Label text="|"/>
-					<mx:LinkButton  label="新建加班登记" icon="@Embed(source='../WebContent/resources/common/tools/button_add_icon.png')" click="enterAdd(0);" />
+					<mx:LinkButton  label="新建调休登记" icon="@Embed(source='../WebContent/resources/common/tools/button_add_icon.png')" click="enterAdd(0);" />
 					<mx:Label text="|"/>
 					
 				</mx:HBox>
@@ -400,7 +396,7 @@
 			<mx:VBox width="100%" height="100%"  verticalGap="10" verticalAlign="middle" horizontalAlign="center" >
 				
 				<mx:HBox width="100%" height="100%" paddingLeft="10" paddingRight="10" paddingBottom="10">
-					<mx:Panel width="100%" height="100%"  styleName="customPanel" title="加班登记"  cornerRadius="5" borderVisible="false" dropShadowVisible="false">
+					<mx:Panel width="100%" height="100%"  styleName="customPanel" title="调休登记"  cornerRadius="5" borderVisible="false" dropShadowVisible="false">
 						
 						<component:WlzxPageDataGrid width="100%" height="100%"   borderVisible="false"  autoLayout="true"  borderAlpha="0.2" verticalAlign="middle"   id="applyTable" pagecount="10"  >				
 							<component:mygridcolumns>
@@ -414,7 +410,7 @@
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
 								
-								<mx:DataGridColumn textAlign="center" headerText="加班时间段"  width="200" >
+								<mx:DataGridColumn textAlign="center" headerText="调休时间段"  width="200" >
 									<mx:itemRenderer>
 										<mx:Component>
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" >
@@ -426,17 +422,7 @@
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
 								
-								<mx:DataGridColumn textAlign="center" headerText="加班原因"  width="300" >
-									<mx:itemRenderer>
-										<mx:Component>
-											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" >
-												<mx1:Text text="{data.reason}" width="180">
-													
-												</mx1:Text>
-											</mx:HBox>
-										</mx:Component>
-									</mx:itemRenderer>
-								</mx:DataGridColumn>
+								
 								<mx:DataGridColumn textAlign="center" headerText="状态"  width="60" dataField="status">
 									<mx:itemRenderer>
 										<mx:Component>
@@ -451,10 +437,12 @@
 																	if(data.status==0){
 																		return "待审批";
 																	}else if(data.status==1){
-																		return "审批通过";
+																		return "审批中-处室通过";
 																	}else if(data.status==2){
-																		return "审批不通过";
+																		return "审批通过";
 																	}else if(data.status==3){
+																		return "审批不通过";
+																	}else if(data.status==4){
 																		return "取消";
 																	}
 																	
@@ -540,7 +528,7 @@
 			</mx:HBox>
 			<mx:VBox width="100%" height="50%"   horizontalGap="10" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
 				<mx:VBox width="100%" horizontalAlign="center" verticalGap="0">
-					<mx:Label  text="温岭中学加班登记表"    width="100%"  letterSpacing="5" textAlign="center" fontSize="14"  fontWeight="bold" height="30"  id="type_label"/>
+					<mx:Label  text="温岭中学调休登记表"    width="100%"  letterSpacing="5" textAlign="center" fontSize="14"  fontWeight="bold" height="30"  id="type_label"/>
 					<mx:HBox>
 						<mx:Label  text="编号【】" id="applyNo"   visible="false" width="100%"  letterSpacing="5" textAlign="right" fontSize="14"  fontWeight="bold" height="20" />
 					</mx:HBox>
@@ -570,17 +558,7 @@
 							</mx:GridItem>
 							
 						</mx:GridRow>
-						<mx:GridRow width="100%">
-							<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5"     verticalAlign="middle" horizontalAlign="center">
-								<mx1:Text text="事由"  textAlign="center" width="80" id="reason_label"/>
-							</mx:GridItem>
-							<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5"     verticalAlign="middle"  colSpan="3" horizontalAlign="center">
-								<mx:TextArea width="100%" height="50" id="reason">
-									
-								</mx:TextArea>
-							</mx:GridItem>
-							
-						</mx:GridRow>
+						
 					
 						
 						<mx:GridRow width="100%">
@@ -607,10 +585,34 @@
 							</mx:GridItem>
 							
 						</mx:GridRow>
+						<mx:GridRow width="100%">
+							<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5"     verticalAlign="middle" horizontalAlign="center">
+								<mx1:Text text="分管校长意见"  textAlign="center" width="80" />
+							</mx:GridItem>
+							<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5"     verticalAlign="middle"  colSpan="3" horizontalAlign="center">
+								<mx:VBox width="100%" horizontalAlign="right">
+									<mx:TextArea width="100%" height="50" id="vicePrincipal_approve_option" enabled="false">
+										
+									</mx:TextArea>
+									<mx:HBox>
+										<mx:RadioButtonGroup id="vicePrincipal_approve_status" enabled="false"/>  
+										<mx:RadioButton groupName="vicePrincipal_approve_status" value="1" label="通过" width="80" enabled="false"/>  
+										<mx:RadioButton groupName="vicePrincipal_approve_status" value="2" label="不通过" width="80" enabled="false"/>  
+										<mx:Label text="签名："/>
+										<mx:TextInput width="120"   alpha="0.5" id="vicePrincipal_approver_name" enabled="false"/>
+										<mx:Label  text=""   id="vicePrincipal_approver_id"  visible="false"/>
+										<mx:Label text="日期："/>
+										<mx:DateField width="120" id="vicePrincipal_approve_time" enabled="false" formatString="YYYY-MM-DD"/>
+									</mx:HBox>
+									
+								</mx:VBox>
+							</mx:GridItem>
+							
+						</mx:GridRow>
 						
 					</mx:Grid>
 					<mx:HBox horizontalAlign="left" width="100%">
-						<mx:Label  id="total"  text="小结：今年已加班天数/已调休天数/剩余可调休天数：**"  visible="true" width="100%"  letterSpacing="5" textAlign="left" fontSize="14"  fontWeight="bold" height="20" />
+						<mx:Label  id="total"  text="小结：今年已调休天数/已调休天数/剩余可调休天数：**"  visible="true" width="100%"  letterSpacing="5" textAlign="left" fontSize="14"  fontWeight="bold" height="20" />
 					</mx:HBox>
 					<mx:HBox horizontalAlign="right" width="100%">
 						<mx:Label id="addUpdateFlag" visible="false"/>
@@ -631,7 +633,7 @@
 			</mx:HBox>
 			<mx:VBox width="100%"    horizontalGap="10" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
 				<mx:VBox width="100%" horizontalAlign="center" verticalGap="0">
-					<mx:Label  text="温岭中学加班登记表"    width="100%"  letterSpacing="5" textAlign="center" fontSize="14"  fontWeight="bold" height="30"  id="detail_type_label"/>
+					<mx:Label  text="温岭中学调休登记表"    width="100%"  letterSpacing="5" textAlign="center" fontSize="14"  fontWeight="bold" height="30"  id="detail_type_label"/>
 					<mx:HBox>
 						<mx:Label  text="编号【】" id="detail_applyNo"   visible="false" width="100%"  letterSpacing="5" textAlign="right" fontSize="14"  fontWeight="bold" height="20" />
 					</mx:HBox>
@@ -663,17 +665,7 @@
 							</mx:GridItem>
 							
 						</mx:GridRow>
-						<mx:GridRow width="100%">
-							<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5"     verticalAlign="middle" horizontalAlign="center">
-								<mx1:Text text="事由"  textAlign="center" width="80" id="detail_reason_label"/>
-							</mx:GridItem>
-							<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5"     verticalAlign="middle"  colSpan="3" horizontalAlign="center">
-								<mx:TextArea width="100%" height="50" id="detail_reason" enabled="false">
-									
-								</mx:TextArea>
-							</mx:GridItem>
-							
-						</mx:GridRow>
+						
 						
 						
 						<mx:GridRow width="100%">
@@ -697,6 +689,30 @@
 									</mx:HBox>
 								</mx:VBox>
 								
+							</mx:GridItem>
+							
+						</mx:GridRow>
+						<mx:GridRow width="100%">
+							<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5"     verticalAlign="middle" horizontalAlign="center">
+								<mx1:Text text="分管校长意见"  textAlign="center" width="80" />
+							</mx:GridItem>
+							<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5"     verticalAlign="middle"  colSpan="3" horizontalAlign="center">
+								<mx:VBox width="100%" horizontalAlign="right">
+									<mx:TextArea width="100%" height="50" id="detail_vicePrincipal_approve_option" enabled="false">
+										
+									</mx:TextArea>
+									<mx:HBox>
+										<mx:RadioButtonGroup id="detail_vicePrincipal_approve_status" enabled="false"/>  
+										<mx:RadioButton groupName="detail_vicePrincipal_approve_status" value="1" label="通过" width="80" enabled="false"/>  
+										<mx:RadioButton groupName="detail_vicePrincipal_approve_status" value="2" label="不通过" width="80" enabled="false"/>  
+										<mx:Label text="签名："/>
+										<mx:TextInput width="120"   alpha="0.5" id="detail_vicePrincipal_approver_name" enabled="false"/>
+										<mx:Label  text=""   id="detail_vicePrincipal_approver_id"  visible="false"/>
+										<mx:Label text="日期："/>
+										<mx:DateField width="120" id="detail_vicePrincipal_approve_time" enabled="false" formatString="YYYY-MM-DD"/>
+									</mx:HBox>
+									
+								</mx:VBox>
 							</mx:GridItem>
 							
 						</mx:GridRow>
