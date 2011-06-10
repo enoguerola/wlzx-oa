@@ -28,10 +28,12 @@ public class OverWorkServiceImpl implements OverWorkService {
 	public boolean updateOverWorkApply(OverWorkForm overWork) {
 		// TODO Auto-generated method stub
 		OverWorkForm newOverWork=overWorkDAO.get(overWork.getId());		
-		if(newOverWork.getStatus()!=OverWorkForm.Status.Waiting.getValue())return false;
-		else{
+		if(newOverWork.getStatus()!=OverWorkForm.Status.Waiting.getValue()){
+			return false;
+		}else{
 		
 			newOverWork.setReason(overWork.getReason());
+			newOverWork.setTimes(overWork.getTimes());
 			OverWorkWorkFlowLog log=new OverWorkWorkFlowLog();
 			log.setOperationName("编辑申请");
 			log.setOperationResult("编辑编号为"+overWork.getApplyNo()+"的申请记录");
