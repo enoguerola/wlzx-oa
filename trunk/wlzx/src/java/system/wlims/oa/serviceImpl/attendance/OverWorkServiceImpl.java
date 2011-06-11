@@ -123,11 +123,11 @@ public class OverWorkServiceImpl implements OverWorkService {
 	}
 	@Override
 	public List<OverWorkForm> getOverWorkAppliesByConditions(
-			String teacherId, String type, String status,
+			String teacherId, String status,
 			String submitBeginDate, String submitEndDate,
 			String overWorkBeginDate, String overWorkEndDate) {
 		// TODO Auto-generated method stub
-		List<OverWorkForm> list=overWorkDAO.getOverWorkAppliesByConditions(teacherId,type,status,submitBeginDate,submitEndDate,overWorkBeginDate,overWorkEndDate);
+		List<OverWorkForm> list=overWorkDAO.getOverWorkAppliesByConditions(teacherId,status,submitBeginDate,submitEndDate,overWorkBeginDate,overWorkEndDate);
 		
 		return list;
 	}
