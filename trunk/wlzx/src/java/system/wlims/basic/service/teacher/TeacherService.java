@@ -7,7 +7,9 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 
 import system.ServiceException;
+import system.dao.RoleDAO;
 import system.dao.UserDAO;
+import system.entity.RoleModel;
 import system.entity.UserModel;
 import system.entity.PersonModel.PersonStyle;
 import system.utils.CipherUtil;
@@ -20,7 +22,7 @@ public class TeacherService {
 
 	private TeacherDAO teacherDAO;
 	private UserDAO userDAO;
-	
+	private RoleDAO roleDAO;
 	/**
 	 * 
 	 * @param model
@@ -49,6 +51,8 @@ public class TeacherService {
 			user.setPwd(CipherUtil.encodeByMD5(user.getName()));
 			user.setSequence(0);
 			user.setSymbol(user.getName());
+			RoleModel role=roleDAO.getRoleByName(model.getTeacherPosition());
+			if(role!=null)user.setMainRole(role);
 			userDAO.saveOrUpdate(user);
 			model.setUserID(user.getId());
 			teacherDAO.saveOrUpdate(model);
@@ -132,6 +136,14 @@ public class TeacherService {
 
 	public UserDAO getUserDAO() {
 		return userDAO;
+	}
+
+	public RoleDAO getRoleDAO() {
+		return roleDAO;
+	}
+
+	public void setRoleDAO(RoleDAO roleDAO) {
+		this.roleDAO = roleDAO;
 	}
 	
 }
