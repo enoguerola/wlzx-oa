@@ -98,10 +98,7 @@
 		<property name="modifiedDate" type="java.sql.Date">
 			<column name="teacher_modified_date" />
 		</property>
-		<set name="otherDepartments" lazy="true"  table="basic_teacher_department" cascade="delete">
-			<key column="teacher_id"  />
-			<one-to-many class="system.wlims.basic.entity.teacher.TeacherDepartment" />  
-		</set>
+		
 		<set name="relations" lazy="true"  table="basic_teacher_social_relation" cascade="delete">
 			<key column="teacher_id"  />
 			<one-to-many class="system.wlims.basic.entity.teacher.TeacherRelation" /> 

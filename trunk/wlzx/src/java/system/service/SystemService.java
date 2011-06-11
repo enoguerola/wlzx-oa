@@ -510,22 +510,10 @@ public class SystemService{
 	}
 	//获得部门岗位
 	public List<RoleModel> getDepartmentRoles(String departmentId){
-		List<RoleModel> result=new ArrayList<RoleModel>();
 		DepartmentModel department=departmentDAO.get(departmentId);
-		for(RoleModel role:department.getRoles()){
-			result.add(role);
-			addSubRoles(role,result);
-		}
-		return result;
+		return department.getAllRoles();
 	}
-	public void addSubRoles(RoleModel role,List<RoleModel> result){
-		if(role==null)return ;
-		for(RoleModel _role:role.getSubordinates()){
-			result.add(_role);
-			addSubRoles(_role,result);
-		}
-		
-	}
+	
 	
 	
 	//更新部门

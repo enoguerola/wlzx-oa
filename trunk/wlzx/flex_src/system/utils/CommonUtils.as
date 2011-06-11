@@ -14,6 +14,14 @@ package system.utils
 			list.refresh();//更新  
 			
 		}
+		public static function sortByCondition(list:ArrayCollection,condition:String):void{
+			var sort:Sort=new Sort();  
+			//按照condition升序排序  
+			sort.fields=[new SortField(condition)];  
+			list.sort=sort;
+			list.refresh();//更新  
+			
+		}
 		public static function formatDate(date:Date,patten:String=null):String{
 			if(date==null)return null;
 			var dateFormatter:DateFormatter=new DateFormatter();

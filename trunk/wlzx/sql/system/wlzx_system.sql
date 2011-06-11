@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2011 年 06 月 10 日 21:34
+-- 生成日期: 2011 年 06 月 11 日 17:14
 -- 服务器版本: 5.0.91
 -- PHP 版本: 5.2.13
 
@@ -238,24 +238,6 @@ INSERT INTO `wlzx_system_department_role_relationship` (`id`, `department_id`, `
 (10, 10, 16),
 (11, 11, 17),
 (12, 12, 22);
-
--- --------------------------------------------------------
-
---
--- 表的结构 `wlzx_system_department_user_relationship`
---
-
-CREATE TABLE IF NOT EXISTS `wlzx_system_department_user_relationship` (
-  `id` bigint(20) NOT NULL auto_increment,
-  `department_id` bigint(20) NOT NULL,
-  `user_id` bigint(20) NOT NULL,
-  PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
-
---
--- 转存表中的数据 `wlzx_system_department_user_relationship`
---
-
 
 -- --------------------------------------------------------
 
@@ -974,7 +956,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_role_user_relationship` (
   `role_id` bigint(20) NOT NULL,
   `user_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=11 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=14 ;
 
 --
 -- 转存表中的数据 `wlzx_system_role_user_relationship`
@@ -984,8 +966,10 @@ INSERT INTO `wlzx_system_role_user_relationship` (`id`, `role_id`, `user_id`) VA
 (2, 18, 2),
 (4, 1, 2),
 (5, 20, 3),
-(7, 1, 3),
-(10, 21, 2);
+(10, 21, 2),
+(11, 6, 3),
+(12, 15, 3),
+(13, 22, 3);
 
 -- --------------------------------------------------------
 
@@ -1029,6 +1013,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_user` (
   `creation_date` datetime NOT NULL,
   `modified_date` timestamp NOT NULL default '0000-00-00 00:00:00' on update CURRENT_TIMESTAMP,
   `active` tinyint(1) NOT NULL default '1',
+  `main_role_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `symbol` (`symbol`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='系统用户' AUTO_INCREMENT=4 ;
@@ -1037,9 +1022,9 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_user` (
 -- 转存表中的数据 `wlzx_system_user`
 --
 
-INSERT INTO `wlzx_system_user` (`id`, `symbol`, `sequence`, `name`, `password`, `last_login_time`, `last_login_ip`, `account_style`, `person_id`, `person_name`, `email`, `creation_date`, `modified_date`, `active`) VALUES
-(2, 'admin', 0, 'admin', 'c81e728d9d4c2f636f067f89cc14862c', '2011-06-10 21:24:51', '127.0.0.1', 0, NULL, NULL, NULL, '2011-05-07 11:04:22', '2011-05-25 01:32:00', 1),
-(3, '3', 0, '3', 'eccbc87e4b5ce2fe28308fd9f2a7baf3', '2011-05-30 14:52:46', '127.0.0.1', 0, NULL, NULL, NULL, '2011-05-23 01:59:10', '2011-05-25 00:42:21', 1);
+INSERT INTO `wlzx_system_user` (`id`, `symbol`, `sequence`, `name`, `password`, `last_login_time`, `last_login_ip`, `account_style`, `person_id`, `person_name`, `email`, `creation_date`, `modified_date`, `active`, `main_role_id`) VALUES
+(2, 'admin', 0, 'admin', 'c81e728d9d4c2f636f067f89cc14862c', '2011-06-11 17:03:45', '127.0.0.1', 0, NULL, NULL, NULL, '2011-05-07 11:04:22', '2011-06-11 14:33:56', 1, 1),
+(3, '3', 0, '3', 'eccbc87e4b5ce2fe28308fd9f2a7baf3', '2011-05-30 14:52:46', '127.0.0.1', 0, NULL, NULL, NULL, '2011-05-23 01:59:10', '2011-06-11 14:33:56', 1, 3);
 
 -- --------------------------------------------------------
 

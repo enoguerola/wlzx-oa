@@ -461,11 +461,11 @@
 			/**********************
 			 *   department
 			 * */
-			public function department_cancleApply(id:String):void
+			public function department_cancleApply(teacherId:String,positionId:String):void
 			{
 				Alert.show("你确定要删除该项吗?","确认删除",Alert.NO|Alert.YES,null,function(event:CloseEvent):void{
 					if(event.detail == Alert.YES)
-						teacherDepartmentServiceRO.remove(id);
+						teacherAccountBridgeServiceRO.remove(teacherId,positionId);
 				},null,Alert.NO);
 			}
 			
@@ -484,24 +484,45 @@
 			public function department_enterEdit(data:Object):void
 			{
 				this.currentState='department_add';
-				departmentName.text = data.department;
-				departmentPosition.text = data.position;
+				for(var i=0;i<departmentList.length;i++){
+					var item1:Object=departmentList.getItemAt(i);
+					if(item1.dataField==data.departmentId){
+						departmentName.selectedItem=item1;
+						break;
+					}
+				}
+				callLater(function():void{
+					for(var j=0;j<roleList.length;j++){
+						var item2:Object=departmentList.getItemAt(j);
+						if(item2.dataField==data.positionId){
+							departmentName.selectedItem=item2;
+							break;
+						}
+					}
+					
+				});
+				
+//				departmentName.text = data.departmentName;
+//				departmentPosition.text = data.positionName;
 				departmentId.text = data.id;
 			}
 			
 			private function getDepartment():void
 			{
-				teacherDepartmentServiceRO.get(teacherId, departments_table.curpage, departments_table.pagecount);
+				teacherAccountBridgeServiceRO.get(teacherId, departments_table.curpage, departments_table.pagecount);
 			}
 			
 			protected function department_save_clickHandler(event:MouseEvent):void
 			{
 				if(validateDepartmentInput()){
-					var department:TeacherDepartment = new TeacherDepartment();
-					department.department = departmentName.text;
-					department.position = departmentPosition.text;
-					department.id = departmentId.text;
-					teacherDepartmentServiceRO.save(department, teacherId);
+//					var department:TeacherDepartment = new TeacherDepartment();
+//					department.departmentId = departmentName.text;
+//					department.position = departmentPosition.text;
+//					department.id = departmentId.text;
+					var positionId = departmentPosition.selectedItem.dataField;
+//					teacherAccountBridgeServiceRO.save(department, teacherId);
+					teacherAccountBridgeServiceRO.save(positionId, teacherId,department.id);
+
 				}
 			}
 			
@@ -786,7 +807,7 @@
 			<mx:method name="get"  concurrency="last"  result="teacherExperienceGetResult_resultHandler(event);" />
 			<mx:method name="remove"  concurrency="last"  result="teacherExperienceRemoveResult_resultHandler(event);" />
 		</mx:RemoteObject>
-		<mx:RemoteObject id="teacherDepartmentServiceRO" destination="teacherDepartmentServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+		<mx:RemoteObject id="teacherAccountBridgeServiceRO" destination="teacherAccountBridgeServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 			<mx:method name="save"  concurrency="last"  result="teacherDepartmentAddResult_resultHandler(event);" />
 			<mx:method name="get"  concurrency="last"  result="teacherDepartmentGetResult_resultHandler(event);" />
 			<mx:method name="remove"  concurrency="last"  result="teacherDepartmentRemoveResult_resultHandler(event);" />
@@ -955,7 +976,7 @@
 											<s:VGroup width="100%" height="100%" id="department_listPanel" excludeFrom="department_add">
 												<s:HGroup verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12" height="30" paddingLeft="20">
 													<s:Label text="|"/>
-													<mx:LinkButton  label="添加" icon="@Embed(source='../WebContent/resources/common/tools/button_add_icon.png')" click=" this.currentState='department_add'" />
+													<mx:LinkButton  label="添加" icon="@Embed(source='../WebContent/resources/common/tools/button_add_icon.png')" click=" this.currentState='department_add';departmentId.text='';" />
 													<s:Label text="|"/>
 												</s:HGroup>
 												<s:VGroup width="100%" height="100%"  gap="10" verticalAlign="middle" horizontalAlign="center">
@@ -964,8 +985,8 @@
 															<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="false"   borderAlpha="0.2" verticalAlign="middle"   id="departments_table" pagecount="10"  >				
 																<component:mygridcolumns>
 																	
-																	<mx:DataGridColumn textAlign="center" headerText="部门" dataField="department" width="100"></mx:DataGridColumn>
-																	<mx:DataGridColumn textAlign="center" headerText="职务" dataField="position" width="170"></mx:DataGridColumn>
+																	<mx:DataGridColumn textAlign="center" headerText="部门" dataField="departmentName" width="100"></mx:DataGridColumn>
+																	<mx:DataGridColumn textAlign="center" headerText="职务" dataField="positionName" width="170"></mx:DataGridColumn>
 																	<mx:DataGridColumn textAlign="center" headerText="编辑" width="60">
 																		<mx:itemRenderer>
 																			<fx:Component>
@@ -977,7 +998,7 @@
 																	<mx:DataGridColumn textAlign="center" headerText="删除"  width="60">
 																		<mx:itemRenderer>
 																			<fx:Component>
-																				<mx:LinkButton  label="[删除]"   click="{this.outerDocument.department_cancleApply(data.id);}">											
+																				<mx:LinkButton  label="[删除]"   click="{this.outerDocument.department_cancleApply(data.teacherId,data.positionId);}">											
 																				</mx:LinkButton>										
 																			</fx:Component>
 																		</mx:itemRenderer>

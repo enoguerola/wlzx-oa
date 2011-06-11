@@ -43,8 +43,9 @@ public class UserModel  extends BaseModel implements UserDetails{
 	private Set<UserModel> subordinates=new TreeSet<UserModel>();//直属下属
 	private Set<UserModel> leaders=new TreeSet<UserModel>();//直属领导
 	private Set<RoleModel> roles=new TreeSet<RoleModel>();//所属角色
-	private Set<DepartmentModel> departments=new TreeSet<DepartmentModel>();//用户所在部门集
+//	private Set<DepartmentModel> departments=new TreeSet<DepartmentModel>();//用户所在部门集
 	private Boolean active;
+	private RoleModel mainRole=new RoleModel();//主要角色
 	public String getPwd() {
 		return pwd;
 	}
@@ -184,12 +185,15 @@ public class UserModel  extends BaseModel implements UserDetails{
 	public Set<RoleModel> belongMainOfficeDepartmentMasterVicePrincipal(){
 		return null;
 	}
+	//获得用户所在部门集
 	public Set<DepartmentModel> getDepartments() {
+		Set<DepartmentModel> departments=new HashSet<DepartmentModel>();
+		for(RoleModel role:getRoles()){
+			departments.add(role.getBelongDepartment());
+		}
 		return departments;
 	}
-	public void setDepartments(Set<DepartmentModel> departments) {
-		this.departments = departments;
-	}
+	
 	public Boolean getActive() {
 		return active;
 	}
@@ -201,6 +205,12 @@ public class UserModel  extends BaseModel implements UserDetails{
 	}
 	public void setAccountStyle(int accountStyle) {
 		this.accountStyle = accountStyle;
+	}
+	public RoleModel getMainRole() {
+		return mainRole;
+	}
+	public void setMainRole(RoleModel mainRole) {
+		this.mainRole = mainRole;
 	}
 	
 
