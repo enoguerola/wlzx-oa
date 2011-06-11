@@ -508,6 +508,13 @@ public class SystemService{
 			return department;
 		
 	}
+	//获得部门岗位
+	public Set<RoleModel> getDepartmentRoles(String departmentId){
+		DepartmentModel department=departmentDAO.get(departmentId);
+		
+		return department.getRoles();
+	
+}
 	//更新部门
 	public DepartmentModel departmentUpdate(DepartmentModel department,String supervisorName,String leaderRoleIds){
 		//更新部门信息

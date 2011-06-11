@@ -34,9 +34,9 @@
 			import mx.rpc.events.*;
 			import mx.validators.Validator;
 			
+			import system.entity.*;
 			import system.event.UploadEvent;
 			import system.utils.CommonUtils;
-			
 			private var validatorArr:Array;
 			private var createDate:Date;
 			private var modifiedDate:Date;
@@ -90,11 +90,15 @@
 				]                
 			);
 
+			public var departmentList:ArrayCollection = new ArrayCollection();
+			
+			public var roleList:ArrayCollection = new ArrayCollection();
 			
 			private function init():void
 			{
 //				var parms:String=this.id;
 //				Alert.show(parms);
+				
 				showFirst = true;
 				
 				validatorArr = new Array();
@@ -107,7 +111,6 @@
 				validatorArr.push(position_stringValidator);
 				//validatorArr.push(cellphone_phoneNumberValidator);
 				//validatorArr.push(homephone_phoneNumberValidator);
-				
 				/**
 				 * When component is created, this function is called.
 				 * It instantiates a FileReference object and sets its
@@ -128,7 +131,8 @@
 				path = 'upload/image/teacher';
 				// Instantiate a new FileFilter.
 				imageTypes = new FileFilter("Images (*.jpg, *.jpeg, *.png, *.gif)", "*.jpg; *.jpeg; *.png; *.gif;");
-				callLater(initStaffWin);				
+				callLater(initStaffWin);
+				
 			}
 			
 			private function initStaffWin():void{
@@ -144,8 +148,24 @@
 					teacherId = "3";
 					//teacherId = ((ModuleLoader)(this.owner)).id;//弹出窗口时设定的中转参数
 					//systemServiceRO.getDepartmentById(parentId);
+					
 				}
 				getDepartment();
+				
+				systemServiceRO.getDepartmentBySymbol("root");//初始化部门数据字典
+				callLater(function():void{
+					this.department.dataProvider=departmentList;
+					this.department.validateNow();
+//					this.department.selectedIndex=0;
+//					Alert.show(department.selectedItem.dataField);
+//					systemServiceRO.getDepartmentRoles(department.selectedItem.dataField);
+					callLater(function():void{
+						this.position.dataProvider=roleList;
+						this.position.validateNow();
+//						this.position.selectedIndex=0;
+					});
+				});
+				
 			}
 			
 			protected function teacherGetResult_resultHandler(event:ResultEvent):void
@@ -679,7 +699,62 @@
 				txtServerResponse.text = event.ServerResponse;
 				txtServerResponseRaw.text = event.ServerResponseRaw;
 			}
+			
+			private function getDepartmentBySymbolResult(event:ResultEvent):void {
+				var _department:DepartmentModel=event.result as DepartmentModel;
+				
+				buildSubDepartments(_department,departmentList,0);
+				
+			}
+			private function getDepartmentRolesResult(event:ResultEvent):void {
+				roleList.removeAll();
+				var allList:ArrayCollection=event.result as ArrayCollection;
+				if(allList.length>0){
+					for (var i:int = 0; i < allList.length; i++){
+						var _role:RoleModel = allList.getItemAt(i) as RoleModel;
+						var headText:String="";
+						for(var j:int = 0;j<_role.level;j++)
+							headText=headText.concat("--");
+						headText=headText.concat(_role.name);
+						roleList.addItem( {dataField:_role.id, name:headText})
+					}
+				}	
 
+			}
+			private function buildSubDepartments(department:DepartmentModel,resultList:ArrayCollection,depth:int):void{
+				var headText:String="";
+				for(var j:int = 0;j<depth;j++)
+					headText=headText.concat("----");
+				headText=headText.concat(department.name);
+				resultList.addItem( {dataField:department.id, name:headText})
+				var list:ArrayCollection = ArrayCollection(department.subordinates);			
+				if(list.length>0){
+					for (var i:int = 0; i < list.length; i++){
+						var _department:DepartmentModel = list.getItemAt(i) as DepartmentModel;	
+						buildSubDepartments(_department,resultList,depth+1);
+					}
+					//					CommonUtils.sortBySequence(resultList);
+				}		
+				
+			}
+			private function departmentSelectionChangedHandlerMain(event:Event):void{
+				
+				var target:mx.controls.ComboBox=event.target as mx.controls.ComboBox
+				systemServiceRO.getDepartmentRoles(target.selectedItem.dataField);
+				callLater(function():void{
+					position.dataProvider=roleList;
+					position.selectedIndex=0;
+				});
+			}
+			private function departmentSelectionChangedHandler(event:Event):void{
+				
+				var target:mx.controls.ComboBox=event.target as mx.controls.ComboBox
+				systemServiceRO.getDepartmentRoles(target.selectedItem.dataField);
+				callLater(function():void{
+					departmentPosition.dataProvider=roleList;
+					departmentPosition.selectedIndex=0;
+				});
+			}
 		]]>
 	</fx:Script>
 
@@ -731,6 +806,10 @@
 		</mx:RemoteObject>
 		<mx:HTTPService id="teacherNoValidate" url="/servlet/teacherNoValidate" showBusyCursor="true" method="POST">  
 		</mx:HTTPService> 
+		<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+			<mx:method name="getDepartmentBySymbol"  concurrency="last"  result="getDepartmentBySymbolResult(event);" />
+			<mx:method name="getDepartmentRoles"  concurrency="last"  result="getDepartmentRolesResult(event);" />
+		</mx:RemoteObject>
 	</fx:Declarations>
 	<s:Panel width="100%" height="100%" title="教师信息编辑"  styleName="customPanel"   borderVisible="true" dropShadowVisible="false">
 		<s:VGroup width="100%" height="100%">
@@ -855,15 +934,15 @@
 								<s:VGroup width="100%">
 									<s:HGroup width="100%">
 										<mx:FormItem label="部门" width="20%">
-											<s:ComboBox 
-												id="department" 
-												width="100%" 
-												selectedIndex="0" 
-												dataProvider="{departmentArr}" 
-												labelField="name"/>
+											<mx:ComboBox  id="department" 
+														  width="100%" labelField="name" dataProvider="{departmentList}"
+														  change="departmentSelectionChangedHandlerMain(event);"/>
+
+											
 										</mx:FormItem>
 										<mx:FormItem label="职务" width="30%">
-											<mx:TextInput id='position' width="100%"/>
+											<mx:ComboBox  width="100%" id="position"   fontSize="12" labelField="name"  textAlign="left" />
+
 										</mx:FormItem>
 										<mx:FormItem label="办公电话" width="50%">
 											<mx:TextInput id='officePhone' width="100%"/>
@@ -949,13 +1028,15 @@
 																	<mx:Label  text="部门" width="60"  textAlign="right" />
 																</mx:GridItem>
 																<mx:GridItem  verticalAlign="middle" horizontalAlign="center">
-																	<mx:TextInput width="120" id="departmentName"/>
+																	<mx:ComboBox  width="120" id="departmentName" labelField="name" dataProvider="{departmentList}"
+																				  change="departmentSelectionChangedHandler(event);"/>
 																</mx:GridItem>
 																<mx:GridItem    verticalAlign="middle" horizontalAlign="right">
 																	<mx:Label  text="职务" width="60"  textAlign="right" />
 																</mx:GridItem>
 																<mx:GridItem  verticalAlign="middle" horizontalAlign="center">
-																	<mx:TextInput width="120" id="departmentPosition"/>
+																	<mx:ComboBox width="120" id="departmentPosition"   fontSize="12" labelField="name"  textAlign="left" />
+
 																</mx:GridItem>
 																<mx:GridItem  verticalAlign="middle" horizontalAlign="center">
 																	<s:TextInput id="departmentId" visible="false"/>
