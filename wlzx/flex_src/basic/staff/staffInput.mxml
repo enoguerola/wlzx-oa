@@ -16,6 +16,9 @@
 		<mx:State name="relation_add">           
 		</mx:State>
 	</mx:states>
+	<fx:Metadata>
+		[Event(name="uploadevent", type="system.event.UploadEvent")]
+	</fx:Metadata>
 	<fx:Script>
 		<![CDATA[
 			import basic.entity.*;
@@ -32,6 +35,7 @@
 			import mx.modules.*;
 			
 			import system.utils.CommonUtils;
+			import system.event.UploadEvent;
 			
 			private var validatorArr:Array;
 			private var createDate:Date;
@@ -101,10 +105,33 @@
 				validatorArr.push(position_stringValidator);
 				//validatorArr.push(cellphone_phoneNumberValidator);
 				//validatorArr.push(homephone_phoneNumberValidator);
+				
+				/**
+				 * When component is created, this function is called.
+				 * It instantiates a FileReference object and sets its
+				 * listeners.
+				 *  
+				 * @param event Event object contains details of the event triggering this handler.
+				 */ 
+				file = new FileReference();
+				
+				// Set the event listeners on the FileReference ojbect.
+				file.addEventListener(Event.SELECT, selectHandler);
+				file.addEventListener(Event.OPEN, openHandler);
+				file.addEventListener(ProgressEvent.PROGRESS, progressHandler);
+				file.addEventListener(IOErrorEvent.IO_ERROR, uploadIoErrorHandler);
+				file.addEventListener(DataEvent.UPLOAD_COMPLETE_DATA, uploadCompleteHandler);
+				file.addEventListener(UploadEvent.UPLOAD_EVENT, uploadEventHandler);
+				// Set the upload path from the parent document.
+				path = 'upload/image/teacher';
+				// Instantiate a new FileFilter.
+				imageTypes = new FileFilter("Images (*.jpg, *.jpeg, *.png, *.gif)", "*.jpg; *.jpeg; *.png; *.gif;");
 				callLater(initStaffWin);				
 			}
 			
 			private function initStaffWin():void{
+				imageSrc = 'resources/oa/layout/default_head.jpg';
+				Alert.show(this.label + "000" + this.id + this.name);
 				if(this.toolTip=='Update'){		
 					//teacherId = this.id;//弹出窗口时设定的中转参数
 					//teacherServiceRO.get(teacherId);
@@ -316,7 +343,7 @@
 						
 			private function getExperience():void
 			{
-				teacherExperienceServiceRO.get(experiences_table.pagecount);
+				teacherExperienceServiceRO.get(teacherId, experiences_table.curpage,experiences_table.pagecount);
 			}
 			
 			/**********************
@@ -403,7 +430,7 @@
 			
 			private function getRelation()
 			{
-				teacherRelationServiceRO.get(relations_table.pagecount);
+				teacherRelationServiceRO.get(teacherId, relations_table.curpage,relations_table.pagecount);
 			}
 			
 			
@@ -518,6 +545,136 @@
 				// TODO Auto-generated method stub
 				this.currentState = "department_list";
 			}
+			
+			private var file:FileReference;
+			private var path:String;
+			
+			[Bindable] 
+			private var imageSrc:String;  
+			
+			// Limit the file types in the Browse popup box to ".jpg" 
+			// so we can easily find it again when reloading page. 
+			private var imageTypes:FileFilter;
+			
+			/**
+			 * Event handler for the "Browse" button's click.
+			 * 
+			 * @param event Event object contains details of the event triggering this handler.
+			 */          
+			private function browseHandler(event:Event):void {
+				pbrUploadProgress.visible = false;
+				btnUpload.visible = false;
+				file.browse([imageTypes]);
+			}
+			
+			/**
+			 * Event handler for when the user selects a file from disk.
+			 * 
+			 * @param event Event object contains details of the event triggering this handler.
+			 */ 
+			private function selectHandler(event:Event):void {
+				txtFilename.text = file.name;
+				btnUpload.visible = true;
+			}
+			
+			/**
+			 * Event handler for when the file is opened.
+			 * 
+			 * @param event Event object contains details of the event triggering this handler.
+			 */ 
+			private function openHandler(event:Event):void {
+				pbrUploadProgress.visible = true;
+				pbrUploadProgress.label = "Uploading %3%% of image file.";
+			}
+			
+			/**
+			 * Event handler for the "Upload" button.
+			 * Initiates file upload operation.
+			 * 
+			 * @param event Event object contains details of the event triggering this handler.
+			 */ 
+			private function uploadHandler(event:Event):void {
+				var url:String = 'spring/imageUpload.action';
+				var request:URLRequest = new URLRequest(url);
+				request.method = URLRequestMethod.POST;
+				
+				var variables:URLVariables = new URLVariables();
+				variables.teacherID = teacherId; 
+				request.data = variables;
+				
+				pbrUploadProgress.visible = true;
+				file.upload(request);
+			}
+			
+			/**
+			 * Event handler for when the upload starts.
+			 * 
+			 * @param event ProgressEvent object contains details of the event triggering this handler.
+			 */ 
+			private function progressHandler(event:ProgressEvent):void {
+				pbrUploadProgress.setProgress(event.bytesLoaded, event.bytesTotal);                       
+			}
+			
+			/**
+			 * Event handler for when the upload operation has completed.
+			 * Specifically manages response data.
+			 * 
+			 * @param event DataEvent object contains details of the event triggering this handler.
+			 */       
+			private function uploadCompleteHandler(event:DataEvent):void {
+				try {
+					var xmlResponse:XML = XML(event.data);
+					pbrUploadProgress.label = "Upload complete.";
+					
+					// Create a custom event. 
+					var uploadEvent:UploadEvent = new UploadEvent("uploadevent");
+					// Fetch the file element of the servlet's XML response.
+					uploadEvent.ServerResponse = xmlResponse.elements("file");
+					// Fetch the entire XML response. 
+					uploadEvent.ServerResponseRaw = event.data;
+					// Dispatch the custom event.
+					dispatchEvent(uploadEvent);
+					
+					imageSrc = path + xmlResponse.elements("file").attribute("id").toString();
+				}
+				catch (error:Error) {
+					pbrUploadProgress.label = "Exception occurred.";
+					Alert.show("Exception details: " + error.message,"Exception occured.");
+				}
+			}
+			
+			/**
+			 * Event handler for the image IO error.
+			 * 
+			 * @param event IOErrorEvent object contains details of the event triggering this handler.
+			 */  
+			private function imageIOErrorHandler(event:IOErrorEvent):void {
+				txtFilename.text = "找不到相关图片";
+				imgPhoto.source = "resources/oa/layout/default_head.jpg";
+			}
+			
+			/**
+			 * Event handler for the file upload IO error.
+			 * 
+			 * @param event IOErrorEvent object contains details of the event triggering this handler.
+			 */  
+			private function uploadIoErrorHandler(event:IOErrorEvent):void {
+				pbrUploadProgress.label = "Encountered error.";
+				Alert.show("IO Error: " + event.toString());
+			}
+			
+			/**
+			 * Custom event handler for the UploadEvent.
+			 * 
+			 * <p>Sets some text fields from the event and invalidates
+			 * the DataGrid's display list to force a refresh.</p>
+			 *
+			 * @param event UploadEvent custom event
+			 */ 
+			private function uploadEventHandler(event:UploadEvent):void {
+				txtServerResponse.text = event.ServerResponse;
+				txtServerResponseRaw.text = event.ServerResponseRaw;
+			}
 
 		]]>
 	</fx:Script>
@@ -589,40 +746,20 @@
 								</s:VGroup>
 								<s:VGroup width="40%" height="100%">
 									<s:HGroup width="100%">
-										<mx:FormItem label="姓名" width="50%">
-											<s:TextInput id="teacherName" width="100%"/>
-										</mx:FormItem>
+										<mx:FormItem label="姓名" width="50%"><s:TextInput id="teacherName" width="100%"/></mx:FormItem>
 										<mx:FormItem label="性别" width="50%">
-											<s:DropDownList 
-												id="sex" 
-												selectedIndex="0" 
-												width="100%"
-												dataProvider="{sexArr}" 
-												labelField="name"/> 
+											<s:DropDownList id="sex" selectedIndex="0" width="100%" dataProvider="{sexArr}" labelField="name"/> 
 										</mx:FormItem>
 									</s:HGroup>
 									<s:HGroup width="100%">
 										<mx:FormItem label="婚姻状况" width="50%">
-											<s:DropDownList 
-												id="marriage" 
-												width="100%" 
-												selectedIndex="0" 
-												dataProvider="{marriageArr}" 
-												labelField="name"/>
+											<s:DropDownList id="marriage" width="100%" selectedIndex="0" dataProvider="{marriageArr}" labelField="name"/>
 										</mx:FormItem>
-										<mx:FormItem label="民族" width="50%">
-											<mx:TextInput id="nation" width="100%"/>
-										</mx:FormItem>
+										<mx:FormItem label="民族" width="50%"><mx:TextInput id="nation" width="100%"/></mx:FormItem>
 									</s:HGroup>
-									<mx:FormItem label="身份证号" width="100%">
-										<mx:TextInput id="idCode" width="100%"/>
-									</mx:FormItem>
-									<mx:FormItem label="邮箱" width="100%">
-										<mx:TextInput id="mail" width="100%"/>
-									</mx:FormItem>
-									<mx:FormItem label="家庭地址" width="100%">
-										<mx:TextInput id="teacherAddress" width="100%"/>
-									</mx:FormItem>
+									<mx:FormItem label="身份证号" width="100%"><mx:TextInput id="idCode" width="100%"/></mx:FormItem>
+									<mx:FormItem label="邮箱" width="100%"><mx:TextInput id="mail" width="100%"/></mx:FormItem>
+									<mx:FormItem label="家庭地址" width="100%"><mx:TextInput id="teacherAddress" width="100%"/></mx:FormItem>
 								</s:VGroup>
 								<s:VGroup width="30%">
 									<s:HGroup width="100%">
@@ -643,13 +780,26 @@
 									<mx:FormItem label="家庭电话" width="100%">
 										<mx:TextInput id="homePhone" width="100%"/>
 									</mx:FormItem>
-									<mx:FormItem label="手机" width="100%">
-										<mx:TextInput id="cellPhone" width="100%"/>
-									</mx:FormItem>
+									<mx:FormItem label="手机" width="100%"><mx:TextInput id="cellPhone" width="100%"/></mx:FormItem>
 								</s:VGroup>
 								<s:VGroup width="20%">
 									<mx:FormItem label="照片" width="100%" height="200%">
-										<mx:Image/>
+										<mx:Image id="imgPhoto" visible="true" autoLoad="true" width="100" height="100" source="{imageSrc}" ioError="imageIOErrorHandler(event)"/>
+										<mx:VBox>
+											<mx:TextInput id="txtFilename" editable="false" />
+											<mx:HBox>
+												<mx:Button id="btnBrowse" label="Browse" click="browseHandler(event)" />
+												<mx:Button id="btnUpload" label="Upload" click="uploadHandler(event)" visible="false" />
+											</mx:HBox>
+											<mx:ProgressBar id="pbrUploadProgress" indeterminate="false" mode="manual"
+															fontWeight="bold" color="red" labelPlacement="bottom" trackHeight="9" visible="false" />
+										</mx:VBox>
+									</mx:FormItem>
+									<mx:FormItem direction="horizontal" width="100%" label="Server Response:">
+										<mx:TextInput editable="false" id="txtServerResponse" />
+									</mx:FormItem>
+									<mx:FormItem direction="horizontal" width="100%" label="Server Response (Raw):">
+										<mx:TextArea editable="false"  id="txtServerResponseRaw" width="100%" height="150" />
 									</mx:FormItem>
 									<mx:FormItem label="短号" width="100%">
 										<mx:TextInput id="teacherno" width="100%" focusOut="teacherno_focusOutHandler(event)"/>

@@ -16,6 +16,11 @@
 		<![CDATA[
 			import basic.utils.DateUtil;
 			
+			import flash.events.*;
+			import flash.net.FileFilter;
+			import flash.net.FileReference;
+			import flash.net.URLRequest;
+			
 			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
 			import mx.controls.Button;
@@ -27,11 +32,6 @@
 			import mx.managers.PopUpManager;
 			import mx.rpc.events.*;
 			import mx.utils.StringUtil;
-			
-			import flash.events.*;
-			import flash.net.FileFilter;
-			import flash.net.FileReference;
-			import flash.net.URLRequest;
 			
 			[Bindable]   
 			private var filename:String; 
@@ -97,11 +97,22 @@
 				file.addEventListener(ProgressEvent.PROGRESS,progressHandler);   
 				file.addEventListener(Event.SELECT, selectedHandler);   
 				file.addEventListener(IOErrorEvent.IO_ERROR,ioErrorHandler); 
+				file.addEventListener(Event.COMPLETE, uploadComplete);
 			}
+			
+			private function uploadComplete(e:Event):void   
+			{   
+				Alert('上传完毕');
+				_name.text = "";
+				department.selectedIndex = 0;
+				status.selectedIndex = 0;
+				attendDate.text = "";
+				search();
+			} 
 			
 			private function ioErrorHandler(e:IOErrorEvent):void   
 			{   
-				Alert.show(e.toString());   
+				Alert.show("有错误");   
 			}  
 			
 			private function progressHandler(e:ProgressEvent):void   
@@ -136,17 +147,18 @@
 			{      
 				if (e.detail == Alert.YES)   
 				{      
-						filename = file.name;   
-						var request:URLRequest = new URLRequest();
-						request.url = "/spring/imageUpload.action";
-						try    
-						{      
-							file.upload(request);      
-						}    
-						catch (error:Error)    
-						{      
-							Alert.show("上传失败","错误"); 
-						}      
+					var params:URLVariables = new URLVariables();
+					params.name = "123213";
+					var request:URLRequest = new URLRequest("spring/excelUpload.action");
+					request.data = params;
+					try    
+					{      
+						file.upload(request, "file");      
+					}    
+					catch (error:Error)    
+					{      
+						Alert.show("上传失败","错误"); 
+					}      
 				}      
 			}   
 			
@@ -163,7 +175,7 @@
 			
 			public function importExcel(event:Event):void
 			{
-				var typefiter:FileFilter = new FileFilter("Excel","*.xls");
+				var typefiter:FileFilter = new FileFilter("Excel","*.xls;*.xlsx");
 				file.browse([typefiter]); 
 			}
 			
@@ -216,7 +228,7 @@
 			public function editItem(item_id:String):void
 			{
 				var parent:Object=(Object)(((Object)(this.owner)).owner);
-				parent.addTab("教师编辑",parent.nav,"basic/staff/staffInput.swf");
+				parent.addTab(item_id,parent.nav,"basic/staff/staffInput.swf");
 			}
 			
 			public function changestatus(item_id:String, status:int):void
