@@ -37,8 +37,6 @@ public class TeacherDepartmentService {
 		criteria.createCriteria("teacher").add(Restrictions.eq("id", id));
 		
 		List<TeacherDepartment> list = teacherDepartmentDAO.getListByCriteria(criteria, page, pageCount);
-		System.out.println(list.size());
-		System.out.println(id);
 		for(TeacherDepartment model:list)
 			model.setTeacher(null);
 		return list;

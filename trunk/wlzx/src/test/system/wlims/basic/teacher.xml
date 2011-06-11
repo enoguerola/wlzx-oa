@@ -29,14 +29,15 @@
 		<property name="sessionFactory" ref="basicSessionFactory" />
 	</bean>
 	
-	<bean id="teacherServiceDest" class="system.wlims.basic.service.teacher.TeacherService">
+	<bean id="teacherService" class="system.wlims.basic.service.teacher.TeacherService">
 		<property name="teacherDAO" ref="teacherDAO" />
+		<property name="userDAO" ref="userDAO" />
 	</bean>
-	<bean id="teacherDepartmentServiceDest" class="system.wlims.basic.service.teacher.TeacherDepartmentService">
+	<bean id="teacherDepartmentService" class="system.wlims.basic.service.teacher.TeacherDepartmentService">
 		<property name="teacherDAO" ref="teacherDAO" />
 		<property name="teacherDepartmentDAO" ref="teacherDepartmentDAO" />
 	</bean>
-	<bean id="teacherExperienceServiceDest" class="system.wlims.basic.service.teacher.TeacherExperienceService">
+	<bean id="teacherExperienceService" class="system.wlims.basic.service.teacher.TeacherExperienceService">
 		<property name="teacherDAO" ref="teacherDAO" />
 		<property name="teacherExperienceDAO" ref="teacherExperienceDAO" />
 	</bean>
