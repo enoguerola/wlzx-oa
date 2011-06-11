@@ -368,6 +368,7 @@
 								Alert.show("请至少制定一个'"+date.text+"'当天的加班时间段");
 								return false;
 							}
+							
 							continue;
 						} else {
 							
@@ -594,13 +595,13 @@
 									</mx:TextArea>
 									<mx:HBox>
 										<mx:RadioButtonGroup id="officeChief_approve_status" />  
-										<mx:RadioButton groupName="officeChief_approve_status" value="1" label="通过" width="80" enabled="false"/>  
-										<mx:RadioButton groupName="officeChief_approve_status" value="2" label="不通过" width="80" enabled="false"/>  
+										<mx:RadioButton groupName="officeChief_approve_status" value="1" label="通过" width="80" enabled="true"/>  
+										<mx:RadioButton groupName="officeChief_approve_status" value="2" label="不通过" width="80" enabled="true"/>  
 										<mx:Label text="签名："/>
-										<mx:TextInput width="120"   alpha="0.5" id="officeChief_approver_name" enabled="false"/>
+										<mx:TextInput width="120"   alpha="0.5" id="officeChief_approver_name" enabled="true"/>
 										<mx:Label  text=""   id="officeChief_approver_id" visible="false"/>
 										<mx:Label text="日期："/>
-										<mx:DateField width="120" id="officeChief_approve_time" enabled="false" formatString="YYYY-MM-DD"/>
+										<mx:DateField width="120" id="officeChief_approve_time" enabled="true" formatString="YYYY-MM-DD"/>
 									</mx:HBox>
 								</mx:VBox>
 								
