@@ -724,7 +724,7 @@
 			private function buildSubDepartments(department:DepartmentModel,resultList:ArrayCollection,depth:int):void{
 				var headText:String="";
 				for(var j:int = 0;j<depth;j++)
-					headText=headText.concat("----");
+					headText=headText.concat("--");
 				headText=headText.concat(department.name);
 				resultList.addItem( {dataField:department.id, name:headText})
 				var list:ArrayCollection = ArrayCollection(department.subordinates);			
