@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS `basic_teacher` (
   `teacher_professional_title` varchar(50) default NULL COMMENT '职称',
   `teacher_skill_level` varchar(20) default NULL COMMENT '技能等级',
   `teacher_skill_level_date` date default NULL COMMENT '技能鉴定时间',
-  `teacher_department` varchar(50) NOT NULL COMMENT '部门',
+  `teacher_department` varchar(50) default NULL COMMENT '部门',
   `teacher_position` varchar(50) NOT NULL COMMENT '职务',
   `teacher_office_phone` varchar(20) default NULL COMMENT '办公电话',
   `teacher_contact_phone` varchar(50) default NULL COMMENT '紧要联络电话',
