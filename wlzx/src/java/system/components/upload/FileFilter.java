@@ -11,8 +11,7 @@ import java.util.Iterator;
  * of filenames. Has two custom variables to hold the
  * employee ID and the allowed image types. 
  */
-public class FileFilter
-implements FilenameFilter{
+public class FileFilter implements FilenameFilter{
     private String _employeeID = "";
     private ArrayList _imageTypes;
    
@@ -24,6 +23,7 @@ implements FilenameFilter{
      * @param name
      * @return boolean true if filename passes check, false otherwise
      */
+    @Override
     public boolean accept(File file, String name){
         boolean startsWith = false;
         boolean endsWith = false;

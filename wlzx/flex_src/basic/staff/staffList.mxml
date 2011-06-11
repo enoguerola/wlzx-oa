@@ -10,11 +10,15 @@
 			<mx:method name="remove"  concurrency="last"  result="removeResult_resultHandler(event);" />
 			<mx:method name="changeStatus"  concurrency="last"  result="changeResult_resultHandler(event);" />
 		</mx:RemoteObject>
+		<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+			<mx:method name="getDepartmentBySymbol"  concurrency="last"  result="getDepartmentBySymbolResult(event);" />
+		</mx:RemoteObject>
 	</fx:Declarations>
 	
 	<fx:Script>
 		<![CDATA[
 			import basic.utils.DateUtil;
+			import basic.utils.Excel;
 			
 			import flash.events.*;
 			import flash.net.FileFilter;
@@ -33,31 +37,24 @@
 			import mx.rpc.events.*;
 			import mx.utils.StringUtil;
 			
+			import oa.notice.popWin.*;
+			
+			import system.entity.*;
+			import system.utils.CommonUtils;
 			[Bindable]   
 			private var filename:String; 
 			[Bindable]   
-			private var file:FileReference = new FileReference(); 
-			
-			import oa.notice.popWin.*;
-			
-			import system.utils.CommonUtils;
-			
-			import basic.utils.Excel;
+			private var file:FileReference = new FileReference(); 			
 			private var excel:Excel = new Excel;
-			
-			public var departmentArr:ArrayCollection = new ArrayCollection(
-				[    
-					{value:"0", name:"教务处"}, 
-					{value:"1", name:"其他"}
-				]                
-			);
+			public var departmentList:ArrayCollection = new ArrayCollection();
 			
 			public var statusArr:ArrayCollection = new ArrayCollection(
 				[    
-					{value:"0", name:"正式"}, 
-					{value:"1", name:"适用"},
-					{value:"2", name:"离职"},
-					{value:"3", name:"离休"}
+					{value:-1, name:"请选择"}, 
+					{value:0, name:"正式"}, 
+					{value:1, name:"适用"},
+					{value:2, name:"离职"},
+					{value:3, name:"离休"}
 				]                
 			);
 			
@@ -68,7 +65,7 @@
 			}
 			
 			public function initData():void {
-				search();
+				systemServiceRO.getDepartmentBySymbol("root");//初始化部门数据字典
 				creationCompletedHandler();
 			}
 			
@@ -77,7 +74,7 @@
 				if(selectedIndex==-1)
 					Alert.show("当前未选中任意行");
 				else{
-					
+					editItem(teacherDG.cudg.selectedItem.id);
 				}
 			}
 			
@@ -85,7 +82,7 @@
 				teacher = new TeacherModel();
 				teacher.name = _name.text;
 				teacher.teacherDepartment = department.selectedItem.value;
-				teacher.teacherStatus = parseInt(status.selectedItem.value);
+				teacher.teacherStatus = status.selectedItem.value;
 				teacher.teacherAttendDate = DateFormatter.parseDateString(attendDate.text);
 				teacherServiceRO.getTeacherModels(teacher, teacherDG.curpage, teacherDG.pagecount);
 			}
@@ -117,6 +114,7 @@
 			
 			private function progressHandler(e:ProgressEvent):void   
 			{   
+				uploadbar.visible = true;
 				lblProgress.text = " 已上传 " + e.bytesLoaded   + " 字节，共 " + e.bytesTotal + " 字节";    
 				var proc: uint = e.bytesLoaded / e.bytesTotal * 100;    
 				uploadbar.setProgress(proc, 100);    
@@ -227,7 +225,6 @@
 			
 			public function editItem(item_id:String):void
 			{
-//				Alert.show(item_id);
 				var parent:Object=(Object)(((Object)(this.owner)).owner);
 				parent.addTab("staff_input_menu-edit","教师编辑",parent.nav,"basic/staff/staffInput.swf",null,item_id);
 			}
@@ -242,6 +239,29 @@
 				search();
 			}
 
+			private function getDepartmentBySymbolResult(event:ResultEvent):void {
+				var _department:DepartmentModel = event.result as DepartmentModel;
+				buildSubDepartments(_department,departmentList,0);
+				var _init:Object = {name:'请选择',value:""};
+				departmentList.addItemAt(_init,0);
+				department.selectedIndex = 0;
+				search();
+			}
+			
+			private function buildSubDepartments(department:DepartmentModel,resultList:ArrayCollection,depth:int):void{
+				var headText:String="";
+				for(var j:int = 0;j<depth;j++)
+					headText=headText.concat("--");
+				headText=headText.concat(department.name);
+				resultList.addItem( {dataField:department.id, name:headText})
+				var list:ArrayCollection = ArrayCollection(department.subordinates);			
+				if(list.length>0){
+					for (var i:int = 0; i < list.length; i++){
+						var _department:DepartmentModel = list.getItemAt(i) as DepartmentModel;	
+						buildSubDepartments(_department,resultList,depth+1);
+					}
+				}		
+			}
 			
 		]]>
 	</fx:Script>
@@ -251,17 +271,14 @@
 			<s:HGroup verticalAlign="middle" horizontalAlign="right" width="100%">
 				<mx:HBox width="100%" height="35" paddingLeft="20"  horizontalGap="10" backgroundColor="#C5E497"  verticalAlign="middle">
 					<mx:Label text="|"/>
-					
 					<mx:LinkButton  label="详细" icon="@Embed(source='../WebContent/resources/common/tools/button_detail_icon.png')"  click="detail(event);"/>
 					<mx:Label text="|"/>
-					
 					<mx:LinkButton  label="导入" icon="@Embed(source='../WebContent/resources/common/tools/button_down_icon.png')" click="importExcel(event);"/>
 					<mx:Label text="|"/>
 					<mx:LinkButton  label="导出" icon="@Embed(source='../WebContent/resources/common/tools/button_down_icon.png')" click="exportExcel(event);"/>
 					<mx:Label text="|"/>
-					<mx:ProgressBar id="uploadbar" labelPlacement="bottom" color="#F20D7A"
-									minimum="0" visible="true" maximum="100" label="当前进度: 0%" direction="right" mode="manual" width="200"/> 
-					<mx:Label id="lblProgress" text="上传"/>
+					<mx:ProgressBar id="uploadbar" labelPlacement="bottom" color="#F20D7A" minimum="0" maximum="100" label="当前进度: 0%" direction="right" mode="manual" width="200" visible="false"/> 
+					<mx:Label id="lblProgress" text="上传" visible="false"/>
 				</mx:HBox>
 			</s:HGroup>
 			<s:VGroup width="100%" height="100%" gap="0">
@@ -273,7 +290,7 @@
 						</s:HGroup>	
 						<s:HGroup verticalAlign="middle">
 							<s:Label  text="部门" />
-							<s:ComboBox width="100%" id="department" dataProvider="{departmentArr}" selectedIndex="0" labelField="name"/>
+							<s:ComboBox width="100%" id="department" dataProvider="{departmentList}" selectedIndex="0" labelField="name"/>
 						</s:HGroup>
 						<s:HGroup verticalAlign="middle">
 							<s:Label  text="状态" />
@@ -308,7 +325,7 @@
 							<mx:DataGridColumn textAlign="center" headerText="部门" dataField="teacherDepartment" width="100"></mx:DataGridColumn>
 							<mx:DataGridColumn textAlign="center" headerText="家庭电话" dataField="homePhone" width="100"></mx:DataGridColumn>
 							<mx:DataGridColumn textAlign="center" headerText="办公电话" dataField="teacherOfficePhone" width="100"></mx:DataGridColumn>
-							<mx:DataGridColumn textAlign="center" headerText="入校时间" dataField="teacherAttendDate" width="100"></mx:DataGridColumn>
+							<mx:DataGridColumn textAlign="center" headerText="入校时间" dataField="teacherAttendDate" width="100" labelFunction="formatDate"></mx:DataGridColumn>
 							<mx:DataGridColumn textAlign="center" headerText="离职"  width="60">
 								<mx:itemRenderer>
 									<fx:Component>

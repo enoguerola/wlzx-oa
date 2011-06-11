@@ -94,10 +94,13 @@
 			
 			public var roleList:ArrayCollection = new ArrayCollection();
 			
+			private var file:FileReference;
+			private var path:String;
+			[Bindable] 
+			private var imageSrc:String;  
+			
 			private function init():void
 			{
-//				var parms:String=this.id;
-//				Alert.show(parms);
 				
 				showFirst = true;
 				
@@ -126,9 +129,9 @@
 				file.addEventListener(ProgressEvent.PROGRESS, progressHandler);
 				file.addEventListener(IOErrorEvent.IO_ERROR, uploadIoErrorHandler);
 				file.addEventListener(DataEvent.UPLOAD_COMPLETE_DATA, uploadCompleteHandler);
-				file.addEventListener(UploadEvent.UPLOAD_EVENT, uploadEventHandler);
+				this.addEventListener(UploadEvent.UPLOAD_EVENT, uploadEventHandler);
 				// Set the upload path from the parent document.
-				path = 'upload/image/teacher';
+				path = 'uploads/basic/teacherProfile/';
 				// Instantiate a new FileFilter.
 				imageTypes = new FileFilter("Images (*.jpg, *.jpeg, *.png, *.gif)", "*.jpg; *.jpeg; *.png; *.gif;");
 				callLater(initStaffWin);
@@ -136,21 +139,16 @@
 			}
 			
 			private function initStaffWin():void{
-				imageSrc = 'resources/oa/layout/default_head.jpg';
-//				Alert.show(((Object)(this.owner)).label + "000" + ((Object)(this.owner)).id + ((Object)(this.owner)).name);
 				var parms:String=((Object)(this.owner)).id;
+				teacher = new TeacherModel();	
 				if(parms!=null&&parms!=""){		
 					teacherId = parms ;//弹出窗口时设定的中转参数
-					Alert.show("编辑ID："+teacherId);
-					//teacherServiceRO.get(teacherId);
+					teacherServiceRO.get(teacherId);
+					getDepartment();
 				}else{
-					teacher = new TeacherModel();
-					teacherId = "3";
-					//teacherId = ((ModuleLoader)(this.owner)).id;//弹出窗口时设定的中转参数
-					//systemServiceRO.getDepartmentById(parentId);
-					
+					teacher = new TeacherModel();					
+					imageSrc = "uploads/basic/teacherProfile/default_head.jpg";
 				}
-				getDepartment();
 				
 				systemServiceRO.getDepartmentBySymbol("root");//初始化部门数据字典
 				callLater(function():void{
@@ -175,7 +173,10 @@
 				createDate = teacher.creationDate;
 				modifiedDate = teacher.modifiedDate;
 				userID = teacher.userID;
-				
+				if(teacher.teacherPhoto != null && teacher.teacherPhoto != "")
+					imageSrc = teacher.teacherPhoto;
+				else
+					imageSrc = "resources/oa/layout/default_head.jpg";
 				teacherName.text = teacher.name;
 				mail.text = teacher.teacherMail;
 				teacherno.text = teacher.teacherNo;
@@ -195,13 +196,12 @@
 				skillLevel.text = teacher.teacherSkillLevel;
 				skillLevelDate.text = DateUtil.formatDate(teacher.teacherSkillLevelDate as Date, "YYYY-MM-DD");
 				department.selectedItem.value = teacher.teacherDepartment;
-				position.text = teacher.teacherPosition;
+				position.selectedItem.value = teacher.teacherPosition;
 				contactPhone.text = teacher.teacherContactPhone;
 				officePhone.text = teacher.teacherOfficePhone;
 				workDate.text = DateUtil.formatDate(teacher.teacherWorkDate as Date, "YYYY-MM-DD");
 				teacherAddress.text = teacher.teacherAddress;
 				
-				//teacher.teacherPhoto = status.text;
 				status.selectedItem.value = teacher.teacherStatus;
 			}
 			
@@ -230,13 +230,13 @@
 					teacher.teacherSkillLevel = skillLevel.text;
 					teacher.teacherSkillLevelDate = DateFormatter.parseDateString(skillLevelDate.text);
 					teacher.teacherDepartment = department.selectedItem.value;
-					teacher.teacherPosition = position.text;
+					teacher.teacherPosition = position.selectedItem.dataField;
 					teacher.teacherContactPhone = contactPhone.text;
 					teacher.teacherOfficePhone = officePhone.text;
 					teacher.teacherWorkDate = DateFormatter.parseDateString(workDate.text);
 					teacher.teacherAddress = teacherAddress.text;
 					
-					//teacher.teacherPhoto = status.text;
+					teacher.teacherPhoto = imageSrc;
 					teacher.teacherStatus = parseInt(status.selectedItem.value);
 					teacher.teacherAttendDate = DateFormatter.parseDateString(attendDate.text);
 					
@@ -569,12 +569,7 @@
 				// TODO Auto-generated method stub
 				this.currentState = "department_list";
 			}
-			
-			private var file:FileReference;
-			private var path:String;
-			
-			[Bindable] 
-			private var imageSrc:String;  
+
 			
 			// Limit the file types in the Browse popup box to ".jpg" 
 			// so we can easily find it again when reloading page. 
@@ -597,7 +592,6 @@
 			 * @param event Event object contains details of the event triggering this handler.
 			 */ 
 			private function selectHandler(event:Event):void {
-				txtFilename.text = file.name;
 				btnUpload.visible = true;
 			}
 			
@@ -608,7 +602,7 @@
 			 */ 
 			private function openHandler(event:Event):void {
 				pbrUploadProgress.visible = true;
-				pbrUploadProgress.label = "Uploading %3%% of image file.";
+				pbrUploadProgress.label = "已上传 %3%% .";
 			}
 			
 			/**
@@ -618,12 +612,12 @@
 			 * @param event Event object contains details of the event triggering this handler.
 			 */ 
 			private function uploadHandler(event:Event):void {
-				var url:String = 'spring/imageUpload.action';
+				var url:String = 'teacherImgaeUploadServlet';
 				var request:URLRequest = new URLRequest(url);
 				request.method = URLRequestMethod.POST;
 				
 				var variables:URLVariables = new URLVariables();
-				variables.teacherID = teacherId; 
+				variables.employeeID = teacherId; 
 				request.data = variables;
 				
 				pbrUploadProgress.visible = true;
@@ -648,7 +642,7 @@
 			private function uploadCompleteHandler(event:DataEvent):void {
 				try {
 					var xmlResponse:XML = XML(event.data);
-					pbrUploadProgress.label = "Upload complete.";
+					pbrUploadProgress.label = "上传成功";
 					
 					// Create a custom event. 
 					var uploadEvent:UploadEvent = new UploadEvent("uploadevent");
@@ -656,6 +650,8 @@
 					uploadEvent.ServerResponse = xmlResponse.elements("file");
 					// Fetch the entire XML response. 
 					uploadEvent.ServerResponseRaw = event.data;
+					Alert.show(event.data);
+					Alert.show(xmlResponse.elements("file"));
 					// Dispatch the custom event.
 					dispatchEvent(uploadEvent);
 					
@@ -673,7 +669,6 @@
 			 * @param event IOErrorEvent object contains details of the event triggering this handler.
 			 */  
 			private function imageIOErrorHandler(event:IOErrorEvent):void {
-				txtFilename.text = "找不到相关图片";
 				imgPhoto.source = "resources/oa/layout/default_head.jpg";
 			}
 			
@@ -696,8 +691,7 @@
 			 * @param event UploadEvent custom event
 			 */ 
 			private function uploadEventHandler(event:UploadEvent):void {
-				txtServerResponse.text = event.ServerResponse;
-				txtServerResponseRaw.text = event.ServerResponseRaw;
+				
 			}
 			
 			private function getDepartmentBySymbolResult(event:ResultEvent):void {
@@ -738,7 +732,6 @@
 				
 			}
 			private function departmentSelectionChangedHandlerMain(event:Event):void{
-				
 				var target:mx.controls.ComboBox=event.target as mx.controls.ComboBox
 				systemServiceRO.getDepartmentRoles(target.selectedItem.dataField);
 				callLater(function():void{
@@ -747,7 +740,6 @@
 				});
 			}
 			private function departmentSelectionChangedHandler(event:Event):void{
-				
 				var target:mx.controls.ComboBox=event.target as mx.controls.ComboBox
 				systemServiceRO.getDepartmentRoles(target.selectedItem.dataField);
 				callLater(function():void{
@@ -843,6 +835,7 @@
 									<mx:FormItem label="身份证号" width="100%"><mx:TextInput id="idCode" width="100%"/></mx:FormItem>
 									<mx:FormItem label="邮箱" width="100%"><mx:TextInput id="mail" width="100%"/></mx:FormItem>
 									<mx:FormItem label="家庭地址" width="100%"><mx:TextInput id="teacherAddress" width="100%"/></mx:FormItem>
+									<mx:FormItem label="短号" width="100%"><mx:TextInput id="teacherno" width="100%" focusOut="teacherno_focusOutHandler(event)"/></mx:FormItem>
 								</s:VGroup>
 								<s:VGroup width="30%">
 									<s:HGroup width="100%">
@@ -869,23 +862,13 @@
 									<mx:FormItem label="照片" width="100%" height="200%">
 										<mx:Image id="imgPhoto" visible="true" autoLoad="true" width="100" height="100" source="{imageSrc}" ioError="imageIOErrorHandler(event)"/>
 										<mx:VBox>
-											<mx:TextInput id="txtFilename" editable="false" />
 											<mx:HBox>
-												<mx:Button id="btnBrowse" label="Browse" click="browseHandler(event)" />
-												<mx:Button id="btnUpload" label="Upload" click="uploadHandler(event)" visible="false" />
+												<mx:Button id="btnBrowse" label="浏览" click="browseHandler(event)" />
+												<mx:Button id="btnUpload" label="上传" click="uploadHandler(event)" visible="false" />
 											</mx:HBox>
 											<mx:ProgressBar id="pbrUploadProgress" indeterminate="false" mode="manual"
 															fontWeight="bold" color="red" labelPlacement="bottom" trackHeight="9" visible="false" />
 										</mx:VBox>
-									</mx:FormItem>
-									<mx:FormItem direction="horizontal" width="100%" label="Server Response:">
-										<mx:TextInput editable="false" id="txtServerResponse" />
-									</mx:FormItem>
-									<mx:FormItem direction="horizontal" width="100%" label="Server Response (Raw):">
-										<mx:TextArea editable="false"  id="txtServerResponseRaw" width="100%" height="150" />
-									</mx:FormItem>
-									<mx:FormItem label="短号" width="100%">
-										<mx:TextInput id="teacherno" width="100%" focusOut="teacherno_focusOutHandler(event)"/>
 									</mx:FormItem>
 								</s:VGroup>
 							</s:HGroup>
@@ -895,14 +878,9 @@
 										<s:text>教育背景</s:text>
 									</s:Label>
 								</s:VGroup>
-								<s:VGroup width="20%">
+								<s:VGroup width="25%">
 									<mx:FormItem label="学历" width="100%">
-										<s:ComboBox 
-											id="education" 
-											width="100%" 
-											selectedIndex="0" 
-											dataProvider="{educationArr}" 
-											labelField="name"/>
+										<s:ComboBox id="education" width="100%" selectedIndex="0" dataProvider="{educationArr}" labelField="name"/>
 									</mx:FormItem>
 									<mx:FormItem label="职称" width="100%">
 										<mx:TextInput id='professionalTitle' width="100%"/>
@@ -916,12 +894,12 @@
 										<mx:TextInput id='skillLevel' width="100%"/>
 									</mx:FormItem>
 								</s:VGroup>
-								<s:VGroup width="50%">
-									<mx:FormItem label="毕业院校" width="100%">
-										<mx:TextInput id='school'/>
+								<s:VGroup width="45%">
+									<mx:FormItem label="毕业院校" width="100%" labelWidth="100">
+										<mx:TextInput id='school' width="90%"/>
 									</mx:FormItem>
-									<mx:FormItem label="技能鉴定时间" width="100%">
-										<mx:DateField id="skillLevelDate" width="100%"/>
+									<mx:FormItem label="技能鉴定时间" width="100%" labelWidth="100">
+										<mx:DateField id="skillLevelDate" width="90%" formatString="YYYY-MM-DD"/>
 									</mx:FormItem>
 								</s:VGroup>
 							</s:HGroup>
@@ -937,38 +915,37 @@
 											<mx:ComboBox  id="department" 
 														  width="100%" labelField="name" dataProvider="{departmentList}"
 														  change="departmentSelectionChangedHandlerMain(event);"/>
-
 											
 										</mx:FormItem>
-										<mx:FormItem label="职务" width="30%">
-											<mx:ComboBox  width="100%" id="position"   fontSize="12" labelField="name"  textAlign="left" />
+										<mx:FormItem label="职务" width="35%">
+											<mx:ComboBox  width="90%" id="position"   fontSize="12" labelField="name"  textAlign="left" />
 
 										</mx:FormItem>
-										<mx:FormItem label="办公电话" width="50%">
-											<mx:TextInput id='officePhone' width="100%"/>
+										<mx:FormItem label="办公电话" width="45%">
+											<mx:TextInput id='officePhone' width="90%"/>
 										</mx:FormItem>
 									</s:HGroup>
 									<s:HGroup width="100%">
-										<mx:FormItem label="紧要联络电话" width="20%">
+										<mx:FormItem label="紧要联络电话" width="25%">
 											<mx:TextInput id='contactPhone' width="100%"/>
 										</mx:FormItem>
 										<mx:FormItem label="何时工作" width="30%">
 											<mx:DateField id='workDate' width="100%" formatString="YYYY-MM-DD"/>
 										</mx:FormItem>
-										<mx:FormItem label="工龄" width="50%">
-											<mx:TextInput id='workPeriod' width="100%"/>
+										<mx:FormItem label="工龄" width="45%" labelWidth="100">
+											<mx:TextInput id='workPeriod' width="90%"/>
 										</mx:FormItem>
 									</s:HGroup>
 									<s:HGroup width="100%">
-										<mx:FormItem label="入校时间" width="20%">
+										<mx:FormItem label="入校时间" width="25%">
 											<mx:DateField id="attendDate" width="100%" formatString="YYYY-MM-DD"/>
 										</mx:FormItem>
 										<mx:FormItem label="校龄" width="30%">
 											<mx:TextInput id='attendPeriod' width="100%"/>
 										</mx:FormItem>
-										<mx:FormItem label="状态" width="20%">
+										<mx:FormItem label="状态" width="20%" labelWidth="100">
 											<s:DropDownList id='status' width="100%" 
-															dataProvider="{educationArr}" 
+															dataProvider="{statusArr}" 
 															labelField="name" selectedIndex="0"/>
 										</mx:FormItem>
 										<s:Button click="validateForm(event)" label="保存"/>

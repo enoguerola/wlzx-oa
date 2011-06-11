@@ -74,7 +74,9 @@ public class TeacherService {
 			if(model.getTeacherAttendDate() != null)
 				criteria.add(Restrictions.eq("teacherAttendDate", model.getTeacherAttendDate()));
 			
-			if(model.getTeacherStatus() != null)
+			System.out.println(model.getTeacherStatus());
+			
+			if(model.getTeacherStatus() != null && model.getTeacherStatus() > -1)
 				criteria.add(Restrictions.eq("teacherStatus", model.getTeacherStatus()));
 				
 		}else{
@@ -109,7 +111,11 @@ public class TeacherService {
      * @throws ServiceException
      */
     public TeacherModel get(String id)throws ServiceException{
-    	return teacherDAO.get(id);
+    	TeacherModel teacher = teacherDAO.get(id);
+    	teacher.setExperiences(null);
+		teacher.setOtherDepartments(null);
+		teacher.setRelations(null);
+    	return teacher;
     }
 
 	public void setTeacherDAO(TeacherDAO teacherDAO) {

@@ -115,6 +115,21 @@
 		<url-pattern>/messagebroker/*</url-pattern>
 	</servlet-mapping>
 	
+	<servlet>
+		<servlet-name>Upload Image Servlet</servlet-name>
+		<servlet-class>system.wlims.basic.action.UploadHandler</servlet-class>
+		<init-param>
+			<param-name>UploadDirectory</param-name>
+			<param-value>uploads/basic/teacherProfile/</param-value>
+		</init-param>
+		<load-on-startup>4</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>Upload Image Servlet</servlet-name>
+		<url-pattern>/basic/staff/teacherImgaeUploadServlet</url-pattern>
+	</servlet-mapping>
+	
 	
 	<welcome-file-list>
 		<welcome-file>home.html</welcome-file>
