@@ -141,11 +141,11 @@ public class MoveRestDayServiceImpl implements MoveRestDayService {
 	}
 	@Override
 	public List<MoveRestDayForm> getMoveRestDayAppliesByConditions(
-			String teacherId, String type, String status,
+			String teacherId, String status,
 			String submitBeginDate, String submitEndDate,
 			String moveRestDayBeginDate, String moveRestDayEndDate) {
 		// TODO Auto-generated method stub
-		List<MoveRestDayForm> list=moveRestDayDAO.getMoveRestDayAppliesByConditions(teacherId,type,status,submitBeginDate,submitEndDate,moveRestDayBeginDate,moveRestDayEndDate);
+		List<MoveRestDayForm> list=moveRestDayDAO.getMoveRestDayAppliesByConditions(teacherId,status,submitBeginDate,submitEndDate,moveRestDayBeginDate,moveRestDayEndDate);
 		
 		return list;
 	}

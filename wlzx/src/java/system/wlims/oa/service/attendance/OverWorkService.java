@@ -11,7 +11,7 @@ public interface OverWorkService {
 	public OverWorkForm loadApplyInfoById(String id);
 	public OverWorkForm getDetailInfoById(String id);
 	public boolean cancleOverWorkApplyById(String id);
-	public List<OverWorkForm> getOverWorkAppliesByConditions(String teacherId,String type,String status,String submitBeginDate,String submitEndDate,String overWorkBeginDate,String overWorkEndDate);
+	public List<OverWorkForm> getOverWorkAppliesByConditions(String teacherId,String status,String submitBeginDate,String submitEndDate,String overWorkBeginDate,String overWorkEndDate);
 	boolean deleteOverWorkById(String id);
 	boolean approveOverWork(OverWorkForm overWork);
 

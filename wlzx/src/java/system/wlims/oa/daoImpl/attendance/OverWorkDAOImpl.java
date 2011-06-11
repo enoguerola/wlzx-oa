@@ -29,7 +29,7 @@ public class OverWorkDAOImpl  extends BaseDAOImpl<OverWorkForm> implements OverW
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<OverWorkForm> getOverWorkAppliesByConditions(
-			String teacherId, String type, String status,
+			String teacherId, String status,
 			String submitBeginDate, String submitEndDate,
 			String overWorkBeginDate, String overWorkEndDate) {
 		DetachedCriteria criteria = DetachedCriteria.forClass(OverWorkForm.class);
@@ -37,11 +37,9 @@ public class OverWorkDAOImpl  extends BaseDAOImpl<OverWorkForm> implements OverW
 			criteria.add(Restrictions.sqlRestriction("overWork_teacher_id='"+teacherId+"'"));	
 		}
 		if(StringUtils.isNotEmpty(status)){
-			criteria.add(Restrictions.sqlRestriction("overWork_status='"+status+"'"));	
+			criteria.add(Restrictions.sqlRestriction("overWork_status in("+status+")"));	
 		}
-		if(StringUtils.isNotEmpty(type)){
-			criteria.add(Restrictions.sqlRestriction("overWork_type in("+type+")"));	
-		}
+		
 		if(StringUtils.isNotEmpty(submitBeginDate)){
 			criteria.add(Restrictions.sqlRestriction("overWork_applyNo>='"+submitBeginDate.split("-")[0]+submitBeginDate.split("-")[1]+submitBeginDate.split("-")[2]+"000000'"));	
 		}
@@ -49,10 +47,10 @@ public class OverWorkDAOImpl  extends BaseDAOImpl<OverWorkForm> implements OverW
 			criteria.add(Restrictions.sqlRestriction("overWork_applyNo<='"+submitEndDate.split("-")[0]+submitEndDate.split("-")[1]+submitEndDate.split("-")[2]+"999999'"));	
 		}
 		if(StringUtils.isNotEmpty(overWorkBeginDate)){
-			criteria.add(Restrictions.sqlRestriction("overWork_beginTime>='"+overWorkBeginDate+" 0'"));	
+			criteria.add(Restrictions.sqlRestriction("overWork_times>='"+overWorkBeginDate+" 0'"));	
 		}
 		if(StringUtils.isNotEmpty(overWorkEndDate)){
-			criteria.add(Restrictions.sqlRestriction("overWork_endTime<='"+overWorkEndDate+" 1'"));	
+			criteria.add(Restrictions.sqlRestriction("overWork_times<='"+overWorkEndDate+" 1'"));	
 		}
 		criteria.addOrder(Order.desc("applyNo"));
 		List<OverWorkForm> result = this.getListByCriteria(criteria);
