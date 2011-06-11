@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Module xmlns:mx="http://www.adobe.com/2006/mxml" layout="vertical" width="100%" creationComplete="init();" height="100%" xmlns:valueObjects="oa.entity.*" xmlns:component="system.component.*" currentState="list" xmlns:mx1="library://ns.adobe.com/flex/mx">
 	<mx:StringValidator id="date_stringValidator"   property="text" required="true" requiredFieldError="加班日期不能为空"/>
-	
+	<mx:StringValidator id="officeChiefApproveTime_stringValidator"  property="text"  requiredFieldError="审批日期不能为空"/>
+	<mx:StringValidator id="officeChiefApproverName_stringValidator"    source="{officeChief_approver_name}" property="text" required="true" requiredFieldError="审批人不能为空"/>
 	<mx:StringValidator id="reason_stringValidator" source="{reason}"  property="text" required="true" requiredFieldError="加班事由不能为空"/>
 	<valueObjects:OverWorkForm id="form"/>
 	<mx:states>
@@ -296,14 +297,14 @@
 					editInit(applyId);
 					//权限控制部分
 					
-					if(this.parentApplication.currentUser.hasDam("overWorkOfficeApprove@noFilter@")){
+//					if(this.parentApplication.currentUser.hasDam("overWorkOfficeApprove@noFilter@")){
 						officeChief_approver_name.enabled=true;
 						officeChief_approver_id.enabled=true;
 						officeChief_approve_time.enabled=true;
 						officeChief_approve_status_pass.enabled=true;
 						officeChief_approve_status_deny.enabled=true;
 						officeChief_approve_option.enabled=true;
-					}
+//					}
 					
 				}
 			}
@@ -369,11 +370,19 @@
 					reason_stringValidator.source=reason;
 					validatorArr.push(date_stringValidator);
 					validatorArr.push(reason_stringValidator);
+					officeChiefApproveTime_stringValidator.source=officeChief_approve_time;
+					officeChiefApproverName_stringValidator.source=officeChief_approver_name;
+					validatorArr.push(officeChiefApproveTime_stringValidator);
+					validatorArr.push(officeChiefApproverName_stringValidator);
 					var validatorErrorArray:Array = Validator.validateAll(validatorArr);
 					var isValidForm:Boolean = validatorErrorArray.length == 0;
 					if (isValidForm) {
 						if(morning.selected==false&&afternoon.selected==false&&evening.selected==false){
 							Alert.show("请至少制定一个'"+date.text+"'当天的加班时间段");
+							return false;
+						}
+						if(officeChief_approve_status_pass.value=="1"||officeChief_approve_status_deny.value=="0"){
+							Alert.show("请指定审批结果");
 							return false;
 						}
 						continue;
@@ -672,7 +681,7 @@
 										<mx:TextInput width="120"   alpha="0.5" id="officeChief_approver_name" enabled="false"/>
 										<mx:Label  text=""   id="officeChief_approver_id" visible="false"/>
 										<mx:Label text="日期："/>
-										<mx:DateField width="120" id="officeChief_approve_time" enabled="false" formatString="YYYY-MM-DD"/>
+										<mx:DateField width="120" id="officeChief_approve_time" formatString="YYYY-MM-DD" enabled="true"/>
 									</mx:HBox>
 								</mx:VBox>
 								
