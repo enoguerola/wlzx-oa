@@ -170,6 +170,7 @@ public class ResourcesUtils {
 	
 	public static void main(String[] args){
 		System.out.println(ResourcesUtils.getWebClassPath());
+		System.out.println(ResourcesUtils.getWebRootPath());
 		System.out.println(ResourcesUtils.class.getResource(""));
 	}
 	

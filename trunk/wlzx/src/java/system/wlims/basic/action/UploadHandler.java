@@ -33,6 +33,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
 import system.components.upload.FileFilter;
+import system.utils.ResourcesUtils;
  
  
 /**
@@ -68,7 +69,8 @@ public class UploadHandler extends HttpServlet {
         response.setContentType(CONTENT_TYPE);                                                     
         // Set the servlet's response type to XML.
         PrintWriter out = null;
-        String uploadDirectory = this.getServletContext().getInitParameter("UploadDirectory");
+        String uploadDirectory = this.getServletConfig().getInitParameter("UploadDirectory");
+        uploadDirectory = ResourcesUtils.getWebRootPath() + uploadDirectory;
         // Get the upload directory from the web.xml file.
        
         ArrayList<String> allowedFormats = new ArrayList<String>();
@@ -178,9 +180,10 @@ public class UploadHandler extends HttpServlet {
                         fileFilter.setImageTypes(allowedFormats);
                         File fileList[] = (new File(uploadDirectory)).listFiles(fileFilter);        // Get a filtered list of files from the upload directory.
                        
-                        for (int i=0; i < fileList.length; i++){                                    // Delete any previous instances of the image file from the directory.
-                            (new File(fileList[i].getAbsolutePath())).delete();
-                        }
+                        if(fileList != null)
+                        	for (int i=0; i < fileList.length; i++){                                    // Delete any previous instances of the image file from the directory.
+                        		(new File(fileList[i].getAbsolutePath())).delete();
+                        	}
                        
                         disk = new File(uploadDirectory + newFileName);                             // Instantiate a File object for the file to be written.
                         item.write(disk);                                                           // Write the uploaded file to disk.
@@ -214,6 +217,7 @@ public class UploadHandler extends HttpServlet {
            
             hd.endElement("","","response");                                                        // End the "response" element.
             hd.endDocument();                                                                       // End the XML document.
+            System.out.println(hd.toString());
             out.close();                                                                            // Close the output.
         }
         /*
@@ -222,21 +226,27 @@ public class UploadHandler extends HttpServlet {
          */
         catch (TransformerConfigurationException tcException) {
             out.println(tcException.getMessage());
+            System.out.println(tcException.getMessage());
         }
         catch (FileUploadException fileUploadException) {
             out.println(fileUploadException.getMessage());
+            System.out.println(fileUploadException.getMessage());
         }
         catch (IOException ioException) {
             out.println(ioException.getMessage());
+            System.out.println(ioException.getMessage());
         }
         catch (SAXException saxException) {
             out.println(saxException.getMessage());
+            System.out.println(saxException.getMessage());
         }
         catch (NullPointerException exception) {
             out.println(exception.getMessage());
+            System.out.println(exception.getMessage());
         }
         catch (Exception e){
             out.println(e.getMessage());
+            System.out.println(e.getMessage());
         }
     }
 
