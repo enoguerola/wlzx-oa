@@ -30,12 +30,12 @@
 			import mx.events.FlexEvent;
 			import mx.events.ValidationResultEvent;
 			import mx.formatters.DateFormatter;
+			import mx.modules.*;
 			import mx.rpc.events.*;
 			import mx.validators.Validator;
-			import mx.modules.*;
 			
-			import system.utils.CommonUtils;
 			import system.event.UploadEvent;
+			import system.utils.CommonUtils;
 			
 			private var validatorArr:Array;
 			private var createDate:Date;
@@ -93,6 +93,8 @@
 			
 			private function init():void
 			{
+//				var parms:String=this.id;
+//				Alert.show(parms);
 				showFirst = true;
 				
 				validatorArr = new Array();
@@ -131,9 +133,11 @@
 			
 			private function initStaffWin():void{
 				imageSrc = 'resources/oa/layout/default_head.jpg';
-				Alert.show(this.label + "000" + this.id + this.name);
-				if(this.toolTip=='Update'){		
-					//teacherId = this.id;//弹出窗口时设定的中转参数
+//				Alert.show(((Object)(this.owner)).label + "000" + ((Object)(this.owner)).id + ((Object)(this.owner)).name);
+				var parms:String=((Object)(this.owner)).id;
+				if(parms!=null&&parms!=""){		
+					teacherId = parms ;//弹出窗口时设定的中转参数
+					Alert.show("编辑ID："+teacherId);
 					//teacherServiceRO.get(teacherId);
 				}else{
 					teacher = new TeacherModel();
