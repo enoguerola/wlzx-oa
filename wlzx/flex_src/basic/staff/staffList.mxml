@@ -227,8 +227,9 @@
 			
 			public function editItem(item_id:String):void
 			{
+//				Alert.show(item_id);
 				var parent:Object=(Object)(((Object)(this.owner)).owner);
-				parent.addTab(item_id,parent.nav,"basic/staff/staffInput.swf");
+				parent.addTab("staff_input_menu-edit","教师编辑",parent.nav,"basic/staff/staffInput.swf",null,item_id);
 			}
 			
 			public function changestatus(item_id:String, status:int):void
@@ -253,8 +254,7 @@
 					
 					<mx:LinkButton  label="详细" icon="@Embed(source='../WebContent/resources/common/tools/button_detail_icon.png')"  click="detail(event);"/>
 					<mx:Label text="|"/>
-					<mx:LinkButton  label="搜索" icon="@Embed(source='../WebContent/resources/common/tools/button_search_icon.png')" click="search();"/>
-					<mx:Label text="|"/>
+					
 					<mx:LinkButton  label="导入" icon="@Embed(source='../WebContent/resources/common/tools/button_down_icon.png')" click="importExcel(event);"/>
 					<mx:Label text="|"/>
 					<mx:LinkButton  label="导出" icon="@Embed(source='../WebContent/resources/common/tools/button_down_icon.png')" click="exportExcel(event);"/>
@@ -264,25 +264,32 @@
 					<mx:Label id="lblProgress" text="上传"/>
 				</mx:HBox>
 			</s:HGroup>
-			<s:HGroup width="100%" height="100%" gap="0">
-				<s:VGroup  width="220" height="100%" verticalAlign="middle" horizontalAlign="center">
-					<mx:Form width="100%" height="100%" >		
-						<mx:FormHeading label="搜索条件" fontSize="15" width="100%" textAlign="left"/>
-						<mx:FormItem label="姓名" width="100%">
+			<s:VGroup width="100%" height="100%" gap="0">
+				<mx:HBox width="100%" height="60"   horizontalGap="10" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
+						<mx:FormHeading label="搜索条件" fontSize="15" />
+						<s:HGroup verticalAlign="middle">
+							<s:Label  text="姓名" />
 							<s:TextInput width="100%" id="_name"/>
-						</mx:FormItem>
-						<mx:FormItem label="部门" width="100%">
+						</s:HGroup>	
+						<s:HGroup verticalAlign="middle">
+							<s:Label  text="部门" />
 							<s:ComboBox width="100%" id="department" dataProvider="{departmentArr}" selectedIndex="0" labelField="name"/>
-						</mx:FormItem>
-						<mx:FormItem label="状态 " width="100%">
+						</s:HGroup>
+						<s:HGroup verticalAlign="middle">
+							<s:Label  text="状态" />
 							<s:ComboBox width="100%" id="status" dataProvider="{statusArr}" selectedIndex="0" labelField="name"/>
-						</mx:FormItem>
-						<mx:FormItem label="入校时间" >
+						</s:HGroup>
+						<s:HGroup verticalAlign="middle">
+							<s:Label  text="入校时间" />
 							<mx:DateField formatString="YYYY-MM-DD" width="100%" id="attendDate"/>
-						</mx:FormItem>						
+						</s:HGroup>
+										
 						
-					</mx:Form>
-				</s:VGroup>
+					<mx:Button  label="搜索"  width="80"   click="search()"/>
+					
+					
+				</mx:HBox>
+					
 				<s:VGroup  width="100%" height="100%" gap="0" >
 					<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="false"   borderAlpha="0.2" verticalAlign="middle"   id="teacherDG" pagecount="13">				
 						<component:mygridcolumns>
@@ -346,7 +353,7 @@
 					</component:WlzxPageDataGrid>
 					
 				</s:VGroup>
-			</s:HGroup>
+			</s:VGroup>
 		</s:VGroup>
 		
 		

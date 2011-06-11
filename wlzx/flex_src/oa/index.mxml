@@ -164,11 +164,11 @@
 				
 			}
 			
-			public function addTab(symbol:String,title:String, navigator:SuperTabNavigator, moduleUrl:String=null, icon:Class=null):void {
+			public function addTab(symbol:String,title:String, navigator:SuperTabNavigator, moduleUrl:String=null, icon:Class=null,parms:String=null):void {
 				for(var i:int=0;i<navigator.getChildren().length;i++){
 					// 将对象转换为一个泛型
 					var obj:* = navigator.getChildAt(i);
-					if(obj.label == symbol){
+					if(obj.name == symbol){
 						navigator.selectedIndex = i;
 						return;
 					}
@@ -184,6 +184,7 @@
 				child.icon = icon;	
 				child.url = moduleUrl+"?uid=" + new Date().getTime();
 				child.owner=this;
+				child.id=parms;//传递参数用
 				//Flex 使用ModuleLoader调用多模块时出现强制类型转换错误的解决方法
 				child.applicationDomain=ApplicationDomain.currentDomain;
 				callLater(child.loadModule);
