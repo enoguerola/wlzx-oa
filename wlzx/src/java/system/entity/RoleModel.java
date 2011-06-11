@@ -97,17 +97,26 @@ public class RoleModel extends BaseModel {
      * @创建时间 2011-4-15 上午10:41:15
      */ 
 	public DepartmentModel getBelongDepartment() {
-		if(getDepartments().iterator()!=null)
-			return getDepartments().iterator().next();
+		RoleModel role=getTopLeadRole(this);
+		if(role.getDepartments()!=null&&role.getDepartments().size()>0)
+			return role.getDepartments().iterator().next();
 		else return null;
+		
+	}
+	/**
+	 * 获取角色本部门主管角色
+	 * */
+	public static RoleModel getTopLeadRole(RoleModel role){
+		if(getLeaderRole(role)==null) return role;
+		else return getTopLeadRole(getLeaderRole(role));
 	}
 	/** 
      * 获取角色直属领导角色
      * @创建时间 2011-4-15 上午10:41:15
      */ 
-	public RoleModel getLeaderRole() {
-		if(getLeaders().iterator()!=null)
-			return getLeaders().iterator().next();
+	public static RoleModel getLeaderRole(RoleModel role) {
+		if(role.getLeaders()!=null&&role.getLeaders().size()>0)
+			return role.getLeaders().iterator().next();
 		else return null;
 	}
 

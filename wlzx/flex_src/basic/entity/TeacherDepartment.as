@@ -2,12 +2,13 @@ package basic.entity
 {
 	[Bindable]
 	[RemoteClass(alias="system.wlims.basic.entity.teacher.TeacherDepartment")] 
-	public class TeacherDepartment extends BaseModel
+	public class TeacherDepartment
 	{
-		public var department:String;
-		public var position:String;
+		public var departmentName:String;
+		public var positionName:String;
+		public var positionId:String;
+		public var teacherId:String;
 		
-		public var teacher:TeacherModel;
 		
 		public function TeacherDepartment()
 		{

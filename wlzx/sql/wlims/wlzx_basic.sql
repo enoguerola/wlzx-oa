@@ -67,33 +67,12 @@ CREATE TABLE IF NOT EXISTS `basic_teacher` (
 --
 
 INSERT INTO `basic_teacher` (`teacher_id`, `user_id`, `teacher_cname`, `teacher_sex`, `teacher_birthday`, `teacher_marrage`, `teacher_nation`, `teacher_politics_status`, `teacher_identify`, `teacher_native_place`, `teacher_email`, `teacher_home_phone`, `teacher_address`, `teacher_mobile_phone`, `teacher_no`, `teacher_education`, `teacher_profession`, `teacher_graduate_school`, `teacher_professional_title`, `teacher_skill_level`, `teacher_skill_level_date`, `teacher_department`, `teacher_position`, `teacher_office_phone`, `teacher_contact_phone`, `teacher_work_date`, `teacher_attend_date`, `teacher_status`, `teacher_photo_src`, `teacher_create_date`, `teacher_modified_date`) VALUES
-(1, 22, 'sas', 0, '2011-05-16', 0, '', 0, '', '', '', '', NULL, '12212', '1212', '0', '', '', '', '', NULL, '0', '', '', '', NULL, NULL, 0, NULL, '2011-05-31', '2011-05-31'),
+(1, 3, 'sas', 0, '2011-05-16', 0, '', 0, '', '', '', '', NULL, '12212', '1212', '0', '', '', '', '', NULL, '0', '', '', '', NULL, NULL, 0, NULL, '2011-05-31', '2011-05-31'),
 (2, 24, 'ss', 0, '2011-05-17', 0, 'ss', 0, '', 'ss', '', '', NULL, '313131', '12', '0', '', '', '', '', NULL, '0', 'ss', '', '', NULL, NULL, 2, NULL, '2011-05-31', '2011-05-31'),
-(3, 25, 'yufeng', 0, '2011-05-09', 0, 'ss', 0, '', 'sssss', '', '', NULL, '', '12313', '0', '', '', '', '', NULL, '0', '1212', '', '', NULL, NULL, 3, NULL, '2011-05-31', '2011-05-31');
+(3, 2, 'yufeng', 0, '2011-05-09', 0, 'ss', 0, '', 'sssss', '', '', NULL, '', '12313', '0', '', '', '', '', NULL, '0', '1212', '', '', NULL, NULL, 3, NULL, '2011-05-31', '2011-05-31');
 
 -- --------------------------------------------------------
 
---
--- 表的结构 `basic_teacher_department`
---
-
-CREATE TABLE IF NOT EXISTS `basic_teacher_department` (
-  `department_id` int(20) NOT NULL auto_increment COMMENT '系统自增编号',
-  `teacher_id` bigint(20) NOT NULL COMMENT '教师外键',
-  `teacher_department` varchar(50) NOT NULL COMMENT '部门',
-  `teacher_position` varchar(50) NOT NULL COMMENT '职务',
-  PRIMARY KEY  (`department_id`),
-  KEY `department_id` (`department_id`),
-  KEY `teacher_id` (`teacher_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='教师所在其他部门' AUTO_INCREMENT=4 ;
-
---
--- 转存表中的数据 `basic_teacher_department`
---
-
-INSERT INTO `basic_teacher_department` (`department_id`, `teacher_id`, `teacher_department`, `teacher_position`) VALUES
-(1, 3, 's', 'ss'),
-(2, 3, 's', 'ss');
 
 -- --------------------------------------------------------
 

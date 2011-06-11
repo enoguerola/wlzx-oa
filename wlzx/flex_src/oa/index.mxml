@@ -49,6 +49,7 @@
 //				Alert.show(this.parentApplication.account);
 				account.text=account.text.concat(this.parentApplication.account);
 				roles.text=roles.text.concat(this.parentApplication.roles);
+				mainRole.text=mainRole.text.concat(this.parentApplication.mainRole);
 				lastLoginTime.text=lastLoginTime.text.concat(this.parentApplication.lastLoginTime);
 				var timer:Timer = new Timer(1000);			
 				timer.addEventListener(TimerEvent.TIMER, updateCurrentTime);				
@@ -302,8 +303,9 @@
 		<s:VGroup width="35%" height="100%" verticalAlign="middle">
 			<s:HGroup width="35%">
 				<s:Label id="account" text="当前用户："/>
-				<s:Label id="roles" text="用户角色："/>
+				<s:Label id="mainRole" text="主角色："/>
 			</s:HGroup>
+			<s:Label id="roles" text="所有角色："/>
 			<s:HGroup width="35%">
 				<s:Label id="lastLoginTime" text="上次登录："/>
 				<s:Label text="当前时间："/>

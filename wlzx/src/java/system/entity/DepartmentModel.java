@@ -3,6 +3,9 @@
  */
 package system.entity;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -33,7 +36,6 @@ public class DepartmentModel  extends BaseModel{
 	private Set<RoleModel> roles=new TreeSet<RoleModel>();//部门角色集
 	private Set<RoleModel> leaderRoles=new TreeSet<RoleModel>();//部门上级领导角色集
 	private Set<DataAccessModeModel> dataAccessModes=new TreeSet<DataAccessModeModel>();//部门数据访问权限
-	private Set<UserModel> users=new TreeSet<UserModel>();//部门用户集
 	public String getDetail() {
 		return detail;
 	}
@@ -100,14 +102,33 @@ public class DepartmentModel  extends BaseModel{
 		this.leaderRoles = leaderRoles;
 	}
 
+	//获得部门及子部门所有用户集
 	public Set<UserModel> getUsers() {
+		Set<UserModel> users=new HashSet<UserModel>();
+		for(RoleModel role:this.getAllRoles()){
+			for(UserModel user:role.getUsers())
+			users.add(user);
+		}
 		return users;
 	}
-
-	public void setUsers(Set<UserModel> users) {
-		this.users = users;
+	//获得部门及子部门所有岗位
+	public List<RoleModel> getAllRoles(){
+		List<RoleModel> result=new ArrayList<RoleModel>();
+		for(RoleModel role:this.getRoles()){
+			result.add(role);
+			addSubRoles(role,result);
+		}
+		return result;
 	}
-
+	public void addSubRoles(RoleModel role,List<RoleModel> result){
+		if(role==null)return ;
+		for(RoleModel _role:role.getSubordinates()){
+			result.add(_role);
+			addSubRoles(_role,result);
+		}
+		
+	}
+	
 	
 
 }

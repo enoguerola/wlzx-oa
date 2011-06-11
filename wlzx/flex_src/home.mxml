@@ -34,6 +34,7 @@
 			public var default_url:String="oa/index.swf";
 			public var account:String;
 			public var roles:String;
+			public var mainRole:String;
 			public var lastLoginTime:String;
 			public var currentUser:UserModel;
 			private function init():void{
@@ -85,6 +86,7 @@
 				account=currentUser.person.name;
 				roles=currentUser.getAllRoles();
 //				Alert.show(roles);
+				mainRole=currentUser.mainRole.name;
 				lastLoginTime=CommonUtils.formatDate(currentUser.lastLoginTime);
 //				Alert.show(event.result.name);
 			} 
