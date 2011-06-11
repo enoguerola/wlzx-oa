@@ -93,14 +93,19 @@ public class UserModel  extends BaseModel implements UserDetails{
 	}
 	public void setRoles(Set<RoleModel> roles) {
 		this.roles = roles;
-	}	
-
+	}
+	//获取所有角色
+	public Set<RoleModel> getAllRoles() {
+		Set<RoleModel> allRoles=new TreeSet<RoleModel>(getRoles());
+		allRoles.add(getMainRole());
+		return allRoles;
+	}
 
 	//用户拥有的权限
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		Set<GrantedAuthority> authSet = new HashSet<GrantedAuthority>();  
-        Set<RoleModel> roles = this.getRoles();  
+        Set<RoleModel> roles = this.getAllRoles();  
 //        System.out.println(roles.size()+"getAuthorities");  
         for(RoleModel role : roles) {  
         	authSet.add(new SimpleGrantedAuthority(role.getSymbol())); 
@@ -148,7 +153,7 @@ public class UserModel  extends BaseModel implements UserDetails{
 	@SuppressWarnings("unchecked")
 	public Set<String>  getAllDams(){
 		Set<String> damList=new HashSet();
-		Set<RoleModel> roleList=getRoles();
+		Set<RoleModel> roleList=getAllRoles();
 		Iterator<RoleModel> iterator=roleList.iterator();
 		while(iterator.hasNext()){
 			RoleModel _role=iterator.next();	
@@ -188,7 +193,7 @@ public class UserModel  extends BaseModel implements UserDetails{
 	//获得用户所在部门集
 	public Set<DepartmentModel> getDepartments() {
 		Set<DepartmentModel> departments=new HashSet<DepartmentModel>();
-		for(RoleModel role:getRoles()){
+		for(RoleModel role:getAllRoles()){
 			departments.add(role.getBelongDepartment());
 		}
 		return departments;

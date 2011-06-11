@@ -99,4 +99,14 @@ public class RoleDAO extends BaseDAOImpl<RoleModel> {
 		List<RoleModel> result = this.getListByCriteria(criteria);
 		return result;
 	}
+	@SuppressWarnings("unchecked")
+	public RoleModel getRoleByName(String roleName) {
+		if (StringUtils.isNotEmpty(roleName)) {
+			DetachedCriteria criteria = DetachedCriteria.forClass(RoleModel.class);
+			criteria.add(Restrictions.eq("name", roleName));
+			List<RoleModel> result = this.getListByCriteria(criteria);
+			return result != null && result.size() > 0 ? result.get(0) : null;
+		}
+		return null;
+	}
 }

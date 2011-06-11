@@ -108,7 +108,7 @@ public class SystemService{
 //		UserModel user=userDAO.get("2");
 		UserModel user=SecurityUserHolder.getCurrentUser();
 		if(user!=null){
-			for(RoleModel role:user.getRoles()){
+			for(RoleModel role:user.getAllRoles()){
 				for(DataAccessModeModel dam:role.getDataAccessModes()){
 					if(!dams.contains(dam))
 					dams.add(dam);
@@ -237,7 +237,7 @@ public class SystemService{
 		List<UserModel> unAuthUsers=new ArrayList<UserModel>();
 		List<UserModel> allUsers=userDAO.getAllUsers();
 		for(UserModel user:allUsers){
-			if(user.getRoles()==null||user.getRoles().size()==0){
+			if(user.getAllRoles()==null||user.getAllRoles().size()==0){
 				unAuthUsers.add(user);
 			}
 		}
