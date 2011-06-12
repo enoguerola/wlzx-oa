@@ -12,6 +12,7 @@ import system.dao.UserDAO;
 import system.entity.RoleModel;
 import system.entity.UserModel;
 import system.utils.StringUtils;
+import system.utils.TripleObject;
 import system.wlims.basic.dao.teacher.TeacherDAO;
 import system.wlims.basic.entity.teacher.TeacherDepartment;
 import system.wlims.basic.entity.teacher.TeacherModel;
@@ -73,7 +74,19 @@ public class TeacherAccountBridgeService {
 		user.getRoles().remove(role);
 		userDAO.saveOrUpdate(user);
 	}
-
+	public List<TripleObject<String, String,String>> teacherAccountGetAll(){
+		List<TripleObject<String, String,String>> triples = new ArrayList<TripleObject<String, String,String>>();
+		List<TeacherModel> teachers =teacherDAO.getTeachersByStatus(null) ;
+		if(teachers != null){
+			for(TeacherModel teacher : teachers){
+				UserModel user=userDAO.get(teacher.getUserID());
+				if(user==null) continue;
+				triples.add(new TripleObject<String, String,String>(
+						teacher.getName(), user.getName(),user.getId()));
+			}
+		}
+		return triples;
+	}
 	public TeacherDAO getTeacherDAO() {
 		return teacherDAO;
 	}

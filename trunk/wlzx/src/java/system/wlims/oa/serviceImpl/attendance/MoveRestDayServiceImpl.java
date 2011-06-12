@@ -16,7 +16,7 @@ public class MoveRestDayServiceImpl implements MoveRestDayService {
 	public void addMoveRestDayApply(MoveRestDayForm moveRestDay) {
 		// TODO Auto-generated method stub
 		Date currenDate=new Date();
-		moveRestDay.setApplyNo(UtilDateTime.toDateString(currenDate, "yyyyMMddhhmmss"));
+		moveRestDay.setApplyNo(UtilDateTime.toDateString(currenDate, "yyyyMMddHHmmss"));
 		MoveRestDayWorkFlowLog log=new MoveRestDayWorkFlowLog();
 		log.setOperationName("发起申请");
 		log.setOperationResult("生成编号为"+moveRestDay.getApplyNo()+"的申请记录");
@@ -52,23 +52,23 @@ public class MoveRestDayServiceImpl implements MoveRestDayService {
 			newMoveRestDay.setOfficeChiefApproveOption(moveRestDay.getOfficeChiefApproveOption());
 			newMoveRestDay.setOfficeChiefApproverId(moveRestDay.getOfficeChiefApproverId());
 			newMoveRestDay.setOfficeChiefApproveTime(moveRestDay.getOfficeChiefApproveTime());
-			newMoveRestDay.setOfficeChiefStatus(moveRestDay.getOfficeChiefStatus());
 			newMoveRestDay.setVicePrincipalApproveOption(moveRestDay.getVicePrincipalApproveOption());
 			newMoveRestDay.setVicePrincipalApproverId(moveRestDay.getVicePrincipalApproverId());
 			newMoveRestDay.setVicePrincipalApproveTime(moveRestDay.getVicePrincipalApproveTime());
-			newMoveRestDay.setVicePrincipalStatus(moveRestDay.getVicePrincipalStatus());
 		
 			newMoveRestDay.setReason(moveRestDay.getReason());
 			
 			if(newMoveRestDay.getOfficeChiefStatus().intValue()!=moveRestDay.getOfficeChiefStatus().intValue()){
 				MoveRestDayWorkFlowLog log=new MoveRestDayWorkFlowLog();
 				log.setOperationName("处室审批");
-				if(newMoveRestDay.getOfficeChiefStatus().intValue()==1){
+				if(moveRestDay.getOfficeChiefStatus().intValue()==1){
 					log.setOperationResult("处室审批编号为"+moveRestDay.getApplyNo()+"的申请通过");
+					newMoveRestDay.setOfficeChiefStatus(MoveRestDayForm.Status.OfficePass.getValue());
 					newMoveRestDay.setStatus(MoveRestDayForm.Status.OfficePass.getValue());
 				}
-				else if(newMoveRestDay.getOfficeChiefStatus().intValue()==0){
+				else if(moveRestDay.getOfficeChiefStatus().intValue()==2){
 					log.setOperationResult("处室审批编号为"+moveRestDay.getApplyNo()+"的申请不通过");
+					newMoveRestDay.setOfficeChiefStatus(MoveRestDayForm.Status.Deny.getValue());
 					newMoveRestDay.setStatus(MoveRestDayForm.Status.Deny.getValue());	
 				}
 				log.setOperationTime(new Date());
@@ -78,12 +78,14 @@ public class MoveRestDayServiceImpl implements MoveRestDayService {
 			if(newMoveRestDay.getVicePrincipalStatus().intValue()!=moveRestDay.getVicePrincipalStatus().intValue()){
 				MoveRestDayWorkFlowLog log=new MoveRestDayWorkFlowLog();
 				log.setOperationName("分管副校长审批");
-				if(newMoveRestDay.getVicePrincipalStatus().intValue()==1){
+				if(moveRestDay.getVicePrincipalStatus().intValue()==1){
 					log.setOperationResult("分管副校长审批编号为"+moveRestDay.getApplyNo()+"的申请通过");
+					newMoveRestDay.setVicePrincipalStatus(MoveRestDayForm.Status.Pass.getValue());
 					newMoveRestDay.setStatus(MoveRestDayForm.Status.Pass.getValue());	
 				}
-				else if(newMoveRestDay.getVicePrincipalStatus().intValue()==0){
+				else if(moveRestDay.getVicePrincipalStatus().intValue()==2){
 					log.setOperationResult("分管副校长审批编号为"+moveRestDay.getApplyNo()+"的申请不通过");
+					newMoveRestDay.setVicePrincipalStatus(MoveRestDayForm.Status.Deny.getValue());
 					newMoveRestDay.setStatus(MoveRestDayForm.Status.Deny.getValue());	
 				}
 				log.setOperationTime(new Date());

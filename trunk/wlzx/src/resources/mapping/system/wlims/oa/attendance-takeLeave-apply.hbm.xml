@@ -86,7 +86,7 @@
 		<property name="status" type="int">
 			<column name="takeLeave_status" />
 		</property>
-		<set name="logs" lazy="false" table="wlzx_oa_workflow_log" cascade="all-delete-orphan" where="operation_object_type='TakeLeaveWorkFlowLog'">
+		<set name="logs" lazy="false" table="wlzx_oa_workflow_log" cascade="all-delete-orphan" where="operation_object_type='TakeLeaveWorkFlowLog'" order-by="operation_time">
         	<key column="operation_object_id" not-null="true" />
         	<one-to-many  class="system.wlims.oa.entity.workFlow.takeLeave.TakeLeaveWorkFlowLog" /> 
         </set>		

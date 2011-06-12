@@ -30,7 +30,7 @@ public class ApplyServiceImpl implements ApplyService{
 	public boolean applyAdd(ApplyModel apply) {
 		// TODO Auto-generated method stub
 		Date currenDate=new Date();
-		apply.setApplyNo(UtilDateTime.toDateString(currenDate, "yyyyMMddhhmmss"));
+		apply.setApplyNo(UtilDateTime.toDateString(currenDate, "yyyyMMddHHmmss"));
 		apply.setApplyCreationDate(currenDate);
 		apply.setApplyStatus(ApplyModel.ApplyStatus.WAITING.getStatus());
 		applyDAO.saveOrUpdate(apply);

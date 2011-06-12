@@ -17,7 +17,7 @@ public class TakeLeaveServiceImpl implements TakeLeaveService {
 	public void addTakeLeaveApply(TakeLeaveForm takeLeave) {
 		// TODO Auto-generated method stub
 		Date currenDate=new Date();
-		takeLeave.setApplyNo(UtilDateTime.toDateString(currenDate, "yyyyMMddhhmmss"));
+		takeLeave.setApplyNo(UtilDateTime.toDateString(currenDate, "yyyyMMddHHmmss"));
 		TakeLeaveWorkFlowLog log=new TakeLeaveWorkFlowLog();
 		log.setOperationName("发起申请");
 		log.setOperationResult("生成编号为"+takeLeave.getApplyNo()+"的申请记录");

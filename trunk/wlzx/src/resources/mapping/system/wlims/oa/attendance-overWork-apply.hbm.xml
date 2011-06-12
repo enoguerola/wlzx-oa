@@ -38,7 +38,7 @@
 			<column name="overWork_status" />
 		</property>
 		
-		<set name="logs" lazy="false" table="wlzx_oa_workflow_log" cascade="all-delete-orphan" where="operation_object_type='OverWorkWorkFlowLog'">
+		<set name="logs" lazy="false" table="wlzx_oa_workflow_log" cascade="all-delete-orphan" where="operation_object_type='OverWorkWorkFlowLog'" order-by="operation_time">
         	<key column="operation_object_id" not-null="true" />
         	<one-to-many  class="system.wlims.oa.entity.workFlow.overWork.OverWorkWorkFlowLog" /> 
         </set>		

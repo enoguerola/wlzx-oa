@@ -112,8 +112,9 @@
 			
 			protected function loadApplyInfoById_resultHandler(event:ResultEvent):void{
 				form=event.result as OverWorkForm;
-				applyNo.text=form.applyNo;
-				teacher_name.text=form.teacherId; 
+				applyNo.text="编号：【"+form.applyNo+"】";
+				applyNo.visible=true;
+				teacher_name.text=this.parentApplication.getTeacherNameByAccountId(form.teacherId); 
 				teacher_id.text=form.teacherId;
 				var times_attr:Array=form.times.split(";");
 				timeContainer.removeAllChildren();
@@ -131,15 +132,29 @@
 			}
 			protected function getDetailInfoByIdById_resultHandler(event:ResultEvent):void{
 				form=event.result as OverWorkForm;
-				detail_applyNo.text=form.applyNo;
-				detail_teacher_name.text=form.teacherId; 
+				detail_applyNo.text="编号：【"+form.applyNo+"】";
+
+				detail_applyNo.visible=true;
+				detail_teacher_name.text=this.parentApplication.getTeacherNameByAccountId(form.teacherId); 
 				detail_teacher_id.text=form.teacherId;
 				detail_times.text=timeTip(form.times);
-			//	detail_beginDate.text=form.beginTime.split(" ")[0];
-			//	detail_beginDate_section.selectedIndex=parseInt(form.beginTime.split(" ")[1]);
-			//	detail_endDate.text=form.endTime.split(" ")[0];
-			//	detail_endDate_section.selectedIndex=parseInt(form.endTime.split(" ")[1]);
 				detail_reason.text=form.reason;
+				
+				detail_officeChief_approve_option.text=form.officeChiefApproveOption;
+				detail_officeChief_approve_time.text=CommonUtils.formatDate(form.officeChiefApproveTime,"YYYY-MM-DD");
+				detail_officeChief_approver_id.text=form.officeChiefApproverId;
+				detail_officeChief_approver_name.text=this.parentApplication.getTeacherNameByAccountId(form.officeChiefApproverId);
+				
+				if(form.officeChiefStatus==1)
+					detail_officeChief_approve_status_pass.selected=true;
+				else if(form.officeChiefStatus==2)
+					detail_officeChief_approve_status_deny.selected=true;
+				else{
+					detail_officeChief_approve_status_pass.selected=false;
+					detail_officeChief_approve_status_deny.selected=false;
+					
+				}
+				
 				
 				logTable.initdata(form.logs as ArrayCollection);
 				this.currentState='detail';
@@ -595,13 +610,13 @@
 									</mx:TextArea>
 									<mx:HBox>
 										<mx:RadioButtonGroup id="officeChief_approve_status" />  
-										<mx:RadioButton groupName="officeChief_approve_status" value="1" label="通过" width="80" enabled="true"/>  
-										<mx:RadioButton groupName="officeChief_approve_status" value="2" label="不通过" width="80" enabled="true"/>  
+										<mx:RadioButton groupName="officeChief_approve_status" value="1" label="通过" width="80" enabled="false"/>  
+										<mx:RadioButton groupName="officeChief_approve_status" value="2" label="不通过" width="80" enabled="false"/>  
 										<mx:Label text="签名："/>
-										<mx:TextInput width="120"   alpha="0.5" id="officeChief_approver_name" enabled="true"/>
+										<mx:TextInput width="120"   alpha="0.5" id="officeChief_approver_name" enabled="false"/>
 										<mx:Label  text=""   id="officeChief_approver_id" visible="false"/>
 										<mx:Label text="日期："/>
-										<mx:DateField width="120" id="officeChief_approve_time" enabled="true" formatString="YYYY-MM-DD"/>
+										<mx:DateField width="120" id="officeChief_approve_time"  formatString="YYYY-MM-DD" enabled="false" />
 									</mx:HBox>
 								</mx:VBox>
 								
@@ -688,8 +703,8 @@
 									</mx:TextArea>
 									<mx:HBox>
 										<mx:RadioButtonGroup id="detail_officeChief_approve_status" enabled="false"/>  
-										<mx:RadioButton groupName="detail_officeChief_approve_status" value="1" label="通过" width="80" enabled="false"/>  
-										<mx:RadioButton groupName="detail_officeChief_approve_status" value="2" label="不通过" width="80" enabled="false"/>  
+										<mx:RadioButton groupName="detail_officeChief_approve_status" value="1" label="通过" width="80" id="detail_officeChief_approve_status_pass" enabled="false"/>  
+										<mx:RadioButton groupName="detail_officeChief_approve_status" value="2" label="不通过" width="80" id="detail_officeChief_approve_status_deny" enabled="false"/>  
 										<mx:Label text="签名："/>
 										<mx:TextInput width="120"   alpha="0.5" id="detail_officeChief_approver_name" enabled="false"/>
 										<mx:Label  text=""   id="detail_officeChief_approver_id" visible="false"/>
@@ -720,7 +735,7 @@
 									<mx:itemRenderer>
 										<mx:Component>
 											<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
-												<mx:Label text="{data.operationTeacherId}"/>
+												<mx:Label text="{this.parentApplication.getTeacherNameByAccountId(data.operationTeacherId)}"/>
 											</mx:VBox>																			
 										</mx:Component>
 									</mx:itemRenderer>

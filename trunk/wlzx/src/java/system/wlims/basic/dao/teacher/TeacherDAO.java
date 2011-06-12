@@ -26,4 +26,14 @@ public class TeacherDAO extends BaseDAOImpl<TeacherModel>{
 		}
 		return null;
 	}
+	@SuppressWarnings("unchecked")
+	public List<TeacherModel> getTeachersByStatus(String states) {
+		// TODO Auto-generated method stub
+		DetachedCriteria criteria = DetachedCriteria.forClass(TeacherModel.class);
+		if (StringUtils.isNotEmpty(states)) {
+			criteria.add(Restrictions.sqlRestriction("teacher_status  in("+states+")"));
+		}
+		List<TeacherModel> result = this.getListByCriteria(criteria);
+		return result;
+	}
 }
