@@ -12,6 +12,9 @@
 		<mx:RemoteObject id="securityUserHolder" destination="securityUserHolder"  fault="securityUserHolder_fault_handler(event);">
 			<mx:method name="getCurrentUser"  concurrency="last"  result="getCurrentUserResult(event);" />
 		</mx:RemoteObject>
+		<mx:RemoteObject id="teacherAccountBridgeServiceRO" destination="teacherAccountBridgeServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+			<mx:method name="teacherAccountGetAll"  concurrency="last"  result="teacherAccountGetAll_resultHandler(event);" />
+		</mx:RemoteObject>
 	</fx:Declarations>
 	<fx:Script>    
 		<![CDATA[   
@@ -26,7 +29,8 @@
 			import mx.modules.*;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
-			
+			import system.utils.*;
+
 			import system.entity.*;
 			import system.event.BaseEvent;
 			import system.implement.BaseImpl;
@@ -37,14 +41,19 @@
 			public var mainRole:String;
 			public var lastLoginTime:String;
 			public var currentUser:UserModel;
+			public var allTeacherAcccounts:ArrayCollection = new ArrayCollection();
+			
 			private function init():void{
 				securityUserHolder.getCurrentUser();
-				loadModule(default_url);
-				//启动权限控制
-				SecurityControler.start(null,'enabled');
+				teacherAccountBridgeServiceRO.teacherAccountGetAll();
+				
+				
 				
 			}
-			
+			protected function systemFaultHandler(event:FaultEvent):void {
+				Alert.show(event.fault.faultString, 'Error');
+				
+			}
 			private function readyModule( event:ModuleEvent ) : void
 			{ 
 				var ml:ModuleLoader = event.target as ModuleLoader;				
@@ -80,6 +89,32 @@
 			{
 				Alert.show("退出失败");
 			}
+			private function teacherAccountGetAll_resultHandler(event:ResultEvent):void{
+				//				accounts.addItem({name:"",account:"",id:""});
+				var allList:ArrayCollection=event.result as ArrayCollection;				
+				for(var i:int=0;i<allList.length;i++){
+					var triple:TripleObject=allList.getItemAt(i) as TripleObject;
+					allTeacherAcccounts.addItem({name:triple.left,account:triple.middle,id:triple.right});
+				}
+			}
+			public function getTeacherNameByAccountId(id:String):String{
+				for(var i:int=0;i<allTeacherAcccounts.length;i++){
+					var account:Object=allTeacherAcccounts.getItemAt(i);
+					if(account.id==id){
+						return account.name;
+					}
+				}
+				return "";
+			}
+			public function getItemByAccountId(id:String):Object{
+				for(var i:int=0;i<allTeacherAcccounts.length;i++){
+					var item:Object=allTeacherAcccounts.getItemAt(i);
+					if(item.id==id){
+						return item;
+					}
+				}
+				return null;
+			}
 			private function getCurrentUserResult(event:ResultEvent):void  
 			{  
 				currentUser=event.result as UserModel;
@@ -89,6 +124,11 @@
 				mainRole=currentUser.mainRole.name;
 				lastLoginTime=CommonUtils.formatDate(currentUser.lastLoginTime);
 //				Alert.show(event.result.name);
+				callLater(function():void{
+					loadModule(default_url);
+					//启动权限控制
+					SecurityControler.start(null,'enabled');
+				});
 			} 
 			private function securityUserHolder_fault_handler(event:FaultEvent):void
 			{

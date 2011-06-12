@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2011 年 06 月 11 日 17:14
+-- 生成日期: 2011 年 06 月 12 日 16:05
 -- 服务器版本: 5.0.91
 -- PHP 版本: 5.2.13
 
@@ -956,20 +956,20 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_role_user_relationship` (
   `role_id` bigint(20) NOT NULL,
   `user_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=14 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=21 ;
 
 --
 -- 转存表中的数据 `wlzx_system_role_user_relationship`
 --
 
 INSERT INTO `wlzx_system_role_user_relationship` (`id`, `role_id`, `user_id`) VALUES
-(2, 18, 2),
 (4, 1, 2),
 (5, 20, 3),
-(10, 21, 2),
 (11, 6, 3),
-(12, 15, 3),
-(13, 22, 3);
+(13, 22, 3),
+(14, 21, 3),
+(15, 18, 3),
+(20, 19, 2);
 
 -- --------------------------------------------------------
 
@@ -1016,15 +1016,17 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_user` (
   `main_role_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `symbol` (`symbol`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='系统用户' AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='系统用户' AUTO_INCREMENT=6 ;
 
 --
 -- 转存表中的数据 `wlzx_system_user`
 --
 
 INSERT INTO `wlzx_system_user` (`id`, `symbol`, `sequence`, `name`, `password`, `last_login_time`, `last_login_ip`, `account_style`, `person_id`, `person_name`, `email`, `creation_date`, `modified_date`, `active`, `main_role_id`) VALUES
-(2, 'admin', 0, 'admin', 'c81e728d9d4c2f636f067f89cc14862c', '2011-06-11 17:03:45', '127.0.0.1', 0, NULL, NULL, NULL, '2011-05-07 11:04:22', '2011-06-11 14:33:56', 1, 1),
-(3, '3', 0, '3', 'eccbc87e4b5ce2fe28308fd9f2a7baf3', '2011-05-30 14:52:46', '127.0.0.1', 0, NULL, NULL, NULL, '2011-05-23 01:59:10', '2011-06-11 14:33:56', 1, 3);
+(2, 'admin', 0, 'admin', 'c81e728d9d4c2f636f067f89cc14862c', '2011-06-12 15:53:43', '127.0.0.1', 0, NULL, NULL, NULL, '2011-05-07 11:04:22', '2011-06-11 14:33:56', 1, 1),
+(3, '3', 0, '3', 'eccbc87e4b5ce2fe28308fd9f2a7baf3', '2011-05-30 14:52:46', '127.0.0.1', 0, NULL, NULL, NULL, '2011-05-23 01:59:10', '2011-06-11 14:33:56', 1, 3),
+(4, '2344', 0, '2344', 'f52854cc99ae1c1966b0a21d0127975b', '2011-06-11 18:31:09', '127.0.0.1', 0, NULL, NULL, 'yufeng@12', '2011-06-11 18:14:46', '2011-06-11 18:14:47', 1, 1),
+(5, '23445', 0, '23445', '2b3c63c6c00ff7f8ea6323be685a2dbc', NULL, '', 0, NULL, NULL, 'yufeng@12', '2011-06-11 18:32:47', '2011-06-11 18:32:48', 1, 1);
 
 -- --------------------------------------------------------
 

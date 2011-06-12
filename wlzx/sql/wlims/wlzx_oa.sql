@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2011 年 06 月 10 日 21:33
+-- 生成日期: 2011 年 06 月 12 日 16:04
 -- 服务器版本: 5.0.91
 -- PHP 版本: 5.2.13
 
@@ -121,10 +121,10 @@ CREATE TABLE IF NOT EXISTS `wlzx_oa_overwork_apply` (
   `overWork_officeChief_approver_id` bigint(20) default NULL,
   `overWork_officeChief_approve_time` datetime default NULL,
   `overWork_officeChief_approve_option` text,
-  `overWork_officeChief_status` tinyint(1) default NULL,
+  `overWork_officeChief_status` smallint(6) default NULL,
   `overWork_status` int(11) NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=9 ;
 
 --
 -- 转存表中的数据 `wlzx_oa_overwork_apply`
@@ -132,7 +132,11 @@ CREATE TABLE IF NOT EXISTS `wlzx_oa_overwork_apply` (
 
 INSERT INTO `wlzx_oa_overwork_apply` (`id`, `overWork_applyNo`, `overWork_teacher_id`, `overWork_times`, `overWork_reason`, `overWork_officeChief_approver_id`, `overWork_officeChief_approve_time`, `overWork_officeChief_approve_option`, `overWork_officeChief_status`, `overWork_status`) VALUES
 (1, '20110610114719', 2, '2011-06-10 1-1-1;2011-06-11 1-1-1;', '3333333333333', NULL, NULL, NULL, 0, 3),
-(2, '20110610050009', 2, '2011-06-17 1-0-0;2011-06-23 0-0-1;2011-06-15 1-1-0;', '12222222222222', NULL, NULL, NULL, 0, 0);
+(3, '20110612125500', 2, '2011-06-12 1-0-0;2011-06-16 0-1-0;', '32g', 4, '2011-06-15 00:00:00', '不准', 1, 1),
+(5, '20110612032254', 2, '2011-06-17 1-0-0;', '21', 4, '2011-06-14 00:00:00', 'ewg', 2, 2),
+(6, '20110612035424', 2, '2011-06-15 1-0-0;', '111', NULL, NULL, NULL, 0, 0),
+(7, '201106121506171', 2, '2011-06-15 0-1-1;', 'sa', NULL, NULL, NULL, 0, 0),
+(8, '20110612160243', 2, '2011-06-01 0-1-1;', 'b', NULL, NULL, NULL, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -194,7 +198,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_oa_workflow_log` (
   `operation_name` varchar(200) NOT NULL,
   `operation_result` text,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=17 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=28 ;
 
 --
 -- 转存表中的数据 `wlzx_oa_workflow_log`
@@ -207,7 +211,16 @@ INSERT INTO `wlzx_oa_workflow_log` (`id`, `operation_object_type`, `operation_ob
 (4, 'OverWorkWorkFlowLog', 1, 2, '2011-06-10 11:47:19', '发起申请', '生成编号为20110610114719的申请记录'),
 (5, 'OverWorkWorkFlowLog', 1, 2, '2011-06-10 16:43:24', '编辑申请', '编辑编号为20110610114719的申请记录'),
 (12, 'OverWorkWorkFlowLog', 1, 2, '2011-06-10 16:59:37', '取消申请', '取消编号为20110610114719的申请记录'),
-(13, 'OverWorkWorkFlowLog', 2, 2, '2011-06-10 17:00:09', '发起申请', '生成编号为20110610050009的申请记录'),
 (14, 'MoveRestDayWorkFlowLog', 1, 2, '2011-06-10 21:04:54', '发起申请', '生成编号为20110610090454的申请记录'),
 (15, 'MoveRestDayWorkFlowLog', 1, 2, '2011-06-10 21:05:03', '编辑申请', '编辑编号为20110610090454的申请记录'),
-(16, 'MoveRestDayWorkFlowLog', 1, 2, '2011-06-10 21:05:17', '取消申请', '取消编号为20110610090454的申请记录');
+(16, 'MoveRestDayWorkFlowLog', 1, 2, '2011-06-10 21:05:17', '取消申请', '取消编号为20110610090454的申请记录'),
+(17, 'OverWorkWorkFlowLog', 3, 2, '2011-06-12 12:55:00', '发起申请', '生成编号为20110612125500的申请记录'),
+(18, 'OverWorkWorkFlowLog', 3, 2, '2011-06-12 12:58:51', '编辑申请', '编辑编号为20110612125500的申请记录'),
+(20, 'OverWorkWorkFlowLog', 3, 2, '2011-06-12 15:22:32', '编辑申请', '编辑编号为20110612125500的申请记录'),
+(21, 'OverWorkWorkFlowLog', 5, 2, '2011-06-12 15:22:54', '发起申请', '生成编号为20110612032254的申请记录'),
+(22, 'OverWorkWorkFlowLog', 3, 4, '2011-06-12 15:39:24', '处室审批', '处室审批编号为20110612125500的申请通过'),
+(23, 'OverWorkWorkFlowLog', 5, 4, '2011-06-12 15:41:23', '处室审批', '处室审批编号为20110612032254的申请不通过'),
+(24, 'OverWorkWorkFlowLog', 6, 2, '2011-06-12 15:54:24', '发起申请', '生成编号为20110612035424的申请记录'),
+(25, 'OverWorkWorkFlowLog', 7, 2, '2011-06-12 15:59:02', '发起申请', '生成编号为201106121506171的申请记录'),
+(26, 'OverWorkWorkFlowLog', 8, 2, '2011-06-12 16:02:43', '发起申请', '生成编号为20110612160243的申请记录'),
+(27, 'OverWorkWorkFlowLog', 8, 2, '2011-06-12 16:03:14', '编辑申请', '编辑编号为20110612160243的申请记录');

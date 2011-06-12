@@ -41,4 +41,41 @@
         	<one-to-many  class="system.wlims.oa.entity.course.adjust.ApplyItemModel" /> 
         </set>		
 	</class>
+	<class name="system.wlims.oa.entity.course.adjust.ApplyItemModel" table="wlzx_oa_course_adjust_apply_item">
+		<id name="id">
+			<column name="id" />
+			<generator class="native" />
+		</id>
+		<property name="applyClass" type="string">
+			<column name="apply_class" />
+		</property>
+		<property name="applyCourse" type="string">
+			<column name="apply_course" />
+		</property>
+		<property name="applyCourseDate" type="java.util.Date">
+			<column name="apply_course_date" />
+		</property>
+		<property name="applyCourseTime" type="string">
+			<column name="apply_course_time" />
+		</property>
+		<property name="adjustMeanDate" type="java.util.Date">
+			<column name="adjust_mean_date" />
+		</property>
+		<property name="adjustMeanTeacherId" type="string">
+			<column name="adjust_mean_teacher_id" />
+		</property>
+		<property name="adjustActualDate" type="java.util.Date">
+			<column name="adjust_actual_date" />
+		</property>
+		<property name="adjustActualTime" type="string">
+			<column name="adjust_actual_time" />
+		</property>
+		<property name="adjustActualTeacherId" type="string">
+			<column name="adjust_actual_teacher_id" />
+		</property>
+		
+		<many-to-one class="system.wlims.oa.entity.course.adjust.ApplyModel" 
+			name="apply" 
+			column="apply_id"/>	
+	</class>
 </hibernate-mapping>

@@ -15,7 +15,7 @@ public class OverWorkServiceImpl implements OverWorkService {
 	public void addOverWorkApply(OverWorkForm overWork) {
 		// TODO Auto-generated method stub
 		Date currenDate=new Date();
-		overWork.setApplyNo(UtilDateTime.toDateString(currenDate, "yyyyMMddhhmmss"));
+		overWork.setApplyNo(UtilDateTime.toDateString(currenDate, "yyyyMMddHHmmss"));
 		OverWorkWorkFlowLog log=new OverWorkWorkFlowLog();
 		log.setOperationName("发起申请");
 		log.setOperationResult("生成编号为"+overWork.getApplyNo()+"的申请记录");
@@ -54,19 +54,20 @@ public class OverWorkServiceImpl implements OverWorkService {
 			newOverWork.setOfficeChiefApproveOption(overWork.getOfficeChiefApproveOption());
 			newOverWork.setOfficeChiefApproverId(overWork.getOfficeChiefApproverId());
 			newOverWork.setOfficeChiefApproveTime(overWork.getOfficeChiefApproveTime());
-			newOverWork.setOfficeChiefStatus(overWork.getOfficeChiefStatus());
 			newOverWork.setReason(overWork.getReason());
 			
 			if(newOverWork.getOfficeChiefStatus().intValue()!=overWork.getOfficeChiefStatus().intValue()){
 				OverWorkWorkFlowLog log=new OverWorkWorkFlowLog();
 				log.setOperationName("处室审批");
-				if(newOverWork.getOfficeChiefStatus()==1){
+				if(overWork.getOfficeChiefStatus().intValue()==1){
 					log.setOperationResult("处室审批编号为"+overWork.getApplyNo()+"的申请通过");
 					newOverWork.setOfficeChiefStatus(OverWorkForm.Status.OfficePass.getValue());
+					newOverWork.setStatus(OverWorkForm.Status.OfficePass.getValue());
 				}
-				else if(newOverWork.getOfficeChiefStatus()==0){
+				else if(overWork.getOfficeChiefStatus().intValue()==2){
 					log.setOperationResult("处室审批编号为"+overWork.getApplyNo()+"的申请不通过");
-					newOverWork.setOfficeChiefStatus(OverWorkForm.Status.OfficeDeny.getValue());	
+					newOverWork.setOfficeChiefStatus(OverWorkForm.Status.OfficeDeny.getValue());
+					newOverWork.setStatus(OverWorkForm.Status.OfficeDeny.getValue());
 				}
 				log.setOperationTime(new Date());
 				log.setOperationTeacherId(overWork.getOfficeChiefApproverId());

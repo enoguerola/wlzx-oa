@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Module xmlns:mx="http://www.adobe.com/2006/mxml" layout="vertical" width="100%" creationComplete="init();" height="100%" xmlns:valueObjects="oa.entity.*" xmlns:component="system.component.*" currentState="list" xmlns:mx1="library://ns.adobe.com/flex/mx">
+<mx:Module xmlns:mx="http://www.adobe.com/2006/mxml" 
+		   xmlns:hc="com.hillelcoren.components.*"
+		   xmlns:render="system.component.render.*"
+		   layout="vertical" width="100%" creationComplete="init();" height="100%" xmlns:valueObjects="oa.entity.*" xmlns:component="system.component.*" currentState="list" xmlns:mx1="library://ns.adobe.com/flex/mx">
 	<mx:StringValidator id="date_stringValidator"   property="text" required="true" requiredFieldError="加班日期不能为空"/>
 	<mx:StringValidator id="officeChiefApproveTime_stringValidator"  property="text"  requiredFieldError="审批日期不能为空"/>
 	<mx:StringValidator id="officeChiefApproverName_stringValidator"    source="{officeChief_approver_name}" property="text" required="true" requiredFieldError="审批人不能为空"/>
@@ -47,6 +50,7 @@
 		
 		
 	</mx:transitions>
+	
 	<mx:RemoteObject id="overWorkServiceRO" destination="overWorkServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 		<mx:method name="addOverWorkApply"  concurrency="last"  result="addOverWorkApplyResult_resultHandler(event);" />
 		<mx:method name="approveOverWork"  concurrency="last"  result="approveOverWorkResult_resultHandler(event);" />
@@ -60,6 +64,7 @@
 			import mx.collections.ArrayCollection;
 			import mx.containers.FormItem;
 			import mx.controls.Alert;
+			import mx.controls.CheckBox;
 			import mx.controls.DateField;
 			import mx.core.FlexGlobals;
 			import mx.events.*;
@@ -69,9 +74,9 @@
 			import mx.managers.PopUpManager;
 			import mx.rpc.events.*;
 			import mx.validators.Validator;
-			import mx.controls.CheckBox;
-
-			import system.utils.CommonUtils;
+			
+			import system.component.WlzxLockWin;
+			import system.utils.*;
 			[Embed(source="../WebContent/resources/common/tools/button_add_icon.png")]
 			private const button_add:Class;
 			[Embed(source="../WebContent/resources/common/tools/button_delete_icon.png")]
@@ -92,12 +97,16 @@
 			
 			
 			private function init():void{
+				search_account.dataProvider=this.parentApplication.allTeacherAcccounts;
 				search();
 			}
 			protected function systemFaultHandler(event:FaultEvent):void {
+				unLockWin();
 				Alert.show(event.fault.faultString, 'Error');
 				
 			}
+			
+			
 			protected function addOverWorkApplyResult_resultHandler(event:ResultEvent):void
 			{
 				Alert.show("添加成功");
@@ -106,7 +115,7 @@
 			}
 			protected function approveOverWorkResult_resultHandler(event:ResultEvent):void
 			{
-				Alert.show("更新成功");
+				Alert.show("审批成功");
 				this.currentState='list';
 				search();
 			}
@@ -123,8 +132,9 @@
 			
 			protected function loadApplyInfoById_resultHandler(event:ResultEvent):void{
 				form=event.result as OverWorkForm;
-				applyNo.text=form.applyNo;
-				teacher_name.text=form.teacherId; 
+				applyNo.text="编号：【"+form.applyNo+"】";
+				
+				teacher_name.text=this.parentApplication.getTeacherNameByAccountId(form.teacherId); 
 				teacher_id.text=form.teacherId;
 				var times_attr:Array=form.times.split(";");
 				timeContainer.removeAllChildren();
@@ -138,9 +148,24 @@
 				reason.text=form.reason;
 				
 				officeChief_approve_option.text=form.officeChiefApproveOption;
-				officeChief_approve_time.text=CommonUtils.formatDate(form.officeChiefApproveTime,"YYYY-MM-DD");
+				if(form.officeChiefApproveTime!=null)
+					officeChief_approve_time.text=CommonUtils.formatDate(form.officeChiefApproveTime,"YYYY-MM-DD");
 				officeChief_approver_id.text=form.officeChiefApproverId;
-				officeChief_approve_status.selectedValue=form.officeChiefStatus;
+				officeChief_approver_name.selectedItem=this.parentApplication.getItemByAccountId(form.officeChiefApproverId);
+//				if(form.officeChiefStatus==1)
+//					officeChief_approve_status_pass.selected=true;
+//				else if(form.officeChiefStatus==2)
+//					officeChief_approve_status_deny.selected=true;
+//				else{
+//					officeChief_approve_status_pass.selected=false;
+//					officeChief_approve_status_deny.selected=false;
+//					
+//				}
+				var choose:String=form.officeChiefStatus+"";
+//				Alert.show(choose);
+				officeChief_approve_status.selectedValue=choose;
+
+//				officeChief_approve_status.selectedValue=form.officeChiefStatus;
 				
 				
 				
@@ -166,22 +191,22 @@
 				rowItem_date.addElement(afternoon);
 				rowItem_date.addElement(evening);
 				row.addElement(rowItem_date);
-				var row1Item_add:GridItem=new GridItem();
-				if(timeContainer.getChildren().length==0){
-					var rowItem_addButton:LinkButton=new LinkButton();
-					rowItem_addButton.label="添加";
-					rowItem_addButton.setStyle("icon", button_add);
-					rowItem_addButton.addEventListener(MouseEvent.CLICK,function():void{
-						addItem();
-					});
-					rowItem_date.addElement(rowItem_addButton);
-				}else{
-					var rowItem_removeButton:LinkButton=new LinkButton();
-					rowItem_removeButton.label="删除";
-					rowItem_removeButton.setStyle("icon", button_delete);
-					rowItem_removeButton.addEventListener(MouseEvent.CLICK,removeItem_clickHandler);
-					rowItem_date.addElement(rowItem_removeButton);
-				}
+//				var row1Item_add:GridItem=new GridItem();
+//				if(timeContainer.getChildren().length==0){
+//					var rowItem_addButton:LinkButton=new LinkButton();
+//					rowItem_addButton.label="添加";
+//					rowItem_addButton.setStyle("icon", button_add);
+//					rowItem_addButton.addEventListener(MouseEvent.CLICK,function():void{
+//						addItem();
+//					});
+//					rowItem_date.addElement(rowItem_addButton);
+//				}else{
+//					var rowItem_removeButton:LinkButton=new LinkButton();
+//					rowItem_removeButton.label="删除";
+//					rowItem_removeButton.setStyle("icon", button_delete);
+//					rowItem_removeButton.addEventListener(MouseEvent.CLICK,removeItem_clickHandler);
+//					rowItem_date.addElement(rowItem_removeButton);
+//				}
 				timeContainer.addChild(row);
 				if(time!=null){
 					var time_attr:Array=time.split(" ");
@@ -192,10 +217,13 @@
 					var _moning:String=sections.split("-")[0];
 					var _afternoon:String=sections.split("-")[1];
 					var _evening:String=sections.split("-")[2];
-					if(_moning=="1")morning.selected=true;
-					if(_afternoon=="1")afternoon.selected=true;
-					if(_evening=="1")evening.selected=true;
-					
+					if(_moning=="1")morning.selected=true;else morning.selected=false;
+					if(_afternoon=="1")afternoon.selected=true;else afternoon.selected=false;
+					if(_evening=="1")evening.selected=true;else evening.selected=false;
+					date.enabled=false;
+					morning.enabled=false;
+					afternoon.enabled=false;
+					evening.enabled=false;
 				}
 				
 				
@@ -207,8 +235,8 @@
 			}
 			protected function getDetailInfoByIdById_resultHandler(event:ResultEvent):void{
 				form=event.result as OverWorkForm;
-				detail_applyNo.text=form.applyNo;
-				detail_teacher_name.text=form.teacherId; 
+				detail_applyNo.text="编号：【"+form.applyNo+"】";
+				detail_teacher_name.text=this.parentApplication.getTeacherNameByAccountId(form.teacherId); 
 				detail_teacher_id.text=form.teacherId;
 				detail_times.text=timeTip(form.times);
 				detail_reason.text=form.reason;
@@ -216,8 +244,19 @@
 				detail_officeChief_approve_option.text=form.officeChiefApproveOption;
 				detail_officeChief_approve_time.text=CommonUtils.formatDate(form.officeChiefApproveTime,"YYYY-MM-DD");
 				detail_officeChief_approver_id.text=form.officeChiefApproverId;
+				detail_officeChief_approver_name.text=this.parentApplication.getTeacherNameByAccountId(form.officeChiefApproverId);
 				detail_officeChief_approve_status.selectedValue=form.officeChiefStatus;
-				
+
+//				if(form.officeChiefStatus==1)
+//					detail_officeChief_approve_status_pass.selected=true;
+//				else if(form.officeChiefStatus==2)
+//					detail_officeChief_approve_status_deny.selected=true;
+//				else{
+//					detail_officeChief_approve_status_pass.selected=false;
+//					detail_officeChief_approve_status_deny.selected=false;
+//
+//				}
+//				
 				
 				logTable.initdata(form.logs as ArrayCollection);
 				this.currentState='detail';
@@ -228,9 +267,11 @@
 			{
 				var allList:ArrayCollection=event.result as ArrayCollection;
 				applyTable.initdata(allList);
+				unLockWin();
 			}
 			private function search():void{
-				var teacher:String=search_account.text;
+				lockWin();
+				var teacher:String=search_account_id.text;
 				var status:String=search_state.selectedItem.data;
 				var submitBeginDate:String=search_date_begin.text;
 				var submitEndDate:String=search_date_end.text;
@@ -267,6 +308,11 @@
 			public function editInit(applyId:String):void{
 				
 				saveButton.label="审批";
+				officeChief_approver_name.dataProvider=this.parentApplication.allTeacherAcccounts;
+				officeChief_approve_time.text="";
+				officeChief_approver_name.selectedItemId=-1;
+				officeChief_approver_id.text="";
+				officeChief_approve_status.selection=null;
 				overWorkServiceRO.loadApplyInfoById(applyId);
 			}
 			public function enterEdit(applyId:String):void{
@@ -346,8 +392,12 @@
 						//						officeChief_approve_time.text=CommonUtils.formatDate(form.officeChiefApproveTime,"YYYY-MM-DD");
 						if(officeChief_approver_id.text!="")
 							form.officeChiefApproverId=officeChief_approver_id.text;
-						if(officeChief_approve_status.selectedValue!=null)
-							form.officeChiefStatus=parseInt(officeChief_approve_status.selectedValue.toString());
+//						if(officeChief_approve_status_pass.selected==true)
+//							form.officeChiefStatus=parseInt(officeChief_approve_status_pass.value.toString());
+//						else if(officeChief_approve_status_deny.selected==true)
+							
+							form.officeChiefStatus=parseInt(officeChief_approve_status.selection.value.toString());
+//						Alert.show(form.officeChiefStatus+"");
 
 						overWorkServiceRO.approveOverWork(form);
 						
@@ -381,7 +431,7 @@
 							Alert.show("请至少制定一个'"+date.text+"'当天的加班时间段");
 							return false;
 						}
-						if(officeChief_approve_status_pass.value=="1"||officeChief_approve_status_deny.value=="0"){
+						if(officeChief_approve_status_pass.selected==false&&officeChief_approve_status_deny.selected==false){
 							Alert.show("请指定审批结果");
 							return false;
 						}
@@ -428,8 +478,51 @@
 				return result;			
 				
 			}
+
+			private function searchAccountHandleAutoCompleteChange():void
+			{
+				var color:Object = search_account.selectedItem;
+				
+				if (color != null && color.hasOwnProperty( "id" ))
+				{
+					search_account_id.text=color.id;
+				} else{
+					search_account_id.text="";
+				}               
+			}
+			private function officeChiefApproverHandleAutoCompleteChange():void
+			{
+				var color:Object = officeChief_approver_name.selectedItem;
+				
+				if (color != null && color.hasOwnProperty( "id" ))
+				{
+					officeChief_approver_id.text=color.id;
+				} else{
+					officeChief_approver_id.text="";
+				}               
+			}
+			
+			private var window:WlzxLockWin=null;
+			private function lockWin():void{
+				
+				window=WlzxLockWin(PopUpManager.createPopUp(this,WlzxLockWin,true)); 
+				PopUpManager.centerPopUp(window);
+				window.percentHeight=100;
+				window.percentWidth=100;			
+				
+			}
+			private function unLockWin():void{
+				if(window!=null)
+					PopUpManager.removePopUp(window);
+			}
 		]]> 		
 	</mx:Script> 
+	<mx:Component id="searchAccountDropDownItemRenderer">
+		<render:AdvancedItemRenderer selectedItems="{ outerDocument.search_account.selectedItems }" />
+	</mx:Component>
+	<mx:Component id="officeChiefApproverDropDownItemRenderer">
+		<render:AdvancedItemRenderer selectedItems="{ outerDocument.officeChief_approver_name.selectedItems }" />
+	</mx:Component>
 	<mx:Panel width="100%" height="100%"   title="加班/出差审批"  borderVisible="false" id="panel" dropShadowVisible="false" >
 		
 		
@@ -440,16 +533,19 @@
 				</mx:HBox>
 			</mx:HBox>
 			<mx:VBox width="100%" height="100%"  verticalGap="10" verticalAlign="middle" horizontalAlign="center" >
-				<mx:VBox width="100%" height="100"   horizontalGap="10" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
+				<mx:VBox width="100%" height="110"   horizontalGap="10" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
 					<mx:FormHeading label="条件查询">
 						
 					</mx:FormHeading>
 					<mx:HBox>
 						<mx:HBox verticalAlign="middle">
 							<mx:Label  text="申请教师"  width="100"  textAlign="right"/>
-							<component:AutoComplete id="search_account"  IsfocusInDropDown="true"  IsAutoComplete="true" width="120" >
+							<hc:AutoComplete id="search_account"  labelField="name"  width="300"  matchType="anyPart" prompt="选择教师"  change="{ searchAccountHandleAutoCompleteChange() }" dropDownItemRenderer="{ searchAccountDropDownItemRenderer }" selectedItemStyleName="none">
 								
-							</component:AutoComplete>
+							</hc:AutoComplete>
+							<mx:Label id="search_account_id" visible="false">
+								
+							</mx:Label>
 						</mx:HBox>	
 						
 						<mx:HBox verticalAlign="middle">
@@ -492,7 +588,17 @@
 										</mx:Component>						
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
-								
+								<mx:DataGridColumn textAlign="center" headerText="申请人" >
+									<mx:itemRenderer>
+										<mx:Component>
+											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" >
+												<mx1:Text text="{this.parentApplication.getTeacherNameByAccountId(data.teacherId)}" width="100">
+													
+												</mx1:Text>
+											</mx:HBox>
+										</mx:Component>
+									</mx:itemRenderer>
+								</mx:DataGridColumn>
 								<mx:DataGridColumn textAlign="center" headerText="加班时间" >
 									<mx:itemRenderer>
 										<mx:Component>
@@ -517,7 +623,7 @@
 										</mx:Component>
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="状态"  width="60" dataField="status">
+								<mx:DataGridColumn textAlign="center" headerText="状态"  width="100" dataField="status">
 									<mx:itemRenderer>
 										<mx:Component>
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
@@ -555,7 +661,7 @@
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0">
 												<mx:LinkButton  label="[审批]"   click="{this.outerDocument.enterEdit(data.id);}" enabled="{checkAuth(data)}">											
 												</mx:LinkButton>
-												<mx:LinkButton  label="[删除]"   click="{this.outerDocument.deleteApply(data.id);}" enabled="{checkAuth(data)}">											
+												<mx:LinkButton  label="[删除]"   click="{this.outerDocument.deleteApply(data.id);}" >											
 												</mx:LinkButton>
 												<mx:Script>
 													<![CDATA[
@@ -586,7 +692,7 @@
 										
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="查看" width="100">
+								<mx:DataGridColumn textAlign="center" headerText="查看" width="60">
 									<mx:itemRenderer>
 										<mx:Component>
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0">
@@ -621,8 +727,8 @@
 			<mx:VBox width="100%" height="50%"   horizontalGap="10" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
 				<mx:VBox width="100%" horizontalAlign="center" verticalGap="0">
 					<mx:Label  text="温岭中学教职工加班单"    width="100%"  letterSpacing="5" textAlign="center" fontSize="14"  fontWeight="bold" height="30"  id="type_label"/>
-					<mx:HBox>
-						<mx:Label  text="编号【】" id="applyNo"   visible="false" width="100%"  letterSpacing="5" textAlign="right" fontSize="14"  fontWeight="bold" height="20" />
+					<mx:HBox width="100%" horizontalAlign="right">
+						<mx:Label  text="编号【】" id="applyNo"   visible="true" width="100%"  letterSpacing="5" textAlign="right" fontSize="14"  fontWeight="bold" height="20" />
 						<mx:Label text="0" id="applyType" visible="false"/>
 					</mx:HBox>
 					
@@ -656,7 +762,7 @@
 								<mx1:Text text="加班事由"  textAlign="center" width="80" id="reason_label" enabled="false"/>
 							</mx:GridItem>
 							<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5"     verticalAlign="middle"  colSpan="3" horizontalAlign="center">
-								<mx:TextArea width="100%" height="50" id="reason">
+								<mx:TextArea width="100%" height="50" id="reason" enabled="false">
 									
 								</mx:TextArea>
 							</mx:GridItem>
@@ -675,11 +781,16 @@
 									</mx:TextArea>
 									<mx:HBox>
 										<mx:RadioButtonGroup id="officeChief_approve_status"/>  
-										<mx:RadioButton groupName="officeChief_approve_status" value="1" id="officeChief_approve_status_pass" label="通过" width="80" enabled="false"/>  
-										<mx:RadioButton groupName="officeChief_approve_status" value="2" id="officeChief_approve_status_deny" label="不通过" width="80" enabled="false" />  
+										<mx:RadioButton group="{officeChief_approve_status}" value="1" id="officeChief_approve_status_pass" label="通过" width="80" enabled="false"/>  
+										<mx:RadioButton group="{officeChief_approve_status}" value="2" id="officeChief_approve_status_deny" label="不通过" width="80" enabled="false" />  
 										<mx:Label text="签名："/>
-										<mx:TextInput width="120"   alpha="0.5" id="officeChief_approver_name" enabled="false"/>
-										<mx:Label  text=""   id="officeChief_approver_id" visible="false"/>
+										<hc:AutoComplete id="officeChief_approver_name"  labelField="name"  width="120"   alpha="0.5" enabled="false"  matchType="anyPart" prompt="选择"  change="{ officeChiefApproverHandleAutoCompleteChange() }" dropDownItemRenderer="{ officeChiefApproverDropDownItemRenderer }" selectedItemStyleName="none">
+											
+										</hc:AutoComplete>
+										<mx:Label id="officeChief_approver_id" visible="false">
+											
+										</mx:Label>
+
 										<mx:Label text="日期："/>
 										<mx:DateField width="120" id="officeChief_approve_time" formatString="YYYY-MM-DD" enabled="true"/>
 									</mx:HBox>
@@ -712,8 +823,8 @@
 			<mx:VBox width="100%"    horizontalGap="10" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
 				<mx:VBox width="100%" horizontalAlign="center" verticalGap="0">
 					<mx:Label  text="温岭中学教职工加班单"    width="100%"  letterSpacing="5" textAlign="center" fontSize="14"  fontWeight="bold" height="30"  id="detail_type_label"/>
-					<mx:HBox>
-						<mx:Label  text="编号【】" id="detail_applyNo"   visible="false" width="100%"  letterSpacing="5" textAlign="right" fontSize="14"  fontWeight="bold" height="20" />
+					<mx:HBox width="100%" horizontalAlign="right">
+						<mx:Label  text="编号【】" id="detail_applyNo"   visible="true" width="100%"  letterSpacing="5" textAlign="right" fontSize="14"  fontWeight="bold" height="20" />
 						<mx:Label text="0" id="detail_applyType" visible="false"/>
 					</mx:HBox>
 					
@@ -767,9 +878,9 @@
 										
 									</mx:TextArea>
 									<mx:HBox>
-										<mx:RadioButtonGroup id="detail_officeChief_approve_status" enabled="false"/>  
-										<mx:RadioButton groupName="detail_officeChief_approve_status" value="1" label="通过" width="80" enabled="false"/>  
-										<mx:RadioButton groupName="detail_officeChief_approve_status" value="2" label="不通过" width="80" enabled="false"/>  
+										<mx:RadioButtonGroup id="detail_officeChief_approve_status" />  
+										<mx:RadioButton group="{detail_officeChief_approve_status}" value="1" label="通过" id="detail_officeChief_approve_status_pass" width="80" selected="false" enabled="false"/>  
+										<mx:RadioButton group="{detail_officeChief_approve_status}" value="2" label="不通过" id="detail_officeChief_approve_status_deny" width="80" selected="false" enabled="false"/>  
 										<mx:Label text="签名："/>
 										<mx:TextInput width="120"   alpha="0.5" id="detail_officeChief_approver_name" enabled="false"/>
 										<mx:Label  text=""   id="detail_officeChief_approver_id" visible="false"/>
@@ -800,7 +911,9 @@
 									<mx:itemRenderer>
 										<mx:Component>
 											<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
-												<mx:Label text="{data.operationTeacherId}"/>
+												<mx1:Text text="{this.parentApplication.getTeacherNameByAccountId(data.operationTeacherId)}" >
+													
+												</mx1:Text>
 											</mx:VBox>																			
 										</mx:Component>
 									</mx:itemRenderer>

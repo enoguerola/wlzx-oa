@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2011 年 06 月 06 日 22:52
+-- 生成日期: 2011 年 06 月 12 日 16:04
 -- 服务器版本: 5.0.91
 -- PHP 版本: 5.2.13
 
@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS `basic_teacher` (
   PRIMARY KEY  (`teacher_id`),
   KEY `teacher_no` (`teacher_no`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='教师记录' AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='教师记录' AUTO_INCREMENT=6 ;
 
 --
 -- 转存表中的数据 `basic_teacher`
@@ -68,11 +68,9 @@ CREATE TABLE IF NOT EXISTS `basic_teacher` (
 
 INSERT INTO `basic_teacher` (`teacher_id`, `user_id`, `teacher_cname`, `teacher_sex`, `teacher_birthday`, `teacher_marrage`, `teacher_nation`, `teacher_politics_status`, `teacher_identify`, `teacher_native_place`, `teacher_email`, `teacher_home_phone`, `teacher_address`, `teacher_mobile_phone`, `teacher_no`, `teacher_education`, `teacher_profession`, `teacher_graduate_school`, `teacher_professional_title`, `teacher_skill_level`, `teacher_skill_level_date`, `teacher_department`, `teacher_position`, `teacher_office_phone`, `teacher_contact_phone`, `teacher_work_date`, `teacher_attend_date`, `teacher_status`, `teacher_photo_src`, `teacher_create_date`, `teacher_modified_date`) VALUES
 (1, 3, 'sas', 0, '2011-05-16', 0, '', 0, '', '', '', '', NULL, '12212', '1212', '0', '', '', '', '', NULL, '0', '', '', '', NULL, NULL, 0, NULL, '2011-05-31', '2011-05-31'),
-(2, 24, 'ss', 0, '2011-05-17', 0, 'ss', 0, '', 'ss', '', '', NULL, '313131', '12', '0', '', '', '', '', NULL, '0', 'ss', '', '', NULL, NULL, 2, NULL, '2011-05-31', '2011-05-31'),
-(3, 2, 'yufeng', 0, '2011-05-09', 0, 'ss', 0, '', 'sssss', '', '', NULL, '', '12313', '0', '', '', '', '', NULL, '0', '1212', '', '', NULL, NULL, 3, NULL, '2011-05-31', '2011-05-31');
-
--- --------------------------------------------------------
-
+(3, 2, 'yufeng', 0, '2011-05-09', 0, 'ss', 0, '', 'sssss', '', '', NULL, '', '12313', '0', '', '', '', '', NULL, '0', '1212', '', '', NULL, NULL, 3, NULL, '2011-05-31', '2011-05-31'),
+(4, 4, '余峰', 1, '1990-08-03', 1, '汉', 2, '23232323', '撒', 'yufeng@12', '122', 'sas', '12334412', '2344', '大学', '计算机', '浙大', '高级', '33', '1990-08-03', NULL, '校长', '88932', '323', '1900-12-12', '1992-08-03', 1, NULL, '2011-06-11', '2011-06-11'),
+(5, 5, '余峰', 1, '1990-08-03', 1, '汉', 2, '23232323', '撒', 'yufeng@12', '122', 'sas', '12334412', '23445', '大学', '计算机', '浙大', '高级', '33', '1990-08-03', NULL, '校长', '88932', '323', '1900-12-12', '1992-08-03', 1, NULL, '2011-06-11', '2011-06-11');
 
 -- --------------------------------------------------------
 
