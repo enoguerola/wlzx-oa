@@ -94,12 +94,19 @@
 				file.addEventListener(ProgressEvent.PROGRESS,progressHandler);   
 				file.addEventListener(Event.SELECT, selectedHandler);   
 				file.addEventListener(IOErrorEvent.IO_ERROR,ioErrorHandler); 
-				file.addEventListener(Event.COMPLETE, uploadComplete);
+				file.addEventListener(DataEvent.UPLOAD_COMPLETE_DATA, uploadComplete);
 			}
 			
-			private function uploadComplete(e:Event):void   
+			private function uploadComplete(e:DataEvent):void   
 			{   
-				Alert('上传完毕');
+				var xmlResponse:XML = XML(e.data);
+				var list:XMLList = xmlResponse.field;
+				var error:String = "";
+				var item:XML;
+				for each(item in list){
+					error += item.toString() + "\n";
+				}
+				Alert.show(error,  "以下短号重复", Alert.OK);
 				_name.text = "";
 				department.selectedIndex = 0;
 				status.selectedIndex = 0;
@@ -173,7 +180,7 @@
 			
 			public function importExcel(event:Event):void
 			{
-				var typefiter:FileFilter = new FileFilter("Excel","*.xls;*.xlsx");
+				var typefiter:FileFilter = new FileFilter("Excel","*.xls");
 				file.browse([typefiter]); 
 			}
 			

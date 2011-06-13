@@ -1,10 +1,16 @@
 package system.wlims.basic.action;
 
+import java.io.PrintWriter;
 import java.util.Date;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.sax.SAXTransformerFactory;
+import javax.xml.transform.sax.TransformerHandler;
+import javax.xml.transform.stream.StreamResult;
 
 import jxl.Cell;
 import jxl.CellType;
@@ -23,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import org.xml.sax.helpers.AttributesImpl;
 
 import system.entity.PersonModel.PersonStyle;
 import system.utils.UtilDateTime;
@@ -41,19 +48,51 @@ public class TeacherExcelImportController{
     @RequestMapping("/basic/staff/spring/excelUpload.action") 
     @ResponseBody//这个是表示，返回内容以这里构造的为准。不返回常用的视图。需要配置支持。
     public void upload(@RequestParam("name") String fname, //设置请求参数的名称和类型
-    		@RequestParam("file") CommonsMultipartFile file)throws Exception{
+    		@RequestParam("file") CommonsMultipartFile file,HttpServletResponse response)throws Exception{
     	Workbook workbook = null;
     	workbook = Workbook.getWorkbook(file.getInputStream());
     	Sheet sheet = workbook.getSheet(0);
-    	System.out.println(sheet.getRows());
     	
+    	System.out.println(sheet.getColumns());
+    	
+		PrintWriter out = null;
+		out = response.getWriter();
+		// SAX 2.0 ContentHandler.
+        TransformerHandler hd = null;
+        
+        StreamResult streamResult = new StreamResult(out); 
+        SAXTransformerFactory tf = (SAXTransformerFactory) SAXTransformerFactory.newInstance(); // SAX XML parsing factory.
+               
+        hd = tf.newTransformerHandler();                                                        // Set the XML handler.
+        Transformer serializer = hd.getTransformer();                                           // You'll serialize the data.
+        serializer.setOutputProperty(OutputKeys.ENCODING,"UTF-8");                              // You'll use UTF-8 for the XML encoding.
+        serializer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM,"response.dtd");                 // Set the doctype to the custom DTD.
+        serializer.setOutputProperty(OutputKeys.INDENT,"yes");                                  // Though not required, you can provide automatic indentation of the XML.
+        serializer.setOutputProperty(OutputKeys.METHOD,"xml");                                  // Identifies the method used for outputting the result tree.
+        hd.setResult(streamResult);
+
+        hd.startDocument();
+        
+        AttributesImpl atts = new AttributesImpl();  
+        hd.startElement("","","response",atts); 
+        
 		int rowCount = sheet.getRows();
 		for (int i = 1; i <rowCount; i++) {
 			 TeacherModel model = new TeacherModel();
+			 // Clear the XML attributes object.
+             atts.clear();
 			 
 			 String group = sheet.getCell(0, i).getContents();
 			 String name = sheet.getCell(1, i).getContents();
 			 String shortNo = sheet.getCell(2, i).getContents();
+			 
+			 if(!teacherService.valideNo(shortNo)){
+                  hd.startElement("","","field",null);                                                // Start element and set its attribute.
+                  hd.characters(shortNo.toCharArray(),0,shortNo.length());          // Set the "field" tag's value.
+                  hd.endElement("","","field");                                                       // Close the "field" tag.                                                       // Close the "field" tag.
+                  continue;
+			 }
+			 
 			 String mobilePhone = sheet.getCell(3, i).getContents();
 			 String officePhone = sheet.getCell(4, i).getContents();
 			 String mail = sheet.getCell(5, i).getContents();
@@ -110,10 +149,15 @@ public class TeacherExcelImportController{
 			 model.setTeacherStatus(1);
 			 model.setTeacherWorkDate(new java.sql.Date(workDate.getTime()));
 			 model.setTeacherProfession(major);
+			 model.setTeacherDepartment(group);
 			 
 			 teacherService.save(model);
 			 workbook.close(); 
 		}
+		
+        hd.endElement("","","response");                                                        // End the "response" element.
+        hd.endDocument();                                                                       // End the XML document.
+        out.close(); 
     }
 
 		

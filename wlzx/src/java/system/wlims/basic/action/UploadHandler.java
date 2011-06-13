@@ -217,7 +217,6 @@ public class UploadHandler extends HttpServlet {
            
             hd.endElement("","","response");                                                        // End the "response" element.
             hd.endDocument();                                                                       // End the XML document.
-            System.out.println(hd.toString());
             out.close();                                                                            // Close the output.
         }
         /*

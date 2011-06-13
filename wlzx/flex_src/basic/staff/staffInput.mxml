@@ -22,6 +22,7 @@
 	<fx:Script>
 		<![CDATA[
 			import basic.entity.*;
+			import basic.service.TeacherRemoteService;
 			import basic.utils.DateUtil;
 			
 			import mx.collections.ArrayCollection;
@@ -71,13 +72,6 @@
 					{value:"0", name:"本科"}, 
 					{value:"1", name:"高中"},
 					{value:"2", name:"大专"}
-				]                
-			);
-			
-			public var departmentArr:ArrayCollection = new ArrayCollection(
-				[    
-					{value:"0", name:"教务处"}, 
-					{value:"1", name:"其他"}
 				]                
 			);
 			
@@ -134,6 +128,11 @@
 				path = 'uploads/basic/teacherProfile/';
 				// Instantiate a new FileFilter.
 				imageTypes = new FileFilter("Images (*.jpg, *.jpeg, *.png, *.gif)", "*.jpg; *.jpeg; *.png; *.gif;");
+				
+				// For client-side and server-side validation using a RemoteObject service
+				teacherRemoteService = new TeacherRemoteService(teacherServiceRO);
+				teacherValidator.teacherService = teacherRemoteService;
+				
 				callLater(initStaffWin);
 				
 			}
@@ -266,21 +265,28 @@
 			{
 				var teacher:Object=event.result;
 				if(teacher!=null){
-					createDate = teacher.creationDate;
-					modifiedDate = teacher.modifiedDate;
-					style = teacher.style;
-					teacherId = teacher.id;
-					userID = teacher.userID;
-					Alert.show("添加成功");
+					if(teacher.teacherNo == "")
+						Alert.show("短号重复");
+					else{
+						createDate = teacher.creationDate;
+						modifiedDate = teacher.modifiedDate;
+						style = teacher.style;
+						teacherId = teacher.id;
+						userID = teacher.userID;
+						Alert.show("添加成功");
+					}
 				}else{
 					Alert.show("添加失败");
 				}
 			}
 			
-
+			import basic.utils.TeacherIDValidator;
+			private var teacherValidator:TeacherIDValidator;
+			private var teacherRemoteService:TeacherRemoteService;
 			protected function teacherno_focusOutHandler(event:FocusEvent):void
 			{
 				// TODO Auto-generated method stub
+				//teacherValidator.validateNO(teacherId, event.target.value, teacherno);
 			}
 			
 			private const button_add:Class;
@@ -363,6 +369,11 @@
 				this.currentState = "list";
 				var allList:ArrayCollection = event.result as ArrayCollection;
 				experiences_table.initdata(allList);
+			}
+			
+			protected function teacherCheckResult_resultHandler(event:ResultEvent):void
+			{
+				
 			}
 						
 			private function getExperience():void
@@ -671,8 +682,8 @@
 					uploadEvent.ServerResponse = xmlResponse.elements("file");
 					// Fetch the entire XML response. 
 					uploadEvent.ServerResponseRaw = event.data;
-					Alert.show(event.data);
-					Alert.show(xmlResponse.elements("file"));
+					//Alert.show(event.data);
+					//Alert.show(xmlResponse.elements("file"));
 					// Dispatch the custom event.
 					dispatchEvent(uploadEvent);
 					
@@ -801,6 +812,7 @@
 		<mx:RemoteObject id="teacherServiceRO" destination="teacherServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 			<mx:method name="save"  concurrency="last"  result="teacherAddResult_resultHandler(event);" />
 			<mx:method name="get"  concurrency="last"  result="teacherGetResult_resultHandler(event);" />
+			<mx:method name="checkNoAvailability"  concurrency="last"  result="teacherCheckResult_resultHandler(event);" />
 		</mx:RemoteObject>
 		<mx:RemoteObject id="teacherExperienceServiceRO" destination="teacherExperienceServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 			<mx:method name="save"  concurrency="last"  result="teacherExperienceAddResult_resultHandler(event);" />
