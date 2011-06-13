@@ -29,6 +29,13 @@ package system.utils
 			else dateFormatter.formatString=patten;
 			return dateFormatter.format(date);
 		}
-		
+		public static function currentMonthBeginDate():Date{
+			var currentDate:Date=new Date();
+			return new Date(currentDate.getFullYear(),currentDate.getMonth(),1);
+		}
+		public static function currentMonthEndDate():Date{
+			var currentDate:Date=new Date();
+			return new Date(currentDate.getFullYear(),currentDate.getMonth()+1,0);
+		}
 	}
 }

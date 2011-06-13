@@ -69,7 +69,7 @@ public class MoveRestDayDAOImpl  extends BaseDAOImpl<MoveRestDayForm> implements
 					boolean flag=false;
 					for(String time:times_attr){
 						if(StringUtils.isNotEmpty(moveRestDayBeginDate)&&StringUtils.isNotEmpty(moveRestDayEndDate)){
-							if(time.compareTo(moveRestDayBeginDate+" 0-0-0")>=0&&time.compareTo(moveRestDayBeginDate+" 1-1-1")<=0){
+							if(time.compareTo(moveRestDayBeginDate+" 0-0-0")>=0&&time.compareTo(moveRestDayEndDate+" 1-1-1")<=0){
 								flag=true;
 								break;
 							}
@@ -79,7 +79,7 @@ public class MoveRestDayDAOImpl  extends BaseDAOImpl<MoveRestDayForm> implements
 								break;
 							}
 						}else if(StringUtils.isNotEmpty(moveRestDayEndDate)){
-							if(time.compareTo(moveRestDayBeginDate+" 1-1-1")<=0){
+							if(time.compareTo(moveRestDayEndDate+" 1-1-1")<=0){
 								flag=true;
 								break;
 							}

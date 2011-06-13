@@ -224,11 +224,11 @@
 //				rotate.easingFunction = Elastic.easeInOut;
 //				rotate.duration = 1000;
 				var fadeIn:Fade = new Fade();
-				fadeIn.duration=1000;
+				fadeIn.duration=100;
 				fadeIn.alphaFrom=0;
 				fadeIn.alphaTo=1;
 				var fadeOut:Fade = new Fade();
-				fadeOut.duration=1000;
+				fadeOut.duration=100;
 				fadeOut.alphaFrom=1;
 				fadeOut.alphaTo=0;
 				child.setStyle("showEffect", fadeIn);

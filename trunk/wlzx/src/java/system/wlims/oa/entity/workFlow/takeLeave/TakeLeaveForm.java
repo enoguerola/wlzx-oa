@@ -43,6 +43,33 @@ public class TakeLeaveForm extends AbstractForm {
 	private String remark;
 	private Integer status;
 	private Set<TakeLeaveWorkFlowLog> logs=new TreeSet<TakeLeaveWorkFlowLog>();
+	public static enum Types{
+		Leave(0, "请假"),
+		BusinessTrip(1, "出差");
+		private Integer value;
+		private String name;
+		
+		private Types(Integer value, String name){
+			this.setValue(value);
+			this.setName(name);
+		}
+
+		public void setValue(Integer value) {
+			this.value = value;
+		}
+
+		public Integer getValue() {
+			return value;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+
+		public String getName() {
+			return name;
+		}
+	}
 	public static enum Status{
 		Waiting(0, "待审批"),
 		OfficePass(1, "审批中-处室通过"),

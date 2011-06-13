@@ -68,7 +68,7 @@ public class OverWorkDAOImpl  extends BaseDAOImpl<OverWorkForm> implements OverW
 				boolean flag=false;
 				for(String time:times_attr){
 					if(StringUtils.isNotEmpty(overWorkBeginDate)&&StringUtils.isNotEmpty(overWorkEndDate)){
-						if(time.compareTo(overWorkBeginDate+" 0-0-0")>=0&&time.compareTo(overWorkBeginDate+" 1-1-1")<=0){
+						if(time.compareTo(overWorkBeginDate+" 0-0-0")>=0&&time.compareTo(overWorkEndDate+" 1-1-1")<=0){
 							flag=true;
 							break;
 						}
@@ -78,7 +78,7 @@ public class OverWorkDAOImpl  extends BaseDAOImpl<OverWorkForm> implements OverW
 							break;
 						}
 					}else if(StringUtils.isNotEmpty(overWorkEndDate)){
-						if(time.compareTo(overWorkBeginDate+" 1-1-1")<=0){
+						if(time.compareTo(overWorkEndDate+" 1-1-1")<=0){
 							flag=true;
 							break;
 						}
