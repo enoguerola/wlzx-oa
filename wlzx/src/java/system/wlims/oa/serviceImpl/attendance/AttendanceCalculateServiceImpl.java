@@ -193,6 +193,30 @@ public class AttendanceCalculateServiceImpl implements AttendanceCalculateServic
 		}
 		return results;
 	}
+	@Override
+	public List<MoveRestDayForm> getValidMoveRestDayAttendanceByCondition(
+			String userId, String beginTime, String endTime) {
+		// TODO Auto-generated method stub
+		return moveRestDayDAO.getMoveRestDayAppliesByConditions(userId,MoveRestDayForm.Status.Pass.getValue().toString(),null,null,beginTime,endTime);
+	}
+	@Override
+	public List<OverWorkForm> getValidOverWorkAttendanceByCondition(
+			String userId, String beginTime, String endTime) {
+		// TODO Auto-generated method stub
+		return overWorkDAO.getOverWorkAppliesByConditions(userId,OverWorkForm.Status.OfficePass.getValue().toString(),null,null,beginTime,endTime);
+	}
+	@Override
+	public List<TakeLeaveForm> getValidTakeLeave_BusinessTripAttendanceByCondition(
+			String userId, String beginTime, String endTime) {
+		// TODO Auto-generated method stub
+		return takeLeaveDAO.getTakeLeaveAppliesByConditions(userId,TakeLeaveForm.Types.BusinessTrip.getValue().toString(),TakeLeaveForm.Status.Pass.getValue().toString(),null,null,beginTime,endTime);
+	}
+	@Override
+	public List<TakeLeaveForm> getValidTakeLeave_LeaveAttendanceByCondition(
+			String userId, String beginTime, String endTime) {
+		// TODO Auto-generated method stub
+		return takeLeaveDAO.getTakeLeaveAppliesByConditions(userId,TakeLeaveForm.Types.Leave.getValue().toString(),TakeLeaveForm.Status.Pass.getValue().toString(),null,null,beginTime,endTime);
+	}
 	
 	
 	
