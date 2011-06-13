@@ -55,26 +55,24 @@ public class TakeLeaveServiceImpl implements TakeLeaveService {
 		if(newTakeLeave.getStatus().intValue()==TakeLeaveForm.Status.Cancle.getValue().intValue()||newTakeLeave.getStatus().intValue()==TakeLeaveForm.Status.Deny.getValue().intValue())return false;
 		else{
 			newTakeLeave.setArrangeTech(takeLeave.getArrangeTech());
-			newTakeLeave.setArrangeTechDealAlready(takeLeave.getArrangeTechDealAlready());
 			newTakeLeave.setArrangeManage(takeLeave.getArrangeTech());
-			newTakeLeave.setArrangeManageDealAlready(takeLeave.getArrangeManageDealAlready());
 			newTakeLeave.setArrangeService(takeLeave.getArrangeTech());
-			newTakeLeave.setArrangeServiceDealAlready(takeLeave.getArrangeServiceDealAlready());
 			newTakeLeave.setOfficeChiefApproveOption(takeLeave.getOfficeChiefApproveOption());
 			newTakeLeave.setOfficeChiefApproverId(takeLeave.getOfficeChiefApproverId());
 			newTakeLeave.setOfficeChiefApproveTime(takeLeave.getOfficeChiefApproveTime());
-			newTakeLeave.setOfficeChiefStatus(takeLeave.getOfficeChiefStatus());
 			newTakeLeave.setVicePrincipalApproveOption(takeLeave.getVicePrincipalApproveOption());
 			newTakeLeave.setVicePrincipalApproverId(takeLeave.getVicePrincipalApproverId());
 			newTakeLeave.setVicePrincipalApproveTime(takeLeave.getVicePrincipalApproveTime());
-			newTakeLeave.setVicePrincipalStatus(takeLeave.getVicePrincipalStatus());
 			newTakeLeave.setPrincipalApproveOption(takeLeave.getPrincipalApproveOption());
 			newTakeLeave.setPrincipalApproverId(takeLeave.getPrincipalApproverId());
 			newTakeLeave.setPrincipalApproveTime(takeLeave.getPrincipalApproveTime());
-			newTakeLeave.setPrincipalStatus(takeLeave.getPrincipalStatus());
+			
+			
+			
+			
 			newTakeLeave.setReason(takeLeave.getReason());
 			UserModel user=SecurityUserHolder.getCurrentUser();
-			if(newTakeLeave.getArrangeTechDealAlready()!=takeLeave.getArrangeTechDealAlready()&&newTakeLeave.getArrangeTechDealAlready()==true){
+			if(newTakeLeave.getArrangeTechDealAlready()!=takeLeave.getArrangeTechDealAlready()&&takeLeave.getArrangeTechDealAlready()==true){
 				TakeLeaveWorkFlowLog log=new TakeLeaveWorkFlowLog();
 				log.setOperationName("落实请假/出差期间工作");
 				log.setOperationResult("落实编号为"+takeLeave.getApplyNo()+"的申请请假/出差期间教学工作");
@@ -82,7 +80,7 @@ public class TakeLeaveServiceImpl implements TakeLeaveService {
 				log.setOperationTeacherId(user.getId());
 				newTakeLeave.getLogs().add(log);
 			}
-			if(newTakeLeave.getArrangeManageDealAlready()!=takeLeave.getArrangeManageDealAlready()&&newTakeLeave.getArrangeManageDealAlready()==true){
+			if(newTakeLeave.getArrangeManageDealAlready()!=takeLeave.getArrangeManageDealAlready()&&takeLeave.getArrangeManageDealAlready()==true){
 				TakeLeaveWorkFlowLog log=new TakeLeaveWorkFlowLog();
 				log.setOperationName("落实请假/出差期间管理工作");
 				log.setOperationResult("落实编号为"+takeLeave.getApplyNo()+"的申请请假/出差期间管理工作");
@@ -90,7 +88,7 @@ public class TakeLeaveServiceImpl implements TakeLeaveService {
 				log.setOperationTeacherId(user.getId());
 				newTakeLeave.getLogs().add(log);
 			}
-			if(newTakeLeave.getArrangeServiceDealAlready()!=takeLeave.getArrangeServiceDealAlready()&&newTakeLeave.getArrangeServiceDealAlready()==true){
+			if(newTakeLeave.getArrangeServiceDealAlready()!=takeLeave.getArrangeServiceDealAlready()&&takeLeave.getArrangeServiceDealAlready()==true){
 				TakeLeaveWorkFlowLog log=new TakeLeaveWorkFlowLog();
 				log.setOperationName("落实请假/出差期间服务工作");
 				log.setOperationResult("落实编号为"+takeLeave.getApplyNo()+"的申请请假/出差期间服务工作");
@@ -98,14 +96,14 @@ public class TakeLeaveServiceImpl implements TakeLeaveService {
 				log.setOperationTeacherId(user.getId());
 				newTakeLeave.getLogs().add(log);
 			}
-			if(newTakeLeave.getOfficeChiefStatus().intValue()!=takeLeave.getOfficeChiefStatus().intValue()){
+			if(takeLeave.getOfficeChiefStatus()!=null&&newTakeLeave.getOfficeChiefStatus().intValue()!=takeLeave.getOfficeChiefStatus().intValue()){
 				TakeLeaveWorkFlowLog log=new TakeLeaveWorkFlowLog();
 				log.setOperationName("处室审批");
-				if(newTakeLeave.getOfficeChiefStatus()==1){
+				if(takeLeave.getOfficeChiefStatus()==1){
 					log.setOperationResult("处室审批编号为"+takeLeave.getApplyNo()+"的申请通过");
 					newTakeLeave.setStatus(TakeLeaveForm.Status.OfficePass.getValue());
 				}
-				else if(newTakeLeave.getOfficeChiefStatus()==0){
+				else if(takeLeave.getOfficeChiefStatus()==2){
 					log.setOperationResult("处室审批编号为"+takeLeave.getApplyNo()+"的申请不通过");
 					newTakeLeave.setStatus(TakeLeaveForm.Status.Deny.getValue());	
 				}
@@ -113,14 +111,14 @@ public class TakeLeaveServiceImpl implements TakeLeaveService {
 				log.setOperationTeacherId(takeLeave.getOfficeChiefApproverId());
 				newTakeLeave.getLogs().add(log);
 			}
-			if(newTakeLeave.getVicePrincipalStatus().intValue()!=takeLeave.getVicePrincipalStatus().intValue()){
+			if(takeLeave.getVicePrincipalStatus()!=null&&newTakeLeave.getVicePrincipalStatus().intValue()!=takeLeave.getVicePrincipalStatus().intValue()){
 				TakeLeaveWorkFlowLog log=new TakeLeaveWorkFlowLog();
 				log.setOperationName("分管副校长审批");
-				if(newTakeLeave.getVicePrincipalStatus().intValue()==1){
+				if(takeLeave.getVicePrincipalStatus().intValue()==1){
 					log.setOperationResult("分管副校长审批编号为"+takeLeave.getApplyNo()+"的申请通过");
 					newTakeLeave.setStatus(TakeLeaveForm.Status.VicePrincipalPass.getValue());	
 				}
-				else if(newTakeLeave.getVicePrincipalStatus().intValue()==0){
+				else if(takeLeave.getVicePrincipalStatus().intValue()==2){
 					log.setOperationResult("分管副校长审批编号为"+takeLeave.getApplyNo()+"的申请不通过");
 					newTakeLeave.setStatus(TakeLeaveForm.Status.Deny.getValue());	
 				}
@@ -128,14 +126,14 @@ public class TakeLeaveServiceImpl implements TakeLeaveService {
 				log.setOperationTeacherId(takeLeave.getVicePrincipalApproverId());
 				newTakeLeave.getLogs().add(log);
 			}
-			if(newTakeLeave.getPrincipalStatus().intValue()!=takeLeave.getPrincipalStatus().intValue()){
+			if(takeLeave.getPrincipalStatus()!=null&&newTakeLeave.getPrincipalStatus().intValue()!=takeLeave.getPrincipalStatus().intValue()){
 				TakeLeaveWorkFlowLog log=new TakeLeaveWorkFlowLog();
 				log.setOperationName("校长审批");
-				if(newTakeLeave.getPrincipalStatus().intValue()==1){
+				if(takeLeave.getPrincipalStatus().intValue()==1){
 					log.setOperationResult("校长审批编号为"+takeLeave.getApplyNo()+"的申请通过");
 					newTakeLeave.setStatus(TakeLeaveForm.Status.Pass.getValue());	
 				}
-				else if(newTakeLeave.getPrincipalStatus().intValue()==0){
+				else if(takeLeave.getPrincipalStatus().intValue()==2){
 					log.setOperationResult("校长审批编号为"+takeLeave.getApplyNo()+"的申请不通过");
 					newTakeLeave.setStatus(TakeLeaveForm.Status.Deny.getValue());	
 				}
@@ -143,7 +141,13 @@ public class TakeLeaveServiceImpl implements TakeLeaveService {
 				log.setOperationTeacherId(takeLeave.getPrincipalApproverId());
 				newTakeLeave.getLogs().add(log);
 			}
-			
+			newTakeLeave.setArrangeTechDealAlready(takeLeave.getArrangeTechDealAlready());
+			newTakeLeave.setArrangeManageDealAlready(takeLeave.getArrangeManageDealAlready());
+			newTakeLeave.setArrangeServiceDealAlready(takeLeave.getArrangeServiceDealAlready());
+
+			newTakeLeave.setOfficeChiefStatus(takeLeave.getOfficeChiefStatus());
+			newTakeLeave.setVicePrincipalStatus(takeLeave.getVicePrincipalStatus());
+			newTakeLeave.setPrincipalStatus(takeLeave.getPrincipalStatus());
 			takeLeaveDAO.saveOrUpdate(newTakeLeave);
 			return true;
 		}

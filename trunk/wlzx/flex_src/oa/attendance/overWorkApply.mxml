@@ -144,16 +144,7 @@
 				detail_officeChief_approve_time.text=CommonUtils.formatDate(form.officeChiefApproveTime,"YYYY-MM-DD");
 				detail_officeChief_approver_id.text=form.officeChiefApproverId;
 				detail_officeChief_approver_name.text=this.parentApplication.getTeacherNameByAccountId(form.officeChiefApproverId);
-				
-				if(form.officeChiefStatus==1)
-					detail_officeChief_approve_status_pass.selected=true;
-				else if(form.officeChiefStatus==2)
-					detail_officeChief_approve_status_deny.selected=true;
-				else{
-					detail_officeChief_approve_status_pass.selected=false;
-					detail_officeChief_approve_status_deny.selected=false;
-					
-				}
+				detail_officeChief_approve_status.selectedValue=form.officeChiefStatus;
 				
 				
 				logTable.initdata(form.logs as ArrayCollection);
@@ -557,7 +548,7 @@
 			<mx:VBox width="100%" height="50%"   horizontalGap="10" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
 				<mx:VBox width="100%" horizontalAlign="center" verticalGap="0">
 					<mx:Label  text="温岭中学加班登记表"    width="100%"  letterSpacing="5" textAlign="center" fontSize="14"  fontWeight="bold" height="30"  id="type_label"/>
-					<mx:HBox>
+					<mx:HBox width="100%" horizontalAlign="right">
 						<mx:Label  text="编号【】" id="applyNo"   visible="false" width="100%"  letterSpacing="5" textAlign="right" fontSize="14"  fontWeight="bold" height="20" />
 					</mx:HBox>
 					
@@ -601,7 +592,7 @@
 						
 						<mx:GridRow width="100%">
 							<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5"     verticalAlign="middle" horizontalAlign="center">
-								<mx1:Text text="处室负责人"  textAlign="center" width="80" />
+								<mx1:Text text="处室负责人意见"  textAlign="center" width="80" />
 							</mx:GridItem>
 							<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5"     verticalAlign="middle"  colSpan="3" horizontalAlign="center">
 								<mx:VBox width="100%" horizontalAlign="right">
@@ -610,8 +601,8 @@
 									</mx:TextArea>
 									<mx:HBox>
 										<mx:RadioButtonGroup id="officeChief_approve_status" />  
-										<mx:RadioButton groupName="officeChief_approve_status" value="1" label="通过" width="80" enabled="false"/>  
-										<mx:RadioButton groupName="officeChief_approve_status" value="2" label="不通过" width="80" enabled="false"/>  
+										<mx:RadioButton group="{officeChief_approve_status}" value="1" label="通过" width="80" enabled="false"/>  
+										<mx:RadioButton group="{officeChief_approve_status}" value="2" label="不通过" width="80" enabled="false"/>  
 										<mx:Label text="签名："/>
 										<mx:TextInput width="120"   alpha="0.5" id="officeChief_approver_name" enabled="false"/>
 										<mx:Label  text=""   id="officeChief_approver_id" visible="false"/>
@@ -648,7 +639,7 @@
 			<mx:VBox width="100%"    horizontalGap="10" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
 				<mx:VBox width="100%" horizontalAlign="center" verticalGap="0">
 					<mx:Label  text="温岭中学加班登记表"    width="100%"  letterSpacing="5" textAlign="center" fontSize="14"  fontWeight="bold" height="30"  id="detail_type_label"/>
-					<mx:HBox>
+					<mx:HBox width="100%" horizontalAlign="right">
 						<mx:Label  text="编号【】" id="detail_applyNo"   visible="false" width="100%"  letterSpacing="5" textAlign="right" fontSize="14"  fontWeight="bold" height="20" />
 					</mx:HBox>
 					
@@ -694,7 +685,7 @@
 						
 						<mx:GridRow width="100%">
 							<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5"     verticalAlign="middle" horizontalAlign="center">
-								<mx1:Text text="处室负责人"  textAlign="center" width="80" />
+								<mx1:Text text="处室负责人意见"  textAlign="center" width="80" />
 							</mx:GridItem>
 							<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5"     verticalAlign="middle"  colSpan="3" horizontalAlign="center">
 								<mx:VBox width="100%" horizontalAlign="right">
@@ -703,8 +694,8 @@
 									</mx:TextArea>
 									<mx:HBox>
 										<mx:RadioButtonGroup id="detail_officeChief_approve_status" enabled="false"/>  
-										<mx:RadioButton groupName="detail_officeChief_approve_status" value="1" label="通过" width="80" id="detail_officeChief_approve_status_pass" enabled="false"/>  
-										<mx:RadioButton groupName="detail_officeChief_approve_status" value="2" label="不通过" width="80" id="detail_officeChief_approve_status_deny" enabled="false"/>  
+										<mx:RadioButton group="{detail_officeChief_approve_status}" value="1" label="通过" width="80" id="detail_officeChief_approve_status_pass" enabled="false"/>  
+										<mx:RadioButton group="{detail_officeChief_approve_status}" value="2" label="不通过" width="80" id="detail_officeChief_approve_status_deny" enabled="false"/>  
 										<mx:Label text="签名："/>
 										<mx:TextInput width="120"   alpha="0.5" id="detail_officeChief_approver_name" enabled="false"/>
 										<mx:Label  text=""   id="detail_officeChief_approver_id" visible="false"/>

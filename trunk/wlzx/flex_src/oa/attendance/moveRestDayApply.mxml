@@ -111,8 +111,9 @@
 			
 			protected function loadApplyInfoById_resultHandler(event:ResultEvent):void{
 				form=event.result as MoveRestDayForm;
-				applyNo.text=form.applyNo;
-				teacher_name.text=form.teacherId; 
+				applyNo.text="编号：【"+form.applyNo+"】";
+				applyNo.visible=true;
+				teacher_name.text=this.parentApplication.getTeacherNameByAccountId(form.teacherId); 
 				teacher_id.text=form.teacherId;
 				var times_attr:Array=form.times.split(";");
 				timeContainer.removeAllChildren();
@@ -130,8 +131,10 @@
 			}
 			protected function getDetailInfoByIdById_resultHandler(event:ResultEvent):void{
 				form=event.result as MoveRestDayForm;
-				detail_applyNo.text=form.applyNo;
-				detail_teacher_name.text=form.teacherId; 
+				detail_applyNo.text="编号：【"+form.applyNo+"】";
+				
+				detail_applyNo.visible=true;
+				detail_teacher_name.text=this.parentApplication.getTeacherNameByAccountId(form.teacherId); 
 				detail_teacher_id.text=form.teacherId;
 				detail_times.text=timeTip(form.times);
 			//	detail_beginDate.text=form.beginTime.split(" ")[0];
@@ -139,7 +142,17 @@
 			//	detail_endDate.text=form.endTime.split(" ")[0];
 			//	detail_endDate_section.selectedIndex=parseInt(form.endTime.split(" ")[1]);
 //				detail_reason.text=form.reason;
+				detail_officeChief_approve_option.text=form.officeChiefApproveOption;
+				detail_officeChief_approve_time.text=CommonUtils.formatDate(form.officeChiefApproveTime,"YYYY-MM-DD");
+				detail_officeChief_approver_id.text=form.officeChiefApproverId;
+				detail_officeChief_approver_name.text=this.parentApplication.getTeacherNameByAccountId(form.officeChiefApproverId);
+				detail_officeChief_approve_status.selectedValue=form.officeChiefStatus;
 				
+				detail_vicePrincipal_approve_option.text=form.vicePrincipalApproveOption;
+				detail_vicePrincipal_approve_time.text=CommonUtils.formatDate(form.vicePrincipalApproveTime,"YYYY-MM-DD");
+				detail_vicePrincipal_approver_id.text=form.vicePrincipalApproverId;
+				detail_vicePrincipal_approver_name.text=this.parentApplication.getTeacherNameByAccountId(form.vicePrincipalApproverId);
+				detail_vicePrincipal_approve_status.selectedValue=form.vicePrincipalStatus;
 				logTable.initdata(form.logs as ArrayCollection);
 				this.currentState='detail';
 				
@@ -529,7 +542,7 @@
 			<mx:VBox width="100%" height="50%"   horizontalGap="10" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
 				<mx:VBox width="100%" horizontalAlign="center" verticalGap="0">
 					<mx:Label  text="温岭中学调休登记表"    width="100%"  letterSpacing="5" textAlign="center" fontSize="14"  fontWeight="bold" height="30"  id="type_label"/>
-					<mx:HBox>
+					<mx:HBox width="100%" horizontalAlign="right">
 						<mx:Label  text="编号【】" id="applyNo"   visible="false" width="100%"  letterSpacing="5" textAlign="right" fontSize="14"  fontWeight="bold" height="20" />
 					</mx:HBox>
 					
@@ -563,7 +576,7 @@
 						
 						<mx:GridRow width="100%">
 							<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5"     verticalAlign="middle" horizontalAlign="center">
-								<mx1:Text text="处室负责人"  textAlign="center" width="80" />
+								<mx1:Text text="处室负责人意见"  textAlign="center" width="80" />
 							</mx:GridItem>
 							<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5"     verticalAlign="middle"  colSpan="3" horizontalAlign="center">
 								<mx:VBox width="100%" horizontalAlign="right">
@@ -572,8 +585,8 @@
 									</mx:TextArea>
 									<mx:HBox>
 										<mx:RadioButtonGroup id="officeChief_approve_status" />  
-										<mx:RadioButton groupName="officeChief_approve_status" value="1" label="通过" width="80" enabled="false"/>  
-										<mx:RadioButton groupName="officeChief_approve_status" value="2" label="不通过" width="80" enabled="false"/>  
+										<mx:RadioButton group="{officeChief_approve_status}" value="1" label="通过" width="80" enabled="false"/>  
+										<mx:RadioButton group="{officeChief_approve_status}" value="2" label="不通过" width="80" enabled="false"/>  
 										<mx:Label text="签名："/>
 										<mx:TextInput width="120"   alpha="0.5" id="officeChief_approver_name" enabled="false"/>
 										<mx:Label  text=""   id="officeChief_approver_id" visible="false"/>
@@ -596,8 +609,8 @@
 									</mx:TextArea>
 									<mx:HBox>
 										<mx:RadioButtonGroup id="vicePrincipal_approve_status" enabled="false"/>  
-										<mx:RadioButton groupName="vicePrincipal_approve_status" value="1" label="通过" width="80" enabled="false"/>  
-										<mx:RadioButton groupName="vicePrincipal_approve_status" value="2" label="不通过" width="80" enabled="false"/>  
+										<mx:RadioButton group="{vicePrincipal_approve_status}" value="1" label="通过" width="80" enabled="false"/>  
+										<mx:RadioButton group="{vicePrincipal_approve_status}" value="2" label="不通过" width="80" enabled="false"/>  
 										<mx:Label text="签名："/>
 										<mx:TextInput width="120"   alpha="0.5" id="vicePrincipal_approver_name" enabled="false"/>
 										<mx:Label  text=""   id="vicePrincipal_approver_id"  visible="false"/>
@@ -634,7 +647,7 @@
 			<mx:VBox width="100%"    horizontalGap="10" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
 				<mx:VBox width="100%" horizontalAlign="center" verticalGap="0">
 					<mx:Label  text="温岭中学调休登记表"    width="100%"  letterSpacing="5" textAlign="center" fontSize="14"  fontWeight="bold" height="30"  id="detail_type_label"/>
-					<mx:HBox>
+					<mx:HBox width="100%" horizontalAlign="right">
 						<mx:Label  text="编号【】" id="detail_applyNo"   visible="false" width="100%"  letterSpacing="5" textAlign="right" fontSize="14"  fontWeight="bold" height="20" />
 					</mx:HBox>
 					
@@ -670,7 +683,7 @@
 						
 						<mx:GridRow width="100%">
 							<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5"     verticalAlign="middle" horizontalAlign="center">
-								<mx1:Text text="处室负责人"  textAlign="center" width="80" />
+								<mx1:Text text="处室负责人意见"  textAlign="center" width="80" />
 							</mx:GridItem>
 							<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5"     verticalAlign="middle"  colSpan="3" horizontalAlign="center">
 								<mx:VBox width="100%" horizontalAlign="right">
@@ -679,8 +692,8 @@
 									</mx:TextArea>
 									<mx:HBox>
 										<mx:RadioButtonGroup id="detail_officeChief_approve_status" enabled="false"/>  
-										<mx:RadioButton groupName="detail_officeChief_approve_status" value="1" label="通过" width="80" enabled="false"/>  
-										<mx:RadioButton groupName="detail_officeChief_approve_status" value="2" label="不通过" width="80" enabled="false"/>  
+										<mx:RadioButton group="{detail_officeChief_approve_status}" value="1" label="通过" width="80" enabled="false"/>  
+										<mx:RadioButton group="{detail_officeChief_approve_status}" value="2" label="不通过" width="80" enabled="false"/>  
 										<mx:Label text="签名："/>
 										<mx:TextInput width="120"   alpha="0.5" id="detail_officeChief_approver_name" enabled="false"/>
 										<mx:Label  text=""   id="detail_officeChief_approver_id" visible="false"/>
@@ -703,8 +716,8 @@
 									</mx:TextArea>
 									<mx:HBox>
 										<mx:RadioButtonGroup id="detail_vicePrincipal_approve_status" enabled="false"/>  
-										<mx:RadioButton groupName="detail_vicePrincipal_approve_status" value="1" label="通过" width="80" enabled="false"/>  
-										<mx:RadioButton groupName="detail_vicePrincipal_approve_status" value="2" label="不通过" width="80" enabled="false"/>  
+										<mx:RadioButton group="{detail_vicePrincipal_approve_status}" value="1" label="通过" width="80" enabled="false"/>  
+										<mx:RadioButton group="{detail_vicePrincipal_approve_status}" value="2" label="不通过" width="80" enabled="false"/>  
 										<mx:Label text="签名："/>
 										<mx:TextInput width="120"   alpha="0.5" id="detail_vicePrincipal_approver_name" enabled="false"/>
 										<mx:Label  text=""   id="detail_vicePrincipal_approver_id"  visible="false"/>
@@ -735,7 +748,7 @@
 									<mx:itemRenderer>
 										<mx:Component>
 											<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
-												<mx:Label text="{data.operationTeacherId}"/>
+												<mx:Label text="{this.parentApplication.getTeacherNameByAccountId(data.operationTeacherId)}"/>
 											</mx:VBox>																			
 										</mx:Component>
 									</mx:itemRenderer>

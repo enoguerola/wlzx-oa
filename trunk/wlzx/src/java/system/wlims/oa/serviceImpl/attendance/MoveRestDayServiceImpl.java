@@ -58,34 +58,34 @@ public class MoveRestDayServiceImpl implements MoveRestDayService {
 		
 			newMoveRestDay.setReason(moveRestDay.getReason());
 			
-			if(newMoveRestDay.getOfficeChiefStatus().intValue()!=moveRestDay.getOfficeChiefStatus().intValue()){
+			if(moveRestDay.getOfficeChiefStatus()!=null&&newMoveRestDay.getOfficeChiefStatus().intValue()!=moveRestDay.getOfficeChiefStatus().intValue()){
 				MoveRestDayWorkFlowLog log=new MoveRestDayWorkFlowLog();
 				log.setOperationName("处室审批");
 				if(moveRestDay.getOfficeChiefStatus().intValue()==1){
 					log.setOperationResult("处室审批编号为"+moveRestDay.getApplyNo()+"的申请通过");
-					newMoveRestDay.setOfficeChiefStatus(MoveRestDayForm.Status.OfficePass.getValue());
+					newMoveRestDay.setOfficeChiefStatus(moveRestDay.getOfficeChiefStatus().intValue());
 					newMoveRestDay.setStatus(MoveRestDayForm.Status.OfficePass.getValue());
 				}
 				else if(moveRestDay.getOfficeChiefStatus().intValue()==2){
 					log.setOperationResult("处室审批编号为"+moveRestDay.getApplyNo()+"的申请不通过");
-					newMoveRestDay.setOfficeChiefStatus(MoveRestDayForm.Status.Deny.getValue());
+					newMoveRestDay.setOfficeChiefStatus(moveRestDay.getOfficeChiefStatus().intValue());
 					newMoveRestDay.setStatus(MoveRestDayForm.Status.Deny.getValue());	
 				}
 				log.setOperationTime(new Date());
 				log.setOperationTeacherId(moveRestDay.getOfficeChiefApproverId());
 				newMoveRestDay.getLogs().add(log);
 			}
-			if(newMoveRestDay.getVicePrincipalStatus().intValue()!=moveRestDay.getVicePrincipalStatus().intValue()){
+			if(moveRestDay.getVicePrincipalStatus()!=null&&newMoveRestDay.getVicePrincipalStatus().intValue()!=moveRestDay.getVicePrincipalStatus().intValue()){
 				MoveRestDayWorkFlowLog log=new MoveRestDayWorkFlowLog();
 				log.setOperationName("分管副校长审批");
 				if(moveRestDay.getVicePrincipalStatus().intValue()==1){
 					log.setOperationResult("分管副校长审批编号为"+moveRestDay.getApplyNo()+"的申请通过");
-					newMoveRestDay.setVicePrincipalStatus(MoveRestDayForm.Status.Pass.getValue());
+					newMoveRestDay.setVicePrincipalStatus(moveRestDay.getVicePrincipalStatus().intValue());
 					newMoveRestDay.setStatus(MoveRestDayForm.Status.Pass.getValue());	
 				}
 				else if(moveRestDay.getVicePrincipalStatus().intValue()==2){
 					log.setOperationResult("分管副校长审批编号为"+moveRestDay.getApplyNo()+"的申请不通过");
-					newMoveRestDay.setVicePrincipalStatus(MoveRestDayForm.Status.Deny.getValue());
+					newMoveRestDay.setVicePrincipalStatus(moveRestDay.getVicePrincipalStatus().intValue());
 					newMoveRestDay.setStatus(MoveRestDayForm.Status.Deny.getValue());	
 				}
 				log.setOperationTime(new Date());
