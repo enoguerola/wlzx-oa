@@ -39,6 +39,12 @@ public class TeacherService {
 			model.setStyle(PersonStyle.Teacher.getStyle());
 		
 		if(StringUtils.isEmpty(model.getId())){
+			//validate no
+			List<UserModel> userList = userDAO.getUsersByCondition(model.getTeacherNo(), null);
+			if(userList != null && userList.size() > 0){
+				model.setTeacherNo("");
+				return model;
+			}
 			//save user
 			UserModel user = new UserModel();
 			user.setActive(true);
@@ -107,6 +113,14 @@ public class TeacherService {
     public void remove(String id)throws ServiceException{
 		teacherDAO.remove(id);
 	}
+    
+    public Boolean valideNo(String no)throws ServiceException{
+    	List<UserModel> userList = userDAO.getUsersByCondition(no, null);
+		if(userList != null && userList.size() > 0){
+			return false;
+		}else
+			return true;
+    }
     
     /**
      * 
