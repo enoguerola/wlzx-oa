@@ -1,7 +1,7 @@
 package system.constants;
 
 public class Constants {
-
+	public static final int DaysOfSections=3;//每天3个时间段早上、下午、晚上，最小计量单位
 	public static String DefaultFileUploadDir = "uploads";
 	// AJAX request parameter
 	public static String  DefaultAjaxParamFlag = "ajax";

@@ -16,21 +16,16 @@
 
 	<!-- 注入配置 -->
 	
-	<bean id="moveRestDayDAO" class="system.wlims.oa.daoImpl.attendance.MoveRestDayDAOImpl">
-		<property name="sessionFactory" ref="oaSessionFactory" />
-	</bean>
-	<bean id="takeLeaveDAO" class="system.wlims.oa.daoImpl.attendance.TakeLeaveDAOImpl">
-		<property name="sessionFactory" ref="oaSessionFactory" />
-	</bean>
-	<bean id="overWorkDAO" class="system.wlims.oa.daoImpl.attendance.OverWorkDAOImpl">
-		<property name="sessionFactory" ref="oaSessionFactory" />
-	</bean>
+
 	
 	<bean id="attendanceCalculateServiceDest" class="system.wlims.oa.serviceImpl.attendance.AttendanceCalculateServiceImpl">
 		<flex:remoting-destination />
 		<property name="takeLeaveDAO" ref="takeLeaveDAO" />
 		<property name="overWorkDAO" ref="overWorkDAO" />
 		<property name="moveRestDayDAO" ref="moveRestDayDAO" />
+		<property name="userDAO" ref="userDAO" />
+		<property name="teacherDAO" ref="teacherDAO" />
+		<property name="departmentDAO" ref="departmentDAO" />
 	</bean>
 	
 </beans>
