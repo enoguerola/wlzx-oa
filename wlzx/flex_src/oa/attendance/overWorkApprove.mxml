@@ -329,6 +329,10 @@
 				});
 			}
 			public function detailApply(applyId:String):void{
+				detail_officeChief_approve_time.text="";
+				detail_officeChief_approver_id.text="";
+				detail_officeChief_approve_status.selection=null;
+				
 				overWorkServiceRO.getDetailInfoById(applyId);
 			}
 			public function sendApply(applyId:String):void{

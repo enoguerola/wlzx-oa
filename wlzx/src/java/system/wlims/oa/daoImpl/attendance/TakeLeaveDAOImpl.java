@@ -37,10 +37,10 @@ public class TakeLeaveDAOImpl  extends BaseDAOImpl<TakeLeaveForm> implements Tak
 			criteria.add(Restrictions.sqlRestriction("takeLeave_teacher_id='"+teacherId+"'"));	
 		}
 		if(StringUtils.isNotEmpty(status)){
-			criteria.add(Restrictions.sqlRestriction("takeLeave_status='"+status+"'"));	
+			criteria.add(Restrictions.sqlRestriction("takeLeave_status in("+status+")"));	
 		}
 		if(StringUtils.isNotEmpty(type)){
-			criteria.add(Restrictions.sqlRestriction("takeLeave_type in("+type+")"));	
+			criteria.add(Restrictions.sqlRestriction("takeLeave_type ='"+type+"'"));	
 		}
 		if(StringUtils.isNotEmpty(submitBeginDate)){
 			criteria.add(Restrictions.sqlRestriction("takeLeave_applyNo>='"+submitBeginDate.split("-")[0]+submitBeginDate.split("-")[1]+submitBeginDate.split("-")[2]+"000000'"));	
@@ -52,7 +52,7 @@ public class TakeLeaveDAOImpl  extends BaseDAOImpl<TakeLeaveForm> implements Tak
 			criteria.add(Restrictions.sqlRestriction("takeLeave_beginTime>='"+takeLeaveBeginDate+" 0'"));	
 		}
 		if(StringUtils.isNotEmpty(takeLeaveEndDate)){
-			criteria.add(Restrictions.sqlRestriction("takeLeave_endTime<='"+takeLeaveEndDate+" 1'"));	
+			criteria.add(Restrictions.sqlRestriction("takeLeave_endTime<='"+takeLeaveEndDate+" 2'"));	
 		}
 		criteria.addOrder(Order.desc("applyNo"));
 		List<TakeLeaveForm> result = this.getListByCriteria(criteria);

@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Module xmlns:mx="http://www.adobe.com/2006/mxml" layout="vertical" width="100%" creationComplete="init();" height="100%" xmlns:valueObjects="oa.entity.*" xmlns:component="system.component.*" currentState="list" xmlns:mx1="library://ns.adobe.com/flex/mx">
+<mx:Module xmlns:mx="http://www.adobe.com/2006/mxml" 
+		   xmlns:hc="com.hillelcoren.components.*"
+		   xmlns:render="system.component.render.*"
+		   layout="vertical" width="100%" creationComplete="init();" height="100%" xmlns:valueObjects="oa.entity.*" xmlns:component="system.component.*" currentState="list" xmlns:mx1="library://ns.adobe.com/flex/mx">
 	<mx:StringValidator id="beginDate_stringValidator" source="{beginDate}"  property="text" required="true" requiredFieldError="请假开始时间不能为空"/>
 	<mx:StringValidator id="endDate_stringValidator" source="{endDate}"  property="text" required="true" requiredFieldError="请假结束时间不能为空"/>
 	<mx:StringValidator id="reason_stringValidator" source="{reason}"  property="text" required="true" requiredFieldError="请假事由不能为空"/>
+	<mx:StringValidator id="officeChiefApproveTime_stringValidator"  property="text"  requiredFieldError="处室审批日期不能为空"/>
+	<mx:StringValidator id="officeChiefApproverName_stringValidator"    property="text" required="true" requiredFieldError="处室审批人不能为空"/>
+	<mx:StringValidator id="vicePrincipalApproveTime_stringValidator"  property="text"  requiredFieldError="分管校长审批日期不能为空"/>
+	<mx:StringValidator id="vicePrincipalApproverName_stringValidator"     property="text" required="true" requiredFieldError="分管校长审批人不能为空"/>
+	<mx:StringValidator id="principalApproveTime_stringValidator"  property="text"  requiredFieldError="校长审批日期不能为空"/>
+	<mx:StringValidator id="principalApproverName_stringValidator"     property="text" required="true" requiredFieldError="校长审批人不能为空"/>
+
 	<valueObjects:TakeLeaveForm id="form"/>
 	<mx:states>
 		<mx:State name="list">           
@@ -68,8 +78,8 @@
 			import mx.managers.PopUpManager;
 			import mx.rpc.events.*;
 			import mx.validators.Validator;
-			
-			import system.utils.CommonUtils;
+			import system.component.WlzxLockWin;
+			import system.utils.*;
 
 			private var validatorArr:Array;
 			public var sections:ArrayCollection = new ArrayCollection( 
@@ -82,13 +92,16 @@
 			
 			public var status:ArrayCollection = new ArrayCollection( 
 				[	{label:"全部", data:"0,1,2,3,4,5"},  
-					{label:"待审批", data:"0,1,2,3"},  
+					{label:"待审批", data:"0,1,2"},  
+					{label:"审批中-处室通过", data:"1"},
+					{label:"审批中-分管副校长通过", data:"2"},
 					{label:"审批通过", data:"3"},
 					{label:"审批不通过", data:"4"},
 					{label:"取消", data:"5"}]); 
 			
 		
 			private function init():void{
+				search_account.dataProvider=this.parentApplication.allTeacherAcccounts;
 				search();
 			}
 			protected function systemFaultHandler(event:FaultEvent):void {
@@ -120,10 +133,10 @@
 			
 			protected function loadApplyInfoById_resultHandler(event:ResultEvent):void{
 				form=event.result as TakeLeaveForm;
-				applyNo.text=form.applyNo;
-				applyType.text=form.type+"";
 				switchTextView();
-				teacher_name.text=form.teacherId; 
+				applyNo.text="编号：【"+form.applyNo+"】";
+				applyType.text=form.type+"";
+				teacher_name.text=this.parentApplication.getTeacherNameByAccountId(form.teacherId); 
 				teacher_id.text=form.teacherId;
 				beginDate.text=form.beginTime.split(" ")[0];
 				beginDate_section.selectedIndex=parseInt(form.beginTime.split(" ")[1]);
@@ -131,33 +144,44 @@
 				endDate_section.selectedIndex=parseInt(form.endTime.split(" ")[1]);
 				reason.text=form.reason;
 				arrange_tech.text=form.arrangeTech;
+//				Alert.show(form.arrangeTechDealAlready+"");
 				arrange_tech_already.selected=form.arrangeTechDealAlready;
 				arrange_service.text=form.arrangeService;
 				arrange_service_already.selected=form.arrangeServiceDealAlready;
 				arrange_manage.text=form.arrangeManage;
 				arrange_manage_already.selected=form.arrangeManageDealAlready;
+				
 				officeChief_approve_option.text=form.officeChiefApproveOption;
-				officeChief_approve_time.text=CommonUtils.formatDate(form.officeChiefApproveTime,"YYYY-MM-DD");
+				if(form.officeChiefApproveTime!=null)
+					officeChief_approve_time.text=CommonUtils.formatDate(form.officeChiefApproveTime,"YYYY-MM-DD");
 				officeChief_approver_id.text=form.officeChiefApproverId;
-				officeChief_approve_status.selectedValue=form.officeChiefStatus;
+				officeChief_approver_name.selectedItem=this.parentApplication.getItemByAccountId(form.officeChiefApproverId);
+				
 				vicePrincipal_approve_option.text=form.vicePrincipalApproveOption;
-				vicePrincipal_approve_time.text=CommonUtils.formatDate(form.vicePrincipalApproveTime,"YYYY-MM-DD");
+				if(form.vicePrincipalApproveTime!=null)
+					vicePrincipal_approve_time.text=CommonUtils.formatDate(form.vicePrincipalApproveTime,"YYYY-MM-DD");
 				vicePrincipal_approver_id.text=form.vicePrincipalApproverId;
-				vicePrincipal_approve_status.selectedValue=form.vicePrincipalStatus;
+				vicePrincipal_approver_name.selectedItem=this.parentApplication.getItemByAccountId(form.vicePrincipalApproverId);
+				
 				principal_approve_option.text=form.principalApproveOption;
-				principal_approve_time.text=CommonUtils.formatDate(form.principalApproveTime,"YYYY-MM-DD");
+				if(form.principalApproveTime!=null)
+					principal_approve_time.text=CommonUtils.formatDate(form.principalApproveTime,"YYYY-MM-DD");
 				principal_approver_id.text=form.principalApproverId;
-				principal_approve_status.selectedValue=form.principalStatus;
+				principal_approver_name.selectedItem=this.parentApplication.getItemByAccountId(form.principalApproverId);
+				
 				remark.text=form.remark;
 				
 				
 			}
 			protected function getDetailInfoByIdById_resultHandler(event:ResultEvent):void{
 				form=event.result as TakeLeaveForm;
+				switchDetailTextView();
+
+				detail_applyNo.text="编号：【"+form.applyNo+"】";
+				
 				detail_applyNo.text=form.applyNo;
 				detail_applyType.text=form.type+"";
-				switchDetailTextView();
-				detail_teacher_name.text=form.teacherId; 
+				detail_teacher_name.text=this.parentApplication.getTeacherNameByAccountId(form.teacherId); 
 				detail_teacher_id.text=form.teacherId;
 				detail_beginDate.text=form.beginTime.split(" ")[0];
 				detail_beginDate_section.selectedIndex=parseInt(form.beginTime.split(" ")[1]);
@@ -170,18 +194,25 @@
 				detail_arrange_service_already.selected=form.arrangeServiceDealAlready;
 				detail_arrange_manage.text=form.arrangeManage;
 				detail_arrange_manage_already.selected=form.arrangeManageDealAlready;
+				
 				detail_officeChief_approve_option.text=form.officeChiefApproveOption;
 				detail_officeChief_approve_time.text=CommonUtils.formatDate(form.officeChiefApproveTime,"YYYY-MM-DD");
 				detail_officeChief_approver_id.text=form.officeChiefApproverId;
+				detail_officeChief_approver_name.text=this.parentApplication.getTeacherNameByAccountId(form.officeChiefApproverId);
 				detail_officeChief_approve_status.selectedValue=form.officeChiefStatus;
+				
 				detail_vicePrincipal_approve_option.text=form.vicePrincipalApproveOption;
 				detail_vicePrincipal_approve_time.text=CommonUtils.formatDate(form.vicePrincipalApproveTime,"YYYY-MM-DD");
 				detail_vicePrincipal_approver_id.text=form.vicePrincipalApproverId;
+				detail_vicePrincipal_approver_name.text=this.parentApplication.getTeacherNameByAccountId(form.vicePrincipalApproverId);
 				detail_vicePrincipal_approve_status.selectedValue=form.vicePrincipalStatus;
+				
 				detail_principal_approve_option.text=form.principalApproveOption;
 				detail_principal_approve_time.text=CommonUtils.formatDate(form.principalApproveTime,"YYYY-MM-DD");
 				detail_principal_approver_id.text=form.principalApproverId;
+				detail_principal_approver_name.text=this.parentApplication.getTeacherNameByAccountId(form.principalApproverId);
 				detail_principal_approve_status.selectedValue=form.principalStatus;
+				
 				detail_remark.text=form.remark;
 				
 				logTable.initdata(form.logs as ArrayCollection);
@@ -195,7 +226,7 @@
 				applyTable.initdata(allList);
 			}
 			private function search():void{
-				var teacher:String=search_account.text;
+				var teacher:String=search_account_id.text;
 				var type:String=search_type.selectedItem.data;
 				var status:String=search_state.selectedItem.data;
 				var submitBeginDate:String=search_date_begin.text;
@@ -271,7 +302,24 @@
 			}
 			public function editInit(applyId:String):void{
 				
-				saveButton.label="更新";
+				saveButton.label="审批";
+				officeChief_approver_name.dataProvider=this.parentApplication.allTeacherAcccounts;
+				officeChief_approve_time.text="";
+				officeChief_approver_name.selectedItemId=-1;
+				officeChief_approver_id.text="";
+				officeChief_approve_status.selection=null;
+				
+				vicePrincipal_approver_name.dataProvider=this.parentApplication.allTeacherAcccounts;
+				vicePrincipal_approve_time.text="";
+				vicePrincipal_approver_name.selectedItemId=-1;
+				vicePrincipal_approver_id.text="";
+				vicePrincipal_approve_status.selection=null;
+				
+				principal_approver_name.dataProvider=this.parentApplication.allTeacherAcccounts;
+				principal_approve_time.text="";
+				principal_approver_name.selectedItemId=-1;
+				principal_approver_id.text="";
+				principal_approve_status.selection=null;
 				takeLeaveServiceRO.loadApplyInfoById(applyId);
 			}
 			public function enterEdit(applyId:String):void{
@@ -288,6 +336,16 @@
 				});
 			}
 			public function detailApply(applyId:String):void{
+				detail_officeChief_approve_time.text="";
+				detail_officeChief_approver_id.text="";
+				detail_officeChief_approve_status.selection=null;
+				
+				detail_vicePrincipal_approve_time.text="";
+				detail_vicePrincipal_approver_id.text="";
+				detail_vicePrincipal_approve_status.selection=null;
+				detail_principal_approve_time.text="";
+				detail_principal_approver_id.text="";
+				detail_principal_approve_status.selection=null;
 				takeLeaveServiceRO.getDetailInfoById(applyId);
 			}
 			public function sendApply(applyId:String):void{
@@ -395,7 +453,7 @@
 						if(principal_approve_status.selectedValue!=null)
 						form.principalStatus=parseInt(principal_approve_status.selectedValue.toString());
 						form.remark=remark.text;
-						Alert.show(addUpdateFlag.text+"aaa");
+//						Alert.show(addUpdateFlag.text+"aaa");
 						takeLeaveServiceRO.approveTakeLeave(form);
 						
 					}
@@ -405,12 +463,30 @@
 			private function validateInput():Boolean
 			{	
 				validatorArr = new Array();
-//				validatorArr.push(beginDate_stringValidator);
-//				validatorArr.push(endDate_stringValidator);
-//				validatorArr.push(reason_stringValidator);
+				validatorArr.push(beginDate_stringValidator);
+				validatorArr.push(endDate_stringValidator);
+				validatorArr.push(reason_stringValidator);
+				officeChiefApproveTime_stringValidator.source=officeChief_approve_time;
+				officeChiefApproverName_stringValidator.source=officeChief_approver_name;
+				validatorArr.push(officeChiefApproveTime_stringValidator);
+				validatorArr.push(officeChiefApproverName_stringValidator);
+				
+				if(vicePrincipal_approve_status.selection!=null){
+					vicePrincipalApproveTime_stringValidator.source=vicePrincipal_approve_time;
+					vicePrincipalApproverName_stringValidator.source=vicePrincipal_approver_name;
+					validatorArr.push(vicePrincipalApproveTime_stringValidator);
+					validatorArr.push(vicePrincipalApproverName_stringValidator);
+				}
+				if(principal_approve_status.selection!=null){
+					principalApproveTime_stringValidator.source=principal_approve_time;
+					principalApproverName_stringValidator.source=principal_approver_name;
+					validatorArr.push(principalApproveTime_stringValidator);
+					validatorArr.push(principalApproverName_stringValidator);
+				}
 				var validatorErrorArray:Array = Validator.validateAll(validatorArr);
 				var isValidForm:Boolean = validatorErrorArray.length == 0;
 				if (isValidForm) {
+					
 					return true;
 				} else {
 					return false;
@@ -421,8 +497,78 @@
 				return CommonUtils.formatDate(date,"YYYY-MM-DD JJ:NN:SS");
 				
 			}
+			private function searchAccountHandleAutoCompleteChange():void
+			{
+				var color:Object = search_account.selectedItem;
+				
+				if (color != null && color.hasOwnProperty( "id" ))
+				{
+					search_account_id.text=color.id;
+				} else{
+					search_account_id.text="";
+				}               
+			}
+			private function officeChiefApproverHandleAutoCompleteChange():void
+			{
+				var color:Object = officeChief_approver_name.selectedItem;
+				
+				if (color != null && color.hasOwnProperty( "id" ))
+				{
+					officeChief_approver_id.text=color.id;
+				} else{
+					officeChief_approver_id.text="";
+				}               
+			}
+			private function vicePrincipalApproverHandleAutoCompleteChange():void
+			{
+				var color:Object = vicePrincipal_approver_name.selectedItem;
+				
+				if (color != null && color.hasOwnProperty( "id" ))
+				{
+					vicePrincipal_approver_id.text=color.id;
+				} else{
+					vicePrincipal_approver_id.text="";
+				}               
+			}
+			private function principalApproverHandleAutoCompleteChange():void
+			{
+				var color:Object = principal_approver_name.selectedItem;
+				
+				if (color != null && color.hasOwnProperty( "id" ))
+				{
+					principal_approver_id.text=color.id;
+				} else{
+					principal_approver_id.text="";
+				}               
+			}
+			
+			private var window:WlzxLockWin=null;
+			private function lockWin():void{
+				
+				window=WlzxLockWin(PopUpManager.createPopUp(this,WlzxLockWin,true)); 
+				PopUpManager.centerPopUp(window);
+				window.percentHeight=100;
+				window.percentWidth=100;			
+				
+			}
+			private function unLockWin():void{
+				if(window!=null)
+					PopUpManager.removePopUp(window);
+			}
 		]]> 		
 	</mx:Script> 
+	<mx:Component id="searchAccountDropDownItemRenderer">
+		<render:AdvancedItemRenderer selectedItems="{ outerDocument.search_account.selectedItems }" />
+	</mx:Component>
+	<mx:Component id="officeChiefApproverDropDownItemRenderer">
+		<render:AdvancedItemRenderer selectedItems="{ outerDocument.officeChief_approver_name.selectedItems }" />
+	</mx:Component>
+	<mx:Component id="vicePrincipalApproverDropDownItemRenderer">
+		<render:AdvancedItemRenderer selectedItems="{ outerDocument.vicePrincipal_approver_name.selectedItems }" />
+	</mx:Component>
+	<mx:Component id="principalApproverDropDownItemRenderer">
+		<render:AdvancedItemRenderer selectedItems="{ outerDocument.principal_approver_name.selectedItems }" />
+	</mx:Component>
 	<mx:Panel width="100%" height="100%"   title="请假/出差审批"  borderVisible="false" id="panel" dropShadowVisible="false" >
 
 		
@@ -433,16 +579,19 @@
 				</mx:HBox>
 			</mx:HBox>
 			<mx:VBox width="100%" height="100%"  verticalGap="10" verticalAlign="middle" horizontalAlign="center" >
-				<mx:VBox width="100%" height="100"   horizontalGap="10" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
+				<mx:VBox width="100%" height="120"   horizontalGap="10" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
 					<mx:FormHeading label="条件查询">
 						
 					</mx:FormHeading>
 					<mx:HBox>
 						<mx:HBox verticalAlign="middle">
 							<mx:Label  text="申请教师"  width="100"  textAlign="right"/>
-							<component:AutoComplete id="search_account"  IsfocusInDropDown="true"  IsAutoComplete="true" width="120" >
+							<hc:AutoComplete id="search_account"  labelField="name"  width="300"  matchType="anyPart" prompt="选择教师"  change="{ searchAccountHandleAutoCompleteChange() }" dropDownItemRenderer="{ searchAccountDropDownItemRenderer }" selectedItemStyleName="none">
 								
-							</component:AutoComplete>
+							</hc:AutoComplete>
+							<mx:Label id="search_account_id" visible="false">
+								
+							</mx:Label>
 						</mx:HBox>	
 						<mx:HBox>
 							<mx:Label  text="申请类型"  width="100"  textAlign="right"/>
@@ -480,7 +629,7 @@
 						
 						<component:WlzxPageDataGrid width="100%" height="100%"   borderVisible="false"  autoLayout="true"  borderAlpha="0.2" verticalAlign="middle"   id="applyTable" pagecount="10"  >				
 							<component:mygridcolumns>
-								<mx:DataGridColumn textAlign="center" headerText="申请编号" dataField="applyNo" width="100">
+								<mx:DataGridColumn textAlign="center" headerText="申请编号" dataField="applyNo" width="120">
 									<mx:itemRenderer>
 										<mx:Component>
 											<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
@@ -515,6 +664,17 @@
 										</mx:Component>						
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="申请人" width="100" >
+									<mx:itemRenderer>
+										<mx:Component>
+											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" >
+												<mx1:Text text="{this.parentApplication.getTeacherNameByAccountId(data.teacherId)}" width="100">
+													
+												</mx1:Text>
+											</mx:HBox>
+										</mx:Component>
+									</mx:itemRenderer>
+								</mx:DataGridColumn>
 								<mx:DataGridColumn textAlign="center" headerText="请假开始时间"  width="100" >
 									<mx:itemRenderer>
 										<mx:Component>
@@ -527,7 +687,14 @@
 															private function beginTimeTip(data:Object):String{
 																
 																if(data!=null){
-																	return data.beginTime.split(" ")[0]+(data.beginTime.split(" ")[1]=='0'?'上午':'下午');
+																	var result:String=data.beginTime.split(" ")[0];
+																	if(data.beginTime.split(" ")[1]=='0')
+																		result+='上午';
+																	else if(data.beginTime.split(" ")[1]=='1')
+																		result+='下午';
+																	else if(data.beginTime.split(" ")[1]=='2')
+																		result+='晚上';
+																	return result;
 																}
 																return null;
 															}
@@ -550,7 +717,14 @@
 															private function endTime(data:Object):String{
 																
 																if(data!=null){
-																	return data.endTime.split(" ")[0]+(data.endTime.split(" ")[1]=='0'?'上午':'下午');
+																	var result:String=data.endTime.split(" ")[0];
+																	if(data.endTime.split(" ")[1]=='0')
+																		result+='上午';
+																	else if(data.endTime.split(" ")[1]=='1')
+																		result+='下午';
+																	else if(data.endTime.split(" ")[1]=='2')
+																		result+='晚上';
+																	return result;
 																}
 																return null;
 															}
@@ -584,7 +758,7 @@
 														}else if(data.status==4){
 															return "审批不通过";
 														}else if(data.status==5){
-															return "删除";
+															return "取消";
 														}
 														
 														}
@@ -635,7 +809,7 @@
 										
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="查看" width="100">
+								<mx:DataGridColumn textAlign="center" headerText="查看" width="60">
 									<mx:itemRenderer>
 										<mx:Component>
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0">
@@ -670,8 +844,8 @@
 			<mx:VBox width="100%" height="50%"   horizontalGap="10" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
 				<mx:VBox width="100%" horizontalAlign="center" verticalGap="0">
 					<mx:Label  text="温岭中学教职工请假单"    width="100%"  letterSpacing="5" textAlign="center" fontSize="14"  fontWeight="bold" height="30"  id="type_label"/>
-					<mx:HBox>
-						<mx:Label  text="编号【】" id="applyNo"   visible="false" width="100%"  letterSpacing="5" textAlign="right" fontSize="14"  fontWeight="bold" height="20" />
+					<mx:HBox width="100%" horizontalAlign="right">
+						<mx:Label  text="编号【】" id="applyNo"   visible="true" width="100%"  letterSpacing="5" textAlign="right" fontSize="14"  fontWeight="bold" height="20" />
 						<mx:Label text="0" id="applyType" visible="false"/>
 					</mx:HBox>
 					
@@ -760,10 +934,12 @@
 									</mx:TextArea>
 									<mx:HBox>
 										<mx:RadioButtonGroup id="officeChief_approve_status"/>  
-										<mx:RadioButton groupName="officeChief_approve_status" value="1" id="officeChief_approve_status_pass" label="通过" width="80" enabled="false"/>  
-										<mx:RadioButton groupName="officeChief_approve_status" value="2" id="officeChief_approve_status_deny" label="不通过" width="80" enabled="false" />  
+										<mx:RadioButton group="{officeChief_approve_status}" value="1" id="officeChief_approve_status_pass" label="通过" width="80" enabled="false"/>  
+										<mx:RadioButton group="{officeChief_approve_status}" value="2" id="officeChief_approve_status_deny" label="不通过" width="80" enabled="false" />  
 										<mx:Label text="签名："/>
-										<mx:TextInput width="120"   alpha="0.5" id="officeChief_approver_name" enabled="false"/>
+										<hc:AutoComplete id="officeChief_approver_name"  labelField="name"  width="120"   alpha="0.5" enabled="false"  matchType="anyPart" prompt="选择"  change="{ officeChiefApproverHandleAutoCompleteChange() }" dropDownItemRenderer="{ officeChiefApproverDropDownItemRenderer }" selectedItemStyleName="none">
+											
+										</hc:AutoComplete>
 										<mx:Label  text=""   id="officeChief_approver_id" visible="false"/>
 										<mx:Label text="日期："/>
 										<mx:DateField width="120" id="officeChief_approve_time" enabled="false" formatString="YYYY-MM-DD"/>
@@ -784,10 +960,12 @@
 									</mx:TextArea>
 									<mx:HBox>
 										<mx:RadioButtonGroup id="vicePrincipal_approve_status"/>  
-										<mx:RadioButton groupName="vicePrincipal_approve_status" value="1" id="vicePrincipal_approve_status_pass" label="通过" width="80" enabled="false"/>  
-										<mx:RadioButton groupName="vicePrincipal_approve_status" value="2" id="vicePrincipal_approve_status_deny" label="不通过" width="80" enabled="false"/>  
+										<mx:RadioButton group="{vicePrincipal_approve_status}" value="1" id="vicePrincipal_approve_status_pass" label="通过" width="80" enabled="false"/>  
+										<mx:RadioButton group="{vicePrincipal_approve_status}" value="2" id="vicePrincipal_approve_status_deny" label="不通过" width="80" enabled="false"/>  
 										<mx:Label text="签名："/>
-										<mx:TextInput width="120"   alpha="0.5" id="vicePrincipal_approver_name" enabled="false"/>
+										<hc:AutoComplete id="vicePrincipal_approver_name"  labelField="name"  width="120"   alpha="0.5" enabled="false"  matchType="anyPart" prompt="选择"  change="{ vicePrincipalApproverHandleAutoCompleteChange() }" dropDownItemRenderer="{ vicePrincipalApproverDropDownItemRenderer }" selectedItemStyleName="none">
+											
+										</hc:AutoComplete>
 										<mx:Label  text=""   id="vicePrincipal_approver_id"  visible="false"/>
 										<mx:Label text="日期："/>
 										<mx:DateField width="120" id="vicePrincipal_approve_time" enabled="false" formatString="YYYY-MM-DD"/>
@@ -808,10 +986,12 @@
 									</mx:TextArea>
 									<mx:HBox>
 										<mx:RadioButtonGroup id="principal_approve_status"/>  
-										<mx:RadioButton groupName="principal_approve_status" value="1" id="principal_approve_status_pass" label="通过" width="80" enabled="false" />  
-										<mx:RadioButton groupName="principal_approve_status" value="2"  id="principal_approve_status_deny" label="不通过" width="80" enabled="false"/>  
+										<mx:RadioButton group="{principal_approve_status}" value="1" id="principal_approve_status_pass" label="通过" width="80" enabled="false" />  
+										<mx:RadioButton group="{principal_approve_status}" value="2"  id="principal_approve_status_deny" label="不通过" width="80" enabled="false"/>  
 										<mx:Label text="签名："/>
-										<mx:TextInput width="120"   alpha="0.5" id="principal_approver_name" enabled="false"/>
+										<hc:AutoComplete id="principal_approver_name"  labelField="name"  width="120"   alpha="0.5" enabled="false"  matchType="anyPart" prompt="选择"  change="{ principalApproverHandleAutoCompleteChange() }" dropDownItemRenderer="{ principalApproverDropDownItemRenderer }" selectedItemStyleName="none">
+											
+										</hc:AutoComplete>
 										<mx:Label  text=""   id="principal_approver_id"  visible="false"/>
 										<mx:Label text="日期："/>
 										<mx:DateField width="120" id="principal_approve_time" enabled="false" formatString="YYYY-MM-DD"/>
@@ -853,8 +1033,8 @@
 			<mx:VBox width="100%"    horizontalGap="10" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
 				<mx:VBox width="100%" horizontalAlign="center" verticalGap="0">
 					<mx:Label  text="温岭中学教职工请假单"    width="100%"  letterSpacing="5" textAlign="center" fontSize="14"  fontWeight="bold" height="30"  id="detail_type_label"/>
-					<mx:HBox>
-						<mx:Label  text="编号【】" id="detail_applyNo"   visible="false" width="100%"  letterSpacing="5" textAlign="right" fontSize="14"  fontWeight="bold" height="20" />
+					<mx:HBox width="100%" horizontalAlign="right">
+						<mx:Label  text="编号【】" id="detail_applyNo"   visible="true" width="100%"  letterSpacing="5" textAlign="right" fontSize="14"  fontWeight="bold" height="20" />
 						<mx:Label text="0" id="detail_applyType" visible="false"/>
 					</mx:HBox>
 					
@@ -943,8 +1123,8 @@
 									</mx:TextArea>
 									<mx:HBox>
 										<mx:RadioButtonGroup id="detail_officeChief_approve_status" enabled="false"/>  
-										<mx:RadioButton groupName="detail_officeChief_approve_status" value="1" label="通过" width="80" enabled="false"/>  
-										<mx:RadioButton groupName="detail_officeChief_approve_status" value="2" label="不通过" width="80" enabled="false"/>  
+										<mx:RadioButton group="{detail_officeChief_approve_status}" value="1" label="通过" width="80" enabled="false"/>  
+										<mx:RadioButton group="{detail_officeChief_approve_status}" value="2" label="不通过" width="80" enabled="false"/>  
 										<mx:Label text="签名："/>
 										<mx:TextInput width="120"   alpha="0.5" id="detail_officeChief_approver_name" enabled="false"/>
 										<mx:Label  text=""   id="detail_officeChief_approver_id" visible="false"/>
@@ -967,8 +1147,8 @@
 									</mx:TextArea>
 									<mx:HBox>
 										<mx:RadioButtonGroup id="detail_vicePrincipal_approve_status" enabled="false"/>  
-										<mx:RadioButton groupName="detail_vicePrincipal_approve_status" value="1" label="通过" width="80" enabled="false"/>  
-										<mx:RadioButton groupName="detail_vicePrincipal_approve_status" value="2" label="不通过" width="80" enabled="false"/>  
+										<mx:RadioButton group="{detail_vicePrincipal_approve_status}" value="1" label="通过" width="80" enabled="false"/>  
+										<mx:RadioButton group="{detail_vicePrincipal_approve_status}" value="2" label="不通过" width="80" enabled="false"/>  
 										<mx:Label text="签名："/>
 										<mx:TextInput width="120"   alpha="0.5" id="detail_vicePrincipal_approver_name" enabled="false"/>
 										<mx:Label  text=""   id="detail_vicePrincipal_approver_id"  visible="false"/>
@@ -991,8 +1171,8 @@
 									</mx:TextArea>
 									<mx:HBox>
 										<mx:RadioButtonGroup id="detail_principal_approve_status" enabled="false"/>  
-										<mx:RadioButton groupName="detail_principal_approve_status" value="1" label="通过" width="80" enabled="false"/>  
-										<mx:RadioButton groupName="detail_principal_approve_status" value="2" label="不通过" width="80" enabled="false"/>  
+										<mx:RadioButton group="{detail_principal_approve_status}" value="1" label="通过" width="80" enabled="false"/>  
+										<mx:RadioButton group="{detail_principal_approve_status}" value="2" label="不通过" width="80" enabled="false"/>  
 										<mx:Label text="签名："/>
 										<mx:TextInput width="120"   alpha="0.5" id="detail_principal_approver_name" enabled="false"/>
 										<mx:Label  text=""   id="detail_principal_approver_id"  visible="false"/>
@@ -1033,7 +1213,9 @@
 									<mx:itemRenderer>
 									<mx:Component>
 										<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
-											<mx:Label text="{data.operationTeacherId}"/>
+											<mx1:Text text="{this.parentApplication.getTeacherNameByAccountId(data.operationTeacherId)}" >
+												
+											</mx1:Text>
 										</mx:VBox>																			
 									</mx:Component>
 									</mx:itemRenderer>
