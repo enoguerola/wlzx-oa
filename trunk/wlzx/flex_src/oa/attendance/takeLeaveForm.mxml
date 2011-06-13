@@ -1,0 +1,382 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Module xmlns:mx="http://www.adobe.com/2006/mxml" 
+		   xmlns:hc="com.hillelcoren.components.*"
+		   xmlns:render="system.component.render.*"
+		   layout="vertical" width="100%" creationComplete="init();" height="100%" xmlns:valueObjects="oa.entity.*" xmlns:component="system.component.*"  xmlns:mx1="library://ns.adobe.com/flex/mx">
+	<valueObjects:TakeLeaveForm id="form"/>
+	
+	<mx:RemoteObject id="takeLeaveServiceRO" destination="takeLeaveServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+			<mx:method name="getDetailInfoById"  concurrency="last"  result="getDetailInfoByIdById_resultHandler(event);" />
+	</mx:RemoteObject>
+	<mx:Script> 
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.containers.FormItem;
+			import mx.controls.Alert;
+			import mx.controls.DateField;
+			import mx.core.FlexGlobals;
+			import mx.events.*;
+			import mx.events.ListEvent;
+			import mx.events.ValidationResultEvent;
+			import mx.formatters.DateFormatter;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.*;
+			import mx.validators.Validator;
+			import system.component.WlzxLockWin;
+			import system.utils.*;
+			
+			private var validatorArr:Array;
+			public var sections:ArrayCollection = new ArrayCollection( 
+				[ {label:"上午", data:0},  
+					{label:"下午", data:1},
+					{label:"晚上", data:2}]); 
+			public var types:ArrayCollection = new ArrayCollection( 
+				[ {label:"全部", data:null},  
+					{label:"请假", data:"0"},  
+					{label:"出差", data:"1"}]); 
+			
+			public var status:ArrayCollection = new ArrayCollection( 
+				[	{label:"全部", data:"0,1,2,3,4,5"},  
+					{label:"待审批", data:"0,1,2"},  
+					{label:"审批中-处室通过", data:"1"},
+					{label:"审批中-分管副校长通过", data:"2"},
+					{label:"审批通过", data:"3"},
+					{label:"审批不通过", data:"4"},
+					{label:"取消", data:"5"}]); 
+			
+			
+			private function init():void{
+				var id:String=((Object)(this.owner)).id;
+				lockWin();
+				detailApply(id);
+			}
+			protected function systemFaultHandler(event:FaultEvent):void {
+				Alert.show(event.fault.faultString, 'Error');
+				unLockWin();
+			}
+			
+			protected function getDetailInfoByIdById_resultHandler(event:ResultEvent):void{
+				form=event.result as TakeLeaveForm;
+				switchDetailTextView();
+				
+				detail_applyNo.text="编号：【"+form.applyNo+"】";
+				
+				detail_applyNo.text=form.applyNo;
+				detail_applyType.text=form.type+"";
+				detail_teacher_name.text=this.parentApplication.getTeacherNameByAccountId(form.teacherId); 
+				detail_teacher_id.text=form.teacherId;
+				detail_beginDate.text=form.beginTime.split(" ")[0];
+				detail_beginDate_section.selectedIndex=parseInt(form.beginTime.split(" ")[1]);
+				detail_endDate.text=form.endTime.split(" ")[0];
+				detail_endDate_section.selectedIndex=parseInt(form.endTime.split(" ")[1]);
+				detail_reason.text=form.reason;
+				detail_arrange_tech.text=form.arrangeTech;
+				detail_arrange_tech_already.selected=form.arrangeTechDealAlready;
+				detail_arrange_service.text=form.arrangeService;
+				detail_arrange_service_already.selected=form.arrangeServiceDealAlready;
+				detail_arrange_manage.text=form.arrangeManage;
+				detail_arrange_manage_already.selected=form.arrangeManageDealAlready;
+				
+				detail_officeChief_approve_option.text=form.officeChiefApproveOption;
+				detail_officeChief_approve_time.text=CommonUtils.formatDate(form.officeChiefApproveTime,"YYYY-MM-DD");
+				detail_officeChief_approver_id.text=form.officeChiefApproverId;
+				detail_officeChief_approver_name.text=this.parentApplication.getTeacherNameByAccountId(form.officeChiefApproverId);
+				detail_officeChief_approve_status.selectedValue=form.officeChiefStatus;
+				
+				detail_vicePrincipal_approve_option.text=form.vicePrincipalApproveOption;
+				detail_vicePrincipal_approve_time.text=CommonUtils.formatDate(form.vicePrincipalApproveTime,"YYYY-MM-DD");
+				detail_vicePrincipal_approver_id.text=form.vicePrincipalApproverId;
+				detail_vicePrincipal_approver_name.text=this.parentApplication.getTeacherNameByAccountId(form.vicePrincipalApproverId);
+				detail_vicePrincipal_approve_status.selectedValue=form.vicePrincipalStatus;
+				
+				detail_principal_approve_option.text=form.principalApproveOption;
+				detail_principal_approve_time.text=CommonUtils.formatDate(form.principalApproveTime,"YYYY-MM-DD");
+				detail_principal_approver_id.text=form.principalApproverId;
+				detail_principal_approver_name.text=this.parentApplication.getTeacherNameByAccountId(form.principalApproverId);
+				detail_principal_approve_status.selectedValue=form.principalStatus;
+				
+				detail_remark.text=form.remark;
+				
+				logTable.initdata(form.logs as ArrayCollection);
+				unLockWin();
+			}
+			
+			
+			
+			public function switchDetailTextView():void{
+				if(detail_applyType.text=="0"){
+					detail_type_label.text="温岭中学教职工请假单";
+					detail_time_label.text="请假时间";
+					detail_reason_label.text="请假事由";
+					detail_arrange_label.text="请假期间工作安排情况";
+				}else if(detail_applyType.text=="1"){
+					detail_type_label.text="温岭中学教职工出差审批单";
+					detail_time_label.text="出差时间";
+					detail_reason_label.text="出差事由";
+					detail_arrange_label.text="出差期间工作安排情况";
+				}
+			}
+			
+			public function detailApply(applyId:String):void{
+				detail_officeChief_approve_time.text="";
+				detail_officeChief_approver_id.text="";
+				detail_officeChief_approve_status.selection=null;
+				
+				detail_vicePrincipal_approve_time.text="";
+				detail_vicePrincipal_approver_id.text="";
+				detail_vicePrincipal_approve_status.selection=null;
+				detail_principal_approve_time.text="";
+				detail_principal_approver_id.text="";
+				detail_principal_approve_status.selection=null;
+				takeLeaveServiceRO.getDetailInfoById(applyId);
+			}
+			
+			
+			public function formatDate(date:Date):String{
+				return CommonUtils.formatDate(date,"YYYY-MM-DD JJ:NN:SS");
+				
+			}
+			
+			
+			private var window:WlzxLockWin=null;
+			private function lockWin():void{
+				
+				window=WlzxLockWin(PopUpManager.createPopUp(this,WlzxLockWin,true)); 
+				PopUpManager.centerPopUp(window);
+				window.percentHeight=100;
+				window.percentWidth=100;			
+				
+			}
+			private function unLockWin():void{
+				if(window!=null)
+					PopUpManager.removePopUp(window);
+			}
+		]]> 		
+	</mx:Script> 
+	
+	<mx:Panel width="100%" height="100%"   title="请假/出差审批单"  borderVisible="false" id="panel" dropShadowVisible="false" >
+		
+		
+		
+		<mx:VBox width="100%" height="100%" id="detailPanel">
+			
+			<mx:VBox width="100%"    horizontalGap="10" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
+				<mx:VBox width="100%" horizontalAlign="center" verticalGap="0">
+					<mx:Label  text="温岭中学教职工请假单"    width="100%"  letterSpacing="5" textAlign="center" fontSize="14"  fontWeight="bold" height="30"  id="detail_type_label"/>
+					<mx:HBox width="100%" horizontalAlign="right">
+						<mx:Label  text="编号【】" id="detail_applyNo"   visible="true" width="100%"  letterSpacing="5" textAlign="right" fontSize="14"  fontWeight="bold" height="20" />
+						<mx:Label text="0" id="detail_applyType" visible="false"/>
+					</mx:HBox>
+					
+				</mx:VBox>
+				
+				<mx:VBox width="100%" horizontalAlign="center" height="100%" verticalAlign="middle"   borderVisible="true" paddingLeft="20" paddingRight="20">
+					
+					<mx:Grid width="100%" height="100%"   verticalGap="-1" horizontalGap="-1" >
+						
+						<mx:GridRow width="100%" >
+							
+							<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5" verticalAlign="middle" horizontalAlign="center" width="100">
+								<mx1:Text text="姓名"  textAlign="center" width="80" />
+							</mx:GridItem>
+							<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5"    verticalAlign="middle" horizontalAlign="center">
+								<mx:TextInput width="120"   alpha="0.5" id="detail_teacher_name" enabled="false"/>
+								<mx:Label  text=""   textAlign="center" id="detail_teacher_id"  visible="false" enabled="false"/>
+							</mx:GridItem>
+							<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5"    verticalAlign="middle" horizontalAlign="center"  width="100">
+								<mx:Label  text="请假时间"  textAlign="center" id="detail_time_label"/>
+							</mx:GridItem>
+							<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5"    verticalAlign="middle" horizontalAlign="left"  width="100%">
+								<mx:DateField width="120" id="detail_beginDate" formatString="YYYY-MM-DD" enabled="false"/>
+								<mx:ComboBox width="60" id="detail_beginDate_section" dataProvider="{sections}" enabled="false"/>
+								<mx:Label width="40"   text="----"/>
+								<mx:DateField width="120" id="detail_endDate" formatString="YYYY-MM-DD" enabled="false"/>
+								<mx:ComboBox width="60" id="detail_endDate_section" dataProvider="{sections}" enabled="false"/>
+							</mx:GridItem>
+							
+						</mx:GridRow>
+						<mx:GridRow width="100%">
+							<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5"     verticalAlign="middle" horizontalAlign="center">
+								<mx1:Text text="请假事由"  textAlign="center" width="80" id="detail_reason_label"/>
+							</mx:GridItem>
+							<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5"     verticalAlign="middle"  colSpan="3" horizontalAlign="center">
+								<mx:TextArea width="100%" height="50" id="detail_reason" enabled="false">
+									
+								</mx:TextArea>
+							</mx:GridItem>
+							
+						</mx:GridRow>
+						<mx:GridRow width="100%">
+							<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5"     verticalAlign="middle" horizontalAlign="center" rowSpan="3">
+								<mx1:Text text="请假期间工作安排情况"  textAlign="center" width="80" id="detail_arrange_label"/>
+							</mx:GridItem>
+							<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5"     verticalAlign="middle"  colSpan="3" horizontalAlign="center">
+								<mx:Label  text="教学工作："  textAlign="center"/>
+								<mx:TextArea width="100%" height="30" id="detail_arrange_tech" enabled="false">
+									
+								</mx:TextArea>
+								<mx:CheckBox label="已落实" selected="false" id="detail_arrange_tech_already" enabled="false"/>
+							</mx:GridItem>
+							
+						</mx:GridRow>
+						<mx:GridRow width="100%">
+							
+							<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5"     verticalAlign="middle"  colSpan="3" horizontalAlign="center">
+								<mx:Label  text="服务工作："  textAlign="center"/>
+								<mx:TextArea width="100%" height="30" id="detail_arrange_service" enabled="false">
+									
+								</mx:TextArea>
+								<mx:CheckBox label="已落实" selected="false" id="detail_arrange_service_already" enabled="false"/>
+							</mx:GridItem>
+							
+						</mx:GridRow>
+						<mx:GridRow width="100%">
+							
+							<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5"     verticalAlign="middle"  colSpan="3" horizontalAlign="center">
+								<mx:Label  text="管理工作："  textAlign="center"/>
+								<mx:TextArea width="100%" height="30" id="detail_arrange_manage" enabled="false">
+									
+								</mx:TextArea>
+								<mx:CheckBox label="已落实" selected="false" id="detail_arrange_manage_already" enabled="false"/>
+							</mx:GridItem>
+							
+						</mx:GridRow>
+						
+						<mx:GridRow width="100%">
+							<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5"     verticalAlign="middle" horizontalAlign="center">
+								<mx1:Text text="处室负责人意见"  textAlign="center" width="80" />
+							</mx:GridItem>
+							<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5"     verticalAlign="middle"  colSpan="3" horizontalAlign="center">
+								<mx:VBox width="100%" horizontalAlign="right">
+									<mx:TextArea width="100%" height="50" id="detail_officeChief_approve_option" enabled="false">
+										
+									</mx:TextArea>
+									<mx:HBox>
+										<mx:RadioButtonGroup id="detail_officeChief_approve_status" enabled="false"/>  
+										<mx:RadioButton group="{detail_officeChief_approve_status}" value="1" label="通过" width="80" enabled="false"/>  
+										<mx:RadioButton group="{detail_officeChief_approve_status}" value="2" label="不通过" width="80" enabled="false"/>  
+										<mx:Label text="签名："/>
+										<mx:TextInput width="120"   alpha="0.5" id="detail_officeChief_approver_name" enabled="false"/>
+										<mx:Label  text=""   id="detail_officeChief_approver_id" visible="false"/>
+										<mx:Label text="日期："/>
+										<mx:DateField width="120" id="detail_officeChief_approve_time" enabled="false" formatString="YYYY-MM-DD"/>
+									</mx:HBox>
+								</mx:VBox>
+								
+							</mx:GridItem>
+							
+						</mx:GridRow>
+						<mx:GridRow width="100%">
+							<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5"     verticalAlign="middle" horizontalAlign="center">
+								<mx1:Text text="分管校长意见"  textAlign="center" width="80" />
+							</mx:GridItem>
+							<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5"     verticalAlign="middle"  colSpan="3" horizontalAlign="center">
+								<mx:VBox width="100%" horizontalAlign="right">
+									<mx:TextArea width="100%" height="50" id="detail_vicePrincipal_approve_option" enabled="false">
+										
+									</mx:TextArea>
+									<mx:HBox>
+										<mx:RadioButtonGroup id="detail_vicePrincipal_approve_status" enabled="false"/>  
+										<mx:RadioButton group="{detail_vicePrincipal_approve_status}" value="1" label="通过" width="80" enabled="false"/>  
+										<mx:RadioButton group="{detail_vicePrincipal_approve_status}" value="2" label="不通过" width="80" enabled="false"/>  
+										<mx:Label text="签名："/>
+										<mx:TextInput width="120"   alpha="0.5" id="detail_vicePrincipal_approver_name" enabled="false"/>
+										<mx:Label  text=""   id="detail_vicePrincipal_approver_id"  visible="false"/>
+										<mx:Label text="日期："/>
+										<mx:DateField width="120" id="detail_vicePrincipal_approve_time" enabled="false" formatString="YYYY-MM-DD"/>
+									</mx:HBox>
+									
+								</mx:VBox>
+							</mx:GridItem>
+							
+						</mx:GridRow>
+						<mx:GridRow width="100%">
+							<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5"     verticalAlign="middle" horizontalAlign="center">
+								<mx1:Text text="校长意见"  textAlign="center" width="80" />
+							</mx:GridItem>
+							<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5"     verticalAlign="middle"  colSpan="3" horizontalAlign="center">
+								<mx:VBox width="100%" horizontalAlign="right">
+									<mx:TextArea width="100%" height="50" id="detail_principal_approve_option" enabled="false">
+										
+									</mx:TextArea>
+									<mx:HBox>
+										<mx:RadioButtonGroup id="detail_principal_approve_status" enabled="false"/>  
+										<mx:RadioButton group="{detail_principal_approve_status}" value="1" label="通过" width="80" enabled="false"/>  
+										<mx:RadioButton group="{detail_principal_approve_status}" value="2" label="不通过" width="80" enabled="false"/>  
+										<mx:Label text="签名："/>
+										<mx:TextInput width="120"   alpha="0.5" id="detail_principal_approver_name" enabled="false"/>
+										<mx:Label  text=""   id="detail_principal_approver_id"  visible="false"/>
+										<mx:Label text="日期："/>
+										<mx:DateField width="120" id="detail_principal_approve_time" enabled="false" formatString="YYYY-MM-DD"/>
+									</mx:HBox>
+									
+								</mx:VBox>
+							</mx:GridItem>
+							
+						</mx:GridRow>
+						<mx:GridRow width="100%">
+							<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5"     verticalAlign="middle" horizontalAlign="center">
+								<mx:Label  text="备注"  textAlign="center"/>
+							</mx:GridItem>
+							<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5"     verticalAlign="middle"  colSpan="3" horizontalAlign="center">
+								<mx:TextArea width="100%" height="50" id="detail_remark" enabled="false">
+									
+								</mx:TextArea>
+							</mx:GridItem>
+							
+						</mx:GridRow>
+					</mx:Grid>
+					<mx:Panel width="100%"   styleName="customPanel" title="流程日志"  cornerRadius="5" borderVisible="false" dropShadowVisible="false">
+						
+						<component:WlzxPageDataGrid width="100%" height="100%"   borderVisible="false"  autoLayout="true"  borderAlpha="0.2" verticalAlign="middle"   id="logTable" pagecount="10"  >				
+							<component:mygridcolumns>
+								<mx:DataGridColumn textAlign="center" headerText="操作时间"  width="100">
+									<mx:itemRenderer>
+										<mx:Component>
+											<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+												<mx:Label text="{this.outerDocument.formatDate(data.operationTime)}"/>
+											</mx:VBox>																			
+										</mx:Component>						
+									</mx:itemRenderer>
+								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="操作人"  width="60">
+									<mx:itemRenderer>
+										<mx:Component>
+											<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+												<mx1:Text text="{this.parentApplication.getTeacherNameByAccountId(data.operationTeacherId)}" >
+													
+												</mx1:Text>
+											</mx:VBox>																			
+										</mx:Component>
+									</mx:itemRenderer>
+								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="操作名称"  width="100" >
+									<mx:itemRenderer>
+										<mx:Component>
+											<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+												<mx:Label text="{data.operationName}"/>
+											</mx:VBox>																			
+										</mx:Component>
+									</mx:itemRenderer>
+								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="操作结果"  width="200" >
+									<mx:itemRenderer>
+										<mx:Component>
+											<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+												<mx:Label text="{data.operationResult}"/>
+											</mx:VBox>																			
+										</mx:Component>
+									</mx:itemRenderer>
+								</mx:DataGridColumn>
+								
+								
+							</component:mygridcolumns>
+						</component:WlzxPageDataGrid>
+					</mx:Panel>
+				</mx:VBox>
+				
+			</mx:VBox>
+		</mx:VBox>
+		
+	</mx:Panel>
+</mx:Module>
