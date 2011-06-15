@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2011 年 06 月 12 日 16:04
+-- 生成日期: 2011 年 06 月 16 日 00:20
 -- 服务器版本: 5.0.91
 -- PHP 版本: 5.2.13
 
@@ -18,6 +18,25 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 --
 -- 数据库: `wlzx_oa`
 --
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `wlzx_oa_attachment`
+--
+
+CREATE TABLE IF NOT EXISTS `wlzx_oa_attachment` (
+  `id` bigint(20) NOT NULL auto_increment,
+  `name` varchar(200) NOT NULL,
+  `path` varchar(300) NOT NULL,
+  `type` varchar(200) NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+--
+-- 转存表中的数据 `wlzx_oa_attachment`
+--
+
 
 -- --------------------------------------------------------
 
@@ -97,14 +116,62 @@ CREATE TABLE IF NOT EXISTS `wlzx_oa_moverestday_apply` (
   `moveRestDay_vicePrincipal_status` tinyint(1) default NULL,
   `moveRestDay_status` int(11) NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
 
 --
 -- 转存表中的数据 `wlzx_oa_moverestday_apply`
 --
 
 INSERT INTO `wlzx_oa_moverestday_apply` (`id`, `moveRestDay_applyNo`, `moveRestDay_teacher_id`, `moveRestDay_times`, `moveRestDay_officeChief_approver_id`, `moveRestDay_officeChief_approve_time`, `moveRestDay_officeChief_approve_option`, `moveRestDay_officeChief_status`, `moveRestDay_vicePrincipal_approver_id`, `moveRestDay_vicePrincipal_approve_time`, `moveRestDay_vicePrincipal_approve_option`, `moveRestDay_vicePrincipal_status`, `moveRestDay_status`) VALUES
-(1, '20110610090454', 2, '2011-06-11 1-1-0;2011-06-23 1-1-1;', NULL, NULL, NULL, 0, NULL, NULL, NULL, 0, 4);
+(1, '20110610090454', 2, '2011-06-11 1-1-0;2011-06-23 1-1-1;', NULL, NULL, NULL, 0, NULL, NULL, NULL, 0, 4),
+(2, '20110612210313', 2, '2011-06-16 1-0-0;', 2, '2011-06-14 00:00:00', '2w', 2, NULL, NULL, '', 0, 3),
+(4, '20110612214441', 2, '2011-06-13 1-0-0;', 4, '2011-06-16 00:00:00', '2222222222', 1, 5, '2011-06-15 00:00:00', '333333', 2, 3),
+(5, '20110612214448', 2, '2011-06-14 0-1-0;', 4, '2011-06-15 00:00:00', '1', 1, 5, '2011-06-16 00:00:00', '2', 1, 2),
+(6, '20110612215810', 2, '2011-06-16 1-0-0;', 2, '2011-06-16 00:00:00', '222222222', 2, NULL, NULL, '', 0, 3),
+(7, '20110612220521', 2, '2011-06-07 1-0-0;', 2, '2011-06-16 00:00:00', '1', 1, NULL, NULL, '', 0, 1);
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `wlzx_oa_notice`
+--
+
+CREATE TABLE IF NOT EXISTS `wlzx_oa_notice` (
+  `id` bigint(20) NOT NULL auto_increment,
+  `scope` smallint(6) NOT NULL,
+  `type` varchar(200) NOT NULL,
+  `post_deparment_id` bigint(20) NOT NULL,
+  `poster_id` bigint(20) NOT NULL,
+  `emergence_flag` smallint(6) NOT NULL,
+  `title` varchar(200) NOT NULL,
+  `content` text NOT NULL,
+  `post_time` datetime NOT NULL,
+  `last_edit_time` timestamp NULL default NULL on update CURRENT_TIMESTAMP,
+  `last_editor_id` bigint(20) default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+--
+-- 转存表中的数据 `wlzx_oa_notice`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `wlzx_oa_notice_attachment_relationship`
+--
+
+CREATE TABLE IF NOT EXISTS `wlzx_oa_notice_attachment_relationship` (
+  `id` bigint(20) NOT NULL,
+  `notice_id` bigint(20) NOT NULL,
+  `attachment_id` bigint(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- 转存表中的数据 `wlzx_oa_notice_attachment_relationship`
+--
+
 
 -- --------------------------------------------------------
 
@@ -181,7 +248,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_oa_takeleave_apply` (
 
 INSERT INTO `wlzx_oa_takeleave_apply` (`id`, `takeLeave_applyNo`, `takeLeave_type`, `takeLeave_teacher_id`, `takeLeave_beginTime`, `takeLeave_endTime`, `takeLeave_reason`, `takeLeave_arrange_tech`, `takeLeave_arrange_tech_deal_already`, `takeLeave_arrange_service`, `takeLeave_arrange_service_deal_already`, `takeLeave_arrange_manage`, `takeLeave_arrange_manage_deal_already`, `takeLeave_officeChief_approver_id`, `takeLeave_officeChief_approve_time`, `takeLeave_officeChief_approve_option`, `takeLeave_officeChief_status`, `takeLeave_vicePrincipal_approver_id`, `takeLeave_vicePrincipal_approve_time`, `takeLeave_vicePrincipal_approve_option`, `takeLeave_vicePrincipal_status`, `takeLeave_principal_approver_id`, `takeLeave_principal_approve_time`, `takeLeave_principal_approve_option`, `takeLeave_principal_status`, `takeLeave_remark`, `takeLeave_status`) VALUES
 (2, '20110608082544', 0, 2, '2011-06-16 1', '2011-06-22 0', NULL, '2', 0, '3', 0, '4', 0, NULL, NULL, NULL, 0, NULL, NULL, NULL, 0, NULL, NULL, NULL, 0, NULL, 5),
-(3, '20110608093112', 1, 2, '2011-06-08 0', '2011-06-16 0', '1', '1', 1, '1', 1, '1', 1, NULL, NULL, '', 0, NULL, NULL, '', 0, NULL, NULL, '', 0, NULL, 0);
+(3, '20110608093112', 1, 2, '2011-06-08 0', '2011-06-16 2', '22222222222222222', '12', 1, '12', 1, '12', 1, 2, '2011-06-16 00:00:00', 'a', 2, NULL, NULL, '', 0, NULL, NULL, '', 0, NULL, 4);
 
 -- --------------------------------------------------------
 
@@ -198,7 +265,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_oa_workflow_log` (
   `operation_name` varchar(200) NOT NULL,
   `operation_result` text,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=28 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=50 ;
 
 --
 -- 转存表中的数据 `wlzx_oa_workflow_log`
@@ -223,4 +290,23 @@ INSERT INTO `wlzx_oa_workflow_log` (`id`, `operation_object_type`, `operation_ob
 (24, 'OverWorkWorkFlowLog', 6, 2, '2011-06-12 15:54:24', '发起申请', '生成编号为20110612035424的申请记录'),
 (25, 'OverWorkWorkFlowLog', 7, 2, '2011-06-12 15:59:02', '发起申请', '生成编号为201106121506171的申请记录'),
 (26, 'OverWorkWorkFlowLog', 8, 2, '2011-06-12 16:02:43', '发起申请', '生成编号为20110612160243的申请记录'),
-(27, 'OverWorkWorkFlowLog', 8, 2, '2011-06-12 16:03:14', '编辑申请', '编辑编号为20110612160243的申请记录');
+(27, 'OverWorkWorkFlowLog', 8, 2, '2011-06-12 16:03:14', '编辑申请', '编辑编号为20110612160243的申请记录'),
+(28, 'MoveRestDayWorkFlowLog', 2, 2, '2011-06-12 21:03:13', '发起申请', '生成编号为20110612210313的申请记录'),
+(29, 'MoveRestDayWorkFlowLog', 2, 2, '2011-06-12 21:07:19', '编辑申请', '编辑编号为20110612210313的申请记录'),
+(33, 'MoveRestDayWorkFlowLog', 2, 2, '2011-06-12 21:44:05', '处室审批', '处室审批编号为20110612210313的申请不通过'),
+(34, 'MoveRestDayWorkFlowLog', 4, 2, '2011-06-12 21:44:41', '发起申请', '生成编号为20110612214441的申请记录'),
+(35, 'MoveRestDayWorkFlowLog', 5, 2, '2011-06-12 21:44:48', '发起申请', '生成编号为20110612214448的申请记录'),
+(36, 'MoveRestDayWorkFlowLog', 4, 4, '2011-06-12 21:45:22', '处室审批', '处室审批编号为20110612214441的申请通过'),
+(37, 'MoveRestDayWorkFlowLog', 4, 5, '2011-06-12 21:51:07', '分管副校长审批', '分管副校长审批编号为20110612214441的申请不通过'),
+(38, 'MoveRestDayWorkFlowLog', 5, 4, '2011-06-12 21:53:03', '处室审批', '处室审批编号为20110612214448的申请通过'),
+(39, 'MoveRestDayWorkFlowLog', 5, 5, '2011-06-12 21:53:03', '分管副校长审批', '分管副校长审批编号为20110612214448的申请通过'),
+(40, 'MoveRestDayWorkFlowLog', 6, 2, '2011-06-12 21:58:10', '发起申请', '生成编号为20110612215810的申请记录'),
+(41, 'MoveRestDayWorkFlowLog', 6, 2, '2011-06-12 22:04:27', '处室审批', '处室审批编号为20110612215810的申请不通过'),
+(42, 'MoveRestDayWorkFlowLog', 7, 2, '2011-06-12 22:05:21', '发起申请', '生成编号为20110612220521的申请记录'),
+(43, 'MoveRestDayWorkFlowLog', 7, 2, '2011-06-12 22:05:40', '处室审批', '处室审批编号为20110612220521的申请通过'),
+(44, 'TakeLeaveWorkFlowLog', 3, 2, '2011-06-12 22:20:43', '编辑申请', '编辑编号为20110608093112的申请记录'),
+(45, 'TakeLeaveWorkFlowLog', 3, 2, '2011-06-12 22:27:54', '编辑申请', '编辑编号为20110608093112的申请记录'),
+(46, 'TakeLeaveWorkFlowLog', 3, 2, '2011-06-12 23:36:46', '落实请假/出差期间工作', '落实编号为20110608093112的申请请假/出差期间教学工作'),
+(47, 'TakeLeaveWorkFlowLog', 3, 2, '2011-06-12 23:37:24', '落实请假/出差期间管理工作', '落实编号为20110608093112的申请请假/出差期间管理工作'),
+(48, 'TakeLeaveWorkFlowLog', 3, 2, '2011-06-12 23:37:24', '落实请假/出差期间服务工作', '落实编号为20110608093112的申请请假/出差期间服务工作'),
+(49, 'TakeLeaveWorkFlowLog', 3, 2, '2011-06-12 23:45:40', '处室审批', '处室审批编号为20110608093112的申请不通过');

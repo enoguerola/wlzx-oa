@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Module xmlns:mx="http://www.adobe.com/2006/mxml" 
+		   layout="vertical" width="100%" creationComplete="init();" height="100%" xmlns:valueObjects="oa.entity.*" xmlns:component="system.component.*"  xmlns:mx1="library://ns.adobe.com/flex/mx">
+
+		<valueObjects:NoticeModel id="notice"/>
+
+	
+	<mx:RemoteObject id="noticeServiceRO" destination="noticeServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+		<mx:method name="getDetailInfoById"  concurrency="last"  result="getDetailInfoByIdById_resultHandler(event);" />
+	</mx:RemoteObject>
+	<mx:Script> 
+		<![CDATA[
+		import mx.collections.ArrayCollection;
+		import mx.containers.FormItem;
+		import mx.controls.Alert;
+		import mx.controls.DateField;
+		import mx.core.FlexGlobals;
+		import mx.events.*;
+		import mx.events.ListEvent;
+		import mx.events.ValidationResultEvent;
+		import mx.formatters.DateFormatter;
+		import mx.managers.PopUpManager;
+		import mx.rpc.events.*;
+		import mx.validators.Validator;
+		import system.component.WlzxLockWin;
+		import system.utils.*;
+		
+		private var validatorArr:Array;
+		
+		
+		private function init():void{
+			var id:String=((Object)(this.owner)).id;
+			lockWin();
+			detail(id);
+		}
+		protected function systemFaultHandler(event:FaultEvent):void {
+			Alert.show(event.fault.faultString, 'Error');
+			unLockWin();
+		}
+		
+		protected function getDetailInfoByIdById_resultHandler(event:ResultEvent):void{
+			notice=event.result as NoticeModel;
+			detail_title.text=notice.title;
+			detail_content.text=notice.content;
+			detail_postTime.text+=formatDate(notice.postTime);
+			detail_department.text+=notice.postDepartmentId;
+			detail_type.text+=notice.type;
+			unLockWin();
+		}
+		public function detail(id:String):void{
+			
+			noticeServiceRO.getDetailInfoById(id);
+		}
+		
+		
+	
+		
+	
+		
+		
+		public function formatDate(date:Date):String{
+			return CommonUtils.formatDate(date,"YYYY-MM-DD JJ:NN:SS");
+		
+		}
+		
+		
+		private var window:WlzxLockWin=null;
+		private function lockWin():void{
+		
+			window=WlzxLockWin(PopUpManager.createPopUp(this,WlzxLockWin,true)); 
+			PopUpManager.centerPopUp(window);
+			window.percentHeight=100;
+			window.percentWidth=100;			
+		
+		}
+		private function unLockWin():void{
+			if(window!=null)
+			PopUpManager.removePopUp(window);
+		}
+		]]> 		
+	</mx:Script> 
+	<mx:Panel width="100%" height="100%"   title="公告详情"  borderVisible="false" id="panel" dropShadowVisible="false" >
+		
+		
+		
+		<mx:VBox width="100%" height="100%" id="detailPanel">
+			
+			<mx:VBox width="100%"    horizontalGap="10" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10" borderStyle="solid">
+				<mx:VBox width="100%" horizontalAlign="center" verticalGap="0">
+					<mx:Label  text=""   id="detail_title" width="100%"  letterSpacing="5" textAlign="center" fontSize="14"  fontWeight="bold" height="30" />
+					<mx:HBox width="100%" horizontalAlign="right">
+						<mx:Label  text="所属类别：" id="detail_type"   visible="true" width="100%"  letterSpacing="5" textAlign="right" fontSize="14"  fontWeight="bold" height="20" />
+						<mx:Label  text="发布部门：" id="detail_department"   visible="true" width="100%"  letterSpacing="5" textAlign="right" fontSize="14"  fontWeight="bold" height="20" />
+						<mx:Label text="发布时间：" id="detail_postTime" visible="false"/>
+					</mx:HBox>
+				</mx:VBox>
+				
+				<mx:VBox width="100%" horizontalAlign="center" height="100%" verticalAlign="middle"   borderVisible="true" paddingLeft="20" paddingRight="20">
+					<mx1:Text id="detail_content" width="100%">
+						
+					</mx1:Text>
+				</mx:VBox>	
+				
+				
+			</mx:VBox>
+			<mx:HBox width="100%" height="20">
+				<mx:LinkButton  label="附件下载区" icon="@Embed(source='../WebContent/resources/common/tools/button_attachment_icon.png')" />
+			</mx:HBox>
+			<mx:VBox width="100%" id="detail_attachments">
+				
+			</mx:VBox>
+		</mx:VBox>
+		
+	</mx:Panel>
+</mx:Module>

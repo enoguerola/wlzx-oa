@@ -372,6 +372,7 @@ public class SystemService{
 		newModule.setName(module.getName());
 		newModule.setSequence(module.getSequence());
 		newModule.setUrl(module.getUrl());
+		newModule.setParms(module.getParms());
 		moduleDAO.saveOrUpdate(newModule);	
 		//更新默认访问操作
 		 operation.setSymbol(newModule.getSymbol()+"@defaultVisit@");

@@ -18,6 +18,12 @@ package system.entity
 			}
 			else return null;
 		};
+		public function getParms():String{
+			if(modules!=null&&ArrayCollection(modules).length>0){
+				return ModuleModel(ArrayCollection(modules).getItemAt(0)).parms;
+			}
+			else return null;
+		};
 		public function MenuModel()
 		{
 		}

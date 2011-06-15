@@ -127,7 +127,7 @@
 			public function clickLeafMenuItem(event:Event):void{ 
 				var selectedNode:XML=Tree(event.target).selectedItem as XML; 
 				if(selectedNode.children().length()==0)
-					addTab(selectedNode.@symbol,selectedNode.@label,nav,selectedNode.@url,null);
+					addTab(selectedNode.@symbol,selectedNode.@label,nav,selectedNode.@url,null,selectedNode.@parms);
 				//Alert.show(selectedNode.@label);
 			} 
 			private function buildSubMenus(menu:MenuModel):String{
@@ -142,7 +142,7 @@
 					}
 					resultXML=resultXML.concat("</node>");
 				}		
-				else resultXML=resultXML.concat("<node symbol='"+menu.symbol+"' label='"+menu.name+"' url='"+menu.getUrl()+"'/>");				
+				else resultXML=resultXML.concat("<node symbol='"+menu.symbol+"' label='"+menu.name+"' url='"+menu.getUrl()+"' parms='"+menu.getParms()+"'/>");				
 				
 				return resultXML;
 			}

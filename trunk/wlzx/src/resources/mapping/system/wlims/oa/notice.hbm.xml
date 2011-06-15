@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+<class name="system.wlims.oa.entity.notice.NoticeModel" table="wlzx_oa_notice">
+        <id name="id">
+            <column name="id" />
+            <generator class="native" />
+        </id>
+
+        <property name="scope" type="int">
+            <column name="scope" />
+        </property>
+        
+        <property name="type" type="string">
+            <column name="type" />
+        </property>
+        
+        <property name="postDepartmentId" type="string">
+            <column name="post_department_id" />
+        </property>
+        
+         <property name="posterId" type="string">
+            <column name="poster_id" />
+        </property>
+        
+        <property name="emergence" type="int">
+            <column name="emergence" />
+        </property>
+        
+        <property name="title" type="string">
+            <column name="title" />
+        </property>
+         <property name="content" type="string">
+            <column name="content" />
+        </property>
+        <property name="postTime" type="java.util.Date">
+            <column name="postTime" />
+        </property>
+          <property name="lastEditorId" type="string">
+            <column name="last_editor_id" />
+        </property>
+        <property name="lastEditTime" type="java.util.Date">
+            <column name="last_edit_time" />
+        </property>
+      <set name="attachments" lazy="false" table="wlzx_oa_notice_attachment_relationship" cascade="all-delete-orphan" inverse="true">
+        	<key column="notice_id" not-null="true" />
+        	<one-to-many  class="system.wlims.oa.entity.notice.AttachmentModel" /> 
+        </set>		
+    </class>
+</hibernate-mapping>

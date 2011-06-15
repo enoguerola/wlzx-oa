@@ -11,7 +11,7 @@ package system.entity
 		public var parent:Object=new Array();//父模块集
 		public var operations:Object=new Array();//操作集
 		public var menus:Object=new Array();//所属菜单集
-		
+		public var parms:String;
 		public function ModuleModel()
 		{
 		}

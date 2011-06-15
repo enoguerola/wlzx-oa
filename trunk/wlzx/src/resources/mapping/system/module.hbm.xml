@@ -23,12 +23,16 @@
 		<property name="url" type="string">
 			<column name="url" />
 		</property>
+		<property name="parms" type="string">
+			<column name="parms" />
+		</property>
 		<property name="creationDate" type="java.util.Date">
 			<column name="creation_date" />
 		</property>
 		<property name="modifiedDate" type="java.util.Date">
 			<column name="modified_date" />
 		</property>
+		
 		<set name="children" lazy="false"  table="wlzx_system_module_treeship" cascade="all">
 			<key column="parent_id" not-null="true" />
 			<many-to-many column="child_id" class="system.entity.ModuleModel" /> 
