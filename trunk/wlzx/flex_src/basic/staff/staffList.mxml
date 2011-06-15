@@ -37,7 +37,6 @@
 			import mx.rpc.events.*;
 			import mx.utils.StringUtil;
 			
-			import oa.notice.popWin.*;
 			
 			import system.entity.*;
 			import system.utils.CommonUtils;
