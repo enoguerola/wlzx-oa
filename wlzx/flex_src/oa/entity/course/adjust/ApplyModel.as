@@ -18,7 +18,7 @@ package oa.entity.course.adjust
 		public var approveRemark:String ;
 		public var approveDate:Date;	
 		public var applyCreationDate:Date;
-		public var applyItems:Object=new Array();;
+		public var applyItems:Object=new Array();
 		
 		public function ApplyModel()
 		{

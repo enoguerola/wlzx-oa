@@ -24,6 +24,7 @@ public class ModuleModel extends BaseModel{
 	private static final long serialVersionUID = 8940806580674257805L;
 	private String detail;
 	private String url;
+	private String parms;
 	private Set<MenuModel> menus=new TreeSet<MenuModel>();//模块所属菜单功能集
 	private Set<OperationModel> operations=new TreeSet<OperationModel>();//模块操作集
 	private Set<ModuleModel> children=new TreeSet<ModuleModel>();//子模块集
@@ -103,5 +104,13 @@ public class ModuleModel extends BaseModel{
 			}
 		}
 		return dams;
+	}
+
+	public String getParms() {
+		return parms;
+	}
+
+	public void setParms(String parms) {
+		this.parms = parms;
 	}
 }
