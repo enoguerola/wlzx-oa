@@ -129,10 +129,6 @@
 				// Instantiate a new FileFilter.
 				imageTypes = new FileFilter("Images (*.jpg, *.jpeg, *.png, *.gif)", "*.jpg; *.jpeg; *.png; *.gif;");
 				
-				// For client-side and server-side validation using a RemoteObject service
-				teacherRemoteService = new TeacherRemoteService(teacherServiceRO);
-				teacherValidator.teacherService = teacherRemoteService;
-				
 				callLater(initStaffWin);
 				
 			}
@@ -142,6 +138,7 @@
 				teacher = new TeacherModel();	
 				if(parms!=null&&parms!=""){		
 					teacherId = parms ;//弹出窗口时设定的中转参数
+					Alert.show(teacherId);
 					teacherServiceRO.get(teacherId);
 					getDepartment();
 				}else{
@@ -280,9 +277,6 @@
 				}
 			}
 			
-			import basic.utils.TeacherIDValidator;
-			private var teacherValidator:TeacherIDValidator;
-			private var teacherRemoteService:TeacherRemoteService;
 			protected function teacherno_focusOutHandler(event:FocusEvent):void
 			{
 				// TODO Auto-generated method stub
