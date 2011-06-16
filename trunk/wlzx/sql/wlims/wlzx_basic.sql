@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2011 年 06 月 12 日 16:04
+-- 生成日期: 2011 年 06 月 16 日 11:00
 -- 服务器版本: 5.0.91
 -- PHP 版本: 5.2.13
 
@@ -67,10 +67,7 @@ CREATE TABLE IF NOT EXISTS `basic_teacher` (
 --
 
 INSERT INTO `basic_teacher` (`teacher_id`, `user_id`, `teacher_cname`, `teacher_sex`, `teacher_birthday`, `teacher_marrage`, `teacher_nation`, `teacher_politics_status`, `teacher_identify`, `teacher_native_place`, `teacher_email`, `teacher_home_phone`, `teacher_address`, `teacher_mobile_phone`, `teacher_no`, `teacher_education`, `teacher_profession`, `teacher_graduate_school`, `teacher_professional_title`, `teacher_skill_level`, `teacher_skill_level_date`, `teacher_department`, `teacher_position`, `teacher_office_phone`, `teacher_contact_phone`, `teacher_work_date`, `teacher_attend_date`, `teacher_status`, `teacher_photo_src`, `teacher_create_date`, `teacher_modified_date`) VALUES
-(1, 3, 'sas', 0, '2011-05-16', 0, '', 0, '', '', '', '', NULL, '12212', '1212', '0', '', '', '', '', NULL, '0', '', '', '', NULL, NULL, 0, NULL, '2011-05-31', '2011-05-31'),
-(3, 2, 'yufeng', 0, '2011-05-09', 0, 'ss', 0, '', 'sssss', '', '', NULL, '', '12313', '0', '', '', '', '', NULL, '0', '1212', '', '', NULL, NULL, 3, NULL, '2011-05-31', '2011-05-31'),
-(4, 4, '余峰', 1, '1990-08-03', 1, '汉', 2, '23232323', '撒', 'yufeng@12', '122', 'sas', '12334412', '2344', '大学', '计算机', '浙大', '高级', '33', '1990-08-03', NULL, '校长', '88932', '323', '1900-12-12', '1992-08-03', 1, NULL, '2011-06-11', '2011-06-11'),
-(5, 5, '余峰', 1, '1990-08-03', 1, '汉', 2, '23232323', '撒', 'yufeng@12', '122', 'sas', '12334412', '23445', '大学', '计算机', '浙大', '高级', '33', '1990-08-03', NULL, '校长', '88932', '323', '1900-12-12', '1992-08-03', 1, NULL, '2011-06-11', '2011-06-11');
+(3, 2, 'yufeng', 0, '2011-05-09', 0, 'ss', 0, '', 'sssss', '', '', NULL, '', '12313', '0', '', '', '', '', NULL, '0', '1212', '', '', NULL, NULL, 3, NULL, '2011-05-31', '2011-05-31');
 
 -- --------------------------------------------------------
 
@@ -174,8 +171,6 @@ CREATE TABLE IF NOT EXISTS `wlzx_basic_place` (
 --
 
 INSERT INTO `wlzx_basic_place` (`id`, `name`, `type`, `position`, `symbol`, `functions`, `area_begin`, `area_end`, `contain_begin`, `contain_end`, `remarks`, `creation_date`, `modified_date`) VALUES
-(2, '会议室', '1', '2--111', 'undefined111', '教学;会客;', 1, 2, 1, 2, '会议室', '2011-05-27 13:43:49', '2011-05-27 13:43:49'),
-(3, '啊啊啊啊啊啊啊', '1', '2--233', 'undefined233', '多媒体;教学;', 1, 2, 1, 2, '啊啊啊啊啊啊啊', '2011-05-27 13:45:24', '2011-05-27 13:45:24'),
 (5, 'weg', '1', '2--1111', 'BP1111', '培训;教学;会客;', 1, 2, 2, 3, '', '2011-05-27 14:24:05', '2011-05-27 14:24:23'),
 (6, 'gwe', '1', '2--22', 'BP22', '', 1, 2, 0, 0, '', '2011-05-27 14:25:26', '2011-05-27 14:25:26'),
 (7, 'g2e2', '1', '2--222', 'BP222', '', 0, 0, 0, 0, '', '2011-05-27 14:28:56', '2011-05-27 14:28:56');
