@@ -2,13 +2,16 @@ package system.wlims.basic.service.teacher;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 
 
 import system.DAOException;
 import system.ServiceException;
+import system.dao.DepartmentDAO;
 import system.dao.RoleDAO;
 import system.dao.UserDAO;
+import system.entity.DepartmentModel;
 import system.entity.RoleModel;
 import system.entity.UserModel;
 import system.utils.StringUtils;
@@ -16,6 +19,7 @@ import system.utils.TripleObject;
 import system.wlims.basic.dao.teacher.TeacherDAO;
 import system.wlims.basic.entity.teacher.TeacherDepartment;
 import system.wlims.basic.entity.teacher.TeacherModel;
+import system.wlims.basic.vo.UserAddressVo;
 
 public class TeacherAccountBridgeService {
 
@@ -23,6 +27,7 @@ public class TeacherAccountBridgeService {
 //	private TeacherDepartmentDAO teacherDepartmentDAO;
 	private UserDAO userDAO;
 	private RoleDAO roleDAO;
+	private DepartmentDAO departmentDAO;
 	public Boolean save(String  positionId, String teacherId,String prePositionId)throws ServiceException{
 		try {
 			TeacherModel teacher = teacherDAO.get(teacherId);
@@ -87,6 +92,79 @@ public class TeacherAccountBridgeService {
 		}
 		return triples;
 	}
+	public List<UserAddressVo> getUserAddressesByConditions(String departmentId,String userId){
+		List<UserAddressVo> results = new ArrayList<UserAddressVo>();
+		if(StringUtils.isNotEmpty(departmentId)){
+			DepartmentModel department=departmentDAO.get(departmentId);
+			if(department!=null){
+				Set<UserModel> users=department.getUsers();
+				if(users!=null&&users.size()>0){
+					for(UserModel user : users){
+						UserAddressVo vo=new UserAddressVo();
+						vo.setUserID(user.getId());
+						vo.setUserAccount(user.getName());
+						if(user.getMainRole()!=null){
+							vo.setMainRoleName(user.getMainRole().getName());
+							if(user.getMainRole().getBelongDepartment()!=null)
+								vo.setMainDepartmentName(user.getMainRole().getBelongDepartment().getName());
+						}
+						TeacherModel teacher=teacherDAO.getTeacherByUserId(user.getId());
+						if(teacher!=null){
+							vo.setUserName(teacher.getName());
+							vo.setEmail(teacher.getTeacherMail());
+							vo.setMobilePhone(teacher.getTeacherMobilePhone());
+							vo.setOfficePhone(teacher.getTeacherOfficePhone());
+						}
+						results.add(vo);
+					}
+				}
+			}
+			
+		}else if(StringUtils.isNotEmpty(userId)){
+			UserModel user=userDAO.get(userId);
+			UserAddressVo vo=new UserAddressVo();
+			vo.setUserID(user.getId());
+			vo.setUserAccount(user.getName());
+			if(user.getMainRole()!=null){
+				vo.setMainRoleName(user.getMainRole().getName());
+				if(user.getMainRole().getBelongDepartment()!=null)
+					vo.setMainDepartmentName(user.getMainRole().getBelongDepartment().getName());
+			}
+			TeacherModel teacher=teacherDAO.getTeacherByUserId(user.getId());
+			if(teacher!=null){
+				vo.setUserName(teacher.getName());
+				vo.setEmail(teacher.getTeacherMail());
+				vo.setMobilePhone(teacher.getTeacherMobilePhone());
+				vo.setOfficePhone(teacher.getTeacherOfficePhone());
+			}
+			results.add(vo);
+		}else{
+
+			List<UserModel> users=userDAO.getAllUsers();
+			if(users!=null&&users.size()>0){
+				for(UserModel user : users){
+					UserAddressVo vo=new UserAddressVo();
+					vo.setUserID(user.getId());
+					vo.setUserAccount(user.getName());
+					if(user.getMainRole()!=null){
+						vo.setMainRoleName(user.getMainRole().getName());
+						if(user.getMainRole().getBelongDepartment()!=null)
+							vo.setMainDepartmentName(user.getMainRole().getBelongDepartment().getName());
+					}
+					TeacherModel teacher=teacherDAO.getTeacherByUserId(user.getId());
+					if(teacher!=null){
+						vo.setUserName(teacher.getName());
+						vo.setEmail(teacher.getTeacherMail());
+						vo.setMobilePhone(teacher.getTeacherMobilePhone());
+						vo.setOfficePhone(teacher.getTeacherOfficePhone());
+					}
+					results.add(vo);
+				}
+			}
+		
+		}
+		return results;
+	}
 	public TeacherDAO getTeacherDAO() {
 		return teacherDAO;
 	}
@@ -109,6 +187,14 @@ public class TeacherAccountBridgeService {
 
 	public void setRoleDAO(RoleDAO roleDAO) {
 		this.roleDAO = roleDAO;
+	}
+
+	public DepartmentDAO getDepartmentDAO() {
+		return departmentDAO;
+	}
+
+	public void setDepartmentDAO(DepartmentDAO departmentDAO) {
+		this.departmentDAO = departmentDAO;
 	}
 
 	
