@@ -5,8 +5,8 @@
 	
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
-		<mx:StringValidator id="name_stringValidator" source="{pname}" property="text"  requiredFieldError="场所名称不能为空"/>
-		<mx:StringValidator id="positionBuilding_stringValidator" source="{position_building}" property="text"  requiredFieldError="场所所在教学楼不能为空"/>
+		<mx:StringValidator id="name_stringValidator" source="{pname}" property="text" required="true"  requiredFieldError="场所名称不能为空"/>
+		<mx:StringValidator id="positionBuilding_stringValidator" source="{position_building}"  required="true" property="text"  requiredFieldError="场所所在教学楼不能为空"/>
 		<mx:StringValidator id="positionDetail_stringValidator" source="{position_detail}" property="text"  requiredFieldError="场所所在教学楼具体位置不能为空"/>
 		<mx:NumberValidator id="area_begin_numberValidator" source="{area_begin}" required="false" property="text"   invalidCharError="请输入数值" domain="real"/>
 		<mx:NumberValidator id="area_end_numberValidator" source="{area_end}" required="false" property="text" invalidCharError="请输入数值" domain="real"/>
@@ -54,6 +54,9 @@
 			private function init():void
 			{
 				validatorArr = new Array();
+				validatorArr.push(name_stringValidator);
+
+				
 				validatorArr.push(area_begin_numberValidator);
 				validatorArr.push(area_end_numberValidator);
 				validatorArr.push(contain_begin_numberValidator);
@@ -241,6 +244,10 @@
 					contain_begin.text="";
 					contain_end.text="";
 					remarks.text="";
+					for(var idx:int = 0; idx < allFunction.length; idx++) {
+						var checkbox:CheckBox=checkBox[idx] as CheckBox;
+							checkbox.selected=false;
+					}
 					
 				}
 			} 

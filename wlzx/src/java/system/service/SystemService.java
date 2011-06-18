@@ -486,18 +486,18 @@ public class SystemService{
 	}
 	//新增部门
 	public DepartmentModel departmentAdd(DepartmentModel department,String parentDepartmentId,String supervisorName,String leaderRoleIds){
-			//父亲部门与新部门的关系保存
-			DepartmentModel parentDepartment=departmentDAO.get(parentDepartmentId);
-			parentDepartment.getSubordinates().add(department);	
-			//新部门主管岗位初始化
+
+			//新部门主管岗位初始化并保存
 			RoleModel supervisorRole=new RoleModel();
 			supervisorRole.setSymbol(department.getSymbol()+"_supervisor");
 			supervisorRole.setCreationDate(department.getCreationDate());
 			supervisorRole.setName(supervisorName);
 			supervisorRole.setModifiedDate(new Date());
 			supervisorRole.setSupervisorFlag(true);
+			roleDAO.saveOrUpdate(supervisorRole);
+			
 			department.getRoles().add(supervisorRole);
-			departmentDAO.saveOrUpdate(parentDepartment);
+			departmentDAO.saveOrUpdate(department);
 			//新部门直属领导保存
 			String[] ids=leaderRoleIds.split(";");
 			for(String leaderRoleId:ids){
@@ -505,6 +505,11 @@ public class SystemService{
 				leaderRole.getLeadingDepartments().add(department);
 				roleDAO.saveOrUpdate(leaderRole);
 			}
+			//父亲部门与新部门的关系保存
+			DepartmentModel parentDepartment=departmentDAO.get(parentDepartmentId);
+			parentDepartment.getSubordinates().add(department);	
+			departmentDAO.saveOrUpdate(parentDepartment);
+			
 			
 			return department;
 		

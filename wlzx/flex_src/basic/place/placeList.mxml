@@ -13,7 +13,7 @@
 		
 		<mx:RemoteObject id="placeServiceRO" destination="placeServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 			<mx:method name="getPlacesByCondition"  concurrency="last"  result="getPlacesByCondition_resultHandler(event);" />
-			<mx:method name="getAllPlaces"  concurrency="last"  result="getAllPlaces_resultHandler(event);" />
+<!--			<mx:method name="getAllPlaces"  concurrency="last"  result="getAllPlaces_resultHandler(event);" />-->			
 			<mx:method name="deletePlace"  concurrency="last"  result="deletePlace_resultHandler(event);" />
 		</mx:RemoteObject>
 		<mx:RemoteObject id="directoryServiceRO" destination="directoryServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
@@ -51,16 +51,16 @@
 				validatorArr.push(area_end_numberValidator);
 				validatorArr.push(contain_begin_numberValidator);
 				validatorArr.push(contain_end_numberValidator);
-				placeServiceRO.getAllPlaces();
+//				placeServiceRO.getAllPlaces();
 				directoryServiceRO.getDirectoryItemsByType("placeType");
 				directoryServiceRO.getDirectoryItemsByType("building");
-				places.addItem("");
+//				places.addItem("");
 				placeTypes.addItem({label:"全部", data:null});
 				buildings.addItem({label:"全部", data:null});
 				
 				search_type.dataProvider=placeTypes;
 				search_building.dataProvider=buildings;
-				search();
+				callLater(search);
 			}
 			protected function getDirectoryItemsByType_resultHandler(event:ResultEvent):void{
 				var list:ArrayCollection=event.result as ArrayCollection;
@@ -79,13 +79,13 @@
 				
 				
 			}
-			protected function getAllPlaces_resultHandler(event:ResultEvent):void{
-				var placeList:ArrayCollection=event.result as ArrayCollection;
-				for(var i:int=0;i<placeList.length;i++){
-					places.addItem(placeList.getItemAt(i).name);
-				}
-				search_name.dataProvider=places;
-			}
+//			protected function getAllPlaces_resultHandler(event:ResultEvent):void{
+//				var placeList:ArrayCollection=event.result as ArrayCollection;
+//				for(var i:int=0;i<placeList.length;i++){
+//					places.addItem(placeList.getItemAt(i).name);
+//				}
+//				search_name.dataProvider=places;
+//			}
 			private function systemFaultHandler(event:FaultEvent):void {
 				Alert.show(event.fault.faultString, 'Error');
 			}
@@ -199,9 +199,8 @@
 								<mx:HBox width="100%" height="30"   horizontalGap="10" >
 									<s:HGroup verticalAlign="middle">
 										<s:Label  text="名称" />
-										<component:AutoComplete id="search_name"  IsfocusInDropDown="true"  IsAutoComplete="true">
-											
-										</component:AutoComplete>
+										<s:TextInput id="search_name"/>
+										
 									</s:HGroup>	
 									<s:HGroup verticalAlign="middle">
 										<s:Label  text="类型" />

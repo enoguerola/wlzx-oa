@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <actionScriptProperties analytics="false" mainApplicationPath="home.mxml" projectUUID="9fc83513-18b1-42a2-bfca-e35ea75215de" version="6">
-  <compiler additionalCompilerArguments="-services &quot;D:/workspace4/wlzx/WebContent/WEB-INF/flex/services-config.xml&quot; -locale zh_CN" autoRSLOrdering="true" copyDependentFiles="true" fteInMXComponents="false" generateAccessible="false" htmlExpressInstall="true" htmlGenerate="true" htmlHistoryManagement="true" htmlPlayerVersionCheck="true" includeNetmonSwc="false" outputFolderPath="bin-debug" rootURL="http://localhost:8080/wlzx" sourceFolderPath="flex_src" strict="true" targetPlayerVersion="0.0.0" useApolloConfig="false" useDebugRSLSwfs="true" verifyDigests="true" warn="true">
+  <compiler additionalCompilerArguments="-services &quot;D:/workspace4/wlzx/WebContent/WEB-INF/flex/services-config.xml&quot;" autoRSLOrdering="true" copyDependentFiles="true" fteInMXComponents="false" generateAccessible="false" htmlExpressInstall="true" htmlGenerate="true" htmlHistoryManagement="true" htmlPlayerVersionCheck="true" includeNetmonSwc="false" outputFolderPath="bin-debug" rootURL="http://localhost:8080/wlzx" sourceFolderPath="flex_src" strict="true" targetPlayerVersion="0.0.0" useApolloConfig="false" useDebugRSLSwfs="true" verifyDigests="true" warn="true">
     <compilerSourcePath/>
     <libraryPath defaultLinkType="0">
       <libraryPathEntry kind="4" path="">
@@ -16,9 +16,9 @@
   <applications>
     <application path="home.mxml"/>
     <application path="config.mxml"/>
+    <application path="system/component/mutiUpload/upload.mxml"/>
     <application path="login.mxml"/>
     <application path="system/component/checkTree/CheckTreeDemo.mxml"/>
-    <application path="system/component/mutiUpload/upload.mxml"/>
   </applications>
   <modules>
     <module application="flex_src/home.mxml" destPath="oa/conference/conferenceList.swf" optimize="false" sourcePath="flex_src/oa/conference/conferenceList.mxml"/>
@@ -56,6 +56,7 @@
     <module application="flex_src/home.mxml" destPath="oa/attendance/overWorkApply.swf" optimize="false" sourcePath="flex_src/oa/attendance/overWorkApply.mxml"/>
     <module application="flex_src/home.mxml" destPath="oa/course/adjust/adjustApprove.swf" optimize="false" sourcePath="flex_src/oa/course/adjust/adjustApprove.mxml"/>
     <module application="flex_src/home.mxml" destPath="oa/index.swf" optimize="true" sourcePath="flex_src/oa/index.mxml"/>
+    <module application="flex_src/home.mxml" destPath="oa/schedule/publicSchedule.swf" optimize="false" sourcePath="flex_src/oa/schedule/publicSchedule.mxml"/>
   </modules>
   <buildCSSFiles/>
 </actionScriptProperties>

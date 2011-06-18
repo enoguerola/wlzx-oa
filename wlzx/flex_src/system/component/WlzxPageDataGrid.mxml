@@ -5,6 +5,7 @@
 	 <![CDATA[
 		 import mx.collections.ArrayCollection;
 		 import mx.events.ListEvent;
+		 import mx.controls.Alert;
 	    [Bindable]
 	    private var mypagedata:ArrayCollection = new ArrayCollection();//当前也没种该显示的记录
 	    [Bindable]
@@ -33,6 +34,7 @@
 	                       inputpage.maximum = 0;
 	                      pagedetail.text = "第0页/共0页   共0条纪录";
 	                  }
+//			  Alert.show(totalpage+"");
 			  selectedRowId=null;
 	      }
 		 
@@ -58,7 +60,7 @@
 		 }
 		 
 	      public function setPager(value:int):void{
-	            if(value<0 || value>totalpage) return;
+	            if(value<0 || value>totalpage-1) return;
 	             curpage = value;
 	             var curNum:int = value*pagecount;//计算出要跳转到的页面种的第一条记录在所有的记录种是第几条记录
 	             mypagedata.removeAll();//移出变量中的数据,以便插入新数据,页面中显示的是这个变量中的数据

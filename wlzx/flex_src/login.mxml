@@ -21,13 +21,15 @@
 			       <![CDATA[   
 					   import flash.display.Stage;
 					   import flash.display.StageDisplayState;
-					   
+					   import mx.managers.CursorManager;
+					   import mx.managers.CursorManagerPriority;
 					   import mx.controls.Alert;
 					   import mx.rpc.events.FaultEvent;
 					   import mx.rpc.events.ResultEvent;
 					   import mx.events.ValidationResultEvent;
 					   import mx.validators.Validator;
 					   private var validatorArr:Array;
+					   
 			         private function httpHandle(event:ResultEvent):void  
 			         { 
 //						Alert.show(e.toString());
@@ -55,7 +57,11 @@
 						  validatorArr = new Array();
 						  validatorArr.push(name_stringValidator);
 						  validatorArr.push(pw_stringValidator);
-						  focusManager.setFocus(j_username);
+						  callLater(function():void{
+							  focusManager.setFocus(j_username);
+//							  focusManager.setFocus(j_username);
+						  });
+						  
 						  
 					  }
 					   private function validateForm(evt:MouseEvent):void {
@@ -70,7 +76,17 @@
 								   var errField:String = FormItem(err.currentTarget.source.parent).label
 								   errorMessageArray.push(errField + ": " + err.message);
 							   }
-							   Alert.show(errorMessageArray.join("\n\n"), "请按照以下提示信息填写", Alert.OK);
+//							   Alert.show(errorMessageArray.join("\n\n"), "请按照以下提示信息填写", Alert.OK);
+							   
+							   if( j_password.text==null||j_password.text==""){
+								   j_password.dispatchEvent(new MouseEvent( MouseEvent.MOUSE_OVER , true,true));
+								   j_password.setFocus();
+							   }
+							   if( j_username.text==null||j_username.text==""){
+								  j_username.dispatchEvent(new MouseEvent( MouseEvent.MOUSE_OVER , true,true));
+								  j_username.setFocus();
+							   }
+							   
 						   }
 					   }
 					   private function reset():void {
@@ -78,8 +94,9 @@
 						   resultArea.visible=false;
 						   j_username.text="";
 						   j_password.text="";
+						  j_username.setFocus();
 					   }
-					 
+					  
 			         ]]>    
 		 </fx:Script> 
 	
@@ -95,24 +112,36 @@
 				</mx:FormItem>
 				<s:HGroup width="100%" textAlign="center" verticalAlign="middle" gap="10" top="-20">
 					<mx:FormItem  label="帐号："  paddingRight="10">
-						<s:TextInput id="j_username" paddingLeft="10" name="j_username"  width="200"/>
+						<s:TextInput id="j_username" paddingLeft="10" name="j_username"  width="200" textAlign="left"/>
 					</mx:FormItem>
 					
 				</s:HGroup>
 				<s:HGroup width="100%"  top="20" textAlign="center" verticalAlign="middle" gap="10">		
 					<mx:FormItem  label="密码："  paddingRight="10">
-						<s:TextInput id="j_password"  paddingLeft="10" name="j_password" width="200" displayAsPassword="true"/>
+						<s:TextInput id="j_password"  paddingLeft="10" name="j_password" width="200" displayAsPassword="true" textAlign="left"/>
 					</mx:FormItem>
 				</s:HGroup>
 				<s:HGroup width="100%" >
 					<s:HGroup width="50"></s:HGroup>
+					<mx:LinkButton  icon="@Embed(source='../WebContent/resources/oa/login_button_green.jpg')" click="validateForm(event);"  width="80" paddingLeft="0" paddingRight="0" paddingTop="0" paddingBottom="0">
+						
+					</mx:LinkButton>
+					
+<!--					
 					<mx:Image  source="@Embed(source='../WebContent/resources/oa/login_button_green.jpg')" click="validateForm(event);"></mx:Image>
+-->					
 					<s:HGroup width="20"></s:HGroup>
-					<mx:Image  source="@Embed(source='../WebContent/resources/oa/login_button_yellow.jpg')" click="reset();"></mx:Image>
+					
+					<mx:LinkButton  icon="@Embed(source='../WebContent/resources/oa/login_button_yellow.jpg')" click="reset();" width="80"  paddingLeft="0" paddingRight="0" paddingTop="0" paddingBottom="0">
+					
+					</mx:LinkButton>
+<!--					<mx:Image  source="@Embed(source='../WebContent/resources/oa/login_button_yellow.jpg')" click="reset();"></mx:Image>
+-->				
 				</s:HGroup>
 				<s:HGroup width="100%" height="20">	
 					<s:HGroup width="60"></s:HGroup>
 					<s:CheckBox label="记住我" id="_spring_security_remember_me"  name="_spring_security_remember_me" />
+					
 					<mx:Image source="@Embed(source='../WebContent/resources/oa/login_wh.jpg')">
 						
 					</mx:Image>
