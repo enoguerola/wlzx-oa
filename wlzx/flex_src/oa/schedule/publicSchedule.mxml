@@ -41,6 +41,7 @@
 			import com.flexcalendar.components.calendar.utils.CalendarMode;
 			import com.flexcalendar.components.calendar.utils.DateUtils;
 			
+			import mx.controls.Alert;
 			import mx.events.CalendarLayoutChangeEvent;
 			
 			[Bindable]
@@ -72,6 +73,13 @@
 				DateUtils.addDays(endRange, 0 - today.day + 6);
 				
 				visibleDateRange = new DateRange(startRange, endRange);
+				//隐藏水印代码
+				callLater(function():void{
+					var sy:Sprite=flexCalendar.getChildAt(3) as Sprite;
+					sy.visible=false;
+//					Alert.show(sy.toString());
+				
+				});
 			}
 			
 			
@@ -151,8 +159,7 @@
 			</mx:Accordion>
 			
 		</mx:VBox>
-		
-		<flexcalendar:FlexCalendar  license="-" id="flexCalendar" width="100%" height="100%" dataProvider="{dp}" scaleX="1" visibleRange="{visibleDateRange}"
+		<flexcalendar:FlexCalendar  license="xxxx-xxx-xxx-xx-xxx" id="flexCalendar" width="100%" height="100%" dataProvider="{dp}" scaleX="1" visibleRange="{visibleDateRange}"
 								   scaleY="1" itemEditor="{new BaloonItemEditor(flexCalendar, false, false)}"
 								   calendarMode="{entireCalendarReadonly.selected?CalendarMode.READ_ONLY_MODE : CalendarMode.LIMITED_EDIT_MODE}"
 								   headerVisible="{hideCalendarHeader.selected}"
