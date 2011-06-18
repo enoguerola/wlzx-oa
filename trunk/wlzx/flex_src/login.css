@@ -10,4 +10,14 @@ global
 	selection-color: #C7E399;
 	font-size: 13;
 }
-	
+.errorTip
+{
+	font-size: 12;
+}
+.testTip
+{
+	font-size: 12;
+	border-color: #ffffdd;
+	color: #ff0000;
+	font-weight: bold;
+}
