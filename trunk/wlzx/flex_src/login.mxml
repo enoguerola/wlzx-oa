@@ -9,7 +9,7 @@
 		<mx:StringValidator id="name_stringValidator" source="{j_username}" property="text"  requiredFieldError="登陆账号不能为空"/>
 		<mx:StringValidator id="pw_stringValidator" source="{j_password}" property="text"  requiredFieldError="登陆密码不能为空"/>
 
-		<mx:HTTPService id="myHttp" url="j_spring_security_check" showBusyCursor="true" method="POST" result="httpHandle(event);" fault="service_faultHandler(event);" >  
+		<mx:HTTPService id="myHttp" url="j_spring_security_check" showBusyCursor="true"  concurrency="last" method="POST" fault="service_faultHandler(event);" >  
 			<mx:request>  
 				<j_username>{j_username.text}</j_username>  
 				<j_password>{j_password.text}</j_password> 
@@ -29,8 +29,8 @@
 					   import mx.events.ValidationResultEvent;
 					   import mx.validators.Validator;
 					   private var validatorArr:Array;
-					   
-			         private function httpHandle(event:ResultEvent):void  
+					 
+			         private function onExecuteSuccess(event:ResultEvent):void  
 			         { 
 //						Alert.show(e.toString());
 						 var result:String=event.result as String;
@@ -54,6 +54,7 @@
 		                Alert.show("请求异常");
 		             }
 					  private function init():void{
+						  myHttp.addEventListener(ResultEvent.RESULT, onExecuteSuccess);
 						  validatorArr = new Array();
 						  validatorArr.push(name_stringValidator);
 						  validatorArr.push(pw_stringValidator);
@@ -68,6 +69,7 @@
 						   var validatorErrorArray:Array = Validator.validateAll(validatorArr);;
 						   var isValidForm:Boolean = validatorErrorArray.length == 0;
 						   if (isValidForm) {
+							   myHttp.send();
 							   myHttp.send();
 						   } else {
 							   var err:ValidationResultEvent;

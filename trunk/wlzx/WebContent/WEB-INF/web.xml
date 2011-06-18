@@ -67,7 +67,7 @@
 	<servlet>
 		<servlet-name>LoginRusultDealServlet</servlet-name>
 		<servlet-class>system.servlet.LoginRusultDealServlet</servlet-class>
-		<load-on-startup>1</load-on-startup>
+		<load-on-startup>0</load-on-startup>
 	</servlet>
 	
 	<servlet-mapping>
@@ -78,7 +78,7 @@
 	<servlet>
 		<servlet-name>ReloadSpringSecurityAuthServlet</servlet-name>
 		<servlet-class>system.servlet.ReloadSpringSecurityAuthServlet</servlet-class>
-		<load-on-startup>2</load-on-startup>
+		<load-on-startup>1</load-on-startup>
 	</servlet>
 	
 	<servlet-mapping>

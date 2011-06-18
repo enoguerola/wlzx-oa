@@ -53,7 +53,7 @@ public class LoginRusultDealServlet extends HttpServlet{
 //			result=messages.getMessage("PasswordComparisonAuthenticator.badCredentials");
 			result="用户名密码错误";
 		}
-		System.out.println(result);
+		System.out.println(result+"aa");
 		if(result.equals("success")){
 			 ServletContext context = this.getServletContext();  
 			 SystemService systemService=(SystemService)WebApplicationContextUtils.getRequiredWebApplicationContext(context).getBean("systemServiceDest");
