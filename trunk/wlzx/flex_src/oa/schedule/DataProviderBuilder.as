@@ -8,7 +8,7 @@ import com.flexcalendar.components.calendar.displayClasses.decoration.IRendererC
 import com.flexcalendar.components.calendar.displayClasses.decoration.RendererColors;
 import com.flexcalendar.components.calendar.displayClasses.decoration.RendererColorsFactory;
 import com.flexcalendar.components.calendar.utils.DateUtils;
-
+import com.flexcalendar.components.calendar.core.dataModel.formatICalendar.Recur;
 public class DataProviderBuilder
 {
 
@@ -23,17 +23,17 @@ public class DataProviderBuilder
 //		var item_one:CalendarItem = buildItemWithDay(1, 6.5, 7.5, "Morning excercises");
 //		item_one.recur = new Recur("FREQ=DAILY");
 //		itemSet.addItem(item_one);
-		itemSet.addItemAsSpace(buildItemWithDay(0, 0, 24, "Holiday", false), ItemType.UNAVAILABLE_SPACE);
-		itemSet.addItemAsSpace(buildItemWithDay(6, 0, 24, "Holiday", false), ItemType.UNAVAILABLE_SPACE);
-		itemSet.addItemAsSpace(buildItemWithDay(1, 8, 16, "Available", false, RendererColorsFactory.buildColors(RendererColors.YELLOW)), ItemType.AVAILABLE_SPACE);
-		itemSet.addItemAsSpace(buildItemWithDay(1, 18, 20, "Available", false), ItemType.AVAILABLE_SPACE);
-		itemSet.addItemAsSpace(buildItemWithDay(2, 8, 16, "Available", false), ItemType.AVAILABLE_SPACE);
-		itemSet.addItemAsSpace(buildItemWithDay(3, 8, 16, "Available", false), ItemType.AVAILABLE_SPACE);
-		itemSet.addItemAsSpace(buildItemWithDay(3, 18, 20, "Available", false), ItemType.AVAILABLE_SPACE);
-		itemSet.addItemAsSpace(buildItemWithDay(4, 8, 16, "Available", false), ItemType.AVAILABLE_SPACE);
-		itemSet.addItemAsSpace(buildItemWithDay(5, 8, 16, "Available", false), ItemType.AVAILABLE_SPACE);
-		itemSet.addItemAsSpace(buildItemWithDay(5, 18, 20, "Available", false), ItemType.AVAILABLE_SPACE);
-
+//		itemSet.addItemAsSpace(buildItemWithDay(0, 0, 24, "Holiday", false), ItemType.UNAVAILABLE_SPACE);
+//		itemSet.addItemAsSpace(buildItemWithDay(6, 0, 24, "Holiday", false), ItemType.UNAVAILABLE_SPACE);
+//		itemSet.addItemAsSpace(buildItemWithDay(1, 8, 16, "Available", false, RendererColorsFactory.buildColors(RendererColors.YELLOW)), ItemType.AVAILABLE_SPACE);
+//		itemSet.addItemAsSpace(buildItemWithDay(1, 18, 20, "Available", false), ItemType.AVAILABLE_SPACE);
+//		itemSet.addItemAsSpace(buildItemWithDay(2, 8, 16, "Available", false), ItemType.AVAILABLE_SPACE);
+//		itemSet.addItemAsSpace(buildItemWithDay(3, 8, 16, "Available", false), ItemType.AVAILABLE_SPACE);
+//		itemSet.addItemAsSpace(buildItemWithDay(3, 18, 20, "Available", false), ItemType.AVAILABLE_SPACE);
+//		itemSet.addItemAsSpace(buildItemWithDay(4, 8, 16, "Available", false), ItemType.AVAILABLE_SPACE);
+//		itemSet.addItemAsSpace(buildItemWithDay(5, 8, 16, "Available", false), ItemType.AVAILABLE_SPACE);
+//		itemSet.addItemAsSpace(buildItemWithDay(5, 18, 20, "Available", false), ItemType.AVAILABLE_SPACE);
+			
 
 		itemSet.addItem(buildItemWithDay(1, 8.5, 11, "Important meeting", false, RendererColorsFactory.buildColorsWithGradient(RendererColors.RED)));
 		itemSet.addItem(buildItemWithDay(1, 11.5, 12.5, "Lunch with Mark", false, RendererColorsFactory.buildColorsWithGradient(RendererColors.YELLOW)));

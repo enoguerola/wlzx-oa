@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+<class name="system.wlims.oa.entity.schedule.ScheduleModel" table="wlzx_oa_schedule">
+        <id name="id">
+            <column name="id" />
+            <generator class="native" />
+        </id>
+        <property name="title" type="string">
+            <column name="title" />
+        </property>
+        
+        <property name="content" type="string">
+            <column name="content" />
+        </property>
+        
+        <property name="beginTime" type="string">
+            <column name="begin_time" />
+        </property>
+        <property name="endTime" type="string">
+            <column name="end_time" />
+        </property>
+        
+         <property name="posterId" type="string">
+            <column name="poster_id" />
+        </property>
+        
+        <property name="type" type="int">
+            <column name="type" />
+        </property>
+         <property name="share" type="int">
+            <column name="share" />
+        </property>
+         <property name="emergence" type="int">
+            <column name="emergence" />
+        </property>
+         <property name="finishStatus" type="int">
+            <column name="finish_status" />
+        </property>
+        <property name="submitStatus" type="int">
+            <column name="submit_status" />
+        </property>
+         <property name="departmentId" type="string">
+            <column name="department_id" />
+        </property>
+    </class>
+</hibernate-mapping>
