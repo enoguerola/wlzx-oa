@@ -232,7 +232,6 @@
 			public function editItem(item_id:String):void
 			{
 				var parent:Object=(Object)(((Object)(this.owner)).owner);
-				Alert.show(item_id);
 				parent.addTab("staff_input_menu-edit","教师编辑",parent.nav,"basic/staff/staffInput.swf",null,item_id);
 			}
 			

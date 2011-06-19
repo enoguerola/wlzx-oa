@@ -138,7 +138,6 @@
 				teacher = new TeacherModel();	
 				if(parms!=null&&parms!=""){		
 					teacherId = parms ;//弹出窗口时设定的中转参数
-					Alert.show(teacherId);
 					teacherServiceRO.get(teacherId);
 					getDepartment();
 				}else{

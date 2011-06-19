@@ -23,6 +23,29 @@ public class NoticeModel extends BaseModel {
 	private String lastEditorId;
 	private Date lastEditTime;
 	private Set<AttachmentModel> attachments=new TreeSet<AttachmentModel>(); 
+	private Integer status;
+	
+	public static enum EScope{
+		School(0, "校级公告"),
+		Department(1, "部门公告");
+		
+		private Integer value;
+		private String text;
+		
+		EScope(Integer value, String text){
+			this.value = value;
+			this.text = text;
+		}
+		
+		public Integer getValue(){
+			return value;
+		}
+		
+		public String getText(){
+			return this.text;
+		}
+	}
+	
 	public Integer getScope() {
 		return scope;
 	}
@@ -88,5 +111,11 @@ public class NoticeModel extends BaseModel {
 	}
 	public void setAttachments(Set<AttachmentModel> attachments) {
 		this.attachments = attachments;
+	}
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+	public Integer getStatus() {
+		return status;
 	}
 }

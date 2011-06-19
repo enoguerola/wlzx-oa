@@ -61,6 +61,8 @@ public interface BaseDAO<T> {
 	 */
 	void remove(T domain) throws DAOException;
 	
+	void remove(String id, Class clazz)throws DAOException;
+	
 	/**
 	 * Get object by it's identity
 	 * @param id Identity of object

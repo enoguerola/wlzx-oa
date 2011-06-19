@@ -2,17 +2,17 @@
 <mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%" fontSize="12" backgroundAlpha="0"  creationComplete="initApp()">
 	<mx:Script>
 		<![CDATA[
-			import mx.events.IndexChangedEvent;
-			import mx.events.CloseEvent;
-			import flash.net.FileReference;
-			import flash.net.FileReferenceList;
-			import flash.net.FileFilter;
 			import flash.events.Event;
 			import flash.events.MouseEvent;
+			import flash.external.ExternalInterface;
+			import flash.net.FileFilter;
+			import flash.net.FileReference;
+			import flash.net.FileReferenceList;
 			import flash.net.URLRequest;
+			
 			import mx.controls.Alert;
 			import mx.events.CloseEvent;
-			import flash.external.ExternalInterface;
+			import mx.events.IndexChangedEvent;
 			
 			public var fileRef:FileReferenceList = new FileReferenceList();
 			public var urlRequest:URLRequest = new URLRequest("upload.php");			
@@ -20,6 +20,8 @@
 			public var upload_size:Number = 0;
 			public var upload_size_total:Number = 0;       
 			private var info:Array = new Array();
+			
+			public var idList:Array = new Array();
 			
 			//===================
 			// 功能设置
@@ -100,13 +102,29 @@
 			internal function upLoadImg(oNum:int):void{
 				try
 				{	
-					fileRef.fileList[oNum].upload(urlRequest);
+					fileRef.fileList[oNum].upload(urlRequest, "file");
 					fileRef.fileList[oNum].addEventListener(Event.COMPLETE,onComplete);						
 					fileRef.fileList[oNum].addEventListener(ProgressEvent.PROGRESS,onProcessHandler);	
+					fileRef.fileList[oNum].addEventListener(IOErrorEvent.IO_ERROR,ioErrorHandler); 
+					fileRef.fileList[oNum].addEventListener(DataEvent.UPLOAD_COMPLETE_DATA, uploadComplete);
 				}
 				catch(e:Event){
 					completeHandler();
 				}				
+			}
+			
+			private function uploadComplete(e:DataEvent):void   
+			{   
+				var xmlResponse:XML = XML(e.data);
+				idList.push(xmlResponse.elements("field"));
+			}
+			
+			//===================
+			// 上传出错
+			//===================
+			private function ioErrorHandler(e:IOErrorEvent):void   
+			{   
+				Alert.show("有错误");   
 			}
 			
 			//===================

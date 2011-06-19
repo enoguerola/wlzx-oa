@@ -13,6 +13,10 @@
             <column name="scope" />
         </property>
         
+        <property name="status" type="int">
+            <column name=""status"" />
+        </property>
+        
         <property name="type" type="string">
             <column name="type" />
         </property>
@@ -26,7 +30,7 @@
         </property>
         
         <property name="emergence" type="int">
-            <column name="emergence" />
+            <column name="emergence_flag" />
         </property>
         
         <property name="title" type="string">

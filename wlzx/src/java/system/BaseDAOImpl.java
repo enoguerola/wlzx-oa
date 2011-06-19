@@ -32,6 +32,13 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 public abstract class BaseDAOImpl<T> extends HibernateDaoSupport implements BaseDAO<T> {
 	
 	
+	@Override
+	public void remove(String id, Class clazz) throws DAOException {
+		// TODO Auto-generated method stub
+		String hql = "delete from " + clazz.getName() + "where id=" + id;
+		execUpdateByHSQL(hql);
+	}
+
 	private Class<T> entityClass;
 	
 	@SuppressWarnings("unchecked")
