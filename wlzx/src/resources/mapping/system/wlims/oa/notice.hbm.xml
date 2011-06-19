@@ -14,7 +14,7 @@
         </property>
         
         <property name="status" type="int">
-            <column name=""status"" />
+            <column name="status" />
         </property>
         
         <property name="type" type="string">
@@ -48,7 +48,7 @@
         <property name="lastEditTime" type="java.util.Date">
             <column name="last_edit_time" />
         </property>
-      <set name="attachments" lazy="false" table="wlzx_oa_notice_attachment_relationship" cascade="all-delete-orphan" inverse="true">
+      	<set name="attachments" lazy="false" table="wlzx_oa_notice_attachment_relationship" cascade="all-delete-orphan" inverse="true">
         	<key column="notice_id" not-null="true" />
         	<one-to-many  class="system.wlims.oa.entity.notice.AttachmentModel" /> 
         </set>		

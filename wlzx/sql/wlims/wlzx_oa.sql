@@ -140,7 +140,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_oa_notice` (
   `id` bigint(20) NOT NULL auto_increment,
   `scope` smallint(6) NOT NULL,
   `type` varchar(200) NOT NULL,
-  `post_deparment_id` bigint(20) NOT NULL,
+  `post_department_id` bigint(20) NOT NULL,
   `poster_id` bigint(20) NOT NULL,
   `emergence_flag` smallint(6) NOT NULL,
   `title` varchar(200) NOT NULL,
@@ -148,6 +148,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_oa_notice` (
   `post_time` datetime NOT NULL,
   `last_edit_time` timestamp NULL default NULL on update CURRENT_TIMESTAMP,
   `last_editor_id` bigint(20) default NULL,
+  `status` smallint(6) NOT NULL COMMENT '是否发布',
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
