@@ -2,11 +2,29 @@
 <mx:Module xmlns:mx="http://www.adobe.com/2006/mxml" 
 		   xmlns:hc="com.hillelcoren.components.*"
 		   xmlns:render="system.component.render.*"
-		   layout="vertical" width="100%" creationComplete="init();" height="100%" xmlns:valueObjects="oa.entity.*" xmlns:component="system.component.*" currentState="list" xmlns:mx1="library://ns.adobe.com/flex/mx" xmlns:mutiUpload="system.component.mutiUpload.*">
-<!--	<mx:StringValidator id="beginDate_stringValidator" source="{beginDate}"  property="text" required="true" requiredFieldError="请假开始时间不能为空"/>
--->
+		   layout="vertical" width="100%" creationComplete="init();" height="100%" 
+		   xmlns:validator="system.component.validator.*" 
+		   xmlns:valueObjects="oa.entity.*" 
+		   xmlns:component="system.component.*" currentState="list" xmlns:mx1="library://ns.adobe.com/flex/mx" 
+		   xmlns:mutiUpload="system.component.mutiUpload.*">
+		<mx:RemoteObject id="noticeServiceRO" destination="noticeServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+			<mx:method name="addNotice"  concurrency="last"  result="addNoticeResult_resultHandler(event);" />
+			<mx:method name="updateNotice"  concurrency="last"  result="updateNoticeResult_resultHandler(event);" />
+			<mx:method name="getDetailInfoById"  concurrency="last"  result="getDetailInfoById_resultHandler(event);" />
+			<mx:method name="deleteNoticeById"  concurrency="last"  result="deleteNoticeByIdResult_resultHandler(event);" />
+			<mx:method name="getNoticesByConditions"  concurrency="last"  result="getNoticesByConditions_resultHandler(event);" />
+		</mx:RemoteObject>
+		
+		<valueObjects:NoticeModel id="form"/>
+		
+		<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+			<mx:method name="getDepartmentBySymbol"  concurrency="last"  result="getDepartmentBySymbolResult(event);" />
+		</mx:RemoteObject>
 	
-	<valueObjects:NoticeModel id="form"/>
+	<mx:StringValidator id="title_stringValidator" source="{title}" property="text"  requiredFieldError="不能为空"/>
+	<mx:StringValidator id="content_stringValidator" source="{rte}" property="text"  requiredFieldError="不能为空"/>
+	<validator:ComboxValidator id="type_stringValidator" source="{noticeType}"/>
+
 	<mx:states>
 		<mx:State name="list">           
 			<mx:RemoveChild target="{addPanel}"/>
@@ -18,42 +36,22 @@
 			<mx:RemoveChild target="{listPanel}"/>
 			<mx:RemoveChild target="{addPanel}"/>
 		</mx:State>
-		
 	</mx:states>
 	<mx:transitions>
 		
 		<mx:Transition id="myTransition1" fromState="list" toState="*" >
-			
 			<mx:Parallel id="t1" target="{addPanel}" >
-				
-				<mx:WipeLeft duration="1500">
-					
-				</mx:WipeLeft>
+				<mx:WipeLeft duration="1500"></mx:WipeLeft>
 			</mx:Parallel>
-			
-			
 		</mx:Transition>
 		<mx:Transition id="myTransition2" fromState="*" toState="list" >
-			
 			<mx:Parallel id="t2" target="{listPanel}" >
-				
 				<mx:WipeRight duration="800">
-					
 				</mx:WipeRight>
 			</mx:Parallel>
-			
-			
 		</mx:Transition>
-		
-		
 	</mx:transitions>
-	<mx:RemoteObject id="noticeServiceRO" destination="noticeServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
-		<mx:method name="addNotice"  concurrency="last"  result="addNoticeResult_resultHandler(event);" />
-		<mx:method name="updateNotice"  concurrency="last"  result="updateNoticeResult_resultHandler(event);" />
-
-		<mx:method name="deleteNoticeById"  concurrency="last"  result="deleteNoticeByIdResult_resultHandler(event);" />
-		<mx:method name="getNoticesByConditions"  concurrency="last"  result="getNoticesByConditions_resultHandler(event);" />
-	</mx:RemoteObject>
+	
 	<mx:Script> 
 		<![CDATA[
 			import mx.collections.ArrayCollection;
@@ -68,8 +66,11 @@
 			import mx.managers.PopUpManager;
 			import mx.rpc.events.*;
 			import mx.validators.Validator;
+			
 			import system.component.WlzxLockWin;
+			import system.component.validator.ComboxValidator;
 			import system.utils.*;
+			import system.entity.DepartmentModel;
 			
 			private var validatorArr:Array;
 			
@@ -84,15 +85,32 @@
 					{label:"学校", data:"1"},  
 					{label:"部门", data:"2"}]); 
 			
+			public var noticeScopeList:ArrayCollection = new ArrayCollection( 
+				[	{label:"请选择", data:null},
+					{label:"校级公告", data:"0"},  
+					{label:"部门公告", data:"1"}]);
+			
+			public var noticeTypeList:ArrayCollection = new ArrayCollection( 
+				[
+					{label:"请选择", data:null},
+					{label:"重要通知", data:"重要通知"}]);
+			
+			public var departmentList:ArrayCollection = new ArrayCollection();
 			
 			private function init():void{
 				var parms:String=((Object)(this.owner)).id;
 				if(parms=='add'){
 					this.currentState='add';
 					returnArea.height=0;
+					var urlRequest:URLRequest = new URLRequest("spring/attachemtnUpload.action");
+					upload.urlRequest = urlRequest;
 				}
-				else if(parms=='list') this.currentState='list';
+				else if(parms=='list') 
+				{
+					this.currentState='list';
+				}
 				search_account.dataProvider=this.parentApplication.allTeacherAcccounts;
+				systemServiceRO.getDepartmentBySymbol("root");
 				search();
 			}
 			protected function systemFaultHandler(event:FaultEvent):void {
@@ -106,6 +124,12 @@
 				search();
 			}
 			protected function updateNoticeResult_resultHandler(event:ResultEvent):void
+			{
+				Alert.show("更新成功");
+				this.currentState='list';
+				search();
+			}
+			protected function getDetailInfoById_resultHandler(event:ResultEvent):void
 			{
 				Alert.show("更新成功");
 				this.currentState='list';
@@ -150,7 +174,7 @@
 			
 			public function editInit(id:String):void{
 				
-				noticeServiceRO.loadApplyInfoById(id);
+				noticeServiceRO.getDetailInfoById(id);
 			}
 			public function enterEdit(id:String):void{
 				addUpdateFlag.text="update"+"_"+id;
@@ -177,11 +201,7 @@
 					addInit();
 				else {
 					var id:String=addUpdateFlag.text.split("_")[1];
-					editInit(id);
-					//权限控制部分
-					//if(this.parentApplication.currentUser.hasDam("noticeWorkDeal@noFilter@")){
-						
-					//}
+					//editInit(id);
 				}
 			}
 			
@@ -190,42 +210,84 @@
 			{
 				
 			}
+			
+			/*
+			*  保存草稿
+			*/
 			protected function save_clickHandler(event:MouseEvent):void
 			{
-				
-				if(validateInput()){
-					if(addUpdateFlag.text=="add"){
-												form=new NoticeModel();
-						//						form.reason=reason.text;
-						//						form.type=parseInt(applyType.text);
-						//						form.beginTime=beginDate.text+" "+beginDate_section.selectedItem.data;
-						//						form.endTime=endDate.text+" "+endDate_section.selectedItem.data;
-						//						form.arrangeTech=arrange_tech.text;
-						//						form.arrangeManage=arrange_manage.text;
-						//						form.arrangeService=arrange_service.text;
-						//						form.teacherId=teacher_id.text;
-												noticeServiceRO.addNotice(form);
+				if(validateSaveInput()){
+					if(addUpdateFlag.text == "add"){
+						Alert.show("add");
+						form = new NoticeModel();
+						form.content = rte.text;
+						if(emergence.selected)
+							form.emergence = 1;
+						else
+							form.emergence = 0;
+						form.postDepartmentId = postdepartment.selectedItem.data;
+						form.scope = parseInt(noticeScope.selectedItem.data);
+						form.title = title.text;
+						form.type = noticeType.selectedItem.data;
+						form.status = 0;
+						Alert.show("add begin");
+						noticeServiceRO.addNotice(form);
 					}else if(addUpdateFlag.text=="update"+"_"+form.id){
-						//						form.reason=reason.text;
-						//						form.beginTime=beginDate.text+" "+beginDate_section.selectedItem.data;
-						//						form.endTime=endDate.text+" "+endDate_section.selectedItem.data;
-						//						form.arrangeTech=arrange_tech.text;
-						//						form.arrangeManage=arrange_manage.text;
-						//						form.arrangeService=arrange_service.text;
-						//						form.teacherId=teacher_id.text;
-						//						form.arrangeTech=arrange_tech.text;
-
-						//						Alert.show(addUpdateFlag.text+"aaa");
 						noticeServiceRO.updateNotice(form);
-						
 					}
 					
 				}
 			}
+			
+			private function validateSaveInput():Boolean
+			{	
+				validatorArr = new Array();
+				validatorArr.push(title_stringValidator);
+				Alert.show(postdepartment.selectedIndex + "");
+				return false;
+				var validatorErrorArray:Array = Validator.validateAll(validatorArr);
+				var isValidForm:Boolean = validatorErrorArray.length == 0;
+				if (isValidForm) {
+					
+					return true;
+				} else {
+					return false;
+				}
+
+			}
+			
+			protected function add_clickHandler(event:MouseEvent):void
+			{
+				if(validateInput()){
+					if(addUpdateFlag.text=="add"){
+						form = new NoticeModel();
+						form.content = rte.text;
+						if(emergence.selected)
+							form.emergence = 1;
+						else
+							form.emergence = 0;
+						form.postDepartmentId = postdepartment.selectedItem.data;
+						form.scope = parseInt(noticeType.selectedItem.data);
+						form.title = title.text;
+						form.type = noticeType.selectedItem.data;
+						noticeServiceRO.addNotice(form);
+					}else if(addUpdateFlag.text=="update"+"_"+form.id){
+						noticeServiceRO.updateNotice(form);
+					}
+					
+				}
+			}
+			
 			private function validateInput():Boolean
 			{	
 				validatorArr = new Array();
-				//validatorArr.push(beginDate_stringValidator);
+				if(addUpdateFlag.text=="add"){
+					validatorArr.push(title_stringValidator);
+					validatorArr.push(content_stringValidator);
+					validatorArr.push(type_stringValidator);
+				}else{
+					validatorArr.push(title_stringValidator);
+				}
 			
 				var validatorErrorArray:Array = Validator.validateAll(validatorArr);
 				var isValidForm:Boolean = validatorErrorArray.length == 0;
@@ -272,6 +334,28 @@
 				if(att_area.height==0)
 					att_area.height=420;
 				else att_area.height=0;
+			}
+			
+			private function getDepartmentBySymbolResult(event:ResultEvent):void {
+				var _department:DepartmentModel = event.result as DepartmentModel;
+				buildSubDepartments(_department,departmentList,0);
+			}
+			
+			private function buildSubDepartments(department:DepartmentModel,resultList:ArrayCollection,depth:int):void{
+				var headText:String="";
+				for(var j:int = 0;j<depth;j++)
+					headText=headText.concat("--");
+				headText=headText.concat(department.name);
+				resultList.addItem( {data:department.id, label:headText})
+				var list:ArrayCollection = ArrayCollection(department.subordinates);			
+				if(list.length>0){
+					for (var i:int = 0; i < list.length; i++){
+						var _department:DepartmentModel = list.getItemAt(i) as DepartmentModel;	
+						buildSubDepartments(_department,resultList,depth+1);
+					}
+					//					CommonUtils.sortBySequence(resultList);
+				}		
+				
 			}
 		]]> 		
 	</mx:Script> 
@@ -462,17 +546,20 @@
 				<mx:VBox  width="100%" height="100%">
 					<mx:Form width="100%" height="100%">
 						<mx:FormItem label="标题" width="100%">
-							<mx:TextInput width="100%"/>
+							<mx:TextInput width="100%" id="title"/>
 						</mx:FormItem>
 						
 						<mx:FormItem label="公告类型" width="100%">
 							<mx:HBox width="100%">
-								<mx:ComboBox/>
+								<mx:ComboBox id="noticeType" dataProvider="{noticeTypeList}" selectedIndex="1" labelField="label"/>
+								<mx:FormItem label="公告范围">
+									<mx:ComboBox id="noticeScope" dataProvider="{noticeScopeList}" selectedIndex="1" labelField="label"/>
+								</mx:FormItem>
 								<mx:FormItem label="发布部门">
-									<mx:ComboBox/>
+									<mx:ComboBox id="postdepartment" dataProvider="{departmentList}" selectedIndex="1" labelField="label"/>
 								</mx:FormItem>
 								<mx:FormItem>
-									<mx:CheckBox label="紧急"/>
+									<mx:CheckBox label="紧急" id="emergence"/>
 								</mx:FormItem>
 								
 							</mx:HBox>
@@ -487,16 +574,16 @@
 						</mx:HBox>
 						<mx:FormItem  width="100%"  height="0" id="att_area" paddingLeft="10" paddingRight="10">
 							<mx:VBox width="100%">
-								<mutiUpload:upload width="100%" >
+								<mutiUpload:upload width="100%" id="upload">
 								</mutiUpload:upload>
 							</mx:VBox>
 						</mx:FormItem>
 					</mx:Form>
 				</mx:VBox>
 				<mx:HBox horizontalAlign="right" width="100%">
-					<mx:Label id="addUpdateFlag" visible="false"/>
+					<mx:Label id="addUpdateFlag" visible="false" text="add"/>
 					<mx:Button label="保存草稿" id="draftSaveButton" click="save_clickHandler(event)"/>
-					<mx:Button label="发布" id="postButton" click="save_clickHandler(event)"/>
+					<mx:Button label="发布" id="postButton" click="add_clickHandler(event)"/>
 				</mx:HBox>
 					
 				

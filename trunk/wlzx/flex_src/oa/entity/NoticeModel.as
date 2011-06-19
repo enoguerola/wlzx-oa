@@ -16,6 +16,7 @@ package oa.entity
 		public var lastEditorId:String;
 		public var lastEditTime:Date;
 		public var attachments:Object=new Array(); 
+		public var status:int;
 		public function NoticeModel()
 		{
 			super();
