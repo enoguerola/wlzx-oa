@@ -50,7 +50,7 @@
         </property>
       	<set name="attachments" lazy="false" table="wlzx_oa_notice_attachment_relationship" cascade="all-delete-orphan" inverse="true">
         	<key column="notice_id" not-null="true" />
-        	<one-to-many  class="system.wlims.oa.entity.notice.AttachmentModel" /> 
+        	<many-to-many  column="attachment_id" class="system.wlims.oa.entity.notice.AttachmentModel" /> 
         </set>		
     </class>
 </hibernate-mapping>

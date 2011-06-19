@@ -141,20 +141,25 @@ CREATE TABLE IF NOT EXISTS `wlzx_oa_notice` (
   `scope` smallint(6) NOT NULL,
   `type` varchar(200) NOT NULL,
   `post_department_id` bigint(20) NOT NULL,
-  `poster_id` bigint(20) NOT NULL,
+  `poster_id` bigint(20) default NULL,
   `emergence_flag` smallint(6) NOT NULL,
   `title` varchar(200) NOT NULL,
-  `content` text NOT NULL,
-  `post_time` datetime NOT NULL,
+  `content` text,
+  `postTime` datetime default NULL,
   `last_edit_time` timestamp NULL default NULL on update CURRENT_TIMESTAMP,
   `last_editor_id` bigint(20) default NULL,
   `status` smallint(6) NOT NULL COMMENT '是否发布',
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
 
 --
 -- 转存表中的数据 `wlzx_oa_notice`
 --
+
+INSERT INTO `wlzx_oa_notice` (`id`, `scope`, `type`, `post_department_id`, `poster_id`, `emergence_flag`, `title`, `content`, `postTime`, `last_edit_time`, `last_editor_id`, `status`) VALUES
+(1, 0, '重要通知', 1, NULL, 0, 'sas', '', NULL, '2011-06-19 21:11:58', 2, 0),
+(2, 0, '重要通知', 1, NULL, 0, 'ss', 'sssss', NULL, '2011-06-19 22:27:29', 2, 0),
+(3, 0, '重要通知', 1, 2, 0, 'ss', 'aaa', '2011-06-19 22:31:28', '2011-06-19 22:31:28', 2, 1);
 
 
 -- --------------------------------------------------------

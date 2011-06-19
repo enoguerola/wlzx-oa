@@ -15,6 +15,9 @@
 		<mx:RemoteObject id="teacherAccountBridgeServiceRO" destination="teacherAccountBridgeServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 			<mx:method name="teacherAccountGetAll"  concurrency="last"  result="teacherAccountGetAll_resultHandler(event);" />
 		</mx:RemoteObject>
+		<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+			<mx:method name="getDepartmentBySymbol"  concurrency="last"  result="getDepartmentBySymbolResult(event);" />
+		</mx:RemoteObject>
 	</fx:Declarations>
 	<fx:Script>    
 		<![CDATA[   
@@ -29,11 +32,11 @@
 			import mx.modules.*;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
-			import system.utils.*;
-
+			
 			import system.entity.*;
 			import system.event.BaseEvent;
 			import system.implement.BaseImpl;
+			import system.utils.*;
 			import system.utils.CommonUtils;
 			public var default_url:String="oa/index.swf";
 			public var account:String;
@@ -42,13 +45,12 @@
 			public var lastLoginTime:String;
 			public var currentUser:UserModel;
 			public var allTeacherAcccounts:ArrayCollection = new ArrayCollection();
+			public var allDepartment:ArrayCollection = new ArrayCollection();
 			
 			private function init():void{
 				securityUserHolder.getCurrentUser();
 				teacherAccountBridgeServiceRO.teacherAccountGetAll();
-				
-				
-				
+				systemServiceRO.getDepartmentBySymbol("root");
 			}
 			protected function systemFaultHandler(event:FaultEvent):void {
 				Alert.show(event.fault.faultString, 'Error');
@@ -136,6 +138,37 @@
 			}
 			private function fullScreen():void{
 				stage.displayState = StageDisplayState.FULL_SCREEN;	
+			}
+			
+			private function getDepartmentBySymbolResult(event:ResultEvent):void {
+				var _department:DepartmentModel = event.result as DepartmentModel;
+				buildSubDepartments(_department,allDepartment,0);
+			}
+			
+			private function buildSubDepartments(department:DepartmentModel,resultList:ArrayCollection,depth:int):void{
+				var headText:String="";
+				for(var j:int = 0;j<depth;j++)
+					headText=headText.concat("--");
+				headText=headText.concat(department.name);
+				resultList.addItem( {id:department.id, name:headText})
+				var list:ArrayCollection = ArrayCollection(department.subordinates);			
+				if(list.length>0){
+					for (var i:int = 0; i < list.length; i++){
+						var _department:DepartmentModel = list.getItemAt(i) as DepartmentModel;	
+						buildSubDepartments(_department,resultList,depth+1);
+					}
+				}		
+			}
+			public function getDepartmentNameById(id:String):String{
+				for(var i:int=0;i<allDepartment.length;i++){
+					var item:Object=allDepartment.getItemAt(i);
+					if(item.id == id){
+						var name:String = item.name;
+						var index:int = name.lastIndexOf("-");
+						return name.substring(index);
+					}
+				}
+				return allDepartment.getItemAt(0).name;
 			}
 
 		]]>    
