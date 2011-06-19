@@ -28,7 +28,9 @@
 			backgroundType: "solid";
 		}
 	</mx:Style>
-	
+	<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+		<mx:method name="getDepartmentBySymbol"  concurrency="last"  result="getDepartmentBySymbolResult(event);" />
+	</mx:RemoteObject>
 	<mx:Script>
 		<![CDATA[
 			import com.flexcalendar.components.calendar.core.DateRange;
@@ -43,20 +45,23 @@
 			
 			import mx.controls.Alert;
 			import mx.events.CalendarLayoutChangeEvent;
-			
+			import mx.collections.ArrayCollection;
+			import mx.rpc.events.*;
+			import system.entity.*;
+			import system.utils.CommonUtils;
 			[Bindable]
 			public var dp:CalendarDataProvider;
 			
 			[Bindable]
 			public var visibleDateRange:DateRange;
 			
-			[Bindable]
-			private var leftComponentsWidth:Number = 100;
+			public var scheduleScope:ArrayCollection = new ArrayCollection(); 
+			public var scheduleState:ArrayCollection = new ArrayCollection( 
+				[ {label:"全部", data:null},  
+					{label:"进行中", data:1},
+					{label:"已完结", data:2}]); 
 			
 			protected function init(event:Event = null):void {
-				
-//				defaultLocale = resourceManager.localeChain[0];
-				
 				fromDateChooser.addEventListener(CalendarLayoutChangeEvent.CHANGE, updateRange);
 				toDateChooser.addEventListener(CalendarLayoutChangeEvent.CHANGE, updateRange);
 				
@@ -73,19 +78,47 @@
 				DateUtils.addDays(endRange, 0 - today.day + 6);
 				
 				visibleDateRange = new DateRange(startRange, endRange);
-				//隐藏水印代码
-				callLater(function():void{
-					var sy:Sprite=flexCalendar.getChildAt(3) as Sprite;
-//					flexCalendar.removeChildAt(3);
-//					flexCalendar.refresh();
-					sy.visible=false;
-					sy.alpha=0;
-//					Alert.show(sy.toString());
 				
-				});
+				hideSy();
+				systemServiceRO.getDepartmentBySymbol("root");//初始化部门数据字典
+				
+				
 			}
-			
-			
+			protected function systemFaultHandler(event:FaultEvent):void {
+				Alert.show(event.fault.faultString, 'Error');
+			}
+			private function getDepartmentBySymbolResult(event:ResultEvent):void {
+				var _department:DepartmentModel = event.result as DepartmentModel;
+				buildSubDepartments(_department,scheduleScope,0);
+				var _init1:Object = {name:'全部',value:null};
+				scheduleScope.addItemAt(_init1,0);
+				var _init2:Object = {name:'学校日程',value:'1'};
+				scheduleScope.addItemAt(_init2,1);
+				scope.selectedIndex = 0;
+			}
+			private function buildSubDepartments(department:DepartmentModel,resultList:ArrayCollection,depth:int):void{
+				var headText:String="";
+				for(var j:int = 0;j<depth;j++)
+					headText=headText.concat("--");
+				headText=headText.concat(department.name);
+				resultList.addItem( {dataField:department.id, name:headText})
+				var list:ArrayCollection = ArrayCollection(department.subordinates);			
+				if(list.length>0){
+					for (var i:int = 0; i < list.length; i++){
+						var _department:DepartmentModel = list.getItemAt(i) as DepartmentModel;	
+						buildSubDepartments(_department,resultList,depth+1);
+					}
+				}		
+			}
+			//隐藏水印代码
+			private function hideSy():void{
+				var sy:Sprite=flexCalendar.getChildAt(3) as Sprite;
+				//					flexCalendar.removeChildAt(3);
+				//					flexCalendar.refresh();
+				sy.visible=false;
+				sy.alpha=0;
+				//					Alert.show(sy.toString());
+			}
 			protected function updateRange(event:CalendarLayoutChangeEvent):void {
 				
 				//sanity check
@@ -142,31 +175,31 @@
 	</mx:Metadata>-->
 	
 	<mx:HBox height="30" width="100%" verticalAlign="middle" horizontalAlign="left">
-		<mx:Label text="开始日期：" width="80">
+		<mx:Label text="起止日期：" width="70">
 			
 		</mx:Label>
 		<mx:DateField width="100" editable="false" id="fromDateChooser" selectedDate="{flexCalendar.visibleRange.start}"  formatString="YYYY-MM-DD">
 			
 		</mx:DateField>
-		<mx:Label text="结束日期：" width="80">
+		<mx:Label text="--" width="20">
 			
 		</mx:Label>
 		<mx:DateField width="100" editable="false" id="toDateChooser" selectedDate="{flexCalendar.visibleRange.end}" formatString="YYYY-MM-DD">
 			
 		</mx:DateField>
-		<mx:Label text="日程范围：" width="80">
+		<mx:Label text="日程范围：" width="70" >
 			
 		</mx:Label>
-		<mx:ComboBox width="130">
+		<mx:ComboBox id="scope" width="130" dataProvider="{scheduleScope}" selectedIndex="0" labelField="name">
 			
 		</mx:ComboBox>
-		<mx:Label text="日程状态：" width="80">
+		<mx:Label text="日程状态：" width="70">
 			
 		</mx:Label>
-		<mx:ComboBox width="100">
+		<mx:ComboBox width="100"   id="state" dataProvider="{scheduleState}" >
 			
 		</mx:ComboBox>
-		<mx:CheckBox id="entireCalendarReadonly" label="只读" selected="false" width="80"/>									
+		<mx:CheckBox id="entireCalendarReadonly" label="只读" selected="true" width="80" />									
 		
 	</mx:HBox>
 	<mx:HBox width="100%" height="100%">

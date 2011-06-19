@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2011 年 06 月 16 日 00:20
+-- 生成日期: 2011 年 06 月 19 日 22:20
 -- 服务器版本: 5.0.91
 -- PHP 版本: 5.2.13
 
@@ -205,6 +205,33 @@ INSERT INTO `wlzx_oa_overwork_apply` (`id`, `overWork_applyNo`, `overWork_teache
 (6, '20110612035424', 2, '2011-06-15 1-0-0;', '111', NULL, NULL, NULL, 0, 0),
 (7, '201106121506171', 2, '2011-06-15 0-1-1;', 'sa', NULL, NULL, NULL, 0, 0),
 (8, '20110612160243', 2, '2011-06-01 0-1-1;', 'b', NULL, NULL, NULL, 0, 0);
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `wlzx_oa_schedule`
+--
+
+CREATE TABLE IF NOT EXISTS `wlzx_oa_schedule` (
+  `id` bigint(20) NOT NULL auto_increment,
+  `title` text NOT NULL,
+  `content` text,
+  `begin_time` varchar(300) NOT NULL,
+  `end_time` varchar(300) NOT NULL,
+  `poster_id` bigint(20) NOT NULL,
+  `type` int(11) NOT NULL,
+  `share` int(11) NOT NULL,
+  `department_id` bigint(20) default NULL,
+  `emergence` int(11) NOT NULL,
+  `finish_status` int(11) default NULL,
+  `submit_status` int(11) default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+--
+-- 转存表中的数据 `wlzx_oa_schedule`
+--
+
 
 -- --------------------------------------------------------
 
