@@ -1,4 +1,7 @@
-#Tue Jun 14 14:52:16 CST 2011
+#Sun Jun 19 11:33:42 CST 2011
 eclipse.preferences.version=1
+encoding//locale/en_US/FlexCalendar.properties=UTF-8
+encoding//locale/pt_BR/FlexCalendar.properties=UTF-8
+encoding//locale/zh_CN/FlexCalendar.properties=UTF-8
 encoding//src/resources/i18n/messages_src.properties=UTF-8
 encoding/<project>=utf-8

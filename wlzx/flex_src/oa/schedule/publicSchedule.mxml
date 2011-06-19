@@ -2,7 +2,7 @@
 <mx:Module xmlns:local="*" xmlns:mx="http://www.adobe.com/2006/mxml"
 		   xmlns:flexcalendar="com.flexcalendar.components.calendar.*"
 		   xmlns:myflexcalendar="oa.schedule.*"
-		   height="100%" width="100%" creationComplete="completeHandler();"
+		   height="100%" width="100%" creationComplete="init();"
 		  >
 
 	<!-- To build with maven comment this line -->
@@ -51,11 +51,11 @@
 			public var visibleDateRange:DateRange;
 			
 			[Bindable]
-			private var leftComponentsWidth:Number = 190;
+			private var leftComponentsWidth:Number = 100;
 			
-			protected function completeHandler(event:Event = null):void {
+			protected function init(event:Event = null):void {
 				
-				defaultLocale = resourceManager.localeChain[0];
+//				defaultLocale = resourceManager.localeChain[0];
 				
 				fromDateChooser.addEventListener(CalendarLayoutChangeEvent.CHANGE, updateRange);
 				toDateChooser.addEventListener(CalendarLayoutChangeEvent.CHANGE, updateRange);
@@ -76,7 +76,10 @@
 				//隐藏水印代码
 				callLater(function():void{
 					var sy:Sprite=flexCalendar.getChildAt(3) as Sprite;
+//					flexCalendar.removeChildAt(3);
+//					flexCalendar.refresh();
 					sy.visible=false;
+					sy.alpha=0;
 //					Alert.show(sy.toString());
 				
 				});
@@ -97,19 +100,19 @@
 				}
 			}
 			
-			private function calendarMouseClickHandler(event:CalendarMouseEvent):void {
-				trace("Selected date: " + event.selectedDate);
-				trace("Preferred new event time: " + event.preferredTimeInMills);
-				trace("Mouse event: " + event.event);
-			}
-			
-			
-			private function calendarRendererMouseClickHandler(event:CalendarMouseEvent):void {
-				trace("Selected renderer start date: " + event.selectedDate);
-				trace("Selected item details: " + event.item)
-				trace("Selected item summary: " + event.item.summary);
-				trace("Mouse event: " + event.event);
-			}
+//			private function calendarMouseClickHandler(event:CalendarMouseEvent):void {
+//				trace("Selected date: " + event.selectedDate);
+//				trace("Preferred new event time: " + event.preferredTimeInMills);
+//				trace("Mouse event: " + event.event);
+//			}
+//			
+//			
+//			private function calendarRendererMouseClickHandler(event:CalendarMouseEvent):void {
+//				trace("Selected renderer start date: " + event.selectedDate);
+//				trace("Selected item details: " + event.item)
+//				trace("Selected item summary: " + event.item.summary);
+//				trace("Mouse event: " + event.event);
+//			}
 			
 			private function calendarItemAdded(event:CalendarItemAddedEvent):void {
 				trace("Item added");
@@ -122,15 +125,15 @@
 			private function calendarItemModified(event:CalendarItemModificationEvent):void {
 				trace("Item modified");
 			}
-			
-			[Bindable]
-			private var locales:Array = ["en_US", "pt_BR"];
-			[Bindable]
-			private var defaultLocale:Object;
-			
-			private function localeComboChangeHandler():void {
-				resourceManager.localeChain = [ localeComboBox.selectedItem, "en_US"];
-			}
+//			
+//			[Bindable]
+//			private var locales:Array = ["en_US", "pt_BR"];
+//			[Bindable]
+//			private var defaultLocale:Object;
+//			
+//			private function localeComboChangeHandler():void {
+//				resourceManager.localeChain = [ localeComboBox.selectedItem, "en_US"];
+//			}
 		]]>
 	</mx:Script>
 	
@@ -138,33 +141,43 @@
 		[ResourceBundle("sampleApp")]
 	</mx:Metadata>-->
 	
-	
+	<mx:HBox height="30" width="100%" verticalAlign="middle" horizontalAlign="left">
+		<mx:Label text="开始日期：" width="80">
+			
+		</mx:Label>
+		<mx:DateField width="100" editable="false" id="fromDateChooser" selectedDate="{flexCalendar.visibleRange.start}"  formatString="YYYY-MM-DD">
+			
+		</mx:DateField>
+		<mx:Label text="结束日期：" width="80">
+			
+		</mx:Label>
+		<mx:DateField width="100" editable="false" id="toDateChooser" selectedDate="{flexCalendar.visibleRange.end}" formatString="YYYY-MM-DD">
+			
+		</mx:DateField>
+		<mx:Label text="日程范围：" width="80">
+			
+		</mx:Label>
+		<mx:ComboBox width="130">
+			
+		</mx:ComboBox>
+		<mx:Label text="日程状态：" width="80">
+			
+		</mx:Label>
+		<mx:ComboBox width="100">
+			
+		</mx:ComboBox>
+		<mx:CheckBox id="entireCalendarReadonly" label="只读" selected="false" width="80"/>									
+		
+	</mx:HBox>
 	<mx:HBox width="100%" height="100%">
 		
-		<mx:VBox height="100%" width="{leftComponentsWidth}">
-			<mx:DateChooser id="fromDateChooser" selectedDate="{flexCalendar.visibleRange.start}" width="100%"/>
-			<mx:DateChooser id="toDateChooser" selectedDate="{flexCalendar.visibleRange.end}" width="100%"/>
-			<mx:Accordion width="{leftComponentsWidth}" height="300">
-				<mx:VBox label="{resourceManager.getString('sampleApp','config.panel.global.settings.title')}" width="100%" styleName="configPanelVbox">
-					<mx:CheckBox id="entireCalendarReadonly" label="{resourceManager.getString('sampleApp','config.panel.global.settings.readonly')}" selected="false"/>
-					<mx:CheckBox id="hideCalendarHeader" label="{resourceManager.getString('sampleApp','config.panel.global.settings.header')}" selected="true"/>
-					<mx:CheckBox id="currentTimeIndicator" label="{resourceManager.getString('sampleApp','config.panel.global.settings.current.time.indicator')}" selected="true"/>
-					<mx:CheckBox id="currentDayIndicator" label="{resourceManager.getString('sampleApp','config.panel.global.settings.current.day.indicator')}" selected="true"/>
-					
-				</mx:VBox>
-				<mx:VBox label="{resourceManager.getString('sampleApp','config.panel.localization.title')}" width="100%" styleName="configPanelVbox">
-					<mx:Label text="{resourceManager.getString('sampleApp','config.panel.localization.choose')}"/>
-					<mx:ComboBox id="localeComboBox" dataProvider="{locales}" change="localeComboChangeHandler()" selectedItem="{defaultLocale}"/>
-				</mx:VBox>
-			</mx:Accordion>
-			
-		</mx:VBox>
+		
 		<flexcalendar:FlexCalendar  license="xxxx-xxx-xxx-xx-xxx" id="flexCalendar" width="100%" height="100%" dataProvider="{dp}" scaleX="1" visibleRange="{visibleDateRange}"
 								   scaleY="1" itemEditor="{new BaloonItemEditor(flexCalendar, false, false)}"
 								   calendarMode="{entireCalendarReadonly.selected?CalendarMode.READ_ONLY_MODE : CalendarMode.LIMITED_EDIT_MODE}"
-								   headerVisible="{hideCalendarHeader.selected}"
-								   currentTimeIndicator="{currentTimeIndicator.selected}"
-								   currentDayIndicator="{currentDayIndicator.selected}"
+								   headerVisible="true"
+								   currentTimeIndicator="true"
+								   currentDayIndicator="true"
 								   doubleClickEnabled="true"
 								   calendarItemAddedEvent="calendarItemAdded(event)"
 								   calendarItemRemovedEvent="calendarItemRemoved(event)"
