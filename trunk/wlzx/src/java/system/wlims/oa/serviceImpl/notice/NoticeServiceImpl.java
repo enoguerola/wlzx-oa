@@ -2,6 +2,9 @@ package system.wlims.oa.serviceImpl.notice;
 
 import java.util.List;
 
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
+
 import system.DAOException;
 import system.components.SecurityUserHolder;
 import system.entity.UserModel;
@@ -48,9 +51,37 @@ public class NoticeServiceImpl implements NoticeService {
 	@Override
 	public List<NoticeModel> getNoticesByConditions(String userId, String type,
 			String scope, String emergence, String deparmentId, String title,
-			String beginDate, String endDate) {
+			String beginDate, String endDate, Integer index, Integer page) {
 		// TODO Auto-generated method stub
-		return null;
+		DetachedCriteria criteria = DetachedCriteria.forClass(NoticeModel.class);
+		
+		if(StringUtils.isNotEmpty(userId))
+			criteria.add(Restrictions.eq("posterId", userId));
+		
+		if(StringUtils.isNotEmpty(type))
+			criteria.add(Restrictions.eq("type", type));
+		
+		if(StringUtils.isNotEmpty(scope))
+			criteria.add(Restrictions.eq("scope", Integer.parseInt(scope)));
+		
+		if(StringUtils.isNotEmpty(emergence))
+			criteria.add(Restrictions.eq("emergence", Integer.parseInt(emergence)));
+		
+		if(StringUtils.isNotEmpty(deparmentId))
+			criteria.add(Restrictions.eq("postDepartmentId", deparmentId));
+		
+		if(StringUtils.isNotEmpty(title))
+			criteria.add(Restrictions.like("title", title));
+		
+		if(StringUtils.isNotEmpty(beginDate))
+			criteria.add(Restrictions.ge("postTime", beginDate));
+		
+		if(StringUtils.isNotEmpty(endDate))
+			criteria.add(Restrictions.ge("postTime", endDate));
+		
+		criteria.add(Restrictions.eq("status", 1));
+		
+		return noticeDAO.getListByCriteria(criteria, (index - 1)*page, page);
 	}
 
 	@Override
