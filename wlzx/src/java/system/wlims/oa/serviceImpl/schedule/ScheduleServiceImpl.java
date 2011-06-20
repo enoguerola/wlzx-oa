@@ -2,11 +2,12 @@ package system.wlims.oa.serviceImpl.schedule;
 
 import java.util.List;
 
+import system.wlims.oa.dao.schedule.ScheduleDAO;
 import system.wlims.oa.entity.schedule.ScheduleModel;
 import system.wlims.oa.service.schedule.ScheduleService;
 
 public class ScheduleServiceImpl implements ScheduleService {
-
+	private ScheduleDAO scheduleDAO;
 	@Override
 	public void addSchedule(ScheduleModel schedule) {
 		// TODO Auto-generated method stub
@@ -40,6 +41,14 @@ public class ScheduleServiceImpl implements ScheduleService {
 	public boolean finishScheduleById(String id) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	public ScheduleDAO getScheduleDAO() {
+		return scheduleDAO;
+	}
+
+	public void setScheduleDAO(ScheduleDAO scheduleDAO) {
+		this.scheduleDAO = scheduleDAO;
 	}
 
 }
