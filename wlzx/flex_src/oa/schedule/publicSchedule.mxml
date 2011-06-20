@@ -1,33 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Module xmlns:local="*" xmlns:mx="http://www.adobe.com/2006/mxml"
 		   xmlns:flexcalendar="com.flexcalendar.components.calendar.*"
-		   xmlns:myflexcalendar="oa.schedule.*"
-		   height="100%" width="100%" creationComplete="init();"
+		   xmlns:myflexcalendar="oa.schedule.flexCalendar"
+		   xmlns:component="system.component.*"
+		   height="100%" width="100%" creationComplete="init();" xmlns:flexCalendar="oa.schedule.flexCalendar.*"
 		  >
 
 	<!-- To build with maven comment this line -->
 	<!--<mx:Style source="flex3/defaults.css" />-->
 	
-	<mx:Style>
-		DefaultCalendarDayViewAvailableSpaceRenderer
-		{
-			textColor: #000000;
-			rendererAlpha: 1;
-			backgroundColor: #ffffff;
-			headerBackgroundColor: #ffffff;
-			borderColor: #dedede;
-			backgroundType: "solid";
-		}
-		
-		DefaultCalendarDayViewUnavailableSpaceRenderer
-		{
-			rendererAlpha: 1;
-			backgroundColor: #dedede;
-			headerBackgroundColor: #dedede;
-			borderColor: #ffffff;
-			backgroundType: "solid";
-		}
-	</mx:Style>
+	
 	<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 		<mx:method name="getDepartmentBySymbol"  concurrency="last"  result="getDepartmentBySymbolResult(event);" />
 	</mx:RemoteObject>
@@ -43,10 +25,14 @@
 			import com.flexcalendar.components.calendar.utils.CalendarMode;
 			import com.flexcalendar.components.calendar.utils.DateUtils;
 			
+			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
 			import mx.events.CalendarLayoutChangeEvent;
-			import mx.collections.ArrayCollection;
+			import mx.events.ItemClickEvent;
 			import mx.rpc.events.*;
+			
+			import oa.schedule.flexCalendar.*;
+			
 			import system.entity.*;
 			import system.utils.CommonUtils;
 			[Bindable]
@@ -62,11 +48,7 @@
 					{label:"已完结", data:2}]); 
 			
 			protected function init(event:Event = null):void {
-				fromDateChooser.addEventListener(CalendarLayoutChangeEvent.CHANGE, updateRange);
-				toDateChooser.addEventListener(CalendarLayoutChangeEvent.CHANGE, updateRange);
 				
-				//create sample CalendarDataProvider
-				dp = new DataProviderBuilder().buildExampleDataProvider();
 				
 				var today:Date = DateUtils.startOfDay(new Date());
 				
@@ -78,9 +60,15 @@
 				DateUtils.addDays(endRange, 0 - today.day + 6);
 				
 				visibleDateRange = new DateRange(startRange, endRange);
-				
-				hideSy();
+				fromDateChooser.text=CommonUtils.formatDate(startRange,"YYYY-MM-DD");
+				toDateChooser.text=CommonUtils.formatDate(endRange,"YYYY-MM-DD");
 				systemServiceRO.getDepartmentBySymbol("root");//初始化部门数据字典
+
+				fromDateChooser.addEventListener(CalendarLayoutChangeEvent.CHANGE, updateRange);
+				toDateChooser.addEventListener(CalendarLayoutChangeEvent.CHANGE, updateRange);
+//				flexCalendar.itemEditor=new MyBaloonItemEditor(flexCalendar,false,false);
+//				//create sample CalendarDataProvider
+//				dp = new DataProviderBuilder().buildExampleDataProvider();
 				
 				
 			}
@@ -113,11 +101,8 @@
 			//隐藏水印代码
 			private function hideSy():void{
 				var sy:Sprite=flexCalendar.getChildAt(3) as Sprite;
-				//					flexCalendar.removeChildAt(3);
-				//					flexCalendar.refresh();
 				sy.visible=false;
 				sy.alpha=0;
-				//					Alert.show(sy.toString());
 			}
 			protected function updateRange(event:CalendarLayoutChangeEvent):void {
 				
@@ -158,15 +143,22 @@
 			private function calendarItemModified(event:CalendarItemModificationEvent):void {
 				trace("Item modified");
 			}
-//			
-//			[Bindable]
-//			private var locales:Array = ["en_US", "pt_BR"];
-//			[Bindable]
-//			private var defaultLocale:Object;
-//			
-//			private function localeComboChangeHandler():void {
-//				resourceManager.localeChain = [ localeComboBox.selectedItem, "en_US"];
-//			}
+
+			private function scheduleViewSwitch(event:ItemClickEvent):void {
+				var value:String=event.currentTarget.selectedValue;
+				//				Alert.show(value);
+				//				scheduleViewContainer.setCurrentState(value,true);
+				if(value=="list"){
+					scheduleViewContainer.selectedChild= list;
+				
+				}else{
+					
+						scheduleViewContainer.selectedChild= schedule;
+						callLater(hideSy);
+				}
+				
+				
+			}
 		]]>
 	</mx:Script>
 	
@@ -200,31 +192,71 @@
 			
 		</mx:ComboBox>
 		<mx:CheckBox id="entireCalendarReadonly" label="只读" selected="true" width="80" />									
-		
+			<mx:RadioButtonGroup id="scheduleView"  itemClick="scheduleViewSwitch(event);" />
+			<mx:RadioButton label="列表视图"  groupName="scheduleView" id="listView" selected="true" value="list"/>
+			<mx:RadioButton label="日历视图" groupName="scheduleView" id="dateView" value="date"/>
+			
 	</mx:HBox>
-	<mx:HBox width="100%" height="100%">
+		
+	<mx:ViewStack width="100%" height="100%" id="scheduleViewContainer" paddingRight="5" paddingBottom="5">
+			<mx:VBox width="100%" height="100%" label="日程列表"  name="list" id="list">
+				
+				<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="false"   borderAlpha="0.2" verticalAlign="middle" id="mydg">				
+					<component:mygridcolumns>
+						
+						<mx:DataGridColumn textAlign="center" headerText="标记" dataField="loginaccount" width="50">
+							
+						</mx:DataGridColumn>
+						<mx:DataGridColumn textAlign="center" headerText="日程级别" dataField="loginaccount" width="100">
+							
+						</mx:DataGridColumn>
+						<mx:DataGridColumn textAlign="center" headerText="开始时间" dataField="type" width="100">
+						</mx:DataGridColumn>
+						<mx:DataGridColumn textAlign="center" headerText="截止时间" dataField="name" width="100">
+						</mx:DataGridColumn>
+						<mx:DataGridColumn textAlign="center" headerText="主题" dataField="col3" width="150">
+						</mx:DataGridColumn>
+						<mx:DataGridColumn textAlign="center" headerText="日程类别" dataField="loginaccount" width="100">
+							
+						</mx:DataGridColumn>
+						<mx:DataGridColumn textAlign="center" headerText="优先级" dataField="col3" width="100">
+						</mx:DataGridColumn>
+						<mx:DataGridColumn textAlign="center" headerText="完成" dataField="col3" width="50">
+						</mx:DataGridColumn>
+						<mx:DataGridColumn textAlign="center" headerText="删除" dataField="col3" width="50">
+						</mx:DataGridColumn>
+					</component:mygridcolumns>
+				</component:WlzxPageDataGrid>
+			</mx:VBox>
+			
 		
 		
-		<flexcalendar:FlexCalendar  license="xxxx-xxx-xxx-xx-xxx" id="flexCalendar" width="100%" height="100%" dataProvider="{dp}" scaleX="1" visibleRange="{visibleDateRange}"
-								   scaleY="1" itemEditor="{new BaloonItemEditor(flexCalendar, false, false)}"
-								   calendarMode="{entireCalendarReadonly.selected?CalendarMode.READ_ONLY_MODE : CalendarMode.LIMITED_EDIT_MODE}"
-								   headerVisible="true"
-								   currentTimeIndicator="true"
-								   currentDayIndicator="true"
-								   doubleClickEnabled="true"
-								   calendarItemAddedEvent="calendarItemAdded(event)"
-								   calendarItemRemovedEvent="calendarItemRemoved(event)"
-								   calendarItemModificationEvent="calendarItemModified(event)"
-								   
-								   calendarMouseClick="trace('calendarMouseClick')"
-								   calendarMouseDoubleClick="trace('calendarMouseDoubleClick')"
-								   calendarRendererMouseClick="trace('calendarRendererMouseClick')"
-								   calendarRendererMouseDoubleClick="trace('calendarRendererMouseDoubleClick')"
-								   calendarSpaceRendererMouseClick="trace('calendarSpaceRendererMouseClick')"
-								   calendarSpaceRendererMouseDoubleClick="trace('calendarSpaceRendererMouseDoubleClick')"
-								   />
+		<mx:VBox label="日历视图" width="100%" height="100%" name="schedule" id="schedule">
+			<flexCalendar:MyFlexCalendar license="xxxx-xxx-xxx-xx-xxx" id="flexCalendar" width="100%" height="100%" dataProvider="{dp}" scaleX="1" visibleRange="{visibleDateRange}"
+										scaleY="1" 
+										calendarMode="{entireCalendarReadonly.selected?CalendarMode.READ_ONLY_MODE : CalendarMode.LIMITED_EDIT_MODE}"
+										headerVisible="true"
+										currentTimeIndicator="true"
+										currentDayIndicator="true"
+										doubleClickEnabled="true"
+										calendarItemAddedEvent="calendarItemAdded(event)"
+										calendarItemRemovedEvent="calendarItemRemoved(event)"
+										calendarItemModificationEvent="calendarItemModified(event)"
+										
+										calendarMouseClick="trace('calendarMouseClick')"
+										calendarMouseDoubleClick="trace('calendarMouseDoubleClick')"
+										calendarRendererMouseClick="trace('calendarRendererMouseClick')"
+										calendarRendererMouseDoubleClick="trace('calendarRendererMouseDoubleClick')"
+										calendarSpaceRendererMouseClick="trace('calendarSpaceRendererMouseClick')"
+										calendarSpaceRendererMouseDoubleClick="trace('calendarSpaceRendererMouseDoubleClick')"
+										/>
+		</mx:VBox>	
+	</mx:ViewStack>
+				
+			
 		
-	</mx:HBox>
+		
+		
 	
 	
 </mx:Module>

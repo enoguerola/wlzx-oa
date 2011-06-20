@@ -33,7 +33,14 @@ public class DataProviderBuilder
 //		itemSet.addItemAsSpace(buildItemWithDay(4, 8, 16, "Available", false), ItemType.AVAILABLE_SPACE);
 //		itemSet.addItemAsSpace(buildItemWithDay(5, 8, 16, "Available", false), ItemType.AVAILABLE_SPACE);
 //		itemSet.addItemAsSpace(buildItemWithDay(5, 18, 20, "Available", false), ItemType.AVAILABLE_SPACE);
-			
+		itemSet.addItemAsSpace(buildItemWithDay(0, 0, 24, null, false), ItemType.AVAILABLE_SPACE);
+		itemSet.addItemAsSpace(buildItemWithDay(1, 0, 24, null, false), ItemType.AVAILABLE_SPACE);
+		itemSet.addItemAsSpace(buildItemWithDay(2, 0, 24, null, false), ItemType.AVAILABLE_SPACE);
+		itemSet.addItemAsSpace(buildItemWithDay(3, 0, 24, null, false), ItemType.AVAILABLE_SPACE);
+		itemSet.addItemAsSpace(buildItemWithDay(4, 0, 24, null, false), ItemType.AVAILABLE_SPACE);
+		itemSet.addItemAsSpace(buildItemWithDay(5, 0, 24, null, false), ItemType.AVAILABLE_SPACE);
+		itemSet.addItemAsSpace(buildItemWithDay(6, 0, 24, null, false), ItemType.AVAILABLE_SPACE);
+
 
 		itemSet.addItem(buildItemWithDay(1, 8.5, 11, "Important meeting", false, RendererColorsFactory.buildColorsWithGradient(RendererColors.RED)));
 		itemSet.addItem(buildItemWithDay(1, 11.5, 12.5, "Lunch with Mark", false, RendererColorsFactory.buildColorsWithGradient(RendererColors.YELLOW)));
