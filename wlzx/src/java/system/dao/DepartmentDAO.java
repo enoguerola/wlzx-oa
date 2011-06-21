@@ -3,12 +3,18 @@
  */
 package system.dao;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
+import org.apache.commons.collections.SetUtils;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 
 import system.BaseDAOImpl;
 import system.entity.DepartmentModel;
+import system.utils.SetUtil;
 import system.utils.StringUtils;
 
 
@@ -64,15 +70,23 @@ public class DepartmentDAO extends BaseDAOImpl<DepartmentModel> {
 //	public Set<DepartmentModel> getAllLeaders(DepartmentModel department){
 //		return null;
 //	}
-//	/** 
-//     * 获取部门领导的直属下属部门集
-//     * @param department 
-//     * @return Set<DepartmentModel> 
-//     * @创建时间 2011-4-15 上午10:41:15
-//     */
-//	public Set<DepartmentModel> getAllSubordinates(DepartmentModel department){
-//		return null;
-//	}
+	/** 
+     * 获取部门领导的直属下属部门集
+     * @param department 
+     * @return Set<DepartmentModel> 
+     * @创建时间 2011-4-15 上午10:41:15
+     */
+	public Set<DepartmentModel> getAllSubordinates(DepartmentModel department){
+		Set<DepartmentModel> set = new HashSet<DepartmentModel>();
+		if(department.getSubordinates() != null && department.getSubordinates().size() > 0){
+			for(DepartmentModel model : department.getSubordinates()){
+				Set<DepartmentModel> tmpSet = getAllSubordinates(model);
+				SetUtil.merge(set, tmpSet);
+				set.add(model);
+			}
+		}
+		return set;
+	}
 	/** 
 	  * 通过唯一性系统标记查询部门实体
 	  * @param symbol 
