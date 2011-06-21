@@ -54,6 +54,9 @@
 	
 	<mx:Script> 
 		<![CDATA[
+			import basic.utils.DateUtil;
+			import system.utils.ComboxUtils;
+			
 			import mx.collections.ArrayCollection;
 			import mx.containers.FormItem;
 			import mx.controls.Alert;
@@ -71,7 +74,6 @@
 			import system.component.validator.ComboxValidator;
 			import system.entity.DepartmentModel;
 			import system.utils.*;
-			import basic.utils.DateUtil;
 			
 			private var validatorArr:Array;
 			
@@ -126,10 +128,19 @@
 			}
 			protected function getDetailInfoById_resultHandler(event:ResultEvent):void
 			{
-				Alert.show("更新成功");
-				this.currentState='list';
-				search();
+				Alert.show("load");
+				form = event.result as NoticeModel;
+				title.text = form.title;
+				noticeType.selectedIndex = ComboxUtils.findIndex(noticeTypeList, form.type);
+				noticeScope.selectedIndex = ComboxUtils.findIndex(noticeScopeList, form.scope);
+				postdepartment.selectedIndex = ComboxUtils.findIndex(departmentList, form.postDepartmentId);
+				
+				if(form.emergence == 1)
+					emergence.selected = true;
+				rte.text = form.content;
+				draftSaveButton.visible = false;
 			}
+			
 			protected function deleteNoticeByIdResult_resultHandler(event:ResultEvent):void
 			{
 				if(event.result as Boolean==true){
@@ -137,14 +148,13 @@
 				}else{
 					Alert.show("无法删除");
 				}
-				
 				search();
 			}			
 		
 			
 			protected function getNoticesByConditions_resultHandler(event:ResultEvent):void
 			{
-				var allList:ArrayCollection=event.result as ArrayCollection;
+				var allList:ArrayCollection = event.result as ArrayCollection;
 				noticeTable.initdata(allList);
 			}
 			private function search():void{
@@ -155,7 +165,7 @@
 				if(_emergence.selected)
 					emergence = 1;
 				var department:String = search_department.selectedItem.data;
-				Alert.show("search ing");
+				Alert.show(department);
 				var submitBeginDate:String=search_date_begin.text;
 				var submitEndDate:String=search_date_end.text;
 				noticeServiceRO.getNoticesByConditions(teacher,type,status,emergence + "", department, "",
@@ -171,7 +181,6 @@
 			
 			
 			public function editInit(id:String):void{
-				
 				noticeServiceRO.getDetailInfoById(id);
 			}
 			public function enterEdit(id:String):void{
@@ -199,7 +208,7 @@
 					addInit();
 				else {
 					var id:String=addUpdateFlag.text.split("_")[1];
-					//editInit(id);
+					editInit(id);
 				}
 			}
 			
@@ -230,7 +239,7 @@
 						form.status = 0;
 						//Alert.show("add begin");
 						noticeServiceRO.addNotice(form);
-					}else if(addUpdateFlag.text=="update"+"_"+form.id){
+					}else if(addUpdateFlag.text == "update"+"_"+form.id){
 						noticeServiceRO.updateNotice(form);
 					}
 				}
@@ -255,6 +264,7 @@
 				if(validateInput()){
 					if(addUpdateFlag.text=="add"){
 						form = new NoticeModel();
+						Alert.show("ok");
 						form.content = rte.text;
 						if(emergence.selected)
 							form.emergence = 1;
@@ -267,7 +277,17 @@
 						form.type = noticeType.selectedItem.data;
 						form.status = 1;
 						noticeServiceRO.addNotice(form);
-					}else if(addUpdateFlag.text=="update"+"_"+form.id){
+					}else if(addUpdateFlag.text == "update"+"_"+form.id){
+						form.content = rte.text;
+						if(emergence.selected)
+							form.emergence = 1;
+						else
+							form.emergence = 0;
+						form.postDepartmentId = postdepartment.selectedItem.data;
+						form.scope = parseInt(noticeScope.selectedItem.data);
+						
+						form.title = title.text;
+						form.type = noticeType.selectedItem.data;
 						noticeServiceRO.updateNotice(form);
 					}
 				}

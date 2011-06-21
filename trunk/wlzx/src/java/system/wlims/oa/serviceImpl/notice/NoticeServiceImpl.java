@@ -1,13 +1,19 @@
 package system.wlims.oa.serviceImpl.notice;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import org.apache.commons.collections.SetUtils;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 
 import system.DAOException;
 import system.components.SecurityUserHolder;
+import system.dao.DepartmentDAO;
+import system.entity.DepartmentModel;
 import system.entity.UserModel;
+import system.utils.SetUtil;
 import system.utils.StringUtils;
 import system.utils.UtilDateTime;
 import system.wlims.oa.dao.notice.NoticeDAO;
@@ -17,6 +23,7 @@ import system.wlims.oa.service.notice.NoticeService;
 public class NoticeServiceImpl implements NoticeService {
 	
 	private NoticeDAO noticeDAO;
+	private DepartmentDAO departmentDAO;
 
 	@Override
 	public void addNotice(NoticeModel notice) {
@@ -39,7 +46,14 @@ public class NoticeServiceImpl implements NoticeService {
 	@Override
 	public boolean deleteTakeLeaveById(String id) {
 		// TODO Auto-generated method stub
-		return false;
+		try {
+			noticeDAO.remove(id, NoticeModel.class);
+		} catch (DAOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+		return true;
 	}
 
 	@Override
@@ -67,8 +81,19 @@ public class NoticeServiceImpl implements NoticeService {
 		if(StringUtils.isNotEmpty(emergence))
 			criteria.add(Restrictions.eq("emergence", Integer.parseInt(emergence)));
 		
-		if(StringUtils.isNotEmpty(deparmentId))
-			criteria.add(Restrictions.eq("postDepartmentId", deparmentId));
+		System.out.println(deparmentId);
+		if(StringUtils.isNotEmpty(deparmentId)){
+			// get all department under id
+			Set<DepartmentModel> departmentSet = new HashSet<DepartmentModel>();
+			DepartmentModel departmentModel = departmentDAO.get(deparmentId);
+			departmentSet.add(departmentModel);
+			SetUtil.merge(departmentSet, departmentDAO.getAllSubordinates(departmentModel));
+			Set<String> stringSet = new HashSet<String>();
+			for(DepartmentModel model: departmentSet){
+				stringSet.add(model.getId());
+			}
+			criteria.add(Restrictions.in("postDepartmentId", stringSet.toArray()));
+		}
 		
 		if(StringUtils.isNotEmpty(title))
 			criteria.add(Restrictions.like("title", title));
@@ -107,6 +132,14 @@ public class NoticeServiceImpl implements NoticeService {
 
 	public NoticeDAO getNoticeDAO() {
 		return noticeDAO;
+	}
+
+	public void setDepartmentDAO(DepartmentDAO departmentDAO) {
+		this.departmentDAO = departmentDAO;
+	}
+
+	public DepartmentDAO getDepartmentDAO() {
+		return departmentDAO;
 	}
 
 }
