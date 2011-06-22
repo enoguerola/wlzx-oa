@@ -9,14 +9,19 @@ package oa.entity
 		public var title:String;
 		public var content:String;
 		public var beginTime:String;
-		public var endTime:int;
+		public var endTime:String;
 		public var posterId:String;
 		public var departmentId:String;
 		public var type:int;
-		public var share:int;
+		public var shares:String;
 		public var emergence:int;
 		public var finishStatus:int;
 		public var submitStatus:int;
+		public var repeatStatus:int;
+		public var repeatType:int;
+		public var repeatInterval:int;
+		public var repeatOnDays:String;
+		public var repeatEndTime:String;
 		public function ScheduleModel()
 		{
 			super();

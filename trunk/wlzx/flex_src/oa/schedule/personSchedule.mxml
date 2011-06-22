@@ -3,10 +3,17 @@
 		   xmlns:flexcalendar="com.flexcalendar.components.calendar.*"
 		   xmlns:myflexcalendar="oa.schedule.flexCalendar"
 		   xmlns:component="system.component.*"
+		   xmlns:valueObjects="oa.entity.*"
 		   height="100%" width="100%" creationComplete="init();" xmlns:flexCalendar="oa.schedule.flexCalendar.*"
 		  >
-
-
+	<mx:RemoteObject id="scheduleServiceRO" destination="scheduleServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+		<mx:method name="getSchedulesByConditions"  concurrency="last"  result="getSchedulesByConditions_resultHandler(event);" />
+		<mx:method name="addSchedule"  concurrency="last"  result="addSchedule_resultHandler(event);" />
+		<mx:method name="updateSchedule"  concurrency="last"  result="updateSchedule_resultHandler(event);" />
+		<mx:method name="deleteSchedule"  concurrency="last"  result="deleteSchedule_resultHandler(event);" />
+		<mx:method name="finishSchedule"  concurrency="last"  result="finishSchedule_resultHandler(event);" />
+	</mx:RemoteObject>
+	<valueObjects:ScheduleModel id="model"/>
 	<mx:Script>
 		<![CDATA[
 			import com.flexcalendar.components.calendar.core.DateRange;
@@ -19,14 +26,23 @@
 			import com.flexcalendar.components.calendar.utils.CalendarMode;
 			import com.flexcalendar.components.calendar.utils.DateUtils;
 			
+			import flash.display.*;
+			import flash.geom.*;
+			
+			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
 			import mx.events.CalendarLayoutChangeEvent;
-			import mx.collections.ArrayCollection;
-			import mx.rpc.events.*;
 			import mx.events.ItemClickEvent;
+			import mx.formatters.DateFormatter;
+			import mx.managers.*;
+			import mx.resources.*;
+			import mx.rpc.events.*;
+			
+			import oa.schedule.flexCalendar.*;
+			
+			import system.component.WlzxLockWin;
 			import system.entity.*;
 			import system.utils.CommonUtils;
-			import oa.schedule.flexCalendar.*;
 			[Bindable]
 			public var dp:CalendarDataProvider;
 			
@@ -42,6 +58,29 @@
 				[ {label:"全部", data:null},  
 					{label:"进行中", data:1},
 					{label:"已完结", data:2}]); 
+			
+			protected function getSchedulesByConditions_resultHandler(event:ResultEvent):void
+			{
+				var allList:ArrayCollection=event.result as ArrayCollection;
+				table.initdata(allList);
+				unLockWin();
+			}
+			protected function addSchedule_resultHandler(event:ResultEvent):void
+			{
+				search();
+			}
+			protected function updateSchedule_resultHandler(event:ResultEvent):void
+			{
+				search();
+			}
+			protected function deleteSchedule_resultHandler(event:ResultEvent):void
+			{
+				search();
+			}
+			protected function finishSchedule_resultHandler(event:ResultEvent):void
+			{
+				search();
+			}
 			
 			protected function init(event:Event = null):void {
 				
@@ -65,10 +104,11 @@
 				//create sample CalendarDataProvider
 				dp = new DataProviderBuilder().buildExampleDataProvider();
 				callLater(hideWaterMark);
-				
+				search();
 			}
 			protected function systemFaultHandler(event:FaultEvent):void {
 				Alert.show(event.fault.faultString, 'Error');
+				unLockWin();
 			}
 			
 			//隐藏水印代码
@@ -144,11 +184,81 @@
 			public  function enterEdit(id:String):void{
 			
 			}
-			public function finishSchedule(id:String):void{
+			public function finish(id:String):void{
 				
 			}
-			public function deleteSchedule(id:String):void{
+			public function remove(id:String):void{
 				
+			}
+			import mx.core.FlexGlobals;
+			import mx.managers.PopUpManager;
+			import com.flexcalendar.components.calendar.core.dataModel.*;
+			public var pop:MyBaloonEditorPanel=null;
+			private var converter:MyItemEditorVOConverter = new MyItemEditorVOConverter();
+			public function add():void{
+				if(pop!=null)PopUpManager.removePopUp(pop);
+				pop=MyBaloonEditorPanel(PopUpManager.createPopUp(this,MyBaloonEditorPanel,true)); 
+				pop.owner=this;
+				PopUpManager.centerPopUp(pop);
+				pop.percentHeight=100;
+				pop.percentWidth=100;
+				pop.x=FlexGlobals.topLevelApplication.stage.stageWidth/2-pop.width/2;
+				pop.y=FlexGlobals.topLevelApplication.stage.stageHeight/2-pop.height/2;
+				pop.toolTip="Add";
+				var calendarItem:CalendarItem;calendarItem 
+						=new CalendarItem(new Date(),new Date(),
+							ResourceManager.getInstance().getString("FlexCalendar", "editor.newItem"));
+				pop.item = converter.calendarItemToItemEditorVO(calendarItem);
+				pop.cancelCallback=function():void{
+					PopUpManager.removePopUp(this);
+				};
+				pop.saveCallback = function():void{
+					model=new ScheduleModel();
+					model.beginTime=CommonUtils.formatDate(pop.item.start);
+					model.endTime=CommonUtils.formatDate(pop.item.end);
+					model.title=pop.item.summary;
+					model.content=pop.item.description;
+					model.type=pop.item.type;
+					model.shares=pop.item.schoolShare+";"+pop.item.departmentShare;
+					model.emergence=pop.item.emergence;
+					model.finishStatus=1;
+					model.posterId=this.parentApplication.currentUser.id;
+					model.repeatEndTime=CommonUtils.formatDate(pop.item.endDate);
+					model.repeatStatus=int(pop.item.endDateSpecified);
+					model.repeatInterval=pop.item.interval;
+					model.repeatOnDays=int(pop.item.MO)+";"+int(pop.item.TU)+";"+int(pop.item.WE)+";"+int(pop.item.TH)+";"+int(pop.item.FR)+";"+int(pop.item.SA)+";"+int(pop.item.SU);
+					model.repeatType=pop.item.repeatRuleId;
+					model.submitStatus=1;
+					scheduleServiceRO.addSchedule(model);
+				};
+				pop.deleteCallback = function():void{
+					PopUpManager.removePopUp(this);
+					
+				};
+				
+				
+			}
+			private function search():void{
+				lockWin();
+				
+				var scheduleBeginDate:String=fromDateChooser.text;
+				var scheduleEndDate:String=toDateChooser.text;
+				var scheduleScope:String=scope.selectedItem.data;
+				var scheduleState:String=state.selectedItem.data;
+				scheduleServiceRO.getSchedulesByConditions(this.parentApplication.currentUser.id,scheduleScope,scheduleState,null,scheduleBeginDate,scheduleEndDate);
+			}
+			private var window:WlzxLockWin=null;
+			private function lockWin():void{
+				
+				window=WlzxLockWin(PopUpManager.createPopUp(this,WlzxLockWin,true)); 
+				PopUpManager.centerPopUp(window);
+				window.percentHeight=100;
+				window.percentWidth=100;			
+				
+			}
+			private function unLockWin():void{
+				if(window!=null)
+					PopUpManager.removePopUp(window);
 			}
 		]]>
 	</mx:Script>
@@ -163,7 +273,7 @@
 			<mx:HBox verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12" >
 				<mx:HBox width="100%" height="30" paddingLeft="20"  horizontalGap="0" backgroundColor="#C5E497"  verticalAlign="middle">
 					<mx:Label text="|"/>
-					<mx:LinkButton  label="新建" icon="@Embed(source='../WebContent/resources/common/tools/button_add_icon.png')"  />
+					<mx:LinkButton  label="新建" icon="@Embed(source='../WebContent/resources/common/tools/button_add_icon.png')"  click="add()" />
 					<mx:Label text="|"/>
 					<mx:LinkButton  label="工作提交" icon="@Embed(source='../WebContent/resources/common/tools/button_add_icon.png')"/>
 					<mx:Label text="|"/>
@@ -208,24 +318,136 @@
 				
 					<mx:VBox width="100%" height="100%" label="日程列表"  name="list" id="list">
 						
-						<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="false"   borderAlpha="0.2" verticalAlign="middle" id="mydg">				
+						<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="false"   borderAlpha="0.2" verticalAlign="middle" id="table">				
 							<component:mygridcolumns>
 								
 								
 								<mx:DataGridColumn textAlign="center" headerText="日程类型"  width="80">
-									
+									<mx:itemRenderer>
+										<mx:Component>
+											<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+												<mx:Label text="{getType(data.type)}"/>
+												<mx:Script>
+													<![CDATA[
+														
+														//提示信息
+														import cn.org.rapid_framework.flex_security.SecurityControler;
+														
+														import mx.controls.Alert;
+														import mx.core.UIComponent;
+														private function getType(type:int):String{
+															
+															if(type==1){
+																return "私人日程";
+															}else
+																return "工作日程";
+															
+															
+														}
+													]]>
+												</mx:Script>
+											</mx:VBox>																			
+										</mx:Component>	
+										
+									</mx:itemRenderer>
 								</mx:DataGridColumn>
 								<mx:DataGridColumn textAlign="center" headerText="共享日程" width="80">
-									
+									<mx:itemRenderer>
+										<mx:Component>
+											<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+												<mx:Label text="{getShares(data.shares)}"/>
+												<mx:Script>
+													<![CDATA[
+														
+														//提示信息
+														import cn.org.rapid_framework.flex_security.SecurityControler;
+														
+														import mx.controls.Alert;
+														import mx.core.UIComponent;
+														private function getShares(shares:String):String{
+															
+															if(shares!=null){
+																var result:String="";
+																var share_attr:Array=shares.split(";");
+																for(var i:int = 0; i < share_attr.length; i++) {
+																	var temp:String=share_attr[i];
+																	
+																	if(temp=="1")
+																		result+="学校共享"+"  ";
+																	else if(temp=="2")
+																		result+="部门共享"+"  ";
+																}
+																return result;
+															}else{
+																return null;
+															}
+														}
+													]]>
+												</mx:Script>
+											</mx:VBox>																			
+										</mx:Component>
+										
+									</mx:itemRenderer>
 								</mx:DataGridColumn>
 								<mx:DataGridColumn textAlign="center" headerText="开始时间" width="100">
+									<mx:itemRenderer>
+										<mx:Component>
+											<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+												<mx:Label text="{data.beginTime}"/>
+												
+											</mx:VBox>																			
+										</mx:Component>						
+									</mx:itemRenderer>
 								</mx:DataGridColumn>
 								<mx:DataGridColumn textAlign="center" headerText="截止时间"  width="100">
+									<mx:itemRenderer>
+										<mx:Component>
+											<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+												<mx:Label text="{data.endTime}"/>
+											</mx:VBox>																			
+										</mx:Component>						
+									</mx:itemRenderer>
 								</mx:DataGridColumn>
 								<mx:DataGridColumn textAlign="center" headerText="主题" width="200">
+									<mx:itemRenderer>
+										<mx:Component>
+											<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+												<mx:Label text="{data.title}"/>
+											</mx:VBox>																			
+										</mx:Component>						
+									</mx:itemRenderer>
 								</mx:DataGridColumn>
 								
 								<mx:DataGridColumn textAlign="center" headerText="优先级" width="80">
+									<mx:itemRenderer>
+										<mx:Component>
+											<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+												<mx:Label text="{getEmergence(data.emergence)}"/>
+												<mx:Script>
+													<![CDATA[
+														
+														//提示信息
+														import cn.org.rapid_framework.flex_security.SecurityControler;
+														
+														import mx.controls.Alert;
+														import mx.core.UIComponent;
+														private function getEmergence(emergence:int):String{
+															
+															if(emergence==1){
+																return "重要紧急";
+															}else if(emergence==2){
+																return "重要非紧急";
+															}else if(emergence==3){
+																return "紧急非重要";
+															}else return null;
+															
+														}
+													]]>
+												</mx:Script>
+											</mx:VBox>																			
+										</mx:Component>	
+										
+									</mx:itemRenderer>
 								</mx:DataGridColumn>
 								<mx:DataGridColumn textAlign="center" headerText="操作" width="100">
 									<mx:itemRenderer>
@@ -233,9 +455,9 @@
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0">
 												<mx:LinkButton  label="[编辑]"   click="{this.outerDocument.enterEdit(data.id);}" enabled="{checkAuth(data)}">											
 												</mx:LinkButton>
-												<mx:LinkButton  label="[完成]"   click="{this.outerDocument.finishSchedule(data.id);}" enabled="{checkAuth(data)}">											
+												<mx:LinkButton  label="[完成]"   click="{this.outerDocument.finish(data.id);}" enabled="{checkAuth(data)}">											
 												</mx:LinkButton>
-												<mx:LinkButton  label="[删除]"   click="{this.outerDocument.deleteSchedule(data.id);}" enabled="{checkAuth(data)}">											
+												<mx:LinkButton  label="[删除]"   click="{this.outerDocument.remove(data.id);}" >											
 												</mx:LinkButton>
 												<mx:Script>
 													<![CDATA[
@@ -248,7 +470,7 @@
 														private function checkAuth(data:Object):Boolean{
 															
 															if(data!=null){	
-																if(data.status==0){
+																if(data.finishStatus==1){
 																	return true;
 																}else
 																	return false;
