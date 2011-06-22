@@ -46,6 +46,27 @@ public class NoticeModel extends BaseModel {
 		}
 	}
 	
+	public static enum EStatus{
+		Draft(0, "草稿"),
+		Published(1, "已发布");
+		
+		private Integer value;
+		private String text;
+		
+		EStatus(Integer value, String text){
+			this.value = value;
+			this.text = text;
+		}
+		
+		public Integer getValue(){
+			return value;
+		}
+		
+		public String getText(){
+			return this.text;
+		}
+	}
+	
 	public Integer getScope() {
 		return scope;
 	}

@@ -38,6 +38,7 @@
 					{label:"重要通知", data:"重要通知"}]);
 			
 			private function init():void {	
+				messagesView.selectedIndex = 0;
 				search();
 			}
 			
@@ -48,14 +49,15 @@
 			private function search():void
 			{
 				var type:String = search_type.selectedItem.data;
+				var scope:String=search_scope.selectedItem.data;
 				var status:String= messagesView.selectedIndex + "";
 				var emergence:int = 0;
 				if(_emergence.selected)
 					emergence = 1;
 				var submitBeginDate:String=search_date_begin.text;
 				var submitEndDate:String=search_date_end.text;
-				noticeServiceRO.getNoticesByConditions(this.parentApplication.currentUser.id,type,status,emergence + "", "", "",
-					submitBeginDate,submitEndDate,noticeTable.curpage, noticeTable.pagecount);	
+				noticeServiceRO.getNoticesByConditions(this.parentApplication.currentUser.id, type, scope,emergence + "", "", "",status,
+					submitBeginDate,submitEndDate, draftTable.curpage, draftTable.pagecount);
 			}
 			
 			protected function addNoticeResult_resultHandler(event:ResultEvent):void
@@ -85,7 +87,11 @@
 			protected function getNoticesByConditions_resultHandler(event:ResultEvent):void
 			{
 				var allList:ArrayCollection = event.result as ArrayCollection;
-				noticeTable.initdata(allList);
+				Alert.show( " " + messagesView.selectedIndex);
+				if(messagesView.selectedIndex == 1)
+					noticeTable.initdata(allList);
+				else
+					draftTable.initdata(allList);
 			}
 			
 			public function formatDate(date:Date):String{

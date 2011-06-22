@@ -23,6 +23,7 @@
 		<flex:remoting-destination />
 		<property name="noticeDAO" ref="noticeDAO" />
 		<property name="departmentDAO" ref="departmentDAO" />
+		<property name="userDAO" ref="userDAO" />
 	</bean>
 	
 	<bean id="attachmentDAO" class="system.wlims.oa.daoImpl.notice.AttachmentDAOImpl">

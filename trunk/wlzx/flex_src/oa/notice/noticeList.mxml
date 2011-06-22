@@ -2,7 +2,8 @@
 <mx:Module xmlns:mx="http://www.adobe.com/2006/mxml" 
 		   layout="vertical" width="100%" creationComplete="init();" height="100%" xmlns:valueObjects="oa.entity.*" xmlns:component="system.component.*"  xmlns:mx1="library://ns.adobe.com/flex/mx" >
 	<mx:RemoteObject id="noticeServiceRO" destination="noticeServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
-		<mx:method name="getNoticesByConditions"  concurrency="last"  result="getNoticesByConditions_resultHandler(event);" />
+		<mx:method name="getDepartmentNotice"  concurrency="last"  result="getNotice_resultHandler(event);" />
+		<mx:method name="getSchoolNotice"  concurrency="last"  result="getNotice_resultHandler(event);" />
 	</mx:RemoteObject>
 	<mx:Script> 
 		<![CDATA[
@@ -20,21 +21,8 @@
 		import mx.validators.Validator;
 		import system.component.WlzxLockWin;
 		import system.utils.*;
-		
-		private var validatorArr:Array;
-		
-		public var emergences:ArrayCollection = new ArrayCollection( 
-		[ {label:"全部", data:null},  
-		{label:"普通", data:"0"},  
-		{label:"重要", data:"1"},
-		{label:"紧急", data:"2"}]); 
-		
-		public var scopes:ArrayCollection = new ArrayCollection( 
-		[	{label:"全部", data:null},  
-		{label:"学校", data:"1"},  
-		{label:"部门", data:"2"}]); 
-		
-		
+		import basic.utils.DateUtil;
+				
 		private function init():void{
 			var parms:String=((Object)(this.owner)).id;
 			if(parms=='department'){
@@ -43,27 +31,34 @@
 			else if(parms=='school') {
 				noticeScope.title="学校公告";
 			}
+			search();
 		}
-		protected function systemFaultHandler(event:FaultEvent):void {
+			
+		private function search():void
+		{
+			if(noticeScope.title == "部门公告")
+				noticeServiceRO.getDepartmentNotice(table.curpage, table.pagecount);
+			else
+				noticeServiceRO.getSchoolNotice(table.curpage, table.pagecount);
+		}
+			
+		private function systemFaultHandler(event:FaultEvent):void {
 			Alert.show(event.fault.faultString, 'Error');
-		
 		}
-			protected function getNoticesByConditions_resultHandler(event:ResultEvent):void
-			{
-				var allList:ArrayCollection=event.result as ArrayCollection;
-				table.initdata(allList);
-			}
+			
+		private function getNotice_resultHandler(event:ResultEvent):void
+		{
+			var allList:ArrayCollection=event.result as ArrayCollection;
+			table.initdata(allList);
+		}
+			
 		public function detailNotice(id:String):void{
-		
-		}
-		
-		public function formatDate(date:Date):String{
-			return CommonUtils.formatDate(date,"YYYY-MM-DD JJ:NN:SS");
 		
 		}
 		
 		
 		private var window:WlzxLockWin=null;
+			
 		private function lockWin():void{
 		
 			window=WlzxLockWin(PopUpManager.createPopUp(this,WlzxLockWin,true)); 
@@ -74,7 +69,7 @@
 		}
 		private function unLockWin():void{
 			if(window!=null)
-			PopUpManager.removePopUp(window);
+				PopUpManager.removePopUp(window);
 		}
 		
 		]]> 		
@@ -88,7 +83,6 @@
 					<mx:Component>
 						<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
 							<mx:Label text="{data.type}">
-								
 							</mx:Label>
 						</mx:HBox>																		
 					</mx:Component>						
@@ -99,26 +93,19 @@
 					<mx:Component>
 						<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" >
 							<mx1:Text text="{data.title}" width="100">
-								
 							</mx1:Text>
 						</mx:HBox>
 					</mx:Component>
 				</mx:itemRenderer>
 			</mx:DataGridColumn>
-			<mx:DataGridColumn textAlign="center" headerText="发布时间" width="100" >
-				<mx:itemRenderer>
-					<mx:Component>
-						<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" >
-							
-						</mx:HBox>
-					</mx:Component>
-				</mx:itemRenderer>
+			<mx:DataGridColumn textAlign="center" headerText="发布时间" width="100" dataField="postTime" labelFunction="DateUtil.datagridFormatDate">
 			</mx:DataGridColumn>
 			<mx:DataGridColumn textAlign="center" headerText="发布部门"  width="100" >
 				<mx:itemRenderer>
 					<mx:Component>
-						<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
-							
+						<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" >
+							<mx1:Text text="{this.parentApplication.getDepartmentNameById(data.postDepartmentId)}" width="100">
+							</mx1:Text>
 						</mx:HBox>
 					</mx:Component>
 				</mx:itemRenderer>
@@ -128,27 +115,19 @@
 					<mx:Component>
 						<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" >
 							<mx1:Text text="{this.parentApplication.getTeacherNameByAccountId(data.posterId)}" width="100">
-								
 							</mx1:Text>
 						</mx:HBox>
 					</mx:Component>
 				</mx:itemRenderer>
 			</mx:DataGridColumn>
-			
-			
 			<mx:DataGridColumn textAlign="center" headerText="详细" width="60">
 				<mx:itemRenderer>
 					<mx:Component>
 						<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0">
-							
 							<mx:LinkButton  label="[详细]"  click="{this.outerDocument.detailNotice(data.id);}">											
 							</mx:LinkButton>
-							
 						</mx:HBox>
-						
-						
 					</mx:Component>
-					
 				</mx:itemRenderer>
 			</mx:DataGridColumn>
 			

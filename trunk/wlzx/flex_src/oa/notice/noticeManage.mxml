@@ -74,6 +74,7 @@
 			import system.component.validator.ComboxValidator;
 			import system.entity.DepartmentModel;
 			import system.utils.*;
+			import basic.utils.DateUtil;
 			
 			private var validatorArr:Array;
 			
@@ -168,7 +169,7 @@
 				Alert.show(department);
 				var submitBeginDate:String=search_date_begin.text;
 				var submitEndDate:String=search_date_end.text;
-				noticeServiceRO.getNoticesByConditions(teacher,type,status,emergence + "", department, "",
+				noticeServiceRO.getNoticesByConditions(teacher,type,status,emergence + "", department, "","",
 					submitBeginDate,submitEndDate,noticeTable.curpage, noticeTable.pagecount);
 			}
 			private function addInit():void{
@@ -365,14 +366,6 @@
 				}		
 				
 			}
-			
-			/**
-			 * Called to format dates in the data grid.
-			 */          
-			private function formatDate(data:Object, column:DataGridColumn):String
-			{
-				return DateUtil.formatDate(data[column.dataField] as Date, "YYYY-MM-DD");
-			}
 		]]> 		
 	</mx:Script> 
 	<mx:Component id="searchAccountDropDownItemRenderer">
@@ -453,7 +446,7 @@
 										</mx:Component>
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="发布时间" width="100" dataField="postTime" labelFunction="formatDate">
+								<mx:DataGridColumn textAlign="center" headerText="发布时间" width="100" dataField="postTime" labelFunction="DateUtil.datagridFormatDate">
 								</mx:DataGridColumn>
 								<mx:DataGridColumn textAlign="center" headerText="发布部门"  width="100" dataField="postDepartmentId">
 									<mx:itemRenderer>
