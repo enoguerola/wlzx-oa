@@ -14,7 +14,7 @@
        http://www.springframework.org/schema/tx
        http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
 
-	<!-- 注入配置 -->
+	<!-- 注入配置
 	
 	<bean id="scheduleDAO" class="system.wlims.oa.daoImpl.schedule.ScheduleDAOImpl">
 		<property name="sessionFactory" ref="oaSessionFactory" />
@@ -24,6 +24,6 @@
 		<flex:remoting-destination />
 		<property name="scheduleDAO" ref="scheduleDAO" />
 		<property name="userDAO" ref="userDAO" />
-	</bean>
+	</bean> -->
 	
 </beans>

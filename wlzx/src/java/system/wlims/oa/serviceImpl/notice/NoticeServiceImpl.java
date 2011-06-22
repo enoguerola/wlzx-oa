@@ -4,16 +4,17 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.collections.SetUtils;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 import system.DAOException;
+import system.ServiceException;
 import system.components.SecurityUserHolder;
 import system.dao.DepartmentDAO;
+import system.dao.UserDAO;
 import system.entity.DepartmentModel;
 import system.entity.UserModel;
-import system.utils.SetUtil;
 import system.utils.StringUtils;
 import system.utils.UtilDateTime;
 import system.wlims.oa.dao.notice.NoticeDAO;
@@ -24,6 +25,7 @@ public class NoticeServiceImpl implements NoticeService {
 	
 	private NoticeDAO noticeDAO;
 	private DepartmentDAO departmentDAO;
+	private UserDAO userDAO;
 
 	@Override
 	public void addNotice(NoticeModel notice) {
@@ -64,13 +66,10 @@ public class NoticeServiceImpl implements NoticeService {
 
 	@Override
 	public List<NoticeModel> getNoticesByConditions(String userId, String type,
-			String scope, String emergence, String deparmentId, String title,
+			String scope, String emergence, String deparmentId, String title, String status,
 			String beginDate, String endDate, Integer index, Integer page) {
 		// TODO Auto-generated method stub
 		DetachedCriteria criteria = DetachedCriteria.forClass(NoticeModel.class);
-		
-		if(StringUtils.isNotEmpty(userId))
-			criteria.add(Restrictions.eq("posterId", userId));
 		
 		if(StringUtils.isNotEmpty(type))
 			criteria.add(Restrictions.eq("type", type));
@@ -87,7 +86,7 @@ public class NoticeServiceImpl implements NoticeService {
 			Set<DepartmentModel> departmentSet = new HashSet<DepartmentModel>();
 			DepartmentModel departmentModel = departmentDAO.get(deparmentId);
 			departmentSet.add(departmentModel);
-			SetUtil.merge(departmentSet, departmentDAO.getAllSubordinates(departmentModel));
+			departmentSet.addAll(departmentDAO.getAllSubordinates(departmentModel));
 			Set<String> stringSet = new HashSet<String>();
 			for(DepartmentModel model: departmentSet){
 				stringSet.add(model.getId());
@@ -102,9 +101,21 @@ public class NoticeServiceImpl implements NoticeService {
 			criteria.add(Restrictions.ge("postTime", beginDate));
 		
 		if(StringUtils.isNotEmpty(endDate))
-			criteria.add(Restrictions.ge("postTime", endDate));
+			criteria.add(Restrictions.le("postTime", endDate));
 		
-		criteria.add(Restrictions.eq("status", 1));
+		if(StringUtils.isNotEmpty(status)){
+			int intstatus = Integer.parseInt(status);
+			//草稿 lasteditorid
+			if(intstatus == 0){
+				if(StringUtils.isNotEmpty(userId))
+					criteria.add(Restrictions.eq("lastEditorId", userId));
+			//发布 posterid
+			}else{
+				if(StringUtils.isNotEmpty(userId))
+					criteria.add(Restrictions.eq("posterId", userId));
+			}
+			criteria.add(Restrictions.eq("status", intstatus));
+		}
 		
 		return noticeDAO.getListByCriteria(criteria, (index - 1)*page, page);
 	}
@@ -140,6 +151,68 @@ public class NoticeServiceImpl implements NoticeService {
 
 	public DepartmentDAO getDepartmentDAO() {
 		return departmentDAO;
+	}
+
+	@Override
+	public List<NoticeModel> getDepartmentNotice(Integer index, Integer page) throws ServiceException {
+		// TODO Auto-generated method stub
+		DetachedCriteria criteria = DetachedCriteria.forClass(NoticeModel.class);
+		
+		criteria.add(Restrictions.eq("scope", NoticeModel.EScope.Department.getValue()));
+		criteria.add(Restrictions.eq("status", 1));
+		criteria.addOrder(Order.desc("postTime"));
+		
+		UserModel userModel = SecurityUserHolder.getCurrentUser();
+		Set<DepartmentModel> set = userModel.getDepartments();
+		if(set != null && set.size() > 0){
+			set.addAll(userDAO.getAllLeaders(userModel));
+		}
+		Set<String> stringSet = new HashSet<String>();
+		
+		for(DepartmentModel model: set){
+			stringSet.add(model.getId());
+		}
+		criteria.add(Restrictions.in("postDepartmentId", stringSet.toArray()));
+		
+		return noticeDAO.getListByCriteria(criteria, (index - 1)*page, page);
+	}
+
+	@Override
+	public List<NoticeModel> getSchoolNotice(Integer index, Integer page) throws ServiceException {
+		// TODO Auto-generated method stub
+		DetachedCriteria criteria = DetachedCriteria.forClass(NoticeModel.class);
+		
+		criteria.add(Restrictions.eq("scope", NoticeModel.EScope.School.getValue()));
+		criteria.add(Restrictions.eq("status", 1));
+		criteria.addOrder(Order.desc("postTime"));
+		
+		return noticeDAO.getListByCriteria(criteria, (index - 1)*page, page);
+	}
+
+	public UserDAO getUserDAO() {
+		return userDAO;
+	}
+
+	public void setUserDAO(UserDAO userDAO) {
+		this.userDAO = userDAO;
+	}
+
+	@Override
+	public boolean publish(String id) throws ServiceException {
+		// TODO Auto-generated method stub
+		NoticeModel noticeModel = noticeDAO.get(id);
+		UserModel userModel = SecurityUserHolder.getCurrentUser();
+		noticeModel.setPostDepartmentId(userModel.getId());
+		noticeModel.setPostTime(UtilDateTime.nowDate());
+		noticeModel.setStatus(1);
+		try {
+			noticeDAO.saveOrUpdate(noticeModel);
+		} catch (DAOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+		return true;
 	}
 
 }

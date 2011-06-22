@@ -37,6 +37,7 @@
 		<property name="sessionFactory" ref="systemSessionFactory" />
 	</bean>
 	<bean id="userDAO" class="system.dao.UserDAO">
+		<property name="departmentDAO" ref="departmentDAO" />
 		<property name="sessionFactory" ref="systemSessionFactory" />
 	</bean>
 	<bean id="messageDAO" class="system.dao.MessageDAO">

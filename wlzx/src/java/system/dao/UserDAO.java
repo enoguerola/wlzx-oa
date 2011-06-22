@@ -4,12 +4,15 @@
 package system.dao;
 
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 
 import system.BaseDAOImpl;
+import system.entity.DepartmentModel;
 import system.entity.UserModel;
 import system.utils.StringUtils;
 
@@ -32,6 +35,8 @@ import system.utils.StringUtils;
  */
 
 public class UserDAO extends BaseDAOImpl<UserModel>{
+	
+	DepartmentDAO departmentDAO;
 //	/** 
 //     * 获取某用户角色集
 //     * @param user 
@@ -41,15 +46,22 @@ public class UserDAO extends BaseDAOImpl<UserModel>{
 //	public Set<RoleModel> getAllRoles(UserModel user){
 //		return null;
 //	}
-//	/** 
-//     * 获取用户直属领导用户集
-//     * @param user 
-//     * @return Set<UserModel> 
-//     * @创建时间 2011-4-15 上午10:41:15
-//     */ 
-//	public Set<UserModel> getAllLeaders(UserModel user){
-//		return null;
-//	}
+
+	/**
+	 * 获取用户所有上属部门
+	 * 
+	 */
+	public Set<DepartmentModel> getAllLeaders(UserModel user){
+		Set<DepartmentModel> departments = user.getDepartments();
+		Set<DepartmentModel> set = new HashSet<DepartmentModel>();
+		if(departments != null && departments.size() > 0){
+			for(DepartmentModel model : departments){
+				set.addAll(departmentDAO.getAllLeaders(model));
+			}
+		}
+		return set;
+	}
+	
 //	/** 
 //     * 获取用户领导的直属下属用户集
 //     * @param user 
@@ -94,6 +106,14 @@ public class UserDAO extends BaseDAOImpl<UserModel>{
 		}
 		List<UserModel> result = this.getListByCriteria(criteria);
 		return result;
+	}
+
+	public DepartmentDAO getDepartmentDAO() {
+		return departmentDAO;
+	}
+
+	public void setDepartmentDAO(DepartmentDAO departmentDAO) {
+		this.departmentDAO = departmentDAO;
 	}
 
 }

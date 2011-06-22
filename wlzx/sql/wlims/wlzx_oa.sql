@@ -150,7 +150,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_oa_notice` (
   `last_editor_id` bigint(20) default NULL,
   `status` smallint(6) NOT NULL COMMENT '是否发布',
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
 
 --
 -- 转存表中的数据 `wlzx_oa_notice`
@@ -158,8 +158,12 @@ CREATE TABLE IF NOT EXISTS `wlzx_oa_notice` (
 
 INSERT INTO `wlzx_oa_notice` (`id`, `scope`, `type`, `post_department_id`, `poster_id`, `emergence_flag`, `title`, `content`, `postTime`, `last_edit_time`, `last_editor_id`, `status`) VALUES
 (1, 0, '重要通知', 1, NULL, 0, 'sas', '', NULL, '2011-06-19 21:11:58', 2, 0),
-(2, 0, '重要通知', 1, NULL, 0, 'ss', 'sssss', NULL, '2011-06-19 22:27:29', 2, 0),
-(3, 0, '重要通知', 1, 2, 0, 'ss', 'aaa', '2011-06-19 22:31:28', '2011-06-19 22:31:28', 2, 1);
+(2, 1, '重要通知', 1, NULL, 0, 'ss', 'sssss', NULL, '2011-06-22 23:04:44', 2, 0),
+(3, 1, '重要通知', 12, 2, 0, 'kkk', 'aaasssbbbbb', '2011-06-19 22:31:28', '2011-06-19 22:31:28', 2, 1),
+(4, 2, '重要通知', 1, 2, 0, 'ss', 'aaa', '2011-06-21 20:29:30', '2011-06-21 23:52:44', 2, 1),
+(5, 0, '重要通知', 1, 2, 0, 'asas', 'xiaojigonggao', '2011-06-22 21:27:02', '2011-06-22 21:27:02', 2, 1),
+(6, 1, '重要通知', 1, 2, 0, 'asas；；；', '部门公告', '2011-06-22 21:27:22', '2011-06-22 21:27:22', 2, 1),
+(7, 0, '重要通知', 3, NULL, 0, '草稿箱', '萨斯', NULL, '2011-06-22 22:45:40', 2, 0);
 
 
 -- --------------------------------------------------------
