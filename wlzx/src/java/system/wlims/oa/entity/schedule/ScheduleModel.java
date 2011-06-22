@@ -19,11 +19,17 @@ public class ScheduleModel extends BaseModel {
 	private String endTime;
 	private String posterId;
 	private Integer type;
-	private Integer share;
+	private String shares;
 	private Integer emergence;
 	private Integer finishStatus;
 	private Integer submitStatus;
 	private String departmentId;
+	private Integer repeatStatus;
+	private Integer repeatType;
+	private Integer repeatInterval;
+	private String repeatOnDays;
+	private String repeatEndTime;
+
 	public static enum Type{
 		Personal(1, "私人日程"),
 		Working(2, "工作日程");
@@ -81,7 +87,7 @@ public class ScheduleModel extends BaseModel {
 	public static enum Emergence{
 		ImportantEmergence(1, "重要紧急"),
 		ImportantNotEmergence(2, "重要非紧急"),
-		EmergenceNotImportant(2, "紧急非重要");
+		EmergenceNotImportant(3, "紧急非重要");
 		private Integer status;
 		private String name;
 		
@@ -160,6 +166,65 @@ public class ScheduleModel extends BaseModel {
 			return name;
 		}
 	}
+	public static enum RepeatStatus{
+		Repeat(1, "循环"),
+		NotRepeat(2, "不循环");
+		private Integer status;
+		private String name;
+		
+		private RepeatStatus(Integer status, String name){
+			this.setStatus(status);
+			this.setName(name);
+		}
+
+		public void setStatus(Integer status) {
+			this.status = status;
+		}
+
+		public Integer getStatus() {
+			return status;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+
+		public String getName() {
+			return name;
+		}
+	}
+	public static enum RepeatType{
+		VariantDaily(0, "每日"),
+		VariantEveryWeekday(1, "每工作日 (周一.-周五.)"),
+		VariantMoWedFri(2, "每周一、周三、周五"),
+		VariantTuesThurs(3, "每周二、周四"),
+		VariantWeekly(4, "每周"),
+		VariantMonthly(5, "每月"),
+		VariantYearly(6, "每年");
+		private Integer status;
+		private String name;
+		
+		private RepeatType(Integer status, String name){
+			this.setStatus(status);
+			this.setName(name);
+		}
+
+		public void setStatus(Integer status) {
+			this.status = status;
+		}
+
+		public Integer getStatus() {
+			return status;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+
+		public String getName() {
+			return name;
+		}
+	}
 	public String getTitle() {
 		return title;
 	}
@@ -196,12 +261,7 @@ public class ScheduleModel extends BaseModel {
 	public void setType(Integer type) {
 		this.type = type;
 	}
-	public Integer getShare() {
-		return share;
-	}
-	public void setShare(Integer share) {
-		this.share = share;
-	}
+
 	public Integer getEmergence() {
 		return emergence;
 	}
@@ -225,5 +285,41 @@ public class ScheduleModel extends BaseModel {
 	}
 	public void setDepartmentId(String departmentId) {
 		this.departmentId = departmentId;
+	}
+	public Integer getRepeatStatus() {
+		return repeatStatus;
+	}
+	public void setRepeatStatus(Integer repeatStatus) {
+		this.repeatStatus = repeatStatus;
+	}
+	public Integer getRepeatType() {
+		return repeatType;
+	}
+	public void setRepeatType(Integer repeatType) {
+		this.repeatType = repeatType;
+	}
+	public Integer getRepeatInterval() {
+		return repeatInterval;
+	}
+	public void setRepeatInterval(Integer repeatInterval) {
+		this.repeatInterval = repeatInterval;
+	}
+	public String getRepeatOnDays() {
+		return repeatOnDays;
+	}
+	public void setRepeatOnDays(String repeatOnDays) {
+		this.repeatOnDays = repeatOnDays;
+	}
+	public String getRepeatEndTime() {
+		return repeatEndTime;
+	}
+	public void setRepeatEndTime(String repeatEndTime) {
+		this.repeatEndTime = repeatEndTime;
+	}
+	public String getShares() {
+		return shares;
+	}
+	public void setShares(String shares) {
+		this.shares = shares;
 	}
 }

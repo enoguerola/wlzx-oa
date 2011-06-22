@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:VGroup xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx"  xmlns:valueObjects="basic.entity.*" xmlns:flexlib="http://code.google.com/p/flexlib/"   creationComplete="init();" width="700" height="430">
+	
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+		<mx:StringValidator id="name_stringValidator" source="{pname}" property="text" required="true"  requiredFieldError="场所名称不能为空"/>
+		<mx:StringValidator id="positionBuilding_stringValidator" source="{position_building}"  required="true" property="text"  requiredFieldError="场所所在教学楼不能为空"/>
+		<mx:StringValidator id="positionDetail_stringValidator" source="{position_detail}" property="text"  requiredFieldError="场所所在教学楼具体位置不能为空"/>
+		<mx:NumberValidator id="area_begin_numberValidator" source="{area_begin}" required="false" property="text"   invalidCharError="请输入数值" domain="real"/>
+		<mx:NumberValidator id="area_end_numberValidator" source="{area_end}" required="false" property="text" invalidCharError="请输入数值" domain="real"/>
+		<mx:NumberValidator id="contain_begin_numberValidator" source="{contain_begin}" required="false" property="text" integerError="请输入正整数" domain="int" minValue="0"/>
+		<mx:NumberValidator id="contain_end_numberValidator" source="{contain_end}" required="false" property="text" integerError="请输入正整数" domain="int" minValue="0"/>
+		
+		<valueObjects:PlaceModel id="place"/>
+		
+		<mx:RemoteObject id="placeServiceRO" destination="placeServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+			<mx:method name="placeAdd"  concurrency="last"  result="placeAddResult_resultHandler(event);" />
+			<mx:method name="getPlaceById"  concurrency="last"  result="getPlaceById_resultHandler(event);" />
+			<mx:method name="placeUpdate"  concurrency="last"  result="placeUpdate_resultHandler(event);" />
+		</mx:RemoteObject>
+		<mx:RemoteObject id="directoryServiceRO" destination="directoryServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+			<mx:method name="getDirectoryItemsByType"  concurrency="multiple"  result="getDirectoryItemsByType_resultHandler(event);" />
+		</mx:RemoteObject>
+		
+		
+	</fx:Declarations>
+	
+	<fx:Script> 
+		
+		<![CDATA[  
+		
+			import basic.place.placeList;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.controls.CheckBox;
+			import mx.core.FlexGlobals;
+			import mx.events.ValidationResultEvent;
+			import mx.formatters.DateFormatter;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.*;
+			import mx.validators.Validator;
+			private var validatorArr:Array;
+			private var allFunction:Array=new Array(
+				{dataField:"培训", headerText:"培训",selected:false},
+				{dataField:"多媒体", headerText:"多媒体",selected:false},
+				{dataField:"教学", headerText:"教学",selected:false},
+				{dataField:"会客", headerText:"会客",selected:false});
+			private var allFunctions:ArrayCollection = new ArrayCollection(allFunction);
+			public var placeTypes:ArrayCollection = new ArrayCollection(); 
+			public var buildings:ArrayCollection = new ArrayCollection(); 
+			private function init():void
+			{
+				validatorArr = new Array();
+				validatorArr.push(name_stringValidator);
+
+				
+				validatorArr.push(area_begin_numberValidator);
+				validatorArr.push(area_end_numberValidator);
+				validatorArr.push(contain_begin_numberValidator);
+				validatorArr.push(contain_end_numberValidator);
+				validatorArr.push(positionBuilding_stringValidator);
+				validatorArr.push(positionDetail_stringValidator);
+				checkBoxRepeater.dataProvider=allFunctions;
+				directoryServiceRO.getDirectoryItemsByType("placeType");
+				directoryServiceRO.getDirectoryItemsByType("building");
+				callLater(initPlaceWin);
+			} 
+			private function initPlaceWin():void{
+				if(this.toolTip=='Update'){		
+					this.placeWin.title="场所编辑";
+					var placeId:String=this.id;//弹出窗口时设定的中转参数
+					placeServiceRO.getPlaceById(placeId);
+				}else if(this.toolTip=='Add'){
+					place=new PlaceModel();
+					this.placeWin.title="场所新增";					
+					
+				}
+			}
+			protected function systemFaultHandler(event:FaultEvent):void {
+				Alert.show(event.fault.faultString, 'Error');
+			}
+			protected function getDirectoryItemsByType_resultHandler(event:ResultEvent):void{
+				var list:ArrayCollection=event.result as ArrayCollection;
+				for(var i:int=0;i<list.length;i++){
+					var directoryItem:Object=list.getItemAt(i);
+					if(directoryItem.type=='placeType'){
+						placeTypes.addItem({label:directoryItem.name, data:directoryItem.value, extraValue:directoryItem.extraValue});
+						if(i==list.length-1)type.dataProvider=placeTypes;
+						
+					}else if(directoryItem.type=='building'){
+						buildings.addItem({label:directoryItem.name, data:directoryItem.value, extraValue:directoryItem.extraValue});
+						if(i==list.length-1)position_building.dataProvider=buildings;
+					}
+				}
+				
+				
+				
+			}
+			protected function placeAddResult_resultHandler(event:ResultEvent):void
+			{
+				var place:Object=event.result;
+				if(place!=null){
+					var parent:placeList = this.owner as placeList;
+					parent.search();
+					PopUpManager.removePopUp(this);
+				}else{
+					Alert.show("添加失败");
+				}
+			}
+			protected function getPlaceById_resultHandler(event:ResultEvent):void
+			{
+				place=event.result as PlaceModel;
+				pname.text=place.name;
+				contain_begin.text=place.containBegin+"";
+				contain_end.text=place.containEnd+"";
+				area_begin.text=place.areaBegin+"";
+				area_end.text=place.areaEnd+"";
+	
+				var  functions_str:String=place.functions;
+				var function_attr:Array=functions_str.split(";");
+				for(var i:int = 0; i < function_attr.length; i++) {
+					var temp:String=function_attr[i];
+					var oterhFlag:Boolean=true;
+					for(var idx:int = 0; idx < allFunction.length; idx++) {
+						var checkbox:CheckBox=checkBox[idx] as CheckBox;
+						if(checkbox.data==temp) {
+							checkbox.selected=true;
+							oterhFlag=false;
+						}
+					}
+					if(oterhFlag==true)functions_other.text=temp;
+				}
+				
+				remarks.text=place.remarks;
+				var  position_str:String=place.position;
+				var position_attr:Array=position_str.split("--");
+				position_detail.text=position_attr[1];
+				position_building.selectedItem.data=position_attr[0];
+				type.selectedItem.data=place.type;
+//				place.position=position_building.selectedItem.data+"--"+position_detail.text;
+//				place.type=type.selectedItem.data;
+				
+			}
+			protected function placeUpdate_resultHandler(event:ResultEvent):void
+			{
+				var place:Object=event.result;
+				if(place!=null){
+					var parent:placeList = this.owner as placeList;
+					parent.search();
+					PopUpManager.removePopUp(this);
+				}else{
+					Alert.show("更新失败");
+				}
+			}
+			private function validateForm(evt:MouseEvent):void {
+				var validatorErrorArray:Array = Validator.validateAll(validatorArr);;
+				var isValidForm:Boolean = validatorErrorArray.length == 0;
+				if (isValidForm) {
+					place.name=pname.text;
+					var areaBegin:Object=null;
+					if(area_begin.text!="")areaBegin=parseFloat(area_begin.text);
+					var areaEnd:Object=null;
+					if(area_end.text!="")areaEnd=parseFloat(area_end.text);
+					var containBegin:Object=null;
+					if(contain_begin.text!="")containBegin=parseInt(contain_begin.text);
+					var containEnd:Object=null;
+					if(contain_end.text!="")containEnd=parseInt(contain_end.text);
+					place.containBegin=containBegin as int;
+					place.containEnd=containEnd as int;
+					place.areaBegin=areaBegin as Number;
+					place.areaEnd=areaEnd as Number;
+					place.symbol=position_building.selectedItem.extraValue+position_detail.text;
+					var  functions_str:String="";
+					var len:int = allFunction.length;					
+					for(var idx:int = 0; idx < len; idx++) {
+						var checkbox:CheckBox=checkBox[idx] as CheckBox;
+						if(checkbox.selected) {
+							functions_str=functions_str.concat(checkbox.data+";");
+						}
+					}
+					functions_str=functions_str.concat(functions_other.text);
+					place.functions=functions_str;
+					place.remarks=remarks.text;
+					place.position=position_building.selectedItem.data+"--"+position_detail.text;
+					place.type=type.selectedItem.data;
+					if(this.toolTip=='Update'){
+						placeServiceRO.placeUpdate(place);
+					}else if(this.toolTip=='Add'){
+						placeServiceRO.placeAdd(place);
+						
+					}
+				} else {
+					var err:ValidationResultEvent;
+					var errorMessageArray:Array = [];
+					for each (err in validatorErrorArray) {
+						var errField:String = FormItem(err.currentTarget.source.parent).label
+						errorMessageArray.push(errField + ": " + err.message);
+					}
+					Alert.show(errorMessageArray.join("\n\n"), "请按照以下错误提示信息重新填写", Alert.OK);
+				}
+			}
+		
+			private function resetForm(evt:MouseEvent):void
+			{
+				if(this.toolTip=='Update'){		
+					pname.text=place.name;
+					contain_begin.text=place.containBegin+"";
+					contain_end.text=place.containEnd+"";
+					area_begin.text=place.areaBegin+"";
+					area_end.text=place.areaEnd+"";
+					
+					var  functions_str:String=place.functions;
+					var function_attr:Array=functions_str.split(";");
+					for(var i:int = 0; i < function_attr.length; i++) {
+						var temp:String=function_attr[i];
+						var oterhFlag:Boolean=true;
+						for(var idx:int = 0; idx < allFunction.length; idx++) {
+							var checkbox:CheckBox=checkBox[idx] as CheckBox;
+							if(checkbox.data==temp) {
+								checkbox.selected=true;
+								oterhFlag=false;
+							}
+						}
+						if(oterhFlag==true)functions_other.text=temp;
+					}
+					
+					remarks.text=place.remarks;
+					var  position_str:String=place.position;
+					var position_attr:Array=position_str.split("--");
+					position_detail.text=position_attr[1];
+					position_building.selectedItem.data=position_attr[0];
+				}else if(this.toolTip=='Add'){
+					pname.text="";
+					position_building.selectedIndex=0;
+					position_detail.text="";
+					type.selectedIndex=0;
+					functions_other.text="";
+					checkBox.selected=false;
+					area_begin.text="";
+					area_end.text="";
+					contain_begin.text="";
+					contain_end.text="";
+					remarks.text="";
+					for(var idx:int = 0; idx < allFunction.length; idx++) {
+						var checkbox:CheckBox=checkBox[idx] as CheckBox;
+							checkbox.selected=false;
+					}
+					
+				}
+			} 
+			
+		]]> 
+		
+	</fx:Script> 
+	<s:TitleWindow  id="placeWin" width="100%" height="100%"  close="PopUpManager.removePopUp(this);" skinClass="system.skins.WlzxTitleWindowSkin">
+		<mx:Form width="100%" height="100%" id="dform">
+			<mx:FormHeading label="场所信息" fontSize="15" width="100%" textAlign="center"/>
+			
+			<mx:FormItem label="场所名称" required="true">
+				<mx:TextInput id="pname" width="200"/>
+			</mx:FormItem>
+			<mx:FormItem label="场所位置" required="true">
+				<mx:HBox>
+					<mx:ComboBox  id="position_building" labelField="label"  width="120" selectedIndex="0"/>
+					<mx:Label text="--"/>
+					<mx:FormItem  required="true">
+						<mx:TextInput id="position_detail" width="80"/>
+					</mx:FormItem>
+				</mx:HBox>
+				
+			</mx:FormItem>
+			<mx:FormItem label="场所类型 " required="true">
+				<mx:ComboBox  id="type" labelField="label"  width="120" selectedIndex="0"/>						
+			</mx:FormItem>
+			
+			<mx:FormItem label="功能">
+				<mx:HBox  horizontalGap="10" id="functions" width="100%"  verticalAlign="middle">
+					<mx:Repeater id="checkBoxRepeater">
+						<mx:CheckBox id="checkBox"   selected="{checkBoxRepeater.currentItem.selected}" label="{checkBoxRepeater.currentItem.headerText}" data="{checkBoxRepeater.currentItem.dataField}"/>
+					</mx:Repeater>
+					<s:Label text="其他" verticalAlign="middle"/>
+					<mx:TextInput id="functions_other" width="80"/>
+				</mx:HBox>	
+				
+			</mx:FormItem>	
+			<mx:FormItem label="面积">
+				<mx:HBox verticalAlign="middle">
+					<s:TextInput id="area_begin" width="30"/>
+					<s:Label  text="-" verticalAlign="middle"/>
+					<s:TextInput id="area_end" width="30"/>
+					<mx:HBox horizontalGap="0">
+						<s:Label  text="m" verticalAlign="middle" textAlign="right"/>
+						<s:Label  text="2" verticalAlign="top"  textAlign="left" fontSize="8"/>
+					</mx:HBox>
+					
+					<mx:FormItem label="容纳人数 ">
+						<mx:HBox verticalAlign="middle">
+							<s:TextInput id="contain_begin" width="30"/>
+							<s:Label  text="-" verticalAlign="middle" />
+							<s:TextInput id="contain_end" width="30"/>
+							<s:Label  text="人" verticalAlign="middle"/>
+						</mx:HBox>
+					</mx:FormItem>
+				</mx:HBox>
+			</mx:FormItem>
+			
+			<mx:FormItem label="备注">
+				<s:TextArea id="remarks" width="400"/>
+			</mx:FormItem>
+			<mx:FormItem width="100%">
+				<mx:HBox verticalAlign="middle" horizontalAlign="right" width="100%">
+					<mx:Button label="保存" click="validateForm(event)" />
+					<mx:Button label="重置" click="resetForm(event);" />
+				</mx:HBox>
+			</mx:FormItem> 
+		</mx:Form>
+		
+	</s:TitleWindow>
+	
+</s:VGroup>
