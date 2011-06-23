@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Module xmlns:mx="http://www.adobe.com/2006/mxml" 
-		   layout="vertical" width="100%" creationComplete="init();" height="100%" xmlns:valueObjects="oa.entity.*" xmlns:component="system.component.*"  xmlns:mx1="library://ns.adobe.com/flex/mx">
-
-		<valueObjects:NoticeModel id="notice"/>
-
-	
+		   layout="vertical" width="100%" creationComplete="init();" height="100%" xmlns:valueObjects="oa.entity.*" xmlns:component="system.component.*"  xmlns:mx1="library://ns.adobe.com/flex/mx" xmlns:s="library://ns.adobe.com/flex/spark">
+	<valueObjects:NoticeModel id="notice"/>
 	<mx:RemoteObject id="noticeServiceRO" destination="noticeServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
-		<mx:method name="getDetailInfoById"  concurrency="last"  result="getDetailInfoByIdById_resultHandler(event);" />
+		<mx:method name="loadNoticeInfoById"  concurrency="last"  result="getDetailInfoByIdById_resultHandler(event);" />
 	</mx:RemoteObject>
 	<mx:Script> 
 		<![CDATA[
@@ -20,87 +17,90 @@
 		import mx.events.ValidationResultEvent;
 		import mx.formatters.DateFormatter;
 		import mx.managers.PopUpManager;
+		import mx.printing.*;
 		import mx.rpc.events.*;
 		import mx.validators.Validator;
-		import system.component.WlzxLockWin;
+		
 		import system.utils.*;
 		
 		private var validatorArr:Array;
-		
+		private var _id:String;
 		
 		private function init():void{
-			var id:String=((Object)(this.owner)).id;
-			lockWin();
-			detail(id);
+			_id = ((Object)(this.owner)).id;
+			this.addEventListener(IndexChangedEvent.CHANGE, change);
+			detail();
 		}
+			
+		public function change(event:IndexChangedEvent):void{
+			noticeServiceRO.loadNoticeInfoById(_id);
+		}
+			
 		protected function systemFaultHandler(event:FaultEvent):void {
 			Alert.show(event.fault.faultString, 'Error');
-			unLockWin();
 		}
 		
 		protected function getDetailInfoByIdById_resultHandler(event:ResultEvent):void{
-			notice=event.result as NoticeModel;
-			detail_title.text=notice.title;
-			detail_content.text=notice.content;
-			detail_postTime.text+=formatDate(notice.postTime);
-			detail_department.text+=notice.postDepartmentId;
-			detail_type.text+=notice.type;
-			unLockWin();
+			notice= event.result as NoticeModel;
+			detail_title.text = notice.title;
+			detail_content.text = notice.content;
+			postTime.text = formatDate(notice.postTime);
+			department.text = this.parentApplication.getDepartmentNameById(notice.postDepartmentId);
+			Alert.show("loaded");
 		}
-		public function detail(id:String):void{
 			
-			noticeServiceRO.getDetailInfoById(id);
+		public function detail():void{
+			noticeServiceRO.loadNoticeInfoById(_id);
 		}
-		
-		
-	
-		
-	
-		
+			
 		
 		public function formatDate(date:Date):String{
 			return CommonUtils.formatDate(date,"YYYY-MM-DD JJ:NN:SS");
 		
 		}
-		
-		
-		private var window:WlzxLockWin=null;
-		private function lockWin():void{
-		
-			window=WlzxLockWin(PopUpManager.createPopUp(this,WlzxLockWin,true)); 
-			PopUpManager.centerPopUp(window);
-			window.percentHeight=100;
-			window.percentWidth=100;			
-		
+
+		protected function linkbutton1_clickHandler(event:MouseEvent):void
+		{
+			// TODO Auto-generated method stub
+			var job : FlexPrintJob = new FlexPrintJob();
+			job.printAsBitmap = false;
+			if(job.start()) {
+				job.addObject(print_content, FlexPrintJobScaleType.NONE);
+				job.send();
+			}
 		}
-		private function unLockWin():void{
-			if(window!=null)
-			PopUpManager.removePopUp(window);
-		}
+
 		]]> 		
 	</mx:Script> 
 	<mx:Panel width="100%" height="100%"   title="公告详情"  borderVisible="false" id="panel" dropShadowVisible="false" >
-		
-		
-		
 		<mx:VBox width="100%" height="100%" id="detailPanel">
-			
-			<mx:VBox width="100%"    horizontalGap="10" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10" borderStyle="solid">
+			<s:Group width="100%">
+				<s:layout>
+					<s:BasicLayout/>
+				</s:layout>
+				<s:mxmlContent>
+					<s:HGroup right="4" width="144" verticalCenter="0">
+						<mx:LinkButton label="打印" click="linkbutton1_clickHandler(event)"/>
+						<mx:LinkButton label="关闭"/>
+						<mx:LinkButton label="返回"/>
+					</s:HGroup>
+				</s:mxmlContent>
+			</s:Group>
+			<mx:VBox width="100%" id="print_content" horizontalGap="10" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10" borderStyle="solid">
 				<mx:VBox width="100%" horizontalAlign="center" verticalGap="0">
-					<mx:Label  text=""   id="detail_title" width="100%"  letterSpacing="5" textAlign="center" fontSize="14"  fontWeight="bold" height="30" />
-					<mx:HBox width="100%" horizontalAlign="right">
-						<mx:Label  text="所属类别：" id="detail_type"   visible="true" width="100%"  letterSpacing="5" textAlign="right" fontSize="14"  fontWeight="bold" height="20" />
-						<mx:Label  text="发布部门：" id="detail_department"   visible="true" width="100%"  letterSpacing="5" textAlign="right" fontSize="14"  fontWeight="bold" height="20" />
-						<mx:Label text="发布时间：" id="detail_postTime" visible="false"/>
+					<mx:Label  text=""  id="detail_title" width="100%"  letterSpacing="5" textAlign="center" fontSize="16"  fontWeight="bold" height="30" />
+					<mx:HBox horizontalAlign="right" right="20">
+						<mx:Label text="发布部门：" visible="true" textAlign="right" />
+						<mx:Label text="" id="department"/>
+						<mx:Label text="发布时间：" visible="true"/>
+						<mx:Label text="" id="postTime"/>
 					</mx:HBox>
 				</mx:VBox>
 				
 				<mx:VBox width="100%" horizontalAlign="center" height="100%" verticalAlign="middle"   borderVisible="true" paddingLeft="20" paddingRight="20">
 					<mx1:Text id="detail_content" width="100%">
-						
 					</mx1:Text>
 				</mx:VBox>	
-				
 				
 			</mx:VBox>
 			<mx:HBox width="100%" height="20">

@@ -8,9 +8,8 @@
 		   xmlns:component="system.component.*" currentState="list" xmlns:mx1="library://ns.adobe.com/flex/mx" 
 		   xmlns:mutiUpload="system.component.mutiUpload.*">
 		<mx:RemoteObject id="noticeServiceRO" destination="noticeServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
-			<mx:method name="addNotice"  concurrency="last"  result="addNoticeResult_resultHandler(event);" />
 			<mx:method name="updateNotice"  concurrency="last"  result="updateNoticeResult_resultHandler(event);" />
-			<mx:method name="getDetailInfoById"  concurrency="last"  result="getDetailInfoById_resultHandler(event);" />
+			<mx:method name="loadNoticeInfoById"  concurrency="last"  result="loadNoticeInfoById_resultHandler(event);" />
 			<mx:method name="deleteNoticeById"  concurrency="last"  result="deleteNoticeByIdResult_resultHandler(event);" />
 			<mx:method name="getNoticesByConditions"  concurrency="last"  result="getNoticesByConditions_resultHandler(event);" />
 		</mx:RemoteObject>
@@ -29,16 +28,11 @@
 		<mx:State name="list">           
 			<mx:RemoveChild target="{addPanel}"/>
 		</mx:State>
-		<mx:State name="add" enterState="add_activateHandler(event)"  exitState="add_exitStateHandler(event)">           
+		<mx:State name="add" enterState="add_activateHandler(event)">           
 			<mx:RemoveChild target="{listPanel}"/>
-		</mx:State>
-		<mx:State name="detail">           
-			<mx:RemoveChild target="{listPanel}"/>
-			<mx:RemoveChild target="{addPanel}"/>
 		</mx:State>
 	</mx:states>
 	<mx:transitions>
-		
 		<mx:Transition id="myTransition1" fromState="list" toState="*" >
 			<mx:Parallel id="t1" target="{addPanel}" >
 				<mx:WipeLeft duration="1500"></mx:WipeLeft>
@@ -97,17 +91,9 @@
 			public var departmentList:ArrayCollection = new ArrayCollection();
 			
 			private function init():void{
-				var parms:String=((Object)(this.owner)).id;
-				if(parms=='add'){
-					this.currentState='add';
-					returnArea.height=0;
-					var urlRequest:URLRequest = new URLRequest("spring/attachemtnUpload.action");
-					upload.urlRequest = urlRequest;
-				}
-				else if(parms=='list') 
-				{
-					this.currentState='list';
-				}
+				this.currentState='list';
+				var urlRequest:URLRequest = new URLRequest("spring/attachmentUpload.action");
+				upload.urlRequest = urlRequest;
 				search_account.dataProvider=this.parentApplication.allTeacherAcccounts;
 				systemServiceRO.getDepartmentBySymbol("root");
 			}
@@ -115,19 +101,13 @@
 				Alert.show(event.fault.faultString, 'Error');
 				
 			}
-			protected function addNoticeResult_resultHandler(event:ResultEvent):void
-			{
-				Alert.show("添加成功");
-				this.currentState='list';
-				search();
-			}
 			protected function updateNoticeResult_resultHandler(event:ResultEvent):void
 			{
 				Alert.show("更新成功");
 				this.currentState='list';
 				search();
 			}
-			protected function getDetailInfoById_resultHandler(event:ResultEvent):void
+			protected function loadNoticeInfoById_resultHandler(event:ResultEvent):void
 			{
 				Alert.show("load");
 				form = event.result as NoticeModel;
@@ -139,7 +119,6 @@
 				if(form.emergence == 1)
 					emergence.selected = true;
 				rte.text = form.content;
-				draftSaveButton.visible = false;
 			}
 			
 			protected function deleteNoticeByIdResult_resultHandler(event:ResultEvent):void
@@ -161,7 +140,7 @@
 			private function search():void{
 				var teacher:String=search_account_id.text;
 				var type:String=search_type.selectedItem.data;
-				var status:String=search_scope.selectedItem.data;
+				var scope:String=search_scope.selectedItem.data;
 				var emergence:int = 0;
 				if(_emergence.selected)
 					emergence = 1;
@@ -169,7 +148,7 @@
 				Alert.show(department);
 				var submitBeginDate:String=search_date_begin.text;
 				var submitEndDate:String=search_date_end.text;
-				noticeServiceRO.getNoticesByConditions(teacher,type,status,emergence + "", department, "","",
+				noticeServiceRO.getNoticesByConditions(teacher,type,scope,emergence + "", department, "","1",
 					submitBeginDate,submitEndDate,noticeTable.curpage, noticeTable.pagecount);
 			}
 			private function addInit():void{
@@ -180,15 +159,15 @@
 				this.currentState='add';
 			}
 			
-			
 			public function editInit(id:String):void{
-				noticeServiceRO.getDetailInfoById(id);
+				noticeServiceRO.loadNoticeInfoById(id);
 			}
+			
 			public function enterEdit(id:String):void{
 				addUpdateFlag.text="update"+"_"+id;
 				this.currentState='add';
-				
 			}
+			
 			public function deleteNotice(id:String):void{
 				Alert.show("你确定要删除该公告吗?","确认",Alert.YES | Alert.NO,null,function(event:CloseEvent):void{
 					if(event.detail == Alert.YES)
@@ -197,12 +176,12 @@
 					}
 				});
 			}
-			public function detailNotice(id:String):void{
 			
+			public function detailNotice(id:String):void{
+				var parent:Object=(Object)(((Object)(this.owner)).owner);
+				parent.addTab("noticeDetial","查看公告",parent.nav,"oa/notice/noticeDetail.swf",null,id);
 			}
-			public function sendApply(id:String):void{
-				
-			}
+			
 			protected function add_activateHandler(event:Event):void
 			{
 				if(addUpdateFlag.text=="add")
@@ -213,84 +192,21 @@
 				}
 			}
 			
-			
-			protected function add_exitStateHandler(event:FlexEvent):void
-			{
-				
-			}
-			
-			/*
-			*  保存草稿
-			*/
-			protected function save_clickHandler(event:MouseEvent):void
-			{
-				if(validateSaveInput()){
-					if(addUpdateFlag.text == "add"){
-						//Alert.show("add");
-						form = new NoticeModel();
-						form.content = rte.text;
-						if(emergence.selected)
-							form.emergence = 1;
-						else
-							form.emergence = 0;
-						form.postDepartmentId = postdepartment.selectedItem.data;
-						form.scope = parseInt(noticeScope.selectedItem.data);
-						form.title = title.text;
-						form.type = noticeType.selectedItem.data;
-						form.status = 0;
-						//Alert.show("add begin");
-						noticeServiceRO.addNotice(form);
-					}else if(addUpdateFlag.text == "update"+"_"+form.id){
-						noticeServiceRO.updateNotice(form);
-					}
-				}
-			}
-			
-			private function validateSaveInput():Boolean
-			{	
-				validatorArr = new Array();
-				validatorArr.push(title_stringValidator);
-				var validatorErrorArray:Array = Validator.validateAll(validatorArr);
-				var isValidForm:Boolean = validatorErrorArray.length == 0;
-				if (isValidForm) {
-					return true;
-				} else {
-					return false;
-				}
-
-			}
-			
 			protected function add_clickHandler(event:MouseEvent):void
 			{
-				if(validateInput()){
-					if(addUpdateFlag.text=="add"){
-						form = new NoticeModel();
-						Alert.show("ok");
-						form.content = rte.text;
-						if(emergence.selected)
-							form.emergence = 1;
-						else
-							form.emergence = 0;
-						form.postDepartmentId = postdepartment.selectedItem.data;
-						form.scope = parseInt(noticeScope.selectedItem.data);
-						
-						form.title = title.text;
-						form.type = noticeType.selectedItem.data;
-						form.status = 1;
-						noticeServiceRO.addNotice(form);
-					}else if(addUpdateFlag.text == "update"+"_"+form.id){
-						form.content = rte.text;
-						if(emergence.selected)
-							form.emergence = 1;
-						else
-							form.emergence = 0;
-						form.postDepartmentId = postdepartment.selectedItem.data;
-						form.scope = parseInt(noticeScope.selectedItem.data);
-						
-						form.title = title.text;
-						form.type = noticeType.selectedItem.data;
-						noticeServiceRO.updateNotice(form);
-					}
+				if(validateInput())
+				{
+					form.content = rte.text;
+					if(emergence.selected)
+						form.emergence = 1;
+					else
+						form.emergence = 0;
+					form.postDepartmentId = postdepartment.selectedItem.data;
+					form.scope = parseInt(noticeScope.selectedItem.data);
+					
+					form.title = title.text;
+					form.type = noticeType.selectedItem.data;
+					noticeServiceRO.updateNotice(form);
 				}
 			}
 			
@@ -299,7 +215,6 @@
 				validatorArr = new Array();
 				validatorArr.push(title_stringValidator);
 				validatorArr.push(content_stringValidator);
-				//validatorArr.push(type_stringValidator);
 				var validatorErrorArray:Array = Validator.validateAll(validatorArr);
 				var isValidForm:Boolean = validatorErrorArray.length == 0;
 				if (isValidForm) {
@@ -319,27 +234,6 @@
 				} else{
 					search_account_id.text="";
 				}               
-			}
-			
-			
-			private var window:WlzxLockWin=null;
-			private function lockWin():void{
-				
-				window=WlzxLockWin(PopUpManager.createPopUp(this,WlzxLockWin,true)); 
-				PopUpManager.centerPopUp(window);
-				window.percentHeight=100;
-				window.percentWidth=100;			
-				
-			}
-			private function unLockWin():void{
-				if(window!=null)
-					PopUpManager.removePopUp(window);
-			}
-			private function showHide():void{
-				//				att_area.visible=!att_area.visible;
-				if(att_area.height==0)
-					att_area.height=420;
-				else att_area.height=0;
 			}
 			
 			private function getDepartmentBySymbolResult(event:ResultEvent):void {
@@ -362,9 +256,16 @@
 						var _department:DepartmentModel = list.getItemAt(i) as DepartmentModel;	
 						buildSubDepartments(_department,resultList,depth+1);
 					}
-					//					CommonUtils.sortBySequence(resultList);
 				}		
 				
+			}
+			
+			private function showHide():void
+			{
+				if(att_area.height==0)
+					att_area.height=420;
+				else 
+					att_area.height=0;
 			}
 		]]> 		
 	</mx:Script> 
@@ -374,13 +275,6 @@
 	
 	<mx:Panel width="100%" height="100%"   title="公告管理"  borderVisible="false" id="panel" dropShadowVisible="false" >
 		<mx:VBox width="100%" height="100%" id="listPanel">
-			<mx:HBox verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12" >
-				<mx:HBox width="100%" height="30" paddingLeft="20"  horizontalGap="0" backgroundColor="#C5E497"  verticalAlign="middle">
-					<mx:Label text="|"/>
-					<mx:LinkButton  label="新增" icon="@Embed(source='../WebContent/resources/common/tools/button_add_icon.png')" click="returnArea.height=30;this.currentState='add';" />
-					<mx:Label text="|"/>
-				</mx:HBox>
-			</mx:HBox>
 			<mx:VBox width="100%" height="100%"  verticalGap="10" verticalAlign="middle" horizontalAlign="center" >
 				<mx:VBox width="100%" height="120"   horizontalGap="10" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
 					<mx:FormHeading label="条件查询">
@@ -557,7 +451,6 @@
 				</mx:VBox>
 				<mx:HBox horizontalAlign="right" width="100%">
 					<mx:Label id="addUpdateFlag" visible="false" text="add"/>
-					<mx:Button label="保存草稿" id="draftSaveButton" click="save_clickHandler(event)"/>
 					<mx:Button label="发布" id="postButton" click="add_clickHandler(event)"/>
 				</mx:HBox>
 			</mx:VBox>

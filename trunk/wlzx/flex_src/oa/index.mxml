@@ -171,6 +171,9 @@
 					var obj:* = navigator.getChildAt(i);
 					if(obj.name == symbol){
 						navigator.selectedIndex = i;
+						if(symbol == "noticeDetial"){
+							obj.detail();
+						}
 						return;
 					}
 				}

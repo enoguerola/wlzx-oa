@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2011 年 06 月 16 日 10:57
+-- 生成日期: 2011 年 06 月 24 日 00:24
 -- 服务器版本: 5.0.91
 -- PHP 版本: 5.2.13
 
@@ -76,7 +76,7 @@ INSERT INTO `wlzx_system_data_access_mode` (`id`, `name`, `symbol`, `sequence`, 
 (4, '全部数据', 'basic_authorization_role_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-06 11:50:32', '2011-05-22 15:05:30'),
 (5, '全部数据', 'basic_setting_department_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-06 11:50:32', '2011-05-22 15:05:30'),
 (6, '全部数据', 'basic_setting_role_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-06 11:50:32', '2011-05-22 15:05:30'),
-(7, '全部数据', 'notice_post_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-07 00:00:00', '2011-06-15 21:49:26'),
+(7, '全部数据', 'notice_post_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-07 00:00:00', '2011-06-23 23:13:19'),
 (8, '全部数据', 'department_notice_read_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-09 00:00:00', '2011-06-16 00:05:21'),
 (9, '全部数据', 'notice_list_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-09 00:00:00', '2011-06-15 21:51:54'),
 (11, '全部数据', 'work_to_deal_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-14 00:00:00', '2011-06-16 10:35:08'),
@@ -114,7 +114,7 @@ INSERT INTO `wlzx_system_data_access_mode` (`id`, `name`, `symbol`, `sequence`, 
 (46, '全部数据', 'overWork_approve_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-06-10 00:00:00', '2011-06-10 21:15:45'),
 (47, '全部数据', 'moveRestDay_approve_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-06-10 00:00:00', '2011-06-10 21:16:34'),
 (48, '全部数据', 'staffCanculateAttendance_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-06-10 00:00:00', '2011-06-10 21:23:26'),
-(49, '全部数据', 'person_notice_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-06-16 00:00:00', '2011-06-16 00:04:01'),
+(49, '全部数据', 'person_notice_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-06-16 00:00:00', '2011-06-23 23:21:09'),
 (50, '全部数据', 'school_notice_read_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-06-16 00:00:00', '2011-06-16 00:04:50'),
 (51, '全部数据', 'task_manager_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-06-16 00:00:00', '2011-06-16 10:46:47');
 
@@ -536,7 +536,7 @@ INSERT INTO `wlzx_system_module` (`id`, `name`, `symbol`, `sequence`, `detail`, 
 (2, '岗位授权主模块', 'basic_authorization_role_main', 0, NULL, '2011-05-06 11:50:32', '2011-05-06 11:50:32', 'basic/authorization/roleAuthorization.swf', NULL),
 (3, '部门设置主模块', 'basic_setting_department_main', 0, NULL, '2011-05-06 11:50:32', '2011-05-06 11:50:32', 'basic/setting/departmentSetting.swf', NULL),
 (4, '岗位设置主模块', 'basic_setting_role_main', 0, NULL, '2011-05-06 11:50:32', '2011-05-06 11:50:32', 'basic/setting/roleSetting.swf', NULL),
-(5, '公告发布主模块', 'notice_post_main', 0, '', '2011-05-07 00:00:00', '2011-06-15 21:49:26', 'oa/notice/noticeManage.swf', 'add'),
+(5, '公告发布主模块', 'notice_post_main', 0, '', '2011-05-07 00:00:00', '2011-06-23 23:13:19', 'oa/notice/personNotice.swf', 'add'),
 (6, '部门公告阅读主模块', 'department_notice_read_main', 0, '', '2011-05-09 00:00:00', '2011-06-16 00:05:21', 'oa/notice/noticeList.swf', 'department'),
 (7, '公告管理主模块', 'notice_list_main', 0, '', '2011-05-09 00:00:00', '2011-06-15 21:51:54', 'oa/notice/noticeManage.swf', 'list'),
 (10, '待办工作主模块', 'work_to_deal_main', 0, '', '2011-05-14 00:00:00', '2011-06-16 10:35:08', 'oa/task/toDealTask.swf', ''),
@@ -567,7 +567,7 @@ INSERT INTO `wlzx_system_module` (`id`, `name`, `symbol`, `sequence`, `detail`, 
 (43, '加班审批主模块', 'overWork_approve_main', 0, '', '2011-06-10 00:00:00', '2011-06-10 21:15:45', 'oa/attendance/overWorkApprove.swf', NULL),
 (44, '调休审批主模块', 'moveRestDay_approve_main', 0, '', '2011-06-10 00:00:00', '2011-06-10 21:16:34', 'oa/attendance/moveRestDayApprove.swf', NULL),
 (45, '员工考勤统计主模块', 'staffCanculateAttendance_main', 0, '', '2011-06-10 00:00:00', '2011-06-10 21:23:26', 'oa/attendance/canculateAttendance.swf', NULL),
-(46, '我的公告主模块', 'person_notice_main', 0, '', '2011-06-16 00:00:00', '2011-06-16 00:04:01', 'oa/notice/personNotice.swf', ''),
+(46, '我的公告主模块', 'person_notice_main', 0, '', '2011-06-16 00:00:00', '2011-06-23 23:21:09', 'oa/notice/personNotice.swf', 'list'),
 (47, '学校公告主模块', 'school_notice_read_main', 0, '', '2011-06-16 00:00:00', '2011-06-16 00:04:50', 'oa/notice/noticeList.swf', 'school'),
 (48, '工作查看主模块', 'task_manager_main', 0, '', '2011-06-16 00:00:00', '2011-06-16 10:46:47', 'oa/task/taskManager.swf', 'list');
 
@@ -682,7 +682,7 @@ INSERT INTO `wlzx_system_operation` (`id`, `name`, `symbol`, `sequence`, `rs_typ
 (4, '页面访问', 'basic_authorization_role_main@defaultVisit@', 0, 'URL', '/basic/authorization/roleAuthorization.swf*', NULL, '2011-05-06 11:50:32', '2011-05-22 15:06:06'),
 (5, '页面访问', 'basic_setting_department_main@defaultVisit@', 0, 'URL', '/basic/setting/departmentSetting.swf*', NULL, '2011-05-06 11:50:32', '2011-05-22 15:06:06'),
 (6, '页面访问', 'basic_setting_role_main@defaultVisit@', 0, 'URL', '/basic/setting/roleSetting.swf*', NULL, '2011-05-06 11:50:32', '2011-05-22 15:06:06'),
-(7, '页面访问', 'notice_post_main@defaultVisit@', 0, 'URL', '/oa/notice/noticeManage.swf*', NULL, '2011-05-07 00:00:00', '2011-06-15 21:49:26'),
+(7, '页面访问', 'notice_post_main@defaultVisit@', 0, 'URL', '/oa/notice/personNotice.swf*', NULL, '2011-05-07 00:00:00', '2011-06-23 23:13:19'),
 (8, '页面访问', 'department_notice_read_main@defaultVisit@', 0, 'URL', '/oa/notice/noticeList.swf*', NULL, '2011-05-09 00:00:00', '2011-06-16 00:05:21'),
 (9, '页面访问', 'notice_list_main@defaultVisit@', 0, 'URL', '/oa/notice/noticeManage.swf*', NULL, '2011-05-09 00:00:00', '2011-06-15 21:51:54'),
 (11, '页面访问', 'work_to_deal_main@defaultVisit@', 0, 'URL', '/oa/task/toDealTask.swf*', NULL, '2011-05-14 00:00:00', '2011-06-16 10:35:08'),
@@ -718,7 +718,7 @@ INSERT INTO `wlzx_system_operation` (`id`, `name`, `symbol`, `sequence`, `rs_typ
 (44, '页面访问', 'overWork_approve_main@defaultVisit@', 0, 'URL', '/oa/attendance/overWorkApprove.swf*', NULL, '2011-06-10 00:00:00', '2011-06-10 21:15:45'),
 (45, '页面访问', 'moveRestDay_approve_main@defaultVisit@', 0, 'URL', '/oa/attendance/moveRestDayApprove.swf*', NULL, '2011-06-10 00:00:00', '2011-06-10 21:16:34'),
 (46, '页面访问', 'staffCanculateAttendance_main@defaultVisit@', 0, 'URL', '/oa/attendance/canculateAttendance.swf*', NULL, '2011-06-10 00:00:00', '2011-06-10 21:23:26'),
-(47, '页面访问', 'person_notice_main@defaultVisit@', 0, 'URL', '/oa/notice/personNotice.swf*', NULL, '2011-06-16 00:00:00', '2011-06-16 00:04:01'),
+(47, '页面访问', 'person_notice_main@defaultVisit@', 0, 'URL', '/oa/notice/personNotice.swf*', NULL, '2011-06-16 00:00:00', '2011-06-23 23:21:09'),
 (48, '页面访问', 'school_notice_read_main@defaultVisit@', 0, 'URL', '/oa/notice/noticeList.swf*', NULL, '2011-06-16 00:00:00', '2011-06-16 00:04:50'),
 (49, '页面访问', 'task_manager_main@defaultVisit@', 0, 'URL', '/oa/task/taskManager.swf*', NULL, '2011-06-16 00:00:00', '2011-06-16 10:46:47');
 
@@ -1034,14 +1034,32 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_user` (
   `main_role_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `symbol` (`symbol`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='系统用户' AUTO_INCREMENT=6 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='系统用户' AUTO_INCREMENT=22 ;
 
 --
 -- 转存表中的数据 `wlzx_system_user`
 --
 
 INSERT INTO `wlzx_system_user` (`id`, `symbol`, `sequence`, `name`, `password`, `last_login_time`, `last_login_ip`, `account_style`, `person_id`, `person_name`, `email`, `creation_date`, `modified_date`, `active`, `main_role_id`) VALUES
-(2, 'admin', 0, 'admin', 'c81e728d9d4c2f636f067f89cc14862c', '2011-06-16 10:28:51', '127.0.0.1', 0, NULL, NULL, NULL, '2011-05-07 11:04:22', '2011-06-11 14:33:56', 1, 1);
+(2, 'admin', 0, 'admin', 'c81e728d9d4c2f636f067f89cc14862c', '2011-06-23 22:20:58', '0:0:0:0:0:0:0:1', 0, NULL, NULL, NULL, '2011-05-07 11:04:22', '2011-06-11 14:33:56', 1, 1),
+(4, '1111111', 0, '1111111', '7fa8282ad93047a4d6fe6111c93b308a', NULL, '', 0, NULL, NULL, '', '2011-06-23 11:19:07', '2011-06-23 11:19:09', 1, 3),
+(5, '544333', 0, '544333', '15b39da9af1c673b4353b0c4b2f12c02', NULL, '', 0, NULL, NULL, '', '2011-06-23 12:14:40', '2011-06-23 12:14:42', 1, 3),
+(6, '1366224000', 0, '1366224000', '198369a2db574d5fd02bea1082b6acc7', NULL, '', 0, NULL, NULL, NULL, '2011-06-23 15:05:47', '2011-06-23 15:05:50', 1, 15),
+(7, '299475669', 0, '299475669', 'e0d8e02f16ee1858102c87682c38e648', NULL, '', 0, NULL, NULL, NULL, '2011-06-23 15:07:02', '2011-06-23 15:07:05', 1, 15),
+(8, '-1388659744', 0, '-1388659744', '65e2cb701f076ae2a833d21575aacfe0', NULL, '', 0, NULL, NULL, NULL, '2011-06-23 15:07:46', '2011-06-23 15:07:49', 1, 15),
+(9, '1045938421', 0, '1045938421', '5f9b451ebaeda8958d4d5f6a0237e300', NULL, '', 0, NULL, NULL, NULL, '2011-06-23 15:08:32', '2011-06-23 15:08:34', 1, 15),
+(10, '-1719650475', 0, '-1719650475', 'b59ade5b3c4a0ab3d86d307e86b58294', NULL, '', 0, NULL, NULL, NULL, '2011-06-23 15:09:07', '2011-06-23 15:09:11', 1, 15),
+(11, '1466105301', 0, '1466105301', '42acf6b362ed76e8d5015065f5724cfb', NULL, '', 0, NULL, NULL, NULL, '2011-06-23 15:09:46', '2011-06-23 15:09:50', 1, 15),
+(12, '-1337851400', 0, '-1337851400', 'ca2fabfcace855741548bb3a8246a5d8', NULL, '', 0, NULL, NULL, NULL, '2011-06-23 15:10:27', '2011-06-23 15:10:29', 1, 15),
+(13, '266555349', 0, '266555349', 'c90a498a0f653b5226cb1a51b6d2ba69', NULL, '', 0, NULL, NULL, NULL, '2011-06-23 15:11:06', '2011-06-23 15:11:09', 1, 15),
+(14, '-82928819', 0, '-82928819', 'ee0356950696b85c564ed5a3b75be03b', NULL, '', 0, NULL, NULL, NULL, '2011-06-23 15:14:45', '2011-06-23 15:14:47', 1, 15),
+(15, '-1207044118', 0, '-1207044118', '8bfc5247eb722f0d55bd56049967deb8', NULL, '', 0, NULL, NULL, NULL, '2011-06-23 15:16:00', '2011-06-23 15:16:02', 1, 15),
+(16, '-1240748940', 0, '-1240748940', 'c50c88efaf0560bc24ca6dbb896d1b66', NULL, '', 0, NULL, NULL, NULL, '2011-06-23 15:24:25', '2011-06-23 15:24:27', 1, 15),
+(17, '-1202225347', 0, '-1202225347', '6b7bead22ade50c99a81412abdcbfc8f', NULL, '', 0, NULL, NULL, NULL, '2011-06-23 15:25:14', '2011-06-23 15:25:17', 1, 15),
+(18, '928701331', 0, '928701331', '0600c23c56096d35ccfd647fb50cb5bf', NULL, '', 0, NULL, NULL, NULL, '2011-06-23 15:26:11', '2011-06-23 15:26:14', 1, 15),
+(19, '-471106541', 0, '-471106541', 'f34e023fa8fe37904126a0c20900e518', NULL, '', 0, NULL, NULL, NULL, '2011-06-23 15:27:03', '2011-06-23 15:27:05', 1, 15),
+(20, '334111', 0, '334111', 'fe7d5ff5bbd29d45fbda2563d212f3f2', NULL, '', 0, NULL, NULL, '', '2011-06-23 15:31:28', '2011-06-23 15:31:30', 1, 3),
+(21, '2222211', 0, '2222211', 'ce681060fbb516ada537fcaa840ea504', NULL, '', 0, NULL, NULL, '', '2011-06-23 15:35:42', '2011-06-23 15:35:44', 1, 3);
 
 -- --------------------------------------------------------
 

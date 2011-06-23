@@ -150,7 +150,7 @@
 				for(var j:int = 0;j<depth;j++)
 					headText=headText.concat("--");
 				headText=headText.concat(department.name);
-				resultList.addItem( {id:department.id, name:headText})
+				resultList.addItem( {data:department.id, label:headText})
 				var list:ArrayCollection = ArrayCollection(department.subordinates);			
 				if(list.length>0){
 					for (var i:int = 0; i < list.length; i++){
@@ -162,10 +162,10 @@
 			public function getDepartmentNameById(id:String):String{
 				for(var i:int=0;i<allDepartment.length;i++){
 					var item:Object=allDepartment.getItemAt(i);
-					if(item.id == id){
-						var name:String = item.name;
+					if(item.data == id){
+						var name:String = item.label;
 						var index:int = name.lastIndexOf("-");
-						return name.substring(index);
+						return name.substring(index + 1);
 					}
 				}
 				return allDepartment.getItemAt(0).name;

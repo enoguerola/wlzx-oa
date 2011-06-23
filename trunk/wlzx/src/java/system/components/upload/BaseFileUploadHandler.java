@@ -52,7 +52,7 @@ public abstract class BaseFileUploadHandler implements IUpload{
 			return filename;
 	}
 	
-	@RequestMapping("/oa/notice/spring/attachemtnUpload.action") 
+	@RequestMapping("/oa/notice/spring/attachmentUpload.action") 
     @ResponseBody//这个是表示，返回内容以这里构造的为准。不返回常用的视图。需要配置支持。
 	public void upload(@RequestParam("file") CommonsMultipartFile file,HttpServletResponse response)throws Exception{
 		
