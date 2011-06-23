@@ -61,6 +61,12 @@ public interface BaseDAO<T> {
 	 */
 	void remove(T domain) throws DAOException;
 	
+	/**
+	 * remove Object without cascade delete
+	 * @param id
+	 * @param clazz
+	 * @throws DAOException
+	 */
 	void remove(String id, Class clazz)throws DAOException;
 	
 	/**

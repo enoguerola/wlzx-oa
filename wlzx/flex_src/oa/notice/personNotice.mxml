@@ -2,15 +2,41 @@
 <mx:Module xmlns:mx="http://www.adobe.com/2006/mxml" 
 		   xmlns:hc="com.hillelcoren.components.*"
 		   xmlns:render="system.component.render.*"
-		   layout="vertical" width="100%" creationComplete="init();" height="100%" xmlns:valueObjects="oa.entity.*" xmlns:component="system.component.*" xmlns:mx1="library://ns.adobe.com/flex/mx" xmlns:mutiUpload="system.component.mutiUpload.*">
-	
+		   layout="vertical" width="100%" creationComplete="init();"  height="100%" xmlns:valueObjects="oa.entity.*" xmlns:component="system.component.*" xmlns:mx1="library://ns.adobe.com/flex/mx" xmlns:mutiUpload="system.component.mutiUpload.*">
+	<valueObjects:NoticeModel id="form"/>
 	<mx:RemoteObject id="noticeServiceRO" destination="noticeServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 		<mx:method name="addNotice"  concurrency="last"  result="addNoticeResult_resultHandler(event);" />
 		<mx:method name="updateNotice"  concurrency="last"  result="updateNoticeResult_resultHandler(event);" />
-		<mx:method name="getDetailInfoById"  concurrency="last"  result="getDetailInfoById_resultHandler(event);" />
-		<mx:method name="deleteNoticeById"  concurrency="last"  result="deleteNoticeByIdResult_resultHandler(event);" />
+		<mx:method name="loadNoticeInfoById"  concurrency="last"  result="loadNoticeInfoById_resultHandler(event);" />
+		<mx:method name="remove"  concurrency="last"  result="remove_resultHandler(event);" />
 		<mx:method name="getNoticesByConditions"  concurrency="last"  result="getNoticesByConditions_resultHandler(event);" />
+		<mx:method name="publish"  concurrency="last"  result="publish_resultHandler(event);" />
 	</mx:RemoteObject>
+	
+	<mx:StringValidator id="title_stringValidator" source="{title}" property="text"  requiredFieldError="不能为空"/>
+	<mx:StringValidator id="content_stringValidator" source="{rte}" property="text"  requiredFieldError="不能为空"/>
+	
+	<mx:states>
+		<mx:State name="list">           
+			<mx:RemoveChild target="{addPanel}"/>
+		</mx:State>
+		<mx:State name="add" enterState="add_activateHandler(event)">           
+			<mx:RemoveChild target="{listPanel}"/>
+		</mx:State>
+	</mx:states>
+	<mx:transitions>
+		<mx:Transition id="myTransition1" fromState="list" toState="*" >
+			<mx:Parallel id="t1" target="{addPanel}" >
+				<mx:WipeLeft duration="1500"></mx:WipeLeft>
+			</mx:Parallel>
+		</mx:Transition>
+		<mx:Transition id="myTransition2" fromState="*" toState="list" >
+			<mx:Parallel id="t2" target="{listPanel}" >
+				<mx:WipeRight duration="800">
+				</mx:WipeRight>
+			</mx:Parallel>
+		</mx:Transition>
+	</mx:transitions>
 	
 	<mx:Script>
 		<![CDATA[
@@ -18,8 +44,9 @@
 			import mx.controls.*;
 			import mx.events.*;
 			import mx.rpc.events.*;
-			
-			import system.utils.CommonUtils;
+			import mx.validators.Validator;
+
+			import system.utils.*;
 			import basic.utils.DateUtil;
 			
 			public var scopes:ArrayCollection = new ArrayCollection( 
@@ -37,9 +64,25 @@
 					{label:"请选择", data:null},
 					{label:"重要通知", data:"重要通知"}]);
 			
+			[Bindable] 
+			public var departmentList:ArrayCollection = new ArrayCollection();
+			private var validatorArr:Array;
+			
 			private function init():void {	
+				var parms:String=((Object)(this.owner)).id;
+				if(parms=='add'){
+					this.currentState='add';
+					returnArea.height=0;
+					var urlRequest:URLRequest = new URLRequest("spring/attachmentUpload.action");
+					upload.urlRequest = urlRequest;
+				}
+				else if(parms=='list') 
+				{
+					this.currentState='list';
+				}
 				messagesView.selectedIndex = 0;
 				search();
+				departmentList = this.parentApplication.allDepartment;
 			}
 			
 			private function systemFaultHandler(event:FaultEvent):void {
@@ -62,18 +105,33 @@
 			
 			protected function addNoticeResult_resultHandler(event:ResultEvent):void
 			{
+				Alert.show("添加成功");
+				this.currentState='list';
 				search();
 			}
 			protected function updateNoticeResult_resultHandler(event:ResultEvent):void
 			{
+				Alert.show("添加成功");
+				this.currentState='list';
 				search();
 			}
-			protected function getDetailInfoById_resultHandler(event:ResultEvent):void
+			protected function loadNoticeInfoById_resultHandler(event:ResultEvent):void
 			{
-
+				form = event.result as NoticeModel;
+				title.text = form.title;
+				noticeType.selectedIndex = ComboxUtils.findIndex(noticeTypeList, form.type);
+				noticeScope.selectedIndex = ComboxUtils.findIndex(noticeScopeList, form.scope);
+				postdepartment.selectedIndex = ComboxUtils.findIndex(departmentList, form.postDepartmentId);
+				if(form.emergence == 1)
+					emergence.selected = true;
+				rte.text = form.content;
+			}
+			protected function publish_resultHandler(event:ResultEvent):void
+			{
+				search();
 			}
 			
-			protected function deleteNoticeByIdResult_resultHandler(event:ResultEvent):void
+			protected function remove_resultHandler(event:ResultEvent):void
 			{
 				if(event.result as Boolean==true){
 					Alert.show("删除成功");
@@ -94,36 +152,179 @@
 					draftTable.initdata(allList);
 			}
 			
+			protected function add_activateHandler(event:Event):void
+			{
+				if(addUpdateFlag.text=="add")
+					addInit();
+				else {
+					var id:String=addUpdateFlag.text.split("_")[1];
+					editInit(id);
+				}
+			}
+			
 			public function formatDate(date:Date):String{
 				return CommonUtils.formatDate(date);
 				
 			}
+			//编辑
 			public function enterEdit(id:String):void{
-			
-				
+				addUpdateFlag.text="update"+"_"+id;
+				this.currentState='add';
+				returnArea.height=30;
 			}
+			//发布
 			public function post(id:String):void{
-				
-				
+				Alert.show("你确定要发布该公告吗?","确认",Alert.YES | Alert.NO,null,function(event:CloseEvent):void{
+					if(event.detail == Alert.YES)
+					{
+						noticeServiceRO.publish(id);
+					}
+				});
 			}
-			public function detailNotice(id:String):void{
-				
+			public function detailNotice(id:String):void
+			{
+				var parent:Object=(Object)(((Object)(this.owner)).owner);
+				parent.addTab("noticeDetial","查看公告",parent.nav,"oa/notice/noticeDetail.swf",null,id);
 			}
+			//删除
 			public function deleteNotice(id:String):void{
 				Alert.show("你确定要删除该公告吗?","确认",Alert.YES | Alert.NO,null,function(event:CloseEvent):void{
 					if(event.detail == Alert.YES)
 					{
-						//noticeServiceRO.deleteNoticeById(id);
+						noticeServiceRO.remove(id);
 					}
 				});
+			}
+			
+			/*
+			*  保存草稿
+			*/
+			protected function save_clickHandler(event:MouseEvent):void
+			{
+				if(validateSaveInput()){
+					if(addUpdateFlag.text == "add"){
+						//Alert.show("add");
+						form = new NoticeModel();
+						form.content = rte.text;
+						if(emergence.selected)
+							form.emergence = 1;
+						else
+							form.emergence = 0;
+						form.postDepartmentId = postdepartment.selectedItem.data;
+						form.scope = parseInt(noticeScope.selectedItem.data);
+						form.title = title.text;
+						form.type = noticeType.selectedItem.data;
+						form.status = 0;
+						//Alert.show("add begin");
+						noticeServiceRO.addNotice(form);
+					}else if(addUpdateFlag.text == "update"+"_"+form.id){
+						form.content = rte.text;
+						if(emergence.selected)
+							form.emergence = 1;
+						else
+							form.emergence = 0;
+						form.postDepartmentId = postdepartment.selectedItem.data;
+						form.scope = parseInt(noticeScope.selectedItem.data);
+						form.title = title.text;
+						form.status = 0;
+						form.type = noticeType.selectedItem.data;
+						noticeServiceRO.updateNotice(form);
+					}
+				}
+			}
+			
+			private function validateSaveInput():Boolean
+			{	
+				validatorArr = new Array();
+				validatorArr.push(title_stringValidator);
+				var validatorErrorArray:Array = Validator.validateAll(validatorArr);
+				var isValidForm:Boolean = validatorErrorArray.length == 0;
+				if (isValidForm) {
+					return true;
+				} else {
+					return false;
+				}
+				
+			}
+			
+			protected function add_clickHandler(event:MouseEvent):void
+			{
+				if(validateInput()){
+					if(addUpdateFlag.text=="add"){
+						form = new NoticeModel();
+						Alert.show("ok");
+						form.content = rte.text;
+						if(emergence.selected)
+							form.emergence = 1;
+						else
+							form.emergence = 0;
+						form.postDepartmentId = postdepartment.selectedItem.data;
+						form.scope = parseInt(noticeScope.selectedItem.data);
+						
+						form.title = title.text;
+						form.type = noticeType.selectedItem.data;
+						form.status = 1;
+						noticeServiceRO.addNotice(form);
+					}else if(addUpdateFlag.text == "update"+"_"+form.id){
+						form.content = rte.text;
+						if(emergence.selected)
+							form.emergence = 1;
+						else
+							form.emergence = 0;
+						form.postDepartmentId = postdepartment.selectedItem.data;
+						form.scope = parseInt(noticeScope.selectedItem.data);
+						form.status = 1;
+						form.title = title.text;
+						form.type = noticeType.selectedItem.data;
+						noticeServiceRO.updateNotice(form);
+					}
+				}
+			}
+			
+			private function validateInput():Boolean
+			{	
+				validatorArr = new Array();
+				validatorArr.push(title_stringValidator);
+				validatorArr.push(content_stringValidator);
+				var validatorErrorArray:Array = Validator.validateAll(validatorArr);
+				var isValidForm:Boolean = validatorErrorArray.length == 0;
+				if (isValidForm) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+			
+			private function addInit():void{
+				
+			}
+			public function enterAdd(type:int):void{
+				addUpdateFlag.text="add";
+				this.currentState='add';
+			}
+			
+			public function editInit(id:String):void{
+				noticeServiceRO.loadNoticeInfoById(id);
+			}
+			
+			private function showHide():void{
+				if(att_area.height==0)
+					att_area.height=420;
+				else att_area.height=0;
 			}
 
 		]]>
 	</mx:Script>
-
 	
 	<mx:Panel width="100%" height="100%"  styleName="customPanel" title="我的公告"  borderVisible="false" dropShadowVisible="false">
-		<mx:VBox width="100%" height="100%">
+		<mx:VBox width="100%" height="100%" id="listPanel">
+			<mx:HBox verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12" >
+				<mx:HBox width="100%" height="30" paddingLeft="20"  horizontalGap="0" backgroundColor="#C5E497"  verticalAlign="middle">
+					<mx:Label text="|"/>
+					<mx:LinkButton  label="新增" icon="@Embed(source='../WebContent/resources/common/tools/button_add_icon.png')" click="returnArea.height=30;this.currentState='add';" />
+					<mx:Label text="|"/>
+				</mx:HBox>
+			</mx:HBox>
 			<mx:VBox width="100%" height="25%"  verticalGap="10" verticalAlign="middle" horizontalAlign="center" >
 				<mx:VBox width="100%" height="100%"   horizontalGap="10" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="0" paddingBottom="0"   paddingLeft="10" paddingRight="10">
 					<mx:FormHeading label="条件查询">
@@ -175,23 +376,13 @@
 										</mx:Component>
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="发布时间" width="100" dataField="postTime" labelFunction="DateUtil.datagridFormatDate">
+								<mx:DataGridColumn textAlign="center" headerText="保存时间" width="100" dataField="lastEditTime" labelFunction="DateUtil.datagridFormatDate">
 								</mx:DataGridColumn>
 								<mx:DataGridColumn textAlign="center" headerText="发布部门"  width="100" >
 									<mx:itemRenderer>
 										<mx:Component>
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" >
 												<mx1:Text text="{this.parentApplication.getDepartmentNameById(data.postDepartmentId)}" width="100">
-												</mx1:Text>
-											</mx:HBox>
-										</mx:Component>
-									</mx:itemRenderer>
-								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="发布人" width="100" >
-									<mx:itemRenderer>
-										<mx:Component>
-											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" >
-												<mx1:Text text="{this.parentApplication.getTeacherNameByAccountId(data.posterId)}" width="100">
 												</mx1:Text>
 											</mx:HBox>
 										</mx:Component>
@@ -209,20 +400,17 @@
 												</mx:LinkButton>
 												<mx:Script>
 													<![CDATA[
-													
 													//提示信息
 													import cn.org.rapid_framework.flex_security.SecurityControler;
-													
 													import mx.controls.Alert;
 													import mx.core.UIComponent;
 													private function checkAuth(data:Object):Boolean{
-													return true;
+														return true;
 													}
 													]]>
 												</mx:Script>
 											</mx:HBox>
 										</mx:Component>
-										
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
 								
@@ -233,9 +421,7 @@
 												<mx:LinkButton  label="[详细]"  click="{this.outerDocument.detailNotice(data.id);}">											
 												</mx:LinkButton>
 											</mx:HBox>
-											
 										</mx:Component>
-										
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
 							</component:mygridcolumns>
@@ -245,7 +431,6 @@
 					<mx:HBox label="已发布" width="100%" height="100%">
 						<component:WlzxPageDataGrid width="100%" height="100%"   borderVisible="false"  autoLayout="true"  borderAlpha="0.2" verticalAlign="middle"   id="noticeTable" pagecount="10"  >				
 							<component:mygridcolumns>
-								
 								<mx:DataGridColumn textAlign="center" headerText="类型"  width="60">
 									<mx:itemRenderer>
 										<mx:Component>
@@ -260,7 +445,6 @@
 										<mx:Component>
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" >
 												<mx1:Text text="{data.title}" width="100">
-													
 												</mx1:Text>
 											</mx:HBox>
 										</mx:Component>
@@ -328,6 +512,57 @@
 			</mx:VBox>
 		</mx:VBox>
 		
-		
+		<mx:VBox width="100%" height="100%" id="addPanel">
+			<mx:HBox verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12" id="returnArea">
+				<mx:HBox width="100%" height="30" paddingLeft="20"  horizontalGap="0" backgroundColor="#C5E497"  verticalAlign="middle">
+					<mx:Label text="|"/>
+					<mx:LinkButton  label="返回" icon="@Embed(source='../WebContent/resources/common/tools/button_back_icon.png')" click="this.currentState='list';" />
+					<mx:Label text="|"/>
+				</mx:HBox>
+				
+			</mx:HBox>
+			<mx:VBox width="100%" height="50%"   horizontalGap="10" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
+				<mx:VBox  width="100%" height="100%">
+					<mx:Form width="100%" height="100%">
+						<mx:FormItem label="标题" width="100%">
+							<mx:TextInput width="100%" id="title"/>
+						</mx:FormItem>
+						<mx:FormItem label="公告类型" width="100%">
+							<mx:HBox width="100%">
+								<mx:ComboBox id="noticeType" dataProvider="{noticeTypeList}" selectedIndex="1" labelField="label"/>
+								<mx:FormItem label="公告范围">
+									<mx:ComboBox id="noticeScope" dataProvider="{noticeScopeList}" selectedIndex="1" labelField="label"/>
+								</mx:FormItem>
+								<mx:FormItem label="发布部门">
+									<mx:ComboBox id="postdepartment" dataProvider="{departmentList}" labelField="label"/>
+								</mx:FormItem>
+								<mx:FormItem>
+									<mx:CheckBox label="紧急" id="emergence"/>
+								</mx:FormItem>
+							</mx:HBox>
+						</mx:FormItem>
+						
+						<mx:FormItem label="内容" width="100%" height="100%">
+							<mx:RichTextEditor id="rte" title="Halo RichTextEditor"   headerHeight="0" width="100%" height="100%" dropShadowVisible="false" text="" >
+							</mx:RichTextEditor>
+						</mx:FormItem>
+						<mx:HBox width="100%" height="20">
+							<mx:LinkButton  label="附件区" icon="@Embed(source='../WebContent/resources/common/tools/button_attachment_icon.png')" click="showHide()"/>
+						</mx:HBox>
+						<mx:FormItem  width="100%"  height="0" id="att_area" paddingLeft="10" paddingRight="10">
+							<mx:VBox width="100%">
+								<mutiUpload:upload width="100%" id="upload">
+								</mutiUpload:upload>
+							</mx:VBox>
+						</mx:FormItem>
+					</mx:Form>
+				</mx:VBox>
+				<mx:HBox horizontalAlign="right" width="100%">
+					<mx:Label id="addUpdateFlag" visible="false" text="add"/>
+					<mx:Button label="保存草稿" id="draftSaveButton" click="save_clickHandler(event)"/>
+					<mx:Button label="发布" id="postButton" click="add_clickHandler(event)"/>
+				</mx:HBox>
+			</mx:VBox>
+		</mx:VBox>
 	</mx:Panel>
 </mx:Module>

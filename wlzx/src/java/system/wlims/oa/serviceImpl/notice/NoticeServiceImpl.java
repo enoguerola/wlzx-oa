@@ -46,22 +46,16 @@ public class NoticeServiceImpl implements NoticeService {
 	}
 
 	@Override
-	public boolean deleteTakeLeaveById(String id) {
+	public boolean remove(String id) {
 		// TODO Auto-generated method stub
 		try {
-			noticeDAO.remove(id, NoticeModel.class);
+			noticeDAO.remove(loadNoticeInfoById(id));
 		} catch (DAOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
 		}
 		return true;
-	}
-
-	@Override
-	public NoticeModel getDetailInfoById(String id) {
-		// TODO Auto-generated method stub
-		return noticeDAO.get(id);
 	}
 
 	@Override
@@ -123,7 +117,7 @@ public class NoticeServiceImpl implements NoticeService {
 	@Override
 	public NoticeModel loadNoticeInfoById(String id) {
 		// TODO Auto-generated method stub
-		return null;
+		return noticeDAO.get(id);
 	}
 
 	@Override
