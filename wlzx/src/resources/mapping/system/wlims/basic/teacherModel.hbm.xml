@@ -99,11 +99,11 @@
 			<column name="teacher_modified_date" />
 		</property>
 		
-		<set name="relations" lazy="true"  table="basic_teacher_social_relation" cascade="delete">
+		<set name="relations" lazy="true"  table="basic_teacher_social_relation" cascade="delete" inverse="true">
 			<key column="teacher_id"  />
 			<one-to-many class="system.wlims.basic.entity.teacher.TeacherRelation" /> 
 		</set>	
-		<set name="experiences" lazy="true"  table="basic_teacher_work_experience" cascade="delete">
+		<set name="experiences" lazy="true"  table="basic_teacher_work_experience" cascade="delete" inverse="true">
 			<key column="teacher_id"  />
 			<one-to-many class="system.wlims.basic.entity.teacher.TeacherExperience" />  
 		</set>	

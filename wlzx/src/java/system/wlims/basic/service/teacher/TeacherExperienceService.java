@@ -35,7 +35,7 @@ public class TeacherExperienceService {
 		
 		criteria.createCriteria("teacher").add(Restrictions.eq("id", id));
 		
-		List<TeacherExperience> list = teacherExperienceDAO.getListByCriteria(criteria, page, pageCount);
+		List<TeacherExperience> list = teacherExperienceDAO.getListByCriteria(criteria, (page - 1)*pageCount, pageCount);
 		for(TeacherExperience model:list)
 			model.setTeacher(null);
 		return list;
