@@ -51,13 +51,13 @@
 			
 			public var scheduleType:ArrayCollection = new ArrayCollection(
 				[ {label:"全部", data:null},  
-					{label:"私人日程", data:1},
-					{label:"工作日程", data:2}]
+					{label:"私人日程", data:0},
+					{label:"工作日程", data:1}]
 			); 
 			public var scheduleState:ArrayCollection = new ArrayCollection( 
 				[ {label:"全部", data:null},  
-					{label:"进行中", data:1},
-					{label:"已完结", data:2}]); 
+					{label:"进行中", data:0},
+					{label:"已完结", data:1}]); 
 			
 			protected function getSchedulesByConditions_resultHandler(event:ResultEvent):void
 			{
@@ -129,6 +129,7 @@
 					flexCalendar.visibleRange = new DateRange(DateUtils.startOfDay(fromDateChooser.selectedDate),
 						DateUtils.endOfDay(toDateChooser.selectedDate));
 				}
+				search();
 			}
 			
 //			private function calendarMouseClickHandler(event:CalendarMouseEvent):void {
@@ -219,17 +220,22 @@
 					model.title=pop.item.summary;
 					model.content=pop.item.description;
 					model.type=pop.item.type;
-					model.shares=pop.item.schoolShare+";"+pop.item.departmentShare;
+					model.departmentShare=int(pop.item.departmentShare);
+					model.schoolShare=int(pop.item.schoolShare);
 					model.emergence=pop.item.emergence;
-					model.finishStatus=1;
+					model.finishStatus=0;
 					model.posterId=this.parentApplication.currentUser.id;
+//					Alert.show(pop.item.endDate+"");
+//					Alert.show(pop.item.endDateSpecified+"");
+					if(pop.item.endDateSpecified)
 					model.repeatEndTime=CommonUtils.formatDate(pop.item.endDate);
 					model.repeatStatus=int(pop.item.endDateSpecified);
 					model.repeatInterval=pop.item.interval;
 					model.repeatOnDays=int(pop.item.MO)+";"+int(pop.item.TU)+";"+int(pop.item.WE)+";"+int(pop.item.TH)+";"+int(pop.item.FR)+";"+int(pop.item.SA)+";"+int(pop.item.SU);
 					model.repeatType=pop.item.repeatRuleId;
-					model.submitStatus=1;
+					model.submitStatus=0;
 					scheduleServiceRO.addSchedule(model);
+					PopUpManager.removePopUp(this);
 				};
 				pop.deleteCallback = function():void{
 					PopUpManager.removePopUp(this);
@@ -245,7 +251,7 @@
 				var scheduleEndDate:String=toDateChooser.text;
 				var scheduleScope:String=scope.selectedItem.data;
 				var scheduleState:String=state.selectedItem.data;
-				scheduleServiceRO.getSchedulesByConditions(this.parentApplication.currentUser.id,scheduleScope,scheduleState,null,scheduleBeginDate,scheduleEndDate);
+				scheduleServiceRO.getSchedulesByConditions(this.parentApplication.currentUser.id,scheduleScope,scheduleState,null,null,null,null,scheduleBeginDate,scheduleEndDate);
 			}
 			private var window:WlzxLockWin=null;
 			private function lockWin():void{
@@ -300,13 +306,13 @@
 					<mx:Label text="日程类型：" width="70" >
 						
 					</mx:Label>
-					<mx:ComboBox id="scope" width="130" dataProvider="{scheduleType}" selectedIndex="0">
+					<mx:ComboBox id="scope" width="130" dataProvider="{scheduleType}" selectedIndex="0" change="search()">
 						
 					</mx:ComboBox>
 					<mx:Label text="日程状态：" width="70">
 						
 					</mx:Label>
-					<mx:ComboBox width="100"   id="state" dataProvider="{scheduleState}"  selectedIndex="0">
+					<mx:ComboBox width="100"   id="state" dataProvider="{scheduleState}"  selectedIndex="0" change="search()">
 						
 					</mx:ComboBox>
 					<mx:CheckBox id="entireCalendarReadonly" label="只读" selected="true" width="80" />									
@@ -322,7 +328,7 @@
 							<component:mygridcolumns>
 								
 								
-								<mx:DataGridColumn textAlign="center" headerText="日程类型"  width="80">
+								<mx:DataGridColumn textAlign="center" headerText="日程类型"  width="60">
 									<mx:itemRenderer>
 										<mx:Component>
 											<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
@@ -337,7 +343,7 @@
 														import mx.core.UIComponent;
 														private function getType(type:int):String{
 															
-															if(type==1){
+															if(type==0){
 																return "私人日程";
 															}else
 																return "工作日程";
@@ -351,11 +357,11 @@
 										
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="共享日程" width="80">
+								<mx:DataGridColumn textAlign="center" headerText="共享日程" width="100">
 									<mx:itemRenderer>
 										<mx:Component>
 											<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
-												<mx:Label text="{getShares(data.shares)}"/>
+												<mx:Label text="{getShares(data)}"/>
 												<mx:Script>
 													<![CDATA[
 														
@@ -364,19 +370,16 @@
 														
 														import mx.controls.Alert;
 														import mx.core.UIComponent;
-														private function getShares(shares:String):String{
+														private function getShares(data:Object):String{
 															
-															if(shares!=null){
+															if(data!=null){
 																var result:String="";
-																var share_attr:Array=shares.split(";");
-																for(var i:int = 0; i < share_attr.length; i++) {
-																	var temp:String=share_attr[i];
-																	
-																	if(temp=="1")
+																
+																	if(data.schoolShare=="1")
 																		result+="学校共享"+"  ";
-																	else if(temp=="2")
+																	if(data.departmentShare=="1")
 																		result+="部门共享"+"  ";
-																}
+																	if(result=="")return "不共享";
 																return result;
 															}else{
 																return null;
@@ -411,14 +414,40 @@
 								<mx:DataGridColumn textAlign="center" headerText="主题" width="200">
 									<mx:itemRenderer>
 										<mx:Component>
-											<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
-												<mx:Label text="{data.title}"/>
-											</mx:VBox>																			
+											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+												<mx:HBox  width="40" horizontalAlign="center">
+													<mx:Image source="@Embed(source='../WebContent/resources/common/ui/circle.png')"  visible="{checkCircle(data)}"/>
+													<mx:Script>
+														<![CDATA[
+															
+															//提示信息
+															import cn.org.rapid_framework.flex_security.SecurityControler;
+															
+															import mx.controls.Alert;
+															import mx.core.UIComponent;
+															private function checkCircle(data:Object):Boolean{
+																
+																if(data!=null){	
+																	if(data.repeatStatus==1){
+																		return true;
+																	}else
+																		return false;
+																	
+																}else{
+																	return false;
+																}
+															}
+														]]>
+													</mx:Script>
+												</mx:HBox>
+												<mx:Label text="{data.title}" width="80%"/>
+												
+											</mx:HBox>																			
 										</mx:Component>						
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
 								
-								<mx:DataGridColumn textAlign="center" headerText="优先级" width="80">
+								<mx:DataGridColumn textAlign="center" headerText="优先级" width="60">
 									<mx:itemRenderer>
 										<mx:Component>
 											<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
@@ -433,11 +462,11 @@
 														import mx.core.UIComponent;
 														private function getEmergence(emergence:int):String{
 															
-															if(emergence==1){
+															if(emergence==0){
 																return "重要紧急";
-															}else if(emergence==2){
+															}else if(emergence==1){
 																return "重要非紧急";
-															}else if(emergence==3){
+															}else if(emergence==2){
 																return "紧急非重要";
 															}else return null;
 															
@@ -449,7 +478,7 @@
 										
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="操作" width="100">
+								<mx:DataGridColumn textAlign="center" headerText="操作" width="150">
 									<mx:itemRenderer>
 										<mx:Component>
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0">
@@ -470,7 +499,7 @@
 														private function checkAuth(data:Object):Boolean{
 															
 															if(data!=null){	
-																if(data.finishStatus==1){
+																if(data.finishStatus==0){
 																	return true;
 																}else
 																	return false;

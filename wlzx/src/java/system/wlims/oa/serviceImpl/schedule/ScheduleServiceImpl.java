@@ -37,11 +37,11 @@ public class ScheduleServiceImpl implements ScheduleService {
 
 
 	@Override
-	public List<ScheduleModel> getSchedulesByConditions(String userId, String type,
-			String shares, String emergence, String deparmentId, String title,
+	public List<ScheduleModel> getSchedulesByConditions(String userId, String type,String state,
+			String departmentShare,String schoolShare, String emergence,  String title,
 			String beginDate, String endDate) {
 		// TODO Auto-generated method stub
-		return scheduleDAO.getSchedulesByConditions(userId, type, shares, emergence,  title, beginDate, endDate);
+		return scheduleDAO.getSchedulesByConditions(userId, type, departmentShare,schoolShare,state, emergence,  title, beginDate, endDate);
 	}
 
 	
@@ -54,7 +54,8 @@ public class ScheduleServiceImpl implements ScheduleService {
 		newSchedule.setEndTime(schedule.getEndTime());
 		newSchedule.setTitle(schedule.getTitle());
 		newSchedule.setContent(schedule.getContent());
-		newSchedule.setShares(schedule.getShares());
+		newSchedule.setDepartmentShare(schedule.getDepartmentShare());
+		newSchedule.setSchoolShare(schedule.getSchoolShare());
 		newSchedule.setType(schedule.getType());
 		newSchedule.setEmergence(schedule.getEmergence());
 		newSchedule.setRepeatStatus(schedule.getRepeatStatus());
@@ -83,6 +84,12 @@ public class ScheduleServiceImpl implements ScheduleService {
 
 	public void setScheduleDAO(ScheduleDAO scheduleDAO) {
 		this.scheduleDAO = scheduleDAO;
+	}
+	public UserDAO getUserDAO() {
+		return userDAO;
+	}
+	public void setUserDAO(UserDAO userDAO) {
+		this.userDAO = userDAO;
 	}
 
 }

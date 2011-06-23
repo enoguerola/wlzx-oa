@@ -30,8 +30,11 @@
         <property name="type" type="int">
             <column name="type" />
         </property>
-         <property name="shares" type="int">
-            <column name="share" />
+         <property name="departmentShare" type="int">
+            <column name="department_share" />
+        </property>
+         <property name="schoolShare" type="int">
+            <column name="school_share" />
         </property>
          <property name="emergence" type="int">
             <column name="emergence" />

@@ -21,7 +21,6 @@
 	</bean>
 	
 	<bean id="scheduleServiceDest" class="system.wlims.oa.serviceImpl.schedule.ScheduleServiceImpl">
-		<flex:remoting-destination />
 		<property name="scheduleDAO" ref="scheduleDAO" />
 		<property name="userDAO" ref="userDAO" />
 	</bean>
