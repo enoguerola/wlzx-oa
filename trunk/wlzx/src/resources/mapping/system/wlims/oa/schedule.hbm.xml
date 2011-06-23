@@ -3,7 +3,7 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping>
-<!--  <class name="system.wlims.oa.entity.schedule.ScheduleModel" table="wlzx_oa_schedule">
+ <class name="system.wlims.oa.entity.schedule.ScheduleModel" table="wlzx_oa_schedule">
         <id name="id">
             <column name="id" />
             <generator class="native" />
@@ -60,5 +60,5 @@
          <property name="repeatEndTime" type="string">
             <column name="repeat_end_time" />
         </property>
-    </class>-->
+    </class>
 </hibernate-mapping>

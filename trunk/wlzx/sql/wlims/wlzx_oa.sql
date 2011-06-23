@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2011 年 06 月 19 日 22:20
+-- 生成日期: 2011 年 06 月 23 日 09:18
 -- 服务器版本: 5.0.91
 -- PHP 版本: 5.2.13
 
@@ -165,7 +165,6 @@ INSERT INTO `wlzx_oa_notice` (`id`, `scope`, `type`, `post_department_id`, `post
 (6, 1, '重要通知', 1, 2, 0, 'asas；；；', '部门公告', '2011-06-22 21:27:22', '2011-06-22 21:27:22', 2, 1),
 (7, 0, '重要通知', 3, NULL, 0, '草稿箱', '萨斯', NULL, '2011-06-22 22:45:40', 2, 0);
 
-
 -- --------------------------------------------------------
 
 --
@@ -228,12 +227,17 @@ CREATE TABLE IF NOT EXISTS `wlzx_oa_schedule` (
   `begin_time` varchar(300) NOT NULL,
   `end_time` varchar(300) NOT NULL,
   `poster_id` bigint(20) NOT NULL,
-  `type` int(11) NOT NULL,
-  `share` int(11) NOT NULL,
+  `type` smallint(6) NOT NULL,
+  `shares` varchar(10) NOT NULL,
   `department_id` bigint(20) default NULL,
-  `emergence` int(11) NOT NULL,
-  `finish_status` int(11) default NULL,
-  `submit_status` int(11) default NULL,
+  `emergence` smallint(6) NOT NULL,
+  `finish_status` smallint(6) default NULL,
+  `submit_status` smallint(6) default NULL,
+  `repeat_status` smallint(6) default NULL,
+  `repeat_type` smallint(6) default NULL,
+  `repeat_interval` smallint(6) default NULL,
+  `repeat_on_days` varchar(200) default NULL,
+  `repeat_end_time` varchar(200) default NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
