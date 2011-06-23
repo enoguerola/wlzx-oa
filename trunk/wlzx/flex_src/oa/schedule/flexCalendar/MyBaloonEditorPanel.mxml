@@ -47,13 +47,13 @@
 
 		[Bindable]
 		public var types:ArrayCollection=new ArrayCollection(
-			[ {label:"私人日程", data:1},
-				{label:"工作日程", data:2}]);
+			[ {label:"私人日程", data:0},
+				{label:"工作日程", data:1}]);
 
 		public var emergences:ArrayCollection=new ArrayCollection(
-			[ {label:"重要紧急", data:1},
-				{label:"重要非紧急", data:2},
-				{label:"紧急非重要", data:3}]);
+			[ {label:"重要紧急", data:0},
+				{label:"重要非紧急", data:1},
+				{label:"紧急非重要", data:2}]);
 		protected var _tip:Canvas;
 
 		private function get neededHeight():Number
@@ -199,8 +199,8 @@
 		</mx:HBox>
 		<mx:HBox horizontalGap="10" width="100%">
 			<mx:Label text="{resourceManager.getString('FlexCalendar','editor.share')}" width="{descWidth}"/>
-			<mx:CheckBox id="schoolShare" label="{resourceManager.getString('FlexCalendar','editor.schoolShare')}" change="item.schoolShare = schoolShare.selected"/>
-			<mx:CheckBox id="departmentShare" label="{resourceManager.getString('FlexCalendar','editor.departmentShare')}" change="item.departmentShare = departmentShare.selected"/>
+			<mx:CheckBox id="schoolShare" label="{resourceManager.getString('FlexCalendar','editor.schoolShare')}" change="item.schoolShare = schoolShare.selected" enabled="{item.type==1}"/>
+			<mx:CheckBox id="departmentShare" label="{resourceManager.getString('FlexCalendar','editor.departmentShare')}" change="item.departmentShare = departmentShare.selected" enabled="{item.type==1}"/>
 		</mx:HBox>
 	
 		<mx:HBox horizontalGap="10" width="100%">
@@ -260,7 +260,7 @@
 				<mx:Label text="{resourceManager.getString('FlexCalendar','editor.endsOn')}" width="{descWidth}"/>
 				<mx:CheckBox id="endDateSpecified" label="{resourceManager.getString('FlexCalendar','editor.never')}" selected="{!item.endDateSpecified}"
 							 change="item.endDateSpecified = !endDateSpecified.selected"/>
-				<mx:DateField id="endsOn" selectedDate="{item.endDate}" enabled="{item.endDateSpecified}"
+				<editor:DateTimeChooser id="endsOn" selectedDate="{item.endDate}"  visible="{item.endDateSpecified}"
 							  change="item.endDate = endsOn.selectedDate"/>
 			</mx:HBox>
 

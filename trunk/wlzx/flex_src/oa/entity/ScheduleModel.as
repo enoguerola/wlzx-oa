@@ -13,7 +13,8 @@ package oa.entity
 		public var posterId:String;
 		public var departmentId:String;
 		public var type:int;
-		public var shares:String;
+		public var schoolShare:int;
+		public var departmentShare:int;
 		public var emergence:int;
 		public var finishStatus:int;
 		public var submitStatus:int;

@@ -19,7 +19,8 @@ public class ScheduleModel extends BaseModel {
 	private String endTime;
 	private String posterId;
 	private Integer type;
-	private String shares;
+	private Integer departmentShare;
+	private Integer schoolShare;
 	private Integer emergence;
 	private Integer finishStatus;
 	private Integer submitStatus;
@@ -31,8 +32,8 @@ public class ScheduleModel extends BaseModel {
 	private String repeatEndTime;
 
 	public static enum Type{
-		Personal(1, "私人日程"),
-		Working(2, "工作日程");
+		Personal(0, "私人日程"),
+		Working(1, "工作日程");
 		private Integer status;
 		private String name;
 		
@@ -59,7 +60,7 @@ public class ScheduleModel extends BaseModel {
 	}
 	public static enum Share{
 		School(1, "学校共享"),
-		Department(2, "部门共享");
+		Department(1, "部门共享");
 		private Integer status;
 		private String name;
 		
@@ -85,9 +86,9 @@ public class ScheduleModel extends BaseModel {
 		}
 	}
 	public static enum Emergence{
-		ImportantEmergence(1, "重要紧急"),
-		ImportantNotEmergence(2, "重要非紧急"),
-		EmergenceNotImportant(3, "紧急非重要");
+		ImportantEmergence(0, "重要紧急"),
+		ImportantNotEmergence(1, "重要非紧急"),
+		EmergenceNotImportant(2, "紧急非重要");
 		private Integer status;
 		private String name;
 		
@@ -113,8 +114,8 @@ public class ScheduleModel extends BaseModel {
 		}
 	}
 	public static enum FinishStatus{
-		OnGoing(1, "进行中"),
-		Finished(2, "已完结");
+		OnGoing(0, "进行中"),
+		Finished(1, "已完结");
 		private Integer status;
 		private String name;
 		
@@ -140,8 +141,8 @@ public class ScheduleModel extends BaseModel {
 		}
 	}
 	public static enum SubmitStatus{
-		NotSubmit(1, "未提交"),
-		AlreadySubmit(2, "已提交");
+		NotSubmit(0, "未提交"),
+		AlreadySubmit(1, "已提交");
 		private Integer status;
 		private String name;
 		
@@ -168,7 +169,7 @@ public class ScheduleModel extends BaseModel {
 	}
 	public static enum RepeatStatus{
 		Repeat(1, "循环"),
-		NotRepeat(2, "不循环");
+		NotRepeat(0, "不循环");
 		private Integer status;
 		private String name;
 		
@@ -316,10 +317,17 @@ public class ScheduleModel extends BaseModel {
 	public void setRepeatEndTime(String repeatEndTime) {
 		this.repeatEndTime = repeatEndTime;
 	}
-	public String getShares() {
-		return shares;
+
+	public Integer getDepartmentShare() {
+		return departmentShare;
 	}
-	public void setShares(String shares) {
-		this.shares = shares;
+	public void setDepartmentShare(Integer departmentShare) {
+		this.departmentShare = departmentShare;
+	}
+	public Integer getSchoolShare() {
+		return schoolShare;
+	}
+	public void setSchoolShare(Integer schoolShare) {
+		this.schoolShare = schoolShare;
 	}
 }
