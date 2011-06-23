@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2011 年 06 月 16 日 11:00
+-- 生成日期: 2011 年 06 月 23 日 15:36
 -- 服务器版本: 5.0.91
 -- PHP 版本: 5.2.13
 
@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS `basic_teacher` (
   `teacher_marrage` smallint(2) NOT NULL COMMENT '婚姻',
   `teacher_nation` varchar(10) NOT NULL COMMENT '民族',
   `teacher_politics_status` smallint(2) NOT NULL COMMENT '政治面貌',
-  `teacher_identify` char(14) NOT NULL COMMENT '身份证',
+  `teacher_identify` char(20) NOT NULL COMMENT '身份证',
   `teacher_native_place` varchar(50) NOT NULL COMMENT '籍贯',
   `teacher_email` varchar(50) default NULL COMMENT '邮箱',
   `teacher_home_phone` varchar(20) NOT NULL COMMENT '家庭电话',
@@ -60,14 +60,15 @@ CREATE TABLE IF NOT EXISTS `basic_teacher` (
   PRIMARY KEY  (`teacher_id`),
   KEY `teacher_no` (`teacher_no`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='教师记录' AUTO_INCREMENT=6 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='教师记录' AUTO_INCREMENT=15 ;
 
 --
 -- 转存表中的数据 `basic_teacher`
 --
 
 INSERT INTO `basic_teacher` (`teacher_id`, `user_id`, `teacher_cname`, `teacher_sex`, `teacher_birthday`, `teacher_marrage`, `teacher_nation`, `teacher_politics_status`, `teacher_identify`, `teacher_native_place`, `teacher_email`, `teacher_home_phone`, `teacher_address`, `teacher_mobile_phone`, `teacher_no`, `teacher_education`, `teacher_profession`, `teacher_graduate_school`, `teacher_professional_title`, `teacher_skill_level`, `teacher_skill_level_date`, `teacher_department`, `teacher_position`, `teacher_office_phone`, `teacher_contact_phone`, `teacher_work_date`, `teacher_attend_date`, `teacher_status`, `teacher_photo_src`, `teacher_create_date`, `teacher_modified_date`) VALUES
-(3, 2, 'yufeng', 0, '2011-05-09', 0, 'ss', 0, '', 'sssss', '', '', NULL, '', '12313', '0', '', '', '', '', NULL, '0', '1212', '', '', NULL, NULL, 3, NULL, '2011-05-31', '2011-05-31');
+(3, 2, 'yufeng', 0, '2011-05-09', 0, 'ss', 0, '', 'sssss', '', '', NULL, '', '12313', '0', '', '', '', '', NULL, '6', '6', '', '', '2010-06-27', '2009-06-15', 1, 'resources/oa/layout/default_head.jpg', '2011-05-31', '2011-06-23'),
+(14, 21, 'ljx', 0, '2011-06-12', 0, 'sa', 0, '333333221124432222', '111', '', '111333', NULL, '22222', '2222211', '0', '', '', '', '', NULL, '3', '3', '', '', NULL, NULL, 0, 'uploads/basic/teacherProfile/default_head.jpg', '2011-06-23', '2011-06-23');
 
 -- --------------------------------------------------------
 
@@ -77,7 +78,7 @@ INSERT INTO `basic_teacher` (`teacher_id`, `user_id`, `teacher_cname`, `teacher_
 
 CREATE TABLE IF NOT EXISTS `basic_teacher_social_relation` (
   `relation_id` int(20) NOT NULL auto_increment COMMENT '系统自增编号',
-  `teacher_id` bigint(20) NOT NULL COMMENT '教师外键',
+  `teacher_id` bigint(20) default NULL COMMENT '教师外键',
   `relation_name` varchar(20) NOT NULL COMMENT '姓名',
   `relation_with` varchar(20) NOT NULL COMMENT '与本人关系',
   `relation_company` varchar(50) NOT NULL COMMENT '所在工作单位',
@@ -85,12 +86,14 @@ CREATE TABLE IF NOT EXISTS `basic_teacher_social_relation` (
   PRIMARY KEY  (`relation_id`),
   KEY `relation_id` (`relation_id`),
   KEY `teacher_id` (`teacher_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='社会关系' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='社会关系' AUTO_INCREMENT=10 ;
 
 --
 -- 转存表中的数据 `basic_teacher_social_relation`
 --
 
+INSERT INTO `basic_teacher_social_relation` (`relation_id`, `teacher_id`, `relation_name`, `relation_with`, `relation_company`, `relation_phone`) VALUES
+(2, 3, 'aaaa', 'ggg', '3343', '454545');
 
 -- --------------------------------------------------------
 
@@ -100,7 +103,7 @@ CREATE TABLE IF NOT EXISTS `basic_teacher_social_relation` (
 
 CREATE TABLE IF NOT EXISTS `basic_teacher_work_experience` (
   `experience_id` int(20) NOT NULL auto_increment COMMENT '系统自增编号',
-  `teacher_id` bigint(20) NOT NULL COMMENT '教师外键',
+  `teacher_id` bigint(20) default NULL COMMENT '教师外键',
   `experience_start_date` date NOT NULL COMMENT '开始时间',
   `experience_end_date` date NOT NULL COMMENT '结束时间',
   `experience_company` varchar(50) NOT NULL COMMENT '工作单位',
@@ -108,7 +111,7 @@ CREATE TABLE IF NOT EXISTS `basic_teacher_work_experience` (
   PRIMARY KEY  (`experience_id`),
   KEY `experience_id` (`experience_id`),
   KEY `teacher_id` (`teacher_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='教师工作经历' AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='教师工作经历' AUTO_INCREMENT=5 ;
 
 --
 -- 转存表中的数据 `basic_teacher_work_experience`

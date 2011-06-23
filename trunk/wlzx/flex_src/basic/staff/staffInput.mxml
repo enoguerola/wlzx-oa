@@ -24,9 +24,11 @@
 			import basic.entity.*;
 			import basic.service.TeacherRemoteService;
 			import basic.utils.DateUtil;
+			import system.utils.ComboxUtils;
 			
 			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
+			import mx.events.CalendarLayoutChangeEvent;
 			import mx.events.CloseEvent;
 			import mx.events.FlexEvent;
 			import mx.events.ValidationResultEvent;
@@ -38,6 +40,7 @@
 			import system.entity.*;
 			import system.event.UploadEvent;
 			import system.utils.CommonUtils;
+			
 			private var validatorArr:Array;
 			private var createDate:Date;
 			private var modifiedDate:Date;
@@ -48,39 +51,41 @@
 			
 			public var sexArr:ArrayCollection = new ArrayCollection(
 				[    
-					{value:"0", name:"男"}, 
-					{value:"1", name:"女"}
+					{data:"0", label:"男"}, 
+					{data:"1", label:"女"}
 				]                
 			);
 			public var marriageArr:ArrayCollection = new ArrayCollection(
 				[    
-					{value:"0", name:"未婚"}, 
-					{value:"1", name:"已婚"}
+					{data:"0", label:"未婚"}, 
+					{data:"1", label:"已婚"}
 				]                
 			);
 			
 			public var politicArr:ArrayCollection = new ArrayCollection(
 				[    
-					{value:"0", name:"党员"}, 
-					{value:"1", name:"团员"},
-					{value:"2", name:"其他"}
+					{data:"0", label:"党员"}, 
+					{data:"1", label:"团员"},
+					{data:"2", label:"其他"}
 				]                
 			);
 			
 			public var educationArr:ArrayCollection = new ArrayCollection(
 				[    
-					{value:"0", name:"本科"}, 
-					{value:"1", name:"高中"},
-					{value:"2", name:"大专"}
+					{data:"0", label:"本科"}, 
+					{data:"1", label:"高中"},
+					{data:"2", label:"大专"},
+					{data:"3", label:"硕士"},
+					{data:"4", label:"博士"}
 				]                
 			);
 			
 			public var statusArr:ArrayCollection = new ArrayCollection(
 				[    
-					{value:"0", name:"正式"}, 
-					{value:"1", name:"适用"},
-					{value:"2", name:"离职"},
-					{value:"3", name:"离休"}
+					{data:"0", label:"正式"}, 
+					{data:"1", label:"适用"},
+					{data:"2", label:"离职"},
+					{data:"3", label:"离休"}
 				]                
 			);
 
@@ -102,9 +107,9 @@
 				validatorArr.push(name_stringValidator);
 				validatorArr.push(birthday_dateValidator);
 				validatorArr.push(nation_stringValidator);
-				//validatorArr.push(idCode_stringValidator);
+				validatorArr.push(idCode_stringValidator);
 				validatorArr.push(nativePlace_stringValidator);
-				//validatorArr.push(department_stringValidator);
+				validatorArr.push(teacherno_stringValidator);
 				validatorArr.push(position_stringValidator);
 				//validatorArr.push(cellphone_phoneNumberValidator);
 				//validatorArr.push(homephone_phoneNumberValidator);
@@ -136,7 +141,7 @@
 			private function initStaffWin():void{
 				var parms:String=((Object)(this.owner)).id;
 				teacher = new TeacherModel();	
-				if(parms!=null&&parms!=""){		
+				if(parms != null && parms!="" && parms!= "null"){		
 					teacherId = parms ;//弹出窗口时设定的中转参数
 					teacherServiceRO.get(teacherId);
 					getDepartment();
@@ -163,7 +168,7 @@
 			
 			protected function teacherGetResult_resultHandler(event:ResultEvent):void
 			{
-				var teacher:TeacherModel = event.result as TeacherModel;
+				teacher = event.result as TeacherModel;
 				style = teacher.style;
 				createDate = teacher.creationDate;
 				modifiedDate = teacher.modifiedDate;
@@ -175,29 +180,31 @@
 				teacherName.text = teacher.name;
 				mail.text = teacher.teacherMail;
 				teacherno.text = teacher.teacherNo;
-				sex.selectedItem.value = teacher.sex;
+				sex.selectedIndex = ComboxUtils.findIndex(sexArr, teacher.sex + "");
 				birthday.text = DateUtil.formatDate(teacher.birthday as Date, "YYYY-MM-DD");
-				marriage.selectedItem.value = teacher.teacherMarried;
+				marriage..selectedIndex = ComboxUtils.findIndex(politicArr, teacher.teacherMarried + "") ;
 				nation.text = teacher.nation;
-				politicStatus.selectedItem.value = teacher.politicsStatus;
+				politicStatus.selectedIndex = ComboxUtils.findIndex(politicArr, teacher.politicsStatus + "");
 				idCode.text = teacher.teacherID;
 				nativePlace.text = teacher.teacherNativePlace;
 				homePhone.text = teacher.homePhone;
 				cellPhone.text = teacher.teacherMobilePhone;
-				education.selectedItem.value = teacher.teacherEducation;
+				education..selectedIndex = ComboxUtils.findIndex(politicArr, teacher.teacherEducation) ;
 				profession.text = teacher.teacherProfession;
 				school.text = teacher.teacherGraduateSchool;
 				professionalTitle.text = teacher.teacherProfessionTitle;
 				skillLevel.text = teacher.teacherSkillLevel;
 				skillLevelDate.text = DateUtil.formatDate(teacher.teacherSkillLevelDate as Date, "YYYY-MM-DD");
-				department.selectedItem.value = teacher.teacherDepartment;
-				position.selectedItem.value = teacher.teacherPosition;
+				department.selectedIndex = ComboxUtils.findIndex(departmentList, teacher.teacherDepartment) ;
+				position.selectedIndex = ComboxUtils.findIndex(roleList,  teacher.teacherPosition);
 				contactPhone.text = teacher.teacherContactPhone;
 				officePhone.text = teacher.teacherOfficePhone;
 				workDate.text = DateUtil.formatDate(teacher.teacherWorkDate as Date, "YYYY-MM-DD");
+				attendDate.text = DateUtil.formatDate(teacher.teacherAttendDate as Date, "YYYY-MM-DD");
 				teacherAddress.text = teacher.teacherAddress;
 				
-				status.selectedItem.value = teacher.teacherStatus;
+				status.selectedIndex = ComboxUtils.findIndex(statusArr, teacher.teacherStatus + "") ;
+				showPeriod(teacher.teacherWorkDate, teacher.teacherAttendDate);
 			}
 			
 			protected function validateForm(event:MouseEvent):void
@@ -209,38 +216,36 @@
 					teacher.name = teacherName.text;
 					teacher.teacherMail = mail.text;
 					teacher.teacherNo = teacherno.text;
-					teacher.sex = parseInt(sex.selectedItem.value);
+					teacher.sex = parseInt(sex.selectedItem.data);
 					teacher.birthday = DateFormatter.parseDateString(birthday.text);
-					teacher.teacherMarried = parseInt(marriage.selectedItem.value);
+					teacher.teacherMarried = parseInt(marriage.selectedItem.data);
 					teacher.nation = nation.text;
-					teacher.politicsStatus = parseInt(politicStatus.selectedItem.value);
+					teacher.politicsStatus = parseInt(politicStatus.selectedItem.data);
 					teacher.teacherID = idCode.text;
 					teacher.teacherNativePlace = nativePlace.text;
 					teacher.homePhone = homePhone.text;
 					teacher.teacherMobilePhone = cellPhone.text;
-					teacher.teacherEducation = education.selectedItem.value;
+					teacher.teacherEducation = education.selectedItem.data;
 					teacher.teacherProfession = profession.text;
 					teacher.teacherGraduateSchool = school.text;
 					teacher.teacherProfessionTitle = professionalTitle.text;
 					teacher.teacherSkillLevel = skillLevel.text;
 					teacher.teacherSkillLevelDate = DateFormatter.parseDateString(skillLevelDate.text);
-					teacher.teacherDepartment = department.selectedItem.value;
-					teacher.teacherPosition = position.selectedItem.dataField;
+					teacher.teacherDepartment = department.selectedItem.data;
+					teacher.teacherPosition = position.selectedItem.data;
 					teacher.teacherContactPhone = contactPhone.text;
 					teacher.teacherOfficePhone = officePhone.text;
 					teacher.teacherWorkDate = DateFormatter.parseDateString(workDate.text);
 					teacher.teacherAddress = teacherAddress.text;
 					
 					teacher.teacherPhoto = imageSrc;
-					teacher.teacherStatus = parseInt(status.selectedItem.value);
+					teacher.teacherStatus = parseInt(status.selectedItem.data);
 					teacher.teacherAttendDate = DateFormatter.parseDateString(attendDate.text);
 					
 					teacher.creationDate = createDate;
 					teacher.modifiedDate = modifiedDate;
 					teacher.style = style;
-					teacher.id = teacherId;
 					teacher.userID = userID;
-					//Alert.show("添加");
 					teacherServiceRO.save(teacher);
 				} else {
 					var err:ValidationResultEvent;
@@ -274,12 +279,6 @@
 				}else{
 					Alert.show("添加失败");
 				}
-			}
-			
-			protected function teacherno_focusOutHandler(event:FocusEvent):void
-			{
-				// TODO Auto-generated method stub
-				//teacherValidator.validateNO(teacherId, event.target.value, teacherno);
 			}
 			
 			private const button_add:Class;
@@ -363,14 +362,10 @@
 				var allList:ArrayCollection = event.result as ArrayCollection;
 				experiences_table.initdata(allList);
 			}
-			
-			protected function teacherCheckResult_resultHandler(event:ResultEvent):void
-			{
-				
-			}
 						
 			private function getExperience():void
 			{
+				Alert.show(teacherId);
 				teacherExperienceServiceRO.get(teacherId, experiences_table.curpage,experiences_table.pagecount);
 			}
 			
@@ -572,7 +567,7 @@
 			{
 				// TODO Auto-generated method stub
 				this.currentState = "list";
-				if(showFirst)
+				if(showFirst && teacherId != null)
 				{
 					getExperience();
 					getRelation();
@@ -735,7 +730,7 @@
 						for(var j:int = 0;j<_role.level;j++)
 							headText=headText.concat("--");
 						headText=headText.concat(_role.name);
-						roleList.addItem( {dataField:_role.id, name:headText})
+						roleList.addItem( {data:_role.id, label:headText})
 					}
 				}	
 
@@ -743,9 +738,9 @@
 			private function buildSubDepartments(department:DepartmentModel,resultList:ArrayCollection,depth:int):void{
 				var headText:String="";
 				for(var j:int = 0;j<depth;j++)
-					headText=headText.concat("--");
-				headText=headText.concat(department.name);
-				resultList.addItem( {dataField:department.id, name:headText})
+					headText = headText.concat("--");
+				headText = headText.concat(department.name);
+				resultList.addItem( {data:department.id, label:headText})
 				var list:ArrayCollection = ArrayCollection(department.subordinates);			
 				if(list.length>0){
 					for (var i:int = 0; i < list.length; i++){
@@ -758,7 +753,7 @@
 			}
 			private function departmentSelectionChangedHandlerMain(event:Event):void{
 				var target:mx.controls.ComboBox=event.target as mx.controls.ComboBox
-				systemServiceRO.getDepartmentRoles(target.selectedItem.dataField);
+				systemServiceRO.getDepartmentRoles(target.selectedItem.data);
 				callLater(function():void{
 					position.dataProvider=roleList;
 					position.selectedIndex=0;
@@ -766,17 +761,53 @@
 			}
 			private function departmentSelectionChangedHandler(event:Event):void{
 				var target:mx.controls.ComboBox=event.target as mx.controls.ComboBox
-				systemServiceRO.getDepartmentRoles(target.selectedItem.dataField);
+				systemServiceRO.getDepartmentRoles(target.selectedItem.data);
 				callLater(function():void{
 					departmentPosition.dataProvider=roleList;
 					departmentPosition.selectedIndex=0;
 				});
 			}
+
+			protected function workDate_changeHandler(event:CalendarLayoutChangeEvent):void
+			{
+				// TODO Auto-generated method stub
+				changeHandler(event.newDate, workPeriod);
+			}
+			
+			private function changeHandler(date:Date, target):void
+			{
+				if(date == null)
+					return ;
+				var currentDate:Date = new Date();
+				var text:String = "";
+				var _year:int = (currentDate.getFullYear() - date.getFullYear());
+				if(_year > 0)
+					text = _year + "年"
+				var _month:int = (currentDate.getMonth() - date.getMonth());
+				if(_month > 0)
+					text += _month + "月";
+				target.text = text;
+			}
+
+
+			protected function attendDate_changeHandler(event:CalendarLayoutChangeEvent):void
+			{
+				// TODO Auto-generated method stub
+				changeHandler(event.newDate, attendPeriod);
+			}
+			
+			private function showPeriod(workDate:Date, attendDate:Date):void
+			{
+				changeHandler(workDate, attendPeriod);
+				changeHandler(attendDate, attendPeriod);
+			}
+
 		]]>
 	</fx:Script>
 
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+		<mx:StringValidator id="teacherno_stringValidator" source="{teacherno}" property="text"  requiredFieldError="不能为空"/>
 		<mx:StringValidator id="name_stringValidator" source="{teacherName}" property="text"  requiredFieldError="不能为空"/>
 		<mx:DateValidator id="birthday_dateValidator" inputFormat="YYYY-MM-DD" source="{birthday}" property="text"  requiredFieldError="请选择"/>
 		<mx:StringValidator id="nation_stringValidator" source="{nation}" property="text"  requiredFieldError="不能为空"/>
@@ -805,7 +836,6 @@
 		<mx:RemoteObject id="teacherServiceRO" destination="teacherServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 			<mx:method name="save"  concurrency="last"  result="teacherAddResult_resultHandler(event);" />
 			<mx:method name="get"  concurrency="last"  result="teacherGetResult_resultHandler(event);" />
-			<mx:method name="checkNoAvailability"  concurrency="last"  result="teacherCheckResult_resultHandler(event);" />
 		</mx:RemoteObject>
 		<mx:RemoteObject id="teacherExperienceServiceRO" destination="teacherExperienceServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 			<mx:method name="save"  concurrency="last"  result="teacherExperienceAddResult_resultHandler(event);" />
@@ -822,8 +852,6 @@
 			<mx:method name="get"  concurrency="last"  result="teacherRelationGetResult_resultHandler(event);" />
 			<mx:method name="remove"  concurrency="last"  result="teacherRelationRemoveResult_resultHandler(event);" />
 		</mx:RemoteObject>
-		<mx:HTTPService id="teacherNoValidate" url="/servlet/teacherNoValidate" showBusyCursor="true" method="POST">  
-		</mx:HTTPService> 
 		<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 			<mx:method name="getDepartmentBySymbol"  concurrency="last"  result="getDepartmentBySymbolResult(event);" />
 			<mx:method name="getDepartmentRoles"  concurrency="last"  result="getDepartmentRolesResult(event);" />
@@ -849,19 +877,19 @@
 									<s:HGroup width="100%">
 										<mx:FormItem label="姓名" width="50%"><s:TextInput id="teacherName" width="100%"/></mx:FormItem>
 										<mx:FormItem label="性别" width="50%">
-											<s:DropDownList id="sex" selectedIndex="0" width="100%" dataProvider="{sexArr}" labelField="name"/> 
+											<s:DropDownList id="sex" selectedIndex="0" width="100%" dataProvider="{sexArr}" labelField="label"/> 
 										</mx:FormItem>
 									</s:HGroup>
 									<s:HGroup width="100%">
 										<mx:FormItem label="婚姻状况" width="50%">
-											<s:DropDownList id="marriage" width="100%" selectedIndex="0" dataProvider="{marriageArr}" labelField="name"/>
+											<s:DropDownList id="marriage" width="100%" selectedIndex="0" dataProvider="{marriageArr}" labelField="label"/>
 										</mx:FormItem>
 										<mx:FormItem label="民族" width="50%"><mx:TextInput id="nation" width="100%"/></mx:FormItem>
 									</s:HGroup>
 									<mx:FormItem label="身份证号" width="100%"><mx:TextInput id="idCode" width="100%"/></mx:FormItem>
 									<mx:FormItem label="邮箱" width="100%"><mx:TextInput id="mail" width="100%"/></mx:FormItem>
 									<mx:FormItem label="家庭地址" width="100%"><mx:TextInput id="teacherAddress" width="100%"/></mx:FormItem>
-									<mx:FormItem label="短号" width="100%"><mx:TextInput id="teacherno" width="100%" focusOut="teacherno_focusOutHandler(event)"/></mx:FormItem>
+									<mx:FormItem label="短号" width="100%"><mx:TextInput id="teacherno" width="100%"/></mx:FormItem>
 								</s:VGroup>
 								<s:VGroup width="30%">
 									<s:HGroup width="100%">
@@ -874,7 +902,7 @@
 											id="politicStatus" 
 											width="100%" dataProvider="{politicArr}"
 											selectedIndex="0" 
-											labelField="name"/> 
+											labelField="label"/> 
 									</mx:FormItem>
 									<mx:FormItem label="籍贯" width="100%">
 										<mx:TextInput id="nativePlace" width="100%"/>
@@ -906,7 +934,7 @@
 								</s:VGroup>
 								<s:VGroup width="25%">
 									<mx:FormItem label="学历" width="100%">
-										<s:ComboBox id="education" width="100%" selectedIndex="0" dataProvider="{educationArr}" labelField="name"/>
+										<s:ComboBox id="education" width="100%" selectedIndex="0" dataProvider="{educationArr}" labelField="label"/>
 									</mx:FormItem>
 									<mx:FormItem label="职称" width="100%">
 										<mx:TextInput id='professionalTitle' width="100%"/>
@@ -939,12 +967,12 @@
 									<s:HGroup width="100%">
 										<mx:FormItem label="部门" width="20%">
 											<mx:ComboBox  id="department" 
-														  width="100%" labelField="name" dataProvider="{departmentList}"
+														  width="100%" labelField="label" dataProvider="{departmentList}"
 														  change="departmentSelectionChangedHandlerMain(event);"/>
 											
 										</mx:FormItem>
 										<mx:FormItem label="职务" width="35%">
-											<mx:ComboBox  width="90%" id="position"   fontSize="12" labelField="name"  textAlign="left" />
+											<mx:ComboBox  width="90%" id="position"   fontSize="12" labelField="label"  textAlign="left" />
 
 										</mx:FormItem>
 										<mx:FormItem label="办公电话" width="45%">
@@ -956,7 +984,7 @@
 											<mx:TextInput id='contactPhone' width="100%"/>
 										</mx:FormItem>
 										<mx:FormItem label="何时工作" width="30%">
-											<mx:DateField id='workDate' width="100%" formatString="YYYY-MM-DD"/>
+											<mx:DateField id='workDate' width="100%" yearNavigationEnabled="true" formatString="YYYY-MM-DD" change="workDate_changeHandler(event)"/>
 										</mx:FormItem>
 										<mx:FormItem label="工龄" width="45%" labelWidth="100">
 											<mx:TextInput id='workPeriod' width="90%"/>
@@ -964,15 +992,15 @@
 									</s:HGroup>
 									<s:HGroup width="100%">
 										<mx:FormItem label="入校时间" width="25%">
-											<mx:DateField id="attendDate" width="100%" formatString="YYYY-MM-DD"/>
+											<mx:DateField id="attendDate" width="100%" yearNavigationEnabled="true" formatString="YYYY-MM-DD" change="attendDate_changeHandler(event)"/>
 										</mx:FormItem>
 										<mx:FormItem label="校龄" width="30%">
 											<mx:TextInput id='attendPeriod' width="100%"/>
 										</mx:FormItem>
-										<mx:FormItem label="状态" width="20%" labelWidth="100">
+										<mx:FormItem label="状态" width="25%" labelWidth="100">
 											<s:DropDownList id='status' width="100%" 
 															dataProvider="{statusArr}" 
-															labelField="name" selectedIndex="0"/>
+															labelField="label" selectedIndex="0"/>
 										</mx:FormItem>
 										<s:Button click="validateForm(event)" label="保存"/>
 									</s:HGroup>
@@ -1031,14 +1059,14 @@
 																	<mx:Label  text="部门" width="60"  textAlign="right" />
 																</mx:GridItem>
 																<mx:GridItem  verticalAlign="middle" horizontalAlign="center">
-																	<mx:ComboBox  width="120" id="departmentName" labelField="name" dataProvider="{departmentList}"
+																	<mx:ComboBox  width="120" id="departmentName" labelField="label" dataProvider="{departmentList}"
 																				  change="departmentSelectionChangedHandler(event);"/>
 																</mx:GridItem>
 																<mx:GridItem    verticalAlign="middle" horizontalAlign="right">
 																	<mx:Label  text="职务" width="60"  textAlign="right" />
 																</mx:GridItem>
 																<mx:GridItem  verticalAlign="middle" horizontalAlign="center">
-																	<mx:ComboBox width="120" id="departmentPosition"   fontSize="12" labelField="name"  textAlign="left" />
+																	<mx:ComboBox width="120" id="departmentPosition"   fontSize="12" labelField="label"  textAlign="left" />
 
 																</mx:GridItem>
 																<mx:GridItem  verticalAlign="middle" horizontalAlign="center">
@@ -1112,24 +1140,22 @@
 										<s:VGroup width="100%" height="50%" gap="10" verticalAlign="middle" horizontalAlign="left" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
 											<s:VGroup width="100%" horizontalAlign="center" height="100%" verticalAlign="middle" paddingLeft="20" paddingRight="20">
 												<mx:Grid width="80%" height="100%" id="container"  verticalGap="10" horizontalGap="5"   borderStyle="solid" paddingBottom="10" paddingTop="10" paddingLeft="10" paddingRight="10">
-													
 													<mx:GridRow width="100%" height="30"  >
 														<mx:GridItem    verticalAlign="middle" horizontalAlign="right">
 															<mx:Label  text="开始时间" width="60"  textAlign="right" />
 														</mx:GridItem>
 														<mx:GridItem  verticalAlign="middle" horizontalAlign="center">
-															<mx:DateField width="120" formatString="YYYY-MM-DD"  name="workStartDate" id="workStartDate"/>
+															<mx:DateField width="120" formatString="YYYY-MM-DD" yearNavigationEnabled="true" name="workStartDate" id="workStartDate"/>
 														</mx:GridItem>
 														<mx:GridItem    verticalAlign="middle" horizontalAlign="right">
 															<mx:Label  text="截止时间" width="60"  textAlign="right" />
 														</mx:GridItem>
 														<mx:GridItem  verticalAlign="middle" horizontalAlign="center">
-															<mx:DateField width="120" formatString="YYYY-MM-DD"  name="workEndDate" id="workEndDate"/>
+															<mx:DateField width="120" formatString="YYYY-MM-DD" yearNavigationEnabled="true" name="workEndDate" id="workEndDate"/>
 														</mx:GridItem>
 														<mx:GridItem    verticalAlign="middle" horizontalAlign="right">
 															<mx:Label  text="工作单位" width="60"  textAlign="right" />
 														</mx:GridItem>
-														
 														<mx:GridItem  verticalAlign="middle" horizontalAlign="center" >
 															<mx:TextInput width="120" name="workDepartment" id="workCompany"/>
 														</mx:GridItem>
@@ -1139,7 +1165,6 @@
 														<mx:GridItem  verticalAlign="middle" horizontalAlign="center" >
 															<mx:TextInput width="120" name="workPosition" id="workPosition"/>
 															<mx:TextInput id="workId" visible="false"/>
-
 														</mx:GridItem>
 														<mx:GridItem  verticalAlign="middle" horizontalAlign="center" >
 															<mx:Button label="保存" width="60" click="work_save_clickHandler(event)"/>
@@ -1207,7 +1232,7 @@
 															<mx:TextInput width="120" id="relationName"/>
 														</mx:GridItem>
 														<mx:GridItem    verticalAlign="middle" horizontalAlign="right">
-															<mx:Label  text="与本人关系" width="60"  textAlign="right" />
+															<mx:Label  text="与本人关系" width="80"  textAlign="right" />
 														</mx:GridItem>
 														<mx:GridItem  verticalAlign="middle" horizontalAlign="center">
 															<mx:TextInput width="120" id="relationWith"/>

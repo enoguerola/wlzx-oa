@@ -34,6 +34,8 @@ package basic.utils
 					return str;
 			}
 			public static function formatDate(date:Date, dateFormat:String):String {
+				if(date == null)
+					return "";
 				var format:DateFormatter = new DateFormatter();
 				format.formatString = dateFormat;
 				var dateStr:String = format.format(date);

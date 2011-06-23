@@ -35,7 +35,7 @@ public class TeacherRelationService {
 		
 		criteria.createCriteria("teacher").add(Restrictions.eq("id", id));
 		
-		List<TeacherRelation> list = teacherRelationDAO.getListByCriteria(criteria, page, pageCount);
+		List<TeacherRelation> list = teacherRelationDAO.getListByCriteria(criteria, (page - 1)*pageCount, pageCount);
 		for(TeacherRelation model:list)
 			model.setTeacher(null);
 		return list;

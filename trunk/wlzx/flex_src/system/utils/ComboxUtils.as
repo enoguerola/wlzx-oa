@@ -9,7 +9,7 @@ package system.utils
 			var index:int = 0;
 			for(var i in whichArray)
 			{
-				if(whichArray[i] == whichItem)
+				if(whichArray[i].data == whichItem)
 				{
 					return index;
 				}

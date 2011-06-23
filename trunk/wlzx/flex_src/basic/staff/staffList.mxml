@@ -49,11 +49,11 @@
 			
 			public var statusArr:ArrayCollection = new ArrayCollection(
 				[    
-					{value:-1, name:"请选择"}, 
-					{value:0, name:"正式"}, 
-					{value:1, name:"适用"},
-					{value:2, name:"离职"},
-					{value:3, name:"离休"}
+					{data:-1, label:"请选择"}, 
+					{data:0, label:"正式"}, 
+					{data:1, label:"适用"},
+					{data:2, label:"离职"},
+					{data:3, label:"离休"}
 				]                
 			);
 			
@@ -80,8 +80,8 @@
 			public function search():void{
 				teacher = new TeacherModel();
 				teacher.name = _name.text;
-				teacher.teacherDepartment = department.selectedItem.value;
-				teacher.teacherStatus = status.selectedItem.value;
+				teacher.teacherDepartment = department.selectedItem.data;
+				teacher.teacherStatus = status.selectedItem.data;
 				teacher.teacherAttendDate = DateFormatter.parseDateString(attendDate.text);
 				teacherServiceRO.getTeacherModels(teacher, teacherDG.curpage, teacherDG.pagecount);
 			}
@@ -220,7 +220,7 @@
 			{
 				Alert.show("你确定要删除该项吗?","确认删除",Alert.NO|Alert.YES,null,function(event:CloseEvent):void{
 					if(event.detail == Alert.YES)
-						teacherServiceRO.deleteDirectoryItem(item_id);
+						teacherServiceRO.remove(item_id);
 				},null,Alert.NO);
 			}
 			
@@ -248,7 +248,7 @@
 			private function getDepartmentBySymbolResult(event:ResultEvent):void {
 				var _department:DepartmentModel = event.result as DepartmentModel;
 				buildSubDepartments(_department,departmentList,0);
-				var _init:Object = {name:'请选择',value:""};
+				var _init:Object = {label:'请选择',data:""};
 				departmentList.addItemAt(_init,0);
 				department.selectedIndex = 0;
 				search();
@@ -259,7 +259,7 @@
 				for(var j:int = 0;j<depth;j++)
 					headText=headText.concat("--");
 				headText=headText.concat(department.name);
-				resultList.addItem( {dataField:department.id, name:headText})
+				resultList.addItem( {data:department.id, label:headText})
 				var list:ArrayCollection = ArrayCollection(department.subordinates);			
 				if(list.length>0){
 					for (var i:int = 0; i < list.length; i++){
@@ -296,11 +296,11 @@
 						</s:HGroup>	
 						<s:HGroup verticalAlign="middle">
 							<s:Label  text="部门" />
-							<s:ComboBox width="100%" id="department" dataProvider="{departmentList}" selectedIndex="0" labelField="name"/>
+							<s:ComboBox width="100%" id="department" dataProvider="{departmentList}" selectedIndex="0" labelField="label"/>
 						</s:HGroup>
 						<s:HGroup verticalAlign="middle">
 							<s:Label  text="状态" />
-							<s:ComboBox width="100%" id="status" dataProvider="{statusArr}" selectedIndex="0" labelField="name"/>
+							<s:ComboBox width="100%" id="status" dataProvider="{statusArr}" selectedIndex="0" labelField="label"/>
 						</s:HGroup>
 						<s:HGroup verticalAlign="middle">
 							<s:Label  text="入校时间" />

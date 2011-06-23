@@ -29,12 +29,13 @@
 	<bean id="teacherService" class="system.wlims.basic.service.teacher.TeacherService">
 		<property name="teacherDAO" ref="teacherDAO" />
 		<property name="userDAO" ref="userDAO" />
+		<property name="roleDAO" ref="roleDAO" />
 	</bean>
 	<bean id="teacherExperienceService" class="system.wlims.basic.service.teacher.TeacherExperienceService">
 		<property name="teacherDAO" ref="teacherDAO" />
 		<property name="teacherExperienceDAO" ref="teacherExperienceDAO" />
 	</bean>
-	<bean id="teacherRelationServiceDest" class="system.wlims.basic.service.teacher.TeacherRelationService">
+	<bean id="teacherRelationService" class="system.wlims.basic.service.teacher.TeacherRelationService">
 		<property name="teacherDAO" ref="teacherDAO" />
 		<property name="teacherRelationDAO" ref="teacherRelationDAO" />
 	</bean>
