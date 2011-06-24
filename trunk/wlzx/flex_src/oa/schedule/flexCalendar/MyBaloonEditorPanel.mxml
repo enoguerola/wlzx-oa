@@ -105,6 +105,23 @@
 			this.repeatVariants = new RepeatVariantsBuilder().repeatVariants;
 			this.intervalVariants = new IntervalVariantsBuilder().intervalVariants;
 			this.addEventListener(KeyboardEvent.KEY_UP, keyHandler, false, 0, true);
+//			Alert.show(item.repeatRuleId+"");
+//			Alert.show(item.interval+"");
+			this.repeats.selectedIndex=item.repeatRuleId;
+			this.interval.selectedIndex=item.interval;
+			callLater(function():void{
+//				Alert.show(item.MO+"");
+//				Alert.show(item.TH+"");
+				this.w1.selected=item.MO;
+				this.w2.selected=item.TU;
+				this.w3.selected=item.WE;
+				this.w4.selected=item.TH;
+				this.w5.selected=item.FR;
+				this.w6.selected=item.SA;
+				this.w7.selected=item.SU;
+			
+			});
+			
 			setDayNames();
 			DrawTipMark();
 //			callLater(initWin);
