@@ -109,7 +109,7 @@ public class  MyItemEditorVOConverter
 	}
 
 
-	private function getFreqType(repeatRuleId:int):String
+	public static function getFreqType(repeatRuleId:int):String
 	{
 		var recurString:String = "FREQ=";
 		switch(repeatRuleId)
@@ -140,7 +140,7 @@ public class  MyItemEditorVOConverter
 		return recurString;
 	}
 
-	private function getInterval(interval:int):String
+	public static function getInterval(interval:int):String
 	{
 		if(interval != 0)
 		{
@@ -186,6 +186,43 @@ public class  MyItemEditorVOConverter
 						return "";
 					
 				}
+		
+		return "";
+	}
+	public static function getByDay2(repeatRuleId:int,repeatOnDays:String):String
+	{
+		if(repeatRuleId == MyItemEditorVO.EVERY_MO_WED_FRI)
+		{
+			return ";BYDAY=MO,WE,FR";
+		}
+		else if(repeatRuleId == MyItemEditorVO.EVERY_THUES_THURS)
+		{
+			return ";BYDAY=TU,TH";
+		}
+		else if(repeatRuleId == MyItemEditorVO.EVERY_WEEKDAY)
+		{
+			return ";BYDAY=MO,TU,WE,TH,FR"
+		}
+		else if(repeatRuleId == MyItemEditorVO.WEEKLY)
+		{
+			var byDayString:String = ";BYDAY=";
+			var days:Array = ["MO", "TU", "WE", "TH", "FR", "SA", "SU"];
+			var anyDaySelected:Boolean = false;
+			for(var i:int = 0; i < days.length; i++)
+			{
+				var dayAbbr:String = days[i];
+				if(repeatOnDays.split(";")[i]=="1")
+				{
+					byDayString += (anyDaySelected ? "," : "") + dayAbbr; 
+					anyDaySelected = true;
+				}
+			}
+			if(anyDaySelected)
+				return byDayString;
+			else
+				return "";
+			
+		}
 		
 		return "";
 	}

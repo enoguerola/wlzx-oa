@@ -12,12 +12,14 @@
 		<mx:method name="updateSchedule"  concurrency="last"  result="updateSchedule_resultHandler(event);" />
 		<mx:method name="deleteSchedule"  concurrency="last"  result="deleteSchedule_resultHandler(event);" />
 		<mx:method name="finishSchedule"  concurrency="last"  result="finishSchedule_resultHandler(event);" />
+		<mx:method name="getSchedule"  concurrency="last"  result="getSchedule_resultHandler(event);" />
 	</mx:RemoteObject>
 	<valueObjects:ScheduleModel id="model"/>
 	<mx:Script>
 		<![CDATA[
 			import com.flexcalendar.components.calendar.core.DateRange;
 			import com.flexcalendar.components.calendar.core.dataModel.CalendarDataProvider;
+			import com.flexcalendar.components.calendar.core.dataModel.formatICalendar.Recur;
 			import com.flexcalendar.components.calendar.editor.baloon.BaloonItemEditor;
 			import com.flexcalendar.components.calendar.events.CalendarItemAddedEvent;
 			import com.flexcalendar.components.calendar.events.CalendarItemModificationEvent;
@@ -32,6 +34,7 @@
 			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
 			import mx.events.CalendarLayoutChangeEvent;
+			import mx.events.CloseEvent;
 			import mx.events.ItemClickEvent;
 			import mx.formatters.DateFormatter;
 			import mx.managers.*;
@@ -64,6 +67,12 @@
 				var allList:ArrayCollection=event.result as ArrayCollection;
 				table.initdata(allList);
 				unLockWin();
+			}
+			protected function getSchedule_resultHandler(event:ResultEvent):void
+			{
+				model=event.result as ScheduleModel;
+				editPopWin();
+//				Alert.show(model.title);
 			}
 			protected function addSchedule_resultHandler(event:ResultEvent):void
 			{
@@ -183,13 +192,103 @@
 				
 			}
 			public  function enterEdit(id:String):void{
+//				Alert.show(id);
+				scheduleServiceRO.getSchedule(id);
 			
+				
+			}
+
+			public function editPopWin():void{
+//					Alert.show("aaa");
+//					Alert.show(model.beginTime);
+					if(pop!=null)PopUpManager.removePopUp(pop);
+					pop=MyBaloonEditorPanel(PopUpManager.createPopUp(this,MyBaloonEditorPanel,true)); 
+					pop.owner=this;
+					
+					pop.toolTip="Update";
+					
+					var calendarItem:CalendarItem=new CalendarItem(DateFormatter.parseDateString(model.beginTime),DateFormatter.parseDateString(model.endTime),model.title);
+					
+					var recurString:String = new String();
+					recurString += MyItemEditorVOConverter.getFreqType(model.repeatInterval);
+					recurString += MyItemEditorVOConverter.getByDay2(model.repeatType,model.repeatOnDays);
+//					Alert.show(MyItemEditorVOConverter.getByDay2(model.repeatType,model.repeatOnDays));
+					recurString += MyItemEditorVOConverter.getInterval(model.repeatType);
+		
+					calendarItem.recur = new Recur(recurString);
+					pop.item = converter.calendarItemToItemEditorVO(calendarItem);
+					pop.item.departmentShare=Boolean(model.departmentShare);
+					pop.item.schoolShare=Boolean(model.schoolShare);
+					pop.item.emergence=model.emergence;
+					pop.item.interval=model.repeatInterval;
+					pop.item.recurring=Boolean(model.repeatStatus);
+					pop.item.repeatRuleId=model.repeatType;
+					pop.item.type=model.type;
+					pop.item.endDateSpecified=(model.repeatEndTime!=null?true:false);
+					pop.item.endDate=DateFormatter.parseDateString(model.repeatEndTime);
+//					pop.item.MO=!model.repeatOnDays.split(";")[0] as Boolean;
+////					Alert.show(pop.item.MO+"");
+//					pop.item.TU=Boolean(model.repeatOnDays.split(";")[1]);
+//					pop.item.WE=Boolean(model.repeatOnDays.split(";")[2]);
+//					pop.item.TH=Boolean(model.repeatOnDays.split(";")[3]);
+//					pop.item.FR=Boolean(model.repeatOnDays.split(";")[4]);
+//					pop.item.SA=Boolean(model.repeatOnDays.split(";")[5]);
+//					pop.item.SU=Boolean(model.repeatOnDays.split(";")[6]);
+//					Alert.show(pop.item.SU+"");
+					pop.cancelCallback=function():void{
+						PopUpManager.removePopUp(this);
+					};
+					pop.saveCallback = function():void{
+//						model=new ScheduleModel();
+						model.beginTime=CommonUtils.formatDate(pop.item.start);
+						model.endTime=CommonUtils.formatDate(pop.item.end);
+						model.title=pop.item.summary;
+						model.content=pop.item.description;
+						model.type=pop.item.type;
+						model.departmentShare=int(pop.item.departmentShare);
+						model.schoolShare=int(pop.item.schoolShare);
+						model.emergence=pop.item.emergence;
+//						model.finishStatus=0;
+						model.posterId=this.parentApplication.currentUser.id;
+						//					Alert.show(pop.item.endDate+"");
+						//					Alert.show(pop.item.endDateSpecified+"");
+						if(pop.item.endDateSpecified)
+							model.repeatEndTime=CommonUtils.formatDate(pop.item.endDate);
+						else model.repeatEndTime=null;
+						model.repeatStatus=int(pop.item.recurring);
+						model.repeatInterval=pop.item.interval;
+						model.repeatOnDays=int(pop.item.MO)+";"+int(pop.item.TU)+";"+int(pop.item.WE)+";"+int(pop.item.TH)+";"+int(pop.item.FR)+";"+int(pop.item.SA)+";"+int(pop.item.SU);
+						model.repeatType=pop.item.repeatRuleId;
+//						model.submitStatus=0;
+						scheduleServiceRO.addSchedule(model);
+						PopUpManager.removePopUp(this);
+					};
+					pop.deleteCallback = function():void{
+						
+						Alert.show("你确定要删除该日程吗?","确认删除",Alert.YES|Alert.NO,null,function(event:CloseEvent):void{
+							if(event.detail == Alert.YES){
+								var id:String=model.id;
+								scheduleServiceRO.deleteSchedule(id);
+								PopUpManager.removePopUp(this);
+							}
+							
+						},null,Alert.NO);
+					};
+					PopUpManager.centerPopUp(pop);
+					pop.percentHeight=100;
+					pop.percentWidth=100;
+					pop.x=FlexGlobals.topLevelApplication.stage.stageWidth/2-pop.width/2;
+					pop.y=FlexGlobals.topLevelApplication.stage.stageHeight/2-pop.height/2;
+				
 			}
 			public function finish(id:String):void{
-				
+				scheduleServiceRO.finishSchedule(id);
 			}
 			public function remove(id:String):void{
-				
+				Alert.show("你确定要删除该日程吗?","确认删除",Alert.YES|Alert.NO,null,function(event:CloseEvent):void{
+					if(event.detail == Alert.YES)
+						scheduleServiceRO.deleteSchedule(id);
+				},null,Alert.NO);
 			}
 			import mx.core.FlexGlobals;
 			import mx.managers.PopUpManager;
@@ -229,7 +328,7 @@
 //					Alert.show(pop.item.endDateSpecified+"");
 					if(pop.item.endDateSpecified)
 					model.repeatEndTime=CommonUtils.formatDate(pop.item.endDate);
-					model.repeatStatus=int(pop.item.endDateSpecified);
+					model.repeatStatus=int(pop.item.recurring);
 					model.repeatInterval=pop.item.interval;
 					model.repeatOnDays=int(pop.item.MO)+";"+int(pop.item.TU)+";"+int(pop.item.WE)+";"+int(pop.item.TH)+";"+int(pop.item.FR)+";"+int(pop.item.SA)+";"+int(pop.item.SU);
 					model.repeatType=pop.item.repeatRuleId;
@@ -239,7 +338,6 @@
 				};
 				pop.deleteCallback = function():void{
 					PopUpManager.removePopUp(this);
-					
 				};
 				
 				
