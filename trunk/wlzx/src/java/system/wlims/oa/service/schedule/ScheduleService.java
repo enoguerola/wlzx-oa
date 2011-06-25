@@ -13,4 +13,6 @@ public interface ScheduleService {
 	boolean deleteSchedule(String id);
 	public boolean finishSchedule(String id);
 	public ScheduleModel getSchedule(String id);
+	public boolean updateScheduleTime(String id,String beginTime,String endTime);
+	
 }

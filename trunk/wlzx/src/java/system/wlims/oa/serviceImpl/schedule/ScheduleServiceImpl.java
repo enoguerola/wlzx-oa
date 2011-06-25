@@ -91,5 +91,17 @@ public class ScheduleServiceImpl implements ScheduleService {
 	public void setUserDAO(UserDAO userDAO) {
 		this.userDAO = userDAO;
 	}
+	@Override
+	public boolean updateScheduleTime(String id, String beginTime,
+			String endTime) {
+		ScheduleModel schedule=scheduleDAO.get(id);
+		if(schedule!=null){
+			schedule.setBeginTime(beginTime);
+			schedule.setEndTime(endTime);
+			scheduleDAO.saveOrUpdate(schedule);
+			return true;
+		}
+		return false;
+	}
 
 }
