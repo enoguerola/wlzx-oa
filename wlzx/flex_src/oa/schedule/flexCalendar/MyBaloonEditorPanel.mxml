@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:editor="com.flexcalendar.components.calendar.editor.*" width="400"
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:editor="com.flexcalendar.components.calendar.editor.*"
 		   minHeight="{basicHeight}"
 		   backgroundAlpha="1.0" backgroundColor="#FFFFFF" borderColor="{bColor}" cornerRadius="25"
 		   borderStyle="solid" creationComplete="onCreationComplete()">
@@ -11,7 +11,7 @@
 		import mx.controls.Alert;
 		import mx.core.Application;
 		import mx.managers.PopUpManager;
-
+		import mx.events.FlexEvent;
 		private const bColor:Number = 0xa1a1a1;
 
 		[Embed(source="../WebContent/resources/common/ui/tabClose.swf", symbol="firefox_close_over")]
@@ -30,11 +30,11 @@
 		[Bindable]
 		private var descWidth:int = 100;
 		[Bindable]
-		private var editWidth:int = 280;
+		private var editWidth:int = 380;
 		[Bindable]
-		private var basicHeight:int = 260;
+		private var basicHeight:int = 300;
 		[Bindable]
-		private var tipHeight:int = 70;
+		private var tipHeight:int = 140;
 
 		[Bindable]
 		private var tipShouldBeDrawn:Boolean = true;
@@ -107,8 +107,12 @@
 			this.addEventListener(KeyboardEvent.KEY_UP, keyHandler, false, 0, true);
 //			Alert.show(item.repeatRuleId+"");
 //			Alert.show(item.interval+"");
+			this.emergence.selectedIndex=item.emergence;
 			this.repeats.selectedIndex=item.repeatRuleId;
 			this.interval.selectedIndex=item.interval;
+			this.type.selectedIndex=item.type;
+			this.departmentShare.selected=item.departmentShare;
+			this.schoolShare.selected=item.schoolShare;
 			callLater(function():void{
 //				Alert.show(item.MO+"");
 //				Alert.show(item.TH+"");
@@ -127,6 +131,7 @@
 //			callLater(initWin);
 			
 		}
+		
 //		private function initWin():void{
 //			if(this.toolTip=='Update'){		
 //				var id:String=this.id;//弹出窗口时设定的中转参数
@@ -208,7 +213,7 @@
 	<mx:VBox top="30" left="10" right="25" verticalGap="10">
 		<mx:HBox horizontalGap="10" width="100%">
 			<mx:Label text="{resourceManager.getString('FlexCalendar','editor.type')}" width="{descWidth}"/>
-			<mx:ComboBox id="type" labelField="label" dataProvider="{types}" change="item.type = type.selectedItem.data"/>
+			<mx:ComboBox id="type" labelField="label" dataProvider="{types}" change="item.type = type.selectedItem.data;if(type.selectedItem.data=='0'){item.schoolShare=schoolShare.selected=false;item.departmentShare =departmentShare.selected=false;}"/>
 		</mx:HBox>
 		<mx:HBox horizontalGap="10" width="100%">
 			<mx:Label text="{resourceManager.getString('FlexCalendar','editor.emergence')}" width="{descWidth}"/>
@@ -253,7 +258,7 @@
 			<mx:HBox horizontalGap="10" width="100%">
 				<mx:Label text="{resourceManager.getString('FlexCalendar','editor.repeats')}" width="{descWidth}"/>
 				<mx:ComboBox id="repeats" labelField="label" dataProvider="{repeatVariants}" selectedIndex="{item.repeatRuleId}"
-							 change="item.repeatRuleId = repeats.selectedIndex"/>
+							 change="item.repeatRuleId = repeats.selectedIndex;"/>
 			</mx:HBox>
 
 			<mx:HBox visible="{displayRepeatEvery(item.repeatRuleId)}" includeInLayout="{displayRepeatEvery(item.repeatRuleId)}" horizontalGap="10" width="100%">
@@ -277,7 +282,7 @@
 				<mx:Label text="{resourceManager.getString('FlexCalendar','editor.endsOn')}" width="{descWidth}"/>
 				<mx:CheckBox id="endDateSpecified" label="{resourceManager.getString('FlexCalendar','editor.never')}" selected="{!item.endDateSpecified}"
 							 change="item.endDateSpecified = !endDateSpecified.selected"/>
-				<editor:DateTimeChooser id="endsOn" selectedDate="{item.endDate}"  visible="{item.endDateSpecified}"
+				<editor:DateTimeChooser id="endsOn" selectedDate="{item.endDate}"  enabled="{item.endDateSpecified}"
 							  change="item.endDate = endsOn.selectedDate"/>
 			</mx:HBox>
 

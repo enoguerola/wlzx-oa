@@ -35,6 +35,7 @@
 			import mx.controls.Alert;
 			import mx.events.CalendarLayoutChangeEvent;
 			import mx.events.CloseEvent;
+			import mx.events.DragEvent;
 			import mx.events.ItemClickEvent;
 			import mx.formatters.DateFormatter;
 			import mx.managers.*;
@@ -65,7 +66,11 @@
 			protected function getSchedulesByConditions_resultHandler(event:ResultEvent):void
 			{
 				var allList:ArrayCollection=event.result as ArrayCollection;
-				table.initdata(allList);
+				if(scheduleView.selectedValue=="list"){
+					table.initdata(allList);
+				}else if(scheduleView.selectedValue=="schedule"){
+					dp = new DataProviderBuilder().buildDataProvider(allList);
+				}
 				unLockWin();
 			}
 			protected function getSchedule_resultHandler(event:ResultEvent):void
@@ -111,7 +116,35 @@
 				toDateChooser.addEventListener(CalendarLayoutChangeEvent.CHANGE, updateRange);
 //				
 				//create sample CalendarDataProvider
-				dp = new DataProviderBuilder().buildExampleDataProvider();
+				//dp = new DataProviderBuilder().buildExampleDataProvider();
+				if (flexCalendar.itemEditor != null)
+				{
+					flexCalendar.removeEventListener(CalendarMouseEvent.CALENDAR_MOUSE_CLICK, flexCalendar.itemEditor.calendarClickHandler);
+					flexCalendar.removeEventListener(CalendarMouseEvent.CALENDAR_MOUSE_DOUBLE_CLICK, flexCalendar.itemEditor.calendarDoubleClickHandler);
+					flexCalendar.removeEventListener(CalendarMouseEvent.CALENDAR_RENDERER_MOUSE_CLICK, flexCalendar.itemEditor.rendererClickHandler);
+					flexCalendar.removeEventListener(CalendarMouseEvent.CALENDAR_RENDERER_MOUSE_DOUBLE_CLICK, flexCalendar.itemEditor.rendererDoubleClickHandler);
+					flexCalendar.removeEventListener(CalendarMouseEvent.CALENDAR_SPACE_RENDERER_MOUSE_CLICK, flexCalendar.itemEditor.spaceRendererClickHandler);
+					flexCalendar.removeEventListener(CalendarMouseEvent.CALENDAR_SPACE_RENDERER_MOUSE_DOUBLE_CLICK, flexCalendar.itemEditor.spaceRendererDoubleClickHandler);
+					
+					flexCalendar.addEventListener(CalendarMouseEvent.CALENDAR_MOUSE_CLICK,function(event:CalendarMouseEvent):void{
+//						Alert.show(event.type);
+//						Alert.show(event.selectedDate+"");
+						add(event.selectedDate,new Date(event.selectedDate.time + event.preferredTimeInMills));
+					});
+					flexCalendar.addEventListener(CalendarMouseEvent.CALENDAR_RENDERER_MOUSE_CLICK,function(event:CalendarMouseEvent):void{enterEdit(event.item.itemId)});
+					flexCalendar.addEventListener(CalendarMouseEvent.CALENDAR_SPACE_RENDERER_MOUSE_CLICK,function(event:CalendarMouseEvent):void{
+						add(event.selectedDate,new Date(event.selectedDate.time + event.preferredTimeInMills));
+					});
+//					flexCalendar.addEventListener(CalendarItemModificationEvent.MODIFICATION_TYPE_ITEM_MOVED,function():void{
+//						Alert.show("a");
+//					});
+//					flexCalendar.addEventListener(CalendarItemModificationEvent.MODIFICATION_TYPE_ITEM_RESIZED,function():void{
+//						Alert.show("b");
+//					});
+						
+					//flexCalendar.addEventListener(CalendarMouseEvent.CALENDAR_MOUSE_CLICK,);
+				
+				}
 				callLater(hideWaterMark);
 				search();
 			}
@@ -158,16 +191,23 @@
 			private function calendarItemAdded(event:CalendarItemAddedEvent):void {
 //				Alert.show("add");
 				trace("Item added");
+				
 			}
 			
 			private function calendarItemRemoved(event:CalendarItemRemovedEvent):void {
 //				Alert.show("removed");
 				trace("Item removed");
+				
 			}
 			
 			private function calendarItemModified(event:CalendarItemModificationEvent):void {
-//				Alert.show("modified");
+				//Alert.show(event.modificationType);
+				if(event.modificationType==CalendarItemModificationEvent.MODIFICATION_TYPE_ITEM_MOVED||event.modificationType==CalendarItemModificationEvent.MODIFICATION_TYPE_ITEM_RESIZED){
+					
+					scheduleServiceRO.updateScheduleTime(event.item.itemId,CommonUtils.formatDate(event.item.start),CommonUtils.formatDate(event.item.end));
+				}
 				trace("Item modified");
+				
 			}
 
 			private function scheduleViewSwitch(event:ItemClickEvent):void {
@@ -180,11 +220,13 @@
 					list.visible=true;
 					schedule.height=0;
 					schedule.visible=false;
+					search();
 				}else if(value=="schedule"){
 					schedule.percentHeight=100;
 					schedule.visible=true;
 					list.height=0;
 					list.visible=false;
+					search();
 //						scheduleViewContainer.selectedChild= b;
 //						
 //						callLater(hideWaterMark);
@@ -210,18 +252,18 @@
 					var calendarItem:CalendarItem=new CalendarItem(DateFormatter.parseDateString(model.beginTime),DateFormatter.parseDateString(model.endTime),model.title);
 					
 					var recurString:String = new String();
-					recurString += MyItemEditorVOConverter.getFreqType(model.repeatInterval);
+					recurString += MyItemEditorVOConverter.getFreqType(model.repeatType);
 					recurString += MyItemEditorVOConverter.getByDay2(model.repeatType,model.repeatOnDays);
 //					Alert.show(MyItemEditorVOConverter.getByDay2(model.repeatType,model.repeatOnDays));
-					recurString += MyItemEditorVOConverter.getInterval(model.repeatType);
+					recurString += MyItemEditorVOConverter.getInterval(model.repeatInterval);
 		
 					calendarItem.recur = new Recur(recurString);
 					pop.item = converter.calendarItemToItemEditorVO(calendarItem);
-					pop.item.departmentShare=Boolean(model.departmentShare);
-					pop.item.schoolShare=Boolean(model.schoolShare);
+					pop.item.departmentShare=CommonUtils.int2Boolean(model.departmentShare);
+					pop.item.schoolShare=CommonUtils.int2Boolean(model.schoolShare);
 					pop.item.emergence=model.emergence;
 					pop.item.interval=model.repeatInterval;
-					pop.item.recurring=Boolean(model.repeatStatus);
+					pop.item.recurring=CommonUtils.int2Boolean(model.repeatStatus);
 					pop.item.repeatRuleId=model.repeatType;
 					pop.item.type=model.type;
 					pop.item.endDateSpecified=(model.repeatEndTime!=null?true:false);
@@ -260,8 +302,8 @@
 						model.repeatOnDays=int(pop.item.MO)+";"+int(pop.item.TU)+";"+int(pop.item.WE)+";"+int(pop.item.TH)+";"+int(pop.item.FR)+";"+int(pop.item.SA)+";"+int(pop.item.SU);
 						model.repeatType=pop.item.repeatRuleId;
 //						model.submitStatus=0;
-						scheduleServiceRO.addSchedule(model);
-						PopUpManager.removePopUp(this);
+						scheduleServiceRO.updateSchedule(model);
+						PopUpManager.removePopUp(pop);
 					};
 					pop.deleteCallback = function():void{
 						
@@ -269,7 +311,7 @@
 							if(event.detail == Alert.YES){
 								var id:String=model.id;
 								scheduleServiceRO.deleteSchedule(id);
-								PopUpManager.removePopUp(this);
+								PopUpManager.removePopUp(pop);
 							}
 							
 						},null,Alert.NO);
@@ -295,7 +337,9 @@
 			import com.flexcalendar.components.calendar.core.dataModel.*;
 			public var pop:MyBaloonEditorPanel=null;
 			private var converter:MyItemEditorVOConverter = new MyItemEditorVOConverter();
-			public function add():void{
+			public function add(beginDate:Date=null,endDate:Date=null):void{
+				if(beginDate==null)beginDate=new Date();
+				if(endDate==null)endDate=new Date();
 				if(pop!=null)PopUpManager.removePopUp(pop);
 				pop=MyBaloonEditorPanel(PopUpManager.createPopUp(this,MyBaloonEditorPanel,true)); 
 				pop.owner=this;
@@ -306,7 +350,7 @@
 				pop.y=FlexGlobals.topLevelApplication.stage.stageHeight/2-pop.height/2;
 				pop.toolTip="Add";
 				var calendarItem:CalendarItem;calendarItem 
-						=new CalendarItem(new Date(),new Date(),
+						=new CalendarItem(beginDate,endDate,
 							ResourceManager.getInstance().getString("FlexCalendar", "editor.newItem"));
 				pop.item = converter.calendarItemToItemEditorVO(calendarItem);
 				pop.cancelCallback=function():void{
@@ -334,13 +378,28 @@
 					model.repeatType=pop.item.repeatRuleId;
 					model.submitStatus=0;
 					scheduleServiceRO.addSchedule(model);
-					PopUpManager.removePopUp(this);
+					PopUpManager.removePopUp(pop);
 				};
 				pop.deleteCallback = function():void{
-					PopUpManager.removePopUp(this);
+					PopUpManager.removePopUp(pop);
 				};
 				
 				
+			}
+			public var  maxFlag:Boolean=false;
+			private function maxCalendar():void{
+				Alert.show("a");
+				if(maxFlag==false){
+					toolBar.height=0;
+					conditionBar.height=0;
+					flexCalendar.refresh();
+					maxFlag=true;
+				}else{
+					toolBar.height=30;
+					conditionBar.height=30;
+					flexCalendar.refresh();
+					maxFlag=false;
+				}
 			}
 			private function search():void{
 				lockWin();
@@ -374,8 +433,8 @@
 		
 		
 		<mx:VBox width="100%" height="100%" id="listPanel">
-			<mx:HBox verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12" >
-				<mx:HBox width="100%" height="30" paddingLeft="20"  horizontalGap="0" backgroundColor="#C5E497"  verticalAlign="middle">
+			<mx:HBox verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12"  >
+				<mx:HBox width="100%" height="30" paddingLeft="20"  horizontalGap="0" backgroundColor="#C5E497"  verticalAlign="middle" id="toolBar">
 					<mx:Label text="|"/>
 					<mx:LinkButton  label="新建" icon="@Embed(source='../WebContent/resources/common/tools/button_add_icon.png')"  click="add()" />
 					<mx:Label text="|"/>
@@ -388,7 +447,7 @@
 				</mx:HBox>
 			</mx:HBox>
 			<mx:VBox width="100%" height="100%">
-				<mx:HBox height="30" width="100%" verticalAlign="middle" horizontalAlign="left">
+				<mx:HBox height="30" width="100%" verticalAlign="middle" horizontalAlign="left" id="conditionBar">
 					<mx:Label text="起止日期：" width="70">
 						
 					</mx:Label>
@@ -623,22 +682,21 @@
 					
 					<mx:VBox label="日历视图" width="100%" height="0" name="schedule" id="schedule">
 						<flexCalendar:MyFlexCalendar license="xxxx-xxx-xxx-xx-xxx" id="flexCalendar" width="100%" height="100%" dataProvider="{dp}" scaleX="1" visibleRange="{visibleDateRange}"
-													scaleY="1" itemEditor="{new MyBaloonItemEditor(flexCalendar, false, false)}"
-													calendarMode="{entireCalendarReadonly.selected?CalendarMode.READ_ONLY_MODE : CalendarMode.LIMITED_EDIT_MODE}"
+													scaleY="1"
+													calendarMode="{CalendarMode.LIMITED_EDIT_MODE}"
+													firstDayOfWeek="1"
+													initialHourPosition="9"
+													itemEditor="{new MyBaloonItemEditor(flexCalendar, false, false)}"
 													headerVisible="true"
 													currentTimeIndicator="true"
 													currentDayIndicator="true"
-													doubleClickEnabled="true"
+													doubleClickEnabled="false"
 													calendarItemAddedEvent="calendarItemAdded(event)"
 													calendarItemRemovedEvent="calendarItemRemoved(event)"
 													calendarItemModificationEvent="calendarItemModified(event)"
-													
-													calendarMouseClick="trace('calendarMouseClick')"
-													calendarMouseDoubleClick="trace('calendarMouseDoubleClick')"
-													calendarRendererMouseClick="trace('calendarRendererMouseClick')"
-													calendarRendererMouseDoubleClick="trace('calendarRendererMouseDoubleClick')"
-													calendarSpaceRendererMouseClick="trace('calendarSpaceRendererMouseClick')"
-													calendarSpaceRendererMouseDoubleClick="trace('calendarSpaceRendererMouseDoubleClick')"
+													calendarRendererMouseClick="enterEdit(event.item.itemId);"
+													calendarSpaceRendererMouseClick="add()"
+													calendarMouseClick ="add()"
 													/>
 					</mx:VBox>	
 			</mx:VBox>
