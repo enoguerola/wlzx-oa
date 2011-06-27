@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+<class name="system.wlims.oa.entity.task.TaskModel" table="wlzx_oa_task">
+        <id name="id">
+            <column name="id" />
+            <generator class="native" />
+        </id>
+
+     
+        <property name="title" type="string">
+            <column name="title" />
+        </property>
+         <property name="content" type="string">
+            <column name="content" />
+        </property>
+        <property name="postTime" type="java.util.Date">
+            <column name="assign_time" />
+        </property>
+		 <property name="assignerId" type="string">
+            <column name="assigner_id" />
+        </property>
+		 <property name="workerIds" type="string">
+            <column name="worker_ids" />
+        </property>
+          <property name="lastEditorId" type="string">
+            <column name="last_editor_id" />
+        </property>
+        <property name="lastEditTime" type="java.util.Date">
+            <column name="last_edit_time" />
+        </property>
+       <property name="status" type="int">
+            <column name="status" />
+        </property>
+    </class>
+</hibernate-mapping>
