@@ -25,6 +25,7 @@
 			import com.flexcalendar.components.calendar.events.CalendarItemModificationEvent;
 			import com.flexcalendar.components.calendar.events.CalendarItemRemovedEvent;
 			import com.flexcalendar.components.calendar.events.CalendarMouseEvent;
+			import com.flexcalendar.components.calendar.events.RangeSelectEvent;
 			import com.flexcalendar.components.calendar.utils.CalendarMode;
 			import com.flexcalendar.components.calendar.utils.DateUtils;
 			
@@ -36,6 +37,7 @@
 			import mx.events.CalendarLayoutChangeEvent;
 			import mx.events.CloseEvent;
 			import mx.events.DragEvent;
+			import mx.events.FlexEvent;
 			import mx.events.ItemClickEvent;
 			import mx.formatters.DateFormatter;
 			import mx.managers.*;
@@ -114,7 +116,9 @@
 
 				fromDateChooser.addEventListener(CalendarLayoutChangeEvent.CHANGE, updateRange);
 				toDateChooser.addEventListener(CalendarLayoutChangeEvent.CHANGE, updateRange);
-//				
+				fromDateChooser.addEventListener(FlexEvent.DATA_CHANGE, search);
+				toDateChooser.addEventListener(FlexEvent.DATA_CHANGE, search);
+				
 				//create sample CalendarDataProvider
 				//dp = new DataProviderBuilder().buildExampleDataProvider();
 				if (flexCalendar.itemEditor != null)
@@ -127,7 +131,7 @@
 					flexCalendar.removeEventListener(CalendarMouseEvent.CALENDAR_SPACE_RENDERER_MOUSE_DOUBLE_CLICK, flexCalendar.itemEditor.spaceRendererDoubleClickHandler);
 					
 					flexCalendar.addEventListener(CalendarMouseEvent.CALENDAR_MOUSE_CLICK,function(event:CalendarMouseEvent):void{
-//						Alert.show(event.type);
+						//Alert.show(event.type);
 //						Alert.show(event.selectedDate+"");
 						add(event.selectedDate,new Date(event.selectedDate.time + event.preferredTimeInMills));
 					});
@@ -145,6 +149,7 @@
 					//flexCalendar.addEventListener(CalendarMouseEvent.CALENDAR_MOUSE_CLICK,);
 				
 				}
+				
 				callLater(hideWaterMark);
 				search();
 			}
@@ -164,14 +169,25 @@
 				//sanity check
 				if (toDateChooser.selectedDate < fromDateChooser.selectedDate) {
 					//reset val	ues
+					//Alert.show("c");
 					fromDateChooser.selectedDate = flexCalendar.visibleRange.start;
 					toDateChooser.selectedDate = flexCalendar.visibleRange.end;
+					
 				}
 				else {
+					//Alert.show("d");
 					flexCalendar.visibleRange = new DateRange(DateUtils.startOfDay(fromDateChooser.selectedDate),
 						DateUtils.endOfDay(toDateChooser.selectedDate));
 				}
-				search();
+				fromDateChooser.dispatchEvent(new FlexEvent(FlexEvent.DATA_CHANGE));
+				toDateChooser.dispatchEvent(new FlexEvent(FlexEvent.DATA_CHANGE));
+				//Alert.show("e");
+//				fromDateChooser.addEventListener(FlexEvent.DATA_CHANGE, search);
+//				toDateChooser.addEventListener(FlexEvent.DATA_CHANGE, search);
+//				callLater(function():void{
+//					Alert.show("bb");
+//					search();
+//				});
 			}
 			
 //			private function calendarMouseClickHandler(event:CalendarMouseEvent):void {
@@ -226,6 +242,13 @@
 					schedule.visible=true;
 					list.height=0;
 					list.visible=false;
+//					flexCalendar.addEventListener(RangeSelectEvent.RANGE_NEXT, search);
+//					flexCalendar.addEventListener(RangeSelectEvent.RANGE_PREV, search);
+//					flexCalendar.addEventListener(RangeSelectEvent.RANGE_SELECT_DAY , search);
+//					flexCalendar.addEventListener(RangeSelectEvent.RANGE_SELECT_MONTH, search);
+//					flexCalendar.addEventListener(RangeSelectEvent.RANGE_SELECT_TODAY, search);
+//					flexCalendar.addEventListener(RangeSelectEvent.RANGE_SELECT_WEEK, search);
+//					flexCalendar.addEventListener(RangeSelectEvent.RANGE_SELECT_WORKING_WEEK, search);
 					search();
 //						scheduleViewContainer.selectedChild= b;
 //						
@@ -354,7 +377,7 @@
 							ResourceManager.getInstance().getString("FlexCalendar", "editor.newItem"));
 				pop.item = converter.calendarItemToItemEditorVO(calendarItem);
 				pop.cancelCallback=function():void{
-					PopUpManager.removePopUp(this);
+					PopUpManager.removePopUp(pop);
 				};
 				pop.saveCallback = function():void{
 					model=new ScheduleModel();
@@ -388,7 +411,6 @@
 			}
 			public var  maxFlag:Boolean=false;
 			private function maxCalendar():void{
-				Alert.show("a");
 				if(maxFlag==false){
 					toolBar.height=0;
 					conditionBar.height=0;
@@ -402,21 +424,22 @@
 				}
 			}
 			private function search():void{
+				//Alert.show("aa");
 				lockWin();
-				
 				var scheduleBeginDate:String=fromDateChooser.text;
 				var scheduleEndDate:String=toDateChooser.text;
-				var scheduleScope:String=scope.selectedItem.data;
+				var scheduleType:String=type.selectedItem.data;
 				var scheduleState:String=state.selectedItem.data;
-				scheduleServiceRO.getSchedulesByConditions(this.parentApplication.currentUser.id,scheduleScope,scheduleState,null,null,null,null,scheduleBeginDate,scheduleEndDate);
+				scheduleServiceRO.getSchedulesByConditions(this.parentApplication.currentUser.id,scheduleType,scheduleState,null,null,null,null,null,scheduleBeginDate,scheduleEndDate);
 			}
 			private var window:WlzxLockWin=null;
 			private function lockWin():void{
-				
-				window=WlzxLockWin(PopUpManager.createPopUp(this,WlzxLockWin,true)); 
-				PopUpManager.centerPopUp(window);
-				window.percentHeight=100;
-				window.percentWidth=100;			
+				if(window==null){
+					window=WlzxLockWin(PopUpManager.createPopUp(this,WlzxLockWin,true)); 
+					PopUpManager.centerPopUp(window);
+					window.percentHeight=100;
+					window.percentWidth=100;
+				}		
 				
 			}
 			private function unLockWin():void{
@@ -429,7 +452,6 @@
 <!--	<mx:Metadata>
 		[ResourceBundle("sampleApp")]
 	</mx:Metadata>-->
-	<mx:Panel width="100%" height="100%"   title="个人日程"  borderVisible="false" id="panel" dropShadowVisible="false" >
 		
 		
 		<mx:VBox width="100%" height="100%" id="listPanel">
@@ -451,28 +473,29 @@
 					<mx:Label text="起止日期：" width="70">
 						
 					</mx:Label>
-					<mx:DateField width="100" editable="false" id="fromDateChooser" selectedDate="{flexCalendar.visibleRange.start}"  formatString="YYYY-MM-DD">
+					<mx:DateField width="100" editable="false" id="fromDateChooser" selectedDate="{flexCalendar.visibleRange.start}"  formatString="YYYY-MM-DD"  >
 						
 					</mx:DateField>
 					<mx:Label text="--" width="20">
 						
 					</mx:Label>
-					<mx:DateField width="100" editable="false" id="toDateChooser" selectedDate="{flexCalendar.visibleRange.end}" formatString="YYYY-MM-DD">
+					<mx:DateField width="100" editable="false" id="toDateChooser" selectedDate="{flexCalendar.visibleRange.end}" formatString="YYYY-MM-DD" >
 						
 					</mx:DateField>
 					<mx:Label text="日程类型：" width="70" >
 						
 					</mx:Label>
-					<mx:ComboBox id="scope" width="130" dataProvider="{scheduleType}" selectedIndex="0" change="search()">
+					<mx:ComboBox id="type" width="130" dataProvider="{scheduleType}" selectedIndex="0">
 						
 					</mx:ComboBox>
 					<mx:Label text="日程状态：" width="70">
 						
 					</mx:Label>
-					<mx:ComboBox width="100"   id="state" dataProvider="{scheduleState}"  selectedIndex="0" change="search()">
+					<mx:ComboBox width="100"   id="state" dataProvider="{scheduleState}"  selectedIndex="0">
 						
 					</mx:ComboBox>
-					<mx:CheckBox id="entireCalendarReadonly" label="只读" selected="true" width="80" />									
+					<mx:Button id="searchButton" label="查询"   width="80"  click="search()"/>									
+
 					<mx:RadioButtonGroup id="scheduleView"  itemClick="scheduleViewSwitch(event);" />
 					<mx:RadioButton label="列表视图"  groupName="scheduleView" id="listView" selected="true" value="list"/>
 					<mx:RadioButton label="日历视图" groupName="scheduleView" id="dateView" value="schedule"/>
@@ -484,7 +507,38 @@
 						<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="false"   borderAlpha="0.2" verticalAlign="middle" id="table">				
 							<component:mygridcolumns>
 								
-								
+								<mx:DataGridColumn textAlign="center" headerText="标记" dataField="loginaccount" width="50">
+									<mx:itemRenderer>
+										<mx:Component>
+											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+												<mx:Image source="@Embed(source='../WebContent/resources/common/ui/circle.png')"  visible="{checkCircle(data)}"/>
+												<mx:Script>
+													<![CDATA[
+														
+														//提示信息
+														import cn.org.rapid_framework.flex_security.SecurityControler;
+														
+														import mx.controls.Alert;
+														import mx.core.UIComponent;
+														private function checkCircle(data:Object):Boolean{
+															
+															if(data!=null){	
+																if(data.repeatStatus==1){
+																	return true;
+																}else
+																	return false;
+																
+															}else{
+																return false;
+															}
+														}
+													]]>
+												</mx:Script>
+												
+											</mx:HBox>																			
+										</mx:Component>						
+									</mx:itemRenderer>
+								</mx:DataGridColumn>
 								<mx:DataGridColumn textAlign="center" headerText="日程类型"  width="60">
 									<mx:itemRenderer>
 										<mx:Component>
@@ -572,31 +626,7 @@
 									<mx:itemRenderer>
 										<mx:Component>
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
-												<mx:HBox  width="40" horizontalAlign="center">
-													<mx:Image source="@Embed(source='../WebContent/resources/common/ui/circle.png')"  visible="{checkCircle(data)}"/>
-													<mx:Script>
-														<![CDATA[
-															
-															//提示信息
-															import cn.org.rapid_framework.flex_security.SecurityControler;
-															
-															import mx.controls.Alert;
-															import mx.core.UIComponent;
-															private function checkCircle(data:Object):Boolean{
-																
-																if(data!=null){	
-																	if(data.repeatStatus==1){
-																		return true;
-																	}else
-																		return false;
-																	
-																}else{
-																	return false;
-																}
-															}
-														]]>
-													</mx:Script>
-												</mx:HBox>
+												
 												<mx:Label text="{data.title}" width="80%"/>
 												
 											</mx:HBox>																			
@@ -680,10 +710,10 @@
 					
 					
 					
-					<mx:VBox label="日历视图" width="100%" height="0" name="schedule" id="schedule">
+					<mx:VBox label="日历视图" width="100%" height="0" name="schedule" id="schedule" horizontalAlign="right">
 						<flexCalendar:MyFlexCalendar license="xxxx-xxx-xxx-xx-xxx" id="flexCalendar" width="100%" height="100%" dataProvider="{dp}" scaleX="1" visibleRange="{visibleDateRange}"
 													scaleY="1"
-													calendarMode="{CalendarMode.LIMITED_EDIT_MODE}"
+													calendarMode="{CalendarMode.FREE_EDIT_MODE}"
 													firstDayOfWeek="1"
 													initialHourPosition="9"
 													itemEditor="{new MyBaloonItemEditor(flexCalendar, false, false)}"
@@ -697,11 +727,11 @@
 													calendarRendererMouseClick="enterEdit(event.item.itemId);"
 													calendarSpaceRendererMouseClick="add()"
 													calendarMouseClick ="add()"
+													  
 													/>
 					</mx:VBox>	
 			</mx:VBox>
 		</mx:VBox>
-	</mx:Panel>
 	
 				
 			
