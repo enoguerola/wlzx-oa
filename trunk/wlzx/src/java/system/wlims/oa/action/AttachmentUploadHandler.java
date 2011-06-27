@@ -10,6 +10,7 @@ import org.xml.sax.helpers.AttributesImpl;
 
 import system.ServiceException;
 import system.components.upload.BaseFileUploadHandler;
+import system.utils.ResourcesUtils;
 import system.wlims.oa.entity.notice.AttachmentModel;
 import system.wlims.oa.service.notice.AttachmentService;
 
@@ -49,7 +50,7 @@ public class AttachmentUploadHandler extends BaseFileUploadHandler{
 	@Override
 	protected void init() {
 		// TODO Auto-generated method stub
-		uploadDirectory = "uploads/oa/attachment/";
+		uploadDirectory = ResourcesUtils.getWebRootPath() + "uploads/oa/attachment/";
 	}
 
 	public AttachmentService getAttachmentService() {

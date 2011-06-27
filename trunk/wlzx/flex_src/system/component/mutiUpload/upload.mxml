@@ -15,6 +15,7 @@
 			import mx.events.IndexChangedEvent;
 			
 			public var fileRef:FileReferenceList = new FileReferenceList();
+			public var allTypes:Array;
 			public var urlRequest:URLRequest = new URLRequest("upload.php");			
 			public var uploadImg_num:int = 0;
 			public var upload_size:Number = 0;
@@ -35,9 +36,7 @@
 			//===================
 			// 浏览本地文件
 			//===================
-			internal function browseHandler(e:Event):void{
-				var imageTypes:FileFilter = new FileFilter("Images(*.jpg,*.jpeg,*.gif,*.png)","*.jpg;*.jpeg;*.gif;*.png");
-				var allTypes:Array = new Array(imageTypes);				
+			internal function browseHandler(e:Event):void{				
 				fileRef.browse(allTypes);				
 			}
 			
@@ -116,7 +115,7 @@
 			private function uploadComplete(e:DataEvent):void   
 			{   
 				var xmlResponse:XML = XML(e.data);
-				idList.push(xmlResponse.elements("field"));
+				idList.push(xmlResponse.elements("field").toString());
 			}
 			
 			//===================
@@ -183,8 +182,6 @@
 			// 执行添加操作
 			//===================
 			internal function addHandler(e:Event):void{
-				var imageTypes:FileFilter = new FileFilter("Images(*.jpg,*.jpeg,*.gif,*.png)","*.jpg;*.jpeg;*.gif;*.png");
-				var allTypes:Array = new Array(imageTypes);
 				var addFileRef:FileReferenceList = new FileReferenceList();
 				var sameImgIndex:Array = new Array();
 				var beforeAddLength:Number = fileRef.fileList.length;				
@@ -227,6 +224,10 @@
 			// 初始化函数
 			//===================		
 			internal function initApp():void{
+				var imageTypes:FileFilter = new FileFilter("Images","*.jpg;*.jpeg;*.gif;*.png");
+				var docTypes:FileFilter = new FileFilter("Documents","*.doc;*.docx;*.xls;*.xlsx;*.pdf");
+				allTypes = new Array(imageTypes, docTypes);
+				
 				browse_btn.addEventListener(MouseEvent.CLICK,browseHandler);
 				fileRef.addEventListener(Event.SELECT,selectHandler);
 				delete_btn.addEventListener(MouseEvent.CLICK,deleteHandler);
@@ -249,7 +250,7 @@
 			<mx:Label text="文件大小" x="215" y="3"/>
 			<mx:Label text="上传进度" x="320" y="3"/>
 		</mx:Canvas> 
-		<mx:List x="0" y="67" width="100%" rowCount="10" allowMultipleSelection="true" borderStyle="solid" borderColor="0Xbbbbbb" rowHeight="25" itemRenderer="system.component.mutiUpload.ImageItem" id="process_list"/>
+		<mx:List x="0" y="67" width="100%" rowCount="10" allowMultipleSelection="true" borderStyle="solid" borderColor="0Xbbbbbb" rowHeight="25" itemRenderer="system.component.mutiUpload.ImageItem" id="process_list" height="165"/>
 		<mx:Canvas width="100%" height="25" backgroundColor="0Xf1f1f1" x="0" y="320" borderStyle="solid" borderColor="0Xbbbbbb">
 			<mx:Label text="" fontWeight="bold" id="tip_txt" x="5" y="3"/>			
 		</mx:Canvas> 

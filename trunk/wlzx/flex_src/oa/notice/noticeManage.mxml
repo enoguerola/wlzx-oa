@@ -206,7 +206,7 @@
 					
 					form.title = title.text;
 					form.type = noticeType.selectedItem.data;
-					noticeServiceRO.updateNotice(form);
+					noticeServiceRO.updateNotice(form, upload.idList);
 				}
 			}
 			

@@ -172,10 +172,11 @@ INSERT INTO `wlzx_oa_notice` (`id`, `scope`, `type`, `post_department_id`, `post
 --
 
 CREATE TABLE IF NOT EXISTS `wlzx_oa_notice_attachment_relationship` (
-  `id` bigint(20) NOT NULL,
+  `id` bigint(20) NOT NULL auto_increment,
   `notice_id` bigint(20) NOT NULL,
-  `attachment_id` bigint(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `attachment_id` bigint(20) NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
 
 --
 -- 转存表中的数据 `wlzx_oa_notice_attachment_relationship`

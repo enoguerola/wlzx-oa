@@ -17,8 +17,11 @@ import system.entity.DepartmentModel;
 import system.entity.UserModel;
 import system.utils.StringUtils;
 import system.utils.UtilDateTime;
+import system.wlims.oa.dao.notice.AttachmentDAO;
 import system.wlims.oa.dao.notice.NoticeDAO;
+import system.wlims.oa.entity.notice.AttachmentModel;
 import system.wlims.oa.entity.notice.NoticeModel;
+import system.wlims.oa.service.notice.AttachmentService;
 import system.wlims.oa.service.notice.NoticeService;
 
 public class NoticeServiceImpl implements NoticeService {
@@ -26,9 +29,10 @@ public class NoticeServiceImpl implements NoticeService {
 	private NoticeDAO noticeDAO;
 	private DepartmentDAO departmentDAO;
 	private UserDAO userDAO;
+	private AttachmentDAO attachmentDAO;
 
 	@Override
-	public void addNotice(NoticeModel notice) {
+	public void addNotice(NoticeModel notice, List list) {
 		// TODO Auto-generated method stub
 		UserModel userModel = SecurityUserHolder.getCurrentUser();
 		notice.setLastEditorId(userModel.getId());
@@ -42,6 +46,14 @@ public class NoticeServiceImpl implements NoticeService {
 				notice.setPostTime(UtilDateTime.nowDate());
 			}
 		}
+		if(list != null && list.size() > 0){
+			for(Object id : list){
+				System.out.println(id);
+				AttachmentModel attachmentModel = attachmentDAO.get((String)id);
+				notice.getAttachments().add(attachmentModel);
+			}
+		}
+			
 		noticeDAO.saveOrUpdate(notice);
 	}
 
@@ -121,9 +133,16 @@ public class NoticeServiceImpl implements NoticeService {
 	}
 
 	@Override
-	public boolean updateNotice(NoticeModel notice) {
+	public boolean updateNotice(NoticeModel notice, List list) {
 		// TODO Auto-generated method stub
 		try{
+			if(list != null && list.size() > 0){
+				for(Object id : list){
+					System.out.println(id);
+					AttachmentModel attachmentModel = attachmentDAO.get((String)id);
+					notice.getAttachments().add(attachmentModel);
+				}
+			}
 			noticeDAO.saveOrUpdate(notice);
 			return true;
 		}catch (DAOException e){
@@ -207,6 +226,21 @@ public class NoticeServiceImpl implements NoticeService {
 			return false;
 		}
 		return true;
+	}
+
+
+	public void setAttachmentDAO(AttachmentDAO attachmentDAO) {
+		this.attachmentDAO = attachmentDAO;
+	}
+
+	public AttachmentDAO getAttachmentDAO() {
+		return attachmentDAO;
+	}
+
+	@Override
+	public NoticeModel get(String id) throws ServiceException {
+		// TODO Auto-generated method stub
+		return noticeDAO.get(id);
 	}
 
 }
