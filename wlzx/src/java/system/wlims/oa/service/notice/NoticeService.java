@@ -2,16 +2,14 @@ package system.wlims.oa.service.notice;
 
 import java.util.List;
 
-import com.sun.swing.internal.plaf.basic.resources.basic;
-
 import system.ServiceException;
 import system.wlims.oa.entity.notice.NoticeModel;
 
 public interface NoticeService {
 	
-	public void addNotice(NoticeModel notice);
+	public void addNotice(NoticeModel notice, List list);
 	
-	public boolean updateNotice(NoticeModel notice);
+	public boolean updateNotice(NoticeModel notice, List list);
 	
 	public NoticeModel loadNoticeInfoById(String id);
 		
@@ -25,5 +23,7 @@ public interface NoticeService {
 	public List<NoticeModel> getSchoolNotice(Integer index, Integer page)throws ServiceException;
 	
 	public boolean publish(String id)throws ServiceException;
+	
+	public NoticeModel get(String id)throws ServiceException;
 
 }

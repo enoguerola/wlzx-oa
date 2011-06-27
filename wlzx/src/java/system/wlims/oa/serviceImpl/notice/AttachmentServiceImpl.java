@@ -2,6 +2,7 @@ package system.wlims.oa.serviceImpl.notice;
 
 import java.util.List;
 
+import system.DAOException;
 import system.ServiceException;
 import system.wlims.oa.dao.notice.AttachmentDAO;
 import system.wlims.oa.entity.notice.AttachmentModel;

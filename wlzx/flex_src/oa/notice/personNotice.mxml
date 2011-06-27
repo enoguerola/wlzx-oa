@@ -73,13 +73,13 @@
 				if(parms=='add'){
 					this.currentState='add';
 					returnArea.height=0;
-					var urlRequest:URLRequest = new URLRequest("spring/attachmentUpload.action");
-					upload.urlRequest = urlRequest;
 				}
 				else if(parms=='list') 
 				{
 					this.currentState='list';
 				}
+				var urlRequest:URLRequest = new URLRequest("spring/attachmentUpload.action");
+				upload.urlRequest = urlRequest;
 				messagesView.selectedIndex = 0;
 				search();
 				departmentList = this.parentApplication.allDepartment;
@@ -216,7 +216,7 @@
 						form.type = noticeType.selectedItem.data;
 						form.status = 0;
 						//Alert.show("add begin");
-						noticeServiceRO.addNotice(form);
+						noticeServiceRO.addNotice(form, upload.idList);
 					}else if(addUpdateFlag.text == "update"+"_"+form.id){
 						form.content = rte.text;
 						if(emergence.selected)
@@ -228,7 +228,7 @@
 						form.title = title.text;
 						form.status = 0;
 						form.type = noticeType.selectedItem.data;
-						noticeServiceRO.updateNotice(form);
+						noticeServiceRO.updateNotice(form, upload.idList);
 					}
 				}
 			}
@@ -264,7 +264,7 @@
 						form.title = title.text;
 						form.type = noticeType.selectedItem.data;
 						form.status = 1;
-						noticeServiceRO.addNotice(form);
+						noticeServiceRO.addNotice(form, upload.idList);
 					}else if(addUpdateFlag.text == "update"+"_"+form.id){
 						form.content = rte.text;
 						if(emergence.selected)
@@ -276,7 +276,7 @@
 						form.status = 1;
 						form.title = title.text;
 						form.type = noticeType.selectedItem.data;
-						noticeServiceRO.updateNotice(form);
+						noticeServiceRO.updateNotice(form, upload.idList);
 					}
 				}
 			}

@@ -20,6 +20,9 @@
 		import mx.printing.*;
 		import mx.rpc.events.*;
 		import mx.validators.Validator;
+		import mx.controls.Button;
+		
+		import oa.entity.AttachmentModel;
 		
 		import system.utils.*;
 		
@@ -46,11 +49,20 @@
 			detail_content.text = notice.content;
 			postTime.text = formatDate(notice.postTime);
 			department.text = this.parentApplication.getDepartmentNameById(notice.postDepartmentId);
-			Alert.show("loaded");
+			for each(var model:AttachmentModel in notice.attachments){
+				Alert.show("loaded att");
+				var b:Button =new Button();
+				b.width=100;
+				b.height=30;
+				b.label= model.name;
+				b.id = model.path;
+				detail_attachments.addChild(b);
+				b.addEventListener(MouseEvent.CLICK, download);
+			}
 		}
 			
 		public function detail():void{
-			noticeServiceRO.loadNoticeInfoById(_id);
+			notice = noticeServiceRO.loadNoticeInfoById(_id);
 		}
 			
 		
@@ -69,6 +81,60 @@
 				job.send();
 			}
 		}
+			
+		private var downloadURL:URLRequest;
+		private var file:FileReference; //这是要主要的地方
+		
+		public function download(event:MouseEvent):void {
+			downloadURL = new URLRequest("../../uploads/oa/attachment/" + event.target.id );
+			//downloadURL = new URLRequest("http://localhost:8081/wlzx/uploads/oa/attachment/gravtar_junlu_110627085752.jpg");
+			file = new FileReference();
+			configureListeners(file);
+			file.download(downloadURL);
+			
+		}
+		
+		private function configureListeners(dispatcher:IEventDispatcher):void {
+			dispatcher.addEventListener(Event.CANCEL, cancelHandler);
+			dispatcher.addEventListener(Event.COMPLETE, completeHandler);
+			dispatcher.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
+			dispatcher.addEventListener(Event.OPEN, openHandler);
+			dispatcher.addEventListener(ProgressEvent.PROGRESS, progressHandler);
+			dispatcher.addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
+			dispatcher.addEventListener(Event.SELECT, selectHandler);
+		}
+		
+		private function cancelHandler(event:Event):void {
+			trace("cancelHandler: " + event);
+		}
+		
+		private function completeHandler(event:Event):void {
+			trace("completeHandler: " + event);
+			Alert.show("下载成功");
+		}
+		
+		private function ioErrorHandler(event:IOErrorEvent):void {
+			trace("ioErrorHandler: " + event);
+			Alert.show("网络连接有错");
+		}
+		
+		private function openHandler(event:Event):void {
+			trace("openHandler: " + event);
+		}
+		
+		private function progressHandler(event:ProgressEvent):void {
+			var file:FileReference = FileReference(event.target);
+			trace("progressHandler name=" + file.name + " bytesLoaded=" + event.bytesLoaded + " bytesTotal=" + event.bytesTotal);
+		}
+		
+		private function securityErrorHandler(event:SecurityErrorEvent):void {
+			trace("securityErrorHandler: " + event);
+		}
+		
+		private function selectHandler(event:Event):void {
+			var file:FileReference = FileReference(event.target);
+			trace("selectHandler: name=" + file.name + " URL=" + downloadURL.url);
+		}
 
 		]]> 		
 	</mx:Script> 
@@ -81,8 +147,8 @@
 				<s:mxmlContent>
 					<s:HGroup right="4" width="144" verticalCenter="0">
 						<mx:LinkButton label="打印" click="linkbutton1_clickHandler(event)"/>
-						<mx:LinkButton label="关闭"/>
-						<mx:LinkButton label="返回"/>
+						<!--<mx:LinkButton label="关闭"/>
+						<mx:LinkButton label="返回"/>-->
 					</s:HGroup>
 				</s:mxmlContent>
 			</s:Group>
@@ -107,7 +173,6 @@
 				<mx:LinkButton  label="附件下载区" icon="@Embed(source='../WebContent/resources/common/tools/button_attachment_icon.png')" />
 			</mx:HBox>
 			<mx:VBox width="100%" id="detail_attachments">
-				
 			</mx:VBox>
 		</mx:VBox>
 		
