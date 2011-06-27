@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2011 年 06 月 23 日 09:18
+-- 生成日期: 2011 年 06 月 27 日 18:17
 -- 服务器版本: 5.0.91
 -- PHP 版本: 5.2.13
 
@@ -157,7 +157,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_oa_notice` (
 --
 
 INSERT INTO `wlzx_oa_notice` (`id`, `scope`, `type`, `post_department_id`, `poster_id`, `emergence_flag`, `title`, `content`, `postTime`, `last_edit_time`, `last_editor_id`, `status`) VALUES
-(1, 0, '重要通知', 1, NULL, 0, 'sas', '', NULL, '2011-06-19 21:11:58', 2, 0),
+(1, 0, '重要通知', 2, NULL, 0, 'sas', 'gewgew', '2011-06-27 14:53:17', '2011-06-19 21:11:58', 2, 1),
 (2, 1, '重要通知', 1, NULL, 0, 'ss', 'sssss', NULL, '2011-06-22 23:04:44', 2, 0),
 (3, 1, '重要通知', 12, 2, 0, 'kkk', 'aaasssbbbbb', '2011-06-19 22:31:28', '2011-06-19 22:31:28', 2, 1),
 (4, 2, '重要通知', 1, 2, 0, 'ss', 'aaa', '2011-06-21 20:29:30', '2011-06-21 23:52:44', 2, 1),
@@ -228,7 +228,8 @@ CREATE TABLE IF NOT EXISTS `wlzx_oa_schedule` (
   `end_time` varchar(300) NOT NULL,
   `poster_id` bigint(20) NOT NULL,
   `type` smallint(6) NOT NULL,
-  `shares` varchar(10) NOT NULL,
+  `department_share` smallint(6) default NULL,
+  `school_share` smallint(6) default NULL,
   `department_id` bigint(20) default NULL,
   `emergence` smallint(6) NOT NULL,
   `finish_status` smallint(6) default NULL,
@@ -239,12 +240,19 @@ CREATE TABLE IF NOT EXISTS `wlzx_oa_schedule` (
   `repeat_on_days` varchar(200) default NULL,
   `repeat_end_time` varchar(200) default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=31 ;
 
 --
 -- 转存表中的数据 `wlzx_oa_schedule`
 --
 
+INSERT INTO `wlzx_oa_schedule` (`id`, `title`, `content`, `begin_time`, `end_time`, `poster_id`, `type`, `department_share`, `school_share`, `department_id`, `emergence`, `finish_status`, `submit_status`, `repeat_status`, `repeat_type`, `repeat_interval`, `repeat_on_days`, `repeat_end_time`) VALUES
+(22, '新日程', NULL, '2011-06-24 02:30:08', '2011-06-24 05:30:00', 2, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, '0;0;0;0;0;0;0', '2011-06-30 00:00:00'),
+(26, '2222', NULL, '2011-06-25 00:00:00', '2011-06-30 00:00:00', 2, 1, 0, 1, 1, 0, 0, 0, 0, 0, 1, '0;0;0;0;0;0;0', NULL),
+(27, '新日程', NULL, '2011-06-25 10:00:08', '2011-06-25 13:00:00', 2, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, '0;0;0;0;0;0;0', NULL),
+(28, '2', NULL, '2011-06-25 16:14:49', '2011-06-25 18:30:49', 2, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, '0;0;0;0;0;0;0', NULL),
+(29, '2222222222222222', NULL, '2011-06-23 00:00:00', '2011-06-24 00:00:00', 2, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, '0;0;0;0;0;0;0', NULL),
+(30, '3333333333333', NULL, '2011-06-21 07:43:30', '2011-06-21 10:00:30', 2, 1, 1, 1, 1, 2, 1, 0, 0, 0, 1, '0;0;0;0;0;0;0', NULL);
 
 -- --------------------------------------------------------
 
@@ -290,6 +298,30 @@ CREATE TABLE IF NOT EXISTS `wlzx_oa_takeleave_apply` (
 INSERT INTO `wlzx_oa_takeleave_apply` (`id`, `takeLeave_applyNo`, `takeLeave_type`, `takeLeave_teacher_id`, `takeLeave_beginTime`, `takeLeave_endTime`, `takeLeave_reason`, `takeLeave_arrange_tech`, `takeLeave_arrange_tech_deal_already`, `takeLeave_arrange_service`, `takeLeave_arrange_service_deal_already`, `takeLeave_arrange_manage`, `takeLeave_arrange_manage_deal_already`, `takeLeave_officeChief_approver_id`, `takeLeave_officeChief_approve_time`, `takeLeave_officeChief_approve_option`, `takeLeave_officeChief_status`, `takeLeave_vicePrincipal_approver_id`, `takeLeave_vicePrincipal_approve_time`, `takeLeave_vicePrincipal_approve_option`, `takeLeave_vicePrincipal_status`, `takeLeave_principal_approver_id`, `takeLeave_principal_approve_time`, `takeLeave_principal_approve_option`, `takeLeave_principal_status`, `takeLeave_remark`, `takeLeave_status`) VALUES
 (2, '20110608082544', 0, 2, '2011-06-16 1', '2011-06-22 0', NULL, '2', 0, '3', 0, '4', 0, NULL, NULL, NULL, 0, NULL, NULL, NULL, 0, NULL, NULL, NULL, 0, NULL, 5),
 (3, '20110608093112', 1, 2, '2011-06-08 0', '2011-06-16 2', '22222222222222222', '12', 1, '12', 1, '12', 1, 2, '2011-06-16 00:00:00', 'a', 2, NULL, NULL, '', 0, NULL, NULL, '', 0, NULL, 4);
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `wlzx_oa_task`
+--
+
+CREATE TABLE IF NOT EXISTS `wlzx_oa_task` (
+  `id` bigint(20) NOT NULL auto_increment,
+  `title` varchar(200) NOT NULL,
+  `content` text NOT NULL,
+  `assign_time` datetime NOT NULL,
+  `assigner_id` bigint(20) NOT NULL,
+  `last_editor_id` bigint(20) default NULL,
+  `last_edit_time` timestamp NULL default NULL on update CURRENT_TIMESTAMP,
+  `worker_ids` text NOT NULL,
+  `status` smallint(6) NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+--
+-- 转存表中的数据 `wlzx_oa_task`
+--
+
 
 -- --------------------------------------------------------
 

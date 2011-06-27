@@ -21,44 +21,48 @@
     <application path="system/component/checkTree/CheckTreeDemo.mxml"/>
   </applications>
   <modules>
-    <module application="flex_src/home.mxml" destPath="oa/attendance/overWorkApply.swf" optimize="false" sourcePath="flex_src/oa/attendance/overWorkApply.mxml"/>
-    <module application="flex_src/home.mxml" destPath="basic/directory/directoryList.swf" optimize="false" sourcePath="flex_src/basic/directory/directoryList.mxml"/>
-    <module application="flex_src/home.mxml" destPath="oa/conference/conferenceList.swf" optimize="false" sourcePath="flex_src/oa/conference/conferenceList.mxml"/>
-    <module application="flex_src/home.mxml" destPath="oa/attendance/moveRestDayApprove.swf" optimize="false" sourcePath="flex_src/oa/attendance/moveRestDayApprove.mxml"/>
-    <module application="flex_src/home.mxml" destPath="oa/notice/noticeDetail.swf" optimize="false" sourcePath="flex_src/oa/notice/noticeDetail.mxml"/>
-    <module application="flex_src/home.mxml" destPath="oa/attendance/takeLeaveForm.swf" optimize="false" sourcePath="flex_src/oa/attendance/takeLeaveForm.mxml"/>
-    <module application="flex_src/home.mxml" destPath="basic/place/placeList.swf" optimize="false" sourcePath="flex_src/basic/place/placeList.mxml"/>
-    <module application="flex_src/home.mxml" destPath="basic/staff/staffList.swf" optimize="false" sourcePath="flex_src/basic/staff/staffList.mxml"/>
-    <module application="flex_src/home.mxml" destPath="basic/index.swf" optimize="true" sourcePath="flex_src/basic/index.mxml"/>
-    <module application="flex_src/home.mxml" destPath="oa/course/adjust/adjustApply.swf" optimize="false" sourcePath="flex_src/oa/course/adjust/adjustApply.mxml"/>
-    <module application="flex_src/home.mxml" destPath="basic/authorization/departmentAuthorization.swf" optimize="false" sourcePath="flex_src/basic/authorization/departmentAuthorization.mxml"/>
-    <module application="flex_src/home.mxml" destPath="oa/attendance/moveRestDayApply.swf" optimize="false" sourcePath="flex_src/oa/attendance/moveRestDayApply.mxml"/>
-    <module application="flex_src/home.mxml" destPath="oa/notice/personNotice.swf" optimize="false" sourcePath="flex_src/oa/notice/personNotice.mxml"/>
-    <module application="flex_src/home.mxml" destPath="oa/attendance/overWorkForm.swf" optimize="false" sourcePath="flex_src/oa/attendance/overWorkForm.mxml"/>
-    <module application="flex_src/home.mxml" destPath="system/message/messageList.swf" optimize="false" sourcePath="flex_src/system/message/messageList.mxml"/>
-    <module application="flex_src/home.mxml" destPath="oa/attendance/moveRestDayForm.swf" optimize="false" sourcePath="flex_src/oa/attendance/moveRestDayForm.mxml"/>
+    <module application="flex_src/home.mxml" destPath="basic/account/accountPw.swf" optimize="false" sourcePath="flex_src/basic/account/accountPw.mxml"/>
+    <module application="flex_src/home.mxml" destPath="oa/index.swf" optimize="true" sourcePath="flex_src/oa/index.mxml"/>
+    <module application="flex_src/home.mxml" destPath="oa/course/adjust/adjustApprove.swf" optimize="false" sourcePath="flex_src/oa/course/adjust/adjustApprove.mxml"/>
+    <module application="flex_src/home.mxml" destPath="oa/notice/noticeManage.swf" optimize="false" sourcePath="flex_src/oa/notice/noticeManage.mxml"/>
     <module application="flex_src/home.mxml" destPath="oa/attendance/selfCanculateAttendance.swf" optimize="false" sourcePath="flex_src/oa/attendance/selfCanculateAttendance.mxml"/>
-    <module application="flex_src/home.mxml" destPath="oa/notice/noticeList.swf" optimize="false" sourcePath="flex_src/oa/notice/noticeList.mxml"/>
+    <module application="flex_src/home.mxml" destPath="system/message/messageList.swf" optimize="false" sourcePath="flex_src/system/message/messageList.mxml"/>
+    <module application="flex_src/home.mxml" destPath="oa/task/taskManager.swf" optimize="false" sourcePath="flex_src/oa/task/taskManager.mxml"/>
+    <module application="flex_src/home.mxml" destPath="basic/place/placeList.swf" optimize="false" sourcePath="flex_src/basic/place/placeList.mxml"/>
+    <module application="flex_src/home.mxml" destPath="oa/notice/personNotice.swf" optimize="false" sourcePath="flex_src/oa/notice/personNotice.mxml"/>
+    <module application="flex_src/home.mxml" destPath="oa/task/waitingTask.swf" optimize="false" sourcePath="flex_src/oa/task/waitingTask.mxml"/>
     <module application="flex_src/home.mxml" destPath="oa/schedule/personSchedule2.swf" optimize="false" sourcePath="flex_src/oa/schedule/personSchedule2.mxml"/>
     <module application="flex_src/home.mxml" destPath="oa/attendance/moveRestDayForm.swf" optimize="false" sourcePath="flex_src/oa/attendance/moveRestDayForm.mxml"/>
-    <module application="flex_src/home.mxml" destPath="oa/attendance/takeLeaveApply.swf" optimize="false" sourcePath="flex_src/oa/attendance/takeLeaveApply.mxml"/>
-    <module application="flex_src/home.mxml" destPath="oa/attendance/takeLeaveApprove.swf" optimize="false" sourcePath="flex_src/oa/attendance/takeLeaveApprove.mxml"/>
-    <module application="flex_src/home.mxml" destPath="oa/attendance/canculateAttendance.swf" optimize="false" sourcePath="flex_src/oa/attendance/canculateAttendance.mxml"/>
-    <module application="flex_src/home.mxml" destPath="oa/communication/publicAddressBook.swf" optimize="false" sourcePath="flex_src/oa/communication/publicAddressBook.mxml"/>
-    <module application="flex_src/home.mxml" destPath="oa/notice/noticeManage.swf" optimize="false" sourcePath="flex_src/oa/notice/noticeManage.mxml"/>
-    <module application="flex_src/home.mxml" destPath="oa/course/adjust/adjustApprove.swf" optimize="false" sourcePath="flex_src/oa/course/adjust/adjustApprove.mxml"/>
-    <module application="flex_src/home.mxml" destPath="basic/setting/roleSetting.swf" optimize="false" sourcePath="flex_src/basic/setting/roleSetting.mxml"/>
-    <module application="flex_src/home.mxml" destPath="oa/schedule/publicSchedule.swf" optimize="false" sourcePath="flex_src/oa/schedule/publicSchedule.mxml"/>
-    <module application="flex_src/home.mxml" destPath="basic/staff/staffInput.swf" optimize="false" sourcePath="flex_src/basic/staff/staffInput.mxml"/>
-    <module application="flex_src/home.mxml" destPath="oa/attendance/overWorkApprove.swf" optimize="false" sourcePath="flex_src/oa/attendance/overWorkApprove.mxml"/>
-    <module application="flex_src/home.mxml" destPath="basic/account/accountList.swf" optimize="false" sourcePath="flex_src/basic/account/accountList.mxml"/>
-    <module application="flex_src/home.mxml" destPath="oa/indexMainHomeBody.swf" optimize="false" sourcePath="flex_src/oa/indexMainHomeBody.mxml"/>
-    <module application="flex_src/home.mxml" destPath="oa/index.swf" optimize="true" sourcePath="flex_src/oa/index.mxml"/>
-    <module application="flex_src/home.mxml" destPath="basic/authorization/roleAuthorization.swf" optimize="false" sourcePath="flex_src/basic/authorization/roleAuthorization.mxml"/>
+    <module application="flex_src/home.mxml" destPath="oa/conference/conferenceList.swf" optimize="false" sourcePath="flex_src/oa/conference/conferenceList.mxml"/>
+    <module application="flex_src/home.mxml" destPath="oa/notice/noticeDetail.swf" optimize="false" sourcePath="flex_src/oa/notice/noticeDetail.mxml"/>
     <module application="flex_src/home.mxml" destPath="basic/setting/departmentSetting.swf" optimize="false" sourcePath="flex_src/basic/setting/departmentSetting.mxml"/>
-    <module application="flex_src/home.mxml" destPath="basic/account/accountPw.swf" optimize="false" sourcePath="flex_src/basic/account/accountPw.mxml"/>
-    <module application="flex_src/home.mxml" destPath="system/index.swf" optimize="true" sourcePath="flex_src/system/index.mxml"/>
+    <module application="flex_src/home.mxml" destPath="oa/attendance/takeLeaveApply.swf" optimize="false" sourcePath="flex_src/oa/attendance/takeLeaveApply.mxml"/>
+    <module application="flex_src/home.mxml" destPath="oa/notice/noticeList.swf" optimize="false" sourcePath="flex_src/oa/notice/noticeList.mxml"/>
+    <module application="flex_src/home.mxml" destPath="oa/attendance/overWorkApply.swf" optimize="false" sourcePath="flex_src/oa/attendance/overWorkApply.mxml"/>
+    <module application="flex_src/home.mxml" destPath="oa/attendance/overWorkForm.swf" optimize="false" sourcePath="flex_src/oa/attendance/overWorkForm.mxml"/>
+    <module application="flex_src/home.mxml" destPath="oa/attendance/takeLeaveForm.swf" optimize="false" sourcePath="flex_src/oa/attendance/takeLeaveForm.mxml"/>
+    <module application="flex_src/home.mxml" destPath="oa/schedule/publicSchedule.swf" optimize="false" sourcePath="flex_src/oa/schedule/publicSchedule.mxml"/>
+    <module application="flex_src/home.mxml" destPath="basic/staff/staffList.swf" optimize="false" sourcePath="flex_src/basic/staff/staffList.mxml"/>
+    <module application="flex_src/home.mxml" destPath="oa/attendance/overWorkApprove.swf" optimize="false" sourcePath="flex_src/oa/attendance/overWorkApprove.mxml"/>
+    <module application="flex_src/home.mxml" destPath="oa/attendance/moveRestDayApply.swf" optimize="false" sourcePath="flex_src/oa/attendance/moveRestDayApply.mxml"/>
+    <module application="flex_src/home.mxml" destPath="oa/attendance/canculateAttendance.swf" optimize="false" sourcePath="flex_src/oa/attendance/canculateAttendance.mxml"/>
+    <module application="flex_src/home.mxml" destPath="basic/setting/roleSetting.swf" optimize="false" sourcePath="flex_src/basic/setting/roleSetting.mxml"/>
+    <module application="flex_src/home.mxml" destPath="basic/index.swf" optimize="true" sourcePath="flex_src/basic/index.mxml"/>
     <module application="flex_src/home.mxml" destPath="oa/schedule/personSchedule.swf" optimize="false" sourcePath="flex_src/oa/schedule/personSchedule.mxml"/>
+    <module application="flex_src/home.mxml" destPath="oa/task/taskManage.swf" optimize="false" sourcePath="flex_src/oa/task/taskManage.mxml"/>
+    <module application="flex_src/home.mxml" destPath="oa/course/adjust/adjustApply.swf" optimize="false" sourcePath="flex_src/oa/course/adjust/adjustApply.mxml"/>
+    <module application="flex_src/home.mxml" destPath="oa/communication/publicAddressBook.swf" optimize="false" sourcePath="flex_src/oa/communication/publicAddressBook.mxml"/>
+    <module application="flex_src/home.mxml" destPath="basic/staff/staffInput.swf" optimize="false" sourcePath="flex_src/basic/staff/staffInput.mxml"/>
+    <module application="flex_src/home.mxml" destPath="basic/authorization/departmentAuthorization.swf" optimize="false" sourcePath="flex_src/basic/authorization/departmentAuthorization.mxml"/>
+    <module application="flex_src/home.mxml" destPath="system/index.swf" optimize="true" sourcePath="flex_src/system/index.mxml"/>
+    <module application="flex_src/home.mxml" destPath="basic/account/accountList.swf" optimize="false" sourcePath="flex_src/basic/account/accountList.mxml"/>
+    <module application="flex_src/home.mxml" destPath="oa/attendance/moveRestDayApprove.swf" optimize="false" sourcePath="flex_src/oa/attendance/moveRestDayApprove.mxml"/>
+    <module application="flex_src/home.mxml" destPath="oa/indexMainHomeBody.swf" optimize="false" sourcePath="flex_src/oa/indexMainHomeBody.mxml"/>
+    <module application="flex_src/home.mxml" destPath="oa/attendance/takeLeaveApprove.swf" optimize="false" sourcePath="flex_src/oa/attendance/takeLeaveApprove.mxml"/>
+    <module application="flex_src/home.mxml" destPath="basic/authorization/roleAuthorization.swf" optimize="false" sourcePath="flex_src/basic/authorization/roleAuthorization.mxml"/>
+    <module application="flex_src/home.mxml" destPath="oa/attendance/moveRestDayForm.swf" optimize="false" sourcePath="flex_src/oa/attendance/moveRestDayForm.mxml"/>
+    <module application="flex_src/home.mxml" destPath="basic/directory/directoryList.swf" optimize="false" sourcePath="flex_src/basic/directory/directoryList.mxml"/>
+    <module application="flex_src/home.mxml" destPath="oa/task/personTask.swf" optimize="false" sourcePath="flex_src/oa/task/personTask.mxml"/>
   </modules>
   <buildCSSFiles/>
 </actionScriptProperties>
