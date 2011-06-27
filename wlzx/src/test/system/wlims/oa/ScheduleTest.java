@@ -1,12 +1,8 @@
 package system.wlims.oa;
 
-import java.util.Set;
 
 import system.BaseTest;
-import system.dao.DepartmentDAO;
 import system.dao.UserDAO;
-import system.entity.DepartmentModel;
-import system.entity.UserModel;
 import system.wlims.oa.dao.schedule.ScheduleDAO;
 
 public class ScheduleTest extends BaseTest {
@@ -20,9 +16,9 @@ public class ScheduleTest extends BaseTest {
 	}
 	
 	public void getSchedulesByConditionsTest(String userId, String type,String state,
-			String departmentShare,String schoolShare, String emergence,  String title,
+			String departmentShare,String departmentId,String schoolShare, String emergence,  String title,
 			String beginDate, String endDate){
-		scheduleDAO.getSchedulesByConditions(userId, type, state, departmentShare, schoolShare,emergence, title, beginDate, endDate);
+		scheduleDAO.getSchedulesByConditions(userId, type, state, departmentShare,departmentId, schoolShare,emergence, title, beginDate, endDate);
 	}
 	public static void main(String[] args){
 		ScheduleTest test = new ScheduleTest();
@@ -31,7 +27,7 @@ public class ScheduleTest extends BaseTest {
 		String scheduleState=null;
 		String scheduleBeginDate="2011-06-19";
 		String scheduleEndDate="2011-06-23";
-		test.getSchedulesByConditionsTest(userId,scheduleScope,scheduleState,null,null,null,null,scheduleBeginDate,scheduleEndDate);
+		test.getSchedulesByConditionsTest(userId,scheduleScope,scheduleState,null,null,null,null,null,scheduleBeginDate,scheduleEndDate);
 	}
 
 	public void setUserDAO(UserDAO userDAO) {

@@ -9,7 +9,9 @@
 	<!-- To build with maven comment this line -->
 	<!--<mx:Style source="flex3/defaults.css" />-->
 	
-	
+	<mx:RemoteObject id="scheduleServiceRO" destination="scheduleServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+		<mx:method name="getSchedulesByConditions"  concurrency="last"  result="getSchedulesByConditions_resultHandler(event);" />
+	</mx:RemoteObject>
 	<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 		<mx:method name="getDepartmentBySymbol"  concurrency="last"  result="getDepartmentBySymbolResult(event);" />
 	</mx:RemoteObject>
@@ -17,22 +19,34 @@
 		<![CDATA[
 			import com.flexcalendar.components.calendar.core.DateRange;
 			import com.flexcalendar.components.calendar.core.dataModel.CalendarDataProvider;
+			import com.flexcalendar.components.calendar.core.dataModel.formatICalendar.Recur;
 			import com.flexcalendar.components.calendar.editor.baloon.BaloonItemEditor;
 			import com.flexcalendar.components.calendar.events.CalendarItemAddedEvent;
 			import com.flexcalendar.components.calendar.events.CalendarItemModificationEvent;
 			import com.flexcalendar.components.calendar.events.CalendarItemRemovedEvent;
 			import com.flexcalendar.components.calendar.events.CalendarMouseEvent;
+			import com.flexcalendar.components.calendar.events.RangeSelectEvent;
 			import com.flexcalendar.components.calendar.utils.CalendarMode;
 			import com.flexcalendar.components.calendar.utils.DateUtils;
+			
+			import flash.display.*;
+			import flash.geom.*;
 			
 			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
 			import mx.events.CalendarLayoutChangeEvent;
+			import mx.events.CloseEvent;
+			import mx.events.FlexEvent;
+			import mx.events.DragEvent;
 			import mx.events.ItemClickEvent;
+			import mx.formatters.DateFormatter;
+			import mx.managers.*;
+			import mx.resources.*;
 			import mx.rpc.events.*;
 			
 			import oa.schedule.flexCalendar.*;
 			
+			import system.component.WlzxLockWin;
 			import system.entity.*;
 			import system.utils.CommonUtils;
 			[Bindable]
@@ -66,23 +80,35 @@
 
 				fromDateChooser.addEventListener(CalendarLayoutChangeEvent.CHANGE, updateRange);
 				toDateChooser.addEventListener(CalendarLayoutChangeEvent.CHANGE, updateRange);
-//				flexCalendar.itemEditor=new MyBaloonItemEditor(flexCalendar,false,false);
-//				//create sample CalendarDataProvider
-//				dp = new DataProviderBuilder().buildExampleDataProvider();
+				callLater(hideWaterMark);
+				
 				
 				
 			}
+			protected function getSchedulesByConditions_resultHandler(event:ResultEvent):void
+			{
+				var allList:ArrayCollection=event.result as ArrayCollection;
+				if(scheduleView.selectedValue=="list"){
+					table.initdata(allList);
+				}else if(scheduleView.selectedValue=="schedule"){
+					dp = new PublicDataProviderBuilder().buildDataProvider(allList);
+				}
+				unLockWin();
+			}
 			protected function systemFaultHandler(event:FaultEvent):void {
+				unLockWin();
 				Alert.show(event.fault.faultString, 'Error');
+				
 			}
 			private function getDepartmentBySymbolResult(event:ResultEvent):void {
 				var _department:DepartmentModel = event.result as DepartmentModel;
 				buildSubDepartments(_department,scheduleScope,0);
-				var _init1:Object = {name:'全部',value:null};
+				var _init1:Object = {dataField:null,name:'全部'};
 				scheduleScope.addItemAt(_init1,0);
-				var _init2:Object = {name:'学校日程',value:'1'};
+				var _init2:Object = {dataField:'0',name:'学校日程'};
 				scheduleScope.addItemAt(_init2,1);
 				scope.selectedIndex = 0;
+				callLater(search);
 			}
 			private function buildSubDepartments(department:DepartmentModel,resultList:ArrayCollection,depth:int):void{
 				var headText:String="";
@@ -99,7 +125,7 @@
 				}		
 			}
 			//隐藏水印代码
-			private function hideSy():void{
+			private function hideWaterMark():void{
 				var sy:Sprite=flexCalendar.getChildAt(3) as Sprite;
 				sy.visible=false;
 				sy.alpha=0;
@@ -117,47 +143,77 @@
 						DateUtils.endOfDay(toDateChooser.selectedDate));
 				}
 			}
-			
-//			private function calendarMouseClickHandler(event:CalendarMouseEvent):void {
-//				trace("Selected date: " + event.selectedDate);
-//				trace("Preferred new event time: " + event.preferredTimeInMills);
-//				trace("Mouse event: " + event.event);
-//			}
-//			
-//			
-//			private function calendarRendererMouseClickHandler(event:CalendarMouseEvent):void {
-//				trace("Selected renderer start date: " + event.selectedDate);
-//				trace("Selected item details: " + event.item)
-//				trace("Selected item summary: " + event.item.summary);
-//				trace("Mouse event: " + event.event);
-//			}
-			
-			private function calendarItemAdded(event:CalendarItemAddedEvent):void {
-				trace("Item added");
-			}
-			
-			private function calendarItemRemoved(event:CalendarItemRemovedEvent):void {
-				trace("Item removed");
-			}
-			
-			private function calendarItemModified(event:CalendarItemModificationEvent):void {
-				trace("Item modified");
-			}
+
 
 			private function scheduleViewSwitch(event:ItemClickEvent):void {
 				var value:String=event.currentTarget.selectedValue;
-				//				Alert.show(value);
-				//				scheduleViewContainer.setCurrentState(value,true);
-				if(value=="list"){
-					scheduleViewContainer.selectedChild= list;
 				
-				}else{
+				if(value=="list"){
+					list.percentHeight=100;
+					list.visible=true;
+					schedule.height=0;
+					schedule.visible=false;
+					search();
+				}else if(value=="schedule"){
+					schedule.percentHeight=100;
+					schedule.visible=true;
+					list.height=0;
+					list.visible=false;				
+					search();
 					
-						scheduleViewContainer.selectedChild= schedule;
-						callLater(hideSy);
 				}
 				
+			}
+			private function search():void{
+				//Alert.show("aa");
+				lockWin();
+				var scheduleBeginDate:String=fromDateChooser.text;
+				var scheduleEndDate:String=toDateChooser.text;
 				
+				var scheduleState:String=state.selectedItem.data;
+				//Alert.show("b");
+				var scheduelType:String=null;
+				var scheduelDepartmentShare:String=null;
+				var scheduelSchoolShare:String=null;
+				var scheduelDepartmentId:String=null;
+				var scheduelEmergence:String=null;
+				var scheduelTitle:String=null;
+				//Alert.show("a");
+				var item:Object=scope.selectedItem;
+				//Alert.show(item.name);
+				var scheduleScope:String=item.dataField;
+				//Alert.show(scheduleScope);
+				if(scheduleScope==null){
+					scheduelDepartmentShare=null;
+					scheduelSchoolShare=null;
+					scheduelDepartmentId=null;
+					scheduelType="1";
+				}else if(scheduleScope=="0"){
+					scheduelDepartmentShare=null;
+					scheduelSchoolShare="1";
+					scheduelDepartmentId=null;
+					scheduelType="1";
+				}else{
+					scheduelDepartmentShare="1";
+					scheduelDepartmentId=scheduleScope;
+					scheduelType="1";
+				}
+				//Alert.show("aaaaaaaaa");
+				scheduleServiceRO.getSchedulesByConditions(null,scheduelType,scheduleState,scheduelDepartmentShare,scheduelDepartmentId,scheduelSchoolShare,scheduelEmergence,scheduelTitle,scheduleBeginDate,scheduleEndDate);
+			}
+			private var window:WlzxLockWin=null;
+			private function lockWin():void{
+				if(window==null){
+					window=WlzxLockWin(PopUpManager.createPopUp(this,WlzxLockWin,true)); 
+					PopUpManager.centerPopUp(window);
+					window.percentHeight=100;
+					window.percentWidth=100;
+				}		
+				
+			}
+			private function unLockWin():void{
+				if(window!=null)
+					PopUpManager.removePopUp(window);
 			}
 		]]>
 	</mx:Script>
@@ -165,98 +221,246 @@
 <!--	<mx:Metadata>
 		[ResourceBundle("sampleApp")]
 	</mx:Metadata>-->
-	
-	<mx:HBox height="30" width="100%" verticalAlign="middle" horizontalAlign="left">
-		<mx:Label text="起止日期：" width="70">
-			
-		</mx:Label>
-		<mx:DateField width="100" editable="false" id="fromDateChooser" selectedDate="{flexCalendar.visibleRange.start}"  formatString="YYYY-MM-DD">
-			
-		</mx:DateField>
-		<mx:Label text="--" width="20">
-			
-		</mx:Label>
-		<mx:DateField width="100" editable="false" id="toDateChooser" selectedDate="{flexCalendar.visibleRange.end}" formatString="YYYY-MM-DD">
-			
-		</mx:DateField>
-		<mx:Label text="日程范围：" width="70" >
-			
-		</mx:Label>
-		<mx:ComboBox id="scope" width="130" dataProvider="{scheduleScope}" selectedIndex="0" labelField="name">
-			
-		</mx:ComboBox>
-		<mx:Label text="日程状态：" width="70">
-			
-		</mx:Label>
-		<mx:ComboBox width="100"   id="state" dataProvider="{scheduleState}" >
-			
-		</mx:ComboBox>
-		<mx:CheckBox id="entireCalendarReadonly" label="只读" selected="true" width="80" />									
+	<mx:VBox width="100%" height="100%">
+		<mx:HBox height="30" width="100%" verticalAlign="middle" horizontalAlign="left">
+			<mx:Label text="起止日期：" width="70">
+				
+			</mx:Label>
+			<mx:DateField width="100" editable="false" id="fromDateChooser" selectedDate="{flexCalendar.visibleRange.start}"  formatString="YYYY-MM-DD">
+				
+			</mx:DateField>
+			<mx:Label text="--" width="20">
+				
+			</mx:Label>
+			<mx:DateField width="100" editable="false" id="toDateChooser" selectedDate="{flexCalendar.visibleRange.end}" formatString="YYYY-MM-DD">
+				
+			</mx:DateField>
+			<mx:Label text="日程范围：" width="70" >
+				
+			</mx:Label>
+			<mx:ComboBox id="scope" width="130" dataProvider="{scheduleScope}" selectedIndex="0" labelField="name">
+				
+			</mx:ComboBox>
+			<mx:Label text="日程状态：" width="70">
+				
+			</mx:Label>
+			<mx:ComboBox width="100"   id="state" dataProvider="{scheduleState}" >
+				
+			</mx:ComboBox>
+			<mx:Button id="searchButton" label="查询"   width="80"  click="search()"/>								
 			<mx:RadioButtonGroup id="scheduleView"  itemClick="scheduleViewSwitch(event);" />
 			<mx:RadioButton label="列表视图"  groupName="scheduleView" id="listView" selected="true" value="list"/>
-			<mx:RadioButton label="日历视图" groupName="scheduleView" id="dateView" value="date"/>
-			
-	</mx:HBox>
-		
-	<mx:ViewStack width="100%" height="100%" id="scheduleViewContainer" paddingRight="5" paddingBottom="5">
-			<mx:VBox width="100%" height="100%" label="日程列表"  name="list" id="list">
+			<mx:RadioButton label="日历视图" groupName="scheduleView" id="dateView" value="schedule"/>
 				
-				<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="false"   borderAlpha="0.2" verticalAlign="middle" id="mydg">				
-					<component:mygridcolumns>
+		</mx:HBox>
+		<mx:VBox width="100%" height="100%" label="日程列表"  name="list" id="list">
+			
+			<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="false"   borderAlpha="0.2" verticalAlign="middle" id="table">				
+				<component:mygridcolumns>
+					
+					<mx:DataGridColumn textAlign="center" headerText="标记" dataField="loginaccount" width="50">
+						<mx:itemRenderer>
+							<mx:Component>
+								<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+										<mx:Image source="@Embed(source='../WebContent/resources/common/ui/circle.png')"  visible="{checkCircle(data)}"/>
+										<mx:Script>
+											<![CDATA[
+												
+												//提示信息
+												import cn.org.rapid_framework.flex_security.SecurityControler;
+												
+												import mx.controls.Alert;
+												import mx.core.UIComponent;
+												private function checkCircle(data:Object):Boolean{
+													
+													if(data!=null){	
+														if(data.repeatStatus==1){
+															return true;
+														}else
+															return false;
+														
+													}else{
+														return false;
+													}
+												}
+											]]>
+										</mx:Script>
+									
+								</mx:HBox>																			
+							</mx:Component>						
+						</mx:itemRenderer>
+					</mx:DataGridColumn>
+					<mx:DataGridColumn textAlign="center" headerText="共享范围" dataField="loginaccount" width="100">
+						<mx:itemRenderer>
+							<mx:Component>
+								<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+									<mx:Label text="{checkShare(data)}"/>
+									<mx:Script>
+										<![CDATA[
+											
+											//提示信息
+											import cn.org.rapid_framework.flex_security.SecurityControler;
+											
+											import mx.controls.Alert;
+											import mx.core.UIComponent;
+											private function checkShare(data:Object):String{
+												if(data!=null){
+													var result:String="";
+													
+													if(data.schoolShare=="1")
+														result+="学校共享"+"  ";
+													if(data.departmentShare=="1")
+														result+="部门共享"+"  ";
+													if(result=="")return "不共享";
+													return result;
+												}else{
+													return null;
+												}
+											}
+										]]>
+									</mx:Script>
+								</mx:VBox>																			
+							</mx:Component>						
+						</mx:itemRenderer>
+					</mx:DataGridColumn>
+					<mx:DataGridColumn textAlign="center" headerText="发布部门" dataField="loginaccount" width="100">
+						<mx:itemRenderer>
+							<mx:Component>
+								<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+									<mx:Label text="{getPostDepartment(data)}"/>
+									<mx:Script>
+										<![CDATA[
+											
+											//提示信息
+											import cn.org.rapid_framework.flex_security.SecurityControler;
+											
+											import mx.controls.Alert;
+											import mx.core.UIComponent;
+											private function getPostDepartment(data:Object):String{
+												return this.parentApplication.getDepartmentNameById(data.departmentId);
+											}
+										]]>
+									</mx:Script>
+								</mx:VBox>																			
+							</mx:Component>						
+						</mx:itemRenderer>
+					</mx:DataGridColumn>
+					<mx:DataGridColumn textAlign="center" headerText="开始时间" dataField="type" width="100">
+						<mx:itemRenderer>
+							<mx:Component>
+								<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+									<mx:Label text="{data.beginTime}"/>
+								</mx:VBox>																			
+							</mx:Component>						
+						</mx:itemRenderer>
+					</mx:DataGridColumn>
+					<mx:DataGridColumn textAlign="center" headerText="截止时间" dataField="name" width="100">
+						<mx:itemRenderer>
+							<mx:Component>
+								<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+									<mx:Label text="{data.endTime}"/>
+								</mx:VBox>																			
+							</mx:Component>						
+						</mx:itemRenderer>
+					</mx:DataGridColumn>
+					<mx:DataGridColumn textAlign="center" headerText="主题" dataField="col3" width="150">
+						<mx:itemRenderer>
+							<mx:Component>
+								<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+									
+									<mx:Label text="{data.title}" width="80%"/>
+									
+								</mx:HBox>																			
+							</mx:Component>						
+						</mx:itemRenderer>
+					</mx:DataGridColumn>
+					<mx:DataGridColumn textAlign="center" headerText="优先级" dataField="col3" width="100">
+						<mx:itemRenderer>
+							<mx:Component>
+								<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+									<mx:Label text="{getEmergence(data.emergence)}"/>
+									<mx:Script>
+										<![CDATA[
+											
+											//提示信息
+											import cn.org.rapid_framework.flex_security.SecurityControler;
+											
+											import mx.controls.Alert;
+											import mx.core.UIComponent;
+											private function getEmergence(emergence:int):String{
+												
+												if(emergence==0){
+													return "重要紧急";
+												}else if(emergence==1){
+													return "重要非紧急";
+												}else if(emergence==2){
+													return "紧急非重要";
+												}else return null;
+												
+											}
+										]]>
+									</mx:Script>
+								</mx:VBox>																			
+							</mx:Component>	
+							
+						</mx:itemRenderer>
+					</mx:DataGridColumn>
+					<mx:DataGridColumn textAlign="center" headerText="状态" dataField="col3" width="50">
+						<mx:itemRenderer>
+							<mx:Component>
+								<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+									<mx:Label text="{checkFinish(data)}"/>
+									<mx:Script>
+										<![CDATA[
+											
+											//提示信息
+											import cn.org.rapid_framework.flex_security.SecurityControler;
+											
+											import mx.controls.Alert;
+											import mx.core.UIComponent;
+											private function checkFinish(data:Object):String{
+												
+												if(data!=null){	
+													if(data.finishStatus==0){
+														return "进行中";
+													}else
+														return "已完成";
+													
+												}else{
+													return "";
+												}
+											}
+										]]>
+									</mx:Script>
+								</mx:VBox>																			
+							</mx:Component>						
+						</mx:itemRenderer>
 						
-						<mx:DataGridColumn textAlign="center" headerText="标记" dataField="loginaccount" width="50">
-							
-						</mx:DataGridColumn>
-						<mx:DataGridColumn textAlign="center" headerText="日程级别" dataField="loginaccount" width="100">
-							
-						</mx:DataGridColumn>
-						<mx:DataGridColumn textAlign="center" headerText="开始时间" dataField="type" width="100">
-						</mx:DataGridColumn>
-						<mx:DataGridColumn textAlign="center" headerText="截止时间" dataField="name" width="100">
-						</mx:DataGridColumn>
-						<mx:DataGridColumn textAlign="center" headerText="主题" dataField="col3" width="150">
-						</mx:DataGridColumn>
-						<mx:DataGridColumn textAlign="center" headerText="日程类别" dataField="loginaccount" width="100">
-							
-						</mx:DataGridColumn>
-						<mx:DataGridColumn textAlign="center" headerText="优先级" dataField="col3" width="100">
-						</mx:DataGridColumn>
-						<mx:DataGridColumn textAlign="center" headerText="完成" dataField="col3" width="50">
-						</mx:DataGridColumn>
-						<mx:DataGridColumn textAlign="center" headerText="删除" dataField="col3" width="50">
-						</mx:DataGridColumn>
-					</component:mygridcolumns>
-				</component:WlzxPageDataGrid>
-			</mx:VBox>
+					</mx:DataGridColumn>
+					
+				</component:mygridcolumns>
+			</component:WlzxPageDataGrid>
+		</mx:VBox>
 			
 		
 		
-		<mx:VBox label="日历视图" width="100%" height="100%" name="schedule" id="schedule">
+		<mx:VBox label="日历视图" width="100%" height="0" name="schedule" id="schedule" horizontalAlign="right">
 			<flexCalendar:MyFlexCalendar license="xxxx-xxx-xxx-xx-xxx" id="flexCalendar" width="100%" height="100%" dataProvider="{dp}" scaleX="1" visibleRange="{visibleDateRange}"
-										scaleY="1" 
-										calendarMode="{entireCalendarReadonly.selected?CalendarMode.READ_ONLY_MODE : CalendarMode.LIMITED_EDIT_MODE}"
-										headerVisible="true"
-										currentTimeIndicator="true"
-										currentDayIndicator="true"
-										doubleClickEnabled="true"
-										calendarItemAddedEvent="calendarItemAdded(event)"
-										calendarItemRemovedEvent="calendarItemRemoved(event)"
-										calendarItemModificationEvent="calendarItemModified(event)"
+										 scaleY="1"
+										 calendarMode="{CalendarMode.READ_ONLY_MODE}"
+										 firstDayOfWeek="1"
+										 initialHourPosition="9"
+										 itemEditor="{new MyBaloonItemEditor(flexCalendar, false, false)}"
+										 headerVisible="true"
+										 currentTimeIndicator="true"
+										 currentDayIndicator="true"
+										 doubleClickEnabled="false"
 										
-										calendarMouseClick="trace('calendarMouseClick')"
-										calendarMouseDoubleClick="trace('calendarMouseDoubleClick')"
-										calendarRendererMouseClick="trace('calendarRendererMouseClick')"
-										calendarRendererMouseDoubleClick="trace('calendarRendererMouseDoubleClick')"
-										calendarSpaceRendererMouseClick="trace('calendarSpaceRendererMouseClick')"
-										calendarSpaceRendererMouseDoubleClick="trace('calendarSpaceRendererMouseDoubleClick')"
+										
+										
 										/>
 		</mx:VBox>	
-	</mx:ViewStack>
-				
-			
-		
-		
-		
-	
+	</mx:VBox>
+
 	
 </mx:Module>

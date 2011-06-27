@@ -16,7 +16,7 @@ public class ScheduleDAOImpl extends BaseDAOImpl<ScheduleModel> implements Sched
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<ScheduleModel> getSchedulesByConditions(String userId, String type,String state,
-			String departmentShare,String schoolShare, String emergence,  String title,
+			String departmentShare,String departmentId,String schoolShare, String emergence,  String title,
 			String beginDate, String endDate) {
 		DetachedCriteria criteria = DetachedCriteria.forClass(ScheduleModel.class);
 		if(StringUtils.isNotEmpty(userId)){
@@ -27,6 +27,9 @@ public class ScheduleDAOImpl extends BaseDAOImpl<ScheduleModel> implements Sched
 		}
 		if(StringUtils.isNotEmpty(departmentShare)){
 			criteria.add(Restrictions.sqlRestriction("department_share ='"+departmentShare+"'"));	
+		}
+		if(StringUtils.isNotEmpty(departmentId)){
+			criteria.add(Restrictions.sqlRestriction("department_id ='"+departmentId+"'"));	
 		}
 		if(StringUtils.isNotEmpty(schoolShare)){
 			criteria.add(Restrictions.sqlRestriction("school_share ='"+schoolShare+"'"));	

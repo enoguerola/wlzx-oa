@@ -24,11 +24,11 @@ public class MyCalendarHeader extends CalendarHeader
 		weekButton.width=80;
 		workingWeekButton.width=80;
 		monthButton.width=80;
-		Alert.show("a");
-		maxControlButton.label="最大化";
-		maxControlButton.width=80;
-		maxControlButton.height=80;
-		this.addChild(maxControlButton);
+//		//Alert.show("a");
+//		maxControlButton.label="最大化";
+//		maxControlButton.width=80;
+//		maxControlButton.height=80;
+//		this.addChild(maxControlButton);
 	}
 }
 }

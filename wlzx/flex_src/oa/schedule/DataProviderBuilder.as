@@ -16,6 +16,7 @@ import mx.formatters.DateFormatter;
 
 import oa.entity.ScheduleModel;
 import oa.schedule.flexCalendar.*;
+
 import system.utils.*;
 public class DataProviderBuilder
 {
@@ -27,15 +28,16 @@ public class DataProviderBuilder
 	public function buildDataProvider(allList:ArrayCollection):CalendarDataProvider
 	{
 		var itemSet:CalendarItemSet = new CalendarItemSet();
-		itemSet.addItemAsSpace(buildItemWithDay(0, 0, 24, null, false), ItemType.AVAILABLE_SPACE);
-		itemSet.addItemAsSpace(buildItemWithDay(1, 0, 24, null, false), ItemType.AVAILABLE_SPACE);
-		itemSet.addItemAsSpace(buildItemWithDay(2, 0, 24, null, false), ItemType.AVAILABLE_SPACE);
-		itemSet.addItemAsSpace(buildItemWithDay(3, 0, 24, null, false), ItemType.AVAILABLE_SPACE);
-		itemSet.addItemAsSpace(buildItemWithDay(4, 0, 24, null, false), ItemType.AVAILABLE_SPACE);
-		itemSet.addItemAsSpace(buildItemWithDay(5, 0, 24, null, false), ItemType.AVAILABLE_SPACE);
-		itemSet.addItemAsSpace(buildItemWithDay(6, 0, 24, null, false), ItemType.AVAILABLE_SPACE);
+//		itemSet.addItemAsSpace(new CalendarItem(new Date(2011,1,1,0,0,0,0), new Date(2051,1,1,23,59,59,59),null), ItemType.AVAILABLE_SPACE);
+//		itemSet.addItemAsSpace(buildItemWithDay(0, 0, 24, null, false), ItemType.AVAILABLE_SPACE);
+//		itemSet.addItemAsSpace(buildItemWithDay(1, 0, 24, null, false), ItemType.AVAILABLE_SPACE);
+//		itemSet.addItemAsSpace(buildItemWithDay(2, 0, 24, null, false), ItemType.AVAILABLE_SPACE);
+//		itemSet.addItemAsSpace(buildItemWithDay(3, 0, 24, null, false), ItemType.AVAILABLE_SPACE);
+//		itemSet.addItemAsSpace(buildItemWithDay(4, 0, 24, null, false), ItemType.AVAILABLE_SPACE);
+//		itemSet.addItemAsSpace(buildItemWithDay(5, 0, 24, null, false), ItemType.AVAILABLE_SPACE);
+//		itemSet.addItemAsSpace(buildItemWithDay(6, 0, 24, null, false), ItemType.AVAILABLE_SPACE);
 		var builtDp:CalendarDataProvider = new CalendarDataProvider();
-		var converter:MyItemEditorVOConverter=new MyItemEditorVOConverter()
+		var converter:MyItemEditorVOConverter=new MyItemEditorVOConverter();
 		for(var j:int = 0;j<allList.length;j++){
 			var model:ScheduleModel=allList.getItemAt(j) as ScheduleModel;
 			//if(model.repeatStatus==0){
@@ -68,6 +70,10 @@ public class DataProviderBuilder
 			//Alert.show(model.repeatEndTime);
 			var calendarItem:CalendarItem=converter.itemEditorVOToCalendarItem(item);
 			calendarItem.itemId=model.id;
+			if(model.finishStatus==1){
+				calendarItem.itemColors=RendererColorsFactory.buildColors(RendererColors.GRAY);
+				calendarItem.readOnly=true;
+			}
 			//Alert.show(calendarItem.recur.until+"");
 //			Alert.show(item.interval+"");
 			itemSet.addItem(calendarItem);
@@ -124,37 +130,37 @@ public class DataProviderBuilder
 //
 //	}
 //
-	private function buildItem(startTime:Number, endTime:Number, summary:String, readOnly:Boolean = false, rendererColors:IRendererColors=null):CalendarItem
-	{
-		var today:Date = DateUtils.startOfDay(new Date());
-		var start:Date = new Date();
-		start.time = today.time + startTime*DateUtils.MILLI_IN_HOUR;
-		var end:Date = new Date();
-		end.time = today.time + endTime*DateUtils.MILLI_IN_HOUR;
-		return new CalendarItem(start, end, summary, null, readOnly, rendererColors);
-	}
-
-	private function buildItemWithDay(dayOffset:Number, startTime:Number, endTime:Number, summary:String, readOnly:Boolean = false, rendererColors:IRendererColors=null):CalendarItem
-	{
-		var today:Date = DateUtils.startOfDay(new Date());
-		var sunday:Date = DateUtils.startOfDay(new Date());
-		DateUtils.addDays(sunday, 0-today.day);
-		DateUtils.addDays(sunday, dayOffset);
-		var start:Date = new Date();
-		start.time = sunday.time + startTime*DateUtils.MILLI_IN_HOUR;
-		var end:Date = new Date();
-		end.time = sunday.time + endTime*DateUtils.MILLI_IN_HOUR;
-		return new CalendarItem(start, end, summary, null, readOnly, rendererColors);
-	}
-
-	private function buildLongItem(dayCount:int, startTime:Number, endTime:Number, summary:String):CalendarItem
-	{
-		var today:Date = DateUtils.startOfDay(new Date());
-		var start:Date = new Date();
-		start.time = today.time + startTime*DateUtils.MILLI_IN_HOUR;
-		var end:Date = new Date();
-		end.time = today.time + dayCount * DateUtils.MILLI_IN_DAY + endTime*DateUtils.MILLI_IN_HOUR;
-		return new CalendarItem(start, end, summary);
-	}
+//	private function buildItem(startTime:Number, endTime:Number, summary:String, readOnly:Boolean = false, rendererColors:IRendererColors=null):CalendarItem
+//	{
+//		var today:Date = DateUtils.startOfDay(new Date());
+//		var start:Date = new Date();
+//		start.time = today.time + startTime*DateUtils.MILLI_IN_HOUR;
+//		var end:Date = new Date();
+//		end.time = today.time + endTime*DateUtils.MILLI_IN_HOUR;
+//		return new CalendarItem(start, end, summary, null, readOnly, rendererColors);
+//	}
+//
+//	private function buildItemWithDay(dayOffset:Number, startTime:Number, endTime:Number, summary:String, readOnly:Boolean = false, rendererColors:IRendererColors=null):CalendarItem
+//	{
+//		var today:Date = DateUtils.startOfDay(new Date());
+//		var sunday:Date = DateUtils.startOfDay(new Date());
+//		DateUtils.addDays(sunday, 1-today.day);
+//		DateUtils.addDays(sunday, dayOffset);
+//		var start:Date = new Date();
+//		start.time = sunday.time + startTime*DateUtils.MILLI_IN_HOUR;
+//		var end:Date = new Date();
+//		end.time = sunday.time + endTime*DateUtils.MILLI_IN_HOUR;
+//		return new CalendarItem(start, end, summary, null, readOnly, rendererColors);
+//	}
+//
+//	private function buildLongItem(dayCount:int, startTime:Number, endTime:Number, summary:String):CalendarItem
+//	{
+//		var today:Date = DateUtils.startOfDay(new Date());
+//		var start:Date = new Date();
+//		start.time = today.time + startTime*DateUtils.MILLI_IN_HOUR;
+//		var end:Date = new Date();
+//		end.time = today.time + dayCount * DateUtils.MILLI_IN_DAY + endTime*DateUtils.MILLI_IN_HOUR;
+//		return new CalendarItem(start, end, summary);
+//	}
 }
 }

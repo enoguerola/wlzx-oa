@@ -8,7 +8,7 @@ public interface ScheduleService {
 	public void addSchedule(ScheduleModel schedule);
 	public boolean updateSchedule(ScheduleModel schedule);
 	public List<ScheduleModel> getSchedulesByConditions(String userId, String type,String state,
-			String departmentShare,String schoolShare, String emergence,  String title,
+			String departmentShare,String departmentId,String schoolShare, String emergence,  String title,
 			String beginDate, String endDate);
 	boolean deleteSchedule(String id);
 	public boolean finishSchedule(String id);

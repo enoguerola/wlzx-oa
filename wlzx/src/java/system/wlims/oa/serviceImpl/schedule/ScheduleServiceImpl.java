@@ -38,10 +38,10 @@ public class ScheduleServiceImpl implements ScheduleService {
 
 	@Override
 	public List<ScheduleModel> getSchedulesByConditions(String userId, String type,String state,
-			String departmentShare,String schoolShare, String emergence,  String title,
+			String departmentShare,String departmentId,String schoolShare, String emergence,  String title,
 			String beginDate, String endDate) {
 		// TODO Auto-generated method stub
-		return scheduleDAO.getSchedulesByConditions(userId, type, departmentShare,schoolShare,state, emergence,  title, beginDate, endDate);
+		return scheduleDAO.getSchedulesByConditions(userId, type, state, departmentShare,departmentId,schoolShare,emergence,  title, beginDate, endDate);
 	}
 
 	
