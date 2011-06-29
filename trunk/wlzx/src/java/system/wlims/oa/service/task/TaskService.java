@@ -1,8 +1,10 @@
 package system.wlims.oa.service.task;
 
+
+
 import java.util.List;
 
-
+import system.PaginationSupport;
 import system.wlims.oa.entity.task.TaskModel;
 
 public interface TaskService {
@@ -13,8 +15,8 @@ public interface TaskService {
 	
 	public TaskModel loadTaskInfoById(String id);
 		
-	public List<TaskModel> getTasksByConditions(String assignerId, String workerIds,String status, String beginDate,String endDate, Integer index, Integer page);
-	
-	boolean remove(String id);
+	public PaginationSupport<TaskModel> getTasksByConditions(String assignerId, String workerIds,String status, String beginDate,String endDate, Integer index, Integer page);
+	public List<TaskModel> getTasksByConditions(String assignerId, String workerIds,String status, String beginDate,String endDate);
+	boolean deleteTaskById(String id);
 
 }

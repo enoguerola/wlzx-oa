@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2011 年 06 月 23 日 15:36
+-- 生成日期: 2011 年 06 月 29 日 09:57
 -- 服务器版本: 5.0.91
 -- PHP 版本: 5.2.13
 
@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS `basic_teacher` (
 
 INSERT INTO `basic_teacher` (`teacher_id`, `user_id`, `teacher_cname`, `teacher_sex`, `teacher_birthday`, `teacher_marrage`, `teacher_nation`, `teacher_politics_status`, `teacher_identify`, `teacher_native_place`, `teacher_email`, `teacher_home_phone`, `teacher_address`, `teacher_mobile_phone`, `teacher_no`, `teacher_education`, `teacher_profession`, `teacher_graduate_school`, `teacher_professional_title`, `teacher_skill_level`, `teacher_skill_level_date`, `teacher_department`, `teacher_position`, `teacher_office_phone`, `teacher_contact_phone`, `teacher_work_date`, `teacher_attend_date`, `teacher_status`, `teacher_photo_src`, `teacher_create_date`, `teacher_modified_date`) VALUES
 (3, 2, 'yufeng', 0, '2011-05-09', 0, 'ss', 0, '', 'sssss', '', '', NULL, '', '12313', '0', '', '', '', '', NULL, '6', '6', '', '', '2010-06-27', '2009-06-15', 1, 'resources/oa/layout/default_head.jpg', '2011-05-31', '2011-06-23'),
-(14, 21, 'ljx', 0, '2011-06-12', 0, 'sa', 0, '333333221124432222', '111', '', '111333', NULL, '22222', '2222211', '0', '', '', '', '', NULL, '3', '3', '', '', NULL, NULL, 0, 'uploads/basic/teacherProfile/default_head.jpg', '2011-06-23', '2011-06-23');
+(14, 3, 'ljx', 0, '2011-06-12', 0, 'sa', 0, '333333221124432222', '111', '', '111333', NULL, '22222', '2222211', '0', '', '', '', '', NULL, '3', '3', '', '', NULL, NULL, 0, 'uploads/basic/teacherProfile/default_head.jpg', '2011-06-23', '2011-06-23');
 
 -- --------------------------------------------------------
 
@@ -86,7 +86,7 @@ CREATE TABLE IF NOT EXISTS `basic_teacher_social_relation` (
   PRIMARY KEY  (`relation_id`),
   KEY `relation_id` (`relation_id`),
   KEY `teacher_id` (`teacher_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='社会关系' AUTO_INCREMENT=10 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='社会关系' AUTO_INCREMENT=3 ;
 
 --
 -- 转存表中的数据 `basic_teacher_social_relation`
@@ -111,7 +111,7 @@ CREATE TABLE IF NOT EXISTS `basic_teacher_work_experience` (
   PRIMARY KEY  (`experience_id`),
   KEY `experience_id` (`experience_id`),
   KEY `teacher_id` (`teacher_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='教师工作经历' AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='教师工作经历' AUTO_INCREMENT=2 ;
 
 --
 -- 转存表中的数据 `basic_teacher_work_experience`

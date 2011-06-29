@@ -1,7 +1,9 @@
 package system.wlims.oa.serviceImpl.task;
 
+
 import java.util.List;
 
+import system.PaginationSupport;
 import system.wlims.oa.dao.task.TaskDAO;
 import system.wlims.oa.entity.task.TaskModel;
 import system.wlims.oa.service.task.TaskService;
@@ -15,7 +17,7 @@ public class TaskServiceImpl implements TaskService {
 	}
 
 	@Override
-	public List<TaskModel> getTasksByConditions(String assignerId,
+	public PaginationSupport<TaskModel> getTasksByConditions(String assignerId,
 			String workerIds, String status, String beginDate, String endDate,
 			Integer index, Integer page) {
 		// TODO Auto-generated method stub
@@ -29,7 +31,7 @@ public class TaskServiceImpl implements TaskService {
 	}
 
 	@Override
-	public boolean remove(String id) {
+	public boolean deleteTaskById(String id) {
 		// TODO Auto-generated method stub
 		TaskModel task=taskDAO.get(id);
 		if(task==null)return false;
@@ -52,6 +54,13 @@ public class TaskServiceImpl implements TaskService {
 
 	public void setTaskDAO(TaskDAO taskDAO) {
 		this.taskDAO = taskDAO;
+	}
+
+	@Override
+	public List<TaskModel> getTasksByConditions(String assignerId,
+			String workerIds, String status, String beginDate, String endDate) {
+		// TODO Auto-generated method stub
+		return taskDAO.getTasksByConditions(assignerId, workerIds, status, beginDate, endDate);
 	}
 	
 

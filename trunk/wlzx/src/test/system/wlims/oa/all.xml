@@ -24,7 +24,13 @@
 		<property name="scheduleDAO" ref="scheduleDAO" />
 		<property name="userDAO" ref="userDAO" />
 	</bean>
+	<bean id="taskDAO" class="system.wlims.oa.daoImpl.task.TaskDAOImpl">
+		<property name="sessionFactory" ref="oaSessionFactory" />
+	</bean>
 	
+	<bean id="taskServiceDest" class="system.wlims.oa.serviceImpl.task.TaskServiceImpl">
+		<property name="taskDAO" ref="taskDAO" />
+	</bean>
 	<bean id="noticeDAO" class="system.wlims.oa.daoImpl.notice.NoticeDAOImpl">
 		<property name="sessionFactory" ref="oaSessionFactory" />
 	</bean>

@@ -32,6 +32,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 public abstract class BaseDAOImpl<T> extends HibernateDaoSupport implements BaseDAO<T> {
 	
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void remove(String id, Class clazz) throws DAOException {
 		// TODO Auto-generated method stub
@@ -261,13 +262,14 @@ public abstract class BaseDAOImpl<T> extends HibernateDaoSupport implements Base
 	 * @see org.mali.dao.common.BaseDAO#findPageByCriteria(org.hibernate.criterion.DetachedCriteria, int, int)
 	 */
 	@SuppressWarnings("unchecked")
-	public PaginationSupport<T> findPageByCriteria(
+		public PaginationSupport<T> findPageByCriteria(
 			final DetachedCriteria criteria,
 			final int pageSize,
 			final int startIndex) throws DAOException{
 		return (PaginationSupport<T>)getHibernateTemplate().execute(new HibernateCallback(){
 			public Object doInHibernate(Session session) throws HibernateException, SQLException {
 				Criteria execCriteria = criteria.getExecutableCriteria(session);
+				//int rowCount = execCriteria.setProjection(Projections.rowCount()).uniqueResult();
 				int rowCount = ((Long)execCriteria.setProjection(Projections.rowCount()).uniqueResult()).intValue();
 				execCriteria.setProjection(null);
 				execCriteria.setResultTransformer(CriteriaSpecification.ROOT_ENTITY);
