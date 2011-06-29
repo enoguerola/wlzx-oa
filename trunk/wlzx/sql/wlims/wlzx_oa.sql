@@ -27,9 +27,9 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
 CREATE TABLE IF NOT EXISTS `wlzx_oa_attachment` (
   `id` bigint(20) NOT NULL auto_increment,
-  `name` varchar(200) NOT NULL,
-  `path` varchar(300) NOT NULL,
-  `type` varchar(200) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `path` varchar(100) NOT NULL,
+  `type` varchar(10) NOT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
@@ -256,6 +256,97 @@ INSERT INTO `wlzx_oa_schedule` (`id`, `title`, `content`, `begin_time`, `end_tim
 (30, '3333333333333', NULL, '2011-06-21 07:43:30', '2011-06-21 10:00:30', 2, 1, 1, 1, 1, 2, 1, 0, 0, 0, 1, '0;0;0;0;0;0;0', NULL);
 
 -- --------------------------------------------------------
+
+
+-- phpMyAdmin SQL Dump
+-- version 3.3.3
+-- http://www.phpmyadmin.net
+--
+-- 主机: localhost
+-- 生成日期: 2011 年 06 月 29 日 23:15
+-- 服务器版本: 5.0.91
+-- PHP 版本: 5.2.13
+
+SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+
+--
+-- 数据库: `wlzx_oa`
+--
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `wlzx_oa_receipt`
+--
+
+CREATE TABLE IF NOT EXISTS `wlzx_oa_receipt` (
+  `id` bigint(20) NOT NULL auto_increment,
+  `do_number` varchar(20) NOT NULL,
+  `office` varchar(100) NOT NULL,
+  `in_number` varchar(20) NOT NULL,
+  `in_date` date NOT NULL,
+  `subject` varchar(200) NOT NULL,
+  `title` varchar(200) NOT NULL,
+  `summary` text,
+  `status` int(4) NOT NULL,
+  `is_completed` int(4) NOT NULL,
+  `registed_date` date default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+--
+-- 转存表中的数据 `wlzx_oa_receipt`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `wlzx_oa_receipt_attachment`
+--
+
+CREATE TABLE IF NOT EXISTS `wlzx_oa_receipt_attachment` (
+  `id` int(11) NOT NULL auto_increment,
+  `name` varchar(100) NOT NULL,
+  `type` varchar(10) NOT NULL,
+  `path` varchar(100) NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+--
+-- 转存表中的数据 `wlzx_oa_receipt_attachment`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `wlzx_oa_receipt_flow`
+--
+
+CREATE TABLE IF NOT EXISTS `wlzx_oa_receipt_flow` (
+  `id` int(11) NOT NULL auto_increment,
+  `type` int(4) NOT NULL,
+  `is_completed` int(4) NOT NULL,
+  `text` text,
+  `step` int(4) NOT NULL,
+  `user_id` bigint(20) NOT NULL,
+  `department_id` bigint(20) NOT NULL,
+  `receipt_id` bigint(20) NOT NULL,
+  `completed_date` date default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+--
+-- 转存表中的数据 `wlzx_oa_receipt_flow`
+--
+
 
 --
 -- 表的结构 `wlzx_oa_takeleave_apply`

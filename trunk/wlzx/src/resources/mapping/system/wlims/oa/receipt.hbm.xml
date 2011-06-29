@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+<class name="system.wlims.oa.entity.receipt.ReceiptModel" table="wlzx_oa_receipt">
+        <id name="id">
+            <column name="id" />
+            <generator class="native" />
+        </id>
+        
+        <property name="doNumber" type="string">
+            <column name="do_number" />
+        </property>
+        
+        <property name="office" type="string">
+            <column name="office" />
+        </property>
+        
+         <property name="inNumber" type="string">
+            <column name="in_number" />
+        </property>
+        
+        <property name="inDate" type="java.sql.Date">
+            <column name="in_date" />
+        </property>
+        
+        <property name="subject" type="string">
+            <column name="subject" />
+        </property>
+        
+         <property name="title" type="string">
+            <column name="title" />
+        </property>
+        
+        <property name="summary" type="string">
+            <column name="summary" />
+        </property>
+        
+        <property name="status" type="int">
+            <column name="status" />
+        </property>
+        
+        <property name="isCompleted" type="int">
+            <column name="is_completed" />
+        </property>
+        
+        <property name="registedDate" type="java.sql.Date">
+            <column name="registed_date" />
+        </property>
+        
+      	<set name="attachments" lazy="false" cascade="all-delete-orphan" inverse="false">
+        	<key column="receipt_id" not-null="true" />
+        	<one-to-many class="system.wlims.oa.entity.receipt.FileAttachmentModel" /> 
+        </set>		
+    </class>
+</hibernate-mapping>

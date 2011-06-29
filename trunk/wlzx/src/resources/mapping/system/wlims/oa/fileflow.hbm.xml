@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+<class name="system.wlims.oa.entity.receipt.FileFlowModel" table="wlzx_oa_receipt_flow">
+        <id name="id">
+            <column name="id" />
+            <generator class="native" />
+        </id>
+        
+        <property name="type" type="int">
+            <column name="type" />
+        </property>
+        
+        <property name="isCompleted" type="int">
+            <column name="is_completed" />
+        </property>
+        
+         <property name="text" type="string">
+            <column name="text" />
+        </property>
+        
+        <property name="step" type="int">
+            <column name="step" />
+        </property>
+        
+        <property name="user" type="string">
+            <column name="user_id" />
+        </property>
+        
+        <property name="department" type="string">
+            <column name="department_id" />
+        </property>
+        
+        <property name="completedDate" type="string">
+            <column name="completed_date" />
+        </property>
+        
+    	<many-to-one class="system.wlims.oa.entity.receipt.ReceiptModel" name="receipt" column="receipt_id" lazy="proxy"/>
+  
+    </class>
+</hibernate-mapping>
