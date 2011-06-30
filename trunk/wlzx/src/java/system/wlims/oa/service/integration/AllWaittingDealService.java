@@ -7,6 +7,7 @@ import system.wlims.oa.vo.TaskVO;
 
 public interface AllWaittingDealService {
 	
-	List<TaskVO> getAllWaittingDealTasksByCondition(String accountId,String status,String beginTime,String endTime);
-
+	List<TaskVO> getAllDealTasksByCondition(String accountId,String beginTime,String endTime);
+	List<TaskVO> getAllWaittingDealTasksByCondition(String accountId,String beginTime,String endTime);
+	
 }
