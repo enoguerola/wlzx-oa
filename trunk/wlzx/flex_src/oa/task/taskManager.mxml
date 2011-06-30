@@ -521,32 +521,41 @@
 				
 			</mx:HBox>
 			<mx:VBox width="100%" height="100%"   horizontalGap="10" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
-				<mx:VBox  width="100%" height="100%">
-					<mx:Form width="100%" height="100%">
-						<mx:FormItem label="任务标题" width="100%">
-							<mx:TextInput width="100%" id="title"/>
-						</mx:FormItem>
-						<mx:FormItem label="任务责任人" width="100%">
-							<hc:AutoComplete id="accounts"  labelField="name"  width="300"  matchType="anyPart"  allowMultipleSelection="true"  prompt="选择"  change="{ accountsHandleAutoCompleteChange() }" dropDownItemRenderer="{ accountsDropDownItemRenderer }" selectedItemStyleName="none">
-							</hc:AutoComplete>
-							<mx:Label id="accounts_id" visible="false">
-							</mx:Label>
-						</mx:FormItem>
-						
-						<mx:FormItem label="任务内容" width="100%" height="100%">
-							<mx:TextArea width="100%" height="100%" text=""  id="content">
-								
-							</mx:TextArea>
+				<mx:HBox width="100%" height="100%">
+					<mx:VBox  width="100%" height="100%">
+						<mx:Form width="100%" height="100%">
+							<mx:FormItem label="任务标题" width="100%">
+								<mx:TextInput width="100%" id="title"/>
+							</mx:FormItem>
+							<mx:FormItem label="任务责任人" width="100%">
+								<hc:AutoComplete id="accounts"  labelField="name"  width="300"  matchType="anyPart"  allowMultipleSelection="true"  prompt="选择"  change="{ accountsHandleAutoCompleteChange() }" dropDownItemRenderer="{ accountsDropDownItemRenderer }" selectedItemStyleName="none">
+								</hc:AutoComplete>
+								<mx:Label id="accounts_id" visible="false">
+								</mx:Label>
+							</mx:FormItem>
 							
-						</mx:FormItem>
-						<mx:FormItem label="任务指派人" width="100%">
-							<hc:AutoComplete id="assigner"  labelField="name"  width="300"  matchType="anyPart" prompt="选择"  change="{ assignerHandleAutoCompleteChange() }" dropDownItemRenderer="{ assignerDropDownItemRenderer }" selectedItemStyleName="none">
-							</hc:AutoComplete>
-							<mx:Label id="assigner_id" visible="false">
-							</mx:Label>
-						</mx:FormItem>
-					</mx:Form>
-				</mx:VBox>
+							<mx:FormItem label="任务内容" width="100%" height="100%">
+								<mx:TextArea width="100%" height="100%" text=""  id="content">
+									
+								</mx:TextArea>
+								
+							</mx:FormItem>
+							<mx:FormItem label="任务指派人" width="100%">
+								<hc:AutoComplete id="assigner"  labelField="name"  width="300"  matchType="anyPart" prompt="选择"  change="{ assignerHandleAutoCompleteChange() }" dropDownItemRenderer="{ assignerDropDownItemRenderer }" selectedItemStyleName="none">
+								</hc:AutoComplete>
+								<mx:Label id="assigner_id" visible="false">
+								</mx:Label>
+							</mx:FormItem>
+						</mx:Form>
+					</mx:VBox>
+					<mx:VBox width="200" height="100%">
+						<mx:Panel width="100%" height="100%"  styleName="customPanel" title="通讯录"   dropShadowVisible="false" borderVisible="true">
+							<mx:Tree  id="departments" labelField="@label"   width="100%" height="100%" >
+							</mx:Tree>
+						</mx:Panel>
+					</mx:VBox>
+				</mx:HBox>
+				
 				<mx:HBox horizontalAlign="right" width="100%">
 					<mx:Label id="addUpdateFlag" visible="false" text="add"/>
 					<mx:Button label="指派" id="postButton" click="add_clickHandler(event)"/>

@@ -16,12 +16,12 @@
 
 	<!-- 注入配置 -->
 	
-	<bean id="applyDAO" class="system.wlims.oa.daoImpl.course.adjust.ApplyDAOImpl">
+	<bean id="courseAdjustDAO" class="system.wlims.oa.daoImpl.course.adjust.CourseAdjustDAOImpl">
 		<property name="sessionFactory" ref="oaSessionFactory" />
 	</bean>
-	<bean id="applyServiceDest" class="system.wlims.oa.serviceImpl.course.adjust.ApplyServiceImpl">
+	<bean id="courseAdjustServiceDest" class="system.wlims.oa.serviceImpl.course.adjust.CourseAdjustServiceImpl">
 		<flex:remoting-destination />
-		<property name="applyDAO" ref="applyDAO" />
+		<property name="courseAdjustDAO" ref="courseAdjustDAO" />
 	</bean>
 	
 </beans>

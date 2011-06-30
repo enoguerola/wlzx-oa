@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Module xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		   xmlns:s="library://ns.adobe.com/flex/spark" 
+		   xmlns:mx="library://ns.adobe.com/flex/mx" 
+		   xmlns:hc="com.hillelcoren.components.*"
+		   xmlns:mx1="library://ns.adobe.com/flex/mx"
+		   xmlns:render="system.component.render.*" layout="vertical" width="100%" height="100%"   creationComplete="init();" xmlns:component="system.component.*" >
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+		
+		<mx:RemoteObject id="taskServiceRO" destination="taskServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+			
+		</mx:RemoteObject>
+		<mx:RemoteObject id="scheduleServiceRO" destination="scheduleServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+			
+		</mx:RemoteObject>
+		
+	</fx:Declarations>
+	
+	<fx:Script> 
+		<![CDATA[  
+			import mx.collections.ArrayCollection;
+			import mx.controls.*;
+			import mx.events.*;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.*;
+			
+			import system.entity.DepartmentModel;
+			import system.entity.UserModel;
+			import system.index;
+			import system.utils.CommonUtils;
+			import basic.utils.DateUtil;
+			import system.component.WlzxLockWin;
+			public var taskStateList:ArrayCollection = new ArrayCollection( 
+				[	{label:"全部", data:null},  
+					{label:"进行中", data:"0"},  
+					{label:"已完成", data:"1"}]); 
+			private function init():void {
+				
+				var date:Date=new Date();
+				search_date_begin.text=CommonUtils.formatDate(CommonUtils.currentMonthBeginDate(),"YYYY-MM-DD");
+				search_date_end.text=CommonUtils.formatDate(CommonUtils.currentMonthEndDate(),"YYYY-MM-DD");
+				
+				callLater(search);
+			}
+			
+			
+			
+			
+			
+			private function systemFaultHandler(event:FaultEvent):void {
+				Alert.show(event.fault.faultString, 'Error');
+				unLockWin();
+			}
+			
+			
+			
+			protected function search():void
+			{
+				lockWin();
+				var accountId:String=this.parentApplication.currentUser.id;
+				var beginTime:String=search_date_begin.text;
+				var endTime:String=search_date_end.text;
+				var status:String=search_state.selectedItem.data;
+				taskServiceRO.getAllPersonTasksByCondition(accountId,status,beginTime,endTime);
+				
+			}
+			public function formatDate(date:Date):String{
+				return CommonUtils.formatDate(date);
+				
+			}
+			
+			private var window:WlzxLockWin=null;
+			private function lockWin():void{
+				
+				window=WlzxLockWin(PopUpManager.createPopUp(this,WlzxLockWin,true)); 
+				PopUpManager.centerPopUp(window);
+				window.percentHeight=100;
+				window.percentWidth=100;			
+				
+			}
+			private function unLockWin():void{
+				if(window!=null)
+					PopUpManager.removePopUp(window);
+			}
+			public  function timeTip(times:String):String
+			{
+				
+				var result:String="";
+				var times_attr:Array=times.split(";");
+				for(var i:int=0;i<times_attr.length;i++){
+					
+					var time:String=times_attr[i];
+					if(time!=null&&time!=""){
+						var time_attr:Array=time.split(" ");
+						result=result.concat(time_attr[0]+" ");
+						var sections:String=time_attr[1];
+						if(sections.split("-")[0]=="1"){
+							result=result.concat("早上 ");
+						}
+						if(sections.split("-")[1]=="1"){
+							result=result.concat("下午 ");
+						}
+						if(sections.split("-")[2]=="1"){
+							result=result.concat("晚上 ");
+						}
+						result=result.concat("   ");
+						
+					}
+				}
+				return result;			
+				
+			}
+			public 	 function getWorkers(data:Object, column:DataGridColumn):String{
+				if(data!=null){
+					var result1:String="";
+					var ids:String=data.workerIds;
+					
+					if(ids!=null&&ids!=""){
+						var attr:Array=ids.split(";");
+						for(var i:int=0;i<attr.length;i++){
+							[Binary]var temp:String=attr[i] as String;
+							
+							if(temp==null||temp=="")continue;
+							var name:String=this.parentApplication.getTeacherNameByAccountId(temp);
+							if(data.title=="a"){
+								Alert.show(name);
+								Alert.show(temp);
+							}
+							result1=result1.concat(name+"  ");
+							
+						}
+						return result1;
+					}else return null;
+					//Alert.show(result);
+					
+				}else return null;
+			}
+			public 	 function getAssigner(data:Object, column:DataGridColumn):String{
+				var result2:String="";
+				var id:String=data.assignerId;
+				//Alert.show(ids);
+				if(id!=null&&id!=""){
+					result2+=this.parentApplication.getTeacherNameByAccountId(id);
+				}
+				//Alert.show(result);
+				return result2;
+			}
+			public function enterEdit(id:String):void{
+
+			}
+		]]> 		
+	</fx:Script> 
+	
+	<s:Panel width="100%" height="100%"  styleName="customPanel" title="我的待办工作"  borderVisible="false" dropShadowVisible="false">
+		<mx:VBox width="100%"     verticalGap="0" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
+			<mx:VBox width="100%" horizontalAlign="center" verticalGap="0" height="60">
+				
+				<mx:HBox width="100%" horizontalAlign="right">
+					<mx:HBox width="100%">
+						<mx:Label  text="状态"  width="100"  textAlign="right"/>
+						<mx:ComboBox id="search_state"  dataProvider="{taskStateList}" selectedIndex="0"  editable="false" width="80"/>
+					</mx:HBox>
+					<mx:Label  text="时间区间"  width="100"  textAlign="right"/>
+					<mx:DateField id="search_date_begin"   formatString="YYYY-MM-DD"  editable="false" width="120"/>
+					<mx:Label  text="--"  width="20" textAlign="center"/>
+					<mx:DateField id="search_date_end"  formatString="YYYY-MM-DD" editable="false" width="120"/>
+					<mx:Button  label="搜索"  width="60"   click="search()"/>
+				</mx:HBox>
+				
+			</mx:VBox>
+			<component:WlzxPageDataGrid width="100%" height="100%"   borderVisible="false"  autoLayout="true"  borderAlpha="0.2" verticalAlign="middle"   id="taskTable" pagecount="10"  >				
+				<component:mygridcolumns>				
+				<mx:DataGridColumn textAlign="center" headerText="任务类型" width="100">
+					<mx:itemRenderer>
+						<fx:Component>
+							<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" >
+								<mx1:Text text="{data.title}" width="100">
+								</mx1:Text>
+							</mx:HBox>
+						</fx:Component>
+					</mx:itemRenderer>
+				</mx:DataGridColumn>
+				<mx:DataGridColumn textAlign="center" headerText="任务主题" width="100">
+					<mx:itemRenderer>
+						<fx:Component>
+							<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" >
+								<mx1:Text text="{data.title}" width="100">
+								</mx1:Text>
+							</mx:HBox>
+						</fx:Component>
+					</mx:itemRenderer>
+				</mx:DataGridColumn>
+				
+				<mx:DataGridColumn textAlign="center" headerText="发布时间" width="100" dataField="postTime" labelFunction="DateUtil.datagridFormatDate">
+				</mx:DataGridColumn>
+				<mx:DataGridColumn textAlign="center" headerText="责任人" width="100" dataField="workerIds" labelFunction="getWorkers">
+					
+				</mx:DataGridColumn>
+				<mx:DataGridColumn textAlign="center" headerText="指派人" width="60" dataField="assignerId" labelFunction="getAssigner">
+					
+				</mx:DataGridColumn>
+				
+				<mx:DataGridColumn textAlign="center" headerText="状态" width="60">
+					<mx:itemRenderer>
+						<fx:Component>
+							<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0">
+								<mx:Label text="{getStatus(data)}" width="60">
+								</mx:Label>
+								<fx:Script>
+									<![CDATA[
+										//提示信息
+										
+										import mx.controls.Alert;
+										import mx.core.UIComponent;
+										private function getStatus(data:Object):String{
+											var result:String="";
+											if(data.status=="0")result="进行中";
+											else if(data.status=="1")result="已完成";
+											//Alert.show(result);
+											return result;
+										}
+									]]>
+								</fx:Script>
+							</mx:HBox>
+						</fx:Component>
+					</mx:itemRenderer>
+				</mx:DataGridColumn>
+					<mx:DataGridColumn textAlign="center" headerText="操作" width="100">
+						<mx:itemRenderer>
+							<fx:Component>
+								<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0">
+									<mx:LinkButton  label="[处理]"   click="{this.outerDocument.enterEdit(data.id);}" enabled="{checkAuth(data)}">											
+									</mx:LinkButton>
+									
+									<fx:Script>
+										<![CDATA[
+										//提示信息
+										import cn.org.rapid_framework.flex_security.SecurityControler;
+										
+										import mx.controls.Alert;
+										import mx.core.UIComponent;
+										private function checkAuth(data:Object):Boolean{
+										if(data.status!=1)
+										return true;
+										else return false;
+										}
+										]]>
+									</fx:Script>
+								</mx:HBox>
+							</fx:Component>
+						</mx:itemRenderer>
+					</mx:DataGridColumn>
+					
+				</component:mygridcolumns>
+			</component:WlzxPageDataGrid>
+				
+				
+			
+		</mx:VBox>
+		
+		
+	</s:Panel>
+</mx:Module>

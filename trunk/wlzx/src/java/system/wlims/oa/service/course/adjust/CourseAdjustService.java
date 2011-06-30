@@ -7,7 +7,7 @@ import system.wlims.oa.entity.course.adjust.ApplyItemModel;
 import system.wlims.oa.entity.course.adjust.ApplyModel;
 
 
-public interface ApplyService{
+public interface CourseAdjustService{
 	boolean applyAdd(ApplyModel apply);
 	List<ApplyModel> personalApplySearch();
 	ApplyModel getApplyById(String applyId);
