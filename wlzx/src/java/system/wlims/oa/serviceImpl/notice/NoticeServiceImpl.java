@@ -21,7 +21,6 @@ import system.wlims.oa.dao.notice.AttachmentDAO;
 import system.wlims.oa.dao.notice.NoticeDAO;
 import system.wlims.oa.entity.notice.AttachmentModel;
 import system.wlims.oa.entity.notice.NoticeModel;
-import system.wlims.oa.service.notice.AttachmentService;
 import system.wlims.oa.service.notice.NoticeService;
 
 public class NoticeServiceImpl implements NoticeService {

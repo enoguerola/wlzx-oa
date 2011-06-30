@@ -1,6 +1,5 @@
 package system.wlims.oa.service.notice;
 
-import java.util.List;
 
 import system.ServiceException;
 import system.wlims.oa.entity.notice.AttachmentModel;
@@ -20,14 +19,6 @@ public interface AttachmentService {
 	 * @throws ServiceException
 	 */
 	public void remove(String id)throws ServiceException;
-	
-	/**
-	 * 
-	 * @param noticeId
-	 * @return
-	 * @throws ServiceException
-	 */
-	public List<AttachmentModel> getAll(String noticeId)throws ServiceException;
 	
 	
 }

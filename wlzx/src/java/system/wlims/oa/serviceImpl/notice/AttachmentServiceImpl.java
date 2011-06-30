@@ -1,8 +1,5 @@
 package system.wlims.oa.serviceImpl.notice;
 
-import java.util.List;
-
-import system.DAOException;
 import system.ServiceException;
 import system.wlims.oa.dao.notice.AttachmentDAO;
 import system.wlims.oa.entity.notice.AttachmentModel;
@@ -11,13 +8,6 @@ import system.wlims.oa.service.notice.AttachmentService;
 public class AttachmentServiceImpl implements AttachmentService {
 
 	private AttachmentDAO attachmentDAO;
-	
-	@Override
-	public List<AttachmentModel> getAll(String noticeId)
-			throws ServiceException {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	public void remove(String id) throws ServiceException {
