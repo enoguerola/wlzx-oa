@@ -9,7 +9,7 @@
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
 		
 		<mx:RemoteObject id="allWaittingDealServiceRO" destination="allWaittingDealServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
-			<mx:method name="getAllWaittingDealTasksByCondition"  concurrency="last"  result="getAllWaittingDealTasksByCondition_result(event);" />
+			<mx:method name="getAllDealTasksByCondition"  concurrency="last"  result="getAllDealTasksByCondition_result(event);" />
 
 		</mx:RemoteObject>
 		<mx:RemoteObject id="scheduleServiceRO" destination="scheduleServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
@@ -70,7 +70,7 @@
 				unLockWin();
 			}
 			
-			protected function getAllWaittingDealTasksByCondition_result(event:ResultEvent):void
+			protected function getAllDealTasksByCondition_result(event:ResultEvent):void
 			{
 				
 				var list:ArrayCollection=event.result as ArrayCollection;
@@ -93,8 +93,8 @@
 				var accountId:String=search_account_id.text;
 				var beginTime:String=search_date_begin.text;
 				var endTime:String=search_date_end.text;
-				var status:String=search_state.selectedItem.data;
-				allWaittingDealServiceRO.getAllWaittingDealTasksByCondition(accountId,status,beginTime,endTime);
+				var status:String=null;
+				allWaittingDealServiceRO.getAllDealTasksByCondition(accountId,status,beginTime,endTime);
 
 				scheduleServiceRO.getSchedulesByCondition(accountId,null,status,null,null,null,null,null,beginTime,endTime);
 			}
@@ -172,6 +172,7 @@
 			public 	 function getAssigner(data:Object, column:DataGridColumn):String{
 				var result2:String="";
 				var id:String=data.assignerId;
+				if(id=="-1")return "系统";
 				//Alert.show(ids);
 				if(id!=null&&id!=""){
 					result2+=this.parentApplication.getTeacherNameByAccountId(id);
@@ -190,8 +191,8 @@
 				</mx:HBox>
 			
 				<mx:HBox width="100%" horizontalAlign="right">
-					<mx:Label  text="状态"  width="40"  textAlign="right"/>
-					<mx:ComboBox id="search_state"  dataProvider="{taskStateList}" selectedIndex="0"  editable="false" width="80"/>
+					<!--<mx:Label  text="状态"  width="40"  textAlign="right"/>
+					<mx:ComboBox id="search_state"  dataProvider="{taskStateList}" selectedIndex="0"  editable="false" width="80"/>-->
 					<mx:Label  text="时间区间"  width="100"  textAlign="right"/>
 					<mx:DateField id="search_date_begin"   formatString="YYYY-MM-DD"  editable="false" width="100"/>
 					<mx:Label  text="--"  width="20" textAlign="center"/>
@@ -200,7 +201,7 @@
 				</mx:HBox>
 				
 			</mx:VBox>
-			<mx:Panel width="100%"   styleName="customPanel" title="待办工作"  cornerRadius="5" borderVisible="false" dropShadowVisible="false" verticalScrollPolicy="auto">
+			<mx:Panel width="100%"   styleName="customPanel" title="任务"  cornerRadius="5" borderVisible="false" dropShadowVisible="false" verticalScrollPolicy="auto">
 				
 				<component:WlzxPageDataGrid width="100%" height="100%"   borderVisible="false"  autoLayout="true"  borderAlpha="0.2" verticalAlign="middle"   id="taskTable" pagecount="5"  >				
 					<component:mygridcolumns>						
@@ -208,7 +209,7 @@
 						<mx:itemRenderer>
 							<fx:Component>
 								<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" >
-									<mx1:Text text="{data.title}" width="100">
+									<mx1:Text text="{data.type}" width="100">
 									</mx1:Text>
 								</mx:HBox>
 							</fx:Component>
@@ -225,7 +226,7 @@
 							</mx:itemRenderer>
 						</mx:DataGridColumn>
 						
-						<mx:DataGridColumn textAlign="center" headerText="发布时间" width="100" dataField="postTime" labelFunction="DateUtil.datagridFormatDate">
+						<mx:DataGridColumn textAlign="center" headerText="发布时间" width="100" dataField="postTime">
 						</mx:DataGridColumn>
 						<mx:DataGridColumn textAlign="center" headerText="责任人" width="100" dataField="workerIds" labelFunction="getWorkers">
 							
@@ -234,30 +235,8 @@
 							
 						</mx:DataGridColumn>
 						
-						<mx:DataGridColumn textAlign="center" headerText="状态" width="60">
-							<mx:itemRenderer>
-								<fx:Component>
-									<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0">
-										<mx:Label text="{getStatus(data)}" width="60">
-										</mx:Label>
-										<fx:Script>
-											<![CDATA[
-											//提示信息
-											
-											import mx.controls.Alert;
-											import mx.core.UIComponent;
-											private function getStatus(data:Object):String{
-											var result:String="";
-											if(data.status=="0")result="进行中";
-											else if(data.status=="1")result="已完成";
-											//Alert.show(result);
-											return result;
-											}
-											]]>
-										</fx:Script>
-									</mx:HBox>
-								</fx:Component>
-							</mx:itemRenderer>
+						<mx:DataGridColumn textAlign="center" headerText="状态" width="60"  dataField="status">
+							
 						</mx:DataGridColumn>
 						
 						
@@ -265,7 +244,7 @@
 				</component:WlzxPageDataGrid>
 				
 			</mx:Panel>
-			<mx:Panel width="100%"   styleName="customPanel" title="日程工作"  cornerRadius="5" borderVisible="false" dropShadowVisible="false" verticalScrollPolicy="auto">
+			<mx:Panel width="100%"   styleName="customPanel" title="日程"  cornerRadius="5" borderVisible="false" dropShadowVisible="false" verticalScrollPolicy="auto">
 				<component:WlzxPageDataGrid width="100%" height="100%"   borderVisible="false"  autoLayout="true"  borderAlpha="0.2" verticalAlign="middle"   id="scheduleTable" pagecount="5"  >				
 					<component:mygridcolumns>						
 						<mx:DataGridColumn textAlign="center" headerText="标记" dataField="loginaccount" width="50">
@@ -426,7 +405,31 @@
 								
 							</mx:itemRenderer>
 						</mx:DataGridColumn>
-						
+						<mx:DataGridColumn textAlign="center" headerText="状态" width="60">
+							<mx:itemRenderer>
+								<fx:Component>
+									<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0">
+										<mx:Label text="{getStatus(data)}" width="60">
+										</mx:Label>
+										<fx:Script>
+											<![CDATA[
+												//提示信息
+												
+												import mx.controls.Alert;
+												import mx.core.UIComponent;
+												private function getStatus(data:Object):String{
+													var result:String="";
+													if(data.status=="0")result="进行中";
+													else if(data.status=="1")result="已完成";
+													//Alert.show(result);
+													return result;
+												}
+											]]>
+										</fx:Script>
+									</mx:HBox>
+								</fx:Component>
+							</mx:itemRenderer>
+						</mx:DataGridColumn>
 					</component:mygridcolumns>
 				</component:WlzxPageDataGrid>
 				
