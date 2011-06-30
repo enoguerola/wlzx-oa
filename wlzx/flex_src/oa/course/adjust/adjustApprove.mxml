@@ -48,7 +48,7 @@
 			<mx:method name="getAllUsers"  concurrency="last"  result="getAllUsers_resultHandler(event);" />
 			
 		</mx:RemoteObject>
-		<mx:RemoteObject id="applyServiceRO" destination="applyServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+		<mx:RemoteObject id="applyServiceRO" destination="courseAdjustServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 			<mx:method name="getAppliesByCondition"  concurrency="last"  result="getAppliesByCondition_resultHandler(event);" />
 			<mx:method name="deleteApplyById"  concurrency="last"  result="deleteApplyById_resultHandler(event);" />
 			<mx:method name="getApplyById"  concurrency="last"  result="getApplyById_resultHandler(event);" />

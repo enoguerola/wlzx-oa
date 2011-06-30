@@ -51,7 +51,7 @@
 		
 	</mx:transitions>
 	
-	<mx:RemoteObject id="applyServiceRO" destination="applyServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+	<mx:RemoteObject id="applyServiceRO" destination="courseAdjustServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 		<mx:method name="applyAdd"  concurrency="last"  result="applyAddResult_resultHandler(event);" />
 		<mx:method name="applyUpdate"  concurrency="last"  result="applyUpdateResult_resultHandler(event);" />
 		<mx:method name="getApplyById"  concurrency="last"  result="getApplyById_resultHandler(event);" />

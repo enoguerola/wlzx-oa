@@ -10,20 +10,20 @@ import org.hibernate.criterion.Restrictions;
 import system.components.SecurityUserHolder;
 import system.utils.StringUtils;
 import system.utils.UtilDateTime;
-import system.wlims.oa.dao.course.adjust.ApplyDAO;
+import system.wlims.oa.dao.course.adjust.CourseAdjustDAO;
 import system.wlims.oa.entity.course.adjust.ApplyItemModel;
 import system.wlims.oa.entity.course.adjust.ApplyModel;
-import system.wlims.oa.service.course.adjust.ApplyService;
+import system.wlims.oa.service.course.adjust.CourseAdjustService;
 
-public class ApplyServiceImpl implements ApplyService{
-	private ApplyDAO applyDAO;
+public class CourseAdjustServiceImpl implements CourseAdjustService{
+	private CourseAdjustDAO courseAdjustDAO;
 
-	public ApplyDAO getApplyDAO() {
-		return applyDAO;
+	public CourseAdjustDAO getCourseAdjustDAO() {
+		return courseAdjustDAO;
 	}
 
-	public void setApplyDAO(ApplyDAO applyDAO) {
-		this.applyDAO = applyDAO;
+	public void setCourseAdjustDAO(CourseAdjustDAO courseAdjustDAO) {
+		this.courseAdjustDAO = courseAdjustDAO;
 	}
 
 	@Override
@@ -33,7 +33,7 @@ public class ApplyServiceImpl implements ApplyService{
 		apply.setApplyNo(UtilDateTime.toDateString(currenDate, "yyyyMMddHHmmss"));
 		apply.setApplyCreationDate(currenDate);
 		apply.setApplyStatus(ApplyModel.ApplyStatus.WAITING.getStatus());
-		applyDAO.saveOrUpdate(apply);
+		courseAdjustDAO.saveOrUpdate(apply);
 		return true;
 	}
 
@@ -44,19 +44,19 @@ public class ApplyServiceImpl implements ApplyService{
 		DetachedCriteria criteria = DetachedCriteria.forClass(ApplyModel.class);
 		criteria.add(Restrictions.eq("applyTeacherId", SecurityUserHolder.getCurrentUser().getId()));
 		criteria.addOrder(Order.desc("applyNo"));
-		List<ApplyModel> result = applyDAO.getListByCriteria(criteria);
+		List<ApplyModel> result = courseAdjustDAO.getListByCriteria(criteria);
 		return result;
 	}
 
 	@Override
 	public boolean cancleApplyById(String applyId) {
 		// TODO Auto-generated method stub
-		ApplyModel apply=applyDAO.get(applyId);
+		ApplyModel apply=courseAdjustDAO.get(applyId);
 		if(apply.getApplyStatus()!=ApplyModel.ApplyStatus.WAITING.getStatus()){
 			return false;
 		}else {
 			apply.setApplyStatus(ApplyModel.ApplyStatus.CANCLE.getStatus());
-			applyDAO.saveOrUpdate(apply);
+			courseAdjustDAO.saveOrUpdate(apply);
 			return true;
 		}
 	
@@ -65,29 +65,29 @@ public class ApplyServiceImpl implements ApplyService{
 	@Override
 	public ApplyModel getApplyById(String applyId) {
 		// TODO Auto-generated method stub
-		return applyDAO.get(applyId);
+		return courseAdjustDAO.get(applyId);
 	}
 
 	@Override
 	public ApplyModel loadApplyInfo(String applyId) {
 		// TODO Auto-generated method stub
-		return applyDAO.get(applyId);
+		return courseAdjustDAO.get(applyId);
 	}
 	@Override
 	public boolean applyUpdate(ApplyModel apply, Set<ApplyItemModel> applyItems) {
 		// TODO Auto-generated method stub
-		ApplyModel preApply=applyDAO.get(apply.getId());
+		ApplyModel preApply=courseAdjustDAO.get(apply.getId());
 		preApply.getApplyItems().removeAll(preApply.getApplyItems());
-		applyDAO.saveOrUpdate(preApply);	
+		courseAdjustDAO.saveOrUpdate(preApply);	
 		apply.setApplyItems(applyItems);
-		applyDAO.merge(apply);
+		courseAdjustDAO.merge(apply);
 		
 		return true;
 	}
 //	
 //	public static void main(String[] args) {
 //		 ApplicationContext applicationContext = new ClassPathXmlApplicationContext(new String[]{"system/wlims/oa/serviceImpl/course/adjust/*.xml"});	 
-//		 ApplyService applyService=(ApplyService)applicationContext.getBean("applyServiceDest");
+//		 CourseAdjustService applyService=(CourseAdjustService)applicationContext.getBean("applyServiceDest");
 //		 applyService.applyUpdate(null,null);
 //		 
 //	}
@@ -115,21 +115,21 @@ public class ApplyServiceImpl implements ApplyService{
 		
 		
 		criteria.addOrder(Order.asc("applyNo"));
-		List<ApplyModel> result = applyDAO.getListByCriteria(criteria);
+		List<ApplyModel> result = courseAdjustDAO.getListByCriteria(criteria);
 		return result;
 	}
 
 	@Override
 	public boolean deleteApplyById(String applyId) {
 		// TODO Auto-generated method stub
-		applyDAO.remove(applyDAO.get(applyId));
+		courseAdjustDAO.remove(courseAdjustDAO.get(applyId));
 		return true;
 	}
 
 	@Override
 	public boolean saveApprove(ApplyModel apply) {
 		// TODO Auto-generated method stub
-		applyDAO.saveOrUpdate(apply);
+		courseAdjustDAO.saveOrUpdate(apply);
 		return true;
 	}
 	
