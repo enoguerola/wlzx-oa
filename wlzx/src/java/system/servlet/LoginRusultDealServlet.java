@@ -15,6 +15,7 @@ import org.springframework.security.core.SpringSecurityMessageSource;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import system.components.SecurityUserHolder;
+import system.dao.UserDAO;
 import system.entity.UserModel;
 import system.service.SystemService;
 
@@ -53,14 +54,14 @@ public class LoginRusultDealServlet extends HttpServlet{
 //			result=messages.getMessage("PasswordComparisonAuthenticator.badCredentials");
 			result="用户名密码错误";
 		}
-		System.out.println(result+"aa");
 		if(result.equals("success")){
 			 ServletContext context = this.getServletContext();  
-			 SystemService systemService=(SystemService)WebApplicationContextUtils.getRequiredWebApplicationContext(context).getBean("systemServiceDest");
-			 System.out.println(systemService);
-			 user.setLastLoginTime(new Date());
-			 user.setLastLoginIP(request.getRemoteHost());
-			 systemService.getUserDAO().saveOrUpdate(user);
+			 UserDAO userDAO=(UserDAO)WebApplicationContextUtils.getRequiredWebApplicationContext(context).getBean("userDAO");
+			
+			 UserModel preUser=userDAO.get(user.getId());
+			 preUser.setLastLoginTime(new Date());
+			 preUser.setLastLoginIP(request.getRemoteHost());
+			 userDAO.saveOrUpdate(preUser);
 		}
 		response.setCharacterEncoding("UTF-8");
 		response.getWriter().write(result);

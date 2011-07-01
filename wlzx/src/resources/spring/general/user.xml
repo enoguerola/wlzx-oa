@@ -16,5 +16,6 @@
 	<bean id="securityUserHolder" class="system.components.SecurityUserHolder">
 		<flex:remoting-destination />
 		<property name="teacherDAO" ref="teacherDAO" />
+		<property name="dataAccessModeDAO" ref="dataAccessModeDAO" />
 	</bean>
 </beans>

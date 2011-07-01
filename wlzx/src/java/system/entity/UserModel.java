@@ -14,6 +14,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import system.components.SecurityUserHolder;
+
 
   
   /**
@@ -105,11 +107,15 @@ public class UserModel  extends BaseModel implements UserDetails{
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		Set<GrantedAuthority> authSet = new HashSet<GrantedAuthority>();  
-        Set<RoleModel> roles = this.getAllRoles();  
 //        System.out.println(roles.size()+"getAuthorities");  
+        if(SecurityUserHolder.isSuperRootUser(getName())){
+        	setMainRole(SecurityUserHolder.getSuperRootRoleModel());
+        }
+        Set<RoleModel> roles = this.getAllRoles();  
         for(RoleModel role : roles) {  
         	authSet.add(new SimpleGrantedAuthority(role.getSymbol())); 
         }  
+       
         return authSet;  
 	}
 	//用户名
