@@ -18,12 +18,12 @@ package basic.entity
 		public var  teacherSkillLevel:String;
 		public var  teacherSkillLevelDate:Date;
 		public var  teacherDepartment:String;
+		public var  teacherRole:String;
 		public var  teacherPosition:String;
 		public var  teacherMobilePhone:String;
 		public var  teacherContactPhone:String;
 		public var  teacherOfficePhone:String;
 		public var  teacherWorkDate:Date;
-		public var  teacherAddress:String;
 		public var  teacherPhoto:String;
 		public var  teacherStatus:int;
 		public var  teacherAttendDate:Date;

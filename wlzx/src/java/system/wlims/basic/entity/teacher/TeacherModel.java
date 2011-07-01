@@ -25,6 +25,7 @@ public class TeacherModel extends PersonModel{
 	private String teacherSkillLevel;
 	private Date teacherSkillLevelDate;
 	private String teacherDepartment;
+	private String teacherRole;
 	private String teacherPosition;
 	private String teacherMobilePhone;
 	private String teacherContactPhone;
@@ -205,6 +206,12 @@ public class TeacherModel extends PersonModel{
 	}
 	public void setSexText(String sexText) {
 		this.sexText = sexText;
+	}
+	public String getTeacherRole() {
+		return teacherRole;
+	}
+	public void setTeacherRole(String teacherRole) {
+		this.teacherRole = teacherRole;
 	}
 
 }

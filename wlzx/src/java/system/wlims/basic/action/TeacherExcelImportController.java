@@ -24,6 +24,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.xml.sax.helpers.AttributesImpl;
 
 import system.entity.PersonModel.PersonStyle;
+import system.utils.StringUtils;
 import system.utils.UtilDateTime;
 import system.wlims.basic.entity.teacher.TeacherModel;
 import system.wlims.basic.service.teacher.TeacherService;
@@ -77,7 +78,7 @@ public class TeacherExcelImportController{
 			 String group = sheet.getCell(0, i).getContents();
 			 String name = sheet.getCell(1, i).getContents();
 			 String shortNo = sheet.getCell(2, i).getContents();
-			 
+			 if(StringUtils.isEmpty(shortNo))break;
 			 if(!teacherService.valideNo(shortNo)){
                   hd.startElement("","","field",null);                                                // Start element and set its attribute.
                   hd.characters(shortNo.toCharArray(),0,shortNo.length());          // Set the "field" tag's value.
@@ -144,9 +145,9 @@ public class TeacherExcelImportController{
 			 model.setTeacherDepartment(group);
 			 
 			 teacherService.save(model);
-			 workbook.close(); 
 		}
-		
+		 workbook.close(); 
+
         hd.endElement("","","response");                                                        // End the "response" element.
         hd.endDocument();                                                                       // End the XML document.
         out.close(); 

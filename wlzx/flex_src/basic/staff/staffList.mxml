@@ -57,9 +57,9 @@
 				[    
 					{data:-1, label:"请选择"}, 
 					{data:0, label:"正式"}, 
-					{data:1, label:"适用"},
+					{data:1, label:"试用"},
 					{data:2, label:"离职"},
-					{data:3, label:"离休"}
+					{data:3, label:"退休"}
 				]                
 			);
 			
@@ -67,6 +67,7 @@
 			{
 				var allList:ArrayCollection = event.result as ArrayCollection;
 				teacherDG.initdata(allList);
+				unLockWin();
 			}
 			
 			public function initData():void {
@@ -85,6 +86,7 @@
 			}
 			
 			public function search():void{
+				lockWin();
 				teacher = new TeacherModel();
 				teacher.name = _name.text;
 				teacher.teacherDepartment = department.selectedItem.data;
@@ -196,6 +198,7 @@
 			}
 			
 			protected function systemFaultHandler(event:FaultEvent):void {
+				unLockWin();
 				Alert.show(event.fault.faultString, 'Error');
 			}
 			
@@ -352,19 +355,56 @@
 						<component:mygridcolumns>
 							
 							<mx:DataGridColumn textAlign="center" headerText="姓名" dataField="name" width="100"></mx:DataGridColumn>
-							<mx:DataGridColumn textAlign="center" headerText="性别" dataField="sex" width="50" labelFunction="formatSex"></mx:DataGridColumn>
-							<mx:DataGridColumn textAlign="center" headerText="出生年月" dataField="birthday" width="150" labelFunction="formatDate"></mx:DataGridColumn>
-							<mx:DataGridColumn textAlign="center" headerText="手机/短号" width="100">
+							<mx:DataGridColumn textAlign="center" headerText="性别" dataField="sex" width="30" labelFunction="formatSex"></mx:DataGridColumn>
+							<mx:DataGridColumn textAlign="center" headerText="出生年月" dataField="birthday" width="100" labelFunction="formatDate"></mx:DataGridColumn>
+							<mx:DataGridColumn textAlign="center" headerText="手机/短号" width="150">
 								<mx:itemRenderer>
 									<fx:Component>
 										<mx:Label htmlText="{data.teacherMobilePhone + '/' + data.teacherNo}"/>									
 									</fx:Component>
 								</mx:itemRenderer>
 							</mx:DataGridColumn>
-							<mx:DataGridColumn textAlign="center" headerText="家庭电话" dataField="homePhone" width="100"></mx:DataGridColumn>
-							<mx:DataGridColumn textAlign="center" headerText="部门" dataField="teacherDepartment" width="100"></mx:DataGridColumn>
-							<mx:DataGridColumn textAlign="center" headerText="家庭电话" dataField="homePhone" width="100"></mx:DataGridColumn>
+							<mx:DataGridColumn textAlign="center" headerText="主部门" dataField="teacherDepartment" width="100">
+							
+							</mx:DataGridColumn>
+							<mx:DataGridColumn textAlign="center" headerText="主职务" dataField="teacherRole" width="100">
+							
+							</mx:DataGridColumn>
+
 							<mx:DataGridColumn textAlign="center" headerText="办公电话" dataField="teacherOfficePhone" width="100"></mx:DataGridColumn>
+							<mx:DataGridColumn textAlign="center" headerText="当前状态"  width="60">
+								<mx:itemRenderer>
+									<fx:Component>
+										<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+											<mx:Label  text="{getStatus(data)}" >
+												<fx:Script>
+													<![CDATA[
+														
+														
+														private function getStatus(data:Object):String{
+															if(data!=null){
+																if(data.teacherStatus==0){
+																	return "正式员工";
+																}else if(data.teacherStatus==1){
+																	return "试用员工";
+																}else if(data.teacherStatus==2){
+																	return "离职员工";
+																}else if(data.teacherStatus==3){
+																	return "退休员工";
+																}
+															}
+															return null;
+														}
+													]]>
+												</fx:Script>
+											</mx:Label>
+										</mx:HBox>
+										
+									</fx:Component>
+								</mx:itemRenderer>
+							
+							</mx:DataGridColumn>
+
 							<mx:DataGridColumn textAlign="center" headerText="入校时间" dataField="teacherAttendDate" width="100" labelFunction="formatDate"></mx:DataGridColumn>
 							<mx:DataGridColumn textAlign="center" headerText="离职"  width="60">
 								<mx:itemRenderer>

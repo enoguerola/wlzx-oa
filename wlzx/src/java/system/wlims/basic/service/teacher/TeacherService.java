@@ -97,6 +97,9 @@ public class TeacherService {
 		
 		List<TeacherModel> list =  teacherDAO.getListByCriteria(criteria, startIndex, pageCount);
 		for(TeacherModel teacher : list){
+			UserModel user = userDAO.getUserByUserAccount(teacher.getTeacherNo());
+			teacher.setTeacherDepartment(user.getMainDepartment()==null?"未指定":user.getMainDepartment().getName());
+			teacher.setTeacherRole(user.getMainRole()==null?"未指定":user.getMainRole().getName());
 			teacher.setExperiences(null);
 			teacher.setOtherDepartments(null);
 			teacher.setRelations(null);

@@ -188,6 +188,12 @@ public class UserModel  extends BaseModel implements UserDetails{
 		return has;
 		
 	}
+	//获得主部门
+	public DepartmentModel getMainDepartment(){
+		if(getMainRole()!=null)
+			return getMainRole().getBelongDepartment();
+		else return null;
+	}
 	//获得用户所在处室【不推荐在此写-need provided by yufeng;说明一级部门行政组，二级部门处室定死；分别用level标记数字1,2体现】
 	public DepartmentModel belongMainOfficeDepartment(){
 		return null;

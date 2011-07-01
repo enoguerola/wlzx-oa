@@ -19,6 +19,12 @@
 	<fx:Metadata>
 		[Event(name="uploadevent", type="system.event.UploadEvent")]
 	</fx:Metadata>
+	<fx:Style>
+		.customTabStyles {
+			skin: ClassReference("system.skins.WlzxSubTabSkin");
+			border:1px;
+		}
+	</fx:Style>
 	<fx:Script>
 		<![CDATA[
 			import basic.entity.*;
@@ -139,6 +145,7 @@
 			}
 			
 			private function initStaffWin():void{
+				lockWin();
 				var parms:String=((Object)(this.owner)).id;
 				teacher = new TeacherModel();	
 				if(parms != null && parms!="" && parms!= "null"){		
@@ -201,10 +208,13 @@
 				officePhone.text = teacher.teacherOfficePhone;
 				workDate.text = DateUtil.formatDate(teacher.teacherWorkDate as Date, "YYYY-MM-DD");
 				attendDate.text = DateUtil.formatDate(teacher.teacherAttendDate as Date, "YYYY-MM-DD");
-				teacherAddress.text = teacher.teacherAddress;
+				teacherAddress.text = teacher.address;
 				
 				status.selectedIndex = ComboxUtils.findIndex(statusArr, teacher.teacherStatus + "") ;
-				showPeriod(teacher.teacherWorkDate, teacher.teacherAttendDate);
+				callLater(function():void{
+					showPeriod(teacher.teacherWorkDate, teacher.teacherAttendDate);
+				});
+				unLockWin();
 			}
 			
 			protected function validateForm(event:MouseEvent):void
@@ -236,7 +246,7 @@
 					teacher.teacherContactPhone = contactPhone.text;
 					teacher.teacherOfficePhone = officePhone.text;
 					teacher.teacherWorkDate = DateFormatter.parseDateString(workDate.text);
-					teacher.teacherAddress = teacherAddress.text;
+					teacher.address = teacherAddress.text;
 					
 					teacher.teacherPhoto = imageSrc;
 					teacher.teacherStatus = parseInt(status.selectedItem.data);
@@ -798,8 +808,24 @@
 			
 			private function showPeriod(workDate:Date, attendDate:Date):void
 			{
-				changeHandler(workDate, attendPeriod);
+				changeHandler(workDate, workPeriod);
 				changeHandler(attendDate, attendPeriod);
+			}
+			import system.component.WlzxLockWin;
+			import mx.core.FlexGlobals;
+			import mx.managers.PopUpManager;
+			private var window:WlzxLockWin=null;
+			private function lockWin():void{
+				
+				window=WlzxLockWin(PopUpManager.createPopUp(this,WlzxLockWin,true)); 
+				PopUpManager.centerPopUp(window);
+				window.percentHeight=100;
+				window.percentWidth=100;			
+				
+			}
+			private function unLockWin():void{
+				if(window!=null)
+					PopUpManager.removePopUp(window);
 			}
 
 		]]>
@@ -858,9 +884,10 @@
 		</mx:RemoteObject>
 	</fx:Declarations>
 	<s:Panel width="100%" height="100%" title="教师信息编辑"  styleName="customPanel"   borderVisible="true" dropShadowVisible="false">
+
 		<s:VGroup width="100%" height="100%">
 			<mx:TabNavigator id="systems"  width="100%" height="100%" tabStyleName="customTabStyles"  horizontalGap="1" borderVisible="false"  tabWidth="120" paddingTop="0">
-				<s:NavigatorContent label="基础信息" show="navigatorcontent2_showHandler(event)">
+				<s:NavigatorContent label="基础信息" show="navigatorcontent2_showHandler(event)" >
 					<s:layout>
 						<s:VerticalLayout/>
 					</s:layout>
@@ -934,7 +961,7 @@
 								</s:VGroup>
 								<s:VGroup width="25%">
 									<mx:FormItem label="学历" width="100%">
-										<s:ComboBox id="education" width="100%" selectedIndex="0" dataProvider="{educationArr}" labelField="label"/>
+										<mx:ComboBox id="education" width="100%" selectedIndex="0" dataProvider="{educationArr}" labelField="label"/>
 									</mx:FormItem>
 									<mx:FormItem label="职称" width="100%">
 										<mx:TextInput id='professionalTitle' width="100%"/>
@@ -987,7 +1014,7 @@
 											<mx:DateField id='workDate' width="100%" yearNavigationEnabled="true" formatString="YYYY-MM-DD" change="workDate_changeHandler(event)"/>
 										</mx:FormItem>
 										<mx:FormItem label="工龄" width="45%" labelWidth="100">
-											<mx:TextInput id='workPeriod' width="90%"/>
+											<mx:TextInput id='workPeriod' width="90%" editable="false"/>
 										</mx:FormItem>
 									</s:HGroup>
 									<s:HGroup width="100%">
@@ -995,7 +1022,7 @@
 											<mx:DateField id="attendDate" width="100%" yearNavigationEnabled="true" formatString="YYYY-MM-DD" change="attendDate_changeHandler(event)"/>
 										</mx:FormItem>
 										<mx:FormItem label="校龄" width="30%">
-											<mx:TextInput id='attendPeriod' width="100%"/>
+											<mx:TextInput id='attendPeriod' width="100%" editable="false"/>
 										</mx:FormItem>
 										<mx:FormItem label="状态" width="25%" labelWidth="100">
 											<s:DropDownList id='status' width="100%" 
@@ -1004,87 +1031,89 @@
 										</mx:FormItem>
 										<s:Button click="validateForm(event)" label="保存"/>
 									</s:HGroup>
-									<s:HGroup width="100%">
-										<s:Panel width="100%" height="100%" title="其他单位"  borderVisible="false" id="departments" dropShadowVisible="false">
-											<s:VGroup width="100%" height="100%" id="department_listPanel" excludeFrom="department_add">
-												<s:HGroup verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12" height="30" paddingLeft="20">
-													<s:Label text="|"/>
-													<mx:LinkButton  label="添加" icon="@Embed(source='../WebContent/resources/common/tools/button_add_icon.png')" click=" this.currentState='department_add';departmentId.text='';" />
-													<s:Label text="|"/>
-												</s:HGroup>
-												<s:VGroup width="100%" height="100%"  gap="10" verticalAlign="middle" horizontalAlign="center">
-													<s:HGroup width="100%" height="100%" paddingLeft="10" paddingRight="10" paddingBottom="10">
-														<s:Panel width="100%" height="100%"  styleName="customPanel" title="部门记录"  cornerRadius="5" borderVisible="false" dropShadowVisible="false">
-															<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="false"   borderAlpha="0.2" verticalAlign="middle"   id="departments_table" pagecount="10"  >				
-																<component:mygridcolumns>
-																	
-																	<mx:DataGridColumn textAlign="center" headerText="部门" dataField="departmentName" width="100"></mx:DataGridColumn>
-																	<mx:DataGridColumn textAlign="center" headerText="职务" dataField="positionName" width="170"></mx:DataGridColumn>
-																	<mx:DataGridColumn textAlign="center" headerText="编辑" width="60">
-																		<mx:itemRenderer>
-																			<fx:Component>
-																				<mx:LinkButton  label="[编辑]"   click="{this.outerDocument.department_enterEdit(data);}">											
-																				</mx:LinkButton>										
-																			</fx:Component>
-																		</mx:itemRenderer>
-																	</mx:DataGridColumn>
-																	<mx:DataGridColumn textAlign="center" headerText="删除"  width="60">
-																		<mx:itemRenderer>
-																			<fx:Component>
-																				<mx:LinkButton  label="[删除]"   click="{this.outerDocument.department_cancleApply(data.teacherId,data.positionId);}">											
-																				</mx:LinkButton>										
-																			</fx:Component>
-																		</mx:itemRenderer>
-																	</mx:DataGridColumn>
-																</component:mygridcolumns>
-															</component:WlzxPageDataGrid>
-														</s:Panel>
-													</s:HGroup>
-												</s:VGroup>
-											</s:VGroup>
-											<s:VGroup width="100%" height="100%" id="department_addPanel" excludeFrom="department_list">
-												<s:HGroup verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12">
-													<s:HGroup width="100%" height="30" paddingLeft="20"  gap="0"  verticalAlign="middle">
-														<s:Label text="|"/>
-														<mx:LinkButton  label="返回" icon="@Embed(source='../WebContent/resources/common/tools/button_back_icon.png')" click="currentState='department_list';" />
-														<s:Label text="|"/>
-													</s:HGroup>
-												</s:HGroup>
-												<s:VGroup width="100%" height="50%" gap="10" verticalAlign="middle" horizontalAlign="left" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
-													<s:VGroup width="100%" horizontalAlign="center" height="100%" verticalAlign="middle" paddingLeft="20" paddingRight="20">
-														<mx:Grid width="80%" height="100%" id="department_container"  verticalGap="10" horizontalGap="5"   borderStyle="solid" paddingBottom="10" paddingTop="10" paddingLeft="10" paddingRight="10">
-															
-															<mx:GridRow width="100%" height="30"  >
-																<mx:GridItem    verticalAlign="middle" horizontalAlign="right">
-																	<mx:Label  text="部门" width="60"  textAlign="right" />
-																</mx:GridItem>
-																<mx:GridItem  verticalAlign="middle" horizontalAlign="center">
-																	<mx:ComboBox  width="120" id="departmentName" labelField="label" dataProvider="{departmentList}"
-																				  change="departmentSelectionChangedHandler(event);"/>
-																</mx:GridItem>
-																<mx:GridItem    verticalAlign="middle" horizontalAlign="right">
-																	<mx:Label  text="职务" width="60"  textAlign="right" />
-																</mx:GridItem>
-																<mx:GridItem  verticalAlign="middle" horizontalAlign="center">
-																	<mx:ComboBox width="120" id="departmentPosition"   fontSize="12" labelField="label"  textAlign="left" />
-
-																</mx:GridItem>
-																<mx:GridItem  verticalAlign="middle" horizontalAlign="center">
-																	<s:TextInput id="departmentId" visible="false"/>
-																	<mx:Button label="保存" width="60" click="department_save_clickHandler(event)"/>
-																</mx:GridItem>
-															</mx:GridRow>
-														</mx:Grid>
-													</s:VGroup>
-												</s:VGroup>
-											</s:VGroup>
-										</s:Panel>
-									</s:HGroup>
 								</s:VGroup>
 							</s:HGroup>
+								<s:HGroup width="100%">
+									<s:Panel width="100%" height="100%" title="其他单位"  borderVisible="false" id="departments" dropShadowVisible="false">
+										<s:VGroup width="100%" height="100%" id="department_listPanel" excludeFrom="department_add">
+											<s:HGroup verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12" height="30" paddingLeft="20">
+												<s:Label text="|"/>
+												<mx:LinkButton  label="添加" icon="@Embed(source='../WebContent/resources/common/tools/button_add_icon.png')" click=" this.currentState='department_add';departmentId.text='';" />
+												<s:Label text="|"/>
+											</s:HGroup>
+											<s:VGroup width="100%" height="100%"  gap="10" verticalAlign="middle" horizontalAlign="center">
+												<s:HGroup width="100%" height="100%" paddingLeft="10" paddingRight="10" paddingBottom="10">
+													<s:Panel width="100%" height="100%"  styleName="customPanel" title="部门记录"  cornerRadius="5" borderVisible="false" dropShadowVisible="false">
+														<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="false"   borderAlpha="0.2" verticalAlign="middle"   id="departments_table" pagecount="10"  >				
+															<component:mygridcolumns>
+																
+																<mx:DataGridColumn textAlign="center" headerText="部门" dataField="departmentName" width="100"></mx:DataGridColumn>
+																<mx:DataGridColumn textAlign="center" headerText="职务" dataField="positionName" width="170"></mx:DataGridColumn>
+																<mx:DataGridColumn textAlign="center" headerText="编辑" width="60">
+																	<mx:itemRenderer>
+																		<fx:Component>
+																			<mx:LinkButton  label="[编辑]"   click="{this.outerDocument.department_enterEdit(data);}">											
+																			</mx:LinkButton>										
+																		</fx:Component>
+																	</mx:itemRenderer>
+																</mx:DataGridColumn>
+																<mx:DataGridColumn textAlign="center" headerText="删除"  width="60">
+																	<mx:itemRenderer>
+																		<fx:Component>
+																			<mx:LinkButton  label="[删除]"   click="{this.outerDocument.department_cancleApply(data.teacherId,data.positionId);}">											
+																			</mx:LinkButton>										
+																		</fx:Component>
+																	</mx:itemRenderer>
+																</mx:DataGridColumn>
+															</component:mygridcolumns>
+														</component:WlzxPageDataGrid>
+													</s:Panel>
+												</s:HGroup>
+											</s:VGroup>
+										</s:VGroup>
+										<s:VGroup width="100%" height="100%" id="department_addPanel" excludeFrom="department_list">
+											<s:HGroup verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12">
+												<s:HGroup width="100%" height="30" paddingLeft="20"  gap="0"  verticalAlign="middle">
+													<s:Label text="|"/>
+													<mx:LinkButton  label="返回" icon="@Embed(source='../WebContent/resources/common/tools/button_back_icon.png')" click="currentState='department_list';" />
+													<s:Label text="|"/>
+												</s:HGroup>
+											</s:HGroup>
+											<s:VGroup width="100%" height="50%" gap="10" verticalAlign="middle" horizontalAlign="left" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
+												<s:VGroup width="100%" horizontalAlign="center" height="100%" verticalAlign="middle" paddingLeft="20" paddingRight="20">
+													<mx:Grid width="80%" height="100%" id="department_container"  verticalGap="10" horizontalGap="5"   borderStyle="solid" paddingBottom="10" paddingTop="10" paddingLeft="10" paddingRight="10">
+														
+														<mx:GridRow width="100%" height="30"  >
+															<mx:GridItem    verticalAlign="middle" horizontalAlign="right">
+																<mx:Label  text="部门" width="60"  textAlign="right" />
+															</mx:GridItem>
+															<mx:GridItem  verticalAlign="middle" horizontalAlign="center">
+																<mx:ComboBox  width="120" id="departmentName" labelField="label" dataProvider="{departmentList}"
+																			  change="departmentSelectionChangedHandler(event);"/>
+															</mx:GridItem>
+															<mx:GridItem    verticalAlign="middle" horizontalAlign="right">
+																<mx:Label  text="职务" width="60"  textAlign="right" />
+															</mx:GridItem>
+															<mx:GridItem  verticalAlign="middle" horizontalAlign="center">
+																<mx:ComboBox width="120" id="departmentPosition"   fontSize="12" labelField="label"  textAlign="left" />
+																
+															</mx:GridItem>
+															<mx:GridItem  verticalAlign="middle" horizontalAlign="center">
+																<s:TextInput id="departmentId" visible="false"/>
+																<mx:Button label="保存" width="60" click="department_save_clickHandler(event)"/>
+															</mx:GridItem>
+														</mx:GridRow>
+													</mx:Grid>
+												</s:VGroup>
+											</s:VGroup>
+										</s:VGroup>
+									</s:Panel>
+								</s:HGroup>
+
 							</s:VGroup>
 						</s:Scroller>
 					</mx:Form>
+					
 				</s:NavigatorContent>
 				<s:NavigatorContent label="其他信息" show="navigatorcontent1_activateHandler(event)">
 					<s:layout>
@@ -1267,5 +1296,5 @@
 				</s:NavigatorContent>
 			</mx:TabNavigator>
 		</s:VGroup>
-	</s:Panel>
+		</s:Panel>
 </mx:Module>
