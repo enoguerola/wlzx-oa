@@ -70,7 +70,7 @@
 						   var isValidForm:Boolean = validatorErrorArray.length == 0;
 						   if (isValidForm) {
 							   myHttp.send();
-							  // myHttp.send();
+							   myHttp.send();//临时解决初次请求不响应问题？？
 						   } else {
 							   var err:ValidationResultEvent;
 							   var errorMessageArray:Array = [];

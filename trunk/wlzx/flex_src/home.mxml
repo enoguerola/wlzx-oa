@@ -98,6 +98,8 @@
 					var triple:TripleObject=allList.getItemAt(i) as TripleObject;
 					allTeacherAcccounts.addItem({name:triple.left,account:triple.middle,id:triple.right});
 				}
+				//追加超级管理员
+				allTeacherAcccounts.addItem({name:"超级管理员",account:"super_root",id:"1"});
 			}
 			public function getTeacherNameByAccountId(id:String):String{
 				for(var i:int=0;i<allTeacherAcccounts.length;i++){

@@ -281,13 +281,14 @@ public class SystemService{
 	//修改个人用户密码【0:失败；1：原密码错误；2：修改成功】
 	public int saveUserPW(String oldPW,String newPW){
 		UserModel user=SecurityUserHolder.getCurrentUser();
-		if(user==null)return 0;
+		UserModel preUser=userDAO.get(user.getId());
+		if(preUser==null)return 0;
 		else{
-			if(!user.getPwd().equals(CipherUtil.encodeByMD5(oldPW)))
+			if(!preUser.getPwd().equals(CipherUtil.encodeByMD5(oldPW)))
 				return 1;
 			else{
-				user.setPwd(CipherUtil.encodeByMD5(newPW));
-				userDAO.saveOrUpdate(user);
+				preUser.setPwd(CipherUtil.encodeByMD5(newPW));
+				userDAO.saveOrUpdate(preUser);
 				return 2;
 			}
 		}
