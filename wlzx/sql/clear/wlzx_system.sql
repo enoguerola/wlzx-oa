@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2011 年 07 月 01 日 14:48
+-- 生成日期: 2011 年 07 月 01 日 16:18
 -- 服务器版本: 5.0.91
 -- PHP 版本: 5.2.13
 
@@ -72,10 +72,6 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_data_access_mode` (
 --
 
 INSERT INTO `wlzx_system_data_access_mode` (`id`, `name`, `symbol`, `sequence`, `value`, `detail`, `creation_date`, `modified_date`) VALUES
-(3, '全部数据', 'basic_authorization_department_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-06 11:50:32', '2011-05-22 15:05:30'),
-(4, '全部数据', 'basic_authorization_role_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-06 11:50:32', '2011-05-22 15:05:30'),
-(5, '全部数据', 'basic_setting_department_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-06 11:50:32', '2011-05-22 15:05:30'),
-(6, '全部数据', 'basic_setting_role_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-06 11:50:32', '2011-05-22 15:05:30'),
 (7, '全部数据', 'notice_post_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-07 00:00:00', '2011-06-23 23:13:19'),
 (8, '全部数据', 'department_notice_read_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-09 00:00:00', '2011-06-16 00:05:21'),
 (9, '全部数据', 'notice_list_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-09 00:00:00', '2011-06-15 21:51:54'),
@@ -85,8 +81,6 @@ INSERT INTO `wlzx_system_data_access_mode` (`id`, `name`, `symbol`, `sequence`, 
 (14, '全部数据', 'person_work_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-14 00:00:00', '2011-06-16 10:33:33'),
 (15, '全部数据', 'staff_work_assign_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-14 00:00:00', '2011-06-16 10:47:07'),
 (16, '全部数据', 'public_address_book_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-14 00:00:00', '2011-05-22 15:05:30'),
-(17, '全部数据', 'basic_data_staff_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-21 00:00:00', '2011-05-22 15:05:30'),
-(18, '全部数据', 'basic_data_account_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-21 00:00:00', '2011-05-22 15:05:30'),
 (19, '全部数据', 'staff_file_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-21 00:00:00', '2011-05-22 15:05:30'),
 (20, '全部数据', 'system_account_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-21 00:00:00', '2011-05-22 15:05:30'),
 (21, '全部数据', 'oa_department_set_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-21 00:00:00', '2011-05-22 15:05:30'),
@@ -182,13 +176,7 @@ INSERT INTO `wlzx_system_department_dam_relationship` (`id`, `department_id`, `d
 (42, 1, 20),
 (44, 1, 7),
 (45, 1, 9),
-(46, 1, 8),
-(47, 1, 17),
-(48, 1, 18),
-(49, 1, 3),
-(50, 1, 6),
-(51, 1, 5),
-(52, 1, 4);
+(46, 1, 8);
 
 -- --------------------------------------------------------
 
@@ -265,14 +253,6 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_menu` (
 --
 
 INSERT INTO `wlzx_system_menu` (`id`, `name`, `symbol`, `sequence`, `detail`, `menu_icon`, `creation_date`, `modified_date`) VALUES
-(1, '系统授权', 'basic_authorization', 0, NULL, NULL, '2011-05-06 11:50:32', '2011-05-06 11:50:32'),
-(2, '部门授权', 'basic_authorization_department', 3, '', NULL, '2011-05-06 00:00:00', '2011-05-06 11:50:32'),
-(3, '岗位授权', 'basic_authorization_role', 4, '', NULL, '2011-05-06 00:00:00', '2011-05-06 11:50:32'),
-(4, '基础数据', 'basic_data', 0, NULL, NULL, '2011-05-06 11:50:32', '2011-05-06 11:50:32'),
-(5, '员工基础', 'basic_data_staff', 2, '', NULL, '2011-05-06 00:00:00', '2011-05-06 11:50:32'),
-(6, '系统设置', 'basic_setting', 0, NULL, NULL, '2011-05-06 11:50:32', '2011-05-06 11:50:32'),
-(7, '部门设置', 'basic_setting_department', 1, '', NULL, '2011-05-06 00:00:00', '2011-05-06 11:50:32'),
-(8, '岗位设置', 'basic_setting_role', 2, '', NULL, '2011-05-06 00:00:00', '2011-05-06 11:50:32'),
 (9, '内部事务管理', 'oa_inside_affair', 2, '', 'oa_inside_affair', '2011-05-06 00:00:00', '2011-05-07 22:40:33'),
 (10, '公文管理', 'oa_official_document', 3, '', 'oa_official_document', '2011-05-06 00:00:00', '2011-05-07 22:40:33'),
 (11, '公共事务管理', 'oa_public_affair', 1, '', 'oa_public_affair', '2011-05-06 00:00:00', '2011-05-07 22:40:33'),
@@ -292,7 +272,6 @@ INSERT INTO `wlzx_system_menu` (`id`, `name`, `symbol`, `sequence`, `detail`, `m
 (27, '我的工作', 'person_work', 2, '', '', '2011-05-10 00:00:00', '2011-05-10 11:25:18'),
 (28, '工作指派', 'staff_work_assign', 3, '', '', '2011-05-10 00:00:00', '2011-05-10 11:26:18'),
 (29, '公共通讯录', 'public_address_book', 0, '', '', '2011-05-10 00:00:00', '2011-05-10 11:28:18'),
-(30, '帐号数据', 'basic_data_account', 1, '', '', '2011-05-21 00:00:00', '2011-05-21 09:27:24'),
 (31, '人事管理', 'human_resource', 5, '', '', '2011-05-21 00:00:00', '2011-05-21 09:40:29'),
 (32, '教师档案', 'staff_file', 1, '', '', '2011-05-21 00:00:00', '2011-05-21 09:44:43'),
 (33, '帐号管理', 'system_account', 1, '', '', '2011-05-21 00:00:00', '2011-05-21 09:46:20'),
@@ -344,10 +323,6 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_menu_module_relationship` (
 --
 
 INSERT INTO `wlzx_system_menu_module_relationship` (`id`, `menu_id`, `module_id`) VALUES
-(1, 2, 1),
-(2, 3, 2),
-(3, 7, 3),
-(4, 8, 4),
 (5, 14, 5),
 (6, 20, 6),
 (7, 13, 7),
@@ -357,8 +332,6 @@ INSERT INTO `wlzx_system_menu_module_relationship` (`id`, `menu_id`, `module_id`
 (13, 27, 13),
 (14, 28, 14),
 (15, 29, 15),
-(16, 5, 16),
-(17, 30, 17),
 (18, 32, 18),
 (19, 33, 19),
 (20, 36, 20),
@@ -402,9 +375,6 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_menu_relationship` (
 --
 
 INSERT INTO `wlzx_system_menu_relationship` (`id`, `system_id`, `menu_id`) VALUES
-(1, 2, 1),
-(2, 2, 4),
-(3, 2, 6),
 (4, 3, 9),
 (5, 3, 10),
 (6, 3, 11),
@@ -431,19 +401,10 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_menu_treeship` (
 --
 
 INSERT INTO `wlzx_system_menu_treeship` (`id`, `parent_id`, `child_id`) VALUES
-(1, 1, 2),
-(2, 1, 3),
-(3, 4, 5),
-(4, 6, 7),
-(5, 6, 8),
 (6, 11, 12),
 (7, 11, 16),
 (8, 12, 13),
 (9, 12, 14),
-(12, 19, 3),
-(13, 19, 2),
-(14, 19, 8),
-(15, 19, 7),
 (16, 12, 20),
 (17, 16, 21),
 (18, 16, 22),
@@ -453,7 +414,6 @@ INSERT INTO `wlzx_system_menu_treeship` (`id`, `parent_id`, `child_id`) VALUES
 (23, 23, 27),
 (24, 23, 28),
 (25, 24, 29),
-(26, 4, 30),
 (27, 49, 32),
 (28, 18, 33),
 (29, 10, 34),
@@ -533,10 +493,6 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_module` (
 --
 
 INSERT INTO `wlzx_system_module` (`id`, `name`, `symbol`, `sequence`, `detail`, `creation_date`, `modified_date`, `url`, `parms`) VALUES
-(1, '部门授权主模块', 'basic_authorization_department_main', 0, NULL, '2011-05-06 11:50:32', '2011-05-06 11:50:32', 'basic/authorization/departmentAuthorization.swf', NULL),
-(2, '岗位授权主模块', 'basic_authorization_role_main', 0, NULL, '2011-05-06 11:50:32', '2011-05-06 11:50:32', 'basic/authorization/roleAuthorization.swf', NULL),
-(3, '部门设置主模块', 'basic_setting_department_main', 0, NULL, '2011-05-06 11:50:32', '2011-05-06 11:50:32', 'basic/setting/departmentSetting.swf', NULL),
-(4, '岗位设置主模块', 'basic_setting_role_main', 0, NULL, '2011-05-06 11:50:32', '2011-05-06 11:50:32', 'basic/setting/roleSetting.swf', NULL),
 (5, '公告发布主模块', 'notice_post_main', 0, '', '2011-05-07 00:00:00', '2011-06-23 23:13:19', 'oa/notice/personNotice.swf', 'add'),
 (6, '部门公告阅读主模块', 'department_notice_read_main', 0, '', '2011-05-09 00:00:00', '2011-06-16 00:05:21', 'oa/notice/noticeList.swf', 'department'),
 (7, '公告管理主模块', 'notice_list_main', 0, '', '2011-05-09 00:00:00', '2011-06-15 21:51:54', 'oa/notice/noticeManage.swf', 'list'),
@@ -546,8 +502,6 @@ INSERT INTO `wlzx_system_module` (`id`, `name`, `symbol`, `sequence`, `detail`, 
 (13, '我的工作主模块', 'person_work_main', 0, '', '2011-05-14 00:00:00', '2011-06-16 10:33:33', 'oa/task/personTask.swf', ''),
 (14, '工作指派主模块', 'staff_work_assign_main', 0, '', '2011-05-14 00:00:00', '2011-06-16 10:47:07', 'oa/task/taskManager.swf', 'add'),
 (15, '公共通讯录主模块', 'public_address_book_main', 0, '', '2011-05-14 00:00:00', '2011-05-14 15:05:56', 'oa/communication/publicAddressBook.swf', NULL),
-(16, '员工数据主模块', 'basic_data_staff_main', 0, '', '2011-05-21 00:00:00', '2011-05-21 09:30:48', 'basic/account/accountList.swf', NULL),
-(17, '帐号数据主模块', 'basic_data_account_main', 0, '', '2011-05-21 00:00:00', '2011-05-21 09:31:31', 'basic/account/accountList.swf', NULL),
 (18, '教师档案主模块', 'staff_file_main', 0, '', '2011-05-21 00:00:00', '2011-05-21 09:47:23', 'basic/staff/staffList.swf', NULL),
 (19, '帐号管理主模块', 'system_account_main', 0, '', '2011-05-21 00:00:00', '2011-05-21 09:48:08', 'basic/account/accountList.swf', NULL),
 (20, '部门设置主模块', 'oa_department_set_main', 0, '', '2011-05-21 00:00:00', '2011-05-21 14:06:34', 'basic/setting/departmentSetting.swf', NULL),
@@ -591,10 +545,6 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_module_operation_relationship` (
 --
 
 INSERT INTO `wlzx_system_module_operation_relationship` (`id`, `module_id`, `operation_id`) VALUES
-(3, 1, 3),
-(4, 2, 4),
-(5, 3, 5),
-(6, 4, 6),
 (7, 5, 7),
 (8, 6, 8),
 (9, 7, 9),
@@ -604,8 +554,6 @@ INSERT INTO `wlzx_system_module_operation_relationship` (`id`, `module_id`, `ope
 (14, 13, 14),
 (15, 14, 15),
 (16, 15, 16),
-(17, 16, 17),
-(18, 17, 18),
 (19, 18, 19),
 (20, 19, 20),
 (21, 20, 21),
@@ -678,10 +626,6 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_operation` (
 --
 
 INSERT INTO `wlzx_system_operation` (`id`, `name`, `symbol`, `sequence`, `rs_type`, `rs_value`, `detail`, `creation_date`, `modified_date`) VALUES
-(3, '页面访问', 'basic_authorization_department_main@defaultVisit@', 0, 'URL', '/basic/authorization/departmentAuthorization.swf*', NULL, '2011-05-06 11:50:32', '2011-05-22 15:06:06'),
-(4, '页面访问', 'basic_authorization_role_main@defaultVisit@', 0, 'URL', '/basic/authorization/roleAuthorization.swf*', NULL, '2011-05-06 11:50:32', '2011-05-22 15:06:06'),
-(5, '页面访问', 'basic_setting_department_main@defaultVisit@', 0, 'URL', '/basic/setting/departmentSetting.swf*', NULL, '2011-05-06 11:50:32', '2011-05-22 15:06:06'),
-(6, '页面访问', 'basic_setting_role_main@defaultVisit@', 0, 'URL', '/basic/setting/roleSetting.swf*', NULL, '2011-05-06 11:50:32', '2011-05-22 15:06:06'),
 (7, '页面访问', 'notice_post_main@defaultVisit@', 0, 'URL', '/oa/notice/personNotice.swf*', NULL, '2011-05-07 00:00:00', '2011-06-23 23:13:19'),
 (8, '页面访问', 'department_notice_read_main@defaultVisit@', 0, 'URL', '/oa/notice/noticeList.swf*', NULL, '2011-05-09 00:00:00', '2011-06-16 00:05:21'),
 (9, '页面访问', 'notice_list_main@defaultVisit@', 0, 'URL', '/oa/notice/noticeManage.swf*', NULL, '2011-05-09 00:00:00', '2011-06-15 21:51:54'),
@@ -691,8 +635,6 @@ INSERT INTO `wlzx_system_operation` (`id`, `name`, `symbol`, `sequence`, `rs_typ
 (14, '页面访问', 'person_work_main@defaultVisit@', 0, 'URL', '/oa/task/personTask.swf*', NULL, '2011-05-14 00:00:00', '2011-06-16 10:33:33'),
 (15, '页面访问', 'staff_work_assign_main@defaultVisit@', 0, 'URL', '/oa/task/taskManager.swf*', NULL, '2011-05-14 00:00:00', '2011-06-16 10:47:07'),
 (16, '页面访问', 'public_address_book_main@defaultVisit@', 0, 'URL', '/oa/communication/publicAddressBook.swf*', NULL, '2011-05-14 00:00:00', '2011-05-22 15:06:06'),
-(17, '页面访问', 'basic_data_staff_main@defaultVisit@', 0, 'URL', '/basic/account/accountList.swf*', NULL, '2011-05-21 00:00:00', '2011-05-22 15:06:06'),
-(18, '页面访问', 'basic_data_account_main@defaultVisit@', 0, 'URL', '/basic/account/accountList.swf*', NULL, '2011-05-21 00:00:00', '2011-05-22 15:06:06'),
 (19, '页面访问', 'staff_file_main@defaultVisit@', 0, 'URL', '/basic/staff/staffList.swf*', NULL, '2011-05-21 00:00:00', '2011-05-22 15:06:06'),
 (20, '页面访问', 'system_account_main@defaultVisit@', 0, 'URL', '/basic/account/accountList.swf*', NULL, '2011-05-21 00:00:00', '2011-05-22 15:06:06'),
 (21, '页面访问', 'oa_department_set_main@defaultVisit@', 0, 'URL', '/basic/setting/departmentSetting.swf*', NULL, '2011-05-21 00:00:00', '2011-05-22 15:06:06'),
@@ -741,10 +683,6 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_operation_dam_relationship` (
 --
 
 INSERT INTO `wlzx_system_operation_dam_relationship` (`id`, `operation_id`, `dam_id`) VALUES
-(3, 3, 3),
-(4, 4, 4),
-(5, 5, 5),
-(6, 6, 6),
 (7, 7, 7),
 (8, 8, 8),
 (9, 9, 9),
@@ -754,8 +692,6 @@ INSERT INTO `wlzx_system_operation_dam_relationship` (`id`, `operation_id`, `dam
 (14, 14, 14),
 (15, 15, 15),
 (16, 16, 16),
-(17, 17, 17),
-(18, 18, 18),
 (19, 19, 19),
 (20, 20, 20),
 (21, 21, 21),
@@ -845,37 +781,10 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_role_dam_relationship` (
 INSERT INTO `wlzx_system_role_dam_relationship` (`id`, `role_id`, `dam_id`) VALUES
 (4, 1, 24),
 (12, 1, 20),
-(17, 1, 17),
-(18, 1, 18),
-(19, 1, 3),
-(20, 1, 6),
-(21, 1, 5),
-(22, 1, 4),
 (25, 1, 19),
 (27, 1, 25),
-(28, 19, 3),
-(29, 19, 6),
-(30, 19, 5),
-(31, 19, 4),
-(32, 19, 17),
-(33, 19, 18),
 (34, 1, 21),
 (35, 1, 22),
-(38, 19, 19),
-(39, 19, 22),
-(41, 19, 15),
-(42, 19, 24),
-(43, 19, 16),
-(44, 19, 25),
-(45, 19, 13),
-(47, 19, 14),
-(48, 19, 11),
-(49, 19, 12),
-(50, 19, 21),
-(51, 19, 20),
-(53, 19, 7),
-(54, 19, 9),
-(55, 19, 8),
 (57, 1, 15),
 (58, 1, 16),
 (59, 1, 13),
@@ -1031,7 +940,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_user` (
 --
 
 INSERT INTO `wlzx_system_user` (`id`, `symbol`, `sequence`, `name`, `password`, `last_login_time`, `last_login_ip`, `account_style`, `person_id`, `person_name`, `email`, `creation_date`, `modified_date`, `active`, `main_role_id`) VALUES
-(1, 'super_root', 0, 'super_root', '134bca5421a15476a1e5ebaebdba1ede', '2011-07-01 14:44:34', '127.0.0.1', -1, NULL, NULL, NULL, '2011-05-07 11:04:22', '2011-07-01 14:20:26', 1, NULL);
+(1, 'super_root', 0, 'super_root', '134bca5421a15476a1e5ebaebdba1ede', '2011-07-01 16:16:13', '127.0.0.1', -1, NULL, NULL, NULL, '2011-05-07 11:04:22', '2011-07-01 15:09:45', 1, NULL);
 
 -- --------------------------------------------------------
 
