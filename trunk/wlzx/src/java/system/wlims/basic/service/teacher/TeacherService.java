@@ -57,9 +57,8 @@ public class TeacherService {
 			user.setPwd(CipherUtil.encodeByMD5(user.getName()));
 			user.setSequence(0);
 			user.setSymbol(user.getName());
-			RoleModel role = roleDAO.get(model.getTeacherPosition());
-			if(role != null)
-				user.setMainRole(role);
+			RoleModel role = roleDAO.getRoleByName(model.getTeacherPosition());
+			user.setMainRole(role);
 			userDAO.saveOrUpdate(user);
 			model.setUserID(user.getId());
 			teacherDAO.saveOrUpdate(model);

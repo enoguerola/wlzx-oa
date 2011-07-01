@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Module xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		   xmlns:s="library://ns.adobe.com/flex/spark" 
+		   xmlns:hc="com.hillelcoren.components.*"
+		   xmlns:render="system.component.render.*"
 		   xmlns:mx="library://ns.adobe.com/flex/mx" layout="vertical" width="100%" height="100%" creationComplete="initData();" xmlns:valueObjects="basic.entity.*" xmlns:component="system.component.*">
 	<fx:Declarations>
+		
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
 		<valueObjects:TeacherModel id="teacher"/>
 		<mx:RemoteObject id="teacherServiceRO" destination="teacherServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
@@ -13,6 +16,9 @@
 		<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 			<mx:method name="getDepartmentBySymbol"  concurrency="last"  result="getDepartmentBySymbolResult(event);" />
 		</mx:RemoteObject>
+		<fx:Component id="searchAccountDropDownItemRenderer">
+			<render:AdvancedItemRenderer selectedItems="{ outerDocument.search_account.selectedItems }" />
+		</fx:Component>
 	</fx:Declarations>
 	
 	<fx:Script>
@@ -64,6 +70,7 @@
 			}
 			
 			public function initData():void {
+				search_account.dataProvider=this.parentApplication.allTeacherAcccounts;
 				systemServiceRO.getDepartmentBySymbol("root");//初始化部门数据字典
 				creationCompletedHandler();
 			}
@@ -268,11 +275,35 @@
 					}
 				}		
 			}
+			private function searchAccountHandleAutoCompleteChange():void
+			{
+				var color:Object = search_account.selectedItem;
+				
+				if (color != null && color.hasOwnProperty( "name" ))
+				{
+					_name.text=color.name;
+				} else{
+					_name.text="";
+				}               
+			}
+			import system.component.WlzxLockWin;
+			private var window:WlzxLockWin=null;
+			private function lockWin():void{
+				
+				window=WlzxLockWin(PopUpManager.createPopUp(this,WlzxLockWin,true)); 
+				PopUpManager.centerPopUp(window);
+				window.percentHeight=100;
+				window.percentWidth=100;			
+				
+			}
+			private function unLockWin():void{
+				if(window!=null)
+					PopUpManager.removePopUp(window);
+			}
 			
 		]]>
 	</fx:Script>
 	
-	<s:Panel width="100%" height="100%"  styleName="customPanel" title="教师档案"  borderVisible="false" dropShadowVisible="false">
 		<s:VGroup width="100%" height="100%">
 			<s:HGroup verticalAlign="middle" horizontalAlign="right" width="100%">
 				<mx:HBox width="100%" height="35" paddingLeft="20"  horizontalGap="10" backgroundColor="#C5E497"  verticalAlign="middle">
@@ -283,7 +314,7 @@
 					<mx:Label text="|"/>
 					<mx:LinkButton  label="导出" icon="@Embed(source='../WebContent/resources/common/tools/button_down_icon.png')" click="exportExcel(event);"/>
 					<mx:Label text="|"/>
-					<mx:ProgressBar id="uploadbar" labelPlacement="bottom" color="#F20D7A" minimum="0" maximum="100" label="当前进度: 0%" direction="right" mode="manual" width="200" visible="false"/> 
+					<mx:ProgressBar id="uploadbar" labelPlacement="left" color="#F20D7A" minimum="0" maximum="100" label="当前进度: 0%" direction="right" mode="manual" width="200" visible="false"/> 
 					<mx:Label id="lblProgress" text="上传" visible="false"/>
 				</mx:HBox>
 			</s:HGroup>
@@ -292,15 +323,18 @@
 						<mx:FormHeading label="搜索条件" fontSize="15" />
 						<s:HGroup verticalAlign="middle">
 							<s:Label  text="姓名" />
-							<s:TextInput width="100%" id="_name"/>
+							<hc:AutoComplete id="search_account"  labelField="name"  width="200"  matchType="anyPart" prompt="选择"  change="{ searchAccountHandleAutoCompleteChange() }" dropDownItemRenderer="{ searchAccountDropDownItemRenderer }" selectedItemStyleName="none">
+								
+							</hc:AutoComplete>
+							<mx:Label id="_name" visible="false"/>
 						</s:HGroup>	
 						<s:HGroup verticalAlign="middle">
 							<s:Label  text="部门" />
-							<s:ComboBox width="100%" id="department" dataProvider="{departmentList}" selectedIndex="0" labelField="label"/>
+							<mx:ComboBox  width="100%" id="department" dataProvider="{departmentList}" selectedIndex="0" labelField="label" editable="false"/>
 						</s:HGroup>
 						<s:HGroup verticalAlign="middle">
 							<s:Label  text="状态" />
-							<s:ComboBox width="100%" id="status" dataProvider="{statusArr}" selectedIndex="0" labelField="label"/>
+							<mx:ComboBox  width="100%" id="status" dataProvider="{statusArr}" selectedIndex="0" labelField="label" editable="false"/>
 						</s:HGroup>
 						<s:HGroup verticalAlign="middle">
 							<s:Label  text="入校时间" />
@@ -380,5 +414,4 @@
 		</s:VGroup>
 		
 		
-	</s:Panel>
 </mx:Module>
