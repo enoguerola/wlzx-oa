@@ -70,7 +70,7 @@ public class TeacherExcelImportController{
         hd.startElement("","","response",atts); 
         
 		int rowCount = sheet.getRows();
-		for (int i = 1; i <rowCount; i++) {
+		for (int i =4; i <rowCount; i++) {
 			 TeacherModel model = new TeacherModel();
 			 // Clear the XML attributes object.
              atts.clear();
