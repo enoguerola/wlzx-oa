@@ -85,6 +85,10 @@
 			private const oa_school_affair:Class;
 			[Embed(source="../WebContent/resources/oa/menuIcon/oa_system_management.png")]
 			private const oa_system_management:Class;
+			[Embed(source="../WebContent/resources/oa/menuIcon/human_resource.png")]
+			private const human_resource:Class;
+			[Embed(source="../WebContent/resources/oa/menuIcon/personal_office.png")]
+			private const personal_office:Class;
 			
 
 			private function makeAccordion(menuList:ArrayCollection):void{
@@ -104,6 +108,8 @@
 					else if(_menu.menuIcon=='oa_inside_affair')nc.icon=oa_inside_affair;
 					else if(_menu.menuIcon=='oa_public_affair')nc.icon=oa_public_affair;
 					else if(_menu.menuIcon=='oa_official_document')nc.icon=oa_official_document;
+					else if(_menu.menuIcon=='human_resource')nc.icon=human_resource;
+					else if(_menu.menuIcon=='personal_office')nc.icon=personal_office;
 					if(ArrayCollection(_menu.children).length>0){
 						var resultXML:String=buildSubMenus(_menu);
 						var menuData:XML=new XML(resultXML);
