@@ -375,7 +375,7 @@
 						
 			private function getExperience():void
 			{
-				Alert.show(teacherId);
+//				Alert.show(teacherId);
 				teacherExperienceServiceRO.get(teacherId, experiences_table.curpage,experiences_table.pagecount);
 			}
 			

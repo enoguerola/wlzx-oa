@@ -355,7 +355,7 @@
 						<component:mygridcolumns>
 							
 							<mx:DataGridColumn textAlign="center" headerText="姓名" dataField="name" width="100"></mx:DataGridColumn>
-							<mx:DataGridColumn textAlign="center" headerText="性别" dataField="sex" width="30" labelFunction="formatSex"></mx:DataGridColumn>
+							<mx:DataGridColumn textAlign="center" headerText="性别" dataField="sex" width="40" labelFunction="formatSex"></mx:DataGridColumn>
 							<mx:DataGridColumn textAlign="center" headerText="出生年月" dataField="birthday" width="100" labelFunction="formatDate"></mx:DataGridColumn>
 							<mx:DataGridColumn textAlign="center" headerText="手机/短号" width="150">
 								<mx:itemRenderer>
