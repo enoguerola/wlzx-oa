@@ -92,14 +92,14 @@ public class TeacherExcelImportController{
 			 String homePhone = sheet.getCell(7, i).getContents();
 			 String contactPhone = sheet.getCell(8, i).getContents();
 			 //sex str to int
-			 Integer sex = sheet.getCell(9, i).getContents() == "男" ? 0 : 1;
+			 Integer sex = sheet.getCell(9, i).getContents().equals("男") ? 0 : 1;
 			 Date birthday = ((DateCell)sheet.getCell(10, i)).getDate();
 			 
 			 String nation = sheet.getCell(11, i).getContents();
 			 //marriage str to int
-			 Integer marriage = sheet.getCell(12, i).getContents() == "未婚" ? 0 : 1;
+			 Integer marriage = sheet.getCell(12, i).getContents().equals("未婚") ? 0 : 1;
 			 //politic str to int
-			 Integer politic = sheet.getCell(13, i).getContents() == "党员" ? 0 : (sheet.getCell(13, i).getContents() == "团员" ? 1 :2);
+			 Integer politic = sheet.getCell(13, i).getContents().equals("党员") ? 0 : (sheet.getCell(13, i).getContents().equals("团员") ? 1 :2);
 			 String nativePlace = sheet.getCell(14, i).getContents();
 			 String id = sheet.getCell(15, i).getContents();
 			 
