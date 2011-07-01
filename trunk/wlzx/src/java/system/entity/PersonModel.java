@@ -41,6 +41,7 @@ public class PersonModel extends BaseModel{
 	private String userID;
 	
 	public static enum PersonStyle{
+		SuperRoot(-1, "超级管理员"),
 		Teacher(0, "教师");
 		
 		private int style;

@@ -22,14 +22,18 @@ public class WlzxUserDetailsService implements UserDetailsService{
 	public UserDetails loadUserByUsername(String userAccount)
 			throws UsernameNotFoundException, DataAccessException {
 	            UserModel userModel = userDao.getUserByUserAccount(userAccount);  
+	           
 	            if (userModel ==null){  
 	                String message = "用户"+userAccount+"不存在";  
 	                logger.error(message);  
 	                throw new UsernameNotFoundException(message);  
 	            }  
 	            else if(SecurityUserHolder.isSuperRootUser(userAccount)){
-	            	userModel.getRoles().add(SecurityUserHolder.getSuperRootRoleModel());
+	            	 System.out.println(userModel.getName());
+	            	 userModel.setMainRole(SecurityUserHolder.getSuperRootRoleModel());
+	            	
 	            }
+	           // userModel.getAuthorities();
 	           return userModel;
 	}
 //	

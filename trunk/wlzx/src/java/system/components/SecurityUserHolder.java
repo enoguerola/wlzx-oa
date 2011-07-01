@@ -1,8 +1,12 @@
 package system.components;
 
 
+import java.util.TreeSet;
+
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import system.dao.DataAccessModeDAO;
+import system.entity.DataAccessModeModel;
 import system.entity.PersonModel;
 import system.entity.RoleModel;
 import system.entity.UserModel;
@@ -15,6 +19,7 @@ import system.wlims.basic.entity.teacher.TeacherModel;
 public class SecurityUserHolder {
 	
 	private static TeacherDAO teacherDAO;
+	private static DataAccessModeDAO dataAccessModeDAO;
 	/**
 	 * 获取当前系统登录用户信息
 	 * @return
@@ -24,7 +29,18 @@ public class SecurityUserHolder {
 		try{
 			if( SecurityContextHolder.getContext().getAuthentication()!=null)
 			 user= (UserModel) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-			if(user.getAccountStyle()==PersonModel.PersonStyle.Teacher.getStyle()){
+			if(user.getAccountStyle()==PersonModel.PersonStyle.SuperRoot.getStyle()){
+				user.getMainRole().setDataAccessModes(new TreeSet<DataAccessModeModel>(dataAccessModeDAO.getAllResources()));
+
+				TeacherModel teacher=new TeacherModel();
+				teacher.setId("-1");
+				teacher.setName("超级管理员");
+				teacher.setExperiences(null);
+				teacher.setRelations(null);
+				teacher.setOtherDepartments(null);
+				user.setPerson(teacher);
+			}
+			else if(user.getAccountStyle()==PersonModel.PersonStyle.Teacher.getStyle()){
 				TeacherModel teacher=teacherDAO.getTeacherByUserId(user.getId());
 				/**针对BlazeDS不支持延迟加载的临时解决方案*/
 				teacher.setExperiences(null);
@@ -40,7 +56,7 @@ public class SecurityUserHolder {
 	}
 	
 	public static boolean isSuperRootUser(){
-		return isSuperRootUser(SecurityUserHolder.getCurrentUser().getName());
+		return isSuperRootUser(SecurityUserHolder.getCurrentUser().getName(),SecurityUserHolder.getCurrentUser().getPassword());
 	}
 	
 	public static boolean isSuperRootUser(String userName){
@@ -60,12 +76,12 @@ public class SecurityUserHolder {
 		superModel.setId("-1");
 		superModel.setName(WlzxUserDetailsService.superUserName);
 		superModel.setPwd(WlzxUserDetailsService.superUserPwd);
-		superModel.getRoles().add(getSuperRootRoleModel());
+		superModel.setMainRole(getSuperRootRoleModel());
 		return superModel;
 	}
 	public static RoleModel getSuperRootRoleModel(){
 		RoleModel superModel = new RoleModel();
-		superModel.setId("-1");
+		superModel.setId("0");
 		superModel.setName(WlzxUserDetailsService.superUserRole);
 		superModel.setSymbol(WlzxUserDetailsService.superUserRole);
 		return superModel;
@@ -77,5 +93,13 @@ public class SecurityUserHolder {
 
 	public  void setTeacherDAO(TeacherDAO teacherDAO) {
 		this.teacherDAO = teacherDAO;
+	}
+
+	public DataAccessModeDAO getDataAccessModeDAO() {
+		return dataAccessModeDAO;
+	}
+
+	public void setDataAccessModeDAO(DataAccessModeDAO dataAccessModeDAO) {
+		this.dataAccessModeDAO = dataAccessModeDAO;
 	}
 }
