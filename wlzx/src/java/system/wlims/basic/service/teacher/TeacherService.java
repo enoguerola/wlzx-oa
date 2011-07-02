@@ -61,8 +61,8 @@ public class TeacherService {
 			user.setSequence(0);
 			user.setSymbol(user.getName());
 			//初始角色部门初始化，若不存在则置空
-			if(!StringUtils.isEmpty(model.getTeacherPosition())){
-				RoleModel role = roleDAO.getRoleByName(model.getTeacherPosition());
+			if(!StringUtils.isEmpty(model.getTeacherPositionName())){
+				RoleModel role = roleDAO.getRoleByName(model.getTeacherPositionName());
 				if(role!=null){
 					user.setMainRole(role);
 					model.setTeacherPosition(role.getId());
@@ -73,8 +73,8 @@ public class TeacherService {
 				}else model.setTeacherPosition(null); 
 			}else{
 				model.setTeacherPosition(null);
-				if(!StringUtils.isEmpty(model.getTeacherDepartment())){
-					DepartmentModel department=departmentDAO.getDepartmentByName(model.getTeacherDepartment());
+				if(!StringUtils.isEmpty(model.getTeacherDepartmentName())){
+					DepartmentModel department=departmentDAO.getDepartmentByName(model.getTeacherDepartmentName());
 					if(department!=null){
 						user.setMainDepartment(department);
 						model.setTeacherDepartment(department.getName());
@@ -87,6 +87,30 @@ public class TeacherService {
 			model.setUserID(user.getId());
 			teacherDAO.saveOrUpdate(model);
 		}else{
+			UserModel user=userDAO.get(model.getUserID());
+			//初始角色部门初始化，若不存在则置空
+			if(!StringUtils.isEmpty(model.getTeacherPosition())){
+				RoleModel role = roleDAO.get(model.getTeacherPosition());
+				if(role!=null){
+					user.setMainRole(role);
+					model.setTeacherPosition(role.getId());
+					if(role.getBelongDepartment()!=null){
+						user.setMainDepartment(role.getBelongDepartment());
+						model.setTeacherDepartment(role.getBelongDepartment().getId());
+					}
+				}else model.setTeacherPosition(null); 
+			}else{
+				model.setTeacherPosition(null);
+				if(!StringUtils.isEmpty(model.getTeacherDepartment())){
+					DepartmentModel department=departmentDAO.get(model.getTeacherDepartment());
+					if(department!=null){
+						user.setMainDepartment(department);
+						model.setTeacherDepartment(department.getId());
+					}
+					else model.setTeacherDepartment(null);
+				}else model.setTeacherDepartment(null);
+			}
+			userDAO.saveOrUpdate(user);
 			teacherDAO.saveOrUpdate(model);
 		}
 		

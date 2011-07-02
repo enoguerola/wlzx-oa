@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Module xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		   xmlns:s="library://ns.adobe.com/flex/spark" 
-		   xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:valueObjects="basic.entity.*" xmlns:mutiComboBox="system.component.mutiComboBox.*" xmlns:component="system.component.*" layout="vertical" width="100%" height="100%" creationComplete="init();">
+		   xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:valueObjects="basic.entity.*" xmlns:mutiComboBox="system.component.mutiComboBox.*" xmlns:component="system.component.*" layout="vertical" width="100%" height="100%" creationComplete="init();" xmlns:staff="basic.staff.*">
 	<mx:states>
-		<mx:State name="department_list">           
+		<!--<mx:State name="department_list">           
 		</mx:State>
 		<mx:State name="department_add">           
-		</mx:State>
+		</mx:State>-->
 		<mx:State name="list">           
 		</mx:State>
 		<mx:State name="add">           
@@ -30,7 +30,6 @@
 			import basic.entity.*;
 			import basic.service.TeacherRemoteService;
 			import basic.utils.DateUtil;
-			import system.utils.ComboxUtils;
 			
 			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
@@ -45,12 +44,14 @@
 			
 			import system.entity.*;
 			import system.event.UploadEvent;
+			import system.utils.ComboxUtils;
 			import system.utils.CommonUtils;
 			
 			private var validatorArr:Array;
 			private var createDate:Date;
 			private var modifiedDate:Date;
 			private var style:int;
+			[binary]
 			private var teacherId:String;
 			private var userID:String;
 			private var showFirst:Boolean;
@@ -106,6 +107,7 @@
 			
 			private function init():void
 			{
+				systemServiceRO.getDepartmentBySymbol("root");//初始化部门数据字典
 				
 				showFirst = true;
 				
@@ -147,27 +149,18 @@
 			}
 			
 			private function initStaffWin():void{
-				systemServiceRO.getDepartmentBySymbol("root");//初始化部门数据字典
-				callLater(function():void{
-					this.department.dataProvider=departmentList;
-					this.department.validateNow();
-					//					this.department.selectedIndex=0;
-					//					Alert.show(department.selectedItem.dataField);
-					//					systemServiceRO.getDepartmentRoles(department.selectedItem.dataField);
-					callLater(function():void{
-						this.position.dataProvider=roleList;
-						this.position.validateNow();
-						//						this.position.selectedIndex=0;
-					});
-				});
+				
 				var parms:String=((Object)(this.owner)).id;
 				teacher = new TeacherModel();	
 				if(parms != null && parms!="" && parms!= "null"){		
 					teacherId = parms ;//弹出窗口时设定的中转参数
 					lockWin();
 					teacherServiceRO.get(teacherId);
-					getDepartment();
+					staffInputDepartmentPosition.teacherId=teacherId;
+					
 				}else{
+//					department.selectedIndex=departmentList.length-1;
+//					systemServiceRO.getDepartmentRoles(department.selectedItem.data);
 					teacher = new TeacherModel();					
 					imageSrc = "uploads/basic/teacherProfile/default_head.jpg";
 				}
@@ -214,16 +207,23 @@
 				
 				department.selectedIndex = ComboxUtils.findIndex(departmentList, teacher.teacherDepartment) ;
 				systemServiceRO.getDepartmentRoles(teacher.teacherDepartment);
-				callLater(function():void{
-					for(var i:int=0;i<10000;i++);
-					position.dataProvider=roleList;
-					//position.selectedIndex=0;
-					callLater(function():void{
-						Alert.show(teacher.teacherPosition);
-						position.selectedIndex = ComboxUtils.findIndex(roleList,  teacher.teacherPosition);
-					});
+				staffInputDepartmentPosition.getDepartment();
 
-				});
+//				for(var i:int=0;i<2000;i++){
+//					trace("");
+//				}
+//
+//				callLater(function():void{
+//					position.dataProvider=roleList;
+//					//position.selectedIndex=0;
+//					callLater(function():void{
+//						Alert.show(roleList.length+"");
+//						Alert.show(teacher.teacherPosition);
+//						Alert.show(ComboxUtils.findIndex(roleList,  teacher.teacherPosition)+"bb");
+//						position.selectedIndex = ComboxUtils.findIndex(roleList,  teacher.teacherPosition);
+//					});
+//
+//				});
 //				for (var i:int = 0; i < departmentList.length; i++){
 //					var _item:Object = departmentList.getItemAt(i);
 //					if(_item.data==teacher.teacherDepartment){
@@ -495,107 +495,107 @@
 			}
 			
 			
-			/**********************
-			 *   department
-			 * */
-			public function department_cancleApply(teacherId:String,positionId:String):void
-			{
-				Alert.show("你确定要删除该项吗?","确认删除",Alert.NO|Alert.YES,null,function(event:CloseEvent):void{
-					if(event.detail == Alert.YES)
-						teacherAccountBridgeServiceRO.remove(teacherId,positionId);
-				},null,Alert.NO);
-			}
-			
-			protected function teacherDepartmentRemoveResult_resultHandler(event:ResultEvent):void
-			{
-				this.currentState = "department_list";
-				getDepartment();
-			}
-			
-			protected function teacherDepartmentAddResult_resultHandler(event:ResultEvent):void
-			{
-				this.currentState = "department_list";
-				getDepartment();
-			}
-			
-			public function department_enterEdit(data:Object):void
-			{
-				this.currentState='department_add';
-				for(var i=0;i<departmentList.length;i++){
-					var item1:Object=departmentList.getItemAt(i);
-					if(item1.dataField==data.departmentId){
-						departmentName.selectedItem=item1;
-						break;
-					}
-				}
-				callLater(function():void{
-					for(var j=0;j<roleList.length;j++){
-						var item2:Object=departmentList.getItemAt(j);
-						if(item2.dataField==data.positionId){
-							departmentName.selectedItem=item2;
-							break;
-						}
-					}
-					
-				});
-				
-//				departmentName.text = data.departmentName;
-//				departmentPosition.text = data.positionName;
-				departmentId.text = data.positionId;
-			}
-			
-			private function getDepartment():void
-			{
-				teacherAccountBridgeServiceRO.get(teacherId, departments_table.curpage, departments_table.pagecount);
-			}
-			
-			protected function department_save_clickHandler(event:MouseEvent):void
-			{
-				if(validateDepartmentInput()){
-//					var department:TeacherDepartment = new TeacherDepartment();
-//					department.departmentId = departmentName.text;
-//					department.position = departmentPosition.text;
-//					department.id = departmentId.text;
-					var positionId = departmentPosition.selectedItem.dataField;
-//					teacherAccountBridgeServiceRO.save(department, teacherId);
-					teacherAccountBridgeServiceRO.save(positionId, teacherId,departmentId.text);
-
-				}
-			}
-			
-			protected function teacherDepartmentGetResult_resultHandler(event:ResultEvent):void
-			{
-				this.currentState = "department_list";
-				var allList:ArrayCollection = event.result as ArrayCollection;
-				departments_table.initdata(allList);
-			}
-			
-			private function validateDepartmentInput():Boolean
-			{	
-				validatorArr = new Array();
-				validatorArr.push(department_department_stringValidator);
-				validatorArr.push(department_position_stringValidator);
-				
-				var validatorErrorArray:Array = Validator.validateAll(validatorArr);
-				var isValidForm:Boolean = validatorErrorArray.length == 0;
-				if (isValidForm) {
-					if(teacherId != null)
-						return true;
-					else{
-						Alert.show("请先保存教师信息");
-						return false;
-					}
-				} else {
-					var err:ValidationResultEvent;
-					var errorMessageArray:Array = [];
-					for each (err in validatorErrorArray) {
-						var errField:String = FormItem(err.currentTarget.source.parent).label
-						errorMessageArray.push(errField + ": " + err.message);
-					}
-					Alert.show(errorMessageArray.join("\n\n"), "请按照以下错误提示信息重新填写", Alert.OK);
-					return false;
-				}
-			}
+//			/**********************
+//			 *   department
+//			 * */
+//			public function department_cancleApply(teacherId:String,positionId:String):void
+//			{
+//				Alert.show("你确定要删除该项吗?","确认删除",Alert.NO|Alert.YES,null,function(event:CloseEvent):void{
+//					if(event.detail == Alert.YES)
+//						teacherAccountBridgeServiceRO.remove(teacherId,positionId);
+//				},null,Alert.NO);
+//			}
+//			
+//			protected function teacherDepartmentRemoveResult_resultHandler(event:ResultEvent):void
+//			{
+//				this.currentState = "department_list";
+//				getDepartment();
+//			}
+//			
+//			protected function teacherDepartmentAddResult_resultHandler(event:ResultEvent):void
+//			{
+//				this.currentState = "department_list";
+//				getDepartment();
+//			}
+//			
+//			public function department_enterEdit(data:Object):void
+//			{
+//				this.currentState='department_add';
+//				for(var i=0;i<departmentList.length;i++){
+//					var item1:Object=departmentList.getItemAt(i);
+//					if(item1.dataField==data.departmentId){
+//						departmentName.selectedItem=item1;
+//						break;
+//					}
+//				}
+//				callLater(function():void{
+//					for(var j=0;j<roleList.length;j++){
+//						var item2:Object=departmentList.getItemAt(j);
+//						if(item2.dataField==data.positionId){
+//							departmentName.selectedItem=item2;
+//							break;
+//						}
+//					}
+//					
+//				});
+//				
+////				departmentName.text = data.departmentName;
+////				departmentPosition.text = data.positionName;
+//				departmentId.text = data.positionId;
+//			}
+//			
+//			private function getDepartment():void
+//			{
+//				teacherAccountBridgeServiceRO.get(teacherId, departments_table.curpage, departments_table.pagecount);
+//			}
+//			
+//			protected function department_save_clickHandler(event:MouseEvent):void
+//			{
+//				if(validateDepartmentInput()){
+////					var department:TeacherDepartment = new TeacherDepartment();
+////					department.departmentId = departmentName.text;
+////					department.position = departmentPosition.text;
+////					department.id = departmentId.text;
+//					var positionId = departmentPosition.selectedItem.dataField;
+////					teacherAccountBridgeServiceRO.save(department, teacherId);
+//					teacherAccountBridgeServiceRO.save(positionId, teacherId,departmentId.text);
+//
+//				}
+//			}
+//			
+//			protected function teacherDepartmentGetResult_resultHandler(event:ResultEvent):void
+//			{
+//				this.currentState = "department_list";
+//				var allList:ArrayCollection = event.result as ArrayCollection;
+//				departments_table.initdata(allList);
+//			}
+//			
+//			private function validateDepartmentInput():Boolean
+//			{	
+//				validatorArr = new Array();
+//				validatorArr.push(department_department_stringValidator);
+//				validatorArr.push(department_position_stringValidator);
+//				
+//				var validatorErrorArray:Array = Validator.validateAll(validatorArr);
+//				var isValidForm:Boolean = validatorErrorArray.length == 0;
+//				if (isValidForm) {
+//					if(teacherId != null)
+//						return true;
+//					else{
+//						Alert.show("请先保存教师信息");
+//						return false;
+//					}
+//				} else {
+//					var err:ValidationResultEvent;
+//					var errorMessageArray:Array = [];
+//					for each (err in validatorErrorArray) {
+//						var errField:String = FormItem(err.currentTarget.source.parent).label
+//						errorMessageArray.push(errField + ": " + err.message);
+//					}
+//					Alert.show(errorMessageArray.join("\n\n"), "请按照以下错误提示信息重新填写", Alert.OK);
+//					return false;
+//				}
+//			}
 			
 
 			/*
@@ -756,6 +756,14 @@
 				var _department:DepartmentModel=event.result as DepartmentModel;
 				
 				buildSubDepartments(_department,departmentList,0);
+				//Alert.show(_department.name);
+				systemServiceRO.getDepartmentRoles(_department.id);
+				callLater(function():void{
+//					department.dataProvider=departmentList;
+//					var temp:Object=departmentList.getItemAt(0);
+//					//Alert.show(temp.id+"");
+				
+				});
 				
 			}
 			private function getDepartmentRolesResult(event:ResultEvent):void {
@@ -771,6 +779,10 @@
 						roleList.addItem( {data:_role.id, label:headText})
 					}
 				}	
+				if(teacher!=null&&teacher.id!=null&&teacher.id!="")
+					position.selectedIndex = ComboxUtils.findIndex(roleList,  teacher.teacherPosition);
+				else position.selectedIndex =0;
+				//Alert.show(position.selectedIndex +"a");
 
 			}
 			private function buildSubDepartments(department:DepartmentModel,resultList:ArrayCollection,depth:int):void{
@@ -797,14 +809,14 @@
 					position.selectedIndex=0;
 				});
 			}
-			private function departmentSelectionChangedHandler(event:Event):void{
-				var target:mx.controls.ComboBox=event.target as mx.controls.ComboBox
-				systemServiceRO.getDepartmentRoles(target.selectedItem.data);
-				callLater(function():void{
-					departmentPosition.dataProvider=roleList;
-					departmentPosition.selectedIndex=0;
-				});
-			}
+//			private function departmentSelectionChangedHandler(event:Event):void{
+//				var target:mx.controls.ComboBox=event.target as mx.controls.ComboBox
+//				systemServiceRO.getDepartmentRoles(target.selectedItem.data);
+//				callLater(function():void{
+//					departmentPosition.dataProvider=roleList;
+//					departmentPosition.selectedIndex=0;
+//				});
+//			}
 
 			protected function workDate_changeHandler(event:CalendarLayoutChangeEvent):void
 			{
@@ -844,11 +856,12 @@
 			import mx.managers.PopUpManager;
 			private var window:WlzxLockWin=null;
 			private function lockWin():void{
-				
-				window=WlzxLockWin(PopUpManager.createPopUp(this,WlzxLockWin,true)); 
-				PopUpManager.centerPopUp(window);
-				window.percentHeight=100;
-				window.percentWidth=100;			
+				if(window==null){
+					window=WlzxLockWin(PopUpManager.createPopUp(this,WlzxLockWin,true)); 
+					PopUpManager.centerPopUp(window);
+					window.percentHeight=100;
+					window.percentWidth=100;
+				}		
 				
 			}
 			private function unLockWin():void{
@@ -883,9 +896,9 @@
 		<mx:StringValidator id="relation_company_stringValidator" source="{relationCompany}" property="text"  requiredFieldError="不能为空"/>
 		<mx:StringValidator id="relation_phone_stringValidator" source="{relationPhone}" property="text"  requiredFieldError="不能为空"/>
 		
-		<mx:StringValidator id="department_department_stringValidator" source="{departmentName}" property="text"  requiredFieldError="不能为空"/>
+	<!--	<mx:StringValidator id="department_department_stringValidator" source="{departmentName}" property="text"  requiredFieldError="不能为空"/>
 		<mx:StringValidator id="department_position_stringValidator" source="{departmentPosition}" property="text"  requiredFieldError="不能为空"/>
-		
+-->		
 		<valueObjects:TeacherModel id="teacher"/>
 		<mx:RemoteObject id="teacherServiceRO" destination="teacherServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 			<mx:method name="save"  concurrency="last"  result="teacherAddResult_resultHandler(event);" />
@@ -896,11 +909,11 @@
 			<mx:method name="get"  concurrency="last"  result="teacherExperienceGetResult_resultHandler(event);" />
 			<mx:method name="remove"  concurrency="last"  result="teacherExperienceRemoveResult_resultHandler(event);" />
 		</mx:RemoteObject>
-		<mx:RemoteObject id="teacherAccountBridgeServiceRO" destination="teacherAccountBridgeServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+		<!--<mx:RemoteObject id="teacherAccountBridgeServiceRO" destination="teacherAccountBridgeServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 			<mx:method name="save"  concurrency="last"  result="teacherDepartmentAddResult_resultHandler(event);" />
 			<mx:method name="get"  concurrency="last"  result="teacherDepartmentGetResult_resultHandler(event);" />
 			<mx:method name="remove"  concurrency="last"  result="teacherDepartmentRemoveResult_resultHandler(event);" />
-		</mx:RemoteObject>
+		</mx:RemoteObject>-->
 		<mx:RemoteObject id="teacherRelationServiceRO" destination="teacherRelationServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 			<mx:method name="save"  concurrency="last"  result="teacherRelationAddResult_resultHandler(event);" />
 			<mx:method name="get"  concurrency="last"  result="teacherRelationGetResult_resultHandler(event);" />
@@ -908,7 +921,7 @@
 		</mx:RemoteObject>
 		<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 			<mx:method name="getDepartmentBySymbol"  concurrency="last"  result="getDepartmentBySymbolResult(event);" />
-			<mx:method name="getDepartmentRoles"  concurrency="last"  result="getDepartmentRolesResult(event);" />
+			<mx:method name="getDepartmentRoles"  concurrency="multiple"  result="getDepartmentRolesResult(event);" />
 		</mx:RemoteObject>
 	</fx:Declarations>
 	<s:Panel width="100%" height="100%" title="教师信息编辑"  styleName="customPanel"   borderVisible="true" dropShadowVisible="false">
@@ -949,7 +962,7 @@
 								<s:VGroup width="30%">
 									<s:HGroup width="100%">
 										<mx:FormItem label="出生年月" width="100%">
-											<mx:DateField id="birthday" width="100%" yearNavigationEnabled="true" formatString="YYYY-MM-DD"/>
+											<mx:DateField yearNavigationEnabled="true" id="birthday" width="100%"  formatString="YYYY-MM-DD"/>
 										</mx:FormItem>
 									</s:HGroup>
 									<mx:FormItem label="政治面貌" width="100%">
@@ -1008,7 +1021,7 @@
 										<mx:TextInput id='school' width="90%"/>
 									</mx:FormItem>
 									<mx:FormItem label="技能鉴定时间" width="100%" labelWidth="100">
-										<mx:DateField id="skillLevelDate" width="90%" formatString="YYYY-MM-DD"/>
+										<mx:DateField yearNavigationEnabled="true" id="skillLevelDate" width="90%" formatString="YYYY-MM-DD" />
 									</mx:FormItem>
 								</s:VGroup>
 							</s:HGroup>
@@ -1027,7 +1040,7 @@
 											
 										</mx:FormItem>
 										<mx:FormItem label="职务" width="35%">
-											<mx:ComboBox  width="90%" id="position"   fontSize="12" labelField="label"  textAlign="left" />
+											<mx:ComboBox  width="90%" id="position"  dataProvider="{roleList}" fontSize="12" labelField="label"  textAlign="left" />
 
 										</mx:FormItem>
 										<mx:FormItem label="办公电话" width="45%">
@@ -1039,7 +1052,7 @@
 											<mx:TextInput id='contactPhone' width="100%"/>
 										</mx:FormItem>
 										<mx:FormItem label="何时工作" width="30%">
-											<mx:DateField id='workDate' width="100%" yearNavigationEnabled="true" formatString="YYYY-MM-DD" change="workDate_changeHandler(event)"/>
+											<mx:DateField yearNavigationEnabled="true" id='workDate' width="100%"  formatString="YYYY-MM-DD" change="workDate_changeHandler(event)"/>
 										</mx:FormItem>
 										<mx:FormItem label="工龄" width="45%" labelWidth="100">
 											<mx:TextInput id='workPeriod' width="90%" editable="false"/>
@@ -1047,7 +1060,7 @@
 									</s:HGroup>
 									<s:HGroup width="100%">
 										<mx:FormItem label="入校时间" width="25%">
-											<mx:DateField id="attendDate" width="100%" yearNavigationEnabled="true" formatString="YYYY-MM-DD" change="attendDate_changeHandler(event)"/>
+											<mx:DateField yearNavigationEnabled="true" id="attendDate" width="100%"  formatString="YYYY-MM-DD" change="attendDate_changeHandler(event)"/>
 										</mx:FormItem>
 										<mx:FormItem label="校龄" width="30%">
 											<mx:TextInput id='attendPeriod' width="100%" editable="false"/>
@@ -1062,80 +1075,9 @@
 								</s:VGroup>
 							</s:HGroup>
 								<s:HGroup width="100%">
-									<s:Panel width="100%" height="100%" title="其他单位"  borderVisible="false" id="departments" dropShadowVisible="false">
-										<s:VGroup width="100%" height="100%" id="department_listPanel" excludeFrom="department_add">
-											<s:HGroup verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12" height="30" paddingLeft="20">
-												<s:Label text="|"/>
-												<mx:LinkButton  label="添加" icon="@Embed(source='../WebContent/resources/common/tools/button_add_icon.png')" click=" this.currentState='department_add';departmentId.text='';" />
-												<s:Label text="|"/>
-											</s:HGroup>
-											<s:VGroup width="100%" height="100%"  gap="10" verticalAlign="middle" horizontalAlign="center">
-												<s:HGroup width="100%" height="100%" paddingLeft="10" paddingRight="10" paddingBottom="10">
-													<s:Panel width="100%" height="100%"  styleName="customPanel" title="部门记录"  cornerRadius="5" borderVisible="false" dropShadowVisible="false">
-														<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="false"   borderAlpha="0.2" verticalAlign="middle"   id="departments_table" pagecount="10"  >				
-															<component:mygridcolumns>
-																
-																<mx:DataGridColumn textAlign="center" headerText="部门" dataField="departmentName" width="100"></mx:DataGridColumn>
-																<mx:DataGridColumn textAlign="center" headerText="职务" dataField="positionName" width="170"></mx:DataGridColumn>
-																<mx:DataGridColumn textAlign="center" headerText="编辑" width="60">
-																	<mx:itemRenderer>
-																		<fx:Component>
-																			<mx:LinkButton  label="[编辑]"   click="{this.outerDocument.department_enterEdit(data);}">											
-																			</mx:LinkButton>										
-																		</fx:Component>
-																	</mx:itemRenderer>
-																</mx:DataGridColumn>
-																<mx:DataGridColumn textAlign="center" headerText="删除"  width="60">
-																	<mx:itemRenderer>
-																		<fx:Component>
-																			<mx:LinkButton  label="[删除]"   click="{this.outerDocument.department_cancleApply(data.teacherId,data.positionId);}">											
-																			</mx:LinkButton>										
-																		</fx:Component>
-																	</mx:itemRenderer>
-																</mx:DataGridColumn>
-															</component:mygridcolumns>
-														</component:WlzxPageDataGrid>
-													</s:Panel>
-												</s:HGroup>
-											</s:VGroup>
-										</s:VGroup>
-										<s:VGroup width="100%" height="100%" id="department_addPanel" excludeFrom="department_list">
-											<s:HGroup verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12">
-												<s:HGroup width="100%" height="30" paddingLeft="20"  gap="0"  verticalAlign="middle">
-													<s:Label text="|"/>
-													<mx:LinkButton  label="返回" icon="@Embed(source='../WebContent/resources/common/tools/button_back_icon.png')" click="currentState='department_list';" />
-													<s:Label text="|"/>
-												</s:HGroup>
-											</s:HGroup>
-											<s:VGroup width="100%" height="50%" gap="10" verticalAlign="middle" horizontalAlign="left" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
-												<s:VGroup width="100%" horizontalAlign="center" height="100%" verticalAlign="middle" paddingLeft="20" paddingRight="20">
-													<mx:Grid width="80%" height="100%" id="department_container"  verticalGap="10" horizontalGap="5"   borderStyle="solid" paddingBottom="10" paddingTop="10" paddingLeft="10" paddingRight="10">
-														
-														<mx:GridRow width="100%" height="30"  >
-															<mx:GridItem    verticalAlign="middle" horizontalAlign="right">
-																<mx:Label  text="部门" width="60"  textAlign="right" />
-															</mx:GridItem>
-															<mx:GridItem  verticalAlign="middle" horizontalAlign="center">
-																<mx:ComboBox  width="120" id="departmentName" labelField="label" dataProvider="{departmentList}"
-																			  change="departmentSelectionChangedHandler(event);"/>
-															</mx:GridItem>
-															<mx:GridItem    verticalAlign="middle" horizontalAlign="right">
-																<mx:Label  text="职务" width="60"  textAlign="right" />
-															</mx:GridItem>
-															<mx:GridItem  verticalAlign="middle" horizontalAlign="center">
-																<mx:ComboBox width="120" id="departmentPosition"   fontSize="12" labelField="label"  textAlign="left" />
-																
-															</mx:GridItem>
-															<mx:GridItem  verticalAlign="middle" horizontalAlign="center">
-																<s:TextInput id="departmentId" visible="false"/>
-																<mx:Button label="保存" width="60" click="department_save_clickHandler(event)"/>
-															</mx:GridItem>
-														</mx:GridRow>
-													</mx:Grid>
-												</s:VGroup>
-											</s:VGroup>
-										</s:VGroup>
-									</s:Panel>
+									<staff:staffInputDepartmentPosition id="staffInputDepartmentPosition">
+										
+									</staff:staffInputDepartmentPosition>
 								</s:HGroup>
 
 							</s:VGroup>
@@ -1150,6 +1092,7 @@
 					<s:Scroller width="100%" height="100%" verticalScrollPolicy="auto">
 						<s:VGroup width="100%">
 							<s:HGroup width="100%" height="50%">
+								
 								<s:Panel width="100%" height="100%" title="工作经历"  borderVisible="false" id="work_experience" dropShadowVisible="false">
 									<s:VGroup width="100%" height="100%" id="work_experience_listPanel" excludeFrom="add">
 										<s:HGroup verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12" height="30" paddingLeft="20">
@@ -1202,13 +1145,13 @@
 															<mx:Label  text="开始时间" width="60"  textAlign="right" />
 														</mx:GridItem>
 														<mx:GridItem  verticalAlign="middle" horizontalAlign="center">
-															<mx:DateField width="120" formatString="YYYY-MM-DD" yearNavigationEnabled="true" name="workStartDate" id="workStartDate"/>
+															<mx:DateField yearNavigationEnabled="true" width="120" formatString="YYYY-MM-DD"  name="workStartDate" id="workStartDate"/>
 														</mx:GridItem>
 														<mx:GridItem    verticalAlign="middle" horizontalAlign="right">
 															<mx:Label  text="截止时间" width="60"  textAlign="right" />
 														</mx:GridItem>
 														<mx:GridItem  verticalAlign="middle" horizontalAlign="center">
-															<mx:DateField width="120" formatString="YYYY-MM-DD" yearNavigationEnabled="true" name="workEndDate" id="workEndDate"/>
+															<mx:DateField yearNavigationEnabled="true" width="120" formatString="YYYY-MM-DD"  name="workEndDate" id="workEndDate"/>
 														</mx:GridItem>
 														<mx:GridItem    verticalAlign="middle" horizontalAlign="right">
 															<mx:Label  text="工作单位" width="60"  textAlign="right" />

@@ -151,7 +151,7 @@
 			</mx:FormItem>
 			
 			<mx:FormItem label="创建日期 ">
-				<mx:DateField  id="creationDate" width="200" formatString="YYYY-MM-DD" />
+				<mx:DateField yearNavigationEnabled="true"  id="creationDate" width="200" formatString="YYYY-MM-DD" />
 			</mx:FormItem>
 			
 			<mx:FormItem label="唯一标识">

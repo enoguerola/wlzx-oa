@@ -194,9 +194,9 @@
 					<!--<mx:Label  text="状态"  width="40"  textAlign="right"/>
 					<mx:ComboBox id="search_state"  dataProvider="{taskStateList}" selectedIndex="0"  editable="false" width="80"/>-->
 					<mx:Label  text="时间区间"  width="100"  textAlign="right"/>
-					<mx:DateField id="search_date_begin"   formatString="YYYY-MM-DD"  editable="false" width="100"/>
+					<mx:DateField yearNavigationEnabled="true" id="search_date_begin"   formatString="YYYY-MM-DD"  editable="false" width="100"/>
 					<mx:Label  text="--"  width="20" textAlign="center"/>
-					<mx:DateField id="search_date_end"  formatString="YYYY-MM-DD" editable="false" width="100"/>
+					<mx:DateField yearNavigationEnabled="true" id="search_date_end"  formatString="YYYY-MM-DD" editable="false" width="100"/>
 					<mx:Button  label="搜索"  width="60"   click="search()"/>
 				</mx:HBox>
 				

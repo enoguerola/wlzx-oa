@@ -54,5 +54,6 @@
 			<many-to-many  column="role_id" class="system.entity.RoleModel" /> 
 		</set>
 		<many-to-one name="mainRole"  column="main_role_id" class="system.entity.RoleModel"  lazy="false" />
+		<many-to-one name="mainDepartment"  column="main_department_id" class="system.entity.DepartmentModel"  lazy="false" />
 	</class>
 </hibernate-mapping>

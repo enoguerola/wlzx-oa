@@ -135,14 +135,14 @@ public class TeacherExcelImportController{
 			 model.setTeacherNativePlace(nativePlace);
 			 model.setTeacherNo(shortNo);
 			 model.setTeacherOfficePhone(officePhone);
-			 model.setTeacherPosition(position);
+			 model.setTeacherPositionName(position);
 			 model.setTeacherProfessionTitle(profession);
 			 model.setTeacherSkillLevel(skill);
 			 model.setTeacherSkillLevelDate(new java.sql.Date(skillDate.getTime()));
 			 model.setTeacherStatus(1);
 			 model.setTeacherWorkDate(new java.sql.Date(workDate.getTime()));
 			 model.setTeacherProfession(major);
-			 model.setTeacherDepartment(group);
+			 model.setTeacherDepartmentName(group);
 			 
 			 teacherService.save(model);
 		}

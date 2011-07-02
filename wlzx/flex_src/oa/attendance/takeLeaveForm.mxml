@@ -187,10 +187,10 @@
 								<mx:Label  text="请假时间"  textAlign="center" id="detail_time_label"/>
 							</mx:GridItem>
 							<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5"    verticalAlign="middle" horizontalAlign="left"  width="100%">
-								<mx:DateField width="120" id="detail_beginDate" formatString="YYYY-MM-DD" enabled="false"/>
+								<mx:DateField yearNavigationEnabled="true" width="120" id="detail_beginDate" formatString="YYYY-MM-DD" enabled="false"/>
 								<mx:ComboBox width="60" id="detail_beginDate_section" dataProvider="{sections}" enabled="false"/>
 								<mx:Label width="40"   text="----"/>
-								<mx:DateField width="120" id="detail_endDate" formatString="YYYY-MM-DD" enabled="false"/>
+								<mx:DateField yearNavigationEnabled="true" width="120" id="detail_endDate" formatString="YYYY-MM-DD" enabled="false"/>
 								<mx:ComboBox width="60" id="detail_endDate_section" dataProvider="{sections}" enabled="false"/>
 							</mx:GridItem>
 							
@@ -259,7 +259,7 @@
 										<mx:TextInput width="120"   alpha="0.5" id="detail_officeChief_approver_name" enabled="false"/>
 										<mx:Label  text=""   id="detail_officeChief_approver_id" visible="false"/>
 										<mx:Label text="日期："/>
-										<mx:DateField width="120" id="detail_officeChief_approve_time" enabled="false" formatString="YYYY-MM-DD"/>
+										<mx:DateField yearNavigationEnabled="true" width="120" id="detail_officeChief_approve_time" enabled="false" formatString="YYYY-MM-DD"/>
 									</mx:HBox>
 								</mx:VBox>
 								
@@ -283,7 +283,7 @@
 										<mx:TextInput width="120"   alpha="0.5" id="detail_vicePrincipal_approver_name" enabled="false"/>
 										<mx:Label  text=""   id="detail_vicePrincipal_approver_id"  visible="false"/>
 										<mx:Label text="日期："/>
-										<mx:DateField width="120" id="detail_vicePrincipal_approve_time" enabled="false" formatString="YYYY-MM-DD"/>
+										<mx:DateField yearNavigationEnabled="true" width="120" id="detail_vicePrincipal_approve_time" enabled="false" formatString="YYYY-MM-DD"/>
 									</mx:HBox>
 									
 								</mx:VBox>
@@ -307,7 +307,7 @@
 										<mx:TextInput width="120"   alpha="0.5" id="detail_principal_approver_name" enabled="false"/>
 										<mx:Label  text=""   id="detail_principal_approver_id"  visible="false"/>
 										<mx:Label text="日期："/>
-										<mx:DateField width="120" id="detail_principal_approve_time" enabled="false" formatString="YYYY-MM-DD"/>
+										<mx:DateField yearNavigationEnabled="true" width="120" id="detail_principal_approve_time" enabled="false" formatString="YYYY-MM-DD"/>
 									</mx:HBox>
 									
 								</mx:VBox>
