@@ -106,7 +106,7 @@ public class DepartmentModel  extends BaseModel{
 	public Set<UserModel> getUsers() {
 		Set<UserModel> users=new HashSet<UserModel>();
 		for(RoleModel role:this.getAllRoles()){
-			for(UserModel user:role.getUsers())
+			for(UserModel user:role.getAllUsers())
 			users.add(user);
 		}
 		return users;

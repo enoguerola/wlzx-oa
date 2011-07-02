@@ -3,6 +3,7 @@
  */
 package system.entity;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -33,6 +34,7 @@ public class RoleModel extends BaseModel {
 	private Set<RoleModel> subordinates=new TreeSet<RoleModel>();//直属下级角色
 	private Set<RoleModel> leaders=new TreeSet<RoleModel>();//直属上级角色
 	private Set<UserModel> users=new TreeSet<UserModel>();//角色用户集
+	private Set<UserModel> mainUsers=new TreeSet<UserModel>();//主角色用户集
 	private Set<DataAccessModeModel> dataAccessModes=new TreeSet<DataAccessModeModel>();//角色数据访问权限
 	private Set<DepartmentModel> departments=new TreeSet<DepartmentModel>();//所属部门集
 	private Set<DepartmentModel> leadingDepartments=new TreeSet<DepartmentModel>();//该角色所领导的部门集
@@ -62,6 +64,16 @@ public class RoleModel extends BaseModel {
 
 	public Set<UserModel> getUsers() {
 		return users;
+	}
+	public Set<UserModel> getAllUsers() {
+		Set<UserModel> sets=new HashSet<UserModel>();
+		for(UserModel user:getMainUsers()){
+			sets.add(user);
+		}
+		for(UserModel user:getUsers()){
+			sets.add(user);
+		}
+		return sets;
 	}
 
 	public void setUsers(Set<UserModel> users) {
@@ -134,5 +146,13 @@ public class RoleModel extends BaseModel {
 
 	public void setLevel(int level) {
 		this.level = level;
+	}
+
+	public Set<UserModel> getMainUsers() {
+		return mainUsers;
+	}
+
+	public void setMainUsers(Set<UserModel> mainUsers) {
+		this.mainUsers = mainUsers;
 	}
 }

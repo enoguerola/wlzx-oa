@@ -92,8 +92,10 @@ public class UserDAO extends BaseDAOImpl<UserModel>{
 	@SuppressWarnings("unchecked")
 	public List<UserModel> getAllUsers() {
 		DetachedCriteria criteria = DetachedCriteria.forClass(UserModel.class);
-		
+		//过滤超级用户;
+		criteria.add(Restrictions.ne("accountStyle",new Integer(-1)));
 		List<UserModel> result = this.getListByCriteria(criteria);
+		
 		return result;
 	}
 	@SuppressWarnings("unchecked")

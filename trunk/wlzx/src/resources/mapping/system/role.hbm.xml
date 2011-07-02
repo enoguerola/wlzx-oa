@@ -45,6 +45,10 @@
 			<key column="role_id" not-null="true" />
 			<many-to-many column="user_id" class="system.entity.UserModel" /> 
 		</set>
+		<set name="mainUsers" lazy="false"  table="wlzx_system_user" inverse="true" cascade="none">
+			<key column="main_role_id" not-null="true" />
+			<one-to-many class="system.entity.UserModel" />  
+		</set>
 		<set name="dataAccessModes" lazy="false"  table="wlzx_system_role_dam_relationship">
 			<key column="role_id" not-null="true" />
 			<many-to-many column="dam_id" class="system.entity.DataAccessModeModel" /> 

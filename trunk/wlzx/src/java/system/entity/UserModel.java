@@ -100,6 +100,7 @@ public class UserModel  extends BaseModel implements UserDetails{
 	//获取所有角色
 	public Set<RoleModel> getAllRoles() {
 		Set<RoleModel> allRoles=new TreeSet<RoleModel>(getRoles());
+		if(getMainRole()!=null)
 		allRoles.add(getMainRole());
 		return allRoles;
 	}
