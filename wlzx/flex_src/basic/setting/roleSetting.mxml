@@ -182,7 +182,7 @@
 				detail.text=role.detail;
 				var usersString:String="";
 				if(role.users!=null){
-					var list:ArrayCollection = ArrayCollection(role.users);
+					var list:ArrayCollection = ArrayCollection(role.getAllUsers());
 					for (var i:int = 0; i < list.length; i++){
 						var _user:Object = list.getItemAt(i);	
 						usersString=usersString.concat(_user.name+"  ");

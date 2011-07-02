@@ -225,7 +225,7 @@ public class SystemService{
 	//获得某角色（岗位）用户
 	public Set<UserModel> getRoleUsers(String roleId){	
 		RoleModel role=roleDAO.get(roleId);
-		return role.getUsers();
+		return role.getAllUsers();
 	}
 	//获得某部门用户
 	public Set<UserModel> getDepartmentUsers(String departmentId){	
