@@ -393,9 +393,9 @@
 						</mx:HBox>
 						<mx:HBox verticalAlign="middle">
 							<mx:Label  text="起始日期"  width="100"  textAlign="right"/>
-							<mx:DateField id="search_date_begin"   formatString="YYYY-MM-DD"  editable="false" width="120"/>
+							<mx:DateField yearNavigationEnabled="true" id="search_date_begin"   formatString="YYYY-MM-DD"  editable="false" width="120"/>
 							<mx:Label  text="--"  width="20" textAlign="center"/>
-							<mx:DateField id="search_date_end"  formatString="YYYY-MM-DD" editable="false" width="120"/>
+							<mx:DateField yearNavigationEnabled="true" id="search_date_end"  formatString="YYYY-MM-DD" editable="false" width="120"/>
 						</mx:HBox>
 					</mx:HBox>
 					<mx:HBox width="100%">

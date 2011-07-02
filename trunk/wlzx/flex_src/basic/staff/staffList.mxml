@@ -107,13 +107,16 @@
 			
 			private function uploadComplete(e:DataEvent):void   
 			{   
+				unLockWin();
 				var xmlResponse:XML = XML(e.data);
+				//Alert.show(xmlResponse+"");
 				var list:XMLList = xmlResponse.field;
 				var error:String = "";
 				var item:XML;
 				for each(item in list){
 					error += item.toString() + "\n";
 				}
+				if(error!=null&&error!='')
 				Alert.show(error,  "以下短号重复", Alert.OK);
 				_name.text = "";
 				department.selectedIndex = 0;
@@ -160,6 +163,7 @@
 			{      
 				if (e.detail == Alert.YES)   
 				{      
+					lockWin();
 					var params:URLVariables = new URLVariables();
 					params.name = "123213";
 					var request:URLRequest = new URLRequest("spring/excelUpload.action");
@@ -242,7 +246,7 @@
 			public function editItem(item_id:String):void
 			{
 				var parent:Object=(Object)(((Object)(this.owner)).owner);
-				parent.addTab("staff_input_menu-edit","教师编辑",parent.nav,"basic/staff/staffInput.swf",null,item_id);
+				parent.addTab("staff_input_menu-edit"+item_id,"教师编辑",parent.nav,"basic/staff/staffInput.swf",null,item_id);
 			}
 			
 			public function changestatus(item_id:String, status:int):void
@@ -341,7 +345,7 @@
 						</s:HGroup>
 						<s:HGroup verticalAlign="middle">
 							<s:Label  text="入校时间" />
-							<mx:DateField formatString="YYYY-MM-DD" width="100%" id="attendDate"/>
+							<mx:DateField yearNavigationEnabled="true" formatString="YYYY-MM-DD" width="100%" id="attendDate" />
 						</s:HGroup>
 										
 						

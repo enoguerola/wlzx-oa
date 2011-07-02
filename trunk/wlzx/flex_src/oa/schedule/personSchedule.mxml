@@ -473,13 +473,13 @@
 					<mx:Label text="起止日期：" width="70">
 						
 					</mx:Label>
-					<mx:DateField width="100" editable="false" id="fromDateChooser" selectedDate="{flexCalendar.visibleRange.start}"  formatString="YYYY-MM-DD"  >
+					<mx:DateField yearNavigationEnabled="true" width="100" editable="false" id="fromDateChooser" selectedDate="{flexCalendar.visibleRange.start}"  formatString="YYYY-MM-DD"  >
 						
 					</mx:DateField>
 					<mx:Label text="--" width="20">
 						
 					</mx:Label>
-					<mx:DateField width="100" editable="false" id="toDateChooser" selectedDate="{flexCalendar.visibleRange.end}" formatString="YYYY-MM-DD" >
+					<mx:DateField yearNavigationEnabled="true" width="100" editable="false" id="toDateChooser" selectedDate="{flexCalendar.visibleRange.end}" formatString="YYYY-MM-DD" >
 						
 					</mx:DateField>
 					<mx:Label text="日程类型：" width="70" >

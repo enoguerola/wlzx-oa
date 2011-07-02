@@ -607,7 +607,7 @@
 										<mx:TextInput width="120"   alpha="0.5" id="officeChief_approver_name" enabled="false"/>
 										<mx:Label  text=""   id="officeChief_approver_id" visible="false"/>
 										<mx:Label text="日期："/>
-										<mx:DateField width="120" id="officeChief_approve_time"  formatString="YYYY-MM-DD" enabled="false" />
+										<mx:DateField yearNavigationEnabled="true" width="120" id="officeChief_approve_time"  formatString="YYYY-MM-DD" enabled="false" />
 									</mx:HBox>
 								</mx:VBox>
 								
@@ -700,7 +700,7 @@
 										<mx:TextInput width="120"   alpha="0.5" id="detail_officeChief_approver_name" enabled="false"/>
 										<mx:Label  text=""   id="detail_officeChief_approver_id" visible="false"/>
 										<mx:Label text="日期："/>
-										<mx:DateField width="120" id="detail_officeChief_approve_time" enabled="false" formatString="YYYY-MM-DD"/>
+										<mx:DateField yearNavigationEnabled="true" width="120" id="detail_officeChief_approve_time" enabled="false" formatString="YYYY-MM-DD"/>
 									</mx:HBox>
 								</mx:VBox>
 								
