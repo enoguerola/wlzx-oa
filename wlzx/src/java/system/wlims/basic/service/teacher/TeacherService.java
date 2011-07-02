@@ -7,8 +7,10 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 
 import system.ServiceException;
+import system.dao.DepartmentDAO;
 import system.dao.RoleDAO;
 import system.dao.UserDAO;
+import system.entity.DepartmentModel;
 import system.entity.RoleModel;
 import system.entity.UserModel;
 import system.entity.PersonModel.PersonStyle;
@@ -23,6 +25,7 @@ public class TeacherService {
 	private TeacherDAO teacherDAO;
 	private UserDAO userDAO;
 	private RoleDAO roleDAO;
+	private DepartmentDAO departmentDAO;
 	/**
 	 * 
 	 * @param model
@@ -57,8 +60,29 @@ public class TeacherService {
 			user.setPwd(CipherUtil.encodeByMD5(user.getName()));
 			user.setSequence(0);
 			user.setSymbol(user.getName());
-			RoleModel role = roleDAO.getRoleByName(model.getTeacherPosition());
-			user.setMainRole(role);
+			//初始角色部门初始化，若不存在则置空
+			if(!StringUtils.isEmpty(model.getTeacherPosition())){
+				RoleModel role = roleDAO.getRoleByName(model.getTeacherPosition());
+				if(role!=null){
+					user.setMainRole(role);
+					model.setTeacherPosition(role.getId());
+					if(role.getBelongDepartment()!=null){
+						user.setMainDepartment(role.getBelongDepartment());
+						model.setTeacherDepartment(role.getBelongDepartment().getId());
+					}
+				}else model.setTeacherPosition(null); 
+			}else{
+				model.setTeacherPosition(null);
+				if(!StringUtils.isEmpty(model.getTeacherDepartment())){
+					DepartmentModel department=departmentDAO.getDepartmentByName(model.getTeacherDepartment());
+					if(department!=null){
+						user.setMainDepartment(department);
+						model.setTeacherDepartment(department.getName());
+					}
+					else model.setTeacherDepartment(null);
+				}else model.setTeacherDepartment(null);
+			}
+			
 			userDAO.saveOrUpdate(user);
 			model.setUserID(user.getId());
 			teacherDAO.saveOrUpdate(model);
@@ -98,8 +122,10 @@ public class TeacherService {
 		List<TeacherModel> list =  teacherDAO.getListByCriteria(criteria, startIndex, pageCount);
 		for(TeacherModel teacher : list){
 			UserModel user = userDAO.getUserByUserAccount(teacher.getTeacherNo());
-			teacher.setTeacherDepartment(user.getMainDepartment()==null?"未指定":user.getMainDepartment().getName());
-			teacher.setTeacherRole(user.getMainRole()==null?"未指定":user.getMainRole().getName());
+			teacher.setTeacherDepartmentName(user.getMainDepartment()==null?"未指定":user.getMainDepartment().getName());
+			teacher.setTeacherPositionName(user.getMainRole()==null?"未指定":user.getMainRole().getName());
+			teacher.setTeacherDepartment(user.getMainDepartment()==null?null:user.getMainDepartment().getId());
+			teacher.setTeacherPosition(user.getMainRole()==null?null:user.getMainRole().getId());
 			teacher.setExperiences(null);
 			teacher.setOtherDepartments(null);
 			teacher.setRelations(null);
@@ -137,6 +163,29 @@ public class TeacherService {
     	teacher.setExperiences(null);
 		teacher.setOtherDepartments(null);
 		teacher.setRelations(null);
+		//从user对象里取得部门与职务信息
+		if(teacher!=null){
+			UserModel user=userDAO.get(teacher.getUserID());
+			if(user!=null){
+				RoleModel role=user.getMainRole();
+				if(role!=null){
+					teacher.setTeacherPosition(role.getId());
+					teacher.setTeacherPositionName(role.getName());
+					DepartmentModel department=role.getBelongDepartment();
+					if(department!=null){
+						teacher.setTeacherDepartment(department.getId());
+						teacher.setTeacherDepartmentName(department.getName());
+					}
+				}else{
+					DepartmentModel department=user.getMainDepartment();
+					if(department!=null){
+						teacher.setTeacherDepartment(department.getId());
+						teacher.setTeacherDepartmentName(department.getName());
+					}
+				}
+				
+			}
+		}
     	return teacher;
     }
 
@@ -162,6 +211,14 @@ public class TeacherService {
 
 	public void setRoleDAO(RoleDAO roleDAO) {
 		this.roleDAO = roleDAO;
+	}
+
+	public DepartmentDAO getDepartmentDAO() {
+		return departmentDAO;
+	}
+
+	public void setDepartmentDAO(DepartmentDAO departmentDAO) {
+		this.departmentDAO = departmentDAO;
 	}
 	
 }

@@ -140,16 +140,31 @@
 				// Instantiate a new FileFilter.
 				imageTypes = new FileFilter("Images (*.jpg, *.jpeg, *.png, *.gif)", "*.jpg; *.jpeg; *.png; *.gif;");
 				
+				
+				
 				callLater(initStaffWin);
 				
 			}
 			
 			private function initStaffWin():void{
-				lockWin();
+				systemServiceRO.getDepartmentBySymbol("root");//初始化部门数据字典
+				callLater(function():void{
+					this.department.dataProvider=departmentList;
+					this.department.validateNow();
+					//					this.department.selectedIndex=0;
+					//					Alert.show(department.selectedItem.dataField);
+					//					systemServiceRO.getDepartmentRoles(department.selectedItem.dataField);
+					callLater(function():void{
+						this.position.dataProvider=roleList;
+						this.position.validateNow();
+						//						this.position.selectedIndex=0;
+					});
+				});
 				var parms:String=((Object)(this.owner)).id;
 				teacher = new TeacherModel();	
 				if(parms != null && parms!="" && parms!= "null"){		
 					teacherId = parms ;//弹出窗口时设定的中转参数
+					lockWin();
 					teacherServiceRO.get(teacherId);
 					getDepartment();
 				}else{
@@ -157,19 +172,7 @@
 					imageSrc = "uploads/basic/teacherProfile/default_head.jpg";
 				}
 				
-				systemServiceRO.getDepartmentBySymbol("root");//初始化部门数据字典
-				callLater(function():void{
-					this.department.dataProvider=departmentList;
-					this.department.validateNow();
-//					this.department.selectedIndex=0;
-//					Alert.show(department.selectedItem.dataField);
-//					systemServiceRO.getDepartmentRoles(department.selectedItem.dataField);
-					callLater(function():void{
-						this.position.dataProvider=roleList;
-						this.position.validateNow();
-//						this.position.selectedIndex=0;
-					});
-				});
+				
 				
 			}
 			
@@ -202,14 +205,39 @@
 				professionalTitle.text = teacher.teacherProfessionTitle;
 				skillLevel.text = teacher.teacherSkillLevel;
 				skillLevelDate.text = DateUtil.formatDate(teacher.teacherSkillLevelDate as Date, "YYYY-MM-DD");
-				department.selectedIndex = ComboxUtils.findIndex(departmentList, teacher.teacherDepartment) ;
-				position.selectedIndex = ComboxUtils.findIndex(roleList,  teacher.teacherPosition);
+				
 				contactPhone.text = teacher.teacherContactPhone;
 				officePhone.text = teacher.teacherOfficePhone;
 				workDate.text = DateUtil.formatDate(teacher.teacherWorkDate as Date, "YYYY-MM-DD");
 				attendDate.text = DateUtil.formatDate(teacher.teacherAttendDate as Date, "YYYY-MM-DD");
 				teacherAddress.text = teacher.address;
 				
+				department.selectedIndex = ComboxUtils.findIndex(departmentList, teacher.teacherDepartment) ;
+				systemServiceRO.getDepartmentRoles(teacher.teacherDepartment);
+				callLater(function():void{
+					for(var i:int=0;i<10000;i++);
+					position.dataProvider=roleList;
+					//position.selectedIndex=0;
+					callLater(function():void{
+						Alert.show(teacher.teacherPosition);
+						position.selectedIndex = ComboxUtils.findIndex(roleList,  teacher.teacherPosition);
+					});
+
+				});
+//				for (var i:int = 0; i < departmentList.length; i++){
+//					var _item:Object = departmentList.getItemAt(i);
+//					if(_item.data==teacher.teacherDepartment){
+//						this.department.selectedIndex=i;
+//						break;
+//					}
+//				}
+//				for (var j:int = 0; j < departmentList.length; j++){
+//					var _item2:Object = departmentList.getItemAt(j);
+//					if(_item.data==teacher.teacherPosition){
+//						this.department.selectedIndex=i;
+//						break;
+//					}
+//				}
 				status.selectedIndex = ComboxUtils.findIndex(statusArr, teacher.teacherStatus + "") ;
 				callLater(function():void{
 					showPeriod(teacher.teacherWorkDate, teacher.teacherAttendDate);

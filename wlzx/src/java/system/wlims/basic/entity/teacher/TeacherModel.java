@@ -24,9 +24,11 @@ public class TeacherModel extends PersonModel{
 	private String teacherProfessionTitle;
 	private String teacherSkillLevel;
 	private Date teacherSkillLevelDate;
-	private String teacherDepartment;
-	private String teacherRole;
-	private String teacherPosition;
+	private String teacherDepartment;//辅助显示
+	private String teacherPosition;//辅助显示
+	private String teacherDepartmentName;//辅助显示
+	private String teacherPositionName;//辅助显示
+
 	private String teacherMobilePhone;
 	private String teacherContactPhone;
 	private String teacherOfficePhone;
@@ -207,11 +209,18 @@ public class TeacherModel extends PersonModel{
 	public void setSexText(String sexText) {
 		this.sexText = sexText;
 	}
-	public String getTeacherRole() {
-		return teacherRole;
+	
+	public String getTeacherDepartmentName() {
+		return teacherDepartmentName;
 	}
-	public void setTeacherRole(String teacherRole) {
-		this.teacherRole = teacherRole;
+	public void setTeacherDepartmentName(String teacherDepartmentName) {
+		this.teacherDepartmentName = teacherDepartmentName;
+	}
+	public String getTeacherPositionName() {
+		return teacherPositionName;
+	}
+	public void setTeacherPositionName(String teacherPositionName) {
+		this.teacherPositionName = teacherPositionName;
 	}
 
 }

@@ -32,11 +32,13 @@
 		<property name="teacherDAO" ref="teacherDAO" />
 		<property name="userDAO" ref="userDAO" />
 		<property name="roleDAO" ref="roleDAO" />
+		<property name="departmentDAO" ref="departmentDAO" />	
 	</bean>
 	<bean id="teacherService" class="system.wlims.basic.service.teacher.TeacherService">
 		<property name="teacherDAO" ref="teacherDAO" />
 		<property name="userDAO" ref="userDAO" />
 		<property name="roleDAO" ref="roleDAO" />
+		<property name="departmentDAO" ref="departmentDAO" />
 	</bean>
 	<bean id="teacherAccountBridgeServiceDest" class="system.wlims.basic.service.teacher.TeacherAccountBridgeService">
 		<flex:remoting-destination />
