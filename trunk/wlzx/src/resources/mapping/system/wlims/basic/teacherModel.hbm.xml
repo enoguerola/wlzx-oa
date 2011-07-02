@@ -65,12 +65,14 @@
 		<property name="teacherSkillLevelDate" type="java.sql.Date">
 			<column name="teacher_skill_level_date" />
 		</property>
-		<property name="teacherDepartment" type="string">
-			<column name="teacher_department" />
-		</property>
-		<property name="teacherPosition" type="string">
-			<column name="teacher_position" />
-		</property>
+		<!-- 
+			<property name="teacherDepartment" type="string">
+				<column name="teacher_department" />
+			</property>
+			<property name="teacherPosition" type="string">
+				<column name="teacher_position" />
+			</property> 
+		-->
 		<property name="teacherContactPhone" type="string">
 			<column name="teacher_contact_phone" />
 		</property>

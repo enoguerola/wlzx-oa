@@ -364,10 +364,10 @@
 									</fx:Component>
 								</mx:itemRenderer>
 							</mx:DataGridColumn>
-							<mx:DataGridColumn textAlign="center" headerText="主部门" dataField="teacherDepartment" width="100">
+							<mx:DataGridColumn textAlign="center" headerText="主部门" dataField="teacherDepartmentName" width="100">
 							
 							</mx:DataGridColumn>
-							<mx:DataGridColumn textAlign="center" headerText="主职务" dataField="teacherRole" width="100">
+							<mx:DataGridColumn textAlign="center" headerText="主职务" dataField="teacherPositionName" width="100">
 							
 							</mx:DataGridColumn>
 

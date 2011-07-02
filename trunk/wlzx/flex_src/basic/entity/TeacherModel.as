@@ -18,8 +18,9 @@ package basic.entity
 		public var  teacherSkillLevel:String;
 		public var  teacherSkillLevelDate:Date;
 		public var  teacherDepartment:String;
-		public var  teacherRole:String;
+		public var  teacherDepartmentName:String;
 		public var  teacherPosition:String;
+		public var  teacherPositionName:String;
 		public var  teacherMobilePhone:String;
 		public var  teacherContactPhone:String;
 		public var  teacherOfficePhone:String;

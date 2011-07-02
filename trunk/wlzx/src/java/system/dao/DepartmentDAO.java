@@ -108,5 +108,16 @@ public class DepartmentDAO extends BaseDAOImpl<DepartmentModel> {
 		}
 		return null;
 	}
+	@SuppressWarnings("unchecked")
+	public DepartmentModel getDepartmentByName(String name) {
+		// TODO Auto-generated method stub
+		if (StringUtils.isNotEmpty(name)) {
+			DetachedCriteria criteria = DetachedCriteria.forClass(DepartmentModel.class);
+			criteria.add(Restrictions.eq("name", name));
+			List<DepartmentModel> result = this.getListByCriteria(criteria);
+			return result != null && result.size() > 0 ? result.get(0) : null;
+		}
+		return null;
+	}
 
 }

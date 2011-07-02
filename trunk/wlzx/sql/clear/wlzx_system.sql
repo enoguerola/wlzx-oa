@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2011 年 07 月 01 日 16:18
+-- 生成日期: 2011 年 07 月 02 日 10:17
 -- 服务器版本: 5.0.91
 -- PHP 版本: 5.2.13
 
@@ -156,7 +156,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_department_dam_relationship` (
   `department_id` bigint(20) NOT NULL,
   `dam_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=53 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=47 ;
 
 --
 -- 转存表中的数据 `wlzx_system_department_dam_relationship`
@@ -272,7 +272,7 @@ INSERT INTO `wlzx_system_menu` (`id`, `name`, `symbol`, `sequence`, `detail`, `m
 (27, '我的工作', 'person_work', 2, '', '', '2011-05-10 00:00:00', '2011-05-10 11:25:18'),
 (28, '工作指派', 'staff_work_assign', 3, '', '', '2011-05-10 00:00:00', '2011-05-10 11:26:18'),
 (29, '公共通讯录', 'public_address_book', 0, '', '', '2011-05-10 00:00:00', '2011-05-10 11:28:18'),
-(31, '人事管理', 'human_resource', 5, '', '', '2011-05-21 00:00:00', '2011-05-21 09:40:29'),
+(31, '人事管理', 'human_resource', 5, '', 'human_resource', '2011-05-21 00:00:00', '2011-07-01 23:14:39'),
 (32, '教师档案', 'staff_file', 1, '', '', '2011-05-21 00:00:00', '2011-05-21 09:44:43'),
 (33, '帐号管理', 'system_account', 1, '', '', '2011-05-21 00:00:00', '2011-05-21 09:46:20'),
 (34, '发文管理', 'document_dispatch ', 1, '', '', '2011-05-21 00:00:00', '2011-05-21 09:48:55'),
@@ -290,7 +290,7 @@ INSERT INTO `wlzx_system_menu` (`id`, `name`, `symbol`, `sequence`, `detail`, `m
 (47, '调课申请', 'adjust_class_apply', 0, '', '', '2011-05-27 00:00:00', '2011-05-27 22:32:02'),
 (48, '调课审批', 'adjust_class_apply_approve', 1, '', '', '2011-05-27 00:00:00', '2011-05-27 22:33:09'),
 (49, '教师管理', 'teacher_manager', 0, '', '', '2011-05-27 00:00:00', '2011-05-27 22:38:31'),
-(50, '个人办公', 'personal_office', 0, '', '', '2011-06-03 00:00:00', '2011-06-03 11:27:21'),
+(50, '个人办公', 'personal_office', 0, '', 'personal_office', '2011-06-03 00:00:00', '2011-07-01 23:15:09'),
 (51, '请假出差', 'personal_office_takeLeaveApply', 3, '', '', '2011-06-03 00:00:00', '2011-06-03 11:28:47'),
 (52, '加班申请', 'personal_office_overWork Apply', 4, '', '', '2011-06-03 00:00:00', '2011-06-03 11:29:51'),
 (53, '个人考勤', 'personal_office_canculateAttendance', 6, '', '', '2011-06-03 00:00:00', '2011-06-03 11:31:08'),
@@ -881,7 +881,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_role_user_relationship` (
   `role_id` bigint(20) NOT NULL,
   `user_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=22 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 --
 -- 转存表中的数据 `wlzx_system_role_user_relationship`
@@ -931,16 +931,17 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_user` (
   `modified_date` timestamp NOT NULL default '0000-00-00 00:00:00' on update CURRENT_TIMESTAMP,
   `active` tinyint(1) NOT NULL default '1',
   `main_role_id` bigint(20) default NULL,
+  `main_department_id` bigint(20) default NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `symbol` (`symbol`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='系统用户' AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='系统用户' AUTO_INCREMENT=5 ;
 
 --
 -- 转存表中的数据 `wlzx_system_user`
 --
 
-INSERT INTO `wlzx_system_user` (`id`, `symbol`, `sequence`, `name`, `password`, `last_login_time`, `last_login_ip`, `account_style`, `person_id`, `person_name`, `email`, `creation_date`, `modified_date`, `active`, `main_role_id`) VALUES
-(1, 'super_root', 0, 'super_root', '134bca5421a15476a1e5ebaebdba1ede', '2011-07-01 16:16:13', '127.0.0.1', -1, NULL, NULL, NULL, '2011-05-07 11:04:22', '2011-07-01 15:09:45', 1, NULL);
+INSERT INTO `wlzx_system_user` (`id`, `symbol`, `sequence`, `name`, `password`, `last_login_time`, `last_login_ip`, `account_style`, `person_id`, `person_name`, `email`, `creation_date`, `modified_date`, `active`, `main_role_id`, `main_department_id`) VALUES
+(1, 'super_root', 0, 'super_root', '134bca5421a15476a1e5ebaebdba1ede', '2011-07-02 09:57:35', '127.0.0.1', -1, NULL, NULL, NULL, '2011-05-07 11:04:22', '2011-07-01 15:09:45', 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
