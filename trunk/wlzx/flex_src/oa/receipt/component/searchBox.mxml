@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="100%">
+	<s:layout>
+		<s:VerticalLayout/>
+	</s:layout>
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+		<s:RemoteObject id="receiptServiceRO" destination="receiptServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+			<s:method name="get" concurrency="last" result="get_result(event)"/>
+		</s:RemoteObject>
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			import mx.controls.Alert;
+			
+			private var status_list = new ArrayCollection([{label: '所有', data: null}, 
+				{label: '草稿', data:'0'}, {label: '已登记', data:'1'}]);
+			public var flowStep = 1;
+			private function search():void
+			{
+				var inNumber:String = in_number.text;
+				var inOffice:String = in_office.text;
+				var inDateBegin:String = in_date_begin.text;
+				var inDateEnd:String = in_date_end.text;
+				var doNumber:String = do_number.text;
+				var _status:String = status.selectedItem.data;
+				var _title:String = title.text;
+			}
+			
+			public function get_result(event:ResultEvent):void
+			{
+				var allList:ArrayCollection = event.result as ArrayCollection;
+				if(parentApplication.messagesView.selectedIndex == 1)
+					parentApplication.noticeTable.initdata(allList);
+				else
+					parentApplication.draftTable.initdata(allList);
+			}
+			
+			private function systemFaultHandler(event:FaultEvent):void
+			{
+				Alert.show(event.fault.faultString, 'Error');
+			}
+		
+		]]>
+	</fx:Script>
+	<mx:FormHeading label="条件查询"></mx:FormHeading>
+	<s:HGroup verticalAlign="middle" width="500">
+		<s:Label text="来文字号" width="100" textAlign="right"/>
+		<s:TextInput id="in_number" width="200"/>
+		<s:Label text="来文机关" width="125" textAlign="right"/>
+		<s:TextInput id="in_office" width="200"/>
+		<s:Label text="收文办号" width="100" textAlign="right"/>
+		<s:TextInput id="do_number" width="200"/>
+	</s:HGroup>
+	<s:HGroup verticalAlign="middle" width="500">
+		<s:Label text="来文日期" width="100" textAlign="right"/>
+		<mx:DateField id="in_date_begin" width="100" formatString="YYYY-MM-DD"></mx:DateField>
+		<s:Label  text="--"  width="15" textAlign="center"/>
+		<mx:DateField id="in_date_end" width="100" formatString="YYYY-MM-DD"></mx:DateField>
+		<s:Label text="处理状态" width="100" textAlign="right"/>
+		<s:ComboBox dataProvider="{status_list}" id="status" width="200" selectedIndex="0"/>
+	</s:HGroup>
+	<s:HGroup verticalAlign="middle" width="500">
+		<s:Label text="来文摘要(标题)" width="100" textAlign="right"/>
+		<s:TextInput id="title" width="300"/>
+		<mx:Button  label="搜索"  width="70"   click="search();"/>
+	</s:HGroup>
+</s:Group>

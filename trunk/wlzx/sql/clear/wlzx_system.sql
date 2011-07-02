@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2011 年 07 月 02 日 10:17
+-- 生成日期: 2011 年 07 月 02 日 16:45
 -- 服务器版本: 5.0.91
 -- PHP 版本: 5.2.13
 
@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_data_access_mode` (
   `modified_date` timestamp NOT NULL default '0000-00-00 00:00:00' on update CURRENT_TIMESTAMP,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `symbol` (`symbol`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=53 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=59 ;
 
 --
 -- 转存表中的数据 `wlzx_system_data_access_mode`
@@ -111,7 +111,13 @@ INSERT INTO `wlzx_system_data_access_mode` (`id`, `name`, `symbol`, `sequence`, 
 (49, '全部数据', 'person_notice_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-06-16 00:00:00', '2011-06-23 23:21:09'),
 (50, '全部数据', 'school_notice_read_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-06-16 00:00:00', '2011-06-16 00:04:50'),
 (51, '全部数据', 'personal_office_workDetail@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-01 00:00:00', '2011-07-01 09:49:35'),
-(52, '全部数据', 'person_office_workToDeal_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-01 00:00:00', '2011-07-01 09:50:45');
+(52, '全部数据', 'person_office_workToDeal_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-01 00:00:00', '2011-07-01 09:50:45'),
+(53, '全部数据', 'receipt_register_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-02 00:00:00', '2011-07-02 12:21:05'),
+(54, '全部数据', 'receipt_devise_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-02 00:00:00', '2011-07-02 16:41:02'),
+(55, '全部数据', 'receipt_ratify_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-02 00:00:00', '2011-07-02 16:42:12'),
+(56, '全部数据', 'receipt_undertake_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-02 00:00:00', '2011-07-02 16:43:22'),
+(57, '全部数据', 'receipt_circulate_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-02 00:00:00', '2011-07-02 16:44:14'),
+(58, '全部数据', 'receipt_manage_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-02 00:00:00', '2011-07-02 16:45:20');
 
 -- --------------------------------------------------------
 
@@ -246,7 +252,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_menu` (
   `modified_date` timestamp NOT NULL default '0000-00-00 00:00:00' on update CURRENT_TIMESTAMP,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `symbol` (`symbol`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=64 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=71 ;
 
 --
 -- 转存表中的数据 `wlzx_system_menu`
@@ -275,8 +281,8 @@ INSERT INTO `wlzx_system_menu` (`id`, `name`, `symbol`, `sequence`, `detail`, `m
 (31, '人事管理', 'human_resource', 5, '', 'human_resource', '2011-05-21 00:00:00', '2011-07-01 23:14:39'),
 (32, '教师档案', 'staff_file', 1, '', '', '2011-05-21 00:00:00', '2011-05-21 09:44:43'),
 (33, '帐号管理', 'system_account', 1, '', '', '2011-05-21 00:00:00', '2011-05-21 09:46:20'),
-(34, '发文管理', 'document_dispatch ', 1, '', '', '2011-05-21 00:00:00', '2011-05-21 09:48:55'),
-(35, '收文管理', 'document_receipt ', 2, '', '', '2011-05-21 00:00:00', '2011-05-21 09:49:28'),
+(34, '收文管理', 'document_receipt', 1, '', '', '2011-05-21 00:00:00', '2011-05-21 09:48:55'),
+(35, '发文管理', 'document_dispatch ', 2, '', '', '2011-05-21 00:00:00', '2011-05-21 09:49:28'),
 (36, '部门设置', 'oa_department_set', 1, '', '', '2011-05-21 00:00:00', '2011-05-21 10:05:48'),
 (37, '岗位设置', 'oa_role_set', 2, '', '', '2011-05-21 00:00:00', '2011-05-21 10:06:23'),
 (39, '岗位授权', 'oa_role_authorization', 3, '', '', '2011-05-21 00:00:00', '2011-05-21 11:20:42'),
@@ -303,7 +309,13 @@ INSERT INTO `wlzx_system_menu` (`id`, `name`, `symbol`, `sequence`, `detail`, `m
 (60, '调休审批', 'moveRestDay_approve', 2, '', '', '2011-06-10 00:00:00', '2011-06-10 21:14:42'),
 (61, '我的公告', 'person_notice', 1, '', '', '2011-06-16 00:00:00', '2011-06-16 00:01:41'),
 (62, '学校公告', 'school_notice_read', 3, '', '', '2011-06-16 00:00:00', '2011-06-16 00:02:52'),
-(63, '待办工作', 'person_office_workToDeal', 1, '', '', '2011-07-01 00:00:00', '2011-07-01 09:46:03');
+(63, '待办工作', 'person_office_workToDeal', 1, '', '', '2011-07-01 00:00:00', '2011-07-01 09:46:03'),
+(64, '收文登记', 'receipt_register_menu', 0, '', '', '2011-07-02 00:00:00', '2011-07-02 10:38:04'),
+(66, '收文拟办', 'receipt_devise', 1, '', '', '2011-07-02 00:00:00', '2011-07-02 16:35:44'),
+(67, '收文批示', 'receipt_ratify', 2, '', '', '2011-07-01 00:00:00', '2011-07-02 16:36:17'),
+(68, '收文承办', 'receipt_undertake', 3, '', '', '2011-07-02 00:00:00', '2011-07-02 16:36:59'),
+(69, '收文传阅', 'receipt_circulate', 4, '', '', '2011-07-02 00:00:00', '2011-07-02 16:37:37'),
+(70, '收文管理', 'receipt_manage', 5, '', '', '2011-07-02 00:00:00', '2011-07-02 16:38:27');
 
 -- --------------------------------------------------------
 
@@ -316,7 +328,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_menu_module_relationship` (
   `menu_id` bigint(20) NOT NULL,
   `module_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=46 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=52 ;
 
 --
 -- 转存表中的数据 `wlzx_system_menu_module_relationship`
@@ -355,7 +367,13 @@ INSERT INTO `wlzx_system_menu_module_relationship` (`id`, `menu_id`, `module_id`
 (42, 61, 46),
 (43, 62, 47),
 (44, 54, 48),
-(45, 63, 49);
+(45, 63, 49),
+(46, 64, 50),
+(47, 66, 51),
+(48, 67, 52),
+(49, 68, 53),
+(50, 69, 54),
+(51, 70, 55);
 
 -- --------------------------------------------------------
 
@@ -394,7 +412,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_menu_treeship` (
   `parent_id` bigint(20) NOT NULL,
   `child_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=58 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=65 ;
 
 --
 -- 转存表中的数据 `wlzx_system_menu_treeship`
@@ -443,7 +461,13 @@ INSERT INTO `wlzx_system_menu_treeship` (`id`, `parent_id`, `child_id`) VALUES
 (54, 46, 60),
 (55, 12, 61),
 (56, 12, 62),
-(57, 50, 63);
+(57, 50, 63),
+(58, 34, 64),
+(60, 34, 66),
+(61, 34, 67),
+(62, 34, 68),
+(63, 34, 69),
+(64, 34, 70);
 
 -- --------------------------------------------------------
 
@@ -486,7 +510,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_module` (
   `parms` varchar(300) default NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `symbol` (`symbol`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=50 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=56 ;
 
 --
 -- 转存表中的数据 `wlzx_system_module`
@@ -525,7 +549,13 @@ INSERT INTO `wlzx_system_module` (`id`, `name`, `symbol`, `sequence`, `detail`, 
 (46, '我的公告主模块', 'person_notice_main', 0, '', '2011-06-16 00:00:00', '2011-06-23 23:21:09', 'oa/notice/personNotice.swf', 'list'),
 (47, '学校公告主模块', 'school_notice_read_main', 0, '', '2011-06-16 00:00:00', '2011-06-16 00:04:50', 'oa/notice/noticeList.swf', 'school'),
 (48, '我的工作主模块', 'personal_office_workDetail', 0, '', '2011-07-01 00:00:00', '2011-07-01 09:49:35', 'oa/task/personTask.swf', ''),
-(49, '待办工作主模块', 'person_office_workToDeal_main', 0, '', '2011-07-01 00:00:00', '2011-07-01 09:50:45', 'oa/task/waittingTask.swf', '');
+(49, '待办工作主模块', 'person_office_workToDeal_main', 0, '', '2011-07-01 00:00:00', '2011-07-01 09:50:45', 'oa/task/waittingTask.swf', ''),
+(50, '收文登记主模块', 'receipt_register_main', 0, '', '2011-07-02 00:00:00', '2011-07-02 12:21:05', 'oa/receipt/registerList.swf', ''),
+(51, '收文拟办主模块', 'receipt_devise_main', 0, '', '2011-07-02 00:00:00', '2011-07-02 16:41:01', 'oa/receipt/deviseList.swf', ''),
+(52, '收文批示主模块', 'receipt_ratify_main', 0, '', '2011-07-02 00:00:00', '2011-07-02 16:42:12', 'oa/receipt/ratifyList.swf', ''),
+(53, '收文承办主模块', 'receipt_undertake_main', 0, '', '2011-07-02 00:00:00', '2011-07-02 16:43:22', 'oa/receipt/undertakeList.swf', ''),
+(54, '收文传阅主模块', 'receipt_circulate_main', 0, '', '2011-07-02 00:00:00', '2011-07-02 16:44:14', 'oa/receipt/circulateList.swf', ''),
+(55, '收文管理主模块', 'receipt_manage_main', 0, '', '2011-07-02 00:00:00', '2011-07-02 16:45:20', 'oa/receipt/manageList.swf', '');
 
 -- --------------------------------------------------------
 
@@ -538,7 +568,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_module_operation_relationship` (
   `module_id` bigint(20) NOT NULL,
   `operation_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=51 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=57 ;
 
 --
 -- 转存表中的数据 `wlzx_system_module_operation_relationship`
@@ -581,7 +611,13 @@ INSERT INTO `wlzx_system_module_operation_relationship` (`id`, `module_id`, `ope
 (47, 46, 47),
 (48, 47, 48),
 (49, 48, 49),
-(50, 49, 50);
+(50, 49, 50),
+(51, 50, 51),
+(52, 51, 52),
+(53, 52, 53),
+(54, 53, 54),
+(55, 54, 55),
+(56, 55, 56);
 
 -- --------------------------------------------------------
 
@@ -619,7 +655,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_operation` (
   `modified_date` timestamp NOT NULL default '0000-00-00 00:00:00' on update CURRENT_TIMESTAMP,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `symbol` (`symbol`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=51 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=57 ;
 
 --
 -- 转存表中的数据 `wlzx_system_operation`
@@ -663,7 +699,13 @@ INSERT INTO `wlzx_system_operation` (`id`, `name`, `symbol`, `sequence`, `rs_typ
 (47, '页面访问', 'person_notice_main@defaultVisit@', 0, 'URL', '/oa/notice/personNotice.swf*', NULL, '2011-06-16 00:00:00', '2011-06-23 23:21:09'),
 (48, '页面访问', 'school_notice_read_main@defaultVisit@', 0, 'URL', '/oa/notice/noticeList.swf*', NULL, '2011-06-16 00:00:00', '2011-06-16 00:04:50'),
 (49, '页面访问', 'personal_office_workDetail@defaultVisit@', 0, 'URL', '/oa/task/personTask.swf*', NULL, '2011-07-01 00:00:00', '2011-07-01 09:49:35'),
-(50, '页面访问', 'person_office_workToDeal_main@defaultVisit@', 0, 'URL', '/oa/task/waittingTask.swf*', NULL, '2011-07-01 00:00:00', '2011-07-01 09:50:45');
+(50, '页面访问', 'person_office_workToDeal_main@defaultVisit@', 0, 'URL', '/oa/task/waittingTask.swf*', NULL, '2011-07-01 00:00:00', '2011-07-01 09:50:45'),
+(51, '页面访问', 'receipt_register_main@defaultVisit@', 0, 'URL', '/oa/receipt/registerList.swf*', NULL, '2011-07-02 00:00:00', '2011-07-02 12:21:05'),
+(52, '页面访问', 'receipt_devise_main@defaultVisit@', 0, 'URL', '/oa/receipt/deviseList.swf*', NULL, '2011-07-02 00:00:00', '2011-07-02 16:41:01'),
+(53, '页面访问', 'receipt_ratify_main@defaultVisit@', 0, 'URL', '/oa/receipt/ratifyList.swf*', NULL, '2011-07-02 00:00:00', '2011-07-02 16:42:12'),
+(54, '页面访问', 'receipt_undertake_main@defaultVisit@', 0, 'URL', '/oa/receipt/undertakeList.swf*', NULL, '2011-07-02 00:00:00', '2011-07-02 16:43:22'),
+(55, '页面访问', 'receipt_circulate_main@defaultVisit@', 0, 'URL', '/oa/receipt/circulateList.swf*', NULL, '2011-07-02 00:00:00', '2011-07-02 16:44:14'),
+(56, '页面访问', 'receipt_manage_main@defaultVisit@', 0, 'URL', '/oa/receipt/manageList.swf*', NULL, '2011-07-02 00:00:00', '2011-07-02 16:45:20');
 
 -- --------------------------------------------------------
 
@@ -676,7 +718,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_operation_dam_relationship` (
   `operation_id` bigint(20) NOT NULL,
   `dam_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=53 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=59 ;
 
 --
 -- 转存表中的数据 `wlzx_system_operation_dam_relationship`
@@ -722,7 +764,13 @@ INSERT INTO `wlzx_system_operation_dam_relationship` (`id`, `operation_id`, `dam
 (49, 47, 49),
 (50, 48, 50),
 (51, 49, 51),
-(52, 50, 52);
+(52, 50, 52),
+(53, 51, 53),
+(54, 52, 54),
+(55, 53, 55),
+(56, 54, 56),
+(57, 55, 57),
+(58, 56, 58);
 
 -- --------------------------------------------------------
 
@@ -941,7 +989,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_user` (
 --
 
 INSERT INTO `wlzx_system_user` (`id`, `symbol`, `sequence`, `name`, `password`, `last_login_time`, `last_login_ip`, `account_style`, `person_id`, `person_name`, `email`, `creation_date`, `modified_date`, `active`, `main_role_id`, `main_department_id`) VALUES
-(1, 'super_root', 0, 'super_root', '134bca5421a15476a1e5ebaebdba1ede', '2011-07-02 09:57:35', '127.0.0.1', -1, NULL, NULL, NULL, '2011-05-07 11:04:22', '2011-07-01 15:09:45', 1, NULL, NULL);
+(1, 'super_root', 0, 'super_root', '134bca5421a15476a1e5ebaebdba1ede', '2011-07-02 16:33:55', '0:0:0:0:0:0:0:1', -1, NULL, NULL, NULL, '2011-05-07 11:04:22', '2011-07-01 15:09:45', 1, NULL, NULL);
 
 -- --------------------------------------------------------
 

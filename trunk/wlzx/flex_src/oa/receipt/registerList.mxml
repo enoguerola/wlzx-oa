@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Module xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		   xmlns:s="library://ns.adobe.com/flex/spark" 
+		   xmlns:mx="library://ns.adobe.com/flex/mx" layout="vertical" creationComplete="init();" width="100%" height="100%"
+		   xmlns:receipt="oa.receipt.component.*">
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			private function init():void
+			{
+			
+			}
+			
+			private function add(event:MouseEvent):void
+			{
+				var parent:Object=(Object)(((Object)(this.owner)).owner);
+				parent.addTab("add_receipt","正文登记",parent.nav,"oa/receipt/register.swf",null,"");
+			}
+		]]>
+	</fx:Script>
+	
+	<mx:Panel width="100%" height="100%"  styleName="customPanel" title="收文登记"  borderVisible="false" dropShadowVisible="false">
+		<mx:VBox width="100%" height="100%" id="listPanel">
+			<mx:HBox verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12" >
+				<mx:HBox width="100%" height="30" paddingLeft="20"  horizontalGap="0" backgroundColor="#C5E497"  verticalAlign="middle">
+					<mx:Label text="|"/>
+					<mx:LinkButton  label="新增" icon="@Embed(source='../WebContent/resources/common/tools/button_add_icon.png')" click="add(event)"/>
+					<mx:Label text="|"/>
+				</mx:HBox>
+			</mx:HBox>
+			<mx:VBox width="100%" height="25%"  verticalGap="10" verticalAlign="middle" horizontalAlign="center" >
+				<mx:VBox width="100%" height="100%"   horizontalGap="10" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="0" paddingBottom="0"   paddingLeft="10" paddingRight="10">
+					<receipt:searchBox id="search_panel"/>
+				</mx:VBox>
+			</mx:VBox>
+			<mx:VBox width="100%" height="75%"  verticalAlign="middle" horizontalAlign="center" paddingTop="20">
+				<receipt:datagrid id="register_grid"/>
+			</mx:VBox>
+		</mx:VBox>
+	</mx:Panel>
+</mx:Module>

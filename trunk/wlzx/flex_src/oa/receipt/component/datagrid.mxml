@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="100%"
+		 xmlns:component="system.component.*"
+		 xmlns:item="oa.receipt.component.item.*" creationComplete="init()">
+	<s:layout>
+		<s:HorizontalLayout/>
+	</s:layout>
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			
+			private function init():void
+			{
+				var sample:ArrayCollection = new ArrayCollection([{title:"", status:"2"}, {title:"o", status:"3"}]);
+				grid.initdata(sample);
+			}
+		]]>
+	</fx:Script>
+	
+	<component:WlzxPageDataGrid id="grid" width="100%" height="100%" borderVisible="false" autoLayout="true"  borderAlpha="0.2" verticalAlign="middle" pagecount="10">
+		<component:mygridcolumns>
+			<mx:DataGridColumn textAlign="center" headerText="收文标题" width="100" itemRenderer="oa.receipt.component.item.Title" dataField="title"></mx:DataGridColumn>
+			<mx:DataGridColumn textAlign="center" headerText="处理状态" width="100" itemRenderer="oa.receipt.component.item.Status"/>
+			<mx:DataGridColumn textAlign="center" headerText="来文单位" width="100" itemRenderer="oa.receipt.component.item.Department"/>
+			<mx:DataGridColumn textAlign="center" headerText="来文日期" width="100" itemRenderer="oa.receipt.component.item.InDate"/>
+			<mx:DataGridColumn textAlign="center" headerText="处理" width="100" itemRenderer="oa.receipt.component.item.Handler"/>
+		</component:mygridcolumns>
+		
+	</component:WlzxPageDataGrid>
+</s:Group>
