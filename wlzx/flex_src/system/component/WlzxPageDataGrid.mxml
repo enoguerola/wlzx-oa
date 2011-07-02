@@ -4,12 +4,15 @@
 <mx:Script>
 	 <![CDATA[
 		 import mx.collections.ArrayCollection;
-		 import mx.events.ListEvent;
 		 import mx.controls.Alert;
+		 import mx.events.ListEvent;
+		 
+		 import spark.components.supportClasses.ItemRenderer;
 	    [Bindable]
 	    private var mypagedata:ArrayCollection = new ArrayCollection();//当前也没种该显示的记录
 	    [Bindable]
 	    public var mygridcolumns:Array;
+		public var itemRenderer:ItemRenderer;
 	    public var mydata:ArrayCollection;//所有的数据
 	    public var pagecount:int=10;//表示每页记录的条数,默认10条,可以由用户自行定义
 	    public var curpage:int = 1;//当前的页码
@@ -82,7 +85,7 @@
 	]]>
    </mx:Script>
 
-   <component:WlzxDataGrid id="cudg" dataProvider="{mypagedata}"  columns="{mygridcolumns}" width="100%" height="100%" itemClick="cudg_itemClickHandler(event)">
+   <component:WlzxDataGrid id="cudg" itemRenderer="{itemRenderer}" dataProvider="{mypagedata}"  columns="{mygridcolumns}" width="100%" height="100%" itemClick="cudg_itemClickHandler(event)">
 	   
 	 
 
