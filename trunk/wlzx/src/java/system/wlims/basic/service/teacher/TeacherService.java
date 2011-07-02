@@ -70,17 +70,32 @@ public class TeacherService {
 						user.setMainDepartment(role.getBelongDepartment());
 						model.setTeacherDepartment(role.getBelongDepartment().getId());
 					}
-				}else model.setTeacherPosition(null); 
+				}
 			}else{
-				model.setTeacherPosition(null);
-				if(!StringUtils.isEmpty(model.getTeacherDepartmentName())){
-					DepartmentModel department=departmentDAO.getDepartmentByName(model.getTeacherDepartmentName());
-					if(department!=null){
-						user.setMainDepartment(department);
-						model.setTeacherDepartment(department.getName());
+				if(!StringUtils.isEmpty(model.getTeacherPosition())){
+					RoleModel role = roleDAO.get(model.getTeacherPosition());
+					if(role!=null){
+						user.setMainRole(role);
+						model.setTeacherPosition(role.getId());
+						if(role.getBelongDepartment()!=null){
+							user.setMainDepartment(role.getBelongDepartment());
+							model.setTeacherDepartment(role.getBelongDepartment().getId());
+						}
+					}else model.setTeacherPosition(null); 
+				}else{
+					model.setTeacherPosition(null);
+					if(!StringUtils.isEmpty(model.getTeacherDepartmentName())){
+						DepartmentModel department=departmentDAO.getDepartmentByName(model.getTeacherDepartmentName());
+						if(department!=null){
+							user.setMainDepartment(department);
+						}
+					}else if(!StringUtils.isEmpty(model.getTeacherDepartment())){
+						DepartmentModel department=departmentDAO.get(model.getTeacherDepartment());
+						if(department!=null){
+							user.setMainDepartment(department);
+						}
 					}
-					else model.setTeacherDepartment(null);
-				}else model.setTeacherDepartment(null);
+				}
 			}
 			
 			userDAO.saveOrUpdate(user);
@@ -166,6 +181,8 @@ public class TeacherService {
     public void remove(String id)throws ServiceException{
     	TeacherModel model = teacherDAO.get(id);
 		teacherDAO.remove(model);
+		UserModel user=userDAO.get(model.getUserID());
+    	userDAO.remove(user);
 	}
     
     public Boolean valideNo(String no)throws ServiceException{
