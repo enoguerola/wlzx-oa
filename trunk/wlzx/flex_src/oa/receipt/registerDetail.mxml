@@ -1,17 +1,159 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Module xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		   xmlns:s="library://ns.adobe.com/flex/spark" 
-		   xmlns:mx="library://ns.adobe.com/flex/mx" layout="absolute" width="100%" height="100%"
-		   xmlns:content="oa.receipt.component.*">
+		   xmlns:mx="library://ns.adobe.com/flex/mx" layout="absolute" width="100%" height="100%" creationComplete="init()"
+		   xmlns:content="oa.receipt.component.*"
+		   xmlns:valueObjects="oa.entity.receipt.*">
+	<fx:Script>
+		<![CDATA[
+			import mx.containers.FormItem;
+			import mx.controls.Alert;
+			import mx.events.ValidationResultEvent;
+			import mx.formatters.DateFormatter;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			import mx.validators.Validator;
+			
+			private var validatorArr:Array = new Array();
+
+			private function init():void
+			{
+				var parms:String=((Object)(this.owner)).id;
+				if(parms != null && parms!="" && parms!= "null"){
+					//编辑
+					receiptServiceRO.get(parms);
+				}else{
+					//新增
+					receipt = new ReceiptModel();
+				}
+			}
+			
+			//保存
+			private function save(event:MouseEvent):void
+			{
+				receipt.title = receipt_text.title.text;
+				receipt.doNumber = receipt_file._zi.text + "+" + receipt_file._hao.text;
+				receipt.inDate = DateFormatter.parseDateString(receipt_file.in_date.text);
+				receipt.inNumber = receipt_file.in_number.text;
+				receipt.subject = receipt_file.zhutici.text;
+				receipt.summary = receipt_text.summary.text;
+				receipt.title = receipt_text.title.text;
+				receipt.office = receipt_file.in_department.text;
+				if(event.target == button_save)
+				{
+					Alert.show('receipt save begin');
+					receipt.status = 0;
+					if(validateSave())
+					{
+						receiptServiceRO.save(receipt);
+					}
+				}else
+				{
+					receipt.status = 1;
+					Alert.show("register");
+					if(validateRegister())
+					{
+						receiptServiceRO.save(receipt);
+					}
+				}
+				
+			}
+			
+			private function validateSave():Boolean
+			{
+				validatorArr.push(receipt_text.title_string_validate);
+				return doValidate();
+			}
+			
+			private function validateRegister():Boolean
+			{
+				validatorArr.push(receipt_text.title_string_validate);
+				validatorArr.push(receipt_text.summary_string_validate);
+				validatorArr.push(receipt_file.zi_string_validate);
+				validatorArr.push(receipt_file.hao_string_validate);
+				validatorArr.push(receipt_file.department_string_validate);
+				validatorArr.push(receipt_file.date_string_validate);
+				validatorArr.push(receipt_file.number_string_validate);
+				validatorArr.push(receipt_file.zhutici_string_validate);
+				return doValidate();
+			}
+			
+			private function doValidate():Boolean
+			{
+				var validatorErrorArray:Array = Validator.validateAll(validatorArr);
+				var isValidForm:Boolean = validatorErrorArray.length == 0;
+				if (isValidForm) {
+					return true;
+				} else {
+					var err:ValidationResultEvent;
+					var errorMessageArray:Array = [];
+					for each (err in validatorErrorArray) {
+						var errField:String = FormItem(err.currentTarget.source.parent).label
+						errorMessageArray.push(errField + ": " + err.message);
+					}
+					Alert.show(errorMessageArray.join("\n\n"), "请按照以下错误提示信息重新填写", Alert.OK);
+					return false;
+				}
+			}
+			
+			protected function receiptServiceSave_result(event:ResultEvent):void
+			{
+				// TODO Auto-generated method stub
+				receipt = event.result as ReceiptModel;
+				Alert.show("保存成功!");
+			}
+			
+			protected function receiptServiceGet_result(event:ResultEvent):void
+			{
+				// TODO Auto-generated method stub
+				receipt = event.result as ReceiptModel;
+				receipt_text.title.text = receipt.title;
+				receipt_text.summary.text = receipt.summary;
+				var number:Array = receipt.doNumber.split("+");
+				var letter:String = number.pop();
+				receipt_file.zhutici.text = letter;
+				Alert.show("ok2");
+				receipt_file._zi.text = number[1];
+				Alert.show("ok3");
+				if(receipt.inDate != null)
+					receipt_file.in_date.text = receipt.inDate.fullYear + "-" + receipt.inDate.month + '-' + receipt.inDate.day;
+				
+				receipt_file.in_number.text = receipt.inNumber;
+				receipt_file.zhutici.text = receipt.subject;
+				receipt_text.title.text = receipt.title;
+				receipt_file.in_department.text = receipt.office;
+				//attachments here
+			}
+
+			protected function faultHandler(event:FaultEvent):void
+			{
+				// TODO Auto-generated method stub
+				Alert.show(event.fault.faultString, 'Error');
+			}
+
+		]]>
+	</fx:Script>
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+		<valueObjects:ReceiptModel id="receipt"/>
+		<s:RemoteObject concurrency="last" destination="receiptServiceDest" id="receiptServiceRO" fault="faultHandler(event)">
+			<s:method concurrency="last" name="get" result="receiptServiceGet_result(event)"/>
+			<s:method concurrency="last" name="save" result="receiptServiceSave_result(event)"/>
+		</s:RemoteObject>
 	</fx:Declarations>
-	<mx:TabNavigator width="100%" height="100%">
-		<s:NavigatorContent label="来文正文" width="100%" height="100%">
-			<content:receiptText width="100%"/>
-		</s:NavigatorContent>
-		<s:NavigatorContent label="来文登记单" width="100%" height="100%">
-			<content:receiptFile width="100%"/>
-		</s:NavigatorContent>
-	</mx:TabNavigator>
+	<s:VGroup width="100%" height="100%">
+		<s:HGroup>
+			<mx:LinkButton label="保存" click="save(event)" id="button_save"/>
+			<mx:LinkButton label="登记" click="save(event)" id="button_register"/>
+			<mx:LinkButton label="返回"/>
+		</s:HGroup>
+		<mx:TabNavigator width="100%" height="100%">
+			<s:NavigatorContent label="来文正文" width="100%" height="100%">
+				<content:receiptText width="100%" id="receipt_text"/>
+			</s:NavigatorContent>
+			<s:NavigatorContent label="来文登记单" width="100%" height="100%">
+				<content:receiptFileInput width="100%" id="receipt_file"/>
+			</s:NavigatorContent>
+		</mx:TabNavigator>
+	</s:VGroup>
 </mx:Module>

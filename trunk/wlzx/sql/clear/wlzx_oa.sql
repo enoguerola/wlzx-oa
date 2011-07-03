@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2011 年 07 月 01 日 14:48
+-- 生成日期: 2011 年 07 月 03 日 23:09
 -- 服务器版本: 5.0.91
 -- PHP 版本: 5.2.13
 
@@ -195,18 +195,18 @@ CREATE TABLE IF NOT EXISTS `wlzx_oa_overwork_apply` (
 
 CREATE TABLE IF NOT EXISTS `wlzx_oa_receipt` (
   `id` bigint(20) NOT NULL auto_increment,
-  `do_number` varchar(20) NOT NULL,
-  `office` varchar(100) NOT NULL,
-  `in_number` varchar(20) NOT NULL,
-  `in_date` date NOT NULL,
-  `subject` varchar(200) NOT NULL,
+  `do_number` varchar(20) default NULL,
+  `office` varchar(100) default NULL,
+  `in_number` varchar(20) default NULL,
+  `in_date` date default NULL,
+  `subject` varchar(200) default NULL,
   `title` varchar(200) NOT NULL,
   `summary` text,
   `status` int(4) NOT NULL,
   `is_completed` int(4) NOT NULL,
   `registed_date` date default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 --
 -- 转存表中的数据 `wlzx_oa_receipt`
@@ -224,7 +224,9 @@ CREATE TABLE IF NOT EXISTS `wlzx_oa_receipt_attachment` (
   `name` varchar(100) NOT NULL,
   `type` varchar(10) NOT NULL,
   `path` varchar(100) NOT NULL,
-  PRIMARY KEY  (`id`)
+  `receipt_id` bigint(20) NOT NULL,
+  PRIMARY KEY  (`id`),
+  KEY `receipt_id` (`receipt_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 --

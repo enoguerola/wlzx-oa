@@ -14,22 +14,23 @@
 		<![CDATA[
 			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
+			import basic.utils.DateUtil;
 			
 			private function init():void
 			{
-				var sample:ArrayCollection = new ArrayCollection([{title:"", status:"2"}, {title:"o", status:"3"}]);
-				grid.initdata(sample);
+				/*var sample:ArrayCollection = new ArrayCollection([{title:"", status:"2"}, {title:"o", status:"3"}]);
+				grid.initdata(sample);*/
 			}
 		]]>
 	</fx:Script>
 	
 	<component:WlzxPageDataGrid id="grid" width="100%" height="100%" borderVisible="false" autoLayout="true"  borderAlpha="0.2" verticalAlign="middle" pagecount="10">
 		<component:mygridcolumns>
-			<mx:DataGridColumn textAlign="center" headerText="收文标题" width="100" itemRenderer="oa.receipt.component.item.Title" dataField="title"></mx:DataGridColumn>
+			<mx:DataGridColumn textAlign="center" headerText="收文标题" width="150" itemRenderer="oa.receipt.component.item.Title"></mx:DataGridColumn>
 			<mx:DataGridColumn textAlign="center" headerText="处理状态" width="100" itemRenderer="oa.receipt.component.item.Status"/>
 			<mx:DataGridColumn textAlign="center" headerText="来文单位" width="100" itemRenderer="oa.receipt.component.item.Department"/>
-			<mx:DataGridColumn textAlign="center" headerText="来文日期" width="100" itemRenderer="oa.receipt.component.item.InDate"/>
-			<mx:DataGridColumn textAlign="center" headerText="处理" width="100" itemRenderer="oa.receipt.component.item.Handler"/>
+			<mx:DataGridColumn textAlign="center" headerText="来文日期" width="100" dataField="inDate" labelFunction="DateUtil.datagridFormatDate"/>
+			<mx:DataGridColumn textAlign="center" headerText="处理" width="80" itemRenderer="oa.receipt.component.item.Handler"/>
 		</component:mygridcolumns>
 		
 	</component:WlzxPageDataGrid>

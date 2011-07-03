@@ -3,5 +3,18 @@
 						  xmlns:s="library://ns.adobe.com/flex/spark" 
 						  xmlns:mx="library://ns.adobe.com/flex/mx" 
 						  focusEnabled="true">
-	<s:Label id="lblData" top="0" left="0" right="0" bottom="0" text="{data.status}" />
+	<fx:Script>
+		<![CDATA[
+			private function formateStatus(status:int):String
+			{
+				if(status == 0)
+					return "草稿";
+				else
+					return "已登记";
+			}
+		]]>
+	</fx:Script>
+	<s:HGroup horizontalAlign="center" verticalAlign="middle" width="100%" height="100%">
+		<s:Label top="0" left="0" right="0" bottom="0" text="{formateStatus(data.status)}" />
+	</s:HGroup>
 </s:MXDataGridItemRenderer>
