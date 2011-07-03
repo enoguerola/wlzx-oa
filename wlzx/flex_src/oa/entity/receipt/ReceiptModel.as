@@ -9,7 +9,7 @@ package oa.entity.receipt
 		public var office:String;
 		public var inNumber:String;
 		public var inDate:Date;
-		public var subject:Date;
+		public var subject:String;
 		public var title:String;
 		public var summary:String;
 		public var status:int;

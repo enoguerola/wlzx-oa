@@ -5,19 +5,52 @@
 		   xmlns:receipt="oa.receipt.component.*">
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+		<mx:RemoteObject id="receiptServiceRO" destination="receiptServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+			<mx:method name="get"  concurrency="last" result="get_resultHandler(event);"/>
+		</mx:RemoteObject>
 	</fx:Declarations>
 	
 	<fx:Script>
 		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			import mx.controls.Alert;
+			
 			private function init():void
 			{
-			
+				search();
 			}
 			
-			private function add(event:MouseEvent):void
+			public function search():void
+			{
+				var in_number:String = search_panel.in_number.text;
+				var office:String = search_panel.in_office.text;
+				var do_number:String = search_panel.do_number.text;
+				var status:String = search_panel.status.selectedItem.data;
+				var title:String = search_panel.title.text;
+				var start_date:String = search_panel.in_date_begin.text;
+				var end_date:String = search_panel.in_date_end.text;
+				
+				receiptServiceRO.get(in_number, office, do_number, status, title, start_date, end_date,
+					register_grid.grid.curpage, register_grid.grid.pagecount);
+			}
+			
+			private function get_resultHandler(event:ResultEvent):void
+			{
+				var result = event.result as ArrayCollection;
+				register_grid.grid.initdata(result);
+			}
+			
+			public function add(id:String):void
 			{
 				var parent:Object=(Object)(((Object)(this.owner)).owner);
-				parent.addTab("add_receipt","正文登记",parent.nav,"oa/receipt/register.swf",null,"");
+				parent.addTab("add_receipt","正文登记",parent.nav,"oa/receipt/registerDetail.swf",null,id);
+			}
+			
+			private function systemFaultHandler(event:FaultEvent):void
+			{
+				Alert.show(event.fault.faultString, 'Error');
 			}
 		]]>
 	</fx:Script>
@@ -27,7 +60,7 @@
 			<mx:HBox verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12" >
 				<mx:HBox width="100%" height="30" paddingLeft="20"  horizontalGap="0" backgroundColor="#C5E497"  verticalAlign="middle">
 					<mx:Label text="|"/>
-					<mx:LinkButton  label="新增" icon="@Embed(source='../WebContent/resources/common/tools/button_add_icon.png')" click="add(event)"/>
+					<mx:LinkButton  label="新增" icon="@Embed(source='../WebContent/resources/common/tools/button_add_icon.png')" click="add('')"/>
 					<mx:Label text="|"/>
 				</mx:HBox>
 			</mx:HBox>
