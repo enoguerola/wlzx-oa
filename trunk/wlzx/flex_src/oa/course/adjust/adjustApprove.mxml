@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Module  xmlns:mx="http://www.adobe.com/2006/mxml"   layout="vertical" width="100%" xmlns:valueObjects="oa.entity.course.adjust.*"  currentState="list" creationComplete="init();" height="100%" xmlns:mutiComboBox="system.component.mutiComboBox.*" xmlns:component="system.component.*" xmlns:mx1="library://ns.adobe.com/flex/mx">
+<mx:Module  xmlns:mx="http://www.adobe.com/2006/mxml"
+			xmlns:hc="com.hillelcoren.components.*"
+			xmlns:render="system.component.render.*" layout="vertical" width="100%" xmlns:valueObjects="oa.entity.course.adjust.*"  currentState="list" creationComplete="init();" height="100%" xmlns:mutiComboBox="system.component.mutiComboBox.*" xmlns:component="system.component.*" xmlns:mx1="library://ns.adobe.com/flex/mx">
 	<mx:StringValidator id="actualTeacher_stringValidator"  property="text" required="true" requiredFieldError="代课教师不能为空"/>
 	<mx:StringValidator  id="actualDate_stringValidator" property="text"  required="true" requiredFieldError="补课日期不能为空"/>
 
 	<mx:StringValidator  id="actualTime_stringValidator" property="text"  required="true" requiredFieldError="补课时间不能为空"/>
 	<mx:StringValidator id="approveTeacher_stringValidator"  property="text" required="true" requiredFieldError="审批人不能为空"/>
+	<mx:StringValidator id="approveSuggestion_stringValidator"  property="text" required="true" requiredFieldError="审批 意见 不能为空"/>
 	<mx:StringValidator  id="approveRemark_stringValidator"  property="text" required="true" requiredFieldError="审批批注不能为空"/>
 
 	<mx:states>
@@ -44,10 +47,10 @@
 		
 	</mx:transitions>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
-		<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+		<!--<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 			<mx:method name="getAllUsers"  concurrency="last"  result="getAllUsers_resultHandler(event);" />
 			
-		</mx:RemoteObject>
+		</mx:RemoteObject>-->
 		<mx:RemoteObject id="applyServiceRO" destination="courseAdjustServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 			<mx:method name="getAppliesByCondition"  concurrency="last"  result="getAppliesByCondition_resultHandler(event);" />
 			<mx:method name="deleteApplyById"  concurrency="last"  result="deleteApplyById_resultHandler(event);" />
@@ -71,7 +74,7 @@
 			import system.entity.DepartmentModel;
 			import system.entity.UserModel;
 			import system.index;
-			import system.utils.CommonUtils;
+			import system.utils.*;
 			[Bindable] 
 			public var status:ArrayCollection = new ArrayCollection( 
 				[ {label:"全部", data:null},  
@@ -80,7 +83,8 @@
 					{label:"审批未通过", data:2},
 					{label:"取消", data:3}]); 
 			public var approveStatus:ArrayCollection = new ArrayCollection( 
-				[ 	{label:"审批通过", data:1},
+				[ 	{label:"请选择", data:null},
+					{label:"审批通过", data:1},
 					{label:"审批未通过", data:2}]); 
 			public var types:ArrayCollection = new ArrayCollection( 
 				[	{label:"全部", data:null},  
@@ -101,8 +105,9 @@
 			private var validatorArr:Array;
 			public var accounts:ArrayCollection = new ArrayCollection();
 			private function init():void {	
-				accounts.addItem("");
-				systemServiceRO.getAllUsers();
+				search_account.dataProvider=this.parentApplication.allTeacherAcccounts;
+				search_date_begin.text=CommonUtils.formatDate(CommonUtils.currentMonthBeginDate(),"YYYY-MM-DD");
+				search_date_end.text=CommonUtils.formatDate(CommonUtils.currentMonthEndDate(),"YYYY-MM-DD");
 				search();
 			}
 			protected function getAllUsers_resultHandler(event:ResultEvent):void{
@@ -114,6 +119,7 @@
 			}
 			private function systemFaultHandler(event:FaultEvent):void {
 				Alert.show(event.fault.faultString, 'Error');
+				unLockWin();
 			}
 			private function saveApprove_resultHandler(event:ResultEvent):void {
 				Alert.show("审批成功");
@@ -134,6 +140,7 @@
 			protected function getAppliesByCondition_resultHandler(event:ResultEvent):void{
 				var allList:ArrayCollection=event.result as ArrayCollection;
 				applyTable.initdata(allList);
+				unLockWin();
 			}
 			public function formatDate(date:Date,format:String):String{
 				return CommonUtils.formatDate(date,format);
@@ -144,7 +151,8 @@
 			protected function search():void
 			{
 				// TODO Auto-generated method stub
-				var account:String=search_account.text;
+				lockWin();
+				var account:String=search_account_id.text;
 				var state:Object=search_state.selectedItem.data;
 				var type:Object=search_type.selectedItem.data;
 				var beginDate:String=search_date_begin.text;
@@ -171,14 +179,13 @@
 			{
 				apply=event.result as ApplyModel;
 				detail_applyType.text=types.getItemAt(apply.applyType+1).label;
-				detail_applyStatus.text=status.getItemAt(apply.applyStatus+1).label;
+				detail_applyTeacher.text=this.parentApplication.getTeacherNameByAccountId(apply.applyTeacherId);
+				detail_applyStatus.text=status.getItemAt(ComboxUtils.findIndex(status,apply.applyStatus)).label;
 				detail_applyNo.text="调课申请审批单[编号："+apply.applyNo+"]";
-				detail_applyTeacher.text=apply.applyTeacherId;
 				detail_applyReason.text=apply.applyReason;
 				detailApplyItemsRepeater.dataProvider=apply.applyItems;
 				detailApplyItemsRepeater.validateNow();
-				if(apply.approveDate==null)detail_approveDate.text=CommonUtils.formatDate(new Date());
-				else detail_approveDate.text=CommonUtils.formatDate(apply.approveDate);
+				if(apply.approveDate!=null)detail_approveDate.text=CommonUtils.formatDate(apply.approveDate);
 				if(apply.applyStatus-1>=0)
 				detail_approveStatusDescribe.selectedIndex=apply.applyStatus-1;
 				if(apply.approveTeacherId==null)detail_approveTeacher.text=this.parentApplication.account;
@@ -187,17 +194,30 @@
 				var items:ArrayCollection = ArrayCollection(apply.applyItems);
 				for (var i:int = 0; i < items.length; i++){	
 					var item:ApplyItemModel = ApplyItemModel(items.getItemAt(i));
+					detail_adjustActualTeacher[i].dataProvider=this.parentApplication.allTeacherAcccounts;
+					detail_adjustActualTeacher[i].addEventListener(Event.CHANGE,function():void{
+						var items:ArrayCollection = detail_adjustActualTeacher[i].selectedItems;
+						detail_adjustActualTeacherId[i].text="";
+						for(var i:int=0;i<items.length;i++){
+							var item:Object=items.getItemAt(i);
+							if (item != null && item.hasOwnProperty( "id" ))
+							{
+								detail_adjustActualTeacherId[i].text=item.id;
+							}           
+						}
+					});
 //					item.adjustActualDate=DateFormatter.parseDateString(detail_adjustActualDate[i].text);
-					item.adjustActualTime=detail_adjustActualTime[i].myText.text=item.adjustActualTime;
+					//item.adjustActualTime=detail_adjustActualTime[i].myText.text=item.adjustActualTime;
 //					item.adjustActualTeacherId=detail_adjustActualTeacher[i].text;
 				}
 				
 				
 			}
+			
 			protected function saveApprove(event:MouseEvent):void{
 //				var parent:Module=(Module)(this.owner);
 //				Alert.show(this.parentApplication.account);
-				Alert.show(validateInput()+"");
+				//Alert.show(validateInput()+"");
 				if(validateInput()){
 					var items:ArrayCollection = ArrayCollection(apply.applyItems);
 					for (var i:int = 0; i < items.length; i++){	
@@ -207,16 +227,18 @@
 						item.adjustActualTeacherId=detail_adjustActualTeacher[i].text;
 					}
 					apply.approveRemark=detail_approveRemark.text;
-					apply.approveTeacherId=detail_approveTeacher.text;
+					apply.approveTeacherId=detail_approveTeacherId.text;
 					apply.applyStatus=detail_approveStatusDescribe.selectedItem.data;
 					apply.approveDate=new Date();
 					applyServiceRO.saveApprove(apply);
 				}
-				Alert.show(validateInput()+"");
+				//Alert.show(validateInput()+"");
 			}
 			
 			private function validateInput():Boolean
 			{	
+//				approveSuggestion_stringValidator.source=detail_approveStatusDescribe;
+//				validatorArr.push(approveSuggestion_stringValidator);
 				for(var i:int=0;i<apply.applyItems.length;i++){
 						validatorArr = new Array();
 						actualTeacher_stringValidator.source=detail_adjustActualTeacher[i];
@@ -233,30 +255,86 @@
 						var isValidForm:Boolean = validatorErrorArray.length == 0;
 						if (!isValidForm)return false;	
 				}
+				
 				return true;
 			}
+			private function searchAccountHandleAutoCompleteChange():void
+			{
+				var color:Object = search_account.selectedItem;
+				
+				if (color != null && color.hasOwnProperty( "id" ))
+				{
+					search_account_id.text=color.id;
+				} else{
+					search_account_id.text="";
+				}               
+			}
+			private function actualTeacherSelectAutoCompleteChange(event:Event):void
+			{
+				for(var i:int=0;i<apply.applyItems.length;i++){
+					if(event.target==detail_adjustActualTeacher[i]){
+						var items:ArrayCollection = detail_adjustActualTeacher[i].selectedItems;
+					
+						for(var j:int=0;j<items.length;j++){
+							var item:Object=items.getItemAt(j);
+							if (item != null && item.hasOwnProperty( "id" ))
+							{
+								detail_adjustActualTeacherId[i].text=item.id;
+							}           
+						}
+						break;
+					}
+				
+				}
 			
+				
+				
+			}
+			import system.component.WlzxLockWin;
+			private var window:WlzxLockWin=null;
+			private function lockWin():void{
+				if(window==null){
+					window=WlzxLockWin(PopUpManager.createPopUp(this,WlzxLockWin,true)); 
+					PopUpManager.centerPopUp(window);
+					window.percentHeight=100;
+					window.percentWidth=100;			
+				}
+			}
+			private function unLockWin():void{
+				if(window!=null)
+					PopUpManager.removePopUp(window);
+			}
+			public function detailApply(id:String):void{
+				var parent:Object=(Object)(((Object)(this.owner)).owner);
+				
+				parent.addTab("applyForm-detail"+"_"+id,"调课详单",parent.nav,"oa/course/adjust/adjustApplyForm.swf",null,id);
+					
+			}
 		]]> 		
 	</mx:Script> 
-	<mx:Panel width="100%" height="100%"  styleName="customPanel" title="调课审批"  borderVisible="false" dropShadowVisible="false" >
+	
+	<mx:Component id="searchAccountDropDownItemRenderer">
+		<render:AdvancedItemRenderer selectedItems="{ outerDocument.search_account.selectedItems }" />
+	</mx:Component>
+	<mx:VBox borderVisible="true" width="100%" height="100%" borderStyle="solid">
 		<mx:VBox width="100%" height="100%" id="listPanel">
-			<mx:HBox verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12">
-				<mx:HBox width="100%" height="30" paddingLeft="20"  horizontalGap="0" backgroundColor="#C5E497"  verticalAlign="middle">
-					
-				</mx:HBox>
-			</mx:HBox>
+			
 			<mx:VBox width="100%" height="100%"  verticalGap="10" verticalAlign="middle" horizontalAlign="center" >
-				<mx:VBox width="100%" height="100"   horizontalGap="10" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
+				<mx:VBox width="100%" height="120"   horizontalGap="10" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
 					<mx:FormHeading label="条件查询">
 						
 					</mx:FormHeading>
 					<mx:HBox>
+					
 						<mx:HBox verticalAlign="middle">
-							<mx:Label  text="申请人"  width="100"  textAlign="right"/>
-							<component:AutoComplete id="search_account"  IsfocusInDropDown="true"  IsAutoComplete="true" width="120" >
+							<mx:Label  text="申请教师"  width="100"  textAlign="right"/>
+							<hc:AutoComplete id="search_account"  labelField="name"  width="150"  matchType="anyPart" prompt="选择教师"  change="{ searchAccountHandleAutoCompleteChange() }" dropDownItemRenderer="{ searchAccountDropDownItemRenderer }" selectedItemStyleName="none">
 								
-							</component:AutoComplete>
-						</mx:HBox>	
+							</hc:AutoComplete>
+							<mx:Label id="search_account_id" visible="false">
+								
+							</mx:Label>
+						</mx:HBox>
 						<mx:HBox>
 							<mx:Label  text="申请类型"  width="100"  textAlign="right"/>
 							<mx:ComboBox id="search_type"  dataProvider="{types}" selectedIndex="0"  editable="false" width="80"/>
@@ -303,7 +381,7 @@
 									<mx:itemRenderer>
 										<mx:Component>
 											<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
-												<mx:Label text="{data.applyTeacherId}"/>
+												<mx:Label text="{this.parentApplication.getTeacherNameByAccountId(data.applyTeacherId)}"/>
 											</mx:VBox>
 										</mx:Component>
 									</mx:itemRenderer>
@@ -344,7 +422,15 @@
 										</mx:Component>
 									</mx:itemRenderer>
 								</mx:DataGridColumn>								
-								
+								<mx:DataGridColumn textAlign="center" headerText="调课事由" dataField="applyReason" width="300">
+									<mx:itemRenderer>
+										<mx:Component>
+											<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+												<mx:Label text="{data.applyReason}"/>
+											</mx:VBox>																			
+										</mx:Component>						
+									</mx:itemRenderer>
+								</mx:DataGridColumn>
 								<mx:DataGridColumn textAlign="center" headerText="申请状态" dataField="applyStatus" width="60">
 									<mx:itemRenderer>
 										<mx:Component>
@@ -378,35 +464,41 @@
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
 								
-								<mx:DataGridColumn textAlign="center" headerText="审批" width="100">
+								<mx:DataGridColumn textAlign="center" headerText="操作" width="100">
 									<mx:itemRenderer>
 										<mx:Component>
-											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0">
-												<mx:LinkButton  label="[审批]"   click="{this.outerDocument.enterApprove(data.id);}"   enabled="{checkAuth(data)}">											
-												</mx:LinkButton>
-												
-												<mx:Script>
-													<![CDATA[
+											<mx:HBox>
+												<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0">
+													<mx:LinkButton  label="[审批]"   click="{this.outerDocument.enterApprove(data.id);}"   enabled="{checkAuth(data)}">											
+													</mx:LinkButton>
 													
-													//提示信息
-													import cn.org.rapid_framework.flex_security.SecurityControler;
-													
-													import mx.controls.Alert;
-													import mx.core.UIComponent;
-													private function checkAuth(data:Object):Boolean{
-													
-													if(data!=null){	
-													if(data.applyStatus==3){
-														return false;
-													}else
-														return true;
-													
-													}else{
-													return false;
-													}
-													}
-													]]>
-												</mx:Script>
+													<mx:Script>
+														<![CDATA[
+															
+															//提示信息
+															import cn.org.rapid_framework.flex_security.SecurityControler;
+															
+															import mx.controls.Alert;
+															import mx.core.UIComponent;
+															private function checkAuth(data:Object):Boolean{
+																
+																if(data!=null){	
+																	if(data.applyStatus==3){
+																		return false;
+																	}else
+																		return true;
+																	
+																}else{
+																	return false;
+																}
+															}
+														]]>
+													</mx:Script>
+												</mx:HBox>
+												<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0">
+													<mx:LinkButton  label="[删除]"   click="{this.outerDocument.deleteApply(data.id);}">											
+													</mx:LinkButton>
+												</mx:HBox>
 											</mx:HBox>
 											
 											
@@ -414,14 +506,13 @@
 										
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="删除"  width="50">
+								<mx:DataGridColumn textAlign="center" headerText="详细"  width="50">
 									<mx:itemRenderer>
 										<mx:Component>
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0">
-												<mx:LinkButton  label="[删除]"   click="{this.outerDocument.deleteApply(data.id);}">											
+												<mx:LinkButton  label="[详细]"   click="{this.outerDocument.detailApply(data.id);}">											
 												</mx:LinkButton>
 											</mx:HBox>
-											
 										</mx:Component>
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
@@ -506,14 +597,14 @@
 												<mx1:Text  text="意向教师" width="60" textAlign="center"/>
 											</mx:GridItem>
 											<mx:GridItem  borderStyle="solid" verticalAlign="middle">
-												<mx1:Text  text="代课教师" width="80" textAlign="center"/>
+												<mx1:Text  text="指派教师" width="200" textAlign="center"/>
 											</mx:GridItem>
 											<mx:GridItem  borderStyle="solid" verticalAlign="middle">
 												<mx1:Text  text="补课时间"  width="200" textAlign="center"/>
 											</mx:GridItem>
 										</mx:GridRow>
 										<mx:Repeater id="detailApplyItemsRepeater">
-											
+										
 											<mx:GridRow  autoLayout="true" horizontalAlign="center" verticalAlign="middle" >
 												<mx:GridItem  borderStyle="solid"  verticalAlign="middle">
 													<mx1:Text text="{detailApplyItemsRepeater.currentItem.applyClass}"  width="60" textAlign="center"/>
@@ -528,18 +619,23 @@
 													<mx1:Text  textAlign="center"  text="{formatDate((detailApplyItemsRepeater.currentItem.adjustMeanDate) as Date,'YYYY-MM-DD')}"  />
 												</mx:GridItem>
 												<mx:GridItem  borderStyle="solid" verticalAlign="middle">
-													<mx1:Text width="60" textAlign="center" text="{detailApplyItemsRepeater.currentItem.adjustMeanTeacherId}" />
+													<mx1:Text width="60" textAlign="center" text="{parentApplication.getTeacherNameByAccountId(detailApplyItemsRepeater.currentItem.adjustMeanTeacherId)}" />
+
 												</mx:GridItem>
 												
-												<mx:GridItem  borderStyle="solid" verticalAlign="middle" width="80" horizontalAlign="center">
-													<component:AutoComplete id="detail_adjustActualTeacher"  IsfocusInDropDown="true"  IsAutoComplete="true" width="70"  text="{detailApplyItemsRepeater.currentItem.adjustActualTeacherId}" >
+												<mx:GridItem  borderStyle="solid" verticalAlign="middle" width="120" horizontalAlign="center">
+													
+															<hc:AutoComplete id="detail_adjustActualTeacher"  labelField="name"  width="120"     matchType="anyPart" prompt="选择" selectedItemStyleName="none">
+																
+															</hc:AutoComplete>
+															<mx:Label  text=""   id="detail_adjustActualTeacherId" visible="false"/>
 														
-													</component:AutoComplete>
+													
 												</mx:GridItem>
 												<mx:GridItem  borderStyle="solid" verticalAlign="middle" width="300" horizontalAlign="center">
 													<mx:HBox>
-														<mx:DateField yearNavigationEnabled="true" id="detail_adjustActualDate"   formatString="YYYY-MM-DD"  editable="false" width="100" text="{formatDate((detailApplyItemsRepeater.currentItem.adjustActualDate) as Date,'YYYY-MM-DD')}"/>
-														<mutiComboBox:MyDropList id="detail_adjustActualTime"  dataProvider="{courseSections}"  width="180">
+														<mx:DateField yearNavigationEnabled="true" id="detail_adjustActualDate"   formatString="YYYY-MM-DD"  width="100" />
+														<mutiComboBox:MyDropList id="detail_adjustActualTime"  dataProvider="{new ArrayCollection(CommonUtils.clone(courseSections.toArray()))}"  width="180">
 															
 														</mutiComboBox:MyDropList>
 													</mx:HBox>
@@ -582,7 +678,8 @@
 								<mx:Label  text="审批人"   textAlign="right" />
 							</mx:GridItem>
 							<mx:GridItem  borderStyle="none"  verticalAlign="middle" horizontalAlign="center">
-								<mx:TextInput width="120"   alpha="0.5" id="detail_approveTeacher"/>
+								<mx:TextInput width="120"   alpha="0.5" id="detail_approveTeacher"  text="{this.parentApplication.currentUser.name}" editable="false"/>
+								<mx:Label width="120"   alpha="0.5" id="detail_approveTeacherId" visible="false" text="{this.parentApplication.currentUser.id}"/>
 							</mx:GridItem>
 							<mx:GridItem  borderStyle="none"  verticalAlign="middle" horizontalAlign="right">
 								
@@ -609,5 +706,5 @@
 			</mx:VBox>
 		</mx:VBox>
 		
-	</mx:Panel>
+	</mx:VBox>
 </mx:Module>

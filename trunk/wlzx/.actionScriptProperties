@@ -73,6 +73,7 @@
     <module application="flex_src/home.mxml" destPath="oa/attendance/overWorkForm.swf" optimize="false" sourcePath="flex_src/oa/attendance/overWorkForm.mxml"/>
     <module application="flex_src/home.mxml" destPath="oa/receipt/registerList.swf" optimize="true" sourcePath="flex_src/oa/receipt/registerList.mxml"/>
     <module application="flex_src/home.mxml" destPath="basic/staff/staffList.swf" optimize="false" sourcePath="flex_src/basic/staff/staffList.mxml"/>
+    <module destPath="oa/course/adjust/adjustApplyForm.swf" optimize="false" sourcePath="flex_src/oa/course/adjust/adjustApplyForm.mxml"/>
   </modules>
   <buildCSSFiles/>
 </actionScriptProperties>
