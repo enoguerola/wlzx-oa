@@ -3,17 +3,20 @@
 						  xmlns:s="library://ns.adobe.com/flex/spark" 
 						  xmlns:mx="library://ns.adobe.com/flex/mx" 
 						  focusEnabled="true" creationComplete="init()">
+
 	<fx:Declarations>
-		<s:RemoteObject concurrency="last" id="receiptServiceRO" destination="receiptServiceRest" fault="receiptServiceRO_faultHandler(event)">
+		<s:RemoteObject concurrency="last" id="receiptServiceRO" destination="receiptServiceDest" fault="receiptServiceRO_faultHandler(event)">
 			<s:method concurrency="last" name="remove" result="remove_resultHandler(event)"/>
+			<s:method concurrency="last" name="register" result="remove_resultHandler(event)"/>
 		</s:RemoteObject>
 	</fx:Declarations>
 	<fx:Script>
 		<![CDATA[
 			import mx.controls.Alert;
+			import mx.events.CloseEvent;
+			import mx.events.FlexEvent;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
-			import mx.events.CloseEvent;
 			
 			private var step:String;
 		
@@ -21,10 +24,8 @@
 			{
 				var parent:Object=(Object)(((Object)(((Object)(this.owner)).owner)).owner);
 				if(parent.id == "register_grid"){
-					Alert.show("register");
 					remove_button.label = "删除";
 					step = this.data.step;
-					edit_button.visible = true;
 				}
 			}
 			
@@ -45,6 +46,16 @@
 					}
 				});
 			}
+			
+			private function register(id:String):void
+			{
+				Alert.show("你确定要登记该公告吗?", "确定" ,Alert.YES | Alert.NO,null,function(event:CloseEvent):void{
+					if(event.detail == Alert.YES)
+					{
+						receiptServiceRO.register(id);
+					}
+				});
+			}
 
 			protected function receiptServiceRO_faultHandler(event:FaultEvent):void
 			{
@@ -55,14 +66,25 @@
 			protected function remove_resultHandler(event:ResultEvent):void
 			{
 				// TODO Auto-generated method stub
-				var parent:Object = (Object)((Object)(this.owner)).owner;
+				var parent:Object = ((Object)(this.parentDocument)).parentDocument;
 				parent.search();
+			}
+
+			protected function register_button_creationCompleteHandler(status:int):void
+			{
+				// TODO Auto-generated method stub
+				if(status == 1){
+					register_button.enabled = false;
+				}
 			}
 
 		]]>
 	</fx:Script>
 	<s:HGroup horizontalAlign="center" verticalAlign="middle" width="100%" height="100%">
 		<mx:LinkButton click="{remove(data.id)}" id="remove_button"/>
-		<mx:LinkButton click="{edit(data.id)}" id="edit_button" visible="false" label="编辑"/>
+		<mx:LinkButton click="{edit(data.id)}" id="edit_button" label="编辑"/>
+		<mx:LinkButton click="{register(data.id)}" id="register_button" label="登记"
+					   creationComplete="register_button_creationCompleteHandler(data.status)">
+		</mx:LinkButton>
 	</s:HGroup>
 </s:MXDataGridItemRenderer>

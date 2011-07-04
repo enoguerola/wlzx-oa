@@ -1,16 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Module xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		   xmlns:s="library://ns.adobe.com/flex/spark" 
-		   xmlns:mx="library://ns.adobe.com/flex/mx" layout="vertical" width="100%" height="100%" creationComplete="init"
+		   xmlns:mx="library://ns.adobe.com/flex/mx" layout="vertical" width="100%" height="100%" creationComplete="init()"
 		   xmlns:receipt="oa.receipt.component.*">
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+		<mx:RemoteObject id="receiptServiceRO" destination="receiptServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+			<mx:method name="get" concurrency="last" result="get_resultHandler(event);"/>
+			<mx:method name="complete" concurrency="last" result="complete_resultHandler(event);"/>
+		</mx:RemoteObject>
 	</fx:Declarations>
 	<fx:Script>
 		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			import mx.controls.Alert;
+			
 			private function init():void
 			{
+				search();
+			}
+			
+			public function search():void
+			{
+				search_panel.status.dataProvider = search_panel.step_list;
+				var in_number:String = search_panel.in_number.text;
+				var office:String = search_panel.in_office.text;
+				var do_number:String = search_panel.do_number.text;
+				Alert.show(search_panel.status.selectedItem.data);
+				var status:String = search_panel.status.selectedItem.data;
+				var title:String = search_panel.title.text;
+				var start_date:String = search_panel.in_date_begin.text;
+				var end_date:String = search_panel.in_date_end.text;
 				
+				receiptServiceRO.get(in_number, office, do_number, status, title, start_date, end_date,
+					manage_grid.grid.curpage, manage_grid.grid.pagecount);
+			}
+			
+			public function complete(id:String):void
+			{
+				Alert.show("2");
+				receiptServiceRO.complete(id);
+			}
+			
+			private function get_resultHandler(event:ResultEvent):void
+			{
+				var result = event.result as ArrayCollection;
+				manage_grid.grid.initdata(result);
+			}
+			
+			private function complete_resultHandler(event:ResultEvent):void
+			{
+				Alert.show("设置成功");
+				search();
+			}
+			
+			private function systemFaultHandler(event:FaultEvent):void
+			{
+				Alert.show(event.fault.faultString, 'Error');
 			}
 		]]>
 	</fx:Script>
@@ -22,7 +70,7 @@
 				</mx:VBox>
 			</mx:VBox>
 			<mx:VBox width="100%" height="75%"  verticalAlign="middle" horizontalAlign="center" paddingTop="20">
-				<receipt:datagrid id="list"/>
+				<receipt:manageDatagrid id="manage_grid"/>
 			</mx:VBox>
 		</mx:VBox>
 	</mx:Panel>
