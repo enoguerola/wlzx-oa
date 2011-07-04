@@ -36,8 +36,9 @@
 
 			private function init():void {
 				var parms:String=((Object)(this.owner)).id;
-//				Alert.show(parms);
-				if(parms!=null){
+				//Alert.show(parms);
+				if(parms!=null&&parms!='null'&&parms!=''){
+					//Alert.show("b");
 					var accountId:String=parms.split(";")[0];
 					var beginDate:String=parms.split(";")[1];
 					var endDate:String=parms.split(";")[2];
@@ -46,11 +47,14 @@
 					search_date_begin.text=beginDate;
 					search_date_end.text=endDate;
 				}else{
+					//Alert.show("a");
 					search_account_id.text=this.parentApplication.currentUser.id;
 					search_account_name.text=this.parentApplication.getTeacherNameByAccountId(search_account_id.text)+"考勤统计详单";
+					//Alert.show(search_account_name.text);
 					var date:Date=new Date();
 					search_date_begin.text=CommonUtils.formatDate(CommonUtils.currentMonthBeginDate(),"YYYY-MM-DD");
 					search_date_end.text=CommonUtils.formatDate(CommonUtils.currentMonthEndDate(),"YYYY-MM-DD");
+					//Alert.show(search_date_end.text);
 				}
 				
 				callLater(search);
@@ -182,8 +186,7 @@
 			}
 		]]> 		
 	</fx:Script> 
-	
-	<s:Panel width="100%" height="100%"  styleName="customPanel" title="个人考勤"  borderVisible="false" dropShadowVisible="false">
+	<mx:VBox borderVisible="true" width="100%" height="100%" borderStyle="solid">
 		<mx:VBox width="100%"     verticalGap="0" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
 			<mx:VBox width="100%" horizontalAlign="center" verticalGap="0" height="60">
 				<mx:HBox width="100%" horizontalAlign="center">
@@ -525,7 +528,6 @@
 				
 			</mx:Panel>
 		</mx:VBox>
+	</mx:VBox>	
 		
-		
-	</s:Panel>
 </mx:Module>

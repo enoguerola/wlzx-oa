@@ -81,20 +81,33 @@ public class CourseAdjustServiceImpl implements CourseAdjustService{
 	@Override
 	public boolean applyUpdate(ApplyModel apply, Set<ApplyItemModel> applyItems) {
 		// TODO Auto-generated method stub
+		ApplyModel newApply=courseAdjustDAO.get(apply.getId());
+		if(newApply.getApplyStatus()==ApplyModel.ApplyStatus.DENY.getStatus()){
+			return false;
+		}else{
+			newApply.getApplyItems().removeAll(newApply.getApplyItems());
+			courseAdjustDAO.saveOrUpdate(newApply);
+			newApply.setApplyItems(applyItems);
+			newApply.setApplyReason(apply.getApplyReason());
+			newApply.setApplyType(apply.getApplyType());
+			ApplyWorkFlowLog log=new ApplyWorkFlowLog();
+			log.setOperationName("编辑申请");
+			log.setOperationResult("编辑编号为"+apply.getApplyNo()+"的申请记录");
+			log.setOperationTime(new Date());
+			log.setOperationTeacherId(apply.getApplyTeacherId());
+			newApply.getLogs().add(log);
+			courseAdjustDAO.saveOrUpdate(newApply);
+			return true;
+		}
 //		ApplyModel preApply=courseAdjustDAO.get(apply.getId());
 //		preApply.getApplyItems().removeAll(preApply.getApplyItems());
 //		courseAdjustDAO.saveOrUpdate(preApply);	
 //		ApplyModel newApply=courseAdjustDAO.get(apply.getId());
 //		newApply.setApplyItems(applyItems);
-		ApplyWorkFlowLog log=new ApplyWorkFlowLog();
-		log.setOperationName("编辑申请");
-		log.setOperationResult("编辑编号为"+apply.getApplyNo()+"的申请记录");
-		log.setOperationTime(new Date());
-		log.setOperationTeacherId(apply.getApplyTeacherId());
-		apply.getLogs().add(log);
-		courseAdjustDAO.saveOrUpdate(apply);
 		
-		return true;
+//		courseAdjustDAO.saveOrUpdate(apply);
+		
+//		return true;
 	}
 //	
 //	public static void main(String[] args) {

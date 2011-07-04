@@ -318,7 +318,7 @@
 			}
 		]]> 		
 	</mx:Script> 
-	<mx:Panel width="100%" height="100%"   title="请假/出差登记"  borderVisible="false" id="panel" dropShadowVisible="false" >
+	<mx:VBox borderVisible="true" width="100%" height="100%" borderStyle="solid">
 
 		
 		<mx:VBox width="100%" height="100%" id="listPanel">
@@ -659,7 +659,7 @@
 									<mx:HBox>
 										<mx:RadioButtonGroup id="vicePrincipal_approve_status" enabled="false"/>  
 										<mx:RadioButton group="{vicePrincipal_approve_status}" value="1" label="通过" width="80" enabled="false"/>  
-										<mx:RadioButton group="{vicePrincipal_approve_status}" value="2" label="不通过" width="80" />  
+										<mx:RadioButton group="{vicePrincipal_approve_status}" value="2" label="不通过" width="80" enabled="false"/>  
 										<mx:Label text="签名："/>
 										<mx:TextInput width="120"   alpha="0.5" id="vicePrincipal_approver_name" enabled="false"/>
 										<mx:Label  text=""   id="vicePrincipal_approver_id"  visible="false"/>
@@ -940,5 +940,5 @@
 			</mx:VBox>
 		</mx:VBox>
 		
-	</mx:Panel>
+	</mx:VBox>
 </mx:Module>

@@ -97,6 +97,7 @@
 		
 		]]> 		
 	</mx:Script> 
+	<mx:VBox borderVisible="true" width="100%" height="100%" borderStyle="solid">
 	<mx:VBox width="100%" height="50%"   horizontalGap="10" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
 		<mx:HBox width="100%" horizontalAlign="center">
 			<mx:Label  text="调课申请单" id="detail_applyNo"   width="100%"  letterSpacing="5" textAlign="center" fontSize="14"  fontWeight="bold" height="30" />
@@ -298,5 +299,6 @@
 				</component:mygridcolumns>
 			</component:WlzxPageDataGrid>
 		</mx:Panel>
+		</mx:VBox>
 		</mx:VBox>
 </mx:Module>
