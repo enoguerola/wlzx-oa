@@ -313,6 +313,8 @@
 						teacherId = teacher.id;
 						userID = teacher.userID;
 						Alert.show("添加成功");
+						//重新加载帐号姓名对应全局信息
+						this.parentApplication.teacherAccountBridgeServiceRO.teacherAccountGetAll();
 					}
 				}else{
 					Alert.show("添加失败");

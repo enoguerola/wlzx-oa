@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2011 年 07 月 02 日 10:17
+-- 生成日期: 2011 年 07 月 04 日 12:27
 -- 服务器版本: 5.0.91
 -- PHP 版本: 5.2.13
 
@@ -60,12 +60,16 @@ CREATE TABLE IF NOT EXISTS `basic_teacher` (
   PRIMARY KEY  (`teacher_id`),
   KEY `teacher_no` (`teacher_no`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='教师记录' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='教师记录' AUTO_INCREMENT=4 ;
 
 --
 -- 转存表中的数据 `basic_teacher`
 --
 
+INSERT INTO `basic_teacher` (`teacher_id`, `user_id`, `teacher_cname`, `teacher_sex`, `teacher_birthday`, `teacher_marrage`, `teacher_nation`, `teacher_politics_status`, `teacher_identify`, `teacher_native_place`, `teacher_email`, `teacher_home_phone`, `teacher_address`, `teacher_mobile_phone`, `teacher_no`, `teacher_education`, `teacher_profession`, `teacher_graduate_school`, `teacher_professional_title`, `teacher_skill_level`, `teacher_skill_level_date`, `teacher_department`, `teacher_position`, `teacher_office_phone`, `teacher_contact_phone`, `teacher_work_date`, `teacher_attend_date`, `teacher_status`, `teacher_photo_src`, `teacher_create_date`, `teacher_modified_date`) VALUES
+(1, 2, '余峰', 0, '1990-08-03', 1, '汉', 0, '', '', 'yufeng@126.com', '', '浙江衢州', '***********', '561963', '硕士', '计算机', '浙江大学', '高级', '1', '1990-08-03', NULL, NULL, '280561221', '', '1900-12-12', '1992-08-03', 1, NULL, '2011-07-02', '2011-07-02'),
+(2, 3, '吴裕岳', 0, '1987-02-24', 0, '汉', 2, '******************', '浙江温州', 'wuyuyue@126.com', '0577-********', '浙江温州瑞安', '***********', '561997', '本科', '软件工程', '杭州电子科技大学', '高级', '2', '2005-08-03', NULL, NULL, '280561221', '13732261801', '2000-01-01', '2010-11-11', 1, NULL, '2011-07-02', '2011-07-02'),
+(3, 4, '张三', 0, '2011-07-12', 0, 'A', 0, '111111111111111111', 'AB', '', '', '', '', '123456', '0', '', '', '', '', NULL, NULL, NULL, '', '', NULL, NULL, 0, 'uploads/basic/teacherProfile/default_head.jpg', '2011-07-04', '2011-07-04');
 
 -- --------------------------------------------------------
 

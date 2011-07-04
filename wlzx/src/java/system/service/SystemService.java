@@ -165,13 +165,10 @@ public class SystemService{
 		return  authSystem;
 	}
 	private void filterAuthorization(MenuModel authMenu,Set<DataAccessModeModel> dams){
+		
 		StringBuilder filterMenus=new StringBuilder("");
 		for(MenuModel menu:authMenu.getChildren()){
-			if(menu.getChildren()!=null&&menu.getChildren().size()>0){
-				for(MenuModel subMenu:menu.getChildren()){
-					filterAuthorization(subMenu,dams);
-				}
-			}
+			
 			boolean filter=true;							
 			for(DataAccessModeModel dam:menu.getDams()){//用户权限含该菜单部分权限集则不用过滤
 				if(dams.contains(dam)){
@@ -181,6 +178,12 @@ public class SystemService{
 			}
 			if(filter==true){
 				filterMenus.append(menu.getId()+";");
+			}else{
+//				if(menu.getChildren()!=null&&menu.getChildren().size()>0){
+//					for(MenuModel subMenu:menu.getChildren()){
+						filterAuthorization(menu,dams);
+//					}
+//				}
 			}
 			
 		}

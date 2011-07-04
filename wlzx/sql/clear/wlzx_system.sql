@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2011 年 07 月 02 日 16:45
+-- 生成日期: 2011 年 07 月 04 日 12:26
 -- 服务器版本: 5.0.91
 -- PHP 版本: 5.2.13
 
@@ -293,19 +293,19 @@ INSERT INTO `wlzx_system_menu` (`id`, `name`, `symbol`, `sequence`, `detail`, `m
 (44, '调课管理', 'adjust_class', 0, '', '', '2011-05-27 00:00:00', '2011-05-27 22:28:44'),
 (45, '会议管理', 'conference_manage', 0, '', '', '2011-05-27 00:00:00', '2011-05-27 22:29:34'),
 (46, '考勤管理', 'attendance_manager', 0, '', '', '2011-05-27 00:00:00', '2011-05-27 22:30:15'),
-(47, '调课申请', 'adjust_class_apply', 0, '', '', '2011-05-27 00:00:00', '2011-05-27 22:32:02'),
+(47, '调课申请', 'adjust_class_apply', 3, '', '', '2011-05-27 00:00:00', '2011-05-27 22:32:02'),
 (48, '调课审批', 'adjust_class_apply_approve', 1, '', '', '2011-05-27 00:00:00', '2011-05-27 22:33:09'),
 (49, '教师管理', 'teacher_manager', 0, '', '', '2011-05-27 00:00:00', '2011-05-27 22:38:31'),
 (50, '个人办公', 'personal_office', 0, '', 'personal_office', '2011-06-03 00:00:00', '2011-07-01 23:15:09'),
-(51, '请假出差', 'personal_office_takeLeaveApply', 3, '', '', '2011-06-03 00:00:00', '2011-06-03 11:28:47'),
-(52, '加班申请', 'personal_office_overWork Apply', 4, '', '', '2011-06-03 00:00:00', '2011-06-03 11:29:51'),
-(53, '个人考勤', 'personal_office_canculateAttendance', 6, '', '', '2011-06-03 00:00:00', '2011-06-03 11:31:08'),
+(51, '请假出差', 'personal_office_takeLeaveApply', 4, '', '', '2011-06-03 00:00:00', '2011-06-03 11:28:47'),
+(52, '加班申请', 'personal_office_overWork Apply', 5, '', '', '2011-06-03 00:00:00', '2011-06-03 11:29:51'),
+(53, '个人考勤', 'personal_office_canculateAttendance', 7, '', '', '2011-06-03 00:00:00', '2011-06-03 11:31:08'),
 (54, '我的工作', 'personal_office_workDetail', 0, '', '', '2011-06-03 00:00:00', '2011-06-03 11:32:05'),
 (55, '请假出差审批', 'attendance_manager_takeLeaveApprove', 0, '', '', '2011-06-03 00:00:00', '2011-06-03 11:33:25'),
 (56, '加班审批', 'attendance_manager_overWorkApprove', 1, '', '', '2011-06-03 00:00:00', '2011-06-03 11:34:01'),
 (57, '考勤统计', 'attendance_manager_canculateAttendance', 3, '', '', '2011-06-03 00:00:00', '2011-06-03 11:34:50'),
 (58, '我的消息', 'personal_office_messageDeal', 2, '', '', '2011-06-03 00:00:00', '2011-06-03 11:36:28'),
-(59, '调休申请', 'moveRestDay_apply', 5, '', '', '2011-06-10 00:00:00', '2011-06-10 16:10:32'),
+(59, '调休申请', 'moveRestDay_apply', 6, '', '', '2011-06-10 00:00:00', '2011-06-10 16:10:32'),
 (60, '调休审批', 'moveRestDay_approve', 2, '', '', '2011-06-10 00:00:00', '2011-06-10 21:14:42'),
 (61, '我的公告', 'person_notice', 1, '', '', '2011-06-16 00:00:00', '2011-06-16 00:01:41'),
 (62, '学校公告', 'school_notice_read', 3, '', '', '2011-06-16 00:00:00', '2011-06-16 00:02:52'),
@@ -446,7 +446,7 @@ INSERT INTO `wlzx_system_menu_treeship` (`id`, `parent_id`, `child_id`) VALUES
 (39, 9, 44),
 (40, 9, 45),
 (41, 9, 46),
-(42, 44, 47),
+(42, 50, 47),
 (43, 44, 48),
 (44, 31, 49),
 (45, 50, 51),
@@ -820,7 +820,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_role_dam_relationship` (
   `role_id` bigint(20) NOT NULL,
   `dam_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=93 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=106 ;
 
 --
 -- 转存表中的数据 `wlzx_system_role_dam_relationship`
@@ -865,7 +865,20 @@ INSERT INTO `wlzx_system_role_dam_relationship` (`id`, `role_id`, `dam_id`) VALU
 (89, 1, 49),
 (90, 1, 50),
 (91, 1, 51),
-(92, 1, 52);
+(92, 1, 52),
+(93, 3, 45),
+(94, 3, 35),
+(95, 3, 36),
+(96, 3, 34),
+(97, 3, 16),
+(98, 3, 25),
+(99, 3, 13),
+(100, 3, 14),
+(101, 3, 37),
+(102, 3, 11),
+(103, 3, 32),
+(104, 3, 51),
+(105, 3, 52);
 
 -- --------------------------------------------------------
 
@@ -989,7 +1002,10 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_user` (
 --
 
 INSERT INTO `wlzx_system_user` (`id`, `symbol`, `sequence`, `name`, `password`, `last_login_time`, `last_login_ip`, `account_style`, `person_id`, `person_name`, `email`, `creation_date`, `modified_date`, `active`, `main_role_id`, `main_department_id`) VALUES
-(1, 'super_root', 0, 'super_root', '134bca5421a15476a1e5ebaebdba1ede', '2011-07-02 16:33:55', '0:0:0:0:0:0:0:1', -1, NULL, NULL, NULL, '2011-05-07 11:04:22', '2011-07-01 15:09:45', 1, NULL, NULL);
+(1, 'super_root', 0, 'super_root', '134bca5421a15476a1e5ebaebdba1ede', '2011-07-04 11:17:54', '127.0.0.1', -1, NULL, NULL, NULL, '2011-05-07 11:04:22', '2011-07-01 15:09:45', 1, NULL, NULL),
+(2, '561963', 0, '561963', 'dbac5d7ccc16692c49ff7908bb3f7b70', '2011-07-04 10:54:44', '127.0.0.1', 0, NULL, NULL, 'yufeng@126.com', '2011-07-02 22:19:01', '2011-07-02 22:19:03', 1, 1, 1),
+(3, '561997', 0, '561997', '82972ecd5fa6a0c5d278e47255bdc3e4', '2011-07-04 09:10:47', '127.0.0.1', 0, NULL, NULL, 'wuyuyue@126.com', '2011-07-02 22:19:03', '2011-07-02 22:19:04', 1, 15, 9),
+(4, '123456', 0, '123456', 'e10adc3949ba59abbe56e057f20f883e', '2011-07-04 11:25:28', '127.0.0.1', 0, NULL, NULL, '', '2011-07-04 09:48:42', '2011-07-04 09:48:43', 1, 3, 3);
 
 -- --------------------------------------------------------
 

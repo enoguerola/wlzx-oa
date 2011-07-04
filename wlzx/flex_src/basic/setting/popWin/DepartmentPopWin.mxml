@@ -118,6 +118,8 @@
 					var parent:departmentSetting = this.owner as departmentSetting;
 					parent.selectedNode.appendChild(departmentData);
 					PopUpManager.removePopUp(this);
+					//重新加载部门全局信息
+					this.parentApplication.systemServiceRO.getDepartmentBySymbol("root");
 				}else{
 					Alert.show("添加失败");
 				}
