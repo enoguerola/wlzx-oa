@@ -145,7 +145,7 @@
 				if(_emergence.selected)
 					emergence = 1;
 				var department:String = search_department.selectedItem.data;
-				Alert.show(department);
+//				Alert.show(department);
 				var submitBeginDate:String=search_date_begin.text;
 				var submitEndDate:String=search_date_end.text;
 				noticeServiceRO.getNoticesByConditions(teacher,type,scope,emergence + "", department, "","1",
@@ -263,7 +263,7 @@
 			private function showHide():void
 			{
 				if(att_area.height==0)
-					att_area.height=420;
+					att_area.height=350;
 				else 
 					att_area.height=0;
 			}
@@ -273,7 +273,7 @@
 		<render:AdvancedItemRenderer selectedItems="{ outerDocument.search_account.selectedItems }" />
 	</mx:Component>
 	
-	<mx:Panel width="100%" height="100%"   title="公告管理"  borderVisible="false" id="panel" dropShadowVisible="false" >
+	<mx:VBox borderVisible="true" width="100%" height="100%" borderStyle="solid">
 		<mx:VBox width="100%" height="100%" id="listPanel">
 			<mx:VBox width="100%" height="100%"  verticalGap="10" verticalAlign="middle" horizontalAlign="center" >
 				<mx:VBox width="100%" height="120"   horizontalGap="10" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
@@ -443,7 +443,7 @@
 						</mx:HBox>
 						<mx:FormItem  width="100%"  height="0" id="att_area" paddingLeft="10" paddingRight="10">
 							<mx:VBox width="100%">
-								<mutiUpload:upload width="100%" id="upload">
+								<mutiUpload:upload width="100%" height="100%" id="upload">
 								</mutiUpload:upload>
 							</mx:VBox>
 						</mx:FormItem>
@@ -455,5 +455,5 @@
 				</mx:HBox>
 			</mx:VBox>
 		</mx:VBox>
-	</mx:Panel>
+	</mx:VBox>
 </mx:Module>

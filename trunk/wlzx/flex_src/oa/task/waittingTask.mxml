@@ -34,10 +34,24 @@
 					{label:"进行中", data:"0"},  
 					{label:"已完成", data:"1"}]); 
 			private function init():void {
-				
-				var date:Date=new Date();
-				search_date_begin.text=CommonUtils.formatDate(CommonUtils.currentMonthBeginDate(),"YYYY-MM-DD");
-				search_date_end.text=CommonUtils.formatDate(CommonUtils.currentMonthEndDate(),"YYYY-MM-DD");
+				var parms:String=((Object)(this.owner)).id;
+				if(parms!=null&&parms!=''&&parms!='null'){
+					var accountId:String=parms.split(";")[0];
+					var beginDate:String=parms.split(";")[1];
+					var endDate:String=parms.split(";")[2];
+					search_account_id.text=accountId;
+					search_account_name.text=this.parentApplication.getTeacherNameByAccountId(search_account_id.text)+"待办工作";
+					search_date_begin.text=beginDate;
+					search_date_end.text=endDate;
+				}else{
+					
+					search_account_id.text=this.parentApplication.currentUser.id;
+					//Alert.show(search_account_id.text);
+					search_account_name.text=this.parentApplication.getTeacherNameByAccountId(search_account_id.text)+"待办工作";
+					var date:Date=new Date();
+					search_date_begin.text=CommonUtils.formatDate(CommonUtils.currentMonthBeginDate(),"YYYY-MM-DD");
+					search_date_end.text=CommonUtils.formatDate(CommonUtils.currentMonthEndDate(),"YYYY-MM-DD");
+				}
 				
 				callLater(search);
 			}
@@ -67,7 +81,7 @@
 				var beginTime:String=search_date_begin.text;
 				var endTime:String=search_date_end.text;
 				var status:String=null;
-				allWaittingDealServiceRO.getAllWaittingDealTasksByCondition(accountId,status,beginTime,endTime);
+				allWaittingDealServiceRO.getAllWaittingDealTasksByCondition(accountId,beginTime,endTime);
 				
 			}
 			public function formatDate(date:Date):String{
@@ -157,16 +171,18 @@
 			}
 		]]> 		
 	</fx:Script> 
-	
-	<s:Panel width="100%" height="100%"  styleName="customPanel" title="我的待办工作"  borderVisible="false" dropShadowVisible="false">
-		<mx:VBox width="100%"     verticalGap="0" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
+	<mx:VBox borderVisible="true" width="100%" height="100%" borderStyle="solid">
+		<mx:VBox width="100%"  height="100%"   verticalGap="0" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
 			<mx:VBox width="100%" horizontalAlign="center" verticalGap="0" height="60">
-				
+				<mx:HBox width="100%" horizontalAlign="center">
+					<mx:Label  text=""    width="100%"  letterSpacing="5" textAlign="center" fontSize="14"  fontWeight="bold" height="30"  id="search_account_name"/>
+					<mx:Label id="search_account_id" visible="false" width="0"/>
+				</mx:HBox>
 				<mx:HBox width="100%" horizontalAlign="right">
-					<mx:HBox width="100%">
+					<!--<mx:HBox width="100%">
 						<mx:Label  text="状态"  width="100"  textAlign="right"/>
 						<mx:ComboBox id="search_state"  dataProvider="{taskStateList}" selectedIndex="0"  editable="false" width="80"/>
-					</mx:HBox>
+					</mx:HBox>-->
 					<mx:Label  text="时间区间"  width="100"  textAlign="right"/>
 					<mx:DateField yearNavigationEnabled="true" id="search_date_begin"   formatString="YYYY-MM-DD"  editable="false" width="120"/>
 					<mx:Label  text="--"  width="20" textAlign="center"/>
@@ -177,7 +193,7 @@
 			</mx:VBox>
 			<component:WlzxPageDataGrid width="100%" height="100%"   borderVisible="false"  autoLayout="true"  borderAlpha="0.2" verticalAlign="middle"   id="taskTable" pagecount="10"  >				
 				<component:mygridcolumns>				
-					<mx:DataGridColumn textAlign="center" headerText="任务类型" width="100">
+					<mx:DataGridColumn textAlign="center" headerText="任务类型" width="70">
 						<mx:itemRenderer>
 							<fx:Component>
 								<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" >
@@ -187,11 +203,11 @@
 							</fx:Component>
 						</mx:itemRenderer>
 					</mx:DataGridColumn>
-					<mx:DataGridColumn textAlign="center" headerText="任务主题" width="100">
+					<mx:DataGridColumn textAlign="center" headerText="任务主题" width="300">
 						<mx:itemRenderer>
 							<fx:Component>
 								<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" >
-									<mx1:Text text="{data.title}" width="100">
+									<mx1:Text text="{data.title}" width="100%">
 									</mx1:Text>
 								</mx:HBox>
 							</fx:Component>
@@ -206,7 +222,7 @@
 					<mx:DataGridColumn textAlign="center" headerText="指派人" width="60" dataField="assignerId" labelFunction="getAssigner">
 						
 					</mx:DataGridColumn>
-					<mx:DataGridColumn textAlign="center" headerText="操作" width="100">
+					<mx:DataGridColumn textAlign="center" headerText="操作" width="60">
 						<mx:itemRenderer>
 							<fx:Component>
 								<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0">
@@ -240,5 +256,5 @@
 		</mx:VBox>
 		
 		
-	</s:Panel>
+	</mx:VBox>
 </mx:Module>

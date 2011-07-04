@@ -40,7 +40,7 @@
 			private function init():void {
 				var parms:String=((Object)(this.owner)).id;
 				//Alert.show(parms);
-				if(parms!=null&&parms!=''){
+				if(parms!=null&&parms!=''&&parms!='null'){
 					var accountId:String=parms.split(";")[0];
 					var beginDate:String=parms.split(";")[1];
 					var endDate:String=parms.split(";")[2];
@@ -51,7 +51,7 @@
 				}else{
 					
 					search_account_id.text=this.parentApplication.currentUser.id;
-					Alert.show(search_account_id.text);
+					//Alert.show(search_account_id.text);
 					search_account_name.text=this.parentApplication.getTeacherNameByAccountId(search_account_id.text)+"个人工作";
 					var date:Date=new Date();
 					search_date_begin.text=CommonUtils.formatDate(CommonUtils.currentMonthBeginDate(),"YYYY-MM-DD");
@@ -94,9 +94,9 @@
 				var beginTime:String=search_date_begin.text;
 				var endTime:String=search_date_end.text;
 				var status:String=null;
-				allWaittingDealServiceRO.getAllDealTasksByCondition(accountId,status,beginTime,endTime);
+				allWaittingDealServiceRO.getAllDealTasksByCondition(accountId,beginTime,endTime);
 
-				scheduleServiceRO.getSchedulesByCondition(accountId,null,status,null,null,null,null,null,beginTime,endTime);
+				scheduleServiceRO.getSchedulesByConditions(accountId,null,status,null,null,null,null,null,beginTime,endTime);
 			}
 			public function formatDate(date:Date):String{
 				return CommonUtils.formatDate(date);
@@ -182,7 +182,7 @@
 			}
 		]]> 		
 	</fx:Script> 
-	
+	<mx:VBox borderVisible="true" width="100%" height="100%" borderStyle="solid">
 		<mx:VBox width="100%"     verticalGap="0" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
 			<mx:VBox width="100%" horizontalAlign="center" verticalGap="0" height="60">
 				<mx:HBox width="100%" horizontalAlign="center">
@@ -205,7 +205,7 @@
 				
 				<component:WlzxPageDataGrid width="100%" height="100%"   borderVisible="false"  autoLayout="true"  borderAlpha="0.2" verticalAlign="middle"   id="taskTable" pagecount="5"  >				
 					<component:mygridcolumns>						
-					<mx:DataGridColumn textAlign="center" headerText="任务类型" width="100">
+					<mx:DataGridColumn textAlign="center" headerText="任务类型" width="80">
 						<mx:itemRenderer>
 							<fx:Component>
 								<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" >
@@ -215,11 +215,11 @@
 							</fx:Component>
 						</mx:itemRenderer>
 					</mx:DataGridColumn>
-						<mx:DataGridColumn textAlign="center" headerText="任务主题" width="100">
+						<mx:DataGridColumn textAlign="center" headerText="任务主题" width="300">
 							<mx:itemRenderer>
 								<fx:Component>
 									<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" >
-										<mx1:Text text="{data.title}" width="100">
+										<mx1:Text text="{data.title}" width="100%">
 										</mx1:Text>
 									</mx:HBox>
 								</fx:Component>
@@ -435,6 +435,6 @@
 				
 			</mx:Panel>
 		</mx:VBox>
-		
+		</mx:VBox>
 		
 </mx:Module>

@@ -392,8 +392,7 @@
 			}
 		]]> 		
 	</mx:Script> 
-	<mx:Panel width="100%" height="100%"   title="加班登记"  borderVisible="false" id="panel" dropShadowVisible="false" >
-		
+	<mx:VBox borderVisible="true" width="100%" height="100%" borderStyle="solid">		
 		
 		<mx:VBox width="100%" height="100%" id="listPanel">
 			<mx:HBox verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12" >
@@ -759,5 +758,5 @@
 			</mx:VBox>
 		</mx:VBox>
 		
-	</mx:Panel>
+	</mx:VBox>
 </mx:Module>

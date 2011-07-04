@@ -83,6 +83,7 @@ public class TeacherService {
 						}
 					}else model.setTeacherPosition(null); 
 				}else{
+					user.setMainRole(null);
 					model.setTeacherPosition(null);
 					if(!StringUtils.isEmpty(model.getTeacherDepartmentName())){
 						DepartmentModel department=departmentDAO.getDepartmentByName(model.getTeacherDepartmentName());

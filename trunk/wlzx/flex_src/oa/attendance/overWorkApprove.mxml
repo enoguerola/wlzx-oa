@@ -527,15 +527,10 @@
 	<mx:Component id="officeChiefApproverDropDownItemRenderer">
 		<render:AdvancedItemRenderer selectedItems="{ outerDocument.officeChief_approver_name.selectedItems }" />
 	</mx:Component>
-	<mx:Panel width="100%" height="100%"   title="加班/出差审批"  borderVisible="false" id="panel" dropShadowVisible="false" >
-		
+	<mx:VBox borderVisible="true" width="100%" height="100%" borderStyle="solid">	
 		
 		<mx:VBox width="100%" height="100%" id="listPanel">
-			<mx:HBox verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12" >
-				<mx:HBox width="100%" height="30" paddingLeft="20"  horizontalGap="0" backgroundColor="#C5E497"  verticalAlign="middle">
-					
-				</mx:HBox>
-			</mx:HBox>
+			
 			<mx:VBox width="100%" height="100%"  verticalGap="10" verticalAlign="middle" horizontalAlign="center" >
 				<mx:VBox width="100%" height="110"   horizontalGap="10" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
 					<mx:FormHeading label="条件查询">
@@ -950,5 +945,5 @@
 			</mx:VBox>
 		</mx:VBox>
 		
-	</mx:Panel>
+	</mx:VBox>
 </mx:Module>

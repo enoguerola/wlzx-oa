@@ -455,6 +455,7 @@
 					preClassDateMutiCombobox.myText.text=applyItem.applyCourseTime;
 					adjustTimeDate.text=CommonUtils.formatDate(applyItem.adjustMeanDate,"YYYY-MM-DD");
 					adjustTeacherInput.selectedItem=this.parentApplication.getItemByAccountId(applyItem.adjustMeanTeacherId);
+					adjustTeacherId.text=applyItem.adjustMeanTeacherId;
 				}
 				
 
