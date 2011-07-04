@@ -123,6 +123,8 @@
 				status.selectedIndex = 0;
 				attendDate.text = "";
 				search();
+				//重新加载帐号姓名对应全局信息
+				this.parentApplication.teacherAccountBridgeServiceRO.teacherAccountGetAll();
 			} 
 			
 			private function ioErrorHandler(e:IOErrorEvent):void   
@@ -257,6 +259,8 @@
 			protected function changeResult_resultHandler(event:ResultEvent):void
 			{
 				search();
+				//重新加载帐号姓名对应全局信息
+				this.parentApplication.teacherAccountBridgeServiceRO.teacherAccountGetAll();
 			}
 
 			private function getDepartmentBySymbolResult(event:ResultEvent):void {

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Module  xmlns:mx="http://www.adobe.com/2006/mxml"   layout="vertical" width="100%" xmlns:valueObjects="oa.entity.course.adjust.*" creationComplete="init();" height="100%" xmlns:mutiComboBox="system.component.mutiComboBox.*" xmlns:component="system.component.*" currentState="list" xmlns:mx1="library://ns.adobe.com/flex/mx">
+<mx:Module  xmlns:mx="http://www.adobe.com/2006/mxml"   borderVisible="true" layout="vertical" width="100%" xmlns:valueObjects="oa.entity.course.adjust.*" creationComplete="init();" height="100%" xmlns:mutiComboBox="system.component.mutiComboBox.*" xmlns:component="system.component.*" currentState="list" xmlns:mx1="library://ns.adobe.com/flex/mx">
 	<mx:StringValidator id="aClass_stringValidator"  property="text" required="true" requiredFieldError="班级不能为空"/>
 	<mx:StringValidator  id="aCourseDate_stringValidator" property="text"  required="true" requiredFieldError="原课时不能为空"/>
 	<mx:StringValidator id="aCourseSection_stringValidator"  property="text" required="true" requiredFieldError="课时节次不能为空"/>
@@ -581,7 +581,6 @@
 		]]> 		
 	</mx:Script> 
 	
-	<mx:Panel width="100%" height="100%"   title="调课申请"  borderVisible="false" id="panel" dropShadowVisible="false">
 		<mx:VBox width="100%" height="100%" id="listPanel">
 			<mx:HBox verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12" >
 				<mx:HBox width="100%" height="30" paddingLeft="20"  horizontalGap="0" backgroundColor="#C5E497"  verticalAlign="middle">
@@ -1015,5 +1014,4 @@
 		</mx:VBox>
 	</mx:VBox>
 		
-	</mx:Panel>
 </mx:Module>
