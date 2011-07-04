@@ -42,6 +42,11 @@
 	            <column name="operation_teacher_id" />
 	        </property>
 		</subclass>
-      
+       <subclass name="system.wlims.oa.entity.course.adjust.ApplyWorkFlowLog" discriminator-value="ApplyWorkFlowLog">
+			<many-to-one name="applyForm" class="system.wlims.oa.entity.course.adjust.ApplyModel" column="operation_object_id" insert="false" update="false"/> 
+			<property name="operationTeacherId" type="string">
+	            <column name="operation_teacher_id" />
+	        </property>
+		</subclass>
     </class>
 </hibernate-mapping>

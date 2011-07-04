@@ -9,6 +9,7 @@ import system.utils.UtilDateTime;
 import system.wlims.oa.dao.course.adjust.CourseAdjustDAO;
 import system.wlims.oa.entity.course.adjust.ApplyItemModel;
 import system.wlims.oa.entity.course.adjust.ApplyModel;
+import system.wlims.oa.entity.course.adjust.ApplyWorkFlowLog;
 import system.wlims.oa.service.course.adjust.CourseAdjustService;
 
 public class CourseAdjustServiceImpl implements CourseAdjustService{
@@ -29,6 +30,12 @@ public class CourseAdjustServiceImpl implements CourseAdjustService{
 		apply.setApplyNo(UtilDateTime.toDateString(currenDate, "yyyyMMddHHmmss"));
 		apply.setApplyCreationDate(currenDate);
 		apply.setApplyStatus(ApplyModel.ApplyStatus.WAITING.getStatus());
+		ApplyWorkFlowLog log=new ApplyWorkFlowLog();
+		log.setOperationName("发起申请");
+		log.setOperationResult("生成编号为"+apply.getApplyNo()+"的申请记录");
+		log.setOperationTime(currenDate);
+		log.setOperationTeacherId(apply.getApplyTeacherId());
+		apply.getLogs().add(log);
 		courseAdjustDAO.saveOrUpdate(apply);
 		return true;
 	}
@@ -48,6 +55,12 @@ public class CourseAdjustServiceImpl implements CourseAdjustService{
 			return false;
 		}else {
 			apply.setApplyStatus(ApplyModel.ApplyStatus.CANCLE.getStatus());
+			ApplyWorkFlowLog log=new ApplyWorkFlowLog();
+			log.setOperationName("取消申请");
+			log.setOperationResult("取消编号为"+apply.getApplyNo()+"的申请记录");
+			log.setOperationTime(new Date());
+			log.setOperationTeacherId(apply.getApplyTeacherId());
+			apply.getLogs().add(log);
 			courseAdjustDAO.saveOrUpdate(apply);
 			return true;
 		}
@@ -68,11 +81,18 @@ public class CourseAdjustServiceImpl implements CourseAdjustService{
 	@Override
 	public boolean applyUpdate(ApplyModel apply, Set<ApplyItemModel> applyItems) {
 		// TODO Auto-generated method stub
-		ApplyModel preApply=courseAdjustDAO.get(apply.getId());
-		preApply.getApplyItems().removeAll(preApply.getApplyItems());
-		courseAdjustDAO.saveOrUpdate(preApply);	
-		apply.setApplyItems(applyItems);
-		courseAdjustDAO.merge(apply);
+//		ApplyModel preApply=courseAdjustDAO.get(apply.getId());
+//		preApply.getApplyItems().removeAll(preApply.getApplyItems());
+//		courseAdjustDAO.saveOrUpdate(preApply);	
+//		ApplyModel newApply=courseAdjustDAO.get(apply.getId());
+//		newApply.setApplyItems(applyItems);
+		ApplyWorkFlowLog log=new ApplyWorkFlowLog();
+		log.setOperationName("编辑申请");
+		log.setOperationResult("编辑编号为"+apply.getApplyNo()+"的申请记录");
+		log.setOperationTime(new Date());
+		log.setOperationTeacherId(apply.getApplyTeacherId());
+		apply.getLogs().add(log);
+		courseAdjustDAO.saveOrUpdate(apply);
 		
 		return true;
 	}
@@ -100,6 +120,17 @@ public class CourseAdjustServiceImpl implements CourseAdjustService{
 	@Override
 	public boolean saveApprove(ApplyModel apply) {
 		// TODO Auto-generated method stub
+		ApplyWorkFlowLog log=new ApplyWorkFlowLog();
+		log.setOperationName("课程处审批");
+		if(apply.getApplyStatus()==ApplyModel.ApplyStatus.PASS.getStatus()){
+			log.setOperationResult("课程处审批编号为"+apply.getApplyNo()+"的申请通过");
+		}
+		else if(apply.getApplyStatus()==ApplyModel.ApplyStatus.CANCLE.getStatus()){
+			log.setOperationResult("课程处审批编号为"+apply.getApplyNo()+"的申请不通过");
+		}
+		log.setOperationTime(new Date());
+		log.setOperationTeacherId(apply.getApproveTeacherId());
+		apply.getLogs().add(log);
 		courseAdjustDAO.saveOrUpdate(apply);
 		return true;
 	}

@@ -17,7 +17,7 @@ public class CourseAdjustDAOImpl extends BaseDAOImpl<ApplyModel> implements Cour
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<ApplyModel> getAppliesByCondition(String accountId,
-			Integer state, Integer type, String beginDate, String endDate) {
+			Integer state, Integer type, String submitBeginDate, String submitEndDate) {
 		// TODO Auto-generated method stub
 		DetachedCriteria criteria = DetachedCriteria.forClass(ApplyModel.class);
 		if(!StringUtils.isEmpty(accountId)){
@@ -29,11 +29,11 @@ public class CourseAdjustDAOImpl extends BaseDAOImpl<ApplyModel> implements Cour
 		if(type!=null){
 			criteria.add(Restrictions.eq("applyType", type));
 		}
-		if(!StringUtils.isEmpty(beginDate)){
-			criteria.add(Restrictions.ge("applyCreationDate", java.sql.Date.valueOf(beginDate+" 00:00:00")));
+		if(StringUtils.isNotEmpty(submitBeginDate)){
+			criteria.add(Restrictions.sqlRestriction("apply_no >='"+submitBeginDate.split("-")[0]+submitBeginDate.split("-")[1]+submitBeginDate.split("-")[2]+"000000'"));	
 		}
-		if(!StringUtils.isEmpty(endDate)){
-			criteria.add(Restrictions.le("applyCreationDate", java.sql.Date.valueOf(endDate+" 23:59:59")));
+		if(StringUtils.isNotEmpty(submitEndDate)){
+			criteria.add(Restrictions.sqlRestriction("apply_no <='"+submitEndDate.split("-")[0]+submitEndDate.split("-")[1]+submitEndDate.split("-")[2]+"999999'"));	
 		}
 		
 		

@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Module xmlns:mx="http://www.adobe.com/2006/mxml"
+		   xmlns:valueObjects="oa.entity.course.adjust.*"
+		   xmlns:component="system.component.*"
+		   xmlns:mx1="library://ns.adobe.com/flex/mx"
+		   layout="vertical" width="100%" height="100%" creationComplete="init()">
+	<valueObjects:ApplyModel id="apply"/>
+	
+	
+	<mx:RemoteObject id="applyServiceRO" destination="courseAdjustServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">		
+		<mx:method name="getApplyById"  concurrency="last"  result="getApplyById_resultHandler(event);" />
+	</mx:RemoteObject>
+	<mx:Script> 
+		<![CDATA[
+		import mx.collections.ArrayCollection;
+		import mx.containers.FormItem;
+		import mx.controls.Alert;
+		import mx.controls.CheckBox;
+		import mx.controls.DateField;
+		import mx.core.FlexGlobals;
+		import mx.events.*;
+		import mx.events.ListEvent;
+		import mx.events.ValidationResultEvent;
+		import mx.formatters.DateFormatter;
+		import mx.managers.PopUpManager;
+		import mx.rpc.events.*;
+		import mx.validators.Validator;
+		
+		import system.component.WlzxLockWin;
+		import system.utils.*;
+			public var status:ArrayCollection = new ArrayCollection( 
+				[ {label:"全部", data:null},  
+					{label:"待审批", data:0},  
+					{label:"审批通过", data:1},
+					{label:"审批未通过", data:2},
+					{label:"取消", data:3}]); 
+			public var applyTypes:ArrayCollection = new ArrayCollection( 
+				[	{label:"调课", data:"0"},  
+					{label:"代课", data:"1"} ]); 
+		
+		private function init():void{
+		var id:String=((Object)(this.owner)).id;
+		lockWin();
+		detailApply(id);
+		}
+		public function detailApply(applyId:String):void{
+			
+			applyServiceRO.getApplyById(applyId);
+		}
+		protected function systemFaultHandler(event:FaultEvent):void {
+		unLockWin();
+		Alert.show(event.fault.faultString, 'Error');
+		}
+		protected function getApplyById_resultHandler(event:ResultEvent):void
+		{
+		apply=event.result as ApplyModel;
+		detail_applyType.text=applyTypes.getItemAt(apply.applyType).label;
+		detail_applyNo.text="调课申请单[编号："+apply.applyNo+"]";
+		detail_applyTeacher.text=this.parentApplication.getTeacherNameByAccountId(apply.applyTeacherId);
+		detail_applyStatus.text=status.getItemAt(ComboxUtils.findIndex(status,apply.applyStatus)).label;
+		detail_applyReason.text=apply.applyReason;
+		detailApplyItemsRepeater.dataProvider=apply.applyItems;
+		detailApplyItemsRepeater.validateNow();
+		if(apply.approveDate==null)
+		detail_approveDate.text="--";
+		else detail_approveDate.text=CommonUtils.formatDate(apply.approveDate);
+		if(apply.applyStatus==0||apply.applyStatus==3)detail_approveStatusDescribe.text="--";
+		else detail_approveStatusDescribe.text=status.getItemAt(ComboxUtils.findIndex(status,apply.applyStatus)).label;
+		if(apply.approveTeacherId==null||apply.approveTeacherId=='')
+		detail_approveTeacher.text="--";
+		else detail_approveTeacher.text=this.parentApplication.getTeacherNameByAccountId(apply.approveTeacherId);
+		if(apply.approveRemark==null||apply.approveRemark=='')
+		detail_approveRemark.text="--";
+		else detail_approveRemark.text=apply.approveRemark;
+		logTable.initdata(apply.logs as ArrayCollection);
+		unLockWin();
+		}
+		
+		public function formatDate(date:Date):String{
+		return CommonUtils.formatDate(date,"YYYY-MM-DD JJ:NN:SS");
+		
+		}
+		
+		private var window:WlzxLockWin=null;
+		private function lockWin():void{
+		
+		window=WlzxLockWin(PopUpManager.createPopUp(this,WlzxLockWin,true)); 
+		PopUpManager.centerPopUp(window);
+		window.percentHeight=100;
+		window.percentWidth=100;			
+		
+		}
+		private function unLockWin():void{
+		if(window!=null)
+		PopUpManager.removePopUp(window);
+		}
+		
+		]]> 		
+	</mx:Script> 
+	<mx:VBox width="100%" height="50%"   horizontalGap="10" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
+		<mx:HBox width="100%" horizontalAlign="center">
+			<mx:Label  text="调课申请单" id="detail_applyNo"   width="100%"  letterSpacing="5" textAlign="center" fontSize="14"  fontWeight="bold" height="30" />
+		</mx:HBox>
+		
+		<mx:VBox width="100%" horizontalAlign="center" height="100%" verticalAlign="middle"   borderVisible="true" paddingLeft="20" paddingRight="20">
+			
+			<mx:Grid width="100%" height="100%"   verticalGap="10" horizontalGap="5"   borderStyle="solid" paddingBottom="10" paddingTop="10" paddingLeft="10" paddingRight="10">
+				
+				<mx:GridRow width="100%" height="30" >
+					
+					<mx:GridItem  borderStyle="none"  verticalAlign="bottom" horizontalAlign="right" width="60">
+						<mx:Label  text="申请类型"   textAlign="right" />
+					</mx:GridItem>
+					<mx:GridItem  borderStyle="none"  verticalAlign="bottom" horizontalAlign="center"  width="100">
+						<mx:Label  text=""   textAlign="right" id="detail_applyType" />
+					</mx:GridItem>
+					<mx:GridItem  borderStyle="none"  verticalAlign="bottom" horizontalAlign="right"  width="60">
+						<mx:Label  text="申请人"  textAlign="right"/>
+					</mx:GridItem>
+					<mx:GridItem  borderStyle="none"  verticalAlign="bottom" horizontalAlign="center"  width="100">
+						<mx:Label width="100"   id="detail_applyTeacher"/>
+					</mx:GridItem>
+					<mx:GridItem  borderStyle="none"  verticalAlign="bottom" horizontalAlign="right"  width="60">
+						<mx:Label  text="申请状态"  textAlign="right"/>
+					</mx:GridItem>
+					<mx:GridItem  borderStyle="none"  verticalAlign="bottom" horizontalAlign="center" width="100">
+						<mx:Label  id="detail_applyStatus"  textAlign="left"/>
+					</mx:GridItem>
+					<mx:GridItem  borderStyle="none"  verticalAlign="bottom" horizontalAlign="left">
+						
+					</mx:GridItem>
+				</mx:GridRow>
+				<mx:GridRow width="100%">
+					<mx:GridItem    verticalAlign="middle" horizontalAlign="right">
+						<mx:Label  text="申请事由" width="60"  textAlign="right"/>
+					</mx:GridItem>
+					<mx:GridItem    verticalAlign="middle"  colSpan="5" horizontalAlign="center">
+						<mx1:Text width="100%" id="detail_applyReason"/>
+					</mx:GridItem>
+					<mx:GridItem     verticalAlign="middle" horizontalAlign="center">
+						
+					</mx:GridItem>
+				</mx:GridRow>
+				<mx:GridRow width="100%"  >
+					<mx:GridItem  borderStyle="none"  verticalAlign="middle" horizontalAlign="center" colSpan="7" width="100%">
+						<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" autoLayout="true" verticalGap="0">
+							<mx:Grid width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" autoLayout="true" horizontalGap="0" verticalGap="0">
+								<mx:GridRow  autoLayout="true" horizontalAlign="center" verticalAlign="middle" width="100%" >
+									<mx:GridItem  borderStyle="solid" verticalAlign="middle">
+										<mx1:Text text="调课班级" width="60" textAlign="center" />
+									</mx:GridItem>
+									<mx:GridItem  borderStyle="solid" verticalAlign="middle">
+										<mx1:Text text="调课课程" width="60" textAlign="center"/>
+									</mx:GridItem>
+									<mx:GridItem  borderStyle="solid" verticalAlign="middle">
+										<mx1:Text  text="原上课时间" width="200" textAlign="center"/>
+									</mx:GridItem>
+									<mx:GridItem  borderStyle="solid" verticalAlign="middle">
+										<mx1:Text  text="意向时间" width="60" textAlign="center"/>
+									</mx:GridItem>
+									<mx:GridItem  borderStyle="solid" verticalAlign="middle">
+										<mx1:Text  text="意向教师" width="60" textAlign="center"/>
+									</mx:GridItem>
+									<mx:GridItem  borderStyle="solid" verticalAlign="middle">
+										<mx1:Text  text="指派教师" width="60" textAlign="center"/>
+									</mx:GridItem>
+									<mx:GridItem  borderStyle="solid" verticalAlign="middle">
+										<mx1:Text  text="补课时间"  width="200" textAlign="center"/>
+									</mx:GridItem>
+								</mx:GridRow>
+								<mx:Repeater id="detailApplyItemsRepeater">
+									
+									<mx:GridRow  autoLayout="true" horizontalAlign="center" verticalAlign="middle" >
+										<mx:GridItem  borderStyle="solid"  verticalAlign="middle">
+											<mx1:Text text="{detailApplyItemsRepeater.currentItem.applyClass}"  width="60" textAlign="center"/>
+										</mx:GridItem>
+										<mx:GridItem  borderStyle="solid" verticalAlign="middle">
+											<mx1:Text text="{detailApplyItemsRepeater.currentItem.applyCourse}" width="60" textAlign="center"/>
+										</mx:GridItem>
+										<mx:GridItem  borderStyle="solid" verticalAlign="middle">
+											<mx1:Text   textAlign="center" width="200" text="{formatDate((detailApplyItemsRepeater.currentItem.applyCourseDate) as Date)+detailApplyItemsRepeater.currentItem.applyCourseTime}"   />
+										</mx:GridItem>
+										<mx:GridItem  borderStyle="solid" verticalAlign="middle">
+											<mx1:Text  textAlign="center"  text="{formatDate((detailApplyItemsRepeater.currentItem.adjustMeanDate) as Date)}"  />
+										</mx:GridItem>
+										<mx:GridItem  borderStyle="solid" verticalAlign="middle">
+											<mx1:Text width="60" textAlign="center" text="{parentApplication.getTeacherNameByAccountId(detailApplyItemsRepeater.currentItem.adjustMeanTeacherId)}" />
+										</mx:GridItem>
+										
+										<mx:GridItem  borderStyle="solid" verticalAlign="middle">
+											<mx1:Text width="60" textAlign="center" text="{detailApplyItemsRepeater.currentItem.adjustActualTeacherId!=null?this.parentApplication.getTeacherNameByAccountId(detailApplyItemsRepeater.currentItem.adjustActualTeacherId):'--'}" />
+										</mx:GridItem>
+										<mx:GridItem  borderStyle="solid" verticalAlign="middle">
+											<mx1:Text  textAlign="center" width="200"  text="{detailApplyItemsRepeater.currentItem.adjustActualDate!=null?formatDate((detailApplyItemsRepeater.currentItem.adjustActualDate) as Date)+detailApplyItemsRepeater.currentItem.adjustActualTime:'--'}"  />
+										</mx:GridItem>
+									</mx:GridRow>
+									
+									
+									
+								</mx:Repeater>
+							</mx:Grid>			
+						</mx:VBox>		
+					</mx:GridItem>
+				</mx:GridRow>
+				
+				<mx:GridRow width="100%">
+					<mx:GridItem    verticalAlign="middle" horizontalAlign="right">
+						<mx:Label  text="审批批注" width="60"  textAlign="right"/>
+					</mx:GridItem>
+					<mx:GridItem    verticalAlign="middle"  colSpan="5" horizontalAlign="center">
+						<mx1:Text width="100%"  id="detail_approveRemark"/>
+					</mx:GridItem>
+					<mx:GridItem     verticalAlign="middle" horizontalAlign="center">
+						
+					</mx:GridItem>
+				</mx:GridRow>
+				
+				<mx:GridRow width="100%" height="30" >
+					
+					<mx:GridItem  borderStyle="none"  verticalAlign="middle" horizontalAlign="right" colSpan="2">
+						
+					</mx:GridItem>
+					<mx:GridItem  borderStyle="none"  verticalAlign="middle" horizontalAlign="center">
+						<mx:Label  text="审批意见"   textAlign="center" />
+					</mx:GridItem>
+					<mx:GridItem  borderStyle="none"  verticalAlign="middle" horizontalAlign="left">
+						<mx:Label  text=""   textAlign="right" id="detail_approveStatusDescribe"/>
+					</mx:GridItem>
+					<mx:GridItem  borderStyle="none"  verticalAlign="middle" horizontalAlign="right">
+						<mx:Label  text="审批人"   textAlign="right" />
+					</mx:GridItem>
+					<mx:GridItem  borderStyle="none"  verticalAlign="middle" horizontalAlign="center">
+						<mx:Label  text=""   textAlign="center" id="detail_approveTeacher" />
+					</mx:GridItem>
+					<mx:GridItem  borderStyle="none"  verticalAlign="middle" horizontalAlign="right">
+						
+					</mx:GridItem>
+				</mx:GridRow>
+				<mx:GridRow width="100%" height="30" >
+					<mx:GridItem  borderStyle="none"  verticalAlign="middle" horizontalAlign="right" colSpan="5">
+						
+					</mx:GridItem>
+					<mx:GridItem  borderStyle="none"  verticalAlign="middle" horizontalAlign="center">
+						<mx:Label  text="审批时间"   textAlign="center" />
+					</mx:GridItem>
+					<mx:GridItem  borderStyle="none"  verticalAlign="middle" horizontalAlign="left">
+						<mx:Label  text=""   textAlign="right" id="detail_approveDate"/>
+					</mx:GridItem>
+				</mx:GridRow>
+			</mx:Grid>
+			
+			
+		</mx:VBox>
+		<mx:Panel width="100%"   styleName="customPanel" title="流程日志"  cornerRadius="5" borderVisible="false" dropShadowVisible="false" paddingLeft="20" paddingRight="20">
+			
+			<component:WlzxPageDataGrid width="100%" height="100%"   borderVisible="false"  autoLayout="true"  borderAlpha="0.2" verticalAlign="middle"   id="logTable" pagecount="10"  >				
+				<component:mygridcolumns>
+					<mx:DataGridColumn textAlign="center" headerText="操作时间"  width="100">
+						<mx:itemRenderer>
+							<mx:Component>
+								<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+									<mx:Label text="{this.outerDocument.formatDate(data.operationTime)}"/>
+								</mx:VBox>																			
+							</mx:Component>						
+						</mx:itemRenderer>
+					</mx:DataGridColumn>
+					<mx:DataGridColumn textAlign="center" headerText="操作人"  width="60">
+						<mx:itemRenderer>
+							<mx:Component>
+								<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+									<mx1:Text text="{this.parentApplication.getTeacherNameByAccountId(data.operationTeacherId)}" >
+										
+									</mx1:Text>
+								</mx:VBox>																			
+							</mx:Component>
+						</mx:itemRenderer>
+					</mx:DataGridColumn>
+					<mx:DataGridColumn textAlign="center" headerText="操作名称"  width="100" >
+						<mx:itemRenderer>
+							<mx:Component>
+								<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+									<mx:Label text="{data.operationName}"/>
+								</mx:VBox>																			
+							</mx:Component>
+						</mx:itemRenderer>
+					</mx:DataGridColumn>
+					<mx:DataGridColumn textAlign="center" headerText="操作结果"  width="200" >
+						<mx:itemRenderer>
+							<mx:Component>
+								<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+									<mx:Label text="{data.operationResult}"/>
+								</mx:VBox>																			
+							</mx:Component>
+						</mx:itemRenderer>
+					</mx:DataGridColumn>
+					
+					
+				</component:mygridcolumns>
+			</component:WlzxPageDataGrid>
+		</mx:Panel>
+		</mx:VBox>
+</mx:Module>

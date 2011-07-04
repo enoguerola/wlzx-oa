@@ -4,6 +4,7 @@ package system.utils
 	import mx.collections.Sort;
 	import mx.collections.SortField;
 	import mx.formatters.*;
+	import flash.utils.ByteArray;
 	public class CommonUtils
 	{
 		public static function sortBySequence(list:ArrayCollection):void{
@@ -40,6 +41,14 @@ package system.utils
 		public static function int2Boolean(num:int):Boolean{
 			if(num==0)return false;
 			else return true;
+		}
+		//深复制调用的方法
+		public static function clone(source:Object):Array
+		{
+			var myBA:ByteArray = new ByteArray();
+			myBA.writeObject(source);
+			myBA.position = 0;
+			return(myBA.readObject());
 		}
 	}
 }

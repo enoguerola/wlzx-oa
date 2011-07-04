@@ -11,15 +11,15 @@ package oa.entity.course.adjust
 		
 		public var applyNo:String;
 		public var applyType:int;
-		public var applyTeacherId:String ;	
-		public var applyReason:String ;
+		public var applyTeacherId:String;	
+		public var applyReason:String;
 		public var applyStatus:int;
 		public var approveTeacherId:String ;
 		public var approveRemark:String ;
 		public var approveDate:Date;	
 		public var applyCreationDate:Date;
 		public var applyItems:Object=new Array();
-		
+		public var logs:Object=new Array();
 		public function ApplyModel()
 		{
 		}

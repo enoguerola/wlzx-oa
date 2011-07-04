@@ -8,9 +8,10 @@ import system.wlims.oa.entity.BaseModel;
 
 
 
-public class ApplyModel extends BaseModel {
-
+public class ApplyModel  extends BaseModel  {
+	
 	private static final long serialVersionUID = -6080864595443488206L;
+
 	private String applyNo;
 	private int applyType;
 	private String applyTeacherId;	
@@ -21,6 +22,7 @@ public class ApplyModel extends BaseModel {
 	private Date approveDate;	
 	private Date applyCreationDate;
 	private Set<ApplyItemModel> applyItems=new TreeSet<ApplyItemModel>();
+	private Set<ApplyWorkFlowLog> logs=new TreeSet<ApplyWorkFlowLog>();
 	public static enum ApplyType{
 		ADJUST(0, "调课"),
 		REPLACE(1, "代课");
@@ -137,6 +139,18 @@ public class ApplyModel extends BaseModel {
 	}
 	public void setApplyItems(Set<ApplyItemModel> applyItems) {
 		this.applyItems = applyItems;
+	}
+	public Set<ApplyWorkFlowLog> getLogs() {
+		return logs;
+	}
+	public void setLogs(Set<ApplyWorkFlowLog> logs) {
+		this.logs = logs;
+	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
 	}
 
 }
