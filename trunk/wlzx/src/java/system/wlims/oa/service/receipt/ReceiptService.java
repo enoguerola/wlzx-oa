@@ -17,4 +17,6 @@ public interface ReceiptService {
 		  String title, String startDate, String endDate, int page, int pageCount)throws ServiceException;
   
   void complete(String id)throws ServiceException;
+  
+  void register(String id)throws ServiceException;
 }

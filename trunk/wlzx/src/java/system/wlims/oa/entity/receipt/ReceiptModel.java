@@ -29,7 +29,15 @@ public class ReceiptModel extends BaseModel {
 	
 	public static enum EStatus{
 		Draft(0, "草稿"),
-		Register(1, "已登记");
+		Register(1, "已登记"),
+		DeviseHandling(2, "拟办中"),
+		DeviseHandled(3, "拟办完毕"),
+		RatifyHandling(4, "批办中"),
+		RatifyHandled(5, "批办完毕"),
+		Undertakeing(6, "承办中"),
+		Undertaked(7, "承办完毕"),
+		Circulateing(8, "传阅中"),
+		Circulated(9, "传阅完毕");
 		
 		private int value;
 		private String text;

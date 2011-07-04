@@ -106,18 +106,16 @@
 			protected function receiptServiceGet_result(event:ResultEvent):void
 			{
 				// TODO Auto-generated method stub
+				// for first page 
 				receipt = event.result as ReceiptModel;
 				receipt_text.title.text = receipt.title;
 				receipt_text.summary.text = receipt.summary;
 				var number:Array = receipt.doNumber.split("+");
 				var letter:String = number.pop();
 				receipt_file.zhutici.text = letter;
-				Alert.show("ok2");
-				receipt_file._zi.text = number[1];
-				Alert.show("ok3");
+				receipt_file._zi.text = number.pop();
 				if(receipt.inDate != null)
 					receipt_file.in_date.text = receipt.inDate.fullYear + "-" + receipt.inDate.month + '-' + receipt.inDate.day;
-				
 				receipt_file.in_number.text = receipt.inNumber;
 				receipt_file.zhutici.text = receipt.subject;
 				receipt_text.title.text = receipt.title;
@@ -130,13 +128,17 @@
 				// TODO Auto-generated method stub
 				Alert.show(event.fault.faultString, 'Error');
 			}
+			
+			private function navigator_change():void{
+
+			}
 
 		]]>
 	</fx:Script>
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
 		<valueObjects:ReceiptModel id="receipt"/>
-		<s:RemoteObject concurrency="last" destination="receiptServiceDest" id="receiptServiceRO" fault="faultHandler(event)">
+		<s:RemoteObject concurrency="last" destination="receiptServiceDest" id="receiptServiceRO" fault="faultHandler(event)" showBusyCursor="true">
 			<s:method concurrency="last" name="get" result="receiptServiceGet_result(event)"/>
 			<s:method concurrency="last" name="save" result="receiptServiceSave_result(event)"/>
 		</s:RemoteObject>
@@ -147,13 +149,13 @@
 			<mx:LinkButton label="登记" click="save(event)" id="button_register"/>
 			<mx:LinkButton label="返回"/>
 		</s:HGroup>
-		<mx:TabNavigator width="100%" height="100%">
-			<s:NavigatorContent label="来文正文" width="100%" height="100%">
+		<mx:TabNavigator width="100%" height="100%" id="receipt_navigator" change="navigator_change()" creationPolicy="all">
+			<mx:VBox label="来文正文" width="100%" height="100%">
 				<content:receiptText width="100%" id="receipt_text"/>
-			</s:NavigatorContent>
-			<s:NavigatorContent label="来文登记单" width="100%" height="100%">
+			</mx:VBox>
+			<mx:VBox label="来文登记单" width="100%" height="100%">
 				<content:receiptFileInput width="100%" id="receipt_file"/>
-			</s:NavigatorContent>
+			</mx:VBox>
 		</mx:TabNavigator>
 	</s:VGroup>
 </mx:Module>

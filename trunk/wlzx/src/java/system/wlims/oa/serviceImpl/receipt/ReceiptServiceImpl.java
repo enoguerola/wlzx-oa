@@ -32,13 +32,9 @@ public class ReceiptServiceImpl implements ReceiptService {
 		// TODO Auto-generated method stub
 		return receiptDAO.get(id);
 	}
-
-	@Override
-	public List<ReceiptModel> get(String inNumber, String office, String doNumber, String status, 
-			  String title, String startDate, String endDate, int page, int pageCount) throws ServiceException {
-		// TODO Auto-generated method stub
-		DetachedCriteria criteria = DetachedCriteria.forClass(ReceiptModel.class);
-		
+	
+	private void addSearchRestrictions(DetachedCriteria criteria, String inNumber, String office, String doNumber, 
+			  String title, String startDate, String endDate, int page, int pageCount){
 		if(StringUtils.isNotEmpty(inNumber))
 			criteria.add(Restrictions.eq("inNumber", inNumber));
 		
@@ -47,9 +43,6 @@ public class ReceiptServiceImpl implements ReceiptService {
 		
 		if(StringUtils.isNotEmpty(office))
 			criteria.add(Restrictions.eq("office", office));
-		
-		if(StringUtils.isNotEmpty(status))
-			criteria.add(Restrictions.eq("status", Integer.parseInt(status)));
 		
 		if(StringUtils.isNotEmpty(title))
 			criteria.add(Restrictions.or(Restrictions.like("title", title, MatchMode.ANYWHERE), 
@@ -62,6 +55,27 @@ public class ReceiptServiceImpl implements ReceiptService {
 			criteria.add(Restrictions.le("inDate", Date.valueOf(endDate)));
 		
 		criteria.addOrder(Order.asc("status")).addOrder(Order.asc("isCompleted")).addOrder(Order.desc("inDate"));
+			}
+
+	@Override
+	public List<ReceiptModel> get(String inNumber, String office, String doNumber, String status, 
+			  String title, String startDate, String endDate, int page, int pageCount) throws ServiceException {
+		// TODO Auto-generated method stub
+		DetachedCriteria criteria = DetachedCriteria.forClass(ReceiptModel.class);
+		
+		addSearchRestrictions(criteria, inNumber, office, doNumber, title, startDate, endDate, page, pageCount);
+		
+		if(StringUtils.isNotEmpty(status)){
+			if(status.indexOf(",") > -1){
+				String[] statusList = status.split(",");
+				Integer[] statusIntList = new Integer[statusList.length];
+				for(int i=0; i<statusList.length; i++)
+					statusIntList[i] = Integer.parseInt(statusList[i]);
+				criteria.add(Restrictions.in("status", statusIntList));
+			}else{
+				criteria.add(Restrictions.eq("status", Integer.parseInt(status)));
+			}
+		}
 		
 		return receiptDAO.getListByCriteria(criteria, (page - 1)*pageCount, pageCount);
 	}
@@ -88,6 +102,14 @@ public class ReceiptServiceImpl implements ReceiptService {
 		// TODO Auto-generated method stub
 		ReceiptModel model = receiptDAO.get(id);
 		model.setIsCompleted(1);
+		receiptDAO.saveOrUpdate(model);
+	}
+
+	@Override
+	public void register(String id) throws ServiceException {
+		// TODO Auto-generated method stub
+		ReceiptModel model = receiptDAO.get(id);
+		model.setStatus(ReceiptModel.EStatus.Register.getValue());
 		receiptDAO.saveOrUpdate(model);
 	}
 }
