@@ -15,7 +15,7 @@
    
    <http auto-config="true">
 		<!--指定登陆页面、成功页面、失败页面-->
-		<form-login login-page="/login.html" default-target-url="/loginRusultDealServlet"  always-use-default-target="false" login-processing-url="/j_spring_security_check" authentication-failure-url="/loginRusultDealServlet" />
+		<form-login login-page="/login.html" default-target-url="/loginRusultDealServlet"  always-use-default-target="false" login-processing-url="/j_spring_security_check" authentication-failure-url="/loginFailServlet" />
 		<intercept-url pattern="/home.html" access="IS_AUTHENTICATED_FULLY"/>
 		<intercept-url pattern="/home.swf" access="IS_AUTHENTICATED_FULLY"/>
 		<intercept-url pattern="/config.html" access="ROLE_SUPER_ROOT"/>
@@ -31,7 +31,7 @@
          	 max-sessions="1"同一账号最大登陆次数error-if-maximum-exceeded="true" 禁止同一账户2次登陆; false允许2次登陆并后登陆的账号会挤掉第一次登陆的账号  
              session-fixation-protection="none" 防止伪造sessionid攻击. 
           -->  
-         <session-management session-fixation-protection="none" invalid-session-url="/login.html">  
+         <session-management session-fixation-protection="newSession" invalid-session-url="/login.html">  
             <concurrency-control max-sessions="1" error-if-maximum-exceeded="false"/>
          </session-management>
           <!--增加一个filter，这点与Acegi是不一样的，不能修改默认的filter了，这个filter位于FILTER_SECURITY_INTERCEPTOR之前 -->

@@ -132,7 +132,8 @@
 	<mx:Component id="searchAccountDropDownItemRenderer">
 		<render:AdvancedItemRenderer selectedItems="{ outerDocument.search_account.selectedItems }" />
 	</mx:Component>
-	<mx:Panel width="100%" height="100%"  styleName="customPanel" title="公共通讯录"  borderVisible="false">
+	<mx:VBox borderVisible="true" width="100%" height="100%" borderStyle="solid">
+
 		<mx:VBox  width="100%" height="100%" >
 			<mx:HBox  width="100%" height="7%" backgroundColor="#C5E497" horizontalGap="10" paddingLeft="20" verticalAlign="middle">
 				<mx:Label text="|"/>
@@ -186,5 +187,5 @@
 		</mx:VBox>
 		
 		
-	</mx:Panel>
+	</mx:VBox>
 </mx:Module>

@@ -74,6 +74,16 @@
 		<servlet-name>LoginRusultDealServlet</servlet-name>
 		<url-pattern>/loginRusultDealServlet</url-pattern>
 	</servlet-mapping>
+	<servlet>
+		<servlet-name>LoginFailServlet</servlet-name>
+		<servlet-class>system.servlet.LoginFailServlet</servlet-class>
+		<load-on-startup>0</load-on-startup>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>LoginFailServlet</servlet-name>
+		<url-pattern>/LoginFailServlet</url-pattern>
+	</servlet-mapping>
 	
 	<servlet>
 		<servlet-name>ReloadSpringSecurityAuthServlet</servlet-name>
