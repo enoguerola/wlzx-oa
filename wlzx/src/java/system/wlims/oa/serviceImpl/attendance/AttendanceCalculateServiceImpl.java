@@ -177,7 +177,9 @@ public class AttendanceCalculateServiceImpl implements AttendanceCalculateServic
 			AttendanceCalculateVO vo=new AttendanceCalculateVO();
 			vo.setUserID(user.getId());
 			vo.setUserAccount(user.getName());
-			vo.setDepartmentName(user.getMainRole().getBelongDepartment().getName());
+			if(user.getMainDepartment()!=null)
+			vo.setDepartmentName(user.getMainDepartment().getName());
+			else 	vo.setDepartmentName("未指定");
 			vo.setTakeLeave_leaveDaySections(getSectionsOfValidTakeLeave(user.getId(),beginTime,endTime,TakeLeaveForm.Types.Leave.getValue().toString()));
 			vo.setTakeLeave_leaveTimes(getTimesOfValidTakeLeave(user.getId(),beginTime,endTime,TakeLeaveForm.Types.Leave.getValue().toString()));
 			vo.setTakeLeave_businessTripDaySections(getSectionsOfValidTakeLeave(user.getId(),beginTime,endTime,TakeLeaveForm.Types.BusinessTrip.getValue().toString()));
