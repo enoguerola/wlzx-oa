@@ -83,13 +83,14 @@ public class TeacherAccountBridgeService {
 		List<TripleObject<String, String,String>> triples = new ArrayList<TripleObject<String, String,String>>();
 		List<TeacherModel> teachers =teacherDAO.getTeachersByStatus(null) ;
 		if(teachers != null){
-			for(TeacherModel teacher : teachers){
-				UserModel user=userDAO.get(teacher.getUserID());
-				if(user==null) continue;
+			for(int i=0;i<teachers.size();i++){
+//				UserModel user=userDAO.get(teacher.getUserID());
+//				user.setRoles(null);
+//				if(user==null) continue;
 				triples.add(new TripleObject<String, String,String>(
-						teacher.getName(), user.getName(),user.getId()));
+						teachers.get(i).getName(), teachers.get(i).getTeacherNo(),teachers.get(i).getUserID()));
 			}
-		}
+		}	
 		return triples;
 	}
 	public List<UserAddressVo> getUserAddressesByConditions(String departmentId,String userId){
