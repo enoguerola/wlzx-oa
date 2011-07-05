@@ -117,7 +117,8 @@ public class UserModel  extends BaseModel implements UserDetails{
         for(RoleModel role : roles) {  
         	authSet.add(new SimpleGrantedAuthority(role.getSymbol())); 
         }  
-       
+        //默认继承最小权限集
+        authSet.add(new SimpleGrantedAuthority("basic_role")); 
         return authSet;  
 	}
 	//用户名
@@ -203,6 +204,7 @@ public class UserModel  extends BaseModel implements UserDetails{
 	public Set<DepartmentModel> getDepartments() {
 		Set<DepartmentModel> departments=new HashSet<DepartmentModel>();
 		for(RoleModel role:getAllRoles()){
+			if(role.getBelongDepartment()!=null)
 			departments.add(role.getBelongDepartment());
 		}
 		return departments;

@@ -53,7 +53,7 @@ public class WlzxMethodInvocationSecurityMetadataSource
 	               }
 	           } 
 	           //加载用户资源
-	            for (RoleModel role:roleDao.getAllRoles()){
+	            for (RoleModel role:roleDao.getAllRoles(false)){
 	                for(DataAccessModeModel resource:role.getDataAccessModes()){ 
 	                	if(resource.getBelongOperation().getRsType().equals("METHOD")){
 	                		 String key=resource.getBelongOperation().getRsValue();

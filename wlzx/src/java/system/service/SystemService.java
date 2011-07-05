@@ -105,6 +105,12 @@ public class SystemService{
 	//获得当前登录用户所有权限集
 	public Set<DataAccessModeModel> getAuthorizations(){
 		Set<DataAccessModeModel> dams=new TreeSet<DataAccessModeModel>();
+		//添加基础权限
+		RoleModel basic=roleDAO.getRoleBySymbol("basic_role");
+		for(DataAccessModeModel dam:basic.getDataAccessModes()){
+			if(!dams.contains(dam))
+			dams.add(dam);
+		}
 //		UserModel user=userDAO.get("2");
 		UserModel user=SecurityUserHolder.getCurrentUser();
 		if(user!=null){
@@ -223,7 +229,7 @@ public class SystemService{
 	}
 	//获得所有角色（岗位）
 	public List<RoleModel> getAllRoles(){		
-		return roleDAO.getAllRoles();
+		return roleDAO.getAllRoles(true);
 	}
 	//获得某角色（岗位）用户
 	public Set<UserModel> getRoleUsers(String roleId){	

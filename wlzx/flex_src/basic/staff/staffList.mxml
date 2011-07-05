@@ -131,14 +131,19 @@
 			{   
 				Alert.show("有错误");   
 			}  
-			
+			import	mx.controls.ProgressBarMode;
+
 			private function progressHandler(e:ProgressEvent):void   
 			{   
 				uploadbar.visible = true;
+				uploadbar.mode=ProgressBarMode.POLLED;
+
 				lblProgress.text = " 已上传 " + e.bytesLoaded   + " 字节，共 " + e.bytesTotal + " 字节";    
 				var proc: uint = e.bytesLoaded / e.bytesTotal * 100;    
-				uploadbar.setProgress(proc, 100);    
 				uploadbar.label= "当前进度: " + " " + proc + "%";   
+				uploadbar.setProgress(proc, 100);    
+				
+				uploadbar.validateNow();
 			}
 			
 			/**Event事件监听处理函数，弹出上传提示窗口   
@@ -373,10 +378,18 @@
 								</mx:itemRenderer>
 							</mx:DataGridColumn>
 							<mx:DataGridColumn textAlign="center" headerText="主部门" dataField="teacherDepartmentName" width="100">
-							
+								<mx:itemRenderer>
+									<fx:Component>
+										<mx:Label htmlText="{data.teacherDepartment==null?'未指定':parentApplication.getDepartmentNameById(data.teacherDepartment)}"/>									
+									</fx:Component>
+								</mx:itemRenderer>
 							</mx:DataGridColumn>
-							<mx:DataGridColumn textAlign="center" headerText="主职务" dataField="teacherPositionName" width="100">
-							
+							<mx:DataGridColumn textAlign="center" headerText="主职务" dataField="teacherPosition" width="100">
+								<mx:itemRenderer>
+									<fx:Component>
+										<mx:Label htmlText="{data.teacherPosition==null?'未指定':parentApplication.getRoleNameById(data.teacherPosition)}"/>									
+									</fx:Component>
+								</mx:itemRenderer>
 							</mx:DataGridColumn>
 
 							<mx:DataGridColumn textAlign="center" headerText="办公电话" dataField="teacherOfficePhone" width="100"></mx:DataGridColumn>
