@@ -160,6 +160,7 @@ public class TeacherService {
 		int startIndex = (page - 1) * pageCount;
 		
 		List<TeacherModel> list =  teacherDAO.getListByCriteria(criteria, startIndex, pageCount);
+//		List<TeacherModel> list =  teacherDAO.getListByCriteria(criteria);
 		for(TeacherModel teacher : list){
 			UserModel user = userDAO.getUserByUserAccount(teacher.getTeacherNo());
 			teacher.setTeacherDepartmentName(user.getMainDepartment()==null?"未指定":user.getMainDepartment().getName());
