@@ -21,12 +21,13 @@
 			       <![CDATA[   
 					   import flash.display.Stage;
 					   import flash.display.StageDisplayState;
+					   
+					   import mx.controls.Alert;
+					   import mx.events.ValidationResultEvent;
 					   import mx.managers.CursorManager;
 					   import mx.managers.CursorManagerPriority;
-					   import mx.controls.Alert;
 					   import mx.rpc.events.FaultEvent;
 					   import mx.rpc.events.ResultEvent;
-					   import mx.events.ValidationResultEvent;
 					   import mx.validators.Validator;
 					   private var validatorArr:Array;
 					 
@@ -37,7 +38,7 @@
 						// Alert.show(result);
 						 if(result=="success")
 							 ExternalInterface.call("function() {" +
-								 "window.location.href='home.html';" +
+								 "window.location.href='home.html?time="+new Date()+"';" +
 	//							 "window.open('home.html','FullWnd','fullscreen,scrollbars=no');" +
 	//							 "this.parent.opener=null;" +
 	//							 "this.parent.close();" +
@@ -51,7 +52,9 @@
 			         } 
 					 private function service_faultHandler(event:FaultEvent):void
 					 {
-		                Alert.show("请求异常");
+		               // Alert.show("请求异常");
+						 resultMsg.text="用户名密码错误";
+						 resultArea.visible=true;
 		             }
 					  private function init():void{
 						  myHttp.addEventListener(ResultEvent.RESULT, onExecuteSuccess);
@@ -69,7 +72,9 @@
 						   var validatorErrorArray:Array = Validator.validateAll(validatorArr);;
 						   var isValidForm:Boolean = validatorErrorArray.length == 0;
 						   if (isValidForm) {
+							   myHttp.url="j_spring_security_check?time="+new Date();
 							   myHttp.send();
+							   myHttp.url="j_spring_security_check?time="+new Date();
 							   myHttp.send();//临时解决初次请求不响应问题？？
 						   } else {
 							   var err:ValidationResultEvent;

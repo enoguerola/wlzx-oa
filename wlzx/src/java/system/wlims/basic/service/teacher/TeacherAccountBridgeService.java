@@ -106,8 +106,14 @@ public class TeacherAccountBridgeService {
 						vo.setUserAccount(user.getName());
 						if(user.getMainRole()!=null){
 							vo.setMainRoleName(user.getMainRole().getName());
-							if(user.getMainRole().getBelongDepartment()!=null)
-								vo.setMainDepartmentName(user.getMainRole().getBelongDepartment().getName());
+							
+						}else{
+							vo.setMainRoleName("未指定");
+						}
+						if(user.getMainDepartment()!=null){
+								vo.setMainDepartmentName(user.getMainDepartment().getName());
+						}else {
+							vo.setMainDepartmentName("未指定");
 						}
 						TeacherModel teacher=teacherDAO.getTeacherByUserId(user.getId());
 						if(teacher!=null){
