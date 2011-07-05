@@ -33,6 +33,9 @@
 		</property>
 		<property name="supervisorFlag" type="boolean">
 			<column name="supervisor_flag" />
+		</property> 
+		<property name="basicFlag" type="boolean">
+			<column name="basic_flag" />
 		</property> 	
 		<set name="subordinates" lazy="false"  table="wlzx_system_role_leadship" cascade="all">
 			<key column="leader_id" not-null="true" />

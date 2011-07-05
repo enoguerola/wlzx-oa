@@ -25,6 +25,7 @@ package system.entity
 		}
 		public function getAllRoles():String
 		{	var result:String="";
+			if(mainRole!=null)
 			result=result.concat(mainRole.name).concat("  |  ");
 			var roleList:ArrayCollection = ArrayCollection(roles);
 			CommonUtils.sortByCondition(roleList,'level');

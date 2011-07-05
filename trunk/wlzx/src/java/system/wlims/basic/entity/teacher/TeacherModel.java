@@ -24,8 +24,8 @@ public class TeacherModel extends PersonModel{
 	private String teacherProfessionTitle;
 	private String teacherSkillLevel;
 	private Date teacherSkillLevelDate;
-	private String teacherDepartment;//辅助显示
-	private String teacherPosition;//辅助显示
+	private String teacherDepartment;
+	private String teacherPosition;
 	private String teacherDepartmentName;//辅助显示
 	private String teacherPositionName;//辅助显示
 

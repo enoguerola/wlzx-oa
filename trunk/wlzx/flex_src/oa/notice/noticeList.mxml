@@ -48,8 +48,10 @@
 			
 		private function getNotice_resultHandler(event:ResultEvent):void
 		{
-			var allList:ArrayCollection=event.result as ArrayCollection;
-			table.initdata(allList);
+			if(event.result!=null){
+				var allList:ArrayCollection=event.result as ArrayCollection;
+				table.initdata(allList);
+			}
 		}
 			
 		public function detailNotice(id:String):void{

@@ -93,9 +93,12 @@ public class RoleDAO extends BaseDAOImpl<RoleModel> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<RoleModel> getAllRoles() {
+	public List<RoleModel> getAllRoles(boolean filterBasicFlag) {
 		DetachedCriteria criteria = DetachedCriteria.forClass(RoleModel.class);
 		criteria.addOrder(Order.asc("level"));
+		if(filterBasicFlag==true)
+		//过滤基础角色
+		criteria.add(Restrictions.ne("basicFlag", true));
 		List<RoleModel> result = this.getListByCriteria(criteria);
 		return result;
 	}

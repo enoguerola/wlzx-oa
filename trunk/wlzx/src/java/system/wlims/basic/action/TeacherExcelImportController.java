@@ -94,7 +94,7 @@ public class TeacherExcelImportController{
 			 String contactPhone = sheet.getCell(8, i).getContents();
 			 //sex str to int
 			 Integer sex = sheet.getCell(9, i).getContents().equals("男") ? 0 : 1;
-			 Date birthday = ((DateCell)sheet.getCell(10, i)).getDate();
+			 Date birthday = StringUtils.isEmpty(sheet.getCell(10, i).getContents())?null:((DateCell)sheet.getCell(10, i)).getDate();
 			 
 			 String nation = sheet.getCell(11, i).getContents();
 			 //marriage str to int
@@ -109,13 +109,13 @@ public class TeacherExcelImportController{
 			 String school = sheet.getCell(18, i).getContents();
 			 String position = sheet.getCell(19, i).getContents();
 			 String profession = sheet.getCell(20, i).getContents();
-			 Date workDate = ((DateCell)sheet.getCell(21, i)).getDate();
-			 Date attendDate = ((DateCell)sheet.getCell(22, i)).getDate();
+			 Date workDate = StringUtils.isEmpty(sheet.getCell(21, i).getContents())?null:((DateCell)sheet.getCell(21, i)).getDate();
+			 Date attendDate = StringUtils.isEmpty(sheet.getCell(22, i).getContents())?null:((DateCell)sheet.getCell(22, i)).getDate();
 			 String skill = sheet.getCell(23, i).getContents();
-			 Date skillDate = ((DateCell)sheet.getCell(24, i)).getDate();
+			 Date skillDate = StringUtils.isEmpty(sheet.getCell(24, i).getContents())?null: ((DateCell)sheet.getCell(24, i)).getDate();
 			 
 			 model.setAddress(address);
-			 model.setBirthday(new java.sql.Date(birthday.getTime()));
+			 model.setBirthday(birthday==null?null:new java.sql.Date(birthday.getTime()));
 			 model.setCreationDate(java.sql.Date.valueOf(UtilDateTime.nowDateString()));
 			 model.setHomePhone(homePhone);
 			 model.setModifiedDate(model.getCreationDate());
@@ -124,7 +124,7 @@ public class TeacherExcelImportController{
 			 model.setPoliticsStatus(politic);
 			 model.setSex(sex);
 			 model.setStyle(PersonStyle.Teacher.getStyle());
-			 model.setTeacherAttendDate(new java.sql.Date(attendDate.getTime()));
+			 model.setTeacherAttendDate(attendDate==null?null:new java.sql.Date(attendDate.getTime()));
 			 model.setTeacherContactPhone(contactPhone);
 			 model.setTeacherEducation(education);
 			 model.setTeacherGraduateSchool(school);
@@ -138,9 +138,9 @@ public class TeacherExcelImportController{
 			 model.setTeacherPositionName(position);
 			 model.setTeacherProfessionTitle(profession);
 			 model.setTeacherSkillLevel(skill);
-			 model.setTeacherSkillLevelDate(new java.sql.Date(skillDate.getTime()));
+			 model.setTeacherSkillLevelDate(skillDate==null?null:new java.sql.Date(skillDate.getTime()));
 			 model.setTeacherStatus(1);
-			 model.setTeacherWorkDate(new java.sql.Date(workDate.getTime()));
+			 model.setTeacherWorkDate(workDate==null?null:new java.sql.Date(workDate.getTime()));
 			 model.setTeacherProfession(major);
 			 model.setTeacherDepartmentName(group);
 			 

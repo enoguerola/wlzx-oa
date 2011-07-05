@@ -30,7 +30,7 @@ public class RoleModel extends BaseModel {
 	private static final long serialVersionUID = 7679845606857505181L;
 	private String detail;
 	private int level;//岗位级别
-	private Boolean supervisorFlag;//部门主管标记，注：有此标记的角色不可自行删除，随部门删除而删除
+	private Boolean supervisorFlag=false;//部门主管标记，注：有此标记的角色不可自行删除，随部门删除而删除
 	private Set<RoleModel> subordinates=new TreeSet<RoleModel>();//直属下级角色
 	private Set<RoleModel> leaders=new TreeSet<RoleModel>();//直属上级角色
 	private Set<UserModel> users=new TreeSet<UserModel>();//角色用户集
@@ -38,6 +38,7 @@ public class RoleModel extends BaseModel {
 	private Set<DataAccessModeModel> dataAccessModes=new TreeSet<DataAccessModeModel>();//角色数据访问权限
 	private Set<DepartmentModel> departments=new TreeSet<DepartmentModel>();//所属部门集
 	private Set<DepartmentModel> leadingDepartments=new TreeSet<DepartmentModel>();//该角色所领导的部门集
+	private Boolean basicFlag=false;
 	public String getDetail() {
 		return detail;
 	}
@@ -154,5 +155,13 @@ public class RoleModel extends BaseModel {
 
 	public void setMainUsers(Set<UserModel> mainUsers) {
 		this.mainUsers = mainUsers;
+	}
+
+	public Boolean getBasicFlag() {
+		return basicFlag;
+	}
+
+	public void setBasicFlag(Boolean basicFlag) {
+		this.basicFlag = basicFlag;
 	}
 }

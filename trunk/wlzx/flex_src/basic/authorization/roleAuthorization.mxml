@@ -8,6 +8,7 @@
 		<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 			<mx:method name="getSystemBySymbol"  concurrency="last"  result="getSystemBySymbolResult(event);" />
 			<mx:method name="getAllRoles"  concurrency="last"  result="getAllRolesResult(event);" />
+			<mx:method name="getRoleBySymbol"  concurrency="last"  result="getRoleBySymbolResult(event);" />
 			<mx:method name="getRoleSystemAuthorization"  concurrency="last"  result="getRoleSystemAuthorizationResult(event);" />
 			<mx:method name="saveRoleSystemAuthorization"  concurrency="last"  result="saveRoleSystemAuthorizationResult(event);" />
 
@@ -56,6 +57,7 @@
 			private function init():void {
 				lockWin();
 				systemServiceRO.getSystemBySymbol("root");
+				systemServiceRO.getRoleBySymbol("basic_role")
 				systemServiceRO.getAllRoles();
 				operationTree.percentHeight=100;
 				operationTree.percentWidth=100;
@@ -75,8 +77,9 @@
 				unLockWin();
 				Alert.show(event.fault.faultString, 'Error');
 			}
+			public var roleList:ArrayCollection=new ArrayCollection();
 			private function getAllRolesResult(event:ResultEvent):void {
-				var resultList:ArrayCollection = new ArrayCollection();
+//				var resultList:ArrayCollection = new ArrayCollection();
 //				Alert.show(resultList.length+"");
 				var allList:ArrayCollection=event.result as ArrayCollection;
 				if(allList.length>0){
@@ -86,11 +89,21 @@
 						for(var j:int = 0;j<_role.level;j++)
 							headText=headText.concat("--");
 						headText=headText.concat(_role.name);
-						resultList.addItem( {dataField:_role.id, headerText:headText})
+						roleList.addItem( {dataField:_role.id, headerText:headText})
 					}
 				}	
-				this.roles.dataProvider=resultList;				
+				this.roles.dataProvider=roleList;				
 				switchRoleAuthorization();
+				
+			}
+			private function getRoleBySymbolResult(event:ResultEvent):void {
+				
+				var _role:RoleModel = event.result as RoleModel;
+				var headText:String="";
+				headText=headText.concat("*");
+				headText=headText.concat(_role.name);
+				roleList.addItem( {dataField:_role.id, headerText:headText})
+					
 				
 			}
 		

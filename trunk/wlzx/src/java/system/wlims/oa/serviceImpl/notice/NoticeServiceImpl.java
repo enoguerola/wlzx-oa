@@ -176,17 +176,19 @@ public class NoticeServiceImpl implements NoticeService {
 		
 		UserModel userModel = SecurityUserHolder.getCurrentUser();
 		Set<DepartmentModel> set = userModel.getDepartments();
-		if(set != null && set.size() > 0){
-			set.addAll(userDAO.getAllLeaders(userModel));
-		}
+//		if(set != null && set.size() > 0){
+//			set.addAll(userDAO.getAllLeaders(userModel));
+//		}
 		Set<String> stringSet = new HashSet<String>();
+		if(set!=null&&set.size()>0){
+			for(DepartmentModel model: set){
+				stringSet.add(model.getId());
+			}
 		
-		for(DepartmentModel model: set){
-			stringSet.add(model.getId());
-		}
-		criteria.add(Restrictions.in("postDepartmentId", stringSet.toArray()));
-		
-		return noticeDAO.getListByCriteria(criteria, (index - 1)*page, page);
+			criteria.add(Restrictions.in("postDepartmentId", stringSet.toArray()));
+			
+			return noticeDAO.getListByCriteria(criteria, (index - 1)*page, page);
+		}else return null;
 	}
 
 	@Override

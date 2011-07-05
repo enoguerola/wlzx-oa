@@ -17,6 +17,7 @@
 		</mx:RemoteObject>
 		<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 			<mx:method name="getDepartmentBySymbol"  concurrency="last"  result="getDepartmentBySymbolResult(event);" />
+			<mx:method name="getAllRoles"  concurrency="last"  result="getAllRolesResult(event);" />
 		</mx:RemoteObject>
 	</fx:Declarations>
 	<fx:Script>    
@@ -46,6 +47,7 @@
 			public var currentUser:UserModel;
 			public var allTeacherAcccounts:ArrayCollection = new ArrayCollection();
 			public var allDepartment:ArrayCollection = new ArrayCollection();
+			public var allRole:ArrayCollection = new ArrayCollection();
 			
 			private function init():void{
 				securityUserHolder.getCurrentUser();
@@ -95,10 +97,10 @@
 				//				accounts.addItem({name:"",account:"",id:""});
 				var allList:ArrayCollection=event.result as ArrayCollection;
 				//Alert.show(allList.length+"");
-//				for(var i:int=0;i<allList.length;i++){
-//					var triple:TripleObject=allList.getItemAt(i) as TripleObject;
-//					allTeacherAcccounts.addItem({name:triple.left,account:triple.middle,id:triple.right});
-//				}
+				for(var i:int=0;i<allList.length;i++){
+					var triple:TripleObject=allList.getItemAt(i) as TripleObject;
+					allTeacherAcccounts.addItem({name:triple.left,account:triple.middle,id:triple.right});
+				}
 				//追加超级管理员
 				allTeacherAcccounts.addItem({name:"超级管理员",account:"super_root",id:"1"});
 			}
@@ -125,8 +127,10 @@
 				currentUser=event.result as UserModel;
 				account=currentUser.person.name;
 				roles=currentUser.getAllRoles();
-//				Alert.show(roles);
+			//Alert.show(roles);
+				if(currentUser.mainRole!=null)
 				mainRole=currentUser.mainRole.name;
+				if(currentUser.lastLoginTime!=null)
 				lastLoginTime=CommonUtils.formatDate(currentUser.lastLoginTime);
 //				Alert.show(event.result.name);
 				callLater(function():void{
@@ -141,6 +145,16 @@
 			}
 			private function fullScreen():void{
 				stage.displayState = StageDisplayState.FULL_SCREEN;	
+			}
+			private function getAllRolesResult(event:ResultEvent):void {
+				//				var resultList:ArrayCollection = new ArrayCollection();
+				//				Alert.show(resultList.length+"");
+				var allList:ArrayCollection=event.result as ArrayCollection;
+				
+				for(var i:int=0;i<allList.length;i++){
+					var role:RoleModel=allList.getItemAt(i) as RoleModel;
+					allRole.addItem( {data:role.id, label:role.name})
+				}
 			}
 			
 			private function getDepartmentBySymbolResult(event:ResultEvent):void {
@@ -172,6 +186,17 @@
 					}
 				}
 				return allDepartment.getItemAt(0).name;
+			}
+			public function getRoleNameById(id:String):String{
+				for(var i:int=0;i<allRole.length;i++){
+					var item:Object=allRole.getItemAt(i);
+					if(item.data == id){
+						var name:String = item.label;
+//						var index:int = name.lastIndexOf("-");
+						return name;
+					}
+				}
+				return "";
 			}
 
 		]]>    

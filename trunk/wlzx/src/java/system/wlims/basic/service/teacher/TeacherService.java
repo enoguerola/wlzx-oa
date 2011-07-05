@@ -89,11 +89,13 @@ public class TeacherService {
 						DepartmentModel department=departmentDAO.getDepartmentByName(model.getTeacherDepartmentName());
 						if(department!=null){
 							user.setMainDepartment(department);
+							model.setTeacherDepartment(department.getId());
 						}
 					}else if(!StringUtils.isEmpty(model.getTeacherDepartment())){
 						DepartmentModel department=departmentDAO.get(model.getTeacherDepartment());
 						if(department!=null){
 							user.setMainDepartment(department);
+							model.setTeacherDepartment(department.getId());
 						}
 					}
 				}
@@ -159,14 +161,14 @@ public class TeacherService {
 		
 		int startIndex = (page - 1) * pageCount;
 		
-		List<TeacherModel> list =  teacherDAO.getListByCriteria(criteria, startIndex, pageCount);
-//		List<TeacherModel> list =  teacherDAO.getListByCriteria(criteria);
+//		List<TeacherModel> list =  teacherDAO.getListByCriteria(criteria, startIndex, pageCount);
+		List<TeacherModel> list =  teacherDAO.getListByCriteria(criteria);
 		for(TeacherModel teacher : list){
-			UserModel user = userDAO.getUserByUserAccount(teacher.getTeacherNo());
-			teacher.setTeacherDepartmentName(user.getMainDepartment()==null?"未指定":user.getMainDepartment().getName());
-			teacher.setTeacherPositionName(user.getMainRole()==null?"未指定":user.getMainRole().getName());
-			teacher.setTeacherDepartment(user.getMainDepartment()==null?null:user.getMainDepartment().getId());
-			teacher.setTeacherPosition(user.getMainRole()==null?null:user.getMainRole().getId());
+//			UserModel user = userDAO.getUserByUserAccount(teacher.getTeacherNo());
+//			teacher.setTeacherDepartmentName(user.getMainDepartment()==null?"未指定":user.getMainDepartment().getName());
+//			teacher.setTeacherPositionName(user.getMainRole()==null?"未指定":user.getMainRole().getName());
+//			teacher.setTeacherDepartment(user.getMainDepartment()==null?null:user.getMainDepartment().getId());
+//			teacher.setTeacherPosition(user.getMainRole()==null?null:user.getMainRole().getId());
 			teacher.setExperiences(null);
 			teacher.setOtherDepartments(null);
 			teacher.setRelations(null);
