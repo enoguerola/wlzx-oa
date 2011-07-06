@@ -1,5 +1,6 @@
 package system.wlims.oa.serviceImpl.notice;
 
+import java.sql.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -103,10 +104,10 @@ public class NoticeServiceImpl implements NoticeService {
 			criteria.add(Restrictions.like("title", title));
 		
 		if(StringUtils.isNotEmpty(beginDate))
-			criteria.add(Restrictions.ge("postTime", beginDate));
+			criteria.add(Restrictions.ge("postTime",  Date.valueOf(beginDate)));
 		
 		if(StringUtils.isNotEmpty(endDate))
-			criteria.add(Restrictions.le("postTime", endDate));
+			criteria.add(Restrictions.le("postTime",  Date.valueOf(endDate)));
 		
 		if(StringUtils.isNotEmpty(status)){
 			int intstatus = Integer.parseInt(status);

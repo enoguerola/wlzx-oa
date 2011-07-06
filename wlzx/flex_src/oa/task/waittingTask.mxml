@@ -166,8 +166,27 @@
 				//Alert.show(result);
 				return result2;
 			}
-			public function enterEdit(id:String):void{
-
+			public function enterEdit(id:String,typeId:String):void{
+					//	Alert.show(type);
+				var parent:Object=(Object)(((Object)(this.owner)).owner);
+				if(typeId=="2"){
+					parent.addTab("adjustApprove-detail"+"_"+id,"调课处理",parent.nav,"oa/course/adjust/adjustApprove.swf",null,id);
+				}else if(typeId>="3"&&typeId<="6"){
+					parent.addTab("takeLeaveApprove-leave-detail"+"_"+id,"请假处理",parent.nav,"oa/attendance/takeLeaveApprove.swf",null,id);
+					
+				}else if(typeId>="7"&&typeId<="10"){
+					parent.addTab("takeLeaveApprove-bussiness-detail"+"_"+id,"出差处理",parent.nav,"oa/attendance/takeLeaveApprove.swf",null,id);
+					
+				}else if(typeId>="11"&&typeId<="11"){
+					//parent.addTab("moveRestDayForm-detail"+"_"+id,"销假处理",parent.nav,"oa/attendance/moveRestDayForm.swf",null,id);
+					
+				}else if(typeId>="12"&&typeId<="12"){
+					parent.addTab("overWorkApprove-detail"+"_"+id,"加班处理",parent.nav,"oa/attendance/overWorkApprove.swf",null,id);
+					
+				}else if(typeId>="13"&&typeId<="14"){
+					parent.addTab("moveRestDayApprove-detail"+"_"+id,"调休处理",parent.nav,"oa/attendance/moveRestDayApprove.swf",null,id);
+					
+				}
 			}
 		]]> 		
 	</fx:Script> 
@@ -226,7 +245,7 @@
 						<mx:itemRenderer>
 							<fx:Component>
 								<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0">
-									<mx:LinkButton  label="[处理]"   click="{this.outerDocument.enterEdit(data.id);}" enabled="{checkAuth(data)}">											
+									<mx:LinkButton  label="[处理]"   click="{this.outerDocument.enterEdit(data.id,data.typeId);}" enabled="{checkAuth(data)}">											
 									</mx:LinkButton>
 									
 									<fx:Script>
@@ -237,7 +256,7 @@
 										import mx.controls.Alert;
 										import mx.core.UIComponent;
 										private function checkAuth(data:Object):Boolean{
-										if(data.status!=1)
+										if(data.status!=1&&data.typeId!=1)
 										return true;
 										else return false;
 										}

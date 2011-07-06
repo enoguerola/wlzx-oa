@@ -153,6 +153,7 @@
 				applyServiceRO.getApplyById(applyId);
 			}
 			private function search():void{
+				lockWin();
 				applyServiceRO.personalApplySearch();
 			}
 			protected function systemFaultHandler(event:FaultEvent):void {
@@ -177,7 +178,7 @@
 				apply=event.result as ApplyModel;
 				detail_applyType.text=applyTypes.getItemAt(apply.applyType).label;
 				detail_applyNo.text="调课申请单[编号："+apply.applyNo+"]";
-				detail_applyTeacher.text=this.parentApplication.getTeacherNameByAccountId(apply.applyTeacherId);
+				detail_applyTeacher.text=getUserName(apply.applyTeacherId);
 				detail_applyStatus.text=status.getItemAt(ComboxUtils.findIndex(status,apply.applyStatus)).label;
 				detail_applyReason.text=apply.applyReason;
 				detailApplyItemsRepeater.dataProvider=apply.applyItems;
@@ -189,7 +190,7 @@
 				else detail_approveStatusDescribe.text=status.getItemAt(ComboxUtils.findIndex(status,apply.applyStatus)).label;
 				if(apply.approveTeacherId==null||apply.approveTeacherId=='')
 					detail_approveTeacher.text="--";
-				else detail_approveTeacher.text=this.parentApplication.getTeacherNameByAccountId(apply.approveTeacherId);
+				else detail_approveTeacher.text=getUserName(apply.approveTeacherId);
 				if(apply.approveRemark==null||apply.approveRemark=='')
 					detail_approveRemark.text="--";
 				else detail_approveRemark.text=apply.approveRemark;
@@ -200,7 +201,7 @@
 				apply=event.result as ApplyModel;
 				applyReason.text=apply.applyReason;
 				applyCreationDate.text=CommonUtils.formatDate(apply.applyCreationDate);
-				applyTeacher.text=this.parentApplication.getTeacherNameByAccountId(apply.applyTeacherId);
+				applyTeacher.text=getUserName(apply.applyTeacherId);
 				applyType.selectedIndex=apply.applyType;
 				var items:ArrayCollection = ArrayCollection(apply.applyItems);
 				for (var i:int = 0; i < items.length; i++){	
@@ -212,6 +213,7 @@
 
 				
 			}
+	
 			protected function cancleApplyById_resultHandler(event:ResultEvent):void
 			{
 				var result:Boolean=event.result as Boolean;
@@ -227,6 +229,7 @@
 			{
 				var allList:ArrayCollection=event.result as ArrayCollection;
 				applyTable.initdata(allList);
+				unLockWin();
 			}
 			
 			public function cancleApply(applyId:String):void{
@@ -266,7 +269,10 @@
 
 			}
 			public function detailApply(applyId:String):void{
-				detailInit(applyId);
+				var parent:Object=(Object)(((Object)(this.owner)).owner);
+				
+				parent.addTab("applyForm-detail"+"_"+applyId,"调课详单",parent.nav,"oa/course/adjust/adjustApplyForm.swf",null,applyId);
+				//detailInit(applyId);
 			}
 			protected function removeItem_clickHandler(event:MouseEvent):void{
 				itemCount--;
@@ -617,7 +623,9 @@
 				if(window!=null)
 					PopUpManager.removePopUp(window);
 			}
-
+			public function getUserName(id:String):String{
+				return parentApplication.getTeacherNameByAccountId(id);
+			}
 		]]> 		
 	</mx:Script> 
 		<mx:VBox borderVisible="true" width="100%" height="100%" borderStyle="solid">
@@ -710,7 +718,7 @@
 																<mx1:Text  width="160" textAlign="center" text="{outerDocument.formatDate((applyItemsRepeater.currentItem.applyCourseDate) as Date)+applyItemsRepeater.currentItem.applyCourseTime}"   />
 															</mx:GridItem>
 															<mx:GridItem  borderStyle="solid" verticalAlign="middle">
-																<mx1:Text width="60" textAlign="center" text="{applyItemsRepeater.currentItem.adjustActualTeacherId!=null?this.parentAppliaction.getTeacherNameByAccountId(applyItemsRepeater.currentItem.adjustActualTeacherId):'--'}" />
+																<mx1:Text width="60" textAlign="center" text="{applyItemsRepeater.currentItem.adjustActualTeacherId!=null?outerDocument.getUserName(applyItemsRepeater.currentItem.adjustActualTeacherId):'--'}" />
 															</mx:GridItem>
 															<mx:GridItem  borderStyle="solid" verticalAlign="middle">
 																<mx1:Text width="160" textAlign="center"  text="{applyItemsRepeater.currentItem.adjustActualDate!=null?outerDocument.formatDate((applyItemsRepeater.currentItem.adjustActualDate) as Date)+applyItemsRepeater.currentItem.adjustActualTime:'--'}"  />
@@ -763,7 +771,7 @@
 									<mx:itemRenderer>
 										<mx:Component>
 											<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
-												<mx:Label text="{data.approveTeacherId==null?'--':data.approveTeacherId}"/>
+												<mx:Label text="{data.approveTeacherId==null?'--':outerDocument.getUserName(data.approveTeacherId)}"/>
 											</mx:VBox>
 										</mx:Component>
 									</mx:itemRenderer>
@@ -984,11 +992,11 @@
 													<mx1:Text  textAlign="center"  text="{formatDate((detailApplyItemsRepeater.currentItem.adjustMeanDate) as Date)}"  />
 												</mx:GridItem>
 												<mx:GridItem  borderStyle="solid" verticalAlign="middle">
-													<mx1:Text width="60" textAlign="center" text="{parentApplication.getTeacherNameByAccountId(detailApplyItemsRepeater.currentItem.adjustMeanTeacherId)}" />
+													<mx1:Text width="60" textAlign="center" text="{this.outDocument.getUserName(detailApplyItemsRepeater.currentItem.adjustMeanTeacherId)}" />
 												</mx:GridItem>
 												
 												<mx:GridItem  borderStyle="solid" verticalAlign="middle">
-													<mx1:Text width="60" textAlign="center" text="{detailApplyItemsRepeater.currentItem.adjustActualTeacherId!=null?this.parentApplication.getTeacherNameByAccountId(detailApplyItemsRepeater.currentItem.adjustActualTeacherId):'--'}" />
+													<mx1:Text width="60" textAlign="center" text="{detailApplyItemsRepeater.currentItem.adjustActualTeacherId!=null?getUserName(detailApplyItemsRepeater.currentItem.adjustActualTeacherId):'--'}" />
 												</mx:GridItem>
 												<mx:GridItem  borderStyle="solid" verticalAlign="middle">
 													<mx1:Text  textAlign="center" width="200"  text="{detailApplyItemsRepeater.currentItem.adjustActualDate!=null?formatDate((detailApplyItemsRepeater.currentItem.adjustActualDate) as Date)+detailApplyItemsRepeater.currentItem.adjustActualTime:'--'}"  />
@@ -1068,7 +1076,7 @@
 								<mx:itemRenderer>
 									<mx:Component>
 										<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
-											<mx1:Text text="{this.parentApplication.getTeacherNameByAccountId(data.operationTeacherId)}" >
+											<mx1:Text text="{this.outerDocument.getUserName(data.operationTeacherId)}" >
 												
 											</mx1:Text>
 										</mx:VBox>																			

@@ -133,18 +133,27 @@ public class CourseAdjustServiceImpl implements CourseAdjustService{
 	@Override
 	public boolean saveApprove(ApplyModel apply) {
 		// TODO Auto-generated method stub
+		ApplyModel newApply=courseAdjustDAO.get(apply.getId());
+		newApply.setApplyItems(apply.getApplyItems());
+		newApply.setApproveDate(apply.getApproveDate());
+		newApply.setApproveRemark(apply.getApproveRemark());
+		newApply.setApproveTeacherId(apply.getApproveTeacherId());
+		
 		ApplyWorkFlowLog log=new ApplyWorkFlowLog();
 		log.setOperationName("课程处审批");
 		if(apply.getApplyStatus()==ApplyModel.ApplyStatus.PASS.getStatus()){
 			log.setOperationResult("课程处审批编号为"+apply.getApplyNo()+"的申请通过");
+			newApply.setApplyStatus(ApplyModel.ApplyStatus.PASS.getStatus());
 		}
 		else if(apply.getApplyStatus()==ApplyModel.ApplyStatus.CANCLE.getStatus()){
 			log.setOperationResult("课程处审批编号为"+apply.getApplyNo()+"的申请不通过");
+			newApply.setApplyStatus(ApplyModel.ApplyStatus.DENY.getStatus());
 		}
 		log.setOperationTime(new Date());
 		log.setOperationTeacherId(apply.getApproveTeacherId());
-		apply.getLogs().add(log);
-		courseAdjustDAO.saveOrUpdate(apply);
+		newApply.getLogs().add(log);
+
+		courseAdjustDAO.saveOrUpdate(newApply);
 		return true;
 	}
 	

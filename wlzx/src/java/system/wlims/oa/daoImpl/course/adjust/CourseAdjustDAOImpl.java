@@ -37,7 +37,7 @@ public class CourseAdjustDAOImpl extends BaseDAOImpl<ApplyModel> implements Cour
 		}
 		
 		
-		criteria.addOrder(Order.asc("applyNo"));
+		criteria.addOrder(Order.desc("applyNo"));
 		List<ApplyModel> result = getListByCriteria(criteria);
 		return result;
 	}
