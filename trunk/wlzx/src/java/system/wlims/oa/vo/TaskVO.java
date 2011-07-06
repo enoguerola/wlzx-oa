@@ -2,6 +2,7 @@ package system.wlims.oa.vo;
 
 public class TaskVO {
 	private String type;
+	private int typeId;
 	private String id;
 	private String title;
 	private String postTime;
@@ -155,6 +156,12 @@ public class TaskVO {
 	}
 	public void setWorkersIds(String workersIds) {
 		this.workersIds = workersIds;
+	}
+	public int getTypeId() {
+		return typeId;
+	}
+	public void setTypeId(int typeId) {
+		this.typeId = typeId;
 	}
 
 }

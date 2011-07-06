@@ -83,7 +83,7 @@
 					{label:"审批未通过", data:2},
 					{label:"取消", data:3}]); 
 			public var approveStatus:ArrayCollection = new ArrayCollection( 
-				[ 	{label:"请选择", data:null},
+				[ 	
 					{label:"审批通过", data:1},
 					{label:"审批未通过", data:2}]); 
 			public var types:ArrayCollection = new ArrayCollection( 
@@ -105,10 +105,18 @@
 			private var validatorArr:Array;
 			public var accounts:ArrayCollection = new ArrayCollection();
 			private function init():void {	
-				search_account.dataProvider=this.parentApplication.allTeacherAcccounts;
-				search_date_begin.text=CommonUtils.formatDate(CommonUtils.currentMonthBeginDate(),"YYYY-MM-DD");
-				search_date_end.text=CommonUtils.formatDate(CommonUtils.currentMonthEndDate(),"YYYY-MM-DD");
-				search();
+				var parms:String=((Object)(this.owner)).id;
+				//Alert.show(parms);
+				if(parms!=null&&parms!='null'&&parms!=''){
+					//this.currentState="";
+					enterApprove(parms);
+				}else{
+					search_account.dataProvider=this.parentApplication.allTeacherAcccounts;
+					search_date_begin.text=CommonUtils.formatDate(CommonUtils.currentMonthBeginDate(),"YYYY-MM-DD");
+					search_date_end.text=CommonUtils.formatDate(CommonUtils.currentMonthEndDate(),"YYYY-MM-DD");
+				}
+				
+				callLater(search);
 			}
 			protected function getAllUsers_resultHandler(event:ResultEvent):void{
 				var users:ArrayCollection=event.result as ArrayCollection;
@@ -189,23 +197,33 @@
 				if(apply.applyStatus-1>=0)
 				detail_approveStatusDescribe.selectedIndex=apply.applyStatus-1;
 				if(apply.approveTeacherId==null)detail_approveTeacher.text=this.parentApplication.account;
-				else detail_approveTeacher.text=apply.approveTeacherId;
+				else {
+					detail_approveTeacher.text=parentApplication.getTeacherNameByAccountId(apply.approveTeacherId);
+					detail_approveTeacherId.text=apply.approveTeacherId;
+				}
 				detail_approveRemark.text=apply.approveRemark;
 				var items:ArrayCollection = ArrayCollection(apply.applyItems);
 				for (var i:int = 0; i < items.length; i++){	
+					//Alert.show("a");
 					var item:ApplyItemModel = ApplyItemModel(items.getItemAt(i));
-					detail_adjustActualTeacher[i].dataProvider=this.parentApplication.allTeacherAcccounts;
-					detail_adjustActualTeacher[i].addEventListener(Event.CHANGE,function():void{
-						var items:ArrayCollection = detail_adjustActualTeacher[i].selectedItems;
-						detail_adjustActualTeacherId[i].text="";
-						for(var i:int=0;i<items.length;i++){
-							var item:Object=items.getItemAt(i);
-							if (item != null && item.hasOwnProperty( "id" ))
-							{
-								detail_adjustActualTeacherId[i].text=item.id;
-							}           
-						}
-					});
+					detail_adjustActualTeacher[i].text=parentApplication.getTeacherNameByAccountId(item.adjustActualTeacherId);
+					detail_adjustActualTeacherId[i].text=item.adjustActualTeacherId;
+					if(item.adjustActualDate!=null)
+					detail_adjustActualDate[i].text=formatDate((item.adjustActualDate) as Date,'YYYY-MM-DD');
+					detail_adjustActualTime[i].myText.text=item.adjustActualTime;
+					detail_adjustActualTeacher[i].dataProvider=parentApplication.allTeacherAcccounts;
+					//Alert.show("b");
+//					detail_adjustActualTeacher[i].addEventListener(Event.CHANGE,function():void{
+//						Alert.show(detail_adjustActualTeacher[i].selectedItem);
+//						var item:Object = detail_adjustActualTeacher.selectedItem;
+//						Alert.show(item.toString());
+//							if (item != null && item.hasOwnProperty( "id" ))
+//							{
+//								
+//								detail_adjustActualTeacherId[i].text=item.id;
+//							}           
+//						
+//					});
 //					item.adjustActualDate=DateFormatter.parseDateString(detail_adjustActualDate[i].text);
 					//item.adjustActualTime=detail_adjustActualTime[i].myText.text=item.adjustActualTime;
 //					item.adjustActualTeacherId=detail_adjustActualTeacher[i].text;
@@ -224,7 +242,7 @@
 						var item:ApplyItemModel = ApplyItemModel(items.getItemAt(i));
 						item.adjustActualDate=DateFormatter.parseDateString(detail_adjustActualDate[i].text);
 						item.adjustActualTime=detail_adjustActualTime[i].myText.text;
-						item.adjustActualTeacherId=detail_adjustActualTeacher[i].text;
+						item.adjustActualTeacherId=detail_adjustActualTeacherId[i].text;
 					}
 					apply.approveRemark=detail_approveRemark.text;
 					apply.approveTeacherId=detail_approveTeacherId.text;
@@ -269,7 +287,7 @@
 					search_account_id.text="";
 				}               
 			}
-			private function actualTeacherSelectAutoCompleteChange(event:Event):void
+			private function actualTeacherHandleAutoCompleteChange(event:Event):void
 			{
 				for(var i:int=0;i<apply.applyItems.length;i++){
 					if(event.target==detail_adjustActualTeacher[i]){
@@ -290,6 +308,7 @@
 				
 				
 			}
+	
 			import system.component.WlzxLockWin;
 			private var window:WlzxLockWin=null;
 			private function lockWin():void{
@@ -625,7 +644,7 @@
 												
 												<mx:GridItem  borderStyle="solid" verticalAlign="middle" width="120" horizontalAlign="center">
 													
-															<hc:AutoComplete id="detail_adjustActualTeacher"  labelField="name"  width="120"     matchType="anyPart" prompt="选择" selectedItemStyleName="none">
+															<hc:AutoComplete id="detail_adjustActualTeacher"  labelField="name"  width="120" change="{ actualTeacherHandleAutoCompleteChange(event) }" dataProvider="{parentApplication.allTeacherAcccounts}"    matchType="anyPart" prompt="选择" selectedItemStyleName="none">
 																
 															</hc:AutoComplete>
 															<mx:Label  text=""   id="detail_adjustActualTeacherId" visible="false"/>
@@ -635,7 +654,7 @@
 												<mx:GridItem  borderStyle="solid" verticalAlign="middle" width="300" horizontalAlign="center">
 													<mx:HBox>
 														<mx:DateField yearNavigationEnabled="true" id="detail_adjustActualDate"   formatString="YYYY-MM-DD"  width="100" />
-														<mutiComboBox:MyDropList id="detail_adjustActualTime"  dataProvider="{new ArrayCollection(CommonUtils.clone(courseSections.toArray()))}"  width="180">
+														<mutiComboBox:MyDropList id="detail_adjustActualTime"  dataProvider="{new ArrayCollection(CommonUtils.clone(courseSections.toArray()))}"  width="180" >
 															
 														</mutiComboBox:MyDropList>
 													</mx:HBox>

@@ -39,6 +39,7 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 		for(TaskModel task:taskList){
 			TaskVO taskVO=new TaskVO();
 			taskVO.setType(TaskVO.EType.Task.getText());
+			taskVO.setTypeId(TaskVO.EType.Task.getValue().intValue());
 			taskVO.setAssignerId(task.getAssignerId());
 			taskVO.setId(task.getId());
 			taskVO.setPostTime(UtilDateTime.toDateString(task.getPostTime(),"yyyy-MM-dd HH:mm:ss"));
@@ -57,10 +58,14 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 					//请假出差期间工作落实
 					TaskVO taskVO=new TaskVO();
 					taskVO.setStatus(TaskVO.EStatus.ToBeDeal.getText());
-					if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.BusinessTrip.getValue().intValue())
+					if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.BusinessTrip.getValue().intValue()){
 						taskVO.setType(TaskVO.EType.AskForLeave_BusinessTrip_TechArrange.getText());
-					else if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.Leave.getValue().intValue())
+						taskVO.setTypeId(TaskVO.EType.AskForLeave_BusinessTrip_TechArrange.getValue().intValue());
+					}
+					else if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.Leave.getValue().intValue()){
 						taskVO.setType(TaskVO.EType.AskForLeave_Leave_TechArrange.getText());
+						taskVO.setTypeId(TaskVO.EType.AskForLeave_Leave_TechArrange.getValue().intValue());
+					}
 					taskVO.setAssignerId(TaskVO.EAssigner.Default.getValue().intValue()+"");
 					taskVO.setId(takeLeaveForm.getId());
 					try {
@@ -69,8 +74,8 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 					} catch (ParseException e) {
 						e.printStackTrace();
 					}
-					if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.BusinessTrip.getValue().intValue())
-						taskVO.setTitle(TaskVO.ETitle.AskForLeave_BusinessTrip_TechArrange.getText());
+					if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.BusinessTrip.getValue().intValue()){
+						taskVO.setTitle(TaskVO.ETitle.AskForLeave_BusinessTrip_TechArrange.getText());}
 					else if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.Leave.getValue().intValue())
 						taskVO.setTitle(TaskVO.ETitle.AskForLeave_Leave_TechArrange.getText());
 					taskVO.setWorkersIds(takeLeaveForm.getTeacherId());
@@ -89,10 +94,15 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 					if(takeLeaveForm.getArrangeTechDealAlready()==true){
 						TaskVO taskVO1=new TaskVO();
 						taskVO1.setStatus(TaskVO.EStatus.ToBeDeal.getText());
-						if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.BusinessTrip.getValue().intValue())
+						if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.BusinessTrip.getValue().intValue()){
 							taskVO1.setType(TaskVO.EType.AskForLeave_BusinessTrip_OfficalApprove.getText());
-						else if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.Leave.getValue().intValue())
+							taskVO1.setTypeId(TaskVO.EType.AskForLeave_BusinessTrip_OfficalApprove.getValue().intValue());
+
+						}
+						else if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.Leave.getValue().intValue()){
 							taskVO1.setType(TaskVO.EType.AskForLeave_Leave_OfficalApprove.getText());
+							taskVO1.setTypeId(TaskVO.EType.AskForLeave_Leave_OfficalApprove.getValue().intValue());
+						}
 						taskVO1.setAssignerId(TaskVO.EAssigner.Default.getValue().intValue()+"");
 						taskVO1.setId(takeLeaveForm.getId());
 						try {
@@ -118,10 +128,14 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 					if(takeLeaveForm.getOfficeChiefStatus()!=null&&takeLeaveForm.getOfficeChiefStatus().intValue()==1){
 						TaskVO taskVO2=new TaskVO();
 						taskVO2.setStatus(TaskVO.EStatus.ToBeDeal.getText());
-						if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.BusinessTrip.getValue().intValue())
+						if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.BusinessTrip.getValue().intValue()){
 							taskVO2.setType(TaskVO.EType.AskForLeave_BusinessTrip_VicePrincipalApprove.getText());
-						else if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.Leave.getValue().intValue())
+							taskVO2.setTypeId(TaskVO.EType.AskForLeave_BusinessTrip_VicePrincipalApprove.getValue().intValue());
+						}
+						else if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.Leave.getValue().intValue()){
 							taskVO2.setType(TaskVO.EType.AskForLeave_Leave_VicePrincipalApprove.getText());
+							taskVO2.setTypeId(TaskVO.EType.AskForLeave_Leave_VicePrincipalApprove.getValue().intValue());
+						}
 						taskVO2.setAssignerId(TaskVO.EAssigner.Default.getValue().intValue()+"");
 						taskVO2.setId(takeLeaveForm.getId());
 						try {
@@ -148,10 +162,14 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 					if(takeLeaveForm.getVicePrincipalStatus()!=null&&takeLeaveForm.getVicePrincipalStatus().intValue()==1){
 						TaskVO taskVO3=new TaskVO();
 						taskVO3.setStatus(TaskVO.EStatus.ToBeDeal.getText());
-						if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.BusinessTrip.getValue().intValue())
+						if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.BusinessTrip.getValue().intValue()){
 							taskVO3.setType(TaskVO.EType.AskForLeave_BusinessTrip_PrincipalApprove.getText());
-						else if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.Leave.getValue().intValue())
+							taskVO3.setTypeId(TaskVO.EType.AskForLeave_BusinessTrip_PrincipalApprove.getValue().intValue());
+						}
+						else if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.Leave.getValue().intValue()){
 							taskVO3.setType(TaskVO.EType.AskForLeave_Leave_PrincipalApprove.getText());
+							taskVO3.setTypeId(TaskVO.EType.AskForLeave_Leave_PrincipalApprove.getValue().intValue());
+						}
 						taskVO3.setAssignerId(TaskVO.EAssigner.Default.getValue().intValue()+"");
 						taskVO3.setId(takeLeaveForm.getId());
 						try {
@@ -181,6 +199,7 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 			for(OverWorkForm overWorkForm:overWorkList){
 						TaskVO taskVO1=new TaskVO();
 						taskVO1.setType(TaskVO.EType.OverWork_OfficalApprove.getText());
+						taskVO1.setTypeId(TaskVO.EType.OverWork_OfficalApprove.getValue().intValue());
 						taskVO1.setAssignerId(TaskVO.EAssigner.Default.getValue().intValue()+"");
 						taskVO1.setId(overWorkForm.getId());
 						try {
@@ -208,6 +227,7 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 						//处室审批
 						TaskVO taskVO1=new TaskVO();
 						taskVO1.setType(TaskVO.EType.MoveRestDay_OfficalApprove.getText());
+						taskVO1.setTypeId(TaskVO.EType.MoveRestDay_OfficalApprove.getValue().intValue());
 						taskVO1.setAssignerId(TaskVO.EAssigner.Default.getValue().intValue()+"");
 						taskVO1.setId(moveRestDayForm.getId());
 						try {
@@ -229,6 +249,7 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 						if(moveRestDayForm.getOfficeChiefStatus()!=null&&moveRestDayForm.getOfficeChiefStatus().intValue()==1){
 							TaskVO taskVO2=new TaskVO();
 							taskVO2.setType(TaskVO.EType.MoveRestDay_VicePrincipalApprove.getText());
+							taskVO2.setTypeId(TaskVO.EType.MoveRestDay_VicePrincipalApprove.getValue().intValue());
 							taskVO2.setAssignerId(TaskVO.EAssigner.Default.getValue().intValue()+"");
 							taskVO2.setId(moveRestDayForm.getId());
 							try {
@@ -255,6 +276,7 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 			for(ApplyModel applyModel:applyList){
 						TaskVO taskVO1=new TaskVO();
 						taskVO1.setType(TaskVO.EType.CourseAdjust_Approve.getText());
+						taskVO1.setTypeId(TaskVO.EType.CourseAdjust_Approve.getValue().intValue());
 						taskVO1.setAssignerId(TaskVO.EAssigner.Default.getValue().intValue()+"");
 						taskVO1.setId(applyModel.getId());
 						try {
@@ -287,6 +309,7 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 		for(TaskModel task:taskList){
 			TaskVO taskVO=new TaskVO();
 			taskVO.setType(TaskVO.EType.Task.getText());
+			taskVO.setTypeId(TaskVO.EType.Task.getValue().intValue());
 			taskVO.setAssignerId(task.getAssignerId());
 			taskVO.setId(task.getId());
 			taskVO.setPostTime(UtilDateTime.toDateString(task.getPostTime(),"yyyy-MM-dd HH:mm:ss"));
@@ -306,10 +329,15 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 				if(takeLeaveForm.getArrangeTechDealAlready()==false&&takeLeaveForm.getStatus().intValue()!=TakeLeaveForm.Status.Cancle.getValue().intValue()){
 					TaskVO taskVO=new TaskVO();
 					taskVO.setStatus(TaskVO.EStatus.ToBeDeal.getText());
-					if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.BusinessTrip.getValue().intValue())
+					if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.BusinessTrip.getValue().intValue()){
 						taskVO.setType(TaskVO.EType.AskForLeave_BusinessTrip_TechArrange.getText());
-					else if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.Leave.getValue().intValue())
+						taskVO.setTypeId(TaskVO.EType.AskForLeave_BusinessTrip_TechArrange.getValue().intValue());
+					}
+					else if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.Leave.getValue().intValue()){
 						taskVO.setType(TaskVO.EType.AskForLeave_Leave_TechArrange.getText());
+						taskVO.setTypeId(TaskVO.EType.AskForLeave_Leave_TechArrange.getValue().intValue());
+					}
+						
 					taskVO.setAssignerId(TaskVO.EAssigner.Default.getValue().intValue()+"");
 					taskVO.setId(takeLeaveForm.getId());
 					try {
@@ -331,10 +359,14 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 					if(takeLeaveForm.getArrangeTechDealAlready()==true&&takeLeaveForm.getOfficeChiefStatus()==null&&takeLeaveForm.getStatus().intValue()!=TakeLeaveForm.Status.Cancle.getValue().intValue()){
 						TaskVO taskVO1=new TaskVO();
 						taskVO1.setStatus(TaskVO.EStatus.ToBeDeal.getText());
-						if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.BusinessTrip.getValue().intValue())
+						if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.BusinessTrip.getValue().intValue()){
 							taskVO1.setType(TaskVO.EType.AskForLeave_BusinessTrip_OfficalApprove.getText());
-						else if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.Leave.getValue().intValue())
+							taskVO1.setTypeId(TaskVO.EType.AskForLeave_BusinessTrip_OfficalApprove.getValue().intValue());
+						}
+						else if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.Leave.getValue().intValue()){
 							taskVO1.setType(TaskVO.EType.AskForLeave_Leave_OfficalApprove.getText());
+							taskVO1.setTypeId(TaskVO.EType.AskForLeave_Leave_OfficalApprove.getValue().intValue());
+						}
 						taskVO1.setAssignerId(TaskVO.EAssigner.Default.getValue().intValue()+"");
 						taskVO1.setId(takeLeaveForm.getId());
 						try {
@@ -354,10 +386,14 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 					if(takeLeaveForm.getOfficeChiefStatus()!=null&&takeLeaveForm.getOfficeChiefStatus().intValue()==1&&takeLeaveForm.getVicePrincipalStatus()==null&&takeLeaveForm.getStatus().intValue()!=TakeLeaveForm.Status.Cancle.getValue().intValue()){
 						TaskVO taskVO2=new TaskVO();
 						taskVO2.setStatus(TaskVO.EStatus.ToBeDeal.getText());
-						if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.BusinessTrip.getValue().intValue())
+						if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.BusinessTrip.getValue().intValue()){
 							taskVO2.setType(TaskVO.EType.AskForLeave_BusinessTrip_VicePrincipalApprove.getText());
-						else if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.Leave.getValue().intValue())
+							taskVO2.setTypeId(TaskVO.EType.AskForLeave_BusinessTrip_VicePrincipalApprove.getValue().intValue());
+						}
+						else if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.Leave.getValue().intValue()){
 							taskVO2.setType(TaskVO.EType.AskForLeave_Leave_VicePrincipalApprove.getText());
+							taskVO2.setTypeId(TaskVO.EType.AskForLeave_Leave_VicePrincipalApprove.getValue().intValue());
+						}
 						taskVO2.setAssignerId(TaskVO.EAssigner.Default.getValue().intValue()+"");
 						taskVO2.setId(takeLeaveForm.getId());
 						try {
@@ -381,10 +417,14 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 					if(takeLeaveForm.getVicePrincipalStatus()!=null&&takeLeaveForm.getVicePrincipalStatus().intValue()==1&&takeLeaveForm.getPrincipalStatus()==null&&takeLeaveForm.getStatus().intValue()!=TakeLeaveForm.Status.Cancle.getValue().intValue()){
 						TaskVO taskVO3=new TaskVO();
 						taskVO3.setStatus(TaskVO.EStatus.ToBeDeal.getText());
-						if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.BusinessTrip.getValue().intValue())
+						if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.BusinessTrip.getValue().intValue()){
 							taskVO3.setType(TaskVO.EType.AskForLeave_BusinessTrip_PrincipalApprove.getText());
-						else if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.Leave.getValue().intValue())
+							taskVO3.setTypeId(TaskVO.EType.AskForLeave_BusinessTrip_PrincipalApprove.getValue().intValue());
+						}
+						else if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.Leave.getValue().intValue()){
 							taskVO3.setType(TaskVO.EType.AskForLeave_Leave_PrincipalApprove.getText());
+							taskVO3.setTypeId(TaskVO.EType.AskForLeave_Leave_PrincipalApprove.getValue().intValue());
+						}
 						taskVO3.setAssignerId(TaskVO.EAssigner.Default.getValue().intValue()+"");
 						taskVO3.setId(takeLeaveForm.getId());
 						try {
@@ -413,6 +453,7 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 	
 							TaskVO taskVO1=new TaskVO();
 							taskVO1.setType(TaskVO.EType.OverWork_OfficalApprove.getText());
+							taskVO1.setTypeId(TaskVO.EType.OverWork_OfficalApprove.getValue().intValue());
 							taskVO1.setAssignerId(TaskVO.EAssigner.Default.getValue().intValue()+"");
 							taskVO1.setId(overWorkForm.getId());
 							try {
@@ -437,6 +478,7 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 
 						TaskVO taskVO1=new TaskVO();
 						taskVO1.setType(TaskVO.EType.MoveRestDay_OfficalApprove.getText());
+						taskVO1.setTypeId(TaskVO.EType.MoveRestDay_OfficalApprove.getValue().intValue());
 						taskVO1.setAssignerId(TaskVO.EAssigner.Default.getValue().intValue()+"");
 						taskVO1.setId(moveRestDayForm.getId());
 						try {
@@ -459,6 +501,7 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 						if(moveRestDayForm.getOfficeChiefStatus()!=null&&moveRestDayForm.getOfficeChiefStatus().intValue()==1){
 							TaskVO taskVO2=new TaskVO();
 							taskVO2.setType(TaskVO.EType.MoveRestDay_VicePrincipalApprove.getText());
+							taskVO2.setTypeId(TaskVO.EType.MoveRestDay_VicePrincipalApprove.getValue().intValue());
 							taskVO2.setAssignerId(TaskVO.EAssigner.Default.getValue().intValue()+"");
 							taskVO2.setId(moveRestDayForm.getId());
 							try {
@@ -482,6 +525,7 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 				if(applyModel.getApplyStatus()==ApplyModel.ApplyStatus.WAITING.getStatus()){
 						TaskVO taskVO1=new TaskVO();
 						taskVO1.setType(TaskVO.EType.CourseAdjust_Approve.getText());
+						taskVO1.setTypeId(TaskVO.EType.CourseAdjust_Approve.getValue().intValue());
 						taskVO1.setAssignerId(TaskVO.EAssigner.Default.getValue().intValue()+"");
 						taskVO1.setId(applyModel.getId());
 						try {

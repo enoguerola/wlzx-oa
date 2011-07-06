@@ -102,7 +102,12 @@
 			
 			private function init():void{
 				search_account.dataProvider=this.parentApplication.allTeacherAcccounts;
-				search();
+				var parms:String=((Object)(this.owner)).id;
+				//Alert.show(parms);
+				if(parms!=null&&parms!='null'&&parms!=''){
+					//this.currentState="";
+					enterEdit(parms);
+				}
 			}
 			protected function systemFaultHandler(event:FaultEvent):void {
 				unLockWin();

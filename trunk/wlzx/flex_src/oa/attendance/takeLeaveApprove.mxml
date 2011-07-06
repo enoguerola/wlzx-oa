@@ -103,7 +103,14 @@
 		
 			private function init():void{
 				search_account.dataProvider=this.parentApplication.allTeacherAcccounts;
-				search();
+				var parms:String=((Object)(this.owner)).id;
+				//Alert.show(parms);
+				if(parms!=null&&parms!='null'&&parms!=''){
+					//this.currentState="";
+					enterEdit(parms);
+				}
+				
+				callLater(search);
 			}
 			protected function systemFaultHandler(event:FaultEvent):void {
 				Alert.show(event.fault.faultString, 'Error');
