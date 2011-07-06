@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2011 年 07 月 05 日 22:05
+-- 生成日期: 2011 年 07 月 06 日 12:21
 -- 服务器版本: 5.0.91
 -- PHP 版本: 5.2.13
 
@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_data_access_mode` (
   `modified_date` timestamp NOT NULL default '0000-00-00 00:00:00' on update CURRENT_TIMESTAMP,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `symbol` (`symbol`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=59 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=66 ;
 
 --
 -- 转存表中的数据 `wlzx_system_data_access_mode`
@@ -117,7 +117,14 @@ INSERT INTO `wlzx_system_data_access_mode` (`id`, `name`, `symbol`, `sequence`, 
 (55, '全部数据', 'receipt_ratify_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-02 00:00:00', '2011-07-02 16:42:12'),
 (56, '全部数据', 'receipt_undertake_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-02 00:00:00', '2011-07-02 16:43:22'),
 (57, '全部数据', 'receipt_circulate_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-02 00:00:00', '2011-07-02 16:44:14'),
-(58, '全部数据', 'receipt_manage_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-02 00:00:00', '2011-07-02 16:45:20');
+(58, '全部数据', 'receipt_manage_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-02 00:00:00', '2011-07-02 16:45:20'),
+(59, '全部数据', 'conferenceApply_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-06 00:00:00', '2011-07-06 12:10:25'),
+(60, '全部数据', 'conferenceRoomCheck_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-06 00:00:00', '2011-07-06 12:10:11'),
+(61, '全部数据', 'conferenceSummary_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-06 00:00:00', '2011-07-06 12:09:24'),
+(62, '全部数据', 'conferenceArrange_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-06 00:00:00', '2011-07-06 12:11:47'),
+(63, '全部数据', 'conferenceSelfAttending_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-06 00:00:00', '2011-07-06 12:13:03'),
+(64, '全部数据', 'person_conferenceAttending_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-06 00:00:00', '2011-07-06 12:15:47'),
+(65, '全部数据', 'system_person_setting_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-06 00:00:00', '2011-07-06 12:19:36');
 
 -- --------------------------------------------------------
 
@@ -345,7 +352,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_menu` (
   `modified_date` timestamp NOT NULL default '0000-00-00 00:00:00' on update CURRENT_TIMESTAMP,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `symbol` (`symbol`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=71 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=79 ;
 
 --
 -- 转存表中的数据 `wlzx_system_menu`
@@ -407,7 +414,15 @@ INSERT INTO `wlzx_system_menu` (`id`, `name`, `symbol`, `sequence`, `detail`, `m
 (67, '收文批示', 'receipt_ratify', 2, '', '', '2011-07-01 00:00:00', '2011-07-02 16:36:17'),
 (68, '收文承办', 'receipt_undertake', 3, '', '', '2011-07-02 00:00:00', '2011-07-02 16:36:59'),
 (69, '收文传阅', 'receipt_circulate', 4, '', '', '2011-07-02 00:00:00', '2011-07-02 16:37:37'),
-(70, '收文管理', 'receipt_manage', 5, '', '', '2011-07-02 00:00:00', '2011-07-02 16:38:27');
+(70, '收文管理', 'receipt_manage', 5, '', '', '2011-07-02 00:00:00', '2011-07-02 16:38:27'),
+(71, '会议管理', 'conferenceManage', 2, '', '', '2011-07-06 00:00:00', '2011-07-06 12:00:26'),
+(72, '会议申请', 'conferenceApply', 0, '', '', '2011-07-06 00:00:00', '2011-07-06 12:01:22'),
+(73, '会议室查看', 'conferenceRoomCheck', 1, '', '', '2011-07-06 00:00:00', '2011-07-06 12:02:22'),
+(74, '会议总结', 'conferenceSummary', 2, '', '', '2011-07-06 00:00:00', '2011-07-06 12:03:32'),
+(75, '会议安排', 'conferenceArrange', 5, '', '', '2011-07-06 00:00:00', '2011-07-06 12:04:16'),
+(76, '我参与的会议', 'conferenceSelfAttending', 4, '', '', '2011-07-06 00:00:00', '2011-07-06 12:05:05'),
+(77, '我参与的会议', 'person_conferenceAttending', 7, '', '', '2011-07-06 00:00:00', '2011-07-06 12:14:50'),
+(78, '用户设置', 'system_person_setting', 0, '', '', '2011-07-06 00:00:00', '2011-07-06 12:17:22');
 
 -- --------------------------------------------------------
 
@@ -420,7 +435,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_menu_module_relationship` (
   `menu_id` bigint(20) NOT NULL,
   `module_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=52 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=59 ;
 
 --
 -- 转存表中的数据 `wlzx_system_menu_module_relationship`
@@ -465,7 +480,14 @@ INSERT INTO `wlzx_system_menu_module_relationship` (`id`, `menu_id`, `module_id`
 (48, 67, 52),
 (49, 68, 53),
 (50, 69, 54),
-(51, 70, 55);
+(51, 70, 55),
+(52, 72, 56),
+(53, 73, 57),
+(54, 74, 58),
+(55, 75, 59),
+(56, 76, 60),
+(57, 77, 61),
+(58, 78, 62);
 
 -- --------------------------------------------------------
 
@@ -504,7 +526,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_menu_treeship` (
   `parent_id` bigint(20) NOT NULL,
   `child_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=65 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=73 ;
 
 --
 -- 转存表中的数据 `wlzx_system_menu_treeship`
@@ -559,7 +581,15 @@ INSERT INTO `wlzx_system_menu_treeship` (`id`, `parent_id`, `child_id`) VALUES
 (61, 34, 67),
 (62, 34, 68),
 (63, 34, 69),
-(64, 34, 70);
+(64, 34, 70),
+(65, 11, 71),
+(66, 71, 72),
+(67, 71, 73),
+(68, 71, 74),
+(69, 71, 75),
+(70, 71, 76),
+(71, 50, 77),
+(72, 18, 78);
 
 -- --------------------------------------------------------
 
@@ -602,7 +632,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_module` (
   `parms` varchar(300) default NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `symbol` (`symbol`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=56 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=63 ;
 
 --
 -- 转存表中的数据 `wlzx_system_module`
@@ -647,7 +677,14 @@ INSERT INTO `wlzx_system_module` (`id`, `name`, `symbol`, `sequence`, `detail`, 
 (52, '收文批示主模块', 'receipt_ratify_main', 0, '', '2011-07-02 00:00:00', '2011-07-02 16:42:12', 'oa/receipt/ratifyList.swf', ''),
 (53, '收文承办主模块', 'receipt_undertake_main', 0, '', '2011-07-02 00:00:00', '2011-07-02 16:43:22', 'oa/receipt/undertakeList.swf', ''),
 (54, '收文传阅主模块', 'receipt_circulate_main', 0, '', '2011-07-02 00:00:00', '2011-07-02 16:44:14', 'oa/receipt/circulateList.swf', ''),
-(55, '收文管理主模块', 'receipt_manage_main', 0, '', '2011-07-02 00:00:00', '2011-07-02 16:45:20', 'oa/receipt/manageList.swf', '');
+(55, '收文管理主模块', 'receipt_manage_main', 0, '', '2011-07-02 00:00:00', '2011-07-02 16:45:20', 'oa/receipt/manageList.swf', ''),
+(56, '会议申请主模块', 'conferenceApply_main', 0, '', '2011-07-06 00:00:00', '2011-07-06 12:10:25', 'oa/conference/conferenceList.swf', ''),
+(57, '会议室查看主模块', 'conferenceRoomCheck_main', 0, '', '2011-07-06 00:00:00', '2011-07-06 12:10:11', 'oa/conference/conferenceRoomCheck.swf', ''),
+(58, '会议总结主模块', 'conferenceSummary_main', 0, '', '2011-07-06 00:00:00', '2011-07-06 12:09:24', 'oa/conference/conferenceSummary.swf', ''),
+(59, '会议安排主模块', 'conferenceArrange_main', 0, '', '2011-07-06 00:00:00', '2011-07-06 12:11:47', 'oa/conference/conferenceArrange.swf', ''),
+(60, '我参与的会议主模块', 'conferenceSelfAttending_main', 0, '', '2011-07-06 00:00:00', '2011-07-06 12:13:03', 'oa/conference/conferenceSelfAttending.swf', ''),
+(61, '我参与的会议主模块', 'person_conferenceAttending_main', 0, '', '2011-07-06 00:00:00', '2011-07-06 12:15:47', 'oa/conference/conferenceSelfAttending.swf', ''),
+(62, '用户设置主模块', 'system_person_setting_main', 0, '', '2011-07-06 00:00:00', '2011-07-06 12:19:36', 'oa/system/userSetting.swf', '');
 
 -- --------------------------------------------------------
 
@@ -660,7 +697,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_module_operation_relationship` (
   `module_id` bigint(20) NOT NULL,
   `operation_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=57 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=64 ;
 
 --
 -- 转存表中的数据 `wlzx_system_module_operation_relationship`
@@ -703,7 +740,14 @@ INSERT INTO `wlzx_system_module_operation_relationship` (`id`, `module_id`, `ope
 (47, 46, 47),
 (48, 47, 48),
 (49, 48, 49),
-(50, 49, 50);
+(50, 49, 50),
+(57, 56, 57),
+(58, 57, 58),
+(59, 58, 59),
+(60, 59, 60),
+(61, 60, 61),
+(62, 61, 62),
+(63, 62, 63);
 
 -- --------------------------------------------------------
 
@@ -741,7 +785,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_operation` (
   `modified_date` timestamp NOT NULL default '0000-00-00 00:00:00' on update CURRENT_TIMESTAMP,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `symbol` (`symbol`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=57 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=64 ;
 
 --
 -- 转存表中的数据 `wlzx_system_operation`
@@ -791,7 +835,14 @@ INSERT INTO `wlzx_system_operation` (`id`, `name`, `symbol`, `sequence`, `rs_typ
 (53, '页面访问', 'receipt_ratify_main@defaultVisit@', 0, 'URL', '/oa/receipt/ratifyList.swf*', NULL, '2011-07-02 00:00:00', '2011-07-02 16:42:12'),
 (54, '页面访问', 'receipt_undertake_main@defaultVisit@', 0, 'URL', '/oa/receipt/undertakeList.swf*', NULL, '2011-07-02 00:00:00', '2011-07-02 16:43:22'),
 (55, '页面访问', 'receipt_circulate_main@defaultVisit@', 0, 'URL', '/oa/receipt/circulateList.swf*', NULL, '2011-07-02 00:00:00', '2011-07-02 16:44:14'),
-(56, '页面访问', 'receipt_manage_main@defaultVisit@', 0, 'URL', '/oa/receipt/manageList.swf*', NULL, '2011-07-02 00:00:00', '2011-07-02 16:45:20');
+(56, '页面访问', 'receipt_manage_main@defaultVisit@', 0, 'URL', '/oa/receipt/manageList.swf*', NULL, '2011-07-02 00:00:00', '2011-07-02 16:45:20'),
+(57, '页面访问', 'conferenceApply_main@defaultVisit@', 0, 'URL', '/oa/conference/conferenceList.swf*', NULL, '2011-07-06 00:00:00', '2011-07-06 12:10:25'),
+(58, '页面访问', 'conferenceRoomCheck_main@defaultVisit@', 0, 'URL', '/oa/conference/conferenceRoomCheck.swf*', NULL, '2011-07-06 00:00:00', '2011-07-06 12:10:11'),
+(59, '页面访问', 'conferenceSummary_main@defaultVisit@', 0, 'URL', '/oa/conference/conferenceSummary.swf*', NULL, '2011-07-06 00:00:00', '2011-07-06 12:09:24'),
+(60, '页面访问', 'conferenceArrange_main@defaultVisit@', 0, 'URL', '/oa/conference/conferenceArrange.swf*', NULL, '2011-07-06 00:00:00', '2011-07-06 12:11:47'),
+(61, '页面访问', 'conferenceSelfAttending_main@defaultVisit@', 0, 'URL', '/oa/conference/conferenceSelfAttending.swf*', NULL, '2011-07-06 00:00:00', '2011-07-06 12:13:03'),
+(62, '页面访问', 'person_conferenceAttending_main@defaultVisit@', 0, 'URL', '/oa/conference/conferenceSelfAttending.swf*', NULL, '2011-07-06 00:00:00', '2011-07-06 12:15:47'),
+(63, '页面访问', 'system_person_setting_main@defaultVisit@', 0, 'URL', '/oa/system/userSetting.swf*', NULL, '2011-07-06 00:00:00', '2011-07-06 12:19:36');
 
 -- --------------------------------------------------------
 
@@ -804,7 +855,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_operation_dam_relationship` (
   `operation_id` bigint(20) NOT NULL,
   `dam_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=59 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=66 ;
 
 --
 -- 转存表中的数据 `wlzx_system_operation_dam_relationship`
@@ -856,7 +907,14 @@ INSERT INTO `wlzx_system_operation_dam_relationship` (`id`, `operation_id`, `dam
 (55, 53, 55),
 (56, 54, 56),
 (57, 55, 57),
-(58, 56, 58);
+(58, 56, 58),
+(59, 57, 59),
+(60, 58, 60),
+(61, 59, 61),
+(62, 60, 62),
+(63, 61, 63),
+(64, 62, 64),
+(65, 63, 65);
 
 -- --------------------------------------------------------
 
@@ -1276,8 +1334,8 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_user` (
 --
 
 INSERT INTO `wlzx_system_user` (`id`, `symbol`, `sequence`, `name`, `password`, `last_login_time`, `last_login_ip`, `account_style`, `person_id`, `person_name`, `email`, `creation_date`, `modified_date`, `active`, `main_role_id`, `main_department_id`) VALUES
-(1, 'super_root', 0, 'super_root', '134bca5421a15476a1e5ebaebdba1ede', '2011-07-05 22:02:52', '0:0:0:0:0:0:0:1', -1, NULL, NULL, NULL, '2011-05-07 11:04:22', '2011-07-05 17:33:02', 1, NULL, NULL),
-(708, '666888', 0, '666888', '75e266f182b4fa3625d4a4f4f779af54', '2011-07-05 16:45:49', '127.0.0.1', 0, NULL, NULL, '', '2011-07-05 12:57:49', '2011-07-05 12:57:51', 1, 1, 1),
+(1, 'super_root', 0, 'super_root', '134bca5421a15476a1e5ebaebdba1ede', '2011-07-06 12:20:59', '127.0.0.1', -1, NULL, NULL, NULL, '2011-05-07 11:04:22', '2011-07-05 17:33:02', 1, NULL, NULL),
+(708, '666888', 0, '666888', '75e266f182b4fa3625d4a4f4f779af54', '2011-07-06 11:52:20', '127.0.0.1', 0, NULL, NULL, '', '2011-07-05 12:57:49', '2011-07-05 12:57:51', 1, 1, 1),
 (709, '666900', 0, '666900', '2e6d1125057ec7c4402a5a2ad84f6601', NULL, '', 0, NULL, NULL, '', '2011-07-05 12:57:51', '2011-07-05 12:57:52', 1, NULL, 1),
 (710, '666988', 0, '666988', 'cb3d82f7133330c48bee639908125906', NULL, '', 0, NULL, NULL, '', '2011-07-05 12:57:52', '2011-07-05 12:57:53', 1, NULL, 1),
 (711, '666898', 0, '666898', '25eb84aab86275ed44073ce95057b9c4', NULL, '', 0, NULL, NULL, '', '2011-07-05 12:57:53', '2011-07-05 12:57:55', 1, NULL, 1),
