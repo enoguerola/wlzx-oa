@@ -7,7 +7,7 @@
 		<![CDATA[
 			private function get_file_detail(id:String):void
 			{
-				
+			
 			}
 		]]>
 	</fx:Script>

@@ -14,12 +14,16 @@
 				Alert.show("你确定要办结该公告吗?", "确定", Alert.YES | Alert.NO, null, function(event:CloseEvent):void{
 					if(event.detail == Alert.YES)
 					{
-						var parent:Object = this.owner as Object;
-						Alert.show(parent.toString());
-						parent.complete(id);
+						complete(id);
 					}
 				});
 
+			}
+			
+			private function complete(id:String):void
+			{
+				var parent:Object = ((Object)(this.parentDocument)).parentDocument;
+				parent.complete(id);
 			}
 
 			protected function complete_button_creationCompleteHandler(status:int):void
