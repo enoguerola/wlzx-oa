@@ -22,6 +22,7 @@ package system.entity
 		public var mainRole:RoleModel;//角色集
 		public function UserModel()
 		{
+			super();
 		}
 		public function getAllRoles():String
 		{	var result:String="";

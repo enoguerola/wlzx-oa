@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+<class name="system.wlims.oa.entity.conference.ConferenceModel" table="wlzx_oa_conference">
+        <id name="id">
+            <column name="id" />
+            <generator class="native" />
+        </id>
+ 		<property name="name" type="string">
+            <column name="name" />
+        </property>
+        <property name="meetingDate" type="java.util.Date">
+            <column name="date" />
+        </property>
+        <property name="beginTime" type="string">
+            <column name="time_begin" />
+        </property>
+        <property name="endTime" type="string">
+            <column name="time_end" />
+        </property>
+ 		<property name="attendNum" type="int">
+            <column name="attend_num" />
+        </property>
+        <property name="teacherAttendIds" type="string">
+            <column name="teacher_attend_ids" />
+        </property>
+         <property name="departmentId" type="string">
+            <column name="department_id" />
+        </property>
+         <property name="placeId" type="string">
+            <column name="place_id" />
+        </property>
+         <property name="contactUserId" type="string">
+            <column name="contact_user_id" />
+        </property>
+        <property name="contactPhoneNumber" type="string">
+            <column name="contact_phone_number" />
+        </property>
+        <property name="serviceNeeded" type="string">
+            <column name="service_needed" />
+        </property>
+         <property name="description" type="string">
+            <column name="description" />
+        </property>
+         <property name="applyUserId" type="string">
+            <column name="apply_user_id" />
+        </property>
+  		<property name="applyDateTime" type="java.util.Date">
+            <column name="apply_date_time" />
+        </property>
+        <property name="applyStatus" type="int">
+            <column name="apply_status" />
+        </property>
+
+      	<set name="attachments" lazy="false" table="wlzx_oa_conference_attachment_relationship" cascade="all-delete-orphan" inverse="false">
+        	<key column="conference_id" not-null="true" />
+        	<many-to-many  column="attachment_id" class="system.wlims.oa.entity.notice.AttachmentModel" /> 
+        </set>
+        <set name="summaryAttachments" lazy="false" table="wlzx_oa_conference_summary_attachment_relationship" cascade="all-delete-orphan" inverse="false">
+        	<key column="conference_id" not-null="true" />
+        	<many-to-many  column="attachment_id" class="system.wlims.oa.entity.notice.AttachmentModel" /> 
+        </set>
+        		
+    </class>
+</hibernate-mapping>

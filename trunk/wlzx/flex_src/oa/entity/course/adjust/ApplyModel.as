@@ -22,6 +22,7 @@ package oa.entity.course.adjust
 		public var logs:Object=new Array();
 		public function ApplyModel()
 		{
+			super();
 		}
 		
 		

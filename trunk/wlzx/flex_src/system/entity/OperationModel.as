@@ -1,4 +1,4 @@
-package system.entity
+﻿package system.entity
 {
 	[Bindable]
 	[RemoteClass(alias="system.entity.OperationModel")] 
@@ -13,6 +13,7 @@ package system.entity
 
 		public function OperationModel()
 		{
+			super();
 		}
 	}
 }

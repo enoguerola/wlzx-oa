@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2011 年 07 月 03 日 23:09
+-- 生成日期: 2011 年 07 月 07 日 12:59
 -- 服务器版本: 5.0.91
 -- PHP 版本: 5.2.13
 
@@ -41,6 +41,73 @@ CREATE TABLE IF NOT EXISTS `wlzx_oa_attachment` (
 -- --------------------------------------------------------
 
 --
+-- 表的结构 `wlzx_oa_conference`
+--
+
+CREATE TABLE IF NOT EXISTS `wlzx_oa_conference` (
+  `id` bigint(20) NOT NULL auto_increment,
+  `name` varchar(200) NOT NULL,
+  `date` date NOT NULL,
+  `time_begin` varchar(100) NOT NULL,
+  `time_end` varchar(100) NOT NULL,
+  `attend_num` int(11) NOT NULL,
+  `teacher_attend_ids` text,
+  `department_id` bigint(20) default NULL,
+  `place_id` bigint(20) NOT NULL,
+  `contact_user_id` bigint(20) NOT NULL,
+  `contact_phone_number` varchar(200) NOT NULL,
+  `service_needed` varchar(200) default NULL,
+  `description` text,
+  `apply_user_id` bigint(20) NOT NULL,
+  `apply_time` datetime NOT NULL,
+  `apply_status` smallint(6) default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+--
+-- 转存表中的数据 `wlzx_oa_conference`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `wlzx_oa_conference_attachment_relationship`
+--
+
+CREATE TABLE IF NOT EXISTS `wlzx_oa_conference_attachment_relationship` (
+  `id` bigint(20) NOT NULL auto_increment,
+  `conference_id` bigint(20) NOT NULL,
+  `attachment_id` bigint(20) NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+--
+-- 转存表中的数据 `wlzx_oa_conference_attachment_relationship`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `wlzx_oa_conference_summary_attachment_relationship`
+--
+
+CREATE TABLE IF NOT EXISTS `wlzx_oa_conference_summary_attachment_relationship` (
+  `id` bigint(20) NOT NULL auto_increment,
+  `conference_id` bigint(20) NOT NULL,
+  `attachment_id` bigint(20) NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+--
+-- 转存表中的数据 `wlzx_oa_conference_summary_attachment_relationship`
+--
+
+
+-- --------------------------------------------------------
+
+--
 -- 表的结构 `wlzx_oa_course_adjust_apply`
 --
 
@@ -56,12 +123,16 @@ CREATE TABLE IF NOT EXISTS `wlzx_oa_course_adjust_apply` (
   `approve_date` datetime default NULL,
   `apply_creation_date` datetime NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
 
 --
 -- 转存表中的数据 `wlzx_oa_course_adjust_apply`
 --
 
+INSERT INTO `wlzx_oa_course_adjust_apply` (`id`, `apply_no`, `apply_type`, `apply_teacher_id`, `apply_reason`, `apply_status`, `approve_teacher_id`, `approve_remark`, `approve_date`, `apply_creation_date`) VALUES
+(1, '20110706173203', 0, 1, '学习～～～～～～～～～', 0, NULL, NULL, NULL, '2011-07-06 17:32:03'),
+(2, '20110706174315', 1, 1, '结婚', 2, 1, '不同意', '2011-07-06 18:08:56', '2011-07-06 17:43:15'),
+(3, '20110706175324', 0, 1, '出差', 1, 1, '同意', '2011-07-06 18:14:35', '2011-07-06 17:53:24');
 
 -- --------------------------------------------------------
 
@@ -82,12 +153,16 @@ CREATE TABLE IF NOT EXISTS `wlzx_oa_course_adjust_apply_item` (
   `adjust_actual_time` varchar(200) default NULL,
   `adjust_actual_teacher_id` bigint(20) default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
 
 --
 -- 转存表中的数据 `wlzx_oa_course_adjust_apply_item`
 --
 
+INSERT INTO `wlzx_oa_course_adjust_apply_item` (`id`, `apply_id`, `apply_class`, `apply_course`, `apply_course_date`, `apply_course_time`, `adjust_mean_date`, `adjust_mean_teacher_id`, `adjust_actual_date`, `adjust_actual_time`, `adjust_actual_teacher_id`) VALUES
+(1, 1, '高二12班', '语文', '2011-07-14 00:00:00', '第一节 第二节 ', '2011-07-14 00:00:00', 722, NULL, NULL, NULL),
+(2, 2, '高一1班', '物理', '2011-07-07 00:00:00', '第二节 第三节 ', '2011-07-21 00:00:00', 715, '2011-07-21 00:00:00', '第一节 第二节 ', 715),
+(3, 3, '高三10班', '语文', '2011-07-14 00:00:00', '第四节 第五节 ', '2011-07-14 00:00:00', 708, '2011-07-14 00:00:00', '第四节 第五节 ', 708);
 
 -- --------------------------------------------------------
 
@@ -206,14 +281,12 @@ CREATE TABLE IF NOT EXISTS `wlzx_oa_receipt` (
   `is_completed` int(4) NOT NULL,
   `registed_date` date default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 --
 -- 转存表中的数据 `wlzx_oa_receipt`
 --
 
-INSERT INTO `wlzx_oa_receipt` (`id`, `do_number`, `office`, `in_number`, `in_date`, `subject`, `title`, `summary`, `status`, `is_completed`, `registed_date`) VALUES
-(1, '+', '', '', NULL, '', 's', 'XXXXXXXXXXXXX', 0, 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -374,9 +447,17 @@ CREATE TABLE IF NOT EXISTS `wlzx_oa_workflow_log` (
   `operation_name` varchar(200) NOT NULL,
   `operation_result` text,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
 
 --
 -- 转存表中的数据 `wlzx_oa_workflow_log`
 --
 
+INSERT INTO `wlzx_oa_workflow_log` (`id`, `operation_object_type`, `operation_object_id`, `operation_teacher_id`, `operation_time`, `operation_name`, `operation_result`) VALUES
+(1, 'ApplyWorkFlowLog', 1, 1, '2011-07-06 17:32:03', '发起申请', '生成编号为20110706173203的申请记录'),
+(2, 'ApplyWorkFlowLog', 2, 1, '2011-07-06 17:43:15', '发起申请', '生成编号为20110706174315的申请记录'),
+(3, 'ApplyWorkFlowLog', 3, 1, '2011-07-06 17:53:24', '发起申请', '生成编号为20110706175324的申请记录'),
+(4, 'ApplyWorkFlowLog', 3, 1, '2011-07-06 17:54:42', '课程处审批', '课程处审批编号为20110706175324的申请通过'),
+(5, 'ApplyWorkFlowLog', 2, 1, '2011-07-06 17:56:09', '课程处审批', NULL),
+(6, 'ApplyWorkFlowLog', 2, 1, '2011-07-06 18:08:56', '课程处审批', '课程处审批编号为20110706174315的申请不通过'),
+(7, 'ApplyWorkFlowLog', 3, 1, '2011-07-06 18:14:35', '课程处审批', '课程处审批编号为20110706175324的申请通过');

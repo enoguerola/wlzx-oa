@@ -24,6 +24,7 @@ package oa.entity
 		
 		public function OverWorkForm()
 		{
+			super();
 		}
 		
 		

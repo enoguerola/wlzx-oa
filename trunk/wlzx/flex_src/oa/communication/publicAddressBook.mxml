@@ -12,6 +12,7 @@
 		<mx:RemoteObject id="teacherAccountBridgeServiceRO" destination="teacherAccountBridgeServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 			<mx:method name="getUserAddressesByConditions"  concurrency="last"  result="getUserAddressesByConditions_resultHandler(event);" />
 		</mx:RemoteObject>
+	
 	<mx:Script>
 		<![CDATA[
 			import basic.setting.popWin.DepartmentPopWin;
@@ -155,8 +156,8 @@
 			
 			<mx:HBox  width="100%" height="100%" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10">
 				<mx:VBox width="200" height="100%">
-					<mx:Panel width="100%" height="100%"  styleName="customPanel" title="部门结构"   dropShadowVisible="false" borderVisible="true">
-						<mx:Tree  id="departments" labelField="@label"   width="100%" height="100%"  change="departments_changeHandler(event)">
+					<mx:Panel width="100%" height="100%"  styleName="customPanel"  title="部门结构"   dropShadowVisible="false" borderVisible="true">
+						<mx:Tree  id="departments" labelField="@label"   width="100%" height="100%"  change="departments_changeHandler(event)" borderVisible="false">
 						</mx:Tree>
 					</mx:Panel>
 				</mx:VBox>

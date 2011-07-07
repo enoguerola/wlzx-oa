@@ -39,6 +39,7 @@ package oa.entity
 		
 		public function TakeLeaveForm()
 		{
+			super();
 		}
 		
 		

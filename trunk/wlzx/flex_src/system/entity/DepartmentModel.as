@@ -1,4 +1,4 @@
-package system.entity
+﻿package system.entity
 {
 	import mx.collections.ArrayCollection;
 	[Bindable]
@@ -16,6 +16,7 @@ package system.entity
 		public var users:Object=new Array();//部门用户集
 		public function DepartmentModel()
 		{
+			super();
 		}
 		/** 
 		 * 获取部门主管角色
