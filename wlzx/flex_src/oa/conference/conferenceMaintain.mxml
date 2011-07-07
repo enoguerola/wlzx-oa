@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Box xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		  xmlns:s="library://ns.adobe.com/flex/spark" 
+		  xmlns:editor="com.flexcalendar.components.calendar.editor.*"
+		  xmlns:hc="com.hillelcoren.components.*"
+		  xmlns:render="system.component.render.*"
+		  xmlns:mx="library://ns.adobe.com/flex/mx" layout="vertical" width="100%" height="100%">
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+		<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+			<mx:method name="getDepartmentBySymbol"  concurrency="last"  result="getDepartmentBySymbolResult(event);" />
+		</mx:RemoteObject>
+		<mx:RemoteObject id="placeServiceRO" destination="placeServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+			<mx:method name="getPlacesByCondition"  concurrency="last"  result="getPlacesByCondition_resultHandler(event);" />
+		</mx:RemoteObject>
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.core.FlexGlobals;
+			import mx.events.ValidationResultEvent;
+			import mx.formatters.DateFormatter;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.*;
+			import mx.validators.Validator;
+			
+			import oa.common.popWin.StaffSelectPopWin;
+			import system.entity.*;
+			[Binary]
+			public var departmentList:ArrayCollection = new ArrayCollection();
+			[Binary]
+			public var placeList:ArrayCollection = new ArrayCollection();
+			[Binary]
+			public var usersSelected:Array= new Array();
+			private function init():void {
+				departmentList.addItem( {dataField:"-1", headerText:"×校外"});
+				systemServiceRO.getDepartmentBySymbol("root");
+				placeServiceRO.getPlacesByCondition(null,null,null,null,null,null,null);
+
+			}
+			private function systemFaultHandler(event:FaultEvent):void {
+				Alert.show(event.fault.faultString, 'Error');
+			}
+
+			private function getDepartmentBySymbolResult(event:ResultEvent):void {
+				var department:Object=event.result;
+				buildSubDepartments(department,departmentList,0);				
+			}
+			private function buildSubDepartments(department:Object,resultList:ArrayCollection,depth:int):void{
+				var headText:String="";
+				for(var j:int = 0;j<depth;j++)
+					headText=headText.concat("-");
+				headText=headText.concat(department.name);
+				resultList.addItem( {dataField:department.id, headerText:headText})
+				var list:ArrayCollection = ArrayCollection(department.subordinates);			
+				if(list.length>0){
+					for (var i:int = 0; i < list.length; i++){
+						var _department:Object = list.getItemAt(i);	
+						buildSubDepartments(_department,resultList,depth+1);
+					}
+				}		
+				
+			}
+			protected function getPlacesByCondition_resultHandler(event:ResultEvent):void{
+				var list:ArrayCollection=event.result as ArrayCollection;
+				if(list.length>0){
+					for (var i:int = 0; i < list.length; i++){
+						var _place:Object = list.getItemAt(i);	
+						placeList.addItem( {dataField:_place.id, headerText:_place.name})
+					}
+				}	
+			}
+		
+			private var staffSelectPopWin:StaffSelectPopWin=null;
+			private function openStaffSelectPopWin(event:Event):void{
+				if(staffSelectPopWin!=null)PopUpManager.removePopUp(staffSelectPopWin);
+				staffSelectPopWin=StaffSelectPopWin(PopUpManager.createPopUp(this,StaffSelectPopWin,true)); 
+				PopUpManager.centerPopUp(staffSelectPopWin);
+				staffSelectPopWin.percentHeight=100;
+				staffSelectPopWin.percentWidth=100;
+				staffSelectPopWin.x=FlexGlobals.topLevelApplication.stage.stageWidth/2-staffSelectPopWin.width/2;
+				staffSelectPopWin.y=FlexGlobals.topLevelApplication.stage.stageHeight/2-staffSelectPopWin.height/2;
+				staffSelectPopWin.owner=this;
+				
+				
+			}
+			private function searchAccountHandleAutoCompleteChange():void
+			{
+				var color:Object = search_account.selectedItem;
+				
+				if (color != null && color.hasOwnProperty( "id" ))
+				{
+					search_account_id.text=color.id;
+				} else{
+					search_account_id.text="";
+				}               
+			}
+			
+		]]>
+	</fx:Script>
+	<mx:Component id="searchAccountDropDownItemRenderer">
+		<render:AdvancedItemRenderer selectedItems="{ outerDocument.search_account.selectedItems }" />
+	</mx:Component>
+	<mx:VBox  width="100%" height="100%">
+		<mx:Form width="100%" height="100%">
+			<mx:FormItem label="会议名称" width="100%">
+				<mx:TextInput width="100%" id="name"/>
+			</mx:FormItem>
+			<mx:FormItem label="会议时间" width="100%">
+				<mx:HBox width="100%">
+				<mx:DateField yearNavigationEnabled="true" id="date"   formatString="YYYY-MM-DD"  editable="false" width="100"/>
+				<editor:DateTimeChooser id="time"/>
+				<mx:Label  text="会议地点"/>
+				<mx:ComboBox   width="200" id="places" labelField="headerText"  selectedIndex="0"  />
+
+				</mx:HBox>
+			</mx:FormItem>
+
+			<mx:FormItem label="会议人数" width="100%" height="100%">
+				<mx:HBox width="100%">
+					<mx:TextInput width="100%" id="attendNum"/>
+					<mx:Label  text="使用部门"/>
+					<mx:ComboBox   width="200" id="departments" labelField="headerText" dataProvider="{departmentList}" selectedIndex="0"  />
+
+				</mx:Hbox>
+				
+			</mx:FormItem>
+			<mx:FormItem label="与会人员" width="100%" height="100%">
+				<mx:TextInput id="users" width="200" focusIn="openStaffSelectPopWin(event);" editable="false"/>
+				<mx:TextInput id="usersIds" visible="false"/>
+			</mx:FormItem>
+			<mx:FormItem label="会议服务" width="100%" height="100%">
+				<mx:Text width="100%"/>
+			</mx:FormItem>
+			<mx:FormItem label="会议描述" width="100%" height="100%">
+				<mx:TextArea width="100%"/>
+			</mx:FormItem>
+			<mx:FormItem label="联系人" width="100%" height="100%">
+				<mx:HBox width="100%">
+					<hc:AutoComplete id="search_account"  labelField="name"  width="150"  matchType="anyPart" prompt="选择教师"  change="{ searchAccountHandleAutoCompleteChange() }" dropDownItemRenderer="{ searchAccountDropDownItemRenderer }" selectedItemStyleName="none">
+						
+					</hc:AutoComplete>
+					<mx:Label id="search_account_id" visible="false">
+						
+					</mx:Label>
+					<mx:Label  text="联系电话"/>
+					<mx:TextInput/>
+				</mx:Hbox>
+					
+			</mx:FormItem>
+			<mx:HBox width="100%" height="20">
+				<mx:LinkButton  label="会议附件区" icon="@Embed(source='../WebContent/resources/common/tools/button_attachment_icon.png')" click="showHide()"/>
+			</mx:HBox>
+			<mx:FormItem  width="100%"  height="0" id="att_area" paddingLeft="10" paddingRight="10">
+				<mx:VBox width="100%">
+					<mutiUpload:upload width="100%" id="upload">
+					</mutiUpload:upload>
+				</mx:VBox>
+			</mx:FormItem>
+		</mx:Form>
+	</mx:VBox>
+	<mx:HBox horizontalAlign="right" width="100%">
+		<mx:Label id="addUpdateFlag" visible="false" text="add"/>
+		<!--	<mx:Button label="保存草稿" id="draftSaveButton" click="save_clickHandler(event)"/>-->
+		<mx:Button label="发布" id="postButton" click="add_clickHandler(event)"/>
+	</mx:HBox>
+</mx:Box>
