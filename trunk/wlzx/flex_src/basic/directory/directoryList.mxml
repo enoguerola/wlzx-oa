@@ -31,7 +31,8 @@
 			public var directoryDb:ArrayCollection = new ArrayCollection( 
 				[
 					{label:"场所类型", data:"placeType"} ,
-					{label:"教学楼", data:"building"}
+					{label:"教学楼", data:"building"},
+					{label:"会议室资源", data:"meetingRoom"}
 				]); 
 			private function init():void {
 				validatorArr = new Array();
