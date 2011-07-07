@@ -13,6 +13,7 @@
 	    [Bindable]
 	    public var mygridcolumns:Array;
 		public var itemRenderer:ItemRenderer;
+		public var dragEnabled:Boolean;
 	    public var mydata:ArrayCollection;//所有的数据
 	    public var pagecount:int=10;//表示每页记录的条数,默认10条,可以由用户自行定义
 	    public var curpage:int = 1;//当前的页码
@@ -85,7 +86,7 @@
 	]]>
    </mx:Script>
 
-   <component:WlzxDataGrid id="cudg" itemRenderer="{itemRenderer}" dataProvider="{mypagedata}"  columns="{mygridcolumns}" width="100%" height="100%" itemClick="cudg_itemClickHandler(event)">
+   <component:WlzxDataGrid id="cudg" dragEnabled="{dragEnabled}" itemRenderer="{itemRenderer}" dataProvider="{mypagedata}"  columns="{mygridcolumns}" width="100%" height="100%" itemClick="cudg_itemClickHandler(event)">
 	   
 	 
 

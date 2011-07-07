@@ -40,7 +40,6 @@
 			
 			public function complete(id:String):void
 			{
-				Alert.show("2");
 				receiptServiceRO.complete(id);
 			}
 			

@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="100%"
+		xmlns:component="system.component.*"
+		xmlns:render="system.component.render.*"
+		xmlns:hc="com.hillelcoren.components.*" creationComplete="init()">
+	<s:layout>
+		<s:HorizontalLayout/>
+	</s:layout>
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+		<render:AdvancedItemRenderer selectedItems="{search_account.selectedItems}" id="searchAccountDropDownItemRenderer"/>
+		<s:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+			<s:method name="getDepartmentBySymbol"  concurrency="last"  result="getDepartmentBySymbolResult(event);" />
+		</s:RemoteObject>
+		<s:RemoteObject id="teacherAccountBridgeServiceRO" destination="teacherAccountBridgeServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+			<s:method name="getUserAddressesByConditions"  concurrency="last"  result="getUserAddressesByConditions_resultHandler(event);" />
+		</s:RemoteObject>
+	</fx:Declarations>
+
+	<fx:Script>
+		<![CDATA[			
+
+			import flexlib.controls.SuperTabBar;
+			import flexlib.controls.tabBarClasses.SuperTab;
+			import flexlib.events.TabReorderEvent;
+			import system.component.WlzxLockWin;
+			
+			import mx.collections.ArrayCollection;
+			import mx.containers.*;
+			import mx.controls.*;
+			import mx.events.*;
+			import mx.events.ModuleEvent;
+			import mx.managers.PopUpManager;
+			import mx.modules.*;
+			import mx.rpc.events.*;
+			
+			import mx.events.ListEvent;
+			
+			import system.entity.*;
+			import mx.core.FlexGlobals;
+			
+			private var window:WlzxLockWin=null;
+			
+			private function init():void {
+				systemServiceRO.getDepartmentBySymbol("root");
+				search_account.dataProvider=this.parentApplication.allTeacherAcccounts;
+				search();
+			}
+			
+			private function search():void{
+				lockWin();
+				var departmentId:String= treeSelectedItemId();
+				var userId:String=search_account_id.text;
+				teacherAccountBridgeServiceRO.getUserAddressesByConditions(departmentId,userId);
+			}
+			
+			private function treeSelectedItemId():String{
+				var selectedNode:XML=departments.selectedItem as XML;
+				
+				if(selectedNode!=null){
+					return selectedNode.@id;
+				}
+				else{
+					return null;
+				} 
+			}
+			
+			private function systemFaultHandler(event:FaultEvent):void {
+				Alert.show(event.fault.faultString, 'Error');
+				unLockWin();
+			}
+			
+			private function lockWin():void{
+				
+				window=WlzxLockWin(PopUpManager.createPopUp(this,WlzxLockWin,true)); 
+				PopUpManager.centerPopUp(window);
+				window.percentHeight=100;
+				window.percentWidth=100;			
+				
+			}
+			
+			private function unLockWin():void{
+				if(window!=null)
+					PopUpManager.removePopUp(window);
+			}
+			
+			private function searchAccountHandleAutoCompleteChange():void
+			{
+				var color:Object = search_account.selectedItem;
+				if (color != null && color.hasOwnProperty( "id" ))
+				{
+					search_account_id.text=color.id;
+					departments.selectedItem=null;
+				} else{
+					search_account_id.text="";
+				}               
+			}
+			
+			protected function departments_changeHandler(event:ListEvent):void
+			{
+				// TODO Auto-generated method stub
+				search_account.selectedItem=null;
+				search();
+			}
+			
+			private function getDepartmentBySymbolResult(event:ResultEvent):void {
+				var department:DepartmentModel=DepartmentModel(event.result);
+				var resultXML:String=buildSubDepartments(department);
+				var departmentData:XML=new XML(resultXML);
+				this.departments.dataProvider=departmentData;
+				//				var list:ArrayCollection = ArrayCollection(event.result);
+			}
+			private function buildSubDepartments(department:DepartmentModel):String{
+				var resultXML:String="";
+				var list:ArrayCollection = ArrayCollection(department.subordinates);
+				if(list.length>0){
+					resultXML=resultXML.concat("<node label='"+department.name+"' id='"+department.id+"'>");
+					for (var i:int = 0; i < list.length; i++){
+						var _department:DepartmentModel = DepartmentModel(list.getItemAt(i));	
+						resultXML=resultXML.concat(buildSubDepartments(_department));
+					}
+					resultXML=resultXML.concat("</node>");
+				}		
+				else resultXML=resultXML.concat("<node label='"+department.name+"' id='"+department.id+"'/>");				
+				
+				return resultXML;
+			}
+			private function getUserAddressesByConditions_resultHandler(event:ResultEvent):void{
+				var allList:ArrayCollection=event.result as ArrayCollection;				
+				table.initdata(allList);
+				unLockWin();
+			}
+		]]>
+	</fx:Script>
+
+	<mx:VBox borderVisible="true" width="100%" height="100%" borderStyle="solid">
+		<mx:VBox  width="100%" height="100%" >
+			<mx:HBox  width="100%" height="7%" backgroundColor="#C5E497" horizontalGap="10" paddingLeft="20" verticalAlign="middle">
+				<hc:AutoComplete id="search_account"  labelField="name"  width="100"  matchType="anyPart" prompt="选择" change="searchAccountHandleAutoCompleteChange()" selectedItemStyleName="none">
+				</hc:AutoComplete>
+				<mx:Label id="search_account_id" visible="false" width="0">
+					
+				</mx:Label>
+				<mx:LinkButton  label="快速查找" icon="@Embed(source='../WebContent/resources/oa/buttonIcon/search_icon.jpg')">
+				</mx:LinkButton>
+				<mx:Label text="|"/>
+			</mx:HBox>
+			<mx:HBox  width="100%" height="93%" paddingBottom="5" paddingLeft="5" paddingRight="5" paddingTop="2">
+				<mx:VBox width="30%" height="100%">
+					<mx:Panel width="100%" height="100%"  styleName="customPanel" title="部门结构" dropShadowVisible="false" borderVisible="true">
+						<mx:Tree  id="departments" labelField="@label" width="100%" height="100%" change="departments_changeHandler(event)">
+						</mx:Tree>
+					</mx:Panel>
+				</mx:VBox>
+				<mx:VBox  width="70%" height="100%"  >
+					<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="false" borderAlpha="0.2" verticalAlign="middle" 
+												id="table" pagecount="13" dragEnabled="true">				
+						<component:mygridcolumns>
+							<mx:DataGridColumn textAlign="center" headerText="姓名" dataField="userName" width="30">
+							</mx:DataGridColumn>
+							<mx:DataGridColumn textAlign="center" headerText="主部门" dataField="mainDepartmentName" width="30">
+							</mx:DataGridColumn>
+							<mx:DataGridColumn textAlign="center" headerText="职务" dataField="mainRoleName" width="30">
+							</mx:DataGridColumn>
+							<mx:DataGridColumn textAlign="center" headerText="办公电话" dataField="officePhone" width="35">
+							</mx:DataGridColumn>
+							<mx:DataGridColumn textAlign="center" headerText="手机号码" dataField="mobilePhone" width="35">
+							</mx:DataGridColumn>
+						</component:mygridcolumns>
+					</component:WlzxPageDataGrid>
+				</mx:VBox>
+			</mx:HBox>
+		</mx:VBox>
+		
+	</mx:VBox>
+</s:Group>

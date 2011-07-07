@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="800" height="500"
+		 xmlns:ab="oa.receipt.component.*"
+		 xmlns:component="system.component.*" creationComplete="init()">
+	<s:layout>
+		<s:VerticalLayout/>
+	</s:layout>
+
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+		<s:RemoteObject concurrency="last" fault="system_faultHandler(event)" destination="fileFlowServiceDest" id="fileFlowServiceRO" showBusyCursor="true">
+			<s:method concurrency="last" name="save" result="save_resultHandle(event)"/>
+			<s:method concurrency="last" name="getTeacher" result="getList_resultHandle(event)"/>
+		</s:RemoteObject>
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
+			import mx.events.DragEvent;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			import system.utils.ComboxUtils;
+			
+			private var flowArray:ArrayCollection = new ArrayCollection([
+				{"data":null, "label":"请选择"},{"data":"3", "label":"收文拟办"},{"data":"4", "label":"收文批示"},
+				{"data":"5", "label":"收文承办"},{"data":"6", "label":"收文传阅"}]);
+			
+			private var teacherArray:Array = new Array();
+			private var update:Boolean = false;
+			
+			private function init():void
+			{
+				var status:int = parseInt(this.toolTip);
+				if(status%2 == 0){
+					step_label.label = " 本环节";
+					Alert.show("begining");
+					fileFlowServiceRO.getTeacher(this.id);
+				}
+			}
+			
+			private function save():void
+			{
+				Alert.show("确定提交流转?", "确定",Alert.YES | Alert.NO, null, function(event:CloseEvent):void
+				{
+					if(event.detail == Alert.YES)
+					{
+						doSave();
+					}
+				});
+			}
+			
+			private function doSave()
+			{
+				if(flow_combo.selectedIndex == 0)
+					Alert.show("请选择下一环节", "请选择");
+				else if(teacherArray.length == 0)
+					Alert.show("请选择参与人员", "请选择");
+				else
+				{
+					var id_list:String = teacherArray.join();
+					var type:String = flow_combo.selectedItem.data;
+					fileFlowServiceRO.save(this.id, id_list, update, type);
+				}
+			}
+			
+			private function reset():void
+			{
+				involvedTeachers.dataProvider = new ArrayCollection();
+				while(teacherArray.length != 0)
+					teacherArray.pop();
+			}
+
+			protected function involvedTeachers_dragDropHandler(event:DragEvent):void
+			{
+				// TODO Auto-generated method stub
+				var items:Array= event.dragSource.dataForFormat("items") as Array;
+				var item = items[0];
+				if(teacherArray.indexOf(item.userID) == -1)
+				{
+					teacherArray.push(item.userID);
+				}else
+				{
+					event.preventDefault();
+				}
+			}
+			
+			protected function system_faultHandler(event:FaultEvent):void
+			{
+				Alert.show(event.fault.faultString, "error");
+			}
+			
+			protected function save_resultHandle(event:ResultEvent):void
+			{
+				PopUpManager.removePopUp(this);this.parentApplication.popWin=null;
+			}
+			
+			protected function getList_resultHandle(event:ResultEvent):void
+			{
+				var result:ArrayCollection = event.result as ArrayCollection;
+				if(result == null)
+					Alert.show("null");
+				else
+					Alert.show(" not null");
+				involvedTeachers.dataProvider = result;
+				update = true;
+				for each(var vo in result)
+				{
+					teacherArray.push(vo.userID);
+				}
+				flow_combo.selectedIndex = ComboxUtils.findIndex(flowArray, result[0].email);
+			}
+
+		]]>
+	</fx:Script>
+	<s:TitleWindow id="menuWin" width="100%" height="100%" close="PopUpManager.removePopUp(this);this.parentApplication.popWin=null;">
+		<s:BorderContainer borderVisible="true" width="100%" height="100%">
+			<s:layout>
+				<s:VerticalLayout/>
+			</s:layout>
+			<s:HGroup width="100%" height="47%">
+				<s:VGroup width="100%" height="100%">
+					<s:HGroup width="100%" height="15%">
+						<mx:FormHeading label="下一环节" id="step_label"/>
+						<s:ComboBox dataProvider="{flowArray}" selectedIndex="0" id="flow_combo"/>
+					</s:HGroup>
+					<s:HGroup width="100%" height="85%">
+						<mx:FormHeading label="参与人员" />
+						<mx:DataGrid id="involvedTeachers" dropEnabled="true" dragMoveEnabled="true" height="100%" dragDrop="involvedTeachers_dragDropHandler(event)">
+							<mx:columns>
+								<mx:DataGridColumn dataField="userName" headerText="姓名"/>
+								<mx:DataGridColumn dataField="mainDepartmentName" headerText="主部门"/>
+								<mx:DataGridColumn dataField="mainRoleName" headerText="职务"/>
+								<mx:DataGridColumn dataField="officePhone" headerText="办公电话"/>
+								<mx:DataGridColumn dataField="mobilePhone" headerText="手机号码"/>
+							</mx:columns>
+						</mx:DataGrid>
+						<s:Button label="确定" click="save()"/>
+						<s:Button label="重置" click="reset()"/>
+					</s:HGroup>
+				</s:VGroup>
+			</s:HGroup>
+			<s:HGroup width="100%" height="53%">
+				<ab:AddressBook width="100%" height="100%"/>
+			</s:HGroup>
+		</s:BorderContainer>
+	</s:TitleWindow>
+</s:Group>
