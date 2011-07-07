@@ -206,7 +206,7 @@
 				for (var i:int = 0; i < items.length; i++){	
 					//Alert.show("a");
 					var item:ApplyItemModel = ApplyItemModel(items.getItemAt(i));
-					detail_adjustActualTeacher[i].text=parentApplication.getTeacherNameByAccountId(item.adjustActualTeacherId);
+					detail_adjustActualTeacher[i].selectedItem=parentApplication.getItemByAccountId(item.adjustActualTeacherId);
 					detail_adjustActualTeacherId[i].text=item.adjustActualTeacherId;
 					if(item.adjustActualDate!=null)
 					detail_adjustActualDate[i].text=formatDate((item.adjustActualDate) as Date,'YYYY-MM-DD');

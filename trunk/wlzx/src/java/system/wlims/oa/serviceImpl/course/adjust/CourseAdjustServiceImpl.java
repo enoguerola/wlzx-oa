@@ -145,7 +145,7 @@ public class CourseAdjustServiceImpl implements CourseAdjustService{
 			log.setOperationResult("课程处审批编号为"+apply.getApplyNo()+"的申请通过");
 			newApply.setApplyStatus(ApplyModel.ApplyStatus.PASS.getStatus());
 		}
-		else if(apply.getApplyStatus()==ApplyModel.ApplyStatus.CANCLE.getStatus()){
+		else if(apply.getApplyStatus()==ApplyModel.ApplyStatus.DENY.getStatus()){
 			log.setOperationResult("课程处审批编号为"+apply.getApplyNo()+"的申请不通过");
 			newApply.setApplyStatus(ApplyModel.ApplyStatus.DENY.getStatus());
 		}
