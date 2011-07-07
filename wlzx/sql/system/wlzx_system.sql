@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2011 年 07 月 06 日 12:21
+-- 生成日期: 2011 年 07 月 07 日 12:58
 -- 服务器版本: 5.0.91
 -- PHP 版本: 5.2.13
 
@@ -121,7 +121,7 @@ INSERT INTO `wlzx_system_data_access_mode` (`id`, `name`, `symbol`, `sequence`, 
 (59, '全部数据', 'conferenceApply_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-06 00:00:00', '2011-07-06 12:10:25'),
 (60, '全部数据', 'conferenceRoomCheck_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-06 00:00:00', '2011-07-06 12:10:11'),
 (61, '全部数据', 'conferenceSummary_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-06 00:00:00', '2011-07-06 12:09:24'),
-(62, '全部数据', 'conferenceArrange_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-06 00:00:00', '2011-07-06 12:11:47'),
+(62, '全部数据', 'conferenceArrange_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-06 00:00:00', '2011-07-07 10:43:58'),
 (63, '全部数据', 'conferenceSelfAttending_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-06 00:00:00', '2011-07-06 12:13:03'),
 (64, '全部数据', 'person_conferenceAttending_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-06 00:00:00', '2011-07-06 12:15:47'),
 (65, '全部数据', 'system_person_setting_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-06 00:00:00', '2011-07-06 12:19:36');
@@ -417,9 +417,9 @@ INSERT INTO `wlzx_system_menu` (`id`, `name`, `symbol`, `sequence`, `detail`, `m
 (70, '收文管理', 'receipt_manage', 5, '', '', '2011-07-02 00:00:00', '2011-07-02 16:38:27'),
 (71, '会议管理', 'conferenceManage', 2, '', '', '2011-07-06 00:00:00', '2011-07-06 12:00:26'),
 (72, '会议申请', 'conferenceApply', 0, '', '', '2011-07-06 00:00:00', '2011-07-06 12:01:22'),
-(73, '会议室查看', 'conferenceRoomCheck', 1, '', '', '2011-07-06 00:00:00', '2011-07-06 12:02:22'),
-(74, '会议总结', 'conferenceSummary', 2, '', '', '2011-07-06 00:00:00', '2011-07-06 12:03:32'),
-(75, '会议安排', 'conferenceArrange', 5, '', '', '2011-07-06 00:00:00', '2011-07-06 12:04:16'),
+(73, '会议室查看', 'conferenceRoomCheck', 3, '', '', '2011-07-06 00:00:00', '2011-07-06 12:02:22'),
+(74, '会议总结', 'conferenceSummary', 1, '', '', '2011-07-06 00:00:00', '2011-07-06 12:03:32'),
+(75, '会议调整', 'conferenceArrange', 2, '', '', '2011-07-06 00:00:00', '2011-07-06 12:04:16'),
 (76, '我参与的会议', 'conferenceSelfAttending', 4, '', '', '2011-07-06 00:00:00', '2011-07-06 12:05:05'),
 (77, '我参与的会议', 'person_conferenceAttending', 7, '', '', '2011-07-06 00:00:00', '2011-07-06 12:14:50'),
 (78, '用户设置', 'system_person_setting', 0, '', '', '2011-07-06 00:00:00', '2011-07-06 12:17:22');
@@ -681,7 +681,7 @@ INSERT INTO `wlzx_system_module` (`id`, `name`, `symbol`, `sequence`, `detail`, 
 (56, '会议申请主模块', 'conferenceApply_main', 0, '', '2011-07-06 00:00:00', '2011-07-06 12:10:25', 'oa/conference/conferenceList.swf', ''),
 (57, '会议室查看主模块', 'conferenceRoomCheck_main', 0, '', '2011-07-06 00:00:00', '2011-07-06 12:10:11', 'oa/conference/conferenceRoomCheck.swf', ''),
 (58, '会议总结主模块', 'conferenceSummary_main', 0, '', '2011-07-06 00:00:00', '2011-07-06 12:09:24', 'oa/conference/conferenceSummary.swf', ''),
-(59, '会议安排主模块', 'conferenceArrange_main', 0, '', '2011-07-06 00:00:00', '2011-07-06 12:11:47', 'oa/conference/conferenceArrange.swf', ''),
+(59, '会议调整主模块', 'conferenceArrange_main', 0, '', '2011-07-06 00:00:00', '2011-07-07 10:43:58', 'oa/conference/conferenceArrange.swf', ''),
 (60, '我参与的会议主模块', 'conferenceSelfAttending_main', 0, '', '2011-07-06 00:00:00', '2011-07-06 12:13:03', 'oa/conference/conferenceSelfAttending.swf', ''),
 (61, '我参与的会议主模块', 'person_conferenceAttending_main', 0, '', '2011-07-06 00:00:00', '2011-07-06 12:15:47', 'oa/conference/conferenceSelfAttending.swf', ''),
 (62, '用户设置主模块', 'system_person_setting_main', 0, '', '2011-07-06 00:00:00', '2011-07-06 12:19:36', 'oa/system/userSetting.swf', '');
@@ -839,7 +839,7 @@ INSERT INTO `wlzx_system_operation` (`id`, `name`, `symbol`, `sequence`, `rs_typ
 (57, '页面访问', 'conferenceApply_main@defaultVisit@', 0, 'URL', '/oa/conference/conferenceList.swf*', NULL, '2011-07-06 00:00:00', '2011-07-06 12:10:25'),
 (58, '页面访问', 'conferenceRoomCheck_main@defaultVisit@', 0, 'URL', '/oa/conference/conferenceRoomCheck.swf*', NULL, '2011-07-06 00:00:00', '2011-07-06 12:10:11'),
 (59, '页面访问', 'conferenceSummary_main@defaultVisit@', 0, 'URL', '/oa/conference/conferenceSummary.swf*', NULL, '2011-07-06 00:00:00', '2011-07-06 12:09:24'),
-(60, '页面访问', 'conferenceArrange_main@defaultVisit@', 0, 'URL', '/oa/conference/conferenceArrange.swf*', NULL, '2011-07-06 00:00:00', '2011-07-06 12:11:47'),
+(60, '页面访问', 'conferenceArrange_main@defaultVisit@', 0, 'URL', '/oa/conference/conferenceArrange.swf*', NULL, '2011-07-06 00:00:00', '2011-07-07 10:43:58'),
 (61, '页面访问', 'conferenceSelfAttending_main@defaultVisit@', 0, 'URL', '/oa/conference/conferenceSelfAttending.swf*', NULL, '2011-07-06 00:00:00', '2011-07-06 12:13:03'),
 (62, '页面访问', 'person_conferenceAttending_main@defaultVisit@', 0, 'URL', '/oa/conference/conferenceSelfAttending.swf*', NULL, '2011-07-06 00:00:00', '2011-07-06 12:15:47'),
 (63, '页面访问', 'system_person_setting_main@defaultVisit@', 0, 'URL', '/oa/system/userSetting.swf*', NULL, '2011-07-06 00:00:00', '2011-07-06 12:19:36');
@@ -1334,7 +1334,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_user` (
 --
 
 INSERT INTO `wlzx_system_user` (`id`, `symbol`, `sequence`, `name`, `password`, `last_login_time`, `last_login_ip`, `account_style`, `person_id`, `person_name`, `email`, `creation_date`, `modified_date`, `active`, `main_role_id`, `main_department_id`) VALUES
-(1, 'super_root', 0, 'super_root', '134bca5421a15476a1e5ebaebdba1ede', '2011-07-06 12:20:59', '127.0.0.1', -1, NULL, NULL, NULL, '2011-05-07 11:04:22', '2011-07-05 17:33:02', 1, NULL, NULL),
+(1, 'super_root', 0, 'super_root', '134bca5421a15476a1e5ebaebdba1ede', '2011-07-07 10:16:11', '127.0.0.1', -1, NULL, NULL, NULL, '2011-05-07 11:04:22', '2011-07-05 17:33:02', 1, NULL, NULL),
 (708, '666888', 0, '666888', '75e266f182b4fa3625d4a4f4f779af54', '2011-07-06 11:52:20', '127.0.0.1', 0, NULL, NULL, '', '2011-07-05 12:57:49', '2011-07-05 12:57:51', 1, 1, 1),
 (709, '666900', 0, '666900', '2e6d1125057ec7c4402a5a2ad84f6601', NULL, '', 0, NULL, NULL, '', '2011-07-05 12:57:51', '2011-07-05 12:57:52', 1, NULL, 1),
 (710, '666988', 0, '666988', 'cb3d82f7133330c48bee639908125906', NULL, '', 0, NULL, NULL, '', '2011-07-05 12:57:52', '2011-07-05 12:57:53', 1, NULL, 1),

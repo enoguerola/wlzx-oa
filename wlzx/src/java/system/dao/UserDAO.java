@@ -121,4 +121,17 @@ public class UserDAO extends BaseDAOImpl<UserModel>{
 		this.departmentDAO = departmentDAO;
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<UserModel> getUsersByMainDepartment(String departmentId) {
+		// TODO Auto-generated method stub
+		DetachedCriteria criteria = DetachedCriteria.forClass(UserModel.class);
+		if(StringUtils.isNotEmpty(departmentId)){
+			criteria.add(Restrictions.sqlRestriction("main_department_id='"+departmentId+"'"));
+		}	
+		//过滤超级用户;
+		criteria.add(Restrictions.ne("accountStyle",new Integer(-1)));
+		List<UserModel> result = this.getListByCriteria(criteria);
+		return result;
+	}
+
 }

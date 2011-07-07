@@ -21,6 +21,7 @@ package oa.entity.course.adjust
 	
 		public function ApplyItemModel()
 		{
+			super();
 		}
 		
 		

@@ -1,4 +1,4 @@
-package system.entity
+﻿package system.entity
 {
 	import mx.collections.ArrayCollection;
 	[Bindable]
@@ -26,6 +26,7 @@ package system.entity
 		};
 		public function MenuModel()
 		{
+			super();
 		}
 	}
 }

@@ -27,6 +27,7 @@ package oa.entity
 		
 		public function MoveRestDayForm()
 		{
+			super();
 		}
 		
 		

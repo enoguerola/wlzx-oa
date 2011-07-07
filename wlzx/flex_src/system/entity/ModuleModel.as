@@ -1,4 +1,4 @@
-package system.entity
+﻿package system.entity
 {
 	[Bindable]
 	[RemoteClass(alias="system.entity.ModuleModel")] 
@@ -14,6 +14,7 @@ package system.entity
 		public var parms:String;
 		public function ModuleModel()
 		{
+			super();
 		}
 	}
 }

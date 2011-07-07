@@ -1,4 +1,4 @@
-package system.entity
+﻿package system.entity
 {
 	[Bindable]
 	[RemoteClass(alias="system.entity.DataAccessModeModel")] 
@@ -11,6 +11,7 @@ package system.entity
 
 		public function DataAccessModeModel()
 		{
+			super();
 		}
 	}
 }

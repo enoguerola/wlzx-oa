@@ -1,4 +1,4 @@
-package system.entity
+﻿package system.entity
 {
 	import mx.collections.ArrayCollection;
 
@@ -21,6 +21,7 @@ package system.entity
 		public var leadingDepartments:Object=new Array();//该角色所领导的部门集
 		public function RoleModel()
 		{
+			super();
 		}
 		/** 
 		 * 获取上级领导

@@ -1,4 +1,4 @@
-package system.entity
+﻿package system.entity
 {
 	[Bindable]
 	[RemoteClass(alias="system.entity.SystemModel")] 
@@ -12,6 +12,7 @@ package system.entity
 		public var parent:Object=new Array();//父亲系统集
 		public function SystemModel()
 		{
+			super();
 		}
 	}
 }

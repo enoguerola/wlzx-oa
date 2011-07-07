@@ -1,6 +1,7 @@
 /* CSS file */
 @namespace s "library://ns.adobe.com/flex/spark";
 @namespace mx "library://ns.adobe.com/flex/mx";
+@namespace mx "http://www.adobe.com/2006/mxml";
 @namespace supertabs "flexlib.controls.tabBarClasses.*"; 
 
 
@@ -62,4 +63,7 @@ global
 }
 .customButtonBar {
 	skin: ClassReference("system.skins.WlzxButtonBarSkin");
+}
+.customPanel {
+	skin: ClassReference("system.skins.WlzxPanelSkin");
 }
