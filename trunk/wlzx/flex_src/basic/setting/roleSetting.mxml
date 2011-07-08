@@ -199,7 +199,7 @@
 		]]>
 	</fx:Script>
 	
-	<s:Panel width="100%" height="100%" title="岗位设置" styleName="customPanel">
+	<mx:VBox borderVisible="true" width="100%" height="100%" borderStyle="solid">
 		<mx:VBox width="100%" height="100%" verticalGap="0">
 			<mx:HBox width="100%" height="35" paddingLeft="20"  horizontalGap="10" backgroundColor="#C5E497"  verticalAlign="middle" >
 				<mx:Label text="|"/>
@@ -248,5 +248,5 @@
 		</mx:VBox>
 		
 
-	</s:Panel>
+	</mx:VBox>
 </mx:Module>

@@ -48,7 +48,7 @@
             <column name="apply_user_id" />
         </property>
   		<property name="applyDateTime" type="java.util.Date">
-            <column name="apply_date_time" />
+            <column name="apply_time" />
         </property>
         <property name="applyStatus" type="int">
             <column name="apply_status" />

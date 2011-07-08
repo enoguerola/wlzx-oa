@@ -1,20 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Box xmlns:fx="http://ns.adobe.com/mxml/2009" 
-		  xmlns:s="library://ns.adobe.com/flex/spark" 
+<mx:VBox   xmlns:mx="http://www.adobe.com/2006/mxml" 
 		  xmlns:editor="com.flexcalendar.components.calendar.editor.*"
 		  xmlns:hc="com.hillelcoren.components.*"
 		  xmlns:render="system.component.render.*"
-		  xmlns:mx="library://ns.adobe.com/flex/mx" layout="vertical" width="100%" height="100%">
-	<fx:Declarations>
+		  xmlns:mutiUpload="system.component.mutiUpload.*"
+		  width="100%" height="100%"  xmlns:valueObjects="oa.entity.*"   creationComplete="init();">
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+		<valueObjects:ConferenceModel id="form"/>
 		<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 			<mx:method name="getDepartmentBySymbol"  concurrency="last"  result="getDepartmentBySymbolResult(event);" />
 		</mx:RemoteObject>
 		<mx:RemoteObject id="placeServiceRO" destination="placeServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 			<mx:method name="getPlacesByCondition"  concurrency="last"  result="getPlacesByCondition_resultHandler(event);" />
 		</mx:RemoteObject>
-	</fx:Declarations>
-	<fx:Script>
+		<mx:RemoteObject id="conferenceServiceRO" destination="conferenceServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+			<mx:method name="addConference"  concurrency="last"  result="addConferenceResult_resultHandler(event);" />
+			<mx:method name="updateConference"  concurrency="last"  result="updateConferenceResult_resultHandler(event);" />
+			<mx:method name="loadConferenceInfoById"  concurrency="last"  result="loadConferenceInfoById_resultHandler(event);" />
+		</mx:RemoteObject>
+		<mx:Component id="searchAccountDropDownItemRenderer">
+			<render:AdvancedItemRenderer selectedItems="{ outerDocument.linkman_account.selectedItems }" />
+		</mx:Component>
+	
+	<mx:StringValidator id="title_stringValidator" source="{cname}" property="text"  requiredFieldError="会议名称不能为空"/>
+	<mx:StringValidator id="date_stringValidator" source="{date}" property="text"  requiredFieldError="会议时间不能为空"/>
+	<mx:StringValidator id="place_stringValidator" source="{places}" property="text"  requiredFieldError="会议地点不能为空"/>
+	<mx:StringValidator id="department_stringValidator" source="{departments}" property="text"  requiredFieldError="会议使用部门不能为空"/>
+	<mx:StringValidator id="usersIds_stringValidator" source="{users}" property="text"  requiredFieldError="会议人员不能为空"/>
+	<mx:StringValidator id="linkman_stringValidator" source="{linkman_account}" property="text"  requiredFieldError="会议联系人不能为空"/>
+	<mx:StringValidator id="contactPhone_stringValidator" source="{contactPhone}" property="text"  requiredFieldError="会议联系人电话不能为空"/>
+	<mx:Script>
 		<![CDATA[
 			
 			import mx.collections.ArrayCollection;
@@ -25,9 +40,11 @@
 			import mx.managers.PopUpManager;
 			import mx.rpc.events.*;
 			import mx.validators.Validator;
-			
+			import mx.formatters.DateFormatter;
 			import oa.common.popWin.StaffSelectPopWin;
+			
 			import system.entity.*;
+			private var validatorArr:Array;
 			[Binary]
 			public var departmentList:ArrayCollection = new ArrayCollection();
 			[Binary]
@@ -38,15 +55,42 @@
 				departmentList.addItem( {dataField:"-1", headerText:"×校外"});
 				systemServiceRO.getDepartmentBySymbol("root");
 				placeServiceRO.getPlacesByCondition(null,null,null,null,null,null,null);
+//				Alert.show("aaaaaaaaa");
+				linkman_account.dataProvider=this.parentApplication.allTeacherAcccounts;
+				var urlRequest:URLRequest = new URLRequest("spring/attachmentUpload.action");
+				upload.urlRequest = urlRequest;
 
 			}
 			private function systemFaultHandler(event:FaultEvent):void {
 				Alert.show(event.fault.faultString, 'Error');
 			}
-
+			protected function addConferenceResult_resultHandler(event:ResultEvent):void
+			{
+				Alert.show("添加成功");
+				this.currentState='list';
+				//search();
+			}
+			protected function updateConferenceResult_resultHandler(event:ResultEvent):void
+			{
+				Alert.show("添加成功");
+				this.currentState='list';
+				//search();
+			}
+			protected function loadConferenceInfoById_resultHandler(event:ResultEvent):void
+			{
+				form = event.result as ConferenceModel;
+				//				title.text = form.title;
+				//				conferenceType.selectedIndex = ComboxUtils.findIndex(conferenceTypeList, form.type);
+				//				conferenceScope.selectedIndex = ComboxUtils.findIndex(conferenceScopeList, form.scope);
+				//				postdepartment.selectedIndex = ComboxUtils.findIndex(departmentList, form.postDepartmentId);
+				//				if(form.emergence == 1)
+				//					emergence.selected = true;
+				//				rte.text = form.content;
+			}
 			private function getDepartmentBySymbolResult(event:ResultEvent):void {
 				var department:Object=event.result;
-				buildSubDepartments(department,departmentList,0);				
+				buildSubDepartments(department,departmentList,0);	
+				departments.dataProvider=departmentList;
 			}
 			private function buildSubDepartments(department:Object,resultList:ArrayCollection,depth:int):void{
 				var headText:String="";
@@ -71,6 +115,7 @@
 						placeList.addItem( {dataField:_place.id, headerText:_place.name})
 					}
 				}	
+				places.dataProvider=placeList;
 			}
 		
 			private var staffSelectPopWin:StaffSelectPopWin=null;
@@ -88,82 +133,192 @@
 			}
 			private function searchAccountHandleAutoCompleteChange():void
 			{
-				var color:Object = search_account.selectedItem;
+				var color:Object = linkman_account.selectedItem;
 				
 				if (color != null && color.hasOwnProperty( "id" ))
 				{
-					search_account_id.text=color.id;
+					linkman_account_id.text=color.id;
 				} else{
-					search_account_id.text="";
+					linkman_account_id.text="";
 				}               
 			}
-			
-		]]>
-	</fx:Script>
-	<mx:Component id="searchAccountDropDownItemRenderer">
-		<render:AdvancedItemRenderer selectedItems="{ outerDocument.search_account.selectedItems }" />
-	</mx:Component>
-	<mx:VBox  width="100%" height="100%">
-		<mx:Form width="100%" height="100%">
-			<mx:FormItem label="会议名称" width="100%">
-				<mx:TextInput width="100%" id="name"/>
-			</mx:FormItem>
-			<mx:FormItem label="会议时间" width="100%">
-				<mx:HBox width="100%">
-				<mx:DateField yearNavigationEnabled="true" id="date"   formatString="YYYY-MM-DD"  editable="false" width="100"/>
-				<editor:DateTimeChooser id="time"/>
-				<mx:Label  text="会议地点"/>
-				<mx:ComboBox   width="200" id="places" labelField="headerText"  selectedIndex="0"  />
+			private function showHide():void{
+				if(att_area.height==0)
+					att_area.height=340;
+				else att_area.height=0;
+			}
+			protected function add_clickHandler(event:MouseEvent):void
+			{
+				if(validateInput()){
+					var beginTime:String=((begin_hour.nextValue-1)>=10?(begin_hour.nextValue-1):"0"+(begin_minute.nextValue-1))+":"+((begin_minute.nextValue-1)>=10?(begin_minute.nextValue-1):"0"+(begin_minute.nextValue-1));
+					var endTime:String=((end_hour.nextValue-1)>=10?(end_hour.nextValue-1):"0"+(end_minute.nextValue-1))+":"+((end_minute.nextValue-1)>=10?(end_minute.nextValue-1):"0"+(end_minute.nextValue-1));
+					
+					if(addUpdateFlag.text=="add"){
+						form = new ConferenceModel();
+						form.applyUserId=this.parentApplication.currentUser.id;
+					
+						form.meetingDate=DateFormatter.parseDateString(date.text);
+						form.name=cname.text;
+						
+						form.beginTime=beginTime;
+						form.endTime=endTime;
+						form.placeId=places.selectedItem.dataField;
+						form.attendNum=attendNum.text;
+						form.departmentId=departments.selectedItem.dataField;
+						form.contactUserId=linkman_account_id.text;
+						form.contactPhoneNumber=contactPhone.text;
+						form.serviceNeeded=services.text;					
+						form.description=description.text;
+						form.teacherAttendIds=usersIds.text;
 
+						conferenceServiceRO.addConference(form, upload.idList);
+					}else if(addUpdateFlag.text == "update"+"_"+form.id){
+						form.applyUserId=this.parentApplication.currentUser.id;
+						
+						form.meetingDate=DateFormatter.parseDateString(date.text);
+						form.name=cname.text;
+								
+						form.beginTime=beginTime;
+						form.endTime=endTime;
+						form.placeId=places.selectedItem.dataField;
+						form.attendNum=attendNum.text;
+						form.departmentId=departments.selectedItem.dataField;
+						form.contactUserId=linkman_account_id.text;
+						form.contactPhoneNumber=contactPhone.text;
+						form.serviceNeeded=services.text;					
+						form.description=description.text;
+						form.teacherAttendIds=usersIds.text;
+						conferenceServiceRO.updateConference(form, upload.idList);
+					}
+				}
+			}
+			public function addInit():void{
+				
+			}
+			public function editInit(id:String):void{
+				conferenceServiceRO.loadConferenceInfoById(id);
+			}
+			
+			private function validateInput():Boolean
+			{	
+				validatorArr = new Array();
+				validatorArr.push(title_stringValidator);
+				validatorArr.push(date_stringValidator);
+				validatorArr.push(place_stringValidator);
+				validatorArr.push(department_stringValidator);
+				validatorArr.push(usersIds_stringValidator);
+				validatorArr.push(linkman_stringValidator);
+				validatorArr.push(contactPhone_stringValidator);
+				var validatorErrorArray:Array = Validator.validateAll(validatorArr);
+				var isValidForm:Boolean = validatorErrorArray.length == 0;
+				if (isValidForm) {
+					var beginTime:String=((begin_hour.nextValue-1)>=10?(begin_hour.nextValue-1):"0"+(begin_minute.nextValue-1))+":"+((begin_minute.nextValue-1)>=10?(begin_minute.nextValue-1):"0"+(begin_minute.nextValue-1));
+					var endTime:String=((end_hour.nextValue-1)>=10?(end_hour.nextValue-1):"0"+(end_minute.nextValue-1))+":"+((end_minute.nextValue-1)>=10?(end_minute.nextValue-1):"0"+(end_minute.nextValue-1));
+
+					if(endTime>beginTime)
+					return true;
+					else {
+						Alert.show("会议结束时间必须大于开始时间");
+						return false;
+					}
+				} else {
+					return false;
+				}
+			}
+			public function organizedUsersSelected():void{
+				var str:String="";
+				for (var i:int = 0; i < usersSelected.length; i++){
+					str=str.concat(usersSelected[i].data+";");
+				}
+				users.text=str;
+			}
+			private function canculateUsersSelected():void{
+				var str:String="";
+				for(var i:int=0;i<usersSelected.length;i++){
+					str=str.concat(usersSelected[i].id+";");
+				}
+				usersIds.text=str;
+			}
+		]]>
+	</mx:Script>
+	
+	<mx:VBox  width="100%" >
+		<mx:Form width="100%"  verticalGap="20">
+			<mx:FormItem label="会议名称" width="100%" required="true">
+				<mx:TextInput width="100%" id="cname"/>
+			</mx:FormItem>
+			<mx:FormItem label="会议时间" width="100%" required="true">
+				<mx:HBox width="100%">
+				<mx:DateField yearNavigationEnabled="true" id="date"   formatString="YYYY-MM-DD"  editable="false" width="120"/>
+				<mx:NumericStepper minimum="7" maximum="23" id="begin_hour">
+					
+				</mx:NumericStepper>
+				<mx:NumericStepper minimum="0" maximum="59" id="begin_minute">
+					
+				</mx:NumericStepper>
+				<mx:Label text="--"/>
+				<mx:NumericStepper minimum="7" maximum="23" id="end_hour">
+					
+				</mx:NumericStepper>
+				<mx:NumericStepper minimum="0" maximum="59" id="end_minute">
+					
+				</mx:NumericStepper>
+				<mx:FormItem label="会议地点" width="100%" required="true">
+					<mx:ComboBox   width="200" id="places" labelField="headerText"  selectedIndex="0"  />
+				</mx:FormItem>
 				</mx:HBox>
 			</mx:FormItem>
 
-			<mx:FormItem label="会议人数" width="100%" height="100%">
+			<mx:FormItem label="会议人数" width="100%" >
 				<mx:HBox width="100%">
-					<mx:TextInput width="100%" id="attendNum"/>
-					<mx:Label  text="使用部门"/>
-					<mx:ComboBox   width="200" id="departments" labelField="headerText" dataProvider="{departmentList}" selectedIndex="0"  />
-
-				</mx:Hbox>
+					<mx:TextInput width="60" id="attendNum"/>
+					<mx:Label  text="人"/>
+					<mx:FormItem label="使用部门" width="100%" required="true">
+						<mx:ComboBox   width="200" id="departments" labelField="headerText" dataProvider="{departmentList}" selectedIndex="0"  />
+					</mx:FormItem>
+				</mx:HBox>
 				
 			</mx:FormItem>
-			<mx:FormItem label="与会人员" width="100%" height="100%">
-				<mx:TextInput id="users" width="200" focusIn="openStaffSelectPopWin(event);" editable="false"/>
-				<mx:TextInput id="usersIds" visible="false"/>
-			</mx:FormItem>
-			<mx:FormItem label="会议服务" width="100%" height="100%">
-				<mx:Text width="100%"/>
-			</mx:FormItem>
-			<mx:FormItem label="会议描述" width="100%" height="100%">
-				<mx:TextArea width="100%"/>
-			</mx:FormItem>
-			<mx:FormItem label="联系人" width="100%" height="100%">
+			<mx:FormItem label="与会人员" width="100%"  required="true">
 				<mx:HBox width="100%">
-					<hc:AutoComplete id="search_account"  labelField="name"  width="150"  matchType="anyPart" prompt="选择教师"  change="{ searchAccountHandleAutoCompleteChange() }" dropDownItemRenderer="{ searchAccountDropDownItemRenderer }" selectedItemStyleName="none">
+					<mx:TextInput id="users" width="100%"  editable="false"/>
+					<mx:LinkButton label="打开" click="openStaffSelectPopWin(event)" width="50"/>
+					<mx:TextInput id="usersIds" visible="false"/>
+				</mx:HBox>
+			</mx:FormItem>
+			<mx:FormItem label="会议服务" width="100%">
+				<mx:TextInput width="100%" id="services"/>
+			</mx:FormItem>
+			<mx:FormItem label="会议描述" width="100%">
+				<mx:TextArea width="100%" id="description"/>
+			</mx:FormItem>
+			<mx:FormItem label="联系人" width="100%"  required="true">
+				<mx:HBox width="100%">
+					<hc:AutoComplete id="linkman_account"  labelField="name"  width="150"  matchType="anyPart" prompt="选择教师"  change="{ searchAccountHandleAutoCompleteChange() }" dropDownItemRenderer="{ searchAccountDropDownItemRenderer }" selectedItemStyleName="none">
 						
 					</hc:AutoComplete>
-					<mx:Label id="search_account_id" visible="false">
+					<mx:Label id="linkman_account_id" visible="false">
 						
 					</mx:Label>
-					<mx:Label  text="联系电话"/>
-					<mx:TextInput/>
-				</mx:Hbox>
+					<mx:FormItem label="联系电话" width="100%" required="true">
+						<mx:TextInput id="contactPhone"/>
+					</mx:FormItem>
+				</mx:HBox>
 					
 			</mx:FormItem>
 			<mx:HBox width="100%" height="20">
 				<mx:LinkButton  label="会议附件区" icon="@Embed(source='../WebContent/resources/common/tools/button_attachment_icon.png')" click="showHide()"/>
 			</mx:HBox>
-			<mx:FormItem  width="100%"  height="0" id="att_area" paddingLeft="10" paddingRight="10">
-				<mx:VBox width="100%">
-					<mutiUpload:upload width="100%" id="upload">
-					</mutiUpload:upload>
-				</mx:VBox>
-			</mx:FormItem>
+			
 		</mx:Form>
 	</mx:VBox>
-	<mx:HBox horizontalAlign="right" width="100%">
+	<mx:VBox  width="100%"  height="0" id="att_area" paddingLeft="10" paddingRight="10">
+			<mutiUpload:upload width="100%" id="upload">
+			</mutiUpload:upload>
+	</mx:VBox>
+	<mx:HBox horizontalAlign="right" width="100%" height="30">
 		<mx:Label id="addUpdateFlag" visible="false" text="add"/>
 		<!--	<mx:Button label="保存草稿" id="draftSaveButton" click="save_clickHandler(event)"/>-->
 		<mx:Button label="发布" id="postButton" click="add_clickHandler(event)"/>
 	</mx:HBox>
-</mx:Box>
+</mx:VBox>

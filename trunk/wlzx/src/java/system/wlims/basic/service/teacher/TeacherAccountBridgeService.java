@@ -93,6 +93,50 @@ public class TeacherAccountBridgeService {
 		}	
 		return triples;
 	}
+	public List<TripleObject<String, String,String>> getUsersByCondition(String userId,String departmentId,String roleId){
+		List<TripleObject<String, String,String>> triples = new ArrayList<TripleObject<String, String,String>>();
+		if(StringUtils.isNotEmpty(userId)){
+			UserModel user=userDAO.get(userId);
+			triples.add(new TripleObject<String, String,String>(null,user.getName(),user.getId()));
+		}else if(StringUtils.isNotEmpty(roleId)){
+			RoleModel role=roleDAO.get(roleId);
+			Set<UserModel> users=role.getAllUsers();
+			for(UserModel user:users){
+				triples.add(new TripleObject<String, String,String>(null,user.getName(),user.getId()));
+			}
+		}else if(StringUtils.isNotEmpty(departmentId)){
+			DepartmentModel department=departmentDAO.get(departmentId);
+			
+			Set<UserModel> users=department.getUsers();
+			List<UserModel> mainUsers=userDAO.getUsersByMainDepartment(departmentId);
+			if(mainUsers!=null&&mainUsers.size()>0){
+				for(UserModel user:mainUsers)
+					users.add(user);
+			}
+			for(UserModel user:users){
+				triples.add(new TripleObject<String, String,String>(null,user.getName(),user.getId()));
+			}
+		}else {
+			List<UserModel> users=userDAO.getAllUsers();
+			for(UserModel user:users){
+				triples.add(new TripleObject<String, String,String>(null,user.getName(),user.getId()));
+			}
+		}
+		
+		return triples;
+	}
+	//获得未授权用户
+	public List<TripleObject<String, String,String>>  getUnAuthUsers(){	
+		List<TripleObject<String, String,String>> triples = new ArrayList<TripleObject<String, String,String>>();
+		List<UserModel> allUsers=userDAO.getAllUsers();
+		for(UserModel user:allUsers){
+			if(user.getAllRoles()==null||user.getAllRoles().size()==0){
+				triples.add(new TripleObject<String, String,String>(null,user.getName(),user.getId()));
+			}
+		}
+		return triples;
+		
+	}
 	public List<UserAddressVo> getUserAddressesByConditions(String departmentId,String userId){
 		List<UserAddressVo> results = new ArrayList<UserAddressVo>();
 		if(StringUtils.isNotEmpty(departmentId)){
