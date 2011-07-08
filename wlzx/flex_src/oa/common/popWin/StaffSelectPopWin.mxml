@@ -140,7 +140,7 @@
 				
 				this.departments.dataProvider=resultList;
 				this.departments.selectedIndex=0;
-				teacherAccountBridgeServiceRO.getUsersByCondition(null,null,departments.selectedItem.dataField);
+				teacherAccountBridgeServiceRO.getUsersByCondition(null,departments.selectedItem.dataField,null);
 			}
 			private function buildSubDepartments(department:Object,resultList:ArrayCollection,depth:int):void{
 				var headText:String="";
@@ -173,7 +173,7 @@
 				}	
 				this.roles.dataProvider=resultList;	
 				this.roles.selectedIndex=0;
-				teacherAccountBridgeServiceRO.getUsersByCondition(null,roles.selectedItem.dataField,null);
+				teacherAccountBridgeServiceRO.getUsersByCondition(null,null,roles.selectedItem.dataField);
 //			systemServiceRO.getRoleUsers(roles.selectedItem.dataField);
 				//				switchRoleAuthorization();
 				
@@ -229,13 +229,13 @@
 			private function departmentSelectionChangedHandler(event:Event):void{
 				
 				//				Alert.show(departments.selectedItem.dataField);
-				teacherAccountBridgeServiceRO.getUsersByCondition(null,null,departments.selectedItem.dataField);
+				teacherAccountBridgeServiceRO.getUsersByCondition(null,departments.selectedItem.dataField,null);
 				
 			}
 			private function roleSelectionChangedHandler(event:Event):void{
 				
 				//				Alert.show(departments.selectedItem.dataField);
-				teacherAccountBridgeServiceRO.getUsersByCondition(null,roles.selectedItem.dataField,null);
+				teacherAccountBridgeServiceRO.getUsersByCondition(null,null,roles.selectedItem.dataField);
 				systemServiceRO.getRoleUsers(roles.selectedItem.dataField);
 				
 			}

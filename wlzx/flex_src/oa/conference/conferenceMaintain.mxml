@@ -4,7 +4,7 @@
 		  xmlns:hc="com.hillelcoren.components.*"
 		  xmlns:render="system.component.render.*"
 		  xmlns:mutiUpload="system.component.mutiUpload.*"
-		  width="100%" height="100%"  xmlns:valueObjects="oa.entity.*"   creationComplete="init();">
+		  width="100%" height="100%"  xmlns:valueObjects="oa.entity.*"   creationComplete="init();" >
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
 		<valueObjects:ConferenceModel id="form"/>
 		<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
@@ -112,7 +112,7 @@
 				if(list.length>0){
 					for (var i:int = 0; i < list.length; i++){
 						var _place:Object = list.getItemAt(i);	
-						placeList.addItem( {dataField:_place.id, headerText:_place.name})
+						placeList.addItem( {dataField:_place.id, headerText:_place.name+"["+_place.position+"]"})
 					}
 				}	
 				places.dataProvider=placeList;

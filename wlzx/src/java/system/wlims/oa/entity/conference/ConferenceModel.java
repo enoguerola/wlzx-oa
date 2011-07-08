@@ -33,6 +33,27 @@ public class ConferenceModel extends BaseModel {
 	private Set<AttachmentModel> attachments=new TreeSet<AttachmentModel>(); 
 	private Set<AttachmentModel> summaryAttachments=new TreeSet<AttachmentModel>(); 
 	private Integer applyStatus;
+	public static enum EStatus{
+		Booking(1, "预约中"),
+		Arranged(2, "已安排"),
+		Cancled(3, "已取消");
+		
+		private Integer value;
+		private String text;
+		
+		EStatus(Integer value, String text){
+			this.value = value;
+			this.text = text;
+		}
+		
+		public Integer getValue(){
+			return value;
+		}
+		
+		public String getText(){
+			return this.text;
+		}
+	}
 	public String getName() {
 		return name;
 	}

@@ -2,7 +2,7 @@
 <mx:Module xmlns:mx="http://www.adobe.com/2006/mxml" 
 		   xmlns:hc="com.hillelcoren.components.*"
 		   xmlns:render="system.component.render.*"
-		   layout="vertical" width="100%" creationComplete="init();"  height="100%" xmlns:component="system.component.*" xmlns:mx1="library://ns.adobe.com/flex/mx" xmlns:mutiUpload="system.component.mutiUpload.*" xmlns:conference="oa.conference.*">
+		   layout="vertical" width="100%" creationComplete="init();"  height="100%" xmlns:component="system.component.*" xmlns:mx1="library://ns.adobe.com/flex/mx" xmlns:mutiUpload="system.component.mutiUpload.*" xmlns:conference="oa.conference.*"   currentState="list">
 	
 	<mx:RemoteObject id="conferenceServiceRO" destination="conferenceServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 	
@@ -73,10 +73,10 @@
 					this.currentState='add';
 					returnArea.height=0;
 				}
-				else //if(parms=='list') 
-				{
-					this.currentState='list';
-				}
+//				else //if(parms=='list') 
+//				{
+//					this.currentState='list';
+//				}
 			
 				search();
 				departmentList = this.parentApplication.allDepartment;
@@ -254,11 +254,11 @@
 					<mx:HBox  width="100%" height="100%" paddingLeft="10" paddingRight="10">
 						<component:WlzxPageDataGrid width="100%" height="100%"   borderVisible="false"  autoLayout="true"  borderAlpha="0.2" verticalAlign="middle"   id="conferenceTable" pagecount="10"  >				
 							<component:mygridcolumns>
-								<mx:DataGridColumn textAlign="center" headerText="会议时间"  width="60">
+								<mx:DataGridColumn textAlign="center" headerText="会议时间"  width="100">
 									<mx:itemRenderer>
 										<mx:Component>
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
-												<mx1:Text text="{getMeetingTime(data)}">
+												<mx1:Text text="{getMeetingTime(data)}" width="100">
 												<mx:Script>
 													<![CDATA[
 														//提示信息
@@ -266,7 +266,7 @@
 														import system.utils.CommonUtils;
 														private function getMeetingTime(data:Object):String{
 															
-															return CommonUtils.formatDate(data.date,"YYYY-MM-DD")+" "+data.beginTime+"--"+data.endTime;
+															return CommonUtils.formatDate(data.meetingDate,"YYYY-MM-DD")+" "+data.beginTime+"--"+data.endTime;
 														}
 													]]>
 												</mx:Script>
@@ -275,62 +275,63 @@
 										</mx:Component>						
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="会议名称" width="100" >
+								<mx:DataGridColumn textAlign="center" headerText="会议名称" width="200" >
 									<mx:itemRenderer>
 										<mx:Component>
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" >
-												<mx1:Text text="{data.name}" width="100">
+												<mx1:Text text="{data.name}" width="200">
 												</mx1:Text>
 											</mx:HBox>
 										</mx:Component>
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
 
-								<mx:DataGridColumn textAlign="center" headerText="使用部门"  width="100" >
+								<mx:DataGridColumn textAlign="center" headerText="使用部门"  width="60" >
 									<mx:itemRenderer>
 										<mx:Component>
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" >
-												<mx1:Text text="{data.departmentId==null?'其他':parentApplication.getDepartmentNameById(data.departmentId)}" width="100">
+												<mx1:Text text="{data.departmentId==null?'其他':parentApplication.getDepartmentNameById(data.departmentId)}" width="60">
 												</mx1:Text>
 											</mx:HBox>
 										</mx:Component>
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="参会人数" width="100" >
+								<mx:DataGridColumn textAlign="center" headerText="参会人数" width="60" >
 									<mx:itemRenderer>
 										<mx:Component>
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" >
-												<mx1:Text text="{data.attendNum}" width="100">
+												<mx1:Text text="{data.attendNum}" width="60">
 												</mx1:Text>
 											</mx:HBox>
 										</mx:Component>
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="会议地点" width="100" >
+								<mx:DataGridColumn textAlign="center" headerText="会议地点" width="140" >
 									<mx:itemRenderer>
 										<mx:Component>
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" >
-												<mx1:Text text="{data.placeId}" width="100">
+												<mx1:Text text="{data.placeId==null?'待定':parentApplication.getPlaceNameById(data.placeId)}" width="140">
+												</mx1:Text>
+												
+											</mx:HBox>
+										</mx:Component>
+									</mx:itemRenderer>
+								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="联系人" width="60" >
+									<mx:itemRenderer>
+										<mx:Component>
+											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" >
+												<mx1:Text text="{parentApplication.getTeacherNameByAccountId(data.contactUserId)}" width="60">
 												</mx1:Text>
 											</mx:HBox>
 										</mx:Component>
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="联系人" width="100" >
+								<mx:DataGridColumn textAlign="center" headerText="状态" width="60" >
 									<mx:itemRenderer>
 										<mx:Component>
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" >
-												<mx1:Text text="{parentApplication.getTeacherNameByAccountId(data.contactUserId)}" width="100">
-												</mx1:Text>
-											</mx:HBox>
-										</mx:Component>
-									</mx:itemRenderer>
-								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="状态" width="100" >
-									<mx:itemRenderer>
-										<mx:Component>
-											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" >
-												<mx1:Text text="{getStatus(data)}" width="100">
+												<mx1:Text text="{getStatus(data)}" width="60">
 													<mx:Script>
 														<![CDATA[
 															//提示信息
@@ -349,7 +350,7 @@
 										</mx:Component>
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="操作" width="100">
+								<mx:DataGridColumn textAlign="center" headerText="操作" width="180">
 									<mx:itemRenderer>
 										<mx:Component>
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0">
@@ -392,7 +393,7 @@
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
 								
-								<mx:DataGridColumn textAlign="center" headerText="详细" width="60">
+								<mx:DataGridColumn textAlign="center" headerText="详细" width="50">
 									<mx:itemRenderer>
 										<mx:Component>
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0">
