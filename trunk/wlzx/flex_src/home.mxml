@@ -19,6 +19,9 @@
 			<mx:method name="getDepartmentBySymbol"  concurrency="last"  result="getDepartmentBySymbolResult(event);" />
 			<mx:method name="getAllRoles"  concurrency="last"  result="getAllRolesResult(event);" />
 		</mx:RemoteObject>
+		<mx:RemoteObject id="placeServiceRO" destination="placeServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+			<mx:method name="getPlacesByCondition"  concurrency="last"  result="getPlacesByCondition_resultHandler(event);" />
+		</mx:RemoteObject>
 	</fx:Declarations>
 	<fx:Script>    
 		<![CDATA[   
@@ -48,11 +51,13 @@
 			public var allTeacherAcccounts:ArrayCollection = new ArrayCollection();
 			public var allDepartment:ArrayCollection = new ArrayCollection();
 			public var allRole:ArrayCollection = new ArrayCollection();
+			public var allPlace:ArrayCollection = new ArrayCollection();
 			
 			private function init():void{
 				securityUserHolder.getCurrentUser();
 				teacherAccountBridgeServiceRO.teacherAccountGetAll();
 				systemServiceRO.getDepartmentBySymbol("root");
+				placeServiceRO.getPlacesByCondition(null,null,null,null,null,null,null);
 			}
 			protected function systemFaultHandler(event:FaultEvent):void {
 				Alert.show(event.fault.faultString, 'Error');
@@ -156,7 +161,15 @@
 					allRole.addItem( {data:role.id, label:role.name})
 				}
 			}
-			
+			private function getPlacesByCondition_resultHandler(event:ResultEvent):void{
+				var allList:ArrayCollection=event.result as ArrayCollection;
+				
+				for(var i:int=0;i<allList.length;i++){
+					var _place:Object=allList.getItemAt(i);
+					allPlace.addItem( {data:_place.id, label:_place.name+"["+_place.position+"]"})
+				
+				}	
+			}
 			private function getDepartmentBySymbolResult(event:ResultEvent):void {
 				var _department:DepartmentModel = event.result as DepartmentModel;
 				buildSubDepartments(_department,allDepartment,0);
@@ -193,6 +206,17 @@
 					if(item.data == id){
 						var name:String = item.label;
 //						var index:int = name.lastIndexOf("-");
+						return name;
+					}
+				}
+				return "";
+			}
+			public function getPlaceNameById(id:String):String{
+				for(var i:int=0;i<allPlace.length;i++){
+					var item:Object=allPlace.getItemAt(i);
+					if(item.data == id){
+						var name:String = item.label;
+						//						var index:int = name.lastIndexOf("-");
 						return name;
 					}
 				}

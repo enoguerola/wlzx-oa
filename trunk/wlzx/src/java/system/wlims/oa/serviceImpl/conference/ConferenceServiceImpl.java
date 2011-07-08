@@ -1,5 +1,6 @@
 package system.wlims.oa.serviceImpl.conference;
 
+import java.util.Date;
 import java.util.List;
 
 import system.DAOException;
@@ -34,6 +35,8 @@ public class ConferenceServiceImpl implements ConferenceService {
 //				conference.setPostTime(UtilDateTime.nowDate());
 //			}
 //		}
+		conference.setApplyDateTime(new Date());
+		conference.setApplyStatus(ConferenceModel.EStatus.Booking.getValue());
 		if(list != null && list.size() > 0){
 			for(Object id : list){
 				System.out.println(id);
