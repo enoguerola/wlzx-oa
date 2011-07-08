@@ -320,7 +320,7 @@
 		]]>
 	</fx:Script>
 	
-		<s:VGroup width="100%" height="100%">
+	<mx:VBox borderVisible="true" width="100%" height="100%" borderStyle="solid">
 			<s:HGroup verticalAlign="middle" horizontalAlign="right" width="100%">
 				<mx:HBox width="100%" height="35" paddingLeft="20"  horizontalGap="10" backgroundColor="#C5E497"  verticalAlign="middle">
 					<mx:Label text="|"/>
@@ -364,7 +364,7 @@
 				</mx:HBox>
 					
 				<s:VGroup  width="100%" height="100%" gap="0" >
-					<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="false"   borderAlpha="0.2" verticalAlign="middle"   id="teacherDG" pagecount="13">				
+					<component:WlzxPageDataGrid width="100%" height="100%" paddingLeft="10" paddingRight="10" borderVisible="false"   borderAlpha="0.2" verticalAlign="middle"   id="teacherDG" pagecount="13">				
 						<component:mygridcolumns>
 							
 							<mx:DataGridColumn textAlign="center" headerText="姓名" dataField="name" width="100"></mx:DataGridColumn>
@@ -472,7 +472,7 @@
 					
 				</s:VGroup>
 			</s:VGroup>
-		</s:VGroup>
+		</mx:VBox>
 		
 		
 </mx:Module>

@@ -207,7 +207,8 @@
 			</mx:FormItem>
 			<mx:FormItem label="岗位用户 ">
 				<mx:HBox width="100%">
-					<mx:TextInput id="users" width="200" focusIn="openStaffSelectPopWin(event);" editable="false"/>
+					<mx:TextInput id="users" width="200"  editable="false"/>
+					<mx:LinkButton label="打开" click="openStaffSelectPopWin(event)" width="50"/>
 					<mx:TextInput id="usersIds" visible="false"/>
 				</mx:HBox>
 			</mx:FormItem>
