@@ -23,7 +23,7 @@ public class ConferenceDAOImpl extends BaseDAOImpl<ConferenceModel> implements C
 		DetachedCriteria criteria = DetachedCriteria.forClass(ConferenceModel.class);
 		
 		if(StringUtils.isNotEmpty(name))
-			criteria.add(Restrictions.eq("name", name));
+			criteria.add(Restrictions.like("name", name));
 		
 		if(StringUtils.isNotEmpty(applyUserId))
 			criteria.add(Restrictions.sqlRestriction("apply_user_id='"+applyUserId+"'"));
