@@ -45,7 +45,7 @@ public class FileFlowServiceImpl implements FileFlowService {
 			for(FileFlowModel model : flows){
 				boolean exist = false;
 				for(String userid:userArray){
-					if(model.getId().equals(userid))
+					if(model.getUser().equals(userid))
 						exist = true;
 				}
 				if(!exist){
@@ -56,7 +56,7 @@ public class FileFlowServiceImpl implements FileFlowService {
 			for(String id:userArray){
 				boolean exist = false;
 				for(FileFlowModel model:flows){
-					if(model.getId().equals(id))
+					if(model.getUser().equals(id))
 						exist = true;
 				}
 				if(!exist){
@@ -190,8 +190,17 @@ public class FileFlowServiceImpl implements FileFlowService {
 			vo.setUserID(model.getUser());
 			vo.setOfficePhone(teacher.getTeacherOfficePhone());
 			vo.setMobilePhone(teacher.getTeacherMobilePhone());
-			vo.setMainRoleName(userModel.getMainRole().getName());
-			vo.setMainDepartmentName(userModel.getMainDepartment().getName());
+			if(userModel.getMainRole()!=null){
+				vo.setMainRoleName(userModel.getMainRole().getName());
+				
+			}else{
+				vo.setMainRoleName("未指定");
+			}
+			if(userModel.getMainDepartment()!=null){
+					vo.setMainDepartmentName(userModel.getMainDepartment().getName());
+			}else {
+				vo.setMainDepartmentName("未指定");
+			}
 			vo.setEmail(model.getType() + "");
 			userAddressVoList.add(vo);
 		}

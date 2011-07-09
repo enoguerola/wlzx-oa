@@ -17,14 +17,15 @@
 			{
 				var popWin:FlowManage = FlowManage(PopUpManager.createPopUp(((Object)(this.parentDocument)).parentDocument,FlowManage,true)); 
 				
-				PopUpManager.centerPopUp(popWin);
-				//popWin.percentHeight = 100;
-				//popWin.percentWidth = 100;
-				popWin.x = FlexGlobals.topLevelApplication.stage.stageWidth/2 - popWin.width/2;
-				popWin.y = FlexGlobals.topLevelApplication.stage.stageHeight/2 - popWin.height/2;
+				//popWin.percentHeight = 50;
+				//popWin.percentWidth = 50;
 				popWin.id = id;//参数传递使用
 				popWin.name = "";//参数传递使用
 				popWin.toolTip = status + "";
+				Alert.show(popWin.toolTip);
+				PopUpManager.centerPopUp(popWin);
+				popWin.x = FlexGlobals.topLevelApplication.stage.stageWidth/2 - popWin.width/2;
+				popWin.y = FlexGlobals.topLevelApplication.stage.stageHeight/2 - popWin.height/2;
 			}
 
 		]]>

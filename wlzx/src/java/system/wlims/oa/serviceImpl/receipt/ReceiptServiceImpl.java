@@ -8,7 +8,9 @@ import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
+import system.DAOException;
 import system.ServiceException;
+import system.constants.Constants;
 import system.utils.StringUtils;
 import system.utils.UtilDateTime;
 import system.wlims.oa.dao.receipt.ReceiptDAO;
@@ -98,18 +100,38 @@ public class ReceiptServiceImpl implements ReceiptService {
 	}
 
 	@Override
-	public void complete(String id) throws ServiceException {
+	public String complete(String id) throws ServiceException {
 		// TODO Auto-generated method stub
 		ReceiptModel model = receiptDAO.get(id);
 		model.setIsCompleted(1);
-		receiptDAO.saveOrUpdate(model);
+		
+		try {
+			receiptDAO.saveOrUpdate(model);
+		} catch (DAOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return Constants.DAO_ERROR;
+		}
+		return Constants.NONE_ERROR;
 	}
 
 	@Override
-	public void register(String id) throws ServiceException {
+	public String register(String id) throws ServiceException {
 		// TODO Auto-generated method stub
 		ReceiptModel model = receiptDAO.get(id);
 		model.setStatus(ReceiptModel.EStatus.Register.getValue());
-		receiptDAO.saveOrUpdate(model);
+		
+		if(StringUtils.isEmpty(model.getInNumber()) || StringUtils.isEmpty(model.getSubject())
+				|| StringUtils.isEmpty(model.getSummary()))
+			return Constants.FIELD_NONE_ERROR;
+		
+		try {
+			receiptDAO.saveOrUpdate(model);
+		} catch (DAOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return Constants.DAO_ERROR;
+		}
+		return Constants.NONE_ERROR;
 	}
 }

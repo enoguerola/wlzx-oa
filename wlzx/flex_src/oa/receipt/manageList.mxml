@@ -28,12 +28,11 @@
 				var in_number:String = search_panel.in_number.text;
 				var office:String = search_panel.in_office.text;
 				var do_number:String = search_panel.do_number.text;
-				Alert.show(search_panel.status.selectedItem.data);
 				var status:String = search_panel.status.selectedItem.data;
 				var title:String = search_panel.title.text;
 				var start_date:String = search_panel.in_date_begin.text;
 				var end_date:String = search_panel.in_date_end.text;
-				
+				Alert.show("click ");
 				receiptServiceRO.get(in_number, office, do_number, status, title, start_date, end_date,
 					manage_grid.grid.curpage, manage_grid.grid.pagecount);
 			}
@@ -43,9 +42,16 @@
 				receiptServiceRO.complete(id);
 			}
 			
+			public function add(id:String):void
+			{
+				var parent:Object=(Object)(((Object)(this.owner)).owner);
+				parent.addTab("view_receipt" + id,"公文详细",parent.nav,"oa/receipt/manageDetail.swf",null,id);
+			}
+			
 			private function get_resultHandler(event:ResultEvent):void
 			{
 				var result = event.result as ArrayCollection;
+				Alert.show("search");
 				manage_grid.grid.initdata(result);
 			}
 			

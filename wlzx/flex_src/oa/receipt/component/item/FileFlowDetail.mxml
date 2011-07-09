@@ -5,9 +5,25 @@
 				autoDrawBackground="true">
 	<fx:Script>
 		<![CDATA[
+			import mx.controls.Alert;
+			import mx.core.FlexGlobals;
+			import mx.events.FlexEvent;
+			import mx.managers.PopUpManager;
+			
+			import oa.receipt.component.FlowDetail;
+			
 			private function get_flow_detail(id:String):void
 			{
-				var parent:Object = (Object)(this.parentDocument);
+				var popWin:FlowDetail = FlowDetail(PopUpManager.createPopUp(((Object)(this.parentDocument)).parentDocument,FlowDetail,true)); 
+				
+				//popWin.percentHeight = 50;
+				//popWin.percentWidth = 50;
+				popWin.id = id;//参数传递使用
+				popWin.name = "";//参数传递使用
+				popWin.toolTip = "";
+				PopUpManager.centerPopUp(popWin);
+				popWin.x = FlexGlobals.topLevelApplication.stage.stageWidth/2 - popWin.width/2;
+				popWin.y = FlexGlobals.topLevelApplication.stage.stageHeight/2 - popWin.height/2;
 			}
 		]]>
 	</fx:Script>

@@ -28,8 +28,8 @@
 			import system.utils.ComboxUtils;
 			
 			private var flowArray:ArrayCollection = new ArrayCollection([
-				{"data":null, "label":"请选择"},{"data":"3", "label":"收文拟办"},{"data":"4", "label":"收文批示"},
-				{"data":"5", "label":"收文承办"},{"data":"6", "label":"收文传阅"}]);
+				{"data":null, "label":"请选择"},{"data":"0", "label":"收文拟办"},{"data":"1", "label":"收文批示"},
+				{"data":"2", "label":"收文承办"},{"data":"3", "label":"收文传阅"}]);
 			
 			private var teacherArray:Array = new Array();
 			private var update:Boolean = false;
@@ -97,7 +97,10 @@
 			
 			protected function save_resultHandle(event:ResultEvent):void
 			{
-				PopUpManager.removePopUp(this);this.parentApplication.popWin=null;
+				//var parent:Object = (Object)(this.parentDocument);
+				//parent.search();
+				PopUpManager.removePopUp(this);
+				//this.parentApplication.popWin=null;
 			}
 			
 			protected function getList_resultHandle(event:ResultEvent):void
@@ -118,7 +121,7 @@
 
 		]]>
 	</fx:Script>
-	<s:TitleWindow id="menuWin" width="100%" height="100%" close="PopUpManager.removePopUp(this);this.parentApplication.popWin=null;">
+	<s:TitleWindow id="menuWin" width="100%" height="100%" close="PopUpManager.removePopUp(this);">
 		<s:BorderContainer borderVisible="true" width="100%" height="100%">
 			<s:layout>
 				<s:VerticalLayout/>
