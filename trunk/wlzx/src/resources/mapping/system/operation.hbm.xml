@@ -33,10 +33,12 @@
 			<column name="modified_date" />
 		</property>
 		<set name="dataAccessModes" lazy="false"  table="wlzx_system_operation_dam_relationship" cascade="all">
+			<cache usage="read-write" />
 			<key column="operation_id" not-null="true" />
 			<many-to-many column="dam_id" class="system.entity.DataAccessModeModel" /> 
 		</set>
 		<set name="modules" lazy="false"  table="wlzx_system_module_operation_relationship">
+			<cache usage="read-write" />
 			<key column="operation_id" not-null="true" />
 			<many-to-many column="module_id" class="system.entity.ModuleModel" /> 
 		</set>

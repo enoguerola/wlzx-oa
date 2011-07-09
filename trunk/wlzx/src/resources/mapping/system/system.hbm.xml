@@ -33,14 +33,17 @@
 			<column name="modified_date" />
 		</property>
 		<set name="children" lazy="false"  table="wlzx_system_treeship" cascade="all">
+			<cache usage="nonstrict-read-write" />
 			<key column="parent_id"  />
 			<many-to-many column="child_id" class="system.entity.SystemModel" /> 
 		</set>
 		<set name="parents" lazy="false"  table="wlzx_system_treeship">
+			<cache usage="nonstrict-read-write" />
 			<key column="child_id"  />
 			<many-to-many column="parent_id" class="system.entity.SystemModel" /> 
 		</set>
 		<set name="menus" lazy="false"  table="wlzx_system_menu_relationship" cascade="all">
+			<cache usage="nonstrict-read-write" />
 			<key column="system_id"  />
 			<many-to-many column="menu_id" class="system.entity.MenuModel" order-by="sequence asc" /> 
 		</set>

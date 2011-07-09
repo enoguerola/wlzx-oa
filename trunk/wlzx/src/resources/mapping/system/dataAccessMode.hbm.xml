@@ -30,10 +30,12 @@
 			<column name="modified_date" />
 		</property>
 		<set name="operations" lazy="false"  table="wlzx_system_operation_dam_relationship">
+			<cache usage="read-write" />
 			<key column="dam_id" not-null="true" />
 			<many-to-many column="operation_id" class="system.entity.OperationModel" /> 
 		</set>
 		<set name="departments" lazy="false"  table="wlzx_system_department_dam_relationship">
+			<cache usage="read-write" />
 			<key column="dam_id" not-null="true" />
 			<many-to-many column="department_id" class="system.entity.DepartmentModel" /> 
 		</set>

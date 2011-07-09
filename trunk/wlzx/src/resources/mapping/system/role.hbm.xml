@@ -38,30 +38,37 @@
 			<column name="basic_flag" />
 		</property> 	
 		<set name="subordinates" lazy="false"  table="wlzx_system_role_leadship" cascade="all">
+			<cache usage="read-write" />
 			<key column="leader_id" not-null="true" />
 			<many-to-many  column="subordinate_id"  class="system.entity.RoleModel" /> 
 		</set>
 		<set name="leaders" lazy="false"  table="wlzx_system_role_leadship">
+			<cache usage="read-write" />
 			<key column="subordinate_id" not-null="true" />
 			<many-to-many  column="leader_id"  class="system.entity.RoleModel" /> 
 		</set>
 		<set name="users" lazy="false"  table="wlzx_system_role_user_relationship">
+			<cache usage="read-write" />
 			<key column="role_id" not-null="true" />
 			<many-to-many column="user_id" class="system.entity.UserModel" /> 
 		</set>
 		<set name="mainUsers" lazy="false"  table="wlzx_system_user" inverse="true" cascade="none">
+			<cache usage="read-write" />
 			<key column="main_role_id" not-null="true" />
 			<one-to-many class="system.entity.UserModel" />  
 		</set>
 		<set name="dataAccessModes" lazy="false"  table="wlzx_system_role_dam_relationship">
+			<cache usage="read-write" />
 			<key column="role_id" not-null="true" />
 			<many-to-many column="dam_id" class="system.entity.DataAccessModeModel" /> 
 		</set>
 		<set name="departments" lazy="false"  table="wlzx_system_department_role_relationship">
+			<cache usage="read-write" />
 			<key column="role_id" not-null="true" />
 			<many-to-many column="department_id" class="system.entity.DepartmentModel" /> 
 		</set>
 		<set name="leadingDepartments" lazy="false"  table="wlzx_system_role_department_leadership">
+			<cache usage="read-write" />
 			<key column="role_id" not-null="true" />
 			<many-to-many column="department_id" class="system.entity.DepartmentModel" /> 
 		</set>

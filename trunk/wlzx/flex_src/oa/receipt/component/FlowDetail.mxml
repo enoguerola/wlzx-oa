@@ -1,11 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
-		 xmlns:mx="library://ns.adobe.com/flex/mx" width="800" height="500">
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="600" height="400" creationComplete="init()">
 	<s:layout>
 		<s:VerticalLayout/>
 	</s:layout>
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+		<s:RemoteObject concurrency="last" fault="system_faultHandler(event)" destination="fileFlowServiceDest" id="fileFlowServiceRO" showBusyCursor="true">
+			<s:method concurrency="last" name="getList" result="getList_resultHandle(event)"/>
+		</s:RemoteObject>
 	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			import mx.managers.PopUpManager;
+			
+			private function init():void
+			{
+				var id:String = this.id;
+				fileFlowServiceRO.getList(id);
+			}
+			
+			protected function system_faultHandler(event:FaultEvent):void
+			{
+				Alert.show(event.fault.faultString, "error");
+			}
+			
+			protected function getList_resultHandle(event:ResultEvent):void
+			{
+				var list:ArrayCollection = event.result as ArrayCollection;
+				flowRecords.dataProvider = list;
+			}
+		]]>
+	</fx:Script>
+	<s:TitleWindow id="flowDetailWin" width="100%" height="100%" close="{PopUpManager.removePopUp(this);}">
+		<s:BorderContainer borderVisible="true" width="100%" height="100%"> 
+			<s:layout>
+				<s:VerticalLayout/>
+			</s:layout>
+			<s:VGroup width="100%" height="100%">
+				<s:Panel title="流 转 记 录" width="100%" height="100%">
+					<mx:DataGrid id="flowRecords" dropEnabled="true" dragMoveEnabled="true" height="95%" width="95%" paddingBottom="10" paddingLeft="10"
+								  paddingRight="10" paddingTop="10" verticalAlign="middle" horizontalCenter="0" verticalScrollPolicy="auto" y="10">
+						<mx:columns>
+							<mx:DataGridColumn dataField="id" headerText="序号" width="100"/>
+							<mx:DataGridColumn dataField="userName" headerText="流转类型" width="100"/>
+							<mx:DataGridColumn dataField="mainDepartmentName" headerText="操作人" width="100"/>
+							<mx:DataGridColumn dataField="mainRoleName" headerText="操作时间" width="150"/>
+							<mx:DataGridColumn dataField="officePhone" headerText="是否完成"/>
+						</mx:columns>
+					</mx:DataGrid>
+				</s:Panel>
+			</s:VGroup>
+		</s:BorderContainer>
+	</s:TitleWindow>
 </s:Group>

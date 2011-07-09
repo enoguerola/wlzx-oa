@@ -17,6 +17,7 @@
 			public var status_list:ArrayCollection = new ArrayCollection([{label: '所有', data: null}, 
 				{label: '草稿', data:'0'}, {label: '已登记', data:'1'}]);
 			
+			[Bindable]
 			public var step_list:ArrayCollection = new ArrayCollection([
 				{label: '所有', data: '1,2,3,4,5,6,7,8,9'},{label: '登记中', data: '1'},
 				{label: '拟办中', data: '2'},{label: '批示中', data: '4'},

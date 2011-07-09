@@ -43,14 +43,17 @@
 			<column name="active" />
 		</property>
 		<set name="subordinates" lazy="false"  table="wlzx_system_user_leadship">
+			<cache usage="nonstrict-read-write" />
 			<key column="leader_id" not-null="true" />
 			<many-to-many  column="subordinate_id"  class="system.entity.UserModel" /> 
 		</set>
 		<set name="leaders" lazy="false"  table="wlzx_system_user_leadship">
+			<cache usage="nonstrict-read-write" />
 			<key column="subordinate_id" not-null="true" />
 			<many-to-many  column="leader_id"  class="system.entity.UserModel" /> 
 		</set>
 		<set name="roles" lazy="false"  table="wlzx_system_role_user_relationship">
+			<cache usage="nonstrict-read-write" />
 			<key column="user_id" not-null="true" />
 			<many-to-many  column="role_id" class="system.entity.RoleModel" /> 
 		</set>

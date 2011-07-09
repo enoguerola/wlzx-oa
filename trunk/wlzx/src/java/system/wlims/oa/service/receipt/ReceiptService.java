@@ -16,7 +16,7 @@ public interface ReceiptService {
   List<ReceiptModel> get(String inNumber, String office, String doNumber, String status, 
 		  String title, String startDate, String endDate, int page, int pageCount)throws ServiceException;
   
-  void complete(String id)throws ServiceException;
+  String complete(String id)throws ServiceException;
   
-  void register(String id)throws ServiceException;
+  String register(String id)throws ServiceException;
 }

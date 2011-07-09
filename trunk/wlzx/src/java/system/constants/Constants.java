@@ -33,6 +33,12 @@ public class Constants {
 	public static String RESOURCE_CLASSPATH_PREFIX = "classpath:";
 	
 	public static final String BASIC_XLS_TPL_PATH = "resources/basic/tpl/xls";
+	
+	//error code
+	public static final String NONE_ERROR = "0";
+	public static final String DAO_ERROR = "4";
+	public static final String FIELD_NONE_ERROR = "5";
+	public static final String FIELD_FORMATE_ERROR = "6";
 
 
 }
