@@ -16,7 +16,8 @@
 		<mx:RemoteObject id="conferenceServiceRO" destination="conferenceServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 			<mx:method name="addConference"  concurrency="last"  result="addConferenceResult_resultHandler(event);" />
 			<mx:method name="updateConference"  concurrency="last"  result="updateConferenceResult_resultHandler(event);" />
-			<mx:method name="loadConferenceInfoById"  concurrency="last"  result="loadConferenceInfoById_resultHandler(event);" />
+			<mx:method name="adjustConferenceById"  concurrency="last"  result="adjustConferenceResult_resultHandler(event);" />
+			<mx:method name="get"  concurrency="last"  result="get_resultHandler(event);" />
 		</mx:RemoteObject>
 		<mx:Component id="searchAccountDropDownItemRenderer">
 			<render:AdvancedItemRenderer selectedItems="{ outerDocument.linkman_account.selectedItems }" />
@@ -31,19 +32,20 @@
 	<mx:StringValidator id="contactPhone_stringValidator" source="{contactPhone}" property="text"  requiredFieldError="会议联系人电话不能为空"/>
 	<mx:Script>
 		<![CDATA[
-			
 			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
 			import mx.core.FlexGlobals;
+			import mx.events.StateChangeEvent;
 			import mx.events.ValidationResultEvent;
 			import mx.formatters.DateFormatter;
 			import mx.managers.PopUpManager;
 			import mx.rpc.events.*;
 			import mx.validators.Validator;
-			import mx.formatters.DateFormatter;
+			
 			import oa.common.popWin.StaffSelectPopWin;
 			
 			import system.entity.*;
+			import system.utils.*;
 			private var validatorArr:Array;
 			[Binary]
 			public var departmentList:ArrayCollection = new ArrayCollection();
@@ -52,7 +54,7 @@
 			[Binary]
 			public var usersSelected:Array= new Array();
 			private function init():void {
-				departmentList.addItem( {dataField:"-1", headerText:"×校外"});
+				departmentList.addItem( {data:"-1", headerText:"×校外"});
 				systemServiceRO.getDepartmentBySymbol("root");
 				placeServiceRO.getPlacesByCondition(null,null,null,null,null,null,null);
 //				Alert.show("aaaaaaaaa");
@@ -66,26 +68,66 @@
 			}
 			protected function addConferenceResult_resultHandler(event:ResultEvent):void
 			{
-				Alert.show("添加成功");
-				this.currentState='list';
-				//search();
+				//if(event.result==true)
+					Alert.show("添加成功");
+					dispatchEvent(new  StateChangeEvent("stateChangeEvent"));
+				//else Alert.show("添加失败");
+//				var parent:Object=(Object)(this.owner);
+//				parent.currentState='list';
+//				parent.search();
 			}
 			protected function updateConferenceResult_resultHandler(event:ResultEvent):void
 			{
-				Alert.show("添加成功");
-				this.currentState='list';
-				//search();
+//				if(event.result==true){
+					Alert.show("更新成功");
+					dispatchEvent(new  StateChangeEvent("stateChangeEvent"));
+
+//				}
+//				else Alert.show("更新失败");
+//				var parent:Object=(Object)(this.owner);
+//				parent.currentState='list';
+//				parent.search();
 			}
-			protected function loadConferenceInfoById_resultHandler(event:ResultEvent):void
+			protected function adjustConferenceResult_resultHandler(event:ResultEvent):void
+			{
+//				if(event.result==true){
+					Alert.show("落实成功");
+					dispatchEvent(new  StateChangeEvent("stateChangeEvent"));
+
+//				}
+//				else Alert.show("落实失败");
+//				var parent:Object=(Object)(this.owner);
+//				parent.currentState='list';
+//				parent.search();
+			}
+			protected function get_resultHandler(event:ResultEvent):void
 			{
 				form = event.result as ConferenceModel;
-				//				title.text = form.title;
-				//				conferenceType.selectedIndex = ComboxUtils.findIndex(conferenceTypeList, form.type);
-				//				conferenceScope.selectedIndex = ComboxUtils.findIndex(conferenceScopeList, form.scope);
-				//				postdepartment.selectedIndex = ComboxUtils.findIndex(departmentList, form.postDepartmentId);
-				//				if(form.emergence == 1)
-				//					emergence.selected = true;
-				//				rte.text = form.content;
+				date.text=CommonUtils.formatDate(form.meetingDate,"YYYY-MM-DD");
+				begin_hour.value=parseInt(form.beginTime.split(":")[0]);
+				begin_minute.value=parseInt(form.beginTime.split(":")[1]);
+				end_hour.value=parseInt(form.endTime.split(":")[0]);
+				end_minute.value=parseInt(form.endTime.split(":")[1]);
+				cname.text=form.name;
+				places.selectedIndex=ComboxUtils.findIndex(placeList,form.placeId);
+				attendNum.text=form.attendNum;
+				departments.selectedIndex=ComboxUtils.findIndex(departmentList,form.departmentId);
+				linkman_account_id.text=form.contactUserId;
+				linkman_account.selectedItem=parentApplication.getItemByAccountId(form.contactUserId);
+				contactPhone.text=form.contactPhoneNumber;
+				services.text=form.serviceNeeded;					
+				description.text=form.description;
+				usersSelected=new Array(); 
+				var array:Array=form.teacherAttendIds.split(";");
+				if(array!=null&&array.length>0)
+				for(var i:int=0;i<array.length;i++){
+					//Alert.show(alreadyChoose[i].id);
+					if(array[i]!=null&&array[i]!="")
+					usersSelected.push({data:parentApplication.getTeacherNameByAccountId(array[i]),id:array[i]});
+				}
+				organizedUsersSelected();
+				
+				
 			}
 			private function getDepartmentBySymbolResult(event:ResultEvent):void {
 				var department:Object=event.result;
@@ -97,7 +139,7 @@
 				for(var j:int = 0;j<depth;j++)
 					headText=headText.concat("-");
 				headText=headText.concat(department.name);
-				resultList.addItem( {dataField:department.id, headerText:headText})
+				resultList.addItem( {data:department.id, headerText:headText})
 				var list:ArrayCollection = ArrayCollection(department.subordinates);			
 				if(list.length>0){
 					for (var i:int = 0; i < list.length; i++){
@@ -112,7 +154,7 @@
 				if(list.length>0){
 					for (var i:int = 0; i < list.length; i++){
 						var _place:Object = list.getItemAt(i);	
-						placeList.addItem( {dataField:_place.id, headerText:_place.name+"["+_place.position+"]"})
+						placeList.addItem( {data:_place.id, headerText:_place.name+"["+_place.position+"]"})
 					}
 				}	
 				places.dataProvider=placeList;
@@ -150,8 +192,8 @@
 			protected function add_clickHandler(event:MouseEvent):void
 			{
 				if(validateInput()){
-					var beginTime:String=((begin_hour.nextValue-1)>=10?(begin_hour.nextValue-1):"0"+(begin_minute.nextValue-1))+":"+((begin_minute.nextValue-1)>=10?(begin_minute.nextValue-1):"0"+(begin_minute.nextValue-1));
-					var endTime:String=((end_hour.nextValue-1)>=10?(end_hour.nextValue-1):"0"+(end_minute.nextValue-1))+":"+((end_minute.nextValue-1)>=10?(end_minute.nextValue-1):"0"+(end_minute.nextValue-1));
+					var beginTime:String=((begin_hour.value)>=10?(begin_hour.value):"0"+(begin_hour.value))+":"+((begin_minute.value)>=10?(begin_minute.value):"0"+(begin_minute.value));
+					var endTime:String=((end_hour.value)>=10?(end_hour.value):"0"+(end_hour.value))+":"+((end_minute.value)>=10?(end_minute.value):"0"+(end_minute.value));
 					
 					if(addUpdateFlag.text=="add"){
 						form = new ConferenceModel();
@@ -162,9 +204,9 @@
 						
 						form.beginTime=beginTime;
 						form.endTime=endTime;
-						form.placeId=places.selectedItem.dataField;
+						form.placeId=places.selectedItem.data;
 						form.attendNum=attendNum.text;
-						form.departmentId=departments.selectedItem.dataField;
+						form.departmentId=departments.selectedItem.data;
 						form.contactUserId=linkman_account_id.text;
 						form.contactPhoneNumber=contactPhone.text;
 						form.serviceNeeded=services.text;					
@@ -180,23 +222,49 @@
 								
 						form.beginTime=beginTime;
 						form.endTime=endTime;
-						form.placeId=places.selectedItem.dataField;
+						form.placeId=places.selectedItem.data;
 						form.attendNum=attendNum.text;
-						form.departmentId=departments.selectedItem.dataField;
+						form.departmentId=departments.selectedItem.data;
 						form.contactUserId=linkman_account_id.text;
 						form.contactPhoneNumber=contactPhone.text;
 						form.serviceNeeded=services.text;					
 						form.description=description.text;
 						form.teacherAttendIds=usersIds.text;
 						conferenceServiceRO.updateConference(form, upload.idList);
+					}else if(addUpdateFlag.text == "adjust"+"_"+form.id){
+						form.meetingDate=DateFormatter.parseDateString(date.text);
+						form.beginTime=beginTime;
+						form.endTime=endTime;
+						form.placeId=places.selectedItem.data;						
+						conferenceServiceRO.adjustConferenceById(form.id,form.meetingDate,form.beginTime,form.endTime,form.placeId);
 					}
 				}
 			}
 			public function addInit():void{
-				
+				saveButton.label="新增";
+				begin_hour.value=begin_hour.minimum;
+				begin_minute.value=begin_minute.minimum;
+				end_hour.value=end_hour.minimum;
+				end_minute.value=end_minute.minimum;
+				date.text="";
+				cname.text="";
+				places.selectedIndex=0;
+				attendNum.text="";
+				departments.selectedIndex=0
+				linkman_account_id.text="";
+				linkman_account.searchText="";
+				linkman_account.selectedItem=null;
+				contactPhone.text="";
+				services.text="";
+				description.text="";
+				usersSelected=new Array(); 
+				organizedUsersSelected();
+				hideSummaryArea();
+				enabledConferenceChange();
 			}
 			public function editInit(id:String):void{
-				conferenceServiceRO.loadConferenceInfoById(id);
+				saveButton.label="更新";
+				conferenceServiceRO.get(id);
 			}
 			
 			private function validateInput():Boolean
@@ -212,9 +280,10 @@
 				var validatorErrorArray:Array = Validator.validateAll(validatorArr);
 				var isValidForm:Boolean = validatorErrorArray.length == 0;
 				if (isValidForm) {
-					var beginTime:String=((begin_hour.nextValue-1)>=10?(begin_hour.nextValue-1):"0"+(begin_minute.nextValue-1))+":"+((begin_minute.nextValue-1)>=10?(begin_minute.nextValue-1):"0"+(begin_minute.nextValue-1));
-					var endTime:String=((end_hour.nextValue-1)>=10?(end_hour.nextValue-1):"0"+(end_minute.nextValue-1))+":"+((end_minute.nextValue-1)>=10?(end_minute.nextValue-1):"0"+(end_minute.nextValue-1));
-
+					var beginTime:String=((begin_hour.value)>=10?(begin_hour.value):"0"+(begin_hour.value))+":"+((begin_minute.value)>=10?(begin_minute.value):"0"+(begin_minute.value));
+					var endTime:String=((end_hour.value)>=10?(end_hour.value):"0"+(end_hour.value))+":"+((end_minute.value)>=10?(end_minute.value):"0"+(end_minute.value));
+//					Alert.show("bb"+beginTime);
+//					Alert.show("e"+endTime);
 					if(endTime>beginTime)
 					return true;
 					else {
@@ -226,11 +295,14 @@
 				}
 			}
 			public function organizedUsersSelected():void{
-				var str:String="";
-				for (var i:int = 0; i < usersSelected.length; i++){
-					str=str.concat(usersSelected[i].data+";");
-				}
-				users.text=str;
+			//	if(usersSelected!=null&&usersSelected.length>0){
+					var str:String="";
+					for (var i:int = 0; i < usersSelected.length; i++){
+						str=str.concat(usersSelected[i].data+";");
+					}
+					users.text=str;
+					canculateUsersSelected();
+			//	}
 			}
 			private function canculateUsersSelected():void{
 				var str:String="";
@@ -238,6 +310,65 @@
 					str=str.concat(usersSelected[i].id+";");
 				}
 				usersIds.text=str;
+			}
+			public function hideSummaryArea():void{
+				summaryArea.height=0;
+			}
+			public function showSummaryArea():void{
+				summaryArea.height=360;
+			}
+			public function disabledTimePositionChange():void{
+				places.enabled=false;
+				date.enabled=false;
+				begin_hour.enabled=false;
+				begin_minute.enabled=false;
+				end_hour.enabled=false;
+				end_minute.enabled=false;
+			}
+			
+			public function enabledTimePositionChange():void{
+				places.enabled=true;
+				date.enabled=true;
+				begin_hour.enabled=true;
+				begin_minute.enabled=true;
+				end_hour.enabled=true;
+				end_minute.enabled=true;
+			}
+			public function disabledConferenceChange():void{
+				cname.enabled=false;
+				places.enabled=false;
+				date.enabled=false;
+				begin_hour.enabled=false;
+				begin_minute.enabled=false;
+				end_hour.enabled=false;
+				end_minute.enabled=false;
+				attendNum.enabled=false;
+				departments.enabled=false;
+				openControl.enabled=false;
+				services.enabled=false;
+				description.enabled=false;
+				linkman_account.enabled=false;
+				services.enabled=false;
+				contactPhone.enabled=false;
+				attrArea.enabled=false;
+			}
+			public function enabledConferenceChange():void{
+				cname.enabled=true;
+				places.enabled=true;
+				date.enabled=true;
+				begin_hour.enabled=true;
+				begin_minute.enabled=true;
+				end_hour.enabled=true;
+				end_minute.enabled=true;
+				attendNum.enabled=true;
+				departments.enabled=true;
+				openControl.enabled=true;
+				services.enabled=true;
+				description.enabled=true;
+				linkman_account.enabled=true;
+				services.enabled=true;
+				contactPhone.enabled=true;
+				attrArea.enabled=true;
 			}
 		]]>
 	</mx:Script>
@@ -281,9 +412,9 @@
 			</mx:FormItem>
 			<mx:FormItem label="与会人员" width="100%"  required="true">
 				<mx:HBox width="100%">
-					<mx:TextInput id="users" width="100%"  editable="false"/>
-					<mx:LinkButton label="打开" click="openStaffSelectPopWin(event)" width="50"/>
-					<mx:TextInput id="usersIds" visible="false"/>
+					<mx:TextInput id="users" width="400"  editable="false" />
+					<mx:LinkButton label="打开" click="openStaffSelectPopWin(event)" width="50" id="openControl"/>
+					<mx:TextInput id="usersIds" visible="false" width="400"/>
 				</mx:HBox>
 			</mx:FormItem>
 			<mx:FormItem label="会议服务" width="100%">
@@ -306,19 +437,32 @@
 				</mx:HBox>
 					
 			</mx:FormItem>
-			<mx:HBox width="100%" height="20">
-				<mx:LinkButton  label="会议附件区" icon="@Embed(source='../WebContent/resources/common/tools/button_attachment_icon.png')" click="showHide()"/>
-			</mx:HBox>
+		
 			
 		</mx:Form>
 	</mx:VBox>
-	<mx:VBox  width="100%"  height="0" id="att_area" paddingLeft="10" paddingRight="10">
-			<mutiUpload:upload width="100%" id="upload">
-			</mutiUpload:upload>
+	<mx:VBox id="attrArea"  width="100%">
+		<mx:HBox width="100%" height="20">
+			<mx:LinkButton  label="会议附件区" icon="@Embed(source='../WebContent/resources/common/tools/button_attachment_icon.png')" click="showHide()"/>
+		</mx:HBox>
+		<mx:VBox  width="100%"  height="0" id="att_area" paddingLeft="10" paddingRight="10">
+				<mutiUpload:upload width="100%" id="upload">
+				</mutiUpload:upload>
+		</mx:VBox>
 	</mx:VBox>
+	<mx:VBox id="summaryArea"  width="100%">
+		<mx:HBox width="100%" height="20">
+			<mx:LinkButton  label="会议总结" icon="@Embed(source='../WebContent/resources/common/tools/button_attachment_icon.png')"/>
+		</mx:HBox>
+		<mx:VBox  width="100%"  height="340" id="summaryAttr_area" paddingLeft="10" paddingRight="10">
+			<mutiUpload:upload width="100%" id="summaryUpload">
+			</mutiUpload:upload>
+		</mx:VBox>
+	</mx:VBox>
+	
 	<mx:HBox horizontalAlign="right" width="100%" height="30">
 		<mx:Label id="addUpdateFlag" visible="false" text="add"/>
 		<!--	<mx:Button label="保存草稿" id="draftSaveButton" click="save_clickHandler(event)"/>-->
-		<mx:Button label="发布" id="postButton" click="add_clickHandler(event)"/>
+		<mx:Button label="保存" id="saveButton" click="add_clickHandler(event)"/>
 	</mx:HBox>
 </mx:VBox>

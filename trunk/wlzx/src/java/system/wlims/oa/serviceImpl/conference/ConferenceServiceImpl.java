@@ -5,9 +5,7 @@ import java.util.List;
 
 import system.DAOException;
 import system.ServiceException;
-import system.components.SecurityUserHolder;
 import system.dao.UserDAO;
-import system.entity.UserModel;
 import system.wlims.oa.dao.notice.AttachmentDAO;
 import system.wlims.oa.dao.conference.ConferenceDAO;
 import system.wlims.oa.entity.notice.AttachmentModel;
@@ -20,10 +18,11 @@ public class ConferenceServiceImpl implements ConferenceService {
 	private UserDAO userDAO;
 	private AttachmentDAO attachmentDAO;
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void addConference(ConferenceModel conference, List list) {
 		// TODO Auto-generated method stub
-		UserModel userModel = SecurityUserHolder.getCurrentUser();
+//		UserModel userModel = SecurityUserHolder.getCurrentUser();
 //		conference.setLastEditorId(userModel.getId());
 //		conference.setLastEditTime(UtilDateTime.nowDate());
 //		if(conference.getStatus() == 0){
@@ -60,8 +59,25 @@ public class ConferenceServiceImpl implements ConferenceService {
 		}
 		return true;
 	}
+	@Override
+	public boolean cancleConferenceById(String id) {
+		ConferenceModel conference=conferenceDAO.get(id);
+		if(conference.getApplyStatus().intValue()!=ConferenceModel.EStatus.Booking.getValue().intValue())return false;
+		else{
+			conference.setApplyStatus(ConferenceModel.EStatus.Cancled.getValue());
+//			MoveRestDayWorkFlowLog log=new MoveRestDayWorkFlowLog();
+//			log.setOperationName("取消申请");
+//			log.setOperationResult("取消编号为"+conference.getApplyNo()+"的申请记录");
+//			log.setOperationTime(new Date());
+//			log.setOperationTeacherId(conference.getTeacherId());
+//			conference.getLogs().add(log);
+			conferenceDAO.saveOrUpdate(conference);
+			return true;
+		}
+	}
 
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean updateConference(ConferenceModel conference, List list) {
 		// TODO Auto-generated method stub
@@ -80,6 +96,22 @@ public class ConferenceServiceImpl implements ConferenceService {
 		}
 	}
 
+
+
+	@Override
+	public ConferenceModel get(String id) throws ServiceException {
+		// TODO Auto-generated method stub
+		return conferenceDAO.get(id);
+	}
+
+	@Override
+	public List<ConferenceModel> getConferencesByConditions(String applyUserId,
+			String name, Integer applyStatus, String placeId,
+			String meetingBeginTime, String meetingEndTime,
+			String applyBeginTime, String applyEndTime) {
+		// TODO Auto-generated method stub
+		return conferenceDAO.getConferencesByConditions(applyUserId, name, applyStatus, placeId, meetingBeginTime, meetingEndTime, applyBeginTime, applyEndTime);
+	}
 	public void setConferenceDAO(ConferenceDAO conferenceDAO) {
 		this.conferenceDAO = conferenceDAO;
 	}
@@ -111,18 +143,20 @@ public class ConferenceServiceImpl implements ConferenceService {
 	}
 
 	@Override
-	public ConferenceModel get(String id) throws ServiceException {
+	public boolean adjustConferenceById(String id, Date date,
+			String beginTime, String endTime, String placeId) {
 		// TODO Auto-generated method stub
-		return conferenceDAO.get(id);
+		ConferenceModel model=conferenceDAO.get(id);
+		if(model==null)return false;
+		else {
+			model.setMeetingDate(date);
+			model.setBeginTime(beginTime);
+			model.setEndTime(endTime);
+			model.setPlaceId(placeId);
+			model.setApplyStatus(ConferenceModel.EStatus.Arranged.getValue());
+			conferenceDAO.saveOrUpdate(model);
+			return true;
+		
+		}
 	}
-
-	@Override
-	public List<ConferenceModel> getConferencesByConditions(String applyUserId,
-			String name, Integer applyStatus, String placeId,
-			String meetingBeginTime, String meetingEndTime,
-			String applyBeginTime, String applyEndTime) {
-		// TODO Auto-generated method stub
-		return conferenceDAO.getConferencesByConditions(applyUserId, name, applyStatus, placeId, meetingBeginTime, meetingEndTime, applyBeginTime, applyEndTime);
-	}
-
 }
