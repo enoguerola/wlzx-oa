@@ -13,7 +13,8 @@ global
 	focus-color: #C7E399;
 	selection-color: #C7E399;
 	roll-over-color: #E2FBB8;
-	tabCloseButtonStyleName: "closeButton"; 
+	tabCloseButtonStyleName: "closeButton";
+	color: #000000; 
 }
 
 

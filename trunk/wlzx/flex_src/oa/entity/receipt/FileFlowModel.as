@@ -12,7 +12,7 @@ package oa.entity.receipt
 		public var completedDate:Date;
 		public var user:String;
 		public var department:String;
-		public var receipt:
+		public var receipt;
 		
 		public function FileFlowModel()
 		{

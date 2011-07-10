@@ -9,8 +9,27 @@
 			{
 				if(status == 0)
 					return "草稿";
-				else
+				else if(status ==  1)
 					return "已登记";
+				else if(status == 2)
+					return "拟办中";
+				else if(status == 3)
+					return "拟办完毕";
+				else if(status == 4)
+					return "批办中";
+				else if(status == 5)
+					return "批办完毕";
+				else if(status == 6)
+					return "承办中";
+				else if(status == 7)
+					return "承办完毕";
+				else if(status == 8)
+					return "传阅中";
+				else if(status == 9)
+					return "传阅完毕";
+				else
+					return "";
+				
 			}
 		]]>
 	</fx:Script>

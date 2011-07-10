@@ -88,6 +88,7 @@ public class FileFlowServiceImpl implements FileFlowService {
 		
 		if(receipt != null)
 			criteria.add(Restrictions.eq("receipt", receipt));
+		criteria.addOrder(Order.asc("step"));
 		
 		List<FileFlowModel> list = fileFlowDAO.getListByCriteria(criteria);
 		
@@ -106,18 +107,11 @@ public class FileFlowServiceImpl implements FileFlowService {
 	}
 	
 	@Override
-	public List<FileFlowModel> getList(String receiptId) throws ServiceException {
+	public List<FileFlowModel> getList(String receiptId, Integer step) throws ServiceException {
 		// TODO Auto-generated method stub
 		ReceiptModel receipt = receiptDAO.get(receiptId);
-		DetachedCriteria criteria = DetachedCriteria.forClass(FileFlowModel.class);
 		
-		if(receipt != null)
-			criteria.add(Restrictions.eq("receipt", receipt));
-		criteria.addOrder(Order.asc("step"));
-		
-		List<FileFlowModel> list = fileFlowDAO.getListByCriteria(criteria);
-		
-		return getList(receipt);
+		return fileFlowDAO.getList(receipt, step);
 	}
 	
 
@@ -179,7 +173,7 @@ public class FileFlowServiceImpl implements FileFlowService {
 	@Override
 	public List<UserAddressVo> getTeacher(String receiptId) throws ServiceException {
 		// TODO Auto-generated method stub
-		List<FileFlowModel> list = getList(receiptId);
+		List<FileFlowModel> list = getList(receiptDAO.get(receiptId));
 		
 		List<UserAddressVo> userAddressVoList = new ArrayList<UserAddressVo>();
 		for(FileFlowModel model:list){
@@ -244,6 +238,26 @@ public class FileFlowServiceImpl implements FileFlowService {
 
 	public void setTeacherDAO(TeacherDAO teacherDAO) {
 		this.teacherDAO = teacherDAO;
+	}
+
+	@Override
+	public FileFlowModel save(String id, String text, Integer isCompleted)
+			throws ServiceException {
+		// TODO Auto-generated method stub
+		FileFlowModel model = fileFlowDAO.get(id);
+		model.setText(text);
+		model.setIsCompleted(isCompleted);
+		
+		if(isCompleted == 1){
+			Date date = Date.valueOf(UtilDateTime.nowDateString());
+			model.setCompletedDate(date);
+			fileFlowDAO.saveOrUpdate(model);
+			//check all step isCompleted
+			saveReceiptStatus(model);
+		}else
+			fileFlowDAO.saveOrUpdate(model);
+		
+		return model;
 	}
 
 

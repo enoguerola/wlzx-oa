@@ -26,7 +26,7 @@ public interface FileFlowService {
 	 * @param receipt
 	 * @return
 	 * @throws ServiceException
-
+	   得到当前或上次的FileFlowModel list
 	 */
 	List<FileFlowModel> getList(ReceiptModel receipt)throws ServiceException;
 	
@@ -35,8 +35,9 @@ public interface FileFlowService {
 	 * @param receiptId
 	 * @return
 	 * @throws ServiceException
+	 * 得到某环节 FileFlowModel list
 	 */
-	List<FileFlowModel> getList(String receiptId)throws ServiceException;
+	List<FileFlowModel> getList(String receiptId, Integer step)throws ServiceException;
 	
 	/**
 	 * 
@@ -77,5 +78,13 @@ public interface FileFlowService {
 	 */
 	void update(FileFlowModel model)throws ServiceException;
 	
+	/**
+	 * @description 得到上一环节的所有老师
+	 * @param receiptId
+	 * @return
+	 * @throws ServiceException
+	 */
 	List<UserAddressVo> getTeacher(String receiptId)throws ServiceException;
+	
+	FileFlowModel save(String id, String text, Integer isCompleted)throws ServiceException;
 }

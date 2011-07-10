@@ -44,6 +44,7 @@
 	<bean id="receiptServiceDest" class="system.wlims.oa.serviceImpl.receipt.ReceiptServiceImpl">
 		<flex:remoting-destination />
 		<property name="receiptDAO" ref="receiptDAO" />
+		<property name="fileFlowDAO" ref="fileFlowDAO" />
 	</bean>
 	
 </beans>
