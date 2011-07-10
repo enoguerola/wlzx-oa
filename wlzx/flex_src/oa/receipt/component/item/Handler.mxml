@@ -3,7 +3,6 @@
 						  xmlns:s="library://ns.adobe.com/flex/spark" 
 						  xmlns:mx="library://ns.adobe.com/flex/mx" 
 						  focusEnabled="true" creationComplete="init()">
-
 	<fx:Declarations>
 		<s:RemoteObject concurrency="last" id="receiptServiceRO" destination="receiptServiceDest" fault="receiptServiceRO_faultHandler(event)">
 			<s:method concurrency="last" name="remove" result="remove_resultHandler(event)"/>
@@ -13,6 +12,7 @@
 	<fx:Script>
 		<![CDATA[
 			import mx.controls.Alert;
+			import mx.controls.LinkButton;
 			import mx.events.CloseEvent;
 			import mx.events.FlexEvent;
 			import mx.messaging.channels.StreamingAMFChannel;
@@ -23,10 +23,34 @@
 		
 			private function init():void
 			{
-				var parent:Object=(Object)(((Object)(((Object)(this.owner)).owner)).owner);
-				if(parent.id == "register_grid"){
-					remove_button.label = "删除";
-					step = this.data.step;
+				step = this.data.step;
+				var status:int = this.data.status as int;
+				if(status == 0 || status == 1)
+				{
+					var register_button:LinkButton = new LinkButton();
+					register_button.label = "登记";
+					register_button.addEventListener(MouseEvent.CLICK, register);
+					register_button.enabled = (status == 0);
+					
+					var delete_button:LinkButton = new LinkButton();
+					delete_button.label = "删除";
+					delete_button.addEventListener(MouseEvent.CLICK, remove);
+					
+					var edit_button:LinkButton = new LinkButton();
+					edit_button.label = "编辑";
+					edit_button.addEventListener(MouseEvent.CLICK, edit);
+					edit_button.enabled = (status == 0);
+					
+					hgroup.addElement(register_button);
+					hgroup.addElement(delete_button);
+					hgroup.addElement(edit_button);
+				}else if(status == 2 || status == 3)
+				{
+					var devise_button:LinkButton = new LinkButton();
+					devise_button.label = "拟办";
+					devise_button.enabled = (status == 2);
+					devise_button.addEventListener(MouseEvent.CLICK, edit);
+					hgroup.addElement(devise_button);
 				}
 			}
 			
@@ -34,26 +58,26 @@
 			{
 				// TODO Auto-generated method stub
 				var parent:Object = ((Object)(this.parentDocument)).parentDocument;
-				parent.add(id);
+				parent.add(this.data.id);
 			}
 			
-			protected function remove(id:String):void
+			protected function remove():void
 			{
 				// TODO Auto-generated method stub
 				Alert.show("你确定要删除该公告吗?", "确定" ,Alert.YES | Alert.NO,null,function(event:CloseEvent):void{
 					if(event.detail == Alert.YES)
 					{
-						receiptServiceRO.remove(id);
+						receiptServiceRO.remove(this.data.id);
 					}
 				});
 			}
 			
-			private function register(id:String):void
+			private function register():void
 			{
 				Alert.show("你确定要登记该公告吗?", "确定" ,Alert.YES | Alert.NO,null,function(event:CloseEvent):void{
 					if(event.detail == Alert.YES)
 					{
-						receiptServiceRO.register(id);
+						receiptServiceRO.register(this.data.id);
 					}
 				});
 			}
@@ -83,21 +107,15 @@
 				parent.search();
 			}
 
-			protected function register_button_creationCompleteHandler(status:int):void
-			{
-				// TODO Auto-generated method stub
-				if(status == 1){
-					register_button.enabled = false;
-				}
-			}
-
 		]]>
 	</fx:Script>
-	<s:HGroup horizontalAlign="center" verticalAlign="middle" width="100%" height="100%">
-		<mx:LinkButton click="{remove(data.id)}" id="remove_button"/>
-		<mx:LinkButton click="{edit(data.id)}" id="edit_button" label="编辑"/>
-		<mx:LinkButton click="{register(data.id)}" id="register_button" label="登记"
-					   creationComplete="register_button_creationCompleteHandler(data.status)">
-		</mx:LinkButton>
+	<s:HGroup horizontalAlign="center" verticalAlign="middle" width="100%" height="100%" id="hgroup">
+		<!--<mx:LinkButton click="remove(data.id)" id="remove_button" label="删除" visible="{data.status == 0}"/>
+		<mx:LinkButton click="edit(data.id)" id="edit_button" label="编辑" excludeFrom="state2, state4, state6, state8" visible="{data.status == 2}"/>
+		<mx:LinkButton click="register(data.id)" id="register_button" label="登记" includeIn="state2" visible="{data.status == 2}"></mx:LinkButton>
+		<mx:LinkButton click="edit(data.id)" id="devise_button" label="拟办" includeIn="state2" visible="{data.status == 2}"/>
+		<mx:LinkButton click="edit(data.id)" id="ratify_button" label="批示" includeIn="state2"/>
+		<mx:LinkButton click="edit(data.id)" id="undertake_button" label="承办" includeIn="state2"/>
+		<mx:LinkButton click="edit(data.id)" id="circulate_button" label="传阅" includeIn="state2"/>-->
 	</s:HGroup>
 </s:MXDataGridItemRenderer>
