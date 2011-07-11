@@ -33,11 +33,11 @@
             <column name="department_id" />
         </property>
         
-        <property name="completedDate" type="string">
+        <property name="completedDate" type="java.sql.Date">
             <column name="completed_date" />
         </property>
         
-    	<many-to-one class="system.wlims.oa.entity.receipt.ReceiptModel" name="receipt" column="receipt_id" lazy="proxy"/>
+    	<many-to-one class="system.wlims.oa.entity.receipt.ReceiptModel" name="receipt" column="receipt_id" lazy="false"/>
   
     </class>
 </hibernate-mapping>

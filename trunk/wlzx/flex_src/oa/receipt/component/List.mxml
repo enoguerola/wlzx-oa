@@ -22,11 +22,14 @@
 			[Bindable]
 			protected var title:String;
 			
+			// 更改        标题
+			// 更改        search_panel.status.dataProvider
 			protected function init():void
 			{
 				search();
 			}
 			
+			//addTab for Detail
 			public function add(id:String):void
 			{
 				

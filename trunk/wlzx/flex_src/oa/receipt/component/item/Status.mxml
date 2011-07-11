@@ -12,9 +12,9 @@
 				else if(status ==  1)
 					return "已登记";
 				else if(status == 2)
-					return "拟办中";
+					return "拟示中";
 				else if(status == 3)
-					return "拟办完毕";
+					return "拟示完毕";
 				else if(status == 4)
 					return "批办中";
 				else if(status == 5)

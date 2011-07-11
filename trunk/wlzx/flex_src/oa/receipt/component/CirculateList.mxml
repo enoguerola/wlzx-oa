@@ -8,4 +8,22 @@
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
 	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import mx.controls.Alert;
+			
+			override public function add(id:String):void
+			{
+				var parent:Object=(Object)(((Object)(this.owner)).parentDocument);
+				parent.addTab("devise_receipt","传阅详细",parent.nav,"oa/receipt/circulateDetail.swf",null,id);
+			}
+			
+			override protected function init():void
+			{
+				search_panel.status.dataProvider = search_panel.ciculate_list;
+				super.title = "收文传阅";
+				super.init();
+			}
+		]]>
+	</fx:Script>
 </component:List>
