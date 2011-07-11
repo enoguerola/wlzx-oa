@@ -15,13 +15,13 @@
 			override public function add(id:String):void
 			{
 				var parent:Object=(Object)(((Object)(this.owner)).parentDocument);
-				parent.addTab("devise_receipt","承办详细",parent.nav,"oa/receipt/undertakeDetail.swf",null,id);
+				parent.addTab("devise_receipt","批示详细",parent.nav,"oa/receipt/ratifyDetail.swf",null,id);
 			}
 			
 			override protected function init():void
 			{
-				search_panel.status.dataProvider = search_panel.undertake_list;
-				super.title = "收文承办";
+				search_panel.status.dataProvider = search_panel.ratify_list;
+				super.title = "收文批示";
 				super.init();
 			}
 		]]>

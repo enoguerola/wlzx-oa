@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.taglibs.standard.lang.jstl.NullLiteral;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -155,10 +156,11 @@ public class FileFlowServiceImpl implements FileFlowService {
 		
 		criteria.add(Restrictions.eq("receipt", model.getReceipt()));
 		criteria.add(Restrictions.eq("step", model.getStep()));
-		criteria.add(Restrictions.eq("isCompleted", false));
+		criteria.add(Restrictions.eq("isCompleted", 0));
 		
 		List<FileFlowModel> list = fileFlowDAO.getListByCriteria(criteria);
 		if(list == null || list.size() == 0){
+			//send message to somebody
 			model.getReceipt().setStatus(model.getType() * 2 + 3);
 			receiptDAO.saveOrUpdate(model.getReceipt());
 		}
@@ -256,7 +258,7 @@ public class FileFlowServiceImpl implements FileFlowService {
 			saveReceiptStatus(model);
 		}else
 			fileFlowDAO.saveOrUpdate(model);
-		
+		model.setReceipt(null);
 		return model;
 	}
 

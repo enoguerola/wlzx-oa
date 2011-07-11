@@ -25,6 +25,7 @@
 			{
 				step = this.data.step;
 				var status:int = this.data.status as int;
+				//收文
 				if(status == 0 || status == 1)
 				{
 					var register_button:LinkButton = new LinkButton();
@@ -44,13 +45,19 @@
 					hgroup.addElement(register_button);
 					hgroup.addElement(delete_button);
 					hgroup.addElement(edit_button);
-				}else if(status == 2 || status == 3)
-				{
+				}else if(status > 1){
 					var devise_button:LinkButton = new LinkButton();
-					devise_button.label = "拟办";
-					devise_button.enabled = (status == 2);
 					devise_button.addEventListener(MouseEvent.CLICK, edit);
 					hgroup.addElement(devise_button);
+					if(status == 2 || status == 3)
+						//p批办
+						devise_button.label = "拟办";
+					else if(status == 4 || status == 5)
+						devise_button.label = "批示";
+					else if(status == 6 || status == 7)
+						devise_button.label = "承办";
+					else if(status == 8 || status == 9)
+						devise_button.label = "传阅";
 				}
 			}
 			
