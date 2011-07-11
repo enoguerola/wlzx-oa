@@ -23,6 +23,7 @@
 		<flex:remoting-destination />
 		<property name="conferenceDAO" ref="conferenceDAO" />
 		<property name="userDAO" ref="userDAO" />
+		<property name="placeDao" ref="placeDao" />
 		<property name="attachmentDAO" ref="attachmentDAO" />
 	</bean>
 	

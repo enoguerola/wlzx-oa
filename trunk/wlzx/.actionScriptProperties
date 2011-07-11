@@ -78,6 +78,7 @@
     <module application="flex_src/home.mxml" destPath="oa/conference/conferenceArrange.swf" optimize="false" sourcePath="flex_src/oa/conference/conferenceArrange.mxml"/>
     <module application="flex_src/home.mxml" destPath="oa/conference/conferenceSelfAttending.swf" optimize="false" sourcePath="flex_src/oa/conference/conferenceSelfAttending.mxml"/>
     <module application="flex_src/home.mxml" destPath="oa/conference/conferenceDetail.swf" optimize="false" sourcePath="flex_src/oa/conference/conferenceDetail.mxml"/>
+    <module destPath="oa/conference/conferenceRoomCheck.swf" optimize="false" sourcePath="flex_src/oa/conference/conferenceRoomCheck.mxml"/>
   </modules>
   <buildCSSFiles/>
 </actionScriptProperties>

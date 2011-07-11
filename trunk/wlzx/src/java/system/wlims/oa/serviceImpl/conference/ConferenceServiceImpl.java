@@ -2,12 +2,18 @@ package system.wlims.oa.serviceImpl.conference;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import system.DAOException;
 import system.ServiceException;
 import system.dao.UserDAO;
 import system.utils.StringUtils;
+import system.utils.UtilDateTime;
+import system.wlims.basic.dao.PlaceDao;
+import system.wlims.basic.entity.PlaceModel;
 import system.wlims.oa.dao.notice.AttachmentDAO;
 import system.wlims.oa.dao.conference.ConferenceDAO;
 import system.wlims.oa.entity.notice.AttachmentModel;
@@ -19,7 +25,7 @@ public class ConferenceServiceImpl implements ConferenceService {
 	private ConferenceDAO conferenceDAO;
 	private UserDAO userDAO;
 	private AttachmentDAO attachmentDAO;
-
+	private PlaceDao placeDao;
 	@SuppressWarnings("unchecked")
 	@Override
 	public void addConference(ConferenceModel conference, List list) {
@@ -182,5 +188,58 @@ public class ConferenceServiceImpl implements ConferenceService {
 			}
 		}
 		return results;		
+	}
+	public Map<String, Map<String,Map<String,List<ConferenceModel>>>> getConferencePlaceArrangments(String beginTime,String endTime){
+		Map<String, Map<String,Map<String,List<ConferenceModel>>>> data = new TreeMap<String, Map<String,Map<String,List<ConferenceModel>>>>();
+		List<Date> dates=UtilDateTime.getDatesDateRange(java.sql.Date.valueOf(beginTime), java.sql.Date.valueOf(endTime));
+		for(Date wdate : dates){
+			data.put(UtilDateTime.toDateString(wdate), new TreeMap<String, Map<String,List<ConferenceModel>>>());
+		}
+		List<ConferenceModel> conferences = conferenceDAO.getConferencesByConditions(null, null, null, null, beginTime, endTime, null, null);
+		List<PlaceModel> places = placeDao.getPlacesByCondition(null, null, null, null, null, null, null);
+		
+				if(conferences != null && places != null){
+					for(ConferenceModel conference : conferences){
+						// 过滤已取消会议
+						if (conference.getApplyStatus().intValue() == ConferenceModel.EStatus.Booking.getValue().intValue()||conference.getApplyStatus().intValue() == ConferenceModel.EStatus.Arranged.getValue().intValue()) {
+							String conferenceDate = UtilDateTime.toDateString(conference.getApplyDateTime());
+							if(!data.containsKey(conferenceDate)){
+								data.put(conferenceDate, new TreeMap<String, Map<String,List<ConferenceModel>>>());
+							}
+							
+//							ArrayList<String> timeAreas=MaryUtils.audioTimeCrosss(lesson.getLessonDayTime());
+//							for(String timeArea:timeAreas){
+								String timeArea=conference.getBeginTime()+"-"+conference.getEndTime();
+								if(!data.get(conferenceDate).containsKey(timeArea)){
+									Map<String, List<ConferenceModel>> placeMap = new LinkedHashMap<String, List<ConferenceModel>>();
+									
+									for(PlaceModel place : places){
+										if(!placeMap.containsKey(place.getId())){
+											placeMap.put(place.getId(), null);
+										}
+									}
+									data.get(conferenceDate).put(timeArea, placeMap);
+								}
+//							}
+
+//						for(String timeArea:timeAreas){
+							if(data.get(conferenceDate).get(timeArea).get(conference.getPlaceId())==null)
+								data.get(conferenceDate).get(timeArea).put(conference.getPlaceId(), new ArrayList<ConferenceModel>());
+							data.get(conferenceDate).get(timeArea).get(conference.getPlaceId()).add(conference);
+//						}
+					}			
+				}
+			}
+			
+			
+		return data;
+	}
+
+	public PlaceDao getPlaceDao() {
+		return placeDao;
+	}
+
+	public void setPlaceDao(PlaceDao placeDao) {
+		this.placeDao = placeDao;
 	}
 }

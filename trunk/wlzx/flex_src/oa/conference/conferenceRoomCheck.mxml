@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Module xmlns:mx="http://www.adobe.com/2006/mxml" 
+		   xmlns:hc="com.hillelcoren.components.*"
+		   xmlns:render="system.component.render.*"
+		   xmlns:mx1="library://ns.adobe.com/flex/mx"
+		   layout="vertical" width="100%" height="100%"   creationComplete="init();" xmlns:component="system.component.*" >
+	<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	
+	<mx:RemoteObject id="conferenceServiceRO" destination="conferenceServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">			
+		<mx:method name="getConferencePlaceArrangments"  concurrency="last"  result="getConferencePlaceArrangments_resultHandler(event);" />
+	</mx:RemoteObject>
+	<mx:RemoteObject id="placeServiceRO" destination="placeServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+		<mx:method name="getPlacesByCondition"  concurrency="last"  result="getPlacesByCondition_resultHandler(event);" />
+	</mx:RemoteObject>
+	
+	<mx:Script> 
+		<![CDATA[  
+			import mx.collections.ArrayCollection;
+			import mx.controls.*;
+			import mx.events.*;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.*;
+			
+			import system.entity.DepartmentModel;
+			import system.entity.UserModel;
+			import system.index;
+			import system.utils.CommonUtils;
+			import basic.utils.DateUtil;
+			import system.component.WlzxLockWin;
+			
+			private function init():void {
+				placeServiceRO.getPlacesByCondition(null, null, null, null, null, null, null);
+				var parms:String=((Object)(this.owner)).id;
+				//Alert.show(parms);
+				if(parms!=null&&parms!=''&&parms!='null'){
+					var beginDate:String=parms.split(";")[1];
+					var endDate:String=parms.split(";")[2];
+					search_date_begin.text=beginDate;
+					search_date_end.text=endDate;
+				}else{				
+					var date:Date=new Date();
+					search_date_begin.text=CommonUtils.formatDate(CommonUtils.currentMonthBeginDate(),"YYYY-MM-DD");
+					search_date_end.text=CommonUtils.formatDate(CommonUtils.currentMonthEndDate(),"YYYY-MM-DD");
+				}
+				
+				callLater(search);
+			}
+			
+			
+			
+			
+			
+			private function systemFaultHandler(event:FaultEvent):void {
+				Alert.show(event.fault.faultString, 'Error');
+				unLockWin();
+			}
+			
+			protected function getPlacesByCondition_resultHandler(event:ResultEvent):void
+			{
+				
+				var list:ArrayCollection=event.result as ArrayCollection;
+				places.dataProvider=list;
+				unLockWin();
+				
+			}
+			protected function getConferencePlaceArrangments_resultHandler(event:ResultEvent):void
+			{
+				
+				var list:ArrayCollection=event.result as ArrayCollection;
+				Alert.show(list.length+"");
+				conferences.dataProvider=list;
+				unLockWin();
+				
+			}
+			
+			
+			protected function search():void
+			{
+				lockWin();
+				var beginTime:String=search_date_begin.text;
+				var endTime:String=search_date_end.text;
+				conferenceServiceRO.getConferencePlaceArrangments(beginTime,endTime);
+				
+				
+			}
+	
+			public function formatDate(date:Date):String{
+				return CommonUtils.formatDate(date);
+				
+			}
+			
+			private var window:WlzxLockWin=null;
+			private function lockWin():void{
+				if(window==null){
+					window=WlzxLockWin(PopUpManager.createPopUp(this,WlzxLockWin,true)); 
+					PopUpManager.centerPopUp(window);
+					window.percentHeight=100;
+					window.percentWidth=100;			
+				}
+			}
+			private function unLockWin():void{
+				if(window!=null)
+					PopUpManager.removePopUp(window);
+			}
+			
+		]]> 		
+	</mx:Script> 
+	<mx:VBox borderVisible="true" width="100%" height="100%" borderStyle="solid">
+		<mx:VBox width="100%"  height="100%"   verticalGap="0" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
+			<mx:VBox width="100%" horizontalAlign="center" verticalGap="0" height="60">
+				<mx:HBox width="100%" horizontalAlign="center">
+					<mx:Label  text="会议室安排统计表"    width="100%"  letterSpacing="5" textAlign="center" fontSize="14"  fontWeight="bold" height="30"  id="search_account_name"/>
+				</mx:HBox>
+				
+				<mx:HBox width="100%" horizontalAlign="right">
+					<mx:DateField yearNavigationEnabled="true" id="search_date_begin"   formatString="YYYY-MM-DD"  editable="false" width="100"/>
+					<mx:Label  text="--"  width="20" textAlign="center"/>
+					<mx:DateField yearNavigationEnabled="true" id="search_date_end"  formatString="YYYY-MM-DD" editable="false" width="100"/>
+					<mx:Button  label="搜索"  width="60"   click="search()"/>
+				</mx:HBox>
+				
+			</mx:VBox>
+			<mx:VBox width="100%" horizontalAlign="center" verticalGap="0" verticalAlign="middle">
+				<mx:Grid width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" autoLayout="true" horizontalGap="0" verticalGap="0">
+					<mx:GridRow  autoLayout="true" horizontalAlign="center" verticalAlign="middle" width="100%" >
+						<mx:GridItem  borderStyle="solid" verticalAlign="middle">
+							<mx1:Text text="星期" width="60" textAlign="center" />
+						</mx:GridItem>
+						<mx:GridItem  borderStyle="solid" verticalAlign="middle">
+							<mx1:Text text="时间" width="60" textAlign="center" />
+						</mx:GridItem>
+						<mx:Repeater id="places">
+							<mx:GridItem  borderStyle="solid" verticalAlign="middle">
+								<mx1:Text text="{places.currentItem.position}"  width="60" textAlign="center"/>
+							</mx:GridItem>
+						</mx:Repeater>
+					</mx:GridRow>
+					<mx:Repeater id="conferences">
+						
+						<mx:GridRow  autoLayout="true" horizontalAlign="center" verticalAlign="middle" >
+							<mx:GridItem  borderStyle="solid"  verticalAlign="middle">
+								<mx1:Text text="{conferences.currentItem.key}"  width="60" textAlign="center"/>
+							</mx:GridItem>
+							<mx:GridItem  borderStyle="solid" verticalAlign="middle">
+								<mx1:Text text="{conferences.currentItem.value}" width="60" textAlign="center"/>
+							</mx:GridItem>
+							
+						</mx:GridRow>
+						
+						
+						
+					</mx:Repeater>
+				</mx:Grid>			
+			</mx:VBox>
+
+			
+		</mx:VBox>
+	</mx:VBox>
+	
+</mx:Module>

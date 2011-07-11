@@ -189,6 +189,27 @@ public class UtilDateTime {
     	}
     	return dates;
     }
+    /**
+     * 
+     * @param week
+     * @param startDate
+     * @param endDate
+     * @return;
+     * @author Zhao.Xiang
+     */
+    public static List<Date> getDatesDateRange(Date startDate, Date endDate){
+    	
+    	List<Date> dates = new ArrayList<Date>();
+    	int offset = getIntervalDays(startDate, endDate);  	
+    	
+    	for(int i=0;i<=offset;i++){
+    		Calendar calendar= Calendar.getInstance();
+    		calendar.setTime(startDate);
+    		calendar.add(Calendar.DATE, offset);
+    		dates.add(calendar.getTime());
+    	}
+    	return dates;
+    }
     
     public static java.sql.Timestamp getDayStart(java.sql.Timestamp stamp, int daysLater) {
         Calendar tempCal = Calendar.getInstance();
