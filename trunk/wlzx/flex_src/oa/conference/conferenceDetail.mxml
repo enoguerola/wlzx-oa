@@ -2,13 +2,14 @@
 <mx:Module xmlns:mx="http://www.adobe.com/2006/mxml" 
 		   xmlns:hc="com.hillelcoren.components.*"
 		   xmlns:render="system.component.render.*"
+		   xmlns:mutiUpload="system.component.mutiUpload.*"
 		   layout="vertical" width="100%" creationComplete="init();" height="100%" xmlns:valueObjects="oa.entity.*" xmlns:component="system.component.*"  xmlns:mx1="library://ns.adobe.com/flex/mx">
 		
-	<valueObjects:MoveRestDayForm id="form"/>
+	<valueObjects:ConferenceModel id="form"/>
 	
 	
-	<mx:RemoteObject id="moveRestDayServiceRO" destination="moveRestDayServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
-		<mx:method name="getDetailInfoById"  concurrency="last"  result="getDetailInfoByIdById_resultHandler(event);" />
+	<mx:RemoteObject id="conferenceServiceRO" destination="conferenceServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+		<mx:method name="get"  concurrency="last"  result="get_resultHandler(event);" />
 	</mx:RemoteObject>
 	<mx:Script> 
 		<![CDATA[
@@ -28,29 +29,12 @@
 			
 			import system.component.WlzxLockWin;
 			import system.utils.*;
-			[Embed(source="../WebContent/resources/common/tools/button_add_icon.png")]
-			private const button_add:Class;
-			[Embed(source="../WebContent/resources/common/tools/button_delete_icon.png")]
-			private const button_delete:Class;
-			private var validatorArr:Array;
-			public var sections:ArrayCollection = new ArrayCollection( 
-				[ {label:"上午", data:0},  
-					{label:"下午", data:1},
-					{label:"晚上", data:2},]); 
-			
-			public var status:ArrayCollection = new ArrayCollection( 
-				[	{label:"全部", data:"0,1,2,3,4"},  
-					{label:"待审批", data:"0,1"},  
-					{label:"审批中-处室通过", data:"1"},
-					{label:"审批通过", data:"2"},
-					{label:"审批不通过", data:"3"},
-					{label:"取消", data:"4"}]); 
 			
 			
 			private function init():void{
 				var id:String=((Object)(this.owner)).id;
 				lockWin();
-				detailApply(id);
+				conferenceServiceRO.get(id);
 			}
 			protected function systemFaultHandler(event:FaultEvent):void {
 				unLockWin();
@@ -59,90 +43,35 @@
 			}
 			
 			
-			protected function getDetailInfoByIdById_resultHandler(event:ResultEvent):void{
-				form=event.result as MoveRestDayForm;
-				detail_applyNo.text="编号：【"+form.applyNo+"】";
-				detail_teacher_name.text=this.parentApplication.getTeacherNameByAccountId(form.teacherId); 
-				detail_teacher_id.text=form.teacherId;
-				detail_times.text=timeTip(form.times);
-				//				detail_reason.text=form.reason;
-				
-				detail_officeChief_approve_option.text=form.officeChiefApproveOption;
-				detail_officeChief_approve_time.text=CommonUtils.formatDate(form.officeChiefApproveTime,"YYYY-MM-DD");
-				detail_officeChief_approver_id.text=form.officeChiefApproverId;
-				detail_officeChief_approver_name.text=this.parentApplication.getTeacherNameByAccountId(form.officeChiefApproverId);
-				detail_officeChief_approve_status.selectedValue=form.officeChiefStatus;
-				
-				detail_vicePrincipal_approve_option.text=form.vicePrincipalApproveOption;
-				detail_vicePrincipal_approve_time.text=CommonUtils.formatDate(form.vicePrincipalApproveTime,"YYYY-MM-DD");
-				detail_vicePrincipal_approver_id.text=form.vicePrincipalApproverId;
-				detail_vicePrincipal_approver_name.text=this.parentApplication.getTeacherNameByAccountId(form.vicePrincipalApproverId);
-				detail_vicePrincipal_approve_status.selectedValue=form.vicePrincipalStatus;
-				
-				
-				
-				
-				
-				//				if(form.officeChiefStatus==1)
-				//					detail_officeChief_approve_status_pass.selected=true;
-				//				else if(form.officeChiefStatus==2)
-				//					detail_officeChief_approve_status_deny.selected=true;
-				//				else{
-				//					detail_officeChief_approve_status_pass.selected=false;
-				//					detail_officeChief_approve_status_deny.selected=false;
-				//
-				//				}
-				//				
-				
-				logTable.initdata(form.logs as ArrayCollection);
+			protected function get_resultHandler(event:ResultEvent):void
+			{
+				form = event.result as ConferenceModel;
+				cname.text=form.name;
+				time.text=CommonUtils.formatDate(form.meetingDate,"YYYY-MM-DD")+" "+form.beginTime+"--"+form.endTime;
+				attendNum.text=form.attendNum+" "+"人";
+				department.text=(form.departmentId=="-1"?'校外':parentApplication.getDepartmentNameById(form.departmentId));
+				place.text=(form.placeId==null?'待定':parentApplication.getPlaceNameById(form.placeId));
+				linkman.text=parentApplication.getTeacherNameByAccountId(form.contactUserId);
+				contactPhone.text=form.contactPhoneNumber;
+				services.text=form.serviceNeeded;					
+				description.text=form.description;
+				users.text="";
+				var array:Array=form.teacherAttendIds.split(";");
+				if(array!=null&&array.length>0)
+					for(var i:int=0;i<array.length;i++){
+						//Alert.show(alreadyChoose[i].id);
+						if(array[i]!=null&&array[i]!="")
+							users.text+=parentApplication.getItemByAccountId(array[i]).name+"["+parentApplication.getItemByAccountId(array[i]).account+"]"+"  ";
+					}
 				unLockWin();
-			}
-			
-			
-			public function detailApply(applyId:String):void{
-				detail_officeChief_approve_time.text="";
-				detail_officeChief_approver_id.text="";
-				detail_officeChief_approve_status.selection=null;
 				
-				detail_vicePrincipal_approve_time.text="";
-				detail_vicePrincipal_approver_id.text="";
-				detail_vicePrincipal_approve_status.selection=null;
-				
-				moveRestDayServiceRO.getDetailInfoById(applyId);
 			}
 			
 			public function formatDate(date:Date):String{
 				return CommonUtils.formatDate(date,"YYYY-MM-DD JJ:NN:SS");
 				
 			}
-			public  function timeTip(times:String):String
-			{
-				
-				var result:String="";
-				var times_attr:Array=times.split(";");
-				for(var i:int=0;i<times_attr.length;i++){
-					
-					var time:String=times_attr[i];
-					if(time!=null&&time!=""){
-						var time_attr:Array=time.split(" ");
-						result=result.concat(time_attr[0]+" ");
-						var sections:String=time_attr[1];
-						if(sections.split("-")[0]=="1"){
-							result=result.concat("早上 ");
-						}
-						if(sections.split("-")[1]=="1"){
-							result=result.concat("下午 ");
-						}
-						if(sections.split("-")[2]=="1"){
-							result=result.concat("晚上 ");
-						}
-						result=result.concat("   ");
-						
-					}
-				}
-				return result;			
-				
-			}
+			
 			private var window:WlzxLockWin=null;
 			private function lockWin():void{
 				
@@ -160,159 +89,67 @@
 		]]> 		
 	</mx:Script> 
 	
-		<mx:VBox borderVisible="true" width="100%" height="100%" borderStyle="solid">		
+	<mx:VBox borderVisible="true" width="100%" height="100%" borderStyle="solid" >		
 		
-		
-		<mx:VBox width="100%" height="100%" id="detailPanel">
+		<mx:VBox  width="100%" paddingLeft="20" paddingRight="20" paddingTop="20"  fontSize="14" verticalGap="10">
+				<mx:HBox width="100%" horizontalAlign="center">
+					<mx:Label  text="会议主题：" fontWeight="bold"/>
+					<mx1:Text  text=""    letterSpacing="5" textAlign="center" fontSize="14"  fontWeight="bold" height="30"  id="cname"/>
+
+				</mx:HBox>
+				<mx:HBox width="100%" textAlign="center"  horizontalAlign="left">
+					<mx:Label  text="会议时间:" fontWeight="bold" />
+					<mx1:Text  id="time" textAlign="center"/>
+				</mx:HBox>
+				<mx:HBox width="100%" textAlign="center"  horizontalAlign="left">
+					<mx:Label  text="会议地点:" fontWeight="bold"/>
+					<mx1:Text  id="place" textAlign="center"/>
+				</mx:HBox>
+				<mx:HBox width="100%" textAlign="center"  horizontalAlign="left">
+					<mx:Label  text="会议人数:" fontWeight="bold"/>
+					<mx1:Text  id="attendNum" textAlign="left"/>
+					<mx:Label  text="使用部门:" fontWeight="bold"/>
+					<mx1:Text  id="department" textAlign="left"/>
+				</mx:HBox>
 			
-			<mx:VBox width="100%"    horizontalGap="10" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
-				<mx:VBox width="100%" horizontalAlign="center" verticalGap="0">
-					<mx:Label  text="温岭中学教职工调休单"    width="100%"  letterSpacing="5" textAlign="center" fontSize="14"  fontWeight="bold" height="30"  id="detail_type_label"/>
-					<mx:HBox width="100%" horizontalAlign="right">
-						<mx:Label  text="编号【】" id="detail_applyNo"   visible="true" width="100%"  letterSpacing="5" textAlign="right" fontSize="14"  fontWeight="bold" height="20" />
-						<mx:Label text="0" id="detail_applyType" visible="false"/>
-					</mx:HBox>
-					
-				</mx:VBox>
-				
-				<mx:VBox width="100%" horizontalAlign="center" height="100%" verticalAlign="middle"   borderVisible="true" paddingLeft="20" paddingRight="20">
-					
-					<mx:Grid width="100%" height="100%"   verticalGap="-1" horizontalGap="-1" >
-						
-						<mx:GridRow width="100%" >
-							
-							<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5" verticalAlign="middle" horizontalAlign="center" width="100">
-								<mx1:Text text="姓名"  textAlign="center" width="80" />
-							</mx:GridItem>
-							<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5"    verticalAlign="middle" horizontalAlign="center">
-								<mx:TextInput width="120"   alpha="0.5" id="detail_teacher_name" enabled="false"/>
-								<mx:Label  text=""   textAlign="center" id="detail_teacher_id"  visible="false" enabled="false"/>
-							</mx:GridItem>
-							<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5"    verticalAlign="middle" horizontalAlign="center"  width="100">
-								<mx:Label  text="调休时间"  textAlign="center" id="detail_time_label"/>
-							</mx:GridItem>
-							<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5"    verticalAlign="middle" horizontalAlign="left"  width="100%">
-								
-								<mx:Label id="detail_times">
-									
-								</mx:Label>
-								
-							</mx:GridItem>
-							
-						</mx:GridRow>
-						<!--<mx:GridRow width="100%">
-						<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5"     verticalAlign="middle" horizontalAlign="center">
-						<mx1:Text text="调休事由"  textAlign="center" width="80" id="detail_reason_label"/>
-						</mx:GridItem>
-						<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5"     verticalAlign="middle"  colSpan="3" horizontalAlign="center">
-						<mx:TextArea width="100%" height="50" id="detail_reason" enabled="false">
-						
-						</mx:TextArea>
-						</mx:GridItem>
-						
-						</mx:GridRow>-->
-						
-						
-						<mx:GridRow width="100%">
-							<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5"     verticalAlign="middle" horizontalAlign="center">
-								<mx1:Text text="处室负责人意见"  textAlign="center" width="80" />
-							</mx:GridItem>
-							<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5"     verticalAlign="middle"  colSpan="3" horizontalAlign="center">
-								<mx:VBox width="100%" horizontalAlign="right">
-									<mx:TextArea width="100%" height="50" id="detail_officeChief_approve_option" enabled="false">
-										
-									</mx:TextArea>
-									<mx:HBox>
-										<mx:RadioButtonGroup id="detail_officeChief_approve_status" />  
-										<mx:RadioButton group="{detail_officeChief_approve_status}" value="1" label="通过" id="detail_officeChief_approve_status_pass" width="80" selected="false" enabled="false"/>  
-										<mx:RadioButton group="{detail_officeChief_approve_status}" value="2" label="不通过" id="detail_officeChief_approve_status_deny" width="80" selected="false" enabled="false"/>  
-										<mx:Label text="签名："/>
-										<mx:TextInput width="120"   alpha="0.5" id="detail_officeChief_approver_name" enabled="false"/>
-										<mx:Label  text=""   id="detail_officeChief_approver_id" visible="false"/>
-										<mx:Label text="日期："/>
-										<mx:DateField yearNavigationEnabled="true" width="120" id="detail_officeChief_approve_time" enabled="false" formatString="YYYY-MM-DD"/>
-									</mx:HBox>
-								</mx:VBox>
-								
-							</mx:GridItem>
-							
-						</mx:GridRow>
-						<mx:GridRow width="100%">
-							<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5"     verticalAlign="middle" horizontalAlign="center">
-								<mx1:Text text="分管校长意见"  textAlign="center" width="80" />
-							</mx:GridItem>
-							<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5"     verticalAlign="middle"  colSpan="3" horizontalAlign="center">
-								<mx:VBox width="100%" horizontalAlign="right">
-									<mx:TextArea width="100%" height="50" id="detail_vicePrincipal_approve_option" enabled="false">
-										
-									</mx:TextArea>
-									<mx:HBox>
-										<mx:RadioButtonGroup id="detail_vicePrincipal_approve_status"/>  
-										<mx:RadioButton group="{detail_vicePrincipal_approve_status}" value="1" id="detail_vicePrincipal_approve_status_pass" label="通过" width="80" enabled="false"/>  
-										<mx:RadioButton group="{detail_vicePrincipal_approve_status}" value="2" id="detail_vicePrincipal_approve_status_deny" label="不通过" width="80" enabled="false"/>  
-										<mx:Label text="签名："/>
-										<mx:TextInput width="120"   alpha="0.5" id="detail_vicePrincipal_approver_name" enabled="false"/>
-										<mx:Label  text=""   id="detail_vicePrincipal_approver_id" visible="false"/>
-										<mx:Label text="日期："/>
-										<mx:DateField yearNavigationEnabled="true" width="120" id="detail_vicePrincipal_approve_time" enabled="false" formatString="YYYY-MM-DD"/>
-									</mx:HBox>
-									
-								</mx:VBox>
-							</mx:GridItem>
-							
-						</mx:GridRow>
-					</mx:Grid>
-					<mx:Panel width="100%"   styleName="customPanel" title="流程日志"  cornerRadius="5" borderVisible="false" dropShadowVisible="false">
-						
-						<component:WlzxPageDataGrid width="100%" height="100%"   borderVisible="false"  autoLayout="true"  borderAlpha="0.2" verticalAlign="middle"   id="logTable" pagecount="10"  >				
-							<component:mygridcolumns>
-								<mx:DataGridColumn textAlign="center" headerText="操作时间"  width="100">
-									<mx:itemRenderer>
-										<mx:Component>
-											<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
-												<mx:Label text="{this.outerDocument.formatDate(data.operationTime)}"/>
-											</mx:VBox>																			
-										</mx:Component>						
-									</mx:itemRenderer>
-								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="操作人"  width="60">
-									<mx:itemRenderer>
-										<mx:Component>
-											<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
-												<mx1:Text text="{this.parentApplication.getTeacherNameByAccountId(data.operationTeacherId)}" >
-													
-												</mx1:Text>
-											</mx:VBox>																			
-										</mx:Component>
-									</mx:itemRenderer>
-								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="操作名称"  width="100" >
-									<mx:itemRenderer>
-										<mx:Component>
-											<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
-												<mx:Label text="{data.operationName}"/>
-											</mx:VBox>																			
-										</mx:Component>
-									</mx:itemRenderer>
-								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="操作结果"  width="200" >
-									<mx:itemRenderer>
-										<mx:Component>
-											<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
-												<mx:Label text="{data.operationResult}"/>
-											</mx:VBox>																			
-										</mx:Component>
-									</mx:itemRenderer>
-								</mx:DataGridColumn>
-								
-								
-							</component:mygridcolumns>
-						</component:WlzxPageDataGrid>
-					</mx:Panel>
-				</mx:VBox>
+				<mx:HBox width="100%" textAlign="center"  horizontalAlign="left">
+					<mx:Label  text="与会人员:" fontWeight="bold"/>
+					<mx1:Text width="100%" id="users" textAlign="left"/>
+				</mx:HBox>
+				<mx:HBox width="100%" textAlign="center"  horizontalAlign="left">
+					<mx:Label  text="会议服务:" fontWeight="bold"/>
+					<mx1:Text width="100%" id="services" textAlign="left"/>
+				</mx:HBox>
+				<mx:HBox width="100%" textAlign="center"  horizontalAlign="left">
+					<mx:Label  text="会议描述:" fontWeight="bold"/>
+					<mx1:Text width="100%" id="description" textAlign="left"/>
+				</mx:HBox>
+				<mx:HBox width="100%" textAlign="center"  horizontalAlign="left">
+					<mx:Label  text="会议联系:" fontWeight="bold"/>
+					<mx1:Text  id="linkman" textAlign="center"/>
+					<mx:Label  text="联系电话:" fontWeight="bold"/>
+					<mx1:Text id="contactPhone" textAlign="center"/>
+				</mx:HBox>
+		</mx:VBox>
+		<mx:VBox id="attrArea"  width="100%">
+			<mx:HBox width="100%" height="20">
+				<mx:LinkButton  label="会议附件下载区:"  fontWeight="bold" icon="@Embed(source='../WebContent/resources/common/tools/button_attachment_icon.png')" />
+			</mx:HBox>
+			<mx:VBox  width="100%"  height="0" id="att_area" paddingLeft="10" paddingRight="10">
 				
 			</mx:VBox>
 		</mx:VBox>
+		<mx:VBox id="summaryArea"  width="100%">
+			<mx:HBox width="100%" height="20">
+				<mx:LinkButton  label="会议总结下载区:" fontWeight="bold" icon="@Embed(source='../WebContent/resources/common/tools/button_attachment_icon.png')"/>
+			</mx:HBox>
+			<mx:VBox  width="100%"  height="340" id="summaryAttr_area" paddingLeft="10" paddingRight="10">
+			
+			</mx:VBox>
+		</mx:VBox>
+		
+	
+		
 		
 	</mx:VBox>
 </mx:Module>

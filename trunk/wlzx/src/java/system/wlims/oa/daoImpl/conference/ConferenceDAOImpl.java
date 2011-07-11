@@ -16,7 +16,7 @@ public class ConferenceDAOImpl extends BaseDAOImpl<ConferenceModel> implements C
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<ConferenceModel> getConferencesByConditions(String applyUserId,
-			String name, Integer applyStatus, String placeId,
+			String name, String states, String placeId,
 			String meetingBeginTime, String meetingEndTime,
 			String applyBeginTime, String applyEndTime) {
 		// TODO Auto-generated method stub
@@ -27,8 +27,8 @@ public class ConferenceDAOImpl extends BaseDAOImpl<ConferenceModel> implements C
 		
 		if(StringUtils.isNotEmpty(applyUserId))
 			criteria.add(Restrictions.sqlRestriction("apply_user_id='"+applyUserId+"'"));
-		if(applyStatus!=null)
-			criteria.add(Restrictions.eq("applyStatus", applyStatus));
+		if(StringUtils.isNotEmpty(states))
+			criteria.add(Restrictions.sqlRestriction("apply_status in ("+states+")"));
 		if(StringUtils.isNotEmpty(placeId))
 			criteria.add(Restrictions.sqlRestriction("place_id='"+placeId+"'"));
 		

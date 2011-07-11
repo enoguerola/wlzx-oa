@@ -7,7 +7,7 @@ import system.BaseDAO;
 import system.wlims.oa.entity.conference.ConferenceModel;
 
 public interface ConferenceDAO  extends BaseDAO<ConferenceModel>{
-	public List<ConferenceModel> getConferencesByConditions(String applyUserId, String name,Integer applyStatus,
+	public List<ConferenceModel> getConferencesByConditions(String applyUserId, String name,String states,
 			String placeId,String meetingBeginTime, String meetingEndTime,String applyBeginTime, String applyEndTime) ;
 	
 }

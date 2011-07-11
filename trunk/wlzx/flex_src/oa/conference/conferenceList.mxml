@@ -60,7 +60,8 @@
 				[
 					{label:"全部", data:null},
 					{label:"预约中", data:"1"},
-					{label:"已取消", data:"2"},
+					{label:"申请取消", data:"2"},
+					{label:"安排取消", data:"4"},
 					{label:"已安排", data:"3"}]);
 			
 			[Bindable] 
@@ -160,7 +161,7 @@
 			public function detailConference(id:String):void
 			{
 				var parent:Object=(Object)(((Object)(this.owner)).owner);
-				parent.addTab("conferenceDetial","查看会议",parent.nav,"oa/conference/conferenceDetail.swf",null,id);
+				parent.addTab("conferenceDetial-"+id,"查看会议",parent.nav,"oa/conference/conferenceDetail.swf",null,id);
 			}
 			public function enterEditConference(id:String):void
 			{
@@ -352,7 +353,8 @@
 															import system.utils.CommonUtils;
 															private function getStatus(data:Object):String{
 																if(data.applyStatus==1)return "预约中";
-																else  if(data.applyStatus==2)return "已取消";
+																else  if(data.applyStatus==2)return "申请取消";
+																else  if(data.applyStatus==4)return "安排取消";
 																else  if(data.applyStatus==3)return "已安排";
 																else return "异常";
 															}

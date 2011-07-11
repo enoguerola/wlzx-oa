@@ -36,6 +36,7 @@ public class ConferenceModel extends BaseModel {
 	public static enum EStatus{
 		Booking(1, "预约中"),
 		Arranged(3, "已安排"),
+		ArrangedCancled(4, "取消安排"),
 		Cancled(2, "已取消");
 		
 		private Integer value;

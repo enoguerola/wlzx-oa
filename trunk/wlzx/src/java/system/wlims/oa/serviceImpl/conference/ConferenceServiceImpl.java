@@ -1,11 +1,13 @@
 package system.wlims.oa.serviceImpl.conference;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import system.DAOException;
 import system.ServiceException;
 import system.dao.UserDAO;
+import system.utils.StringUtils;
 import system.wlims.oa.dao.notice.AttachmentDAO;
 import system.wlims.oa.dao.conference.ConferenceDAO;
 import system.wlims.oa.entity.notice.AttachmentModel;
@@ -64,7 +66,9 @@ public class ConferenceServiceImpl implements ConferenceService {
 		ConferenceModel conference=conferenceDAO.get(id);
 		if(conference.getApplyStatus().intValue()!=ConferenceModel.EStatus.Booking.getValue().intValue())return false;
 		else{
-			conference.setApplyStatus(ConferenceModel.EStatus.Cancled.getValue());
+			if(conference.getApplyStatus().intValue()==ConferenceModel.EStatus.Arranged.getValue().intValue())
+				conference.setApplyStatus(ConferenceModel.EStatus.ArrangedCancled.getValue());
+			else conference.setApplyStatus(ConferenceModel.EStatus.Cancled.getValue());
 //			MoveRestDayWorkFlowLog log=new MoveRestDayWorkFlowLog();
 //			log.setOperationName("取消申请");
 //			log.setOperationResult("取消编号为"+conference.getApplyNo()+"的申请记录");
@@ -106,11 +110,11 @@ public class ConferenceServiceImpl implements ConferenceService {
 
 	@Override
 	public List<ConferenceModel> getConferencesByConditions(String applyUserId,
-			String name, Integer applyStatus, String placeId,
+			String name, String states, String placeId,
 			String meetingBeginTime, String meetingEndTime,
 			String applyBeginTime, String applyEndTime) {
 		// TODO Auto-generated method stub
-		return conferenceDAO.getConferencesByConditions(applyUserId, name, applyStatus, placeId, meetingBeginTime, meetingEndTime, applyBeginTime, applyEndTime);
+		return conferenceDAO.getConferencesByConditions(applyUserId, name, states, placeId, meetingBeginTime, meetingEndTime, applyBeginTime, applyEndTime);
 	}
 	public void setConferenceDAO(ConferenceDAO conferenceDAO) {
 		this.conferenceDAO = conferenceDAO;
@@ -158,5 +162,25 @@ public class ConferenceServiceImpl implements ConferenceService {
 			return true;
 		
 		}
+	}
+	public List<ConferenceModel> getAttendConferenceByConditions(String userId, String meetingBeginTime, String meetingEndTime) {
+		List<ConferenceModel> results=new ArrayList<ConferenceModel>();
+		List<ConferenceModel> lists=conferenceDAO.getConferencesByConditions(null, null,"3,4",null,meetingBeginTime,meetingEndTime,null,null);
+		if(lists!=null&&lists.size()>0){
+			for(ConferenceModel model:lists){
+				if(StringUtils.isNotEmpty(userId)&&StringUtils.isNotEmpty(model.getTeacherAttendIds())){
+					String[] ids=model.getTeacherAttendIds().split(";");
+					if(ids!=null&&ids.length>0)
+					for(int i=0;i<ids.length;i++){
+						if(ids[i].equals(userId)){
+							results.add(model);
+							break;
+						}
+					}
+					
+				}
+			}
+		}
+		return results;		
 	}
 }
