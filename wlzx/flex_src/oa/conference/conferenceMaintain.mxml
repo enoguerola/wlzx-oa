@@ -251,9 +251,10 @@
 				places.selectedIndex=0;
 				attendNum.text="";
 				departments.selectedIndex=0
-				linkman_account_id.text="";
-				linkman_account.searchText="";
 				linkman_account.selectedItem=null;
+				Alert.show("aa");
+//				linkman_account_id.text="";
+//				linkman_account.text="";
 				contactPhone.text="";
 				services.text="";
 				description.text="";

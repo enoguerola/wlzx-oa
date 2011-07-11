@@ -75,7 +75,9 @@
     <module application="flex_src/home.mxml" destPath="oa/course/adjust/adjustApply.swf" optimize="false" sourcePath="flex_src/oa/course/adjust/adjustApply.mxml"/>
     <module application="flex_src/home.mxml" destPath="oa/receipt/circulateList.swf" optimize="true" sourcePath="flex_src/oa/receipt/circulateList.mxml"/>
     <module application="flex_src/home.mxml" destPath="oa/schedule/personSchedule.swf" optimize="false" sourcePath="flex_src/oa/schedule/personSchedule.mxml"/>
-    <module destPath="oa/conference/conferenceArrange.swf" optimize="false" sourcePath="flex_src/oa/conference/conferenceArrange.mxml"/>
+    <module application="flex_src/home.mxml" destPath="oa/conference/conferenceArrange.swf" optimize="false" sourcePath="flex_src/oa/conference/conferenceArrange.mxml"/>
+    <module application="flex_src/home.mxml" destPath="oa/conference/conferenceSelfAttending.swf" optimize="false" sourcePath="flex_src/oa/conference/conferenceSelfAttending.mxml"/>
+    <module application="flex_src/home.mxml" destPath="oa/conference/conferenceDetail.swf" optimize="false" sourcePath="flex_src/oa/conference/conferenceDetail.mxml"/>
   </modules>
   <buildCSSFiles/>
 </actionScriptProperties>

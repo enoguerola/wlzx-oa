@@ -19,7 +19,8 @@ public interface ConferenceService {
 	public boolean cancleConferenceById(String id);
 	public ConferenceModel get(String id)throws ServiceException;
 	
-	public List<ConferenceModel> getConferencesByConditions(String applyUserId, String name,Integer applyStatus,
+	public List<ConferenceModel> getConferencesByConditions(String applyUserId, String name,String states,
 			String placeId,String meetingBeginTime, String meetingEndTime,String applyBeginTime, String applyEndTime) ;
+	public List<ConferenceModel> getAttendConferenceByConditions(String userId, String meetingBeginTime, String meetingEndTime) ;
 
 }
