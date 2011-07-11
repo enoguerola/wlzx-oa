@@ -43,7 +43,7 @@ public class PlaceServiceImpl implements PlaceService {
 	public List<PlaceModel> getPlacesByCondition(String searchName,
 			String searchType, String searchBuilding, Float areaBegin,
 			Float areaEnd, Integer containBegin, Integer containEnd) {
-		System.out.println(searchName+";"+searchType+";"+searchBuilding+";"+areaBegin+";"+areaEnd+";"+containBegin+";"+containEnd);
+		//System.out.println(searchName+";"+searchType+";"+searchBuilding+";"+areaBegin+";"+areaEnd+";"+containBegin+";"+containEnd);
 		DetachedCriteria criteria = DetachedCriteria.forClass(PlaceModel.class);
 		if(!StringUtils.isEmpty(searchName)){
 //			criteria.add(Restrictions.eq("name", searchName));
