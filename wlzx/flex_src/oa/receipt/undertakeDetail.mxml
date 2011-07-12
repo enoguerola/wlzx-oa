@@ -23,7 +23,6 @@
 			private function init():void
 			{
 				var parms:String=((Object)(this.owner)).id;
-				Alert.show("devise detail :" + parms);
 				receiptServiceRO.get(parms);
 			}
 			

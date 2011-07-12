@@ -18,4 +18,14 @@ public interface FileFlowDAO extends BaseDAO<FileFlowModel> {
 	 * @throws DAOException
 	 */
 	List<FileFlowModel> getList(ReceiptModel receipt, Integer step)throws DAOException;
+	
+	/**
+	 * 得到某步之前 所有 FileFlowModel List
+	 * @param receipt
+	 * @param maxStep
+	 * @return
+	 * @throws DAOException
+	 */
+	List<FileFlowModel> getAllBefore(ReceiptModel receipt, Integer maxStep)throws DAOException;
+	
 }

@@ -2,6 +2,7 @@ package system.wlims.oa.serviceImpl.receipt;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.taglibs.standard.lang.jstl.NullLiteral;
@@ -43,14 +44,15 @@ public class FileFlowServiceImpl implements FileFlowService {
 		if(update){
 			//更新当前步骤
 			step = flows.get(0).getStep();
-			for(FileFlowModel model : flows){
+			for(Iterator<FileFlowModel> iterator = flows.iterator(); iterator.hasNext();){
+				FileFlowModel model = iterator.next();
 				boolean exist = false;
 				for(String userid:userArray){
 					if(model.getUser().equals(userid))
 						exist = true;
 				}
 				if(!exist){
-					flows.remove(model);
+					iterator.remove();
 					remove(model);
 				}
 			}
@@ -99,9 +101,10 @@ public class FileFlowServiceImpl implements FileFlowService {
 				if(model.getStep() > max)
 					max = model.getStep();
 			}
-			for(FileFlowModel model : list){
+			for(Iterator<FileFlowModel> it = list.iterator(); it.hasNext(); ){
+				FileFlowModel model = it.next();
 				if(model.getStep() < max)
-					list.remove(model);
+					it.remove();
 			}
 		}
 		return list;
@@ -112,7 +115,7 @@ public class FileFlowServiceImpl implements FileFlowService {
 		// TODO Auto-generated method stub
 		ReceiptModel receipt = receiptDAO.get(receiptId);
 		
-		return fileFlowDAO.getList(receipt, step);
+		return fileFlowDAO.getAllBefore(receipt, step);
 	}
 	
 
