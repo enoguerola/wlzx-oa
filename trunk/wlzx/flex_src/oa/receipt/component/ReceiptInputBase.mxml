@@ -9,6 +9,7 @@
 		<![CDATA[
 			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
+			import mx.events.CloseEvent;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
 			
@@ -21,8 +22,7 @@
 			{
 				// TODO Auto-generated method stub
 				var parent:Object = this.parentDocument as Object;
-
-				var id:String = "2";
+				var id:String = parent.id;
 				fileFlowServiceRO.getList(id, parent.status/2 - 1);
 				
 				_hao.text = parent._hao;
@@ -52,8 +52,9 @@
 			private function save(isCompleted:int):void
 			{
 				if(isCompleted == 1){
-					Alert.show("确定提交?", "确定", Alert.YES | Alert.NO, null, function():void{
-						doSave(isCompleted);
+					Alert.show("确定提交?", "确定", Alert.YES | Alert.NO, null, function(event:CloseEvent):void{
+						if(event.detail == Alert.YES)
+							doSave(isCompleted);
 					});
 				}else
 					doSave(isCompleted);

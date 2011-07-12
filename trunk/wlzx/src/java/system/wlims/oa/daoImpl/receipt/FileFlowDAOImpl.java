@@ -39,5 +39,29 @@ public class FileFlowDAOImpl extends BaseDAOImpl<FileFlowModel> implements
 		return list;
 	}
 
+	@Override
+	public List<FileFlowModel> getAllBefore(ReceiptModel receipt,
+			Integer maxStep) throws DAOException {
+		// TODO Auto-generated method stub
+		DetachedCriteria criteria = DetachedCriteria.forClass(FileFlowModel.class);
+		
+		if(receipt != null)
+			criteria.add(Restrictions.eq("receipt", receipt));
+		
+		if(maxStep != null)
+			criteria.add(Restrictions.le("type", maxStep));
+		else
+			criteria.addOrder(Order.asc("step"));
+				
+		List<FileFlowModel> list = getListByCriteria(criteria);
+		
+		if(list != null && list.size() > 0){
+			for(FileFlowModel model:list){
+				model.setReceipt(null);
+			}
+		}
+		return list;
+	}
+
 
 }
