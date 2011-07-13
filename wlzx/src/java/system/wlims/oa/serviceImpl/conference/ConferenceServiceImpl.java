@@ -190,11 +190,13 @@ public class ConferenceServiceImpl implements ConferenceService {
 		return results;		
 	}
 	public Map<String, Map<String,Map<String,List<ConferenceModel>>>> getConferencePlaceArrangments(String beginTime,String endTime){
-		Map<String, Map<String,Map<String,List<ConferenceModel>>>> data = new TreeMap<String, Map<String,Map<String,List<ConferenceModel>>>>();
+		Map<String, Map<String,Map<String,List<ConferenceModel>>>> data = new LinkedHashMap<String, Map<String,Map<String,List<ConferenceModel>>>>();
 		List<Date> dates=UtilDateTime.getDatesDateRange(java.sql.Date.valueOf(beginTime), java.sql.Date.valueOf(endTime));
 		for(Date wdate : dates){
-			data.put(UtilDateTime.toDateString(wdate), new TreeMap<String, Map<String,List<ConferenceModel>>>());
+			System.out.println(UtilDateTime.toDateString(wdate));
+			data.put(UtilDateTime.toDateString(wdate), new LinkedHashMap<String, Map<String,List<ConferenceModel>>>());
 		}
+		System.out.println(dates.size()+"------"+data.size());
 		List<ConferenceModel> conferences = conferenceDAO.getConferencesByConditions(null, null, null, null, beginTime, endTime, null, null);
 		List<PlaceModel> places = placeDao.getPlacesByCondition(null, null, null, null, null, null, null);
 		
@@ -203,9 +205,9 @@ public class ConferenceServiceImpl implements ConferenceService {
 						// 过滤已取消会议
 						if (conference.getApplyStatus().intValue() == ConferenceModel.EStatus.Booking.getValue().intValue()||conference.getApplyStatus().intValue() == ConferenceModel.EStatus.Arranged.getValue().intValue()) {
 							String conferenceDate = UtilDateTime.toDateString(conference.getApplyDateTime());
-							if(!data.containsKey(conferenceDate)){
-								data.put(conferenceDate, new TreeMap<String, Map<String,List<ConferenceModel>>>());
-							}
+//							if(!data.containsKey(conferenceDate)){
+//								data.put(conferenceDate, new LinkedHashMap<String, Map<String,List<ConferenceModel>>>());
+//							}
 							
 //							ArrayList<String> timeAreas=MaryUtils.audioTimeCrosss(lesson.getLessonDayTime());
 //							for(String timeArea:timeAreas){
@@ -231,7 +233,7 @@ public class ConferenceServiceImpl implements ConferenceService {
 				}
 			}
 			
-			
+		System.out.println(data.size());
 		return data;
 	}
 

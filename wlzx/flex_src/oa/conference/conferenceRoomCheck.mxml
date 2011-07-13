@@ -15,18 +15,21 @@
 	
 	<mx:Script> 
 		<![CDATA[  
+			import basic.utils.DateUtil;
+			
 			import mx.collections.ArrayCollection;
+			import mx.containers.*;
 			import mx.controls.*;
 			import mx.events.*;
+			import mx.formatters.DateFormatter;
 			import mx.managers.PopUpManager;
 			import mx.rpc.events.*;
 			
+			import system.component.WlzxLockWin;
 			import system.entity.DepartmentModel;
 			import system.entity.UserModel;
 			import system.index;
-			import system.utils.CommonUtils;
-			import basic.utils.DateUtil;
-			import system.component.WlzxLockWin;
+			import system.utils.*;
 			
 			private function init():void {
 				placeServiceRO.getPlacesByCondition(null, null, null, null, null, null, null);
@@ -54,21 +57,202 @@
 				Alert.show(event.fault.faultString, 'Error');
 				unLockWin();
 			}
-			
+			[Binary]
+			public var placeList:ArrayCollection;
 			protected function getPlacesByCondition_resultHandler(event:ResultEvent):void
 			{
 				
-				var list:ArrayCollection=event.result as ArrayCollection;
-				places.dataProvider=list;
+				placeList=event.result as ArrayCollection;
+			//	places.dataProvider=placeList;
 				unLockWin();
 				
 			}
 			protected function getConferencePlaceArrangments_resultHandler(event:ResultEvent):void
 			{
+				//Alert.show( event.result+"");
+				var obj:Object=event.result as Object;
+			//	Alert.show(obj.toString()+"");
+			//	conferences.dataProvider=obj;
+				//obj.sort()
+				table.removeAllChildren();
+				var head:GridRow=new GridRow();
+				head.autoLayout=true;
+				head.setStyle("horizontalAlign","center");
+				head.setStyle("verticalAlign","middle");
+				var date:GridItem=new GridItem();
+				date.width=150;
+				date.setStyle("borderStyle","solid");
+				date.setStyle("horizontalAlign","center");
+				date.setStyle("verticalAlign","middle");
+				var text_date:Text=new Text();
+				text_date.text="星期";
+				date.addChild(text_date);
+				var time:GridItem=new GridItem();
+				time.width=150;
+				time.setStyle("borderStyle","solid");
+				time.setStyle("horizontalAlign","center");
+				time.setStyle("verticalAlign","middle");
+				var text_time:Text=new Text();
+				text_time.text="时间";
+				time.addChild(text_time);
+			
 				
-				var list:ArrayCollection=event.result as ArrayCollection;
-				Alert.show(list.length+"");
-				conferences.dataProvider=list;
+				head.addChild(date);
+				head.addChild(time);
+				
+				for(var i=0;i<placeList.length;i++){
+					var placeItem:GridItem=new GridItem();
+					placeItem.setStyle("borderStyle","solid");
+					placeItem.setStyle("horizontalAlign","center");
+					placeItem.setStyle("verticalAlign","middle");
+					var text_place:Text=new Text();
+					text_place.text=placeList.getItemAt(i).position;
+					placeItem.addChild(text_place);
+					head.addChild(placeItem);
+					
+				}
+				
+				table.addChild(head);
+				var beginTime:String=search_date_begin.text;
+				var endTime:String=search_date_end.text;
+				var array:ArrayCollection=CommonUtils.getDatesDateRange(DateFormatter.parseDateString(beginTime),DateFormatter.parseDateString(endTime));
+				for (var i:int=0;i<array.length;i++)
+				{
+					var key:String=array.getItemAt(i).date;
+					//Alert.show("b");
+					//for (var key1:Object in list)
+					//{
+				//	Alert.show("map item key is: " + key );
+					//}
+					var row:GridRow=new GridRow();
+					row.autoLayout=true;
+					row.setStyle("horizontalAlign","center");
+					row.setStyle("verticalAlign","middle");
+					var date:GridItem=new GridItem();
+					date.setStyle("borderStyle","solid");
+					date.setStyle("horizontalAlign","center");
+					date.setStyle("verticalAlign","middle");
+					var text:Text=new Text();
+					text.text=key+" "+CommonUtils.DAYS[DateFormatter.parseDateString(key).day];
+					date.addChild(text);
+					var time:GridItem=new GridItem();
+					time.setStyle("borderStyle","solid");
+					time.setStyle("horizontalAlign","center");
+					time.setStyle("verticalAlign","middle");
+					var dayConference:Object=obj[key] as Object;
+					var dayConferenceGrid:Grid=new Grid();
+					dayConferenceGrid.setStyle("horizontalGap","-1");
+					dayConferenceGrid.setStyle("verticalGap","-1");
+					dayConferenceGrid.autoLayout=true;
+//					dayConferenceGrid.setStyle("borderStyle","solid");
+					dayConferenceGrid.percentWidth=100;
+					for(var timeKey:String in dayConference)
+					{
+						var dayConferenceGridRow:GridRow=new GridRow();
+						dayConferenceGridRow.percentWidth=100;
+						var dayConferenceGridRowItem:GridItem=new GridItem();
+						dayConferenceGridRowItem.percentWidth=100;
+						//dayConferenceGridRowItem.setStyle("borderStyle","solid");
+						var dayConferenceGridRowItemText:Text=new Text();
+						dayConferenceGridRowItemText.percentWidth=100;
+						dayConferenceGridRowItemText.text=timeKey;
+						dayConferenceGridRowItemText.setStyle("textAlign","center");
+						dayConferenceGridRowItem.addChild(dayConferenceGridRowItemText);
+						dayConferenceGridRow.addChild(dayConferenceGridRowItem);
+						dayConferenceGrid.addChild(dayConferenceGridRow);
+					}
+					time.addChild(dayConferenceGrid);
+					
+					
+					
+					row.addChild(date);
+					row.addChild(time);
+					
+					for(var j=0;j<placeList.length;j++){
+						var placeKey:String=placeList.getItemAt(j).id;
+						var placeItem:GridItem=new GridItem();
+						placeItem.setStyle("borderStyle","solid");
+						placeItem.setStyle("horizontalAlign","center");
+						placeItem.setStyle("verticalAlign","middle");
+						var dayPlaceConferenceGrid:Grid=new Grid();
+						dayPlaceConferenceGrid.percentWidth=100;
+						dayPlaceConferenceGrid.setStyle("horizontalGap","-1");
+						dayPlaceConferenceGrid.setStyle("verticalGap","-1");
+						dayPlaceConferenceGrid.autoLayout=true;
+						for(var timeKey:String in dayConference)
+						{
+							var dayPlaceConferenceGridRow:GridRow=new GridRow();
+							dayPlaceConferenceGridRow.percentWidth=100;
+							var dayPlaceConferenceGridRowItem:GridItem=new GridItem();
+							dayPlaceConferenceGridRowItem.percentWidth=100;
+						//	dayPlaceConferenceGridRowItem.setStyle("borderStyle","solid");
+							
+							
+//							
+							if(dayConference[timeKey]!=null){
+							var dayPlacesConference:Object=dayConference[timeKey] as Object;
+							if(dayPlacesConference[placeKey]!=null){
+							var conferenceList:ArrayCollection=dayPlacesConference[placeKey] as ArrayCollection;
+							var conferenceGrid:Grid=new Grid();
+							conferenceGrid.percentHeight=100;
+							conferenceGrid.percentWidth=100;
+							conferenceGrid.setStyle("horizontalGap","-1");
+							conferenceGrid.setStyle("verticalGap","-1");
+							for(var k:int=0;k<conferenceList.length;k++){
+								var conferenceGridRow:GridRow=new GridRow();
+								conferenceGridRow.percentWidth=100;
+								conferenceGridRow.setStyle("horizontalAlign","center");
+								conferenceGridRow.setStyle("verticalAlign","middle");
+								var conferenceGridItem:GridItem=new GridItem();
+								conferenceGridItem.percentWidth=100;
+								conferenceGridItem.setStyle("borderStyle","solid");
+								conferenceGridItem.setStyle("horizontalAlign","center");
+								conferenceGridItem.setStyle("verticalAlign","middle");
+								var conferenceText:Text=new Text();
+								conferenceText.percentWidth=100;
+								conferenceText.text=(conferenceList.getItemAt(k).applyStatus==1?"预约中":"已分配");
+								conferenceText.setStyle("textAlign","center");
+								conferenceGridItem.addChild(conferenceText);
+								conferenceGridRow.addChild(conferenceGridItem);
+								conferenceGrid.addChild(conferenceGridRow);
+							}
+							dayPlaceConferenceGridRowItem.addChild(conferenceGrid);
+//							var dayPlaceConferenceGridRowItemText:Text=new Text();
+//							dayPlaceConferenceGridRowItemText.percentWidth=100;
+//							dayPlaceConferenceGridRowItemText.text=timeKey;
+//							dayPlaceConferenceGridRowItemText.setStyle("textAlign","center");
+//							dayPlaceConferenceGridRowItem.addChild(dayPlaceConferenceGridRowItemText);
+							
+							}else{
+								var empty:Text=new Text();
+								empty.percentWidth=100;
+								empty.text=("空闲");
+								empty.setStyle("textAlign","center");
+								dayPlaceConferenceGridRowItem.addChild(empty);
+								
+							}
+							}else{
+								var empty:Text=new Text();
+								empty.percentWidth=100;
+								empty.text=("空闲");
+								empty.setStyle("textAlign","center");
+								dayPlaceConferenceGridRowItem.addChild(empty);
+							
+							}
+							
+							dayPlaceConferenceGridRow.addChild(dayPlaceConferenceGridRowItem);
+							dayPlaceConferenceGrid.addChild(dayPlaceConferenceGridRow);
+						}
+
+						placeItem.addChild(dayPlaceConferenceGrid);
+						row.addChild(placeItem);
+					}
+					
+					
+					table.addChild(row);
+					
+				}
+				
 				unLockWin();
 				
 			}
@@ -79,6 +263,7 @@
 				lockWin();
 				var beginTime:String=search_date_begin.text;
 				var endTime:String=search_date_end.text;
+			//	conferences.dataProvider=CommonUtils.getDatesDateRange(DateFormatter.parseDateString(beginTime),DateFormatter.parseDateString(endTime));
 				conferenceServiceRO.getConferencePlaceArrangments(beginTime,endTime);
 				
 				
@@ -101,12 +286,13 @@
 			private function unLockWin():void{
 				if(window!=null)
 					PopUpManager.removePopUp(window);
+					window=null;
 			}
 			
 		]]> 		
 	</mx:Script> 
 	<mx:VBox borderVisible="true" width="100%" height="100%" borderStyle="solid">
-		<mx:VBox width="100%"  height="100%"   verticalGap="0" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
+		<mx:VBox width="100%"  height="100%"   verticalGap="0" verticalAlign="top" horizontalAlign="left" borderVisible="true" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
 			<mx:VBox width="100%" horizontalAlign="center" verticalGap="0" height="60">
 				<mx:HBox width="100%" horizontalAlign="center">
 					<mx:Label  text="会议室安排统计表"    width="100%"  letterSpacing="5" textAlign="center" fontSize="14"  fontWeight="bold" height="30"  id="search_account_name"/>
@@ -121,35 +307,37 @@
 				
 			</mx:VBox>
 			<mx:VBox width="100%" horizontalAlign="center" verticalGap="0" verticalAlign="middle">
-				<mx:Grid width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" autoLayout="true" horizontalGap="0" verticalGap="0">
+				<mx:Grid width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" autoLayout="true" verticalGap="-1" horizontalGap="-1" id="table">
+					<!--	
 					<mx:GridRow  autoLayout="true" horizontalAlign="center" verticalAlign="middle" width="100%" >
 						<mx:GridItem  borderStyle="solid" verticalAlign="middle">
-							<mx1:Text text="星期" width="60" textAlign="center" />
+							<mx1:Text text="星期" width="150" textAlign="center" />
 						</mx:GridItem>
 						<mx:GridItem  borderStyle="solid" verticalAlign="middle">
-							<mx1:Text text="时间" width="60" textAlign="center" />
+							<mx1:Text text="时间" width="100" textAlign="center" />
 						</mx:GridItem>
 						<mx:Repeater id="places">
 							<mx:GridItem  borderStyle="solid" verticalAlign="middle">
-								<mx1:Text text="{places.currentItem.position}"  width="60" textAlign="center"/>
+								<mx1:Text text="{places.currentItem.position}"  width="100" textAlign="center"/>
 							</mx:GridItem>
 						</mx:Repeater>
 					</mx:GridRow>
+					
 					<mx:Repeater id="conferences">
 						
 						<mx:GridRow  autoLayout="true" horizontalAlign="center" verticalAlign="middle" >
 							<mx:GridItem  borderStyle="solid"  verticalAlign="middle">
-								<mx1:Text text="{conferences.currentItem.key}"  width="60" textAlign="center"/>
+								<mx1:Text text="{conferences.currentItem.date+' '+conferences.currentItem.week}"  width="150" textAlign="center"/>
+							</mx:GridItem>
+							<mx:GridItem  borderStyle="solid"  verticalAlign="middle">
 							</mx:GridItem>
 							<mx:GridItem  borderStyle="solid" verticalAlign="middle">
-								<mx1:Text text="{conferences.currentItem.value}" width="60" textAlign="center"/>
 							</mx:GridItem>
-							
 						</mx:GridRow>
 						
 						
 						
-					</mx:Repeater>
+					</mx:Repeater>-->
 				</mx:Grid>			
 			</mx:VBox>
 
