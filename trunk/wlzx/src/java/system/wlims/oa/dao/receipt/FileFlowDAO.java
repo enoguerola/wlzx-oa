@@ -14,7 +14,7 @@ public interface FileFlowDAO extends BaseDAO<FileFlowModel> {
 	 * 得到所有 某step的FileFlowModel list
 	 * @param receipt
 	 * @param step
-	 * @return
+	 * @return FileFlowModel中receipt被置为null
 	 * @throws DAOException
 	 */
 	List<FileFlowModel> getList(ReceiptModel receipt, Integer step)throws DAOException;
@@ -27,5 +27,14 @@ public interface FileFlowDAO extends BaseDAO<FileFlowModel> {
 	 * @throws DAOException
 	 */
 	List<FileFlowModel> getAllBefore(ReceiptModel receipt, Integer maxStep)throws DAOException;
+	
+	/**
+	 * 得到所有 某type的FileFlowModel list
+	 * @param receipt
+	 * @param type
+	 * @return
+	 * @throws DAOException
+	 */
+	List<FileFlowModel> getListByType(ReceiptModel receipt, Integer type)throws DAOException;
 	
 }

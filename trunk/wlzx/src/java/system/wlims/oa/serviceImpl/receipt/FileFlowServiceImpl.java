@@ -265,5 +265,14 @@ public class FileFlowServiceImpl implements FileFlowService {
 		return model;
 	}
 
+	@Override
+	public List<FileFlowModel> getAllList(String receiptId)
+			throws ServiceException {
+		// TODO Auto-generated method stub
+		ReceiptModel model = receiptDAO.get(receiptId);
+		
+		return fileFlowDAO.getAllBefore(model, 10);
+	}
+
 
 }

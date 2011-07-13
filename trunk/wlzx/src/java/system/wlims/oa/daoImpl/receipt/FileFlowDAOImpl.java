@@ -25,7 +25,7 @@ public class FileFlowDAOImpl extends BaseDAOImpl<FileFlowModel> implements
 			criteria.add(Restrictions.eq("receipt", receipt));
 		
 		if(type != null)
-			criteria.add(Restrictions.eq("type", type));
+			criteria.add(Restrictions.eq("step", type));
 		else
 			criteria.addOrder(Order.asc("step"));
 				
@@ -49,7 +49,31 @@ public class FileFlowDAOImpl extends BaseDAOImpl<FileFlowModel> implements
 			criteria.add(Restrictions.eq("receipt", receipt));
 		
 		if(maxStep != null)
-			criteria.add(Restrictions.le("type", maxStep));
+			criteria.add(Restrictions.le("step", maxStep));
+		else
+			criteria.addOrder(Order.asc("step"));
+				
+		List<FileFlowModel> list = getListByCriteria(criteria);
+		
+		if(list != null && list.size() > 0){
+			for(FileFlowModel model:list){
+				model.setReceipt(null);
+			}
+		}
+		return list;
+	}
+
+	@Override
+	public List<FileFlowModel> getListByType(ReceiptModel receipt, Integer type)
+			throws DAOException {
+		// TODO Auto-generated method stub
+		DetachedCriteria criteria = DetachedCriteria.forClass(FileFlowModel.class);
+		
+		if(receipt != null)
+			criteria.add(Restrictions.eq("receipt", receipt));
+		
+		if(type != null)
+			criteria.add(Restrictions.le("type", type));
 		else
 			criteria.addOrder(Order.asc("step"));
 				

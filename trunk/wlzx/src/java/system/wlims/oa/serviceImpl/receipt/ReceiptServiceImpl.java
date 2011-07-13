@@ -1,6 +1,7 @@
 package system.wlims.oa.serviceImpl.receipt;
 
 import java.sql.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import org.hibernate.criterion.DetachedCriteria;
@@ -73,6 +74,7 @@ public class ReceiptServiceImpl implements ReceiptService {
 		addSearchRestrictions(criteria, inNumber, office, doNumber, title, startDate, endDate, page, pageCount);
 		
 		if(StringUtils.isNotEmpty(status)){
+			// 如果一个 receipt 流向下一步，需要对上步仍然可见
 			if(status.indexOf(",") > -1){
 				String[] statusList = status.split(",");
 				Integer[] statusIntList = new Integer[statusList.length];
@@ -80,6 +82,7 @@ public class ReceiptServiceImpl implements ReceiptService {
 					statusIntList[i] = Integer.parseInt(statusList[i]);
 				criteria.add(Restrictions.in("status", statusIntList));
 			}else if(status.indexOf(";") > -1){
+				// 对于 登记 拟办 传阅等 status 中有“;”号
 				String[] statusList = status.split(";");
 				Integer[] statusIntList = new Integer[statusList.length];
 				for(int i=0; i<statusList.length; i++)
@@ -102,8 +105,9 @@ public class ReceiptServiceImpl implements ReceiptService {
 	//过滤 没有该用户fileflow的receipt
 	private List<ReceiptModel> filter(List<ReceiptModel> list, int status){
 		if(list != null && list.size() > 0){
-			for(ReceiptModel receipt:list){
-				List<FileFlowModel> fileFlowList = fileFlowDAO.getList(receipt, status/2);
+			for(Iterator<ReceiptModel> iterator = list.iterator(); iterator.hasNext();){
+				ReceiptModel receipt = iterator.next();
+				List<FileFlowModel> fileFlowList = fileFlowDAO.getListByType(receipt, status/2);
 				boolean exist = false;
 				if(fileFlowList != null && fileFlowList.size() > 0){
 					UserModel userModel = SecurityUserHolder.getCurrentUser();
@@ -120,7 +124,7 @@ public class ReceiptServiceImpl implements ReceiptService {
 					}
 				}
 				if(!exist)
-					list.remove(receipt);
+					iterator.remove();
 			}
 		}
 		return list;
@@ -147,6 +151,17 @@ public class ReceiptServiceImpl implements ReceiptService {
 	public String complete(String id) throws ServiceException {
 		// TODO Auto-generated method stub
 		ReceiptModel model = receiptDAO.get(id);
+		
+		List<FileFlowModel> list = fileFlowDAO.getListByType(model, FileFlowModel.EType.Circulate.getValue());
+		if(list != null && list.size() > 0){
+			for(FileFlowModel fileFlowModel:list){
+				if(fileFlowModel.getIsCompleted() != 0){
+					fileFlowModel.setIsCompleted(1);
+					fileFlowDAO.saveOrUpdate(fileFlowModel);
+				}
+			}
+		}
+		
 		model.setIsCompleted(1);
 		
 		try {

@@ -24,7 +24,6 @@
 			
 			private var hgroup0:HGroup = new HGroup();
 			private var hgroup1:HGroup = new HGroup();
-			private var hgroup2:HGroup = new HGroup();
 			
 			override protected function fileFlowServiceGetList_result(event:ResultEvent):void
 			{
@@ -72,14 +71,10 @@
 				for(index; index < length; index ++)
 				{
 					file = list.getItemAt(index) as FileFlowModel;
-					if(file.type != 2)
-						break;
-					if(file.isCompleted == 0 && (file.user == this.parentApplication.account || "超级管理员" == this.parentApplication.account))
+					if(file.user == this.parentApplication.account || "超级管理员" == this.parentApplication.account)
 					{
-						var under:Label = new Label();
-						under.text = file.id;
-						under.visible = false;
-						hgroup2.addElement(under);
+						if(file.isCompleted == 1)
+							save1.enabled = false;
 					}
 				}
 				inputGroup.addElement(hgroup0);
@@ -89,16 +84,11 @@
 			
 			override protected function doSave(isCompleted:int):void
 			{
-				var h0:int = hgroup0.numElements;
-				var h1:int = hgroup1.numElements;
-				if(hgroup2.numElements == 0)
+				var hg0:int = hgroup0.numElements - 1;
+				var hg1:int = hgroup1.numElements - 1;
+				for(var index:int = hg0 + hg1; index < super.list.length; index++)
 				{
-					Alert.show("已经承办完成");
-					return;
-				}
-				for (var i:int=0;i < hgroup2.numElements;i++)
-				{
-					var fileFlow:FileFlowModel = list.getItemAt(i-3+h0 + h1) as FileFlowModel;
+					var fileFlow:FileFlowModel = list.getItemAt(index) as FileFlowModel;
 					if(fileFlow.user == this.parentApplication.account || "超级管理员" == this.parentApplication.account)
 					{
 						super.fileFlowServiceRO.save(fileFlow.id, "", isCompleted);
@@ -106,9 +96,16 @@
 				}
 			}
 			
+			override protected function fileFlowServiceSave_result(event:ResultEvent):void
+			{
+				save1.enabled = false;
+			}
+			
 			override protected function init():void
 			{
 				super.init();
+				save0.visible = false;
+				save1.label = "承办完成";
 			}
 			
 		]]>
