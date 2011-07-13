@@ -201,11 +201,14 @@ public class UtilDateTime {
     	
     	List<Date> dates = new ArrayList<Date>();
     	int offset = getIntervalDays(startDate, endDate);  	
-    	
+    	if(offset==0){
+    		dates.add(startDate);
+    		return dates;
+    	}
     	for(int i=0;i<=offset;i++){
     		Calendar calendar= Calendar.getInstance();
     		calendar.setTime(startDate);
-    		calendar.add(Calendar.DATE, offset);
+    		calendar.add(Calendar.DATE, i);
     		dates.add(calendar.getTime());
     	}
     	return dates;
