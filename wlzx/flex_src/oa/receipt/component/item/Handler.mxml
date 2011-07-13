@@ -47,8 +47,6 @@
 					hgroup.addElement(edit_button);
 				}else if(status > 1){
 					var devise_button:LinkButton = new LinkButton();
-					devise_button.addEventListener(MouseEvent.CLICK, edit);
-					hgroup.addElement(devise_button);
 					if(status == 2 || status == 3)
 						//p批办
 						devise_button.label = "拟办";
@@ -58,6 +56,8 @@
 						devise_button.label = "承办";
 					else if(status == 8 || status == 9)
 						devise_button.label = "传阅";
+					devise_button.addEventListener(MouseEvent.CLICK, edit);
+					hgroup.addElement(devise_button);
 				}
 			}
 			

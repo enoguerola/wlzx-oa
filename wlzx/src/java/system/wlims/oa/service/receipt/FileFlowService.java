@@ -22,6 +22,14 @@ public interface FileFlowService {
 	void save(String receiptId, String userIdList, boolean update, int type)throws ServiceException;
 	
 	/**
+	 * 得到所有
+	 * @param receiptId
+	 * @return
+	 * @throws ServiceException
+	 */
+	List<FileFlowModel> getAllList(String receiptId)throws ServiceException;
+	
+	/**
 	 * 
 	 * @param receipt
 	 * @return
