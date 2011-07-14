@@ -123,7 +123,7 @@
 			//===================
 			private function ioErrorHandler(e:IOErrorEvent):void   
 			{   
-				Alert.show("有错误");   
+				Alert.show(e.toString());   
 			}
 			
 			//===================

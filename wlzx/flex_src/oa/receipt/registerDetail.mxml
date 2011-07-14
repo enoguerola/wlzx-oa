@@ -121,6 +121,7 @@
 				receipt_text.title.text = receipt.title;
 				receipt_file.in_department.text = receipt.office;
 				//attachments here
+				
 			}
 
 			protected function faultHandler(event:FaultEvent):void
@@ -152,6 +153,9 @@
 		<mx:TabNavigator width="100%" height="100%" id="receipt_navigator" change="navigator_change()" creationPolicy="all">
 			<mx:VBox label="来文正文" width="100%" height="100%">
 				<content:receiptText width="100%" id="receipt_text"/>
+			</mx:VBox>
+			<mx:VBox label="附件上传" width="100%" height="100%">
+				<content:Upload width="100%" id="receipt_upload"/>
 			</mx:VBox>
 			<mx:VBox label="来文登记单" width="100%" height="100%">
 				<content:receiptFileInput width="100%" id="receipt_file"/>

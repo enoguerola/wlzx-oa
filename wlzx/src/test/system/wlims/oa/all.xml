@@ -48,4 +48,11 @@
 		<property name="attachmentDAO" ref="attachmentDAO" />
 	</bean>
 	
+	<bean id="fileAttachmentDAO" class="system.wlims.oa.daoImpl.receipt.FileAttachmentDAOImpl">
+		<property name="sessionFactory" ref="oaSessionFactory" />
+	</bean>
+	<bean id="fileAttachmentService" class="system.wlims.oa.serviceImpl.receipt.FileAttachmentServiceImpl">
+		<property name="fileAttachmentDAO" ref="fileAttachmentDAO" />
+	</bean>
+	
 </beans>
