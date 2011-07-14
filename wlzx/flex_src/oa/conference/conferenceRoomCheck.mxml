@@ -12,7 +12,15 @@
 	<mx:RemoteObject id="placeServiceRO" destination="placeServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 		<mx:method name="getPlacesByCondition"  concurrency="last"  result="getPlacesByCondition_resultHandler(event);" />
 	</mx:RemoteObject>
+	<mx:Style>
+		@namespace component "system.component.*";
+		component|MyToolTip {
+			borderSkin: ClassReference("system.skins.WlzxToolTipPanel");
+		}
+
+	</mx:Style>
 	
+
 	<mx:Script> 
 		<![CDATA[  
 			import basic.utils.DateUtil;
@@ -25,6 +33,7 @@
 			import mx.managers.PopUpManager;
 			import mx.rpc.events.*;
 			
+			import system.component.MyToolTip;
 			import system.component.WlzxLockWin;
 			import system.entity.DepartmentModel;
 			import system.entity.UserModel;
@@ -32,6 +41,7 @@
 			import system.utils.*;
 			
 			private function init():void {
+				
 				placeServiceRO.getPlacesByCondition(null, null, null, null, null, null, null);
 				var parms:String=((Object)(this.owner)).id;
 				//Alert.show(parms);
@@ -42,8 +52,8 @@
 					search_date_end.text=endDate;
 				}else{				
 					var date:Date=new Date();
-					search_date_begin.text=CommonUtils.formatDate(CommonUtils.currentMonthBeginDate(),"YYYY-MM-DD");
-					search_date_end.text=CommonUtils.formatDate(CommonUtils.currentMonthEndDate(),"YYYY-MM-DD");
+					search_date_begin.text=CommonUtils.formatDate(CommonUtils.currentWeekBeginDate(),"YYYY-MM-DD");
+					search_date_end.text=CommonUtils.formatDate(CommonUtils.currentWeekEndDate(),"YYYY-MM-DD");
 				}
 				
 				callLater(search);
@@ -208,10 +218,52 @@
 								conferenceGridItem.setStyle("borderStyle","solid");
 								conferenceGridItem.setStyle("horizontalAlign","center");
 								conferenceGridItem.setStyle("verticalAlign","middle");
+								
 								var conferenceText:Text=new Text();
 								conferenceText.percentWidth=100;
 								conferenceText.text=(conferenceList.getItemAt(k).applyStatus==1?"预约中":"已分配");
 								conferenceText.setStyle("textAlign","center");
+								var tip:String="会议主题："+conferenceList.getItemAt(k).name+"\n"+
+												"会议时间："+(CommonUtils.formatDate(conferenceList.getItemAt(k).meetingDate,"YYYY-MM-DD")+" "+conferenceList.getItemAt(k).beginTime+"--"+conferenceList.getItemAt(k).endTime)+"\n"+
+												"会议部门："+(conferenceList.getItemAt(k).departmentId=="-1"?'校外':parentApplication.getDepartmentNameById(conferenceList.getItemAt(k).departmentId))+"\n";
+												"会议联系："+parentApplication.getTeacherNameByAccountId(conferenceList.getItemAt(k).contactUserId)+"\n";
+											
+												conferenceText.toolTip=tip;
+												[binary]var arg1:String=conferenceText.text;
+												[binary]var arg2:String=tip;
+												conferenceText.addEventListener(ToolTipEvent.TOOL_TIP_CREATE,createfunc(arg1,arg2));
+												function createfunc(title:String,body:String):Function{
+													var func=function(event):void{
+														var ptt:MyToolTip = new MyToolTip();
+														ptt.bodyText = body;
+														ptt.title=title;
+														event.toolTip = ptt;
+														
+													}
+													return func;
+												}
+												conferenceText.addEventListener(ToolTipEvent.TOOL_TIP_SHOW,showfunc(arg1,arg2));
+												function showfunc(title:String,body:String):Function{
+													var func=function(event):void{
+														var p:Point = new Point(event.target.x,event.target.y);
+														p = event.target.localToGlobal(p);
+														//Alert.show(this.mouseX+"a");
+//														Alert.show(event.target.mouseX+"b");
+//														Alert.show(event.target.x+"a");
+														event.toolTip.x=p.x +event.target.width+10;
+														event.toolTip.y=p.y;
+
+													}
+													return func;
+												}
+//												conferenceText.addEventListener(ToolTipEvent.TOOL_TIP_CREATE,function (event:ToolTipEvent):void{createCustomTip(argu1,argu2,event);});
+//												conferenceText.addEventListener(ToolTipEvent.TOOL_TIP_SHOW,function (event:ToolTipEvent):void{
+//													event.toolTip.x=event.target.x + event.target.width + 10;
+//													event.toolTip.y=event.target.y;
+//												
+//												});
+								//与显示元素关联。
+								//system.component.ToolTip.register(conferenceText, tip);
 								conferenceGridItem.addChild(conferenceText);
 								conferenceGridRow.addChild(conferenceGridItem);
 								conferenceGrid.addChild(conferenceGridRow);
@@ -289,6 +341,21 @@
 					window=null;
 			}
 			
+			import mx.events.ToolTipEvent;
+			import system.component.MyToolTip;
+//			private function createCustomTip(title:String, body:String, event:ToolTipEvent):void {
+//				var ptt:MyToolTip = new MyToolTip();
+//				ptt.bodyText = body;
+//				ptt.title=title;
+//				event.toolTip = ptt;
+//			}
+//			
+//			private function positionTip(event:ToolTipEvent):void{
+//				event.toolTip.x=event.target.x + event.target.width + 10;
+//				event.toolTip.y=event.target.y;
+//			}
+
+			
 		]]> 		
 	</mx:Script> 
 	<mx:VBox borderVisible="true" width="100%" height="100%" borderStyle="solid">
@@ -344,5 +411,4 @@
 			
 		</mx:VBox>
 	</mx:VBox>
-	
 </mx:Module>

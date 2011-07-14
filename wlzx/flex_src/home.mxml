@@ -23,6 +23,20 @@
 			<mx:method name="getPlacesByCondition"  concurrency="last"  result="getPlacesByCondition_resultHandler(event);" />
 		</mx:RemoteObject>
 	</fx:Declarations>
+	<fx:Style>
+		@namespace s "library://ns.adobe.com/flex/spark";
+		@namespace mx "library://ns.adobe.com/flex/mx";
+		
+		mx|ToolTip{
+			font-family:            verdana;
+			font-size:              14px;
+			color:                  #000000;
+			background-color:       #ffd7ff;
+			background-alpha:       0.85;
+			cornerRadius:           10;
+		}
+		
+	</fx:Style>
 	<fx:Script>    
 		<![CDATA[   
 			import cn.org.rapid_framework.flex_security.SecurityControler;
@@ -52,8 +66,10 @@
 			public var allDepartment:ArrayCollection = new ArrayCollection();
 			public var allRole:ArrayCollection = new ArrayCollection();
 			public var allPlace:ArrayCollection = new ArrayCollection();
-			
+			import system.component.MyToolTip;
 			private function init():void{
+				//MyToolTip.init(this);  
+
 				securityUserHolder.getCurrentUser();
 				teacherAccountBridgeServiceRO.teacherAccountGetAll();
 				systemServiceRO.getDepartmentBySymbol("root");
@@ -222,6 +238,8 @@
 				}
 				return "";
 			}
+			
+			
 
 		]]>    
 	</fx:Script> 

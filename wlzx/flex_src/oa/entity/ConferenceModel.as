@@ -1,6 +1,7 @@
 package oa.entity
 {
 	import oa.entity.BaseModel;
+	import system.utils.CommonUtils;
 	[Bindable]
 	[RemoteClass(alias="system.wlims.oa.entity.conference.ConferenceModel")] 
 	public class ConferenceModel extends BaseModel
@@ -25,6 +26,9 @@ package oa.entity
 		public function ConferenceModel()
 		{
 			super();
+		}
+		public function getTime():String{
+			return CommonUtils.formatDate(meetingDate,"YYYY-MM-DD")+" "+beginTime+"--"+endTime;
 		}
 	}
 }
