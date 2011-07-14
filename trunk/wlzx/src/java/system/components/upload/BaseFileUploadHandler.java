@@ -24,7 +24,6 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
-import com.sun.corba.se.spi.orb.StringPair;
 
 public abstract class BaseFileUploadHandler implements IUpload{
 
@@ -52,10 +51,7 @@ public abstract class BaseFileUploadHandler implements IUpload{
 			return filename;
 	}
 	
-	@RequestMapping("/oa/notice/spring/attachmentUpload.action") 
-    @ResponseBody//这个是表示，返回内容以这里构造的为准。不返回常用的视图。需要配置支持。
-	public void upload(@RequestParam("file") CommonsMultipartFile file,HttpServletResponse response)throws Exception{
-		
+	protected void doUpload(CommonsMultipartFile file,HttpServletResponse response)throws Exception{
 		init();
 		
 		if (file != null && !file.isEmpty()) {
@@ -63,7 +59,7 @@ public abstract class BaseFileUploadHandler implements IUpload{
 		    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMddhhmmss");
 		    filename = getFileName(file.getOriginalFilename()) + "_" + simpleDateFormat.format(calendar.getTime()) + "."
 		    				+ getFileType(file.getOriginalFilename());
-		    DataOutputStream out = new DataOutputStream(new FileOutputStream("c:/" + filename));// 存放文件的绝对路径
+		    DataOutputStream out = new DataOutputStream(new FileOutputStream(uploadDirectory + filename));// 存放文件的绝对路径
 		    InputStream is = null;// 附件输入流
 		    try {
 		    	is = file.getInputStream();
@@ -82,11 +78,42 @@ public abstract class BaseFileUploadHandler implements IUpload{
 		    }
 		}
 		
-		doSave(file);
-		doUpload(response);
+		doSave(file, response);
 	}
 	
-	private void doUpload(HttpServletResponse response){
+	/*public void upload(@RequestParam("file") CommonsMultipartFile file,HttpServletResponse response)throws Exception{
+		
+		init();
+		
+		if (file != null && !file.isEmpty()) {
+			Calendar calendar = Calendar.getInstance();
+		    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMddhhmmss");
+		    filename = getFileName(file.getOriginalFilename()) + "_" + simpleDateFormat.format(calendar.getTime()) + "."
+		    				+ getFileType(file.getOriginalFilename());
+		    DataOutputStream out = new DataOutputStream(new FileOutputStream(uploadDirectory + filename));// 存放文件的绝对路径
+		    InputStream is = null;// 附件输入流
+		    try {
+		    	is = file.getInputStream();
+		        byte[] b = new byte[is.available()];
+		        is.read(b);
+		        out.write(b);
+		    } catch (IOException exception) {
+		        exception.printStackTrace();
+		    } finally {
+		        if (is != null) {
+		        	is.close();
+		        }
+		        if (out != null) {
+		        	out.close();
+		        }
+		    }
+		}
+		
+		doSave(file, response);
+		//doUpload(response);
+	}*/
+	
+	protected void doUpload(HttpServletResponse response, String id){
 		 try {
 	            out = response.getWriter();
 	            StreamResult streamResult = new StreamResult(out);                                      // Used for writing debug errors to the screen.
@@ -107,7 +134,7 @@ public abstract class BaseFileUploadHandler implements IUpload{
 	   
 	            hd.startElement("","","response",atts);                                                 // Start the main response element.
 	 
-	            doResponse();
+	            doResponse(id);
 	           
 	            hd.endElement("","","response");                                                        // End the "response" element.
 	            hd.endDocument();                                                                       // End the XML document.
@@ -137,6 +164,20 @@ public abstract class BaseFileUploadHandler implements IUpload{
 	            out.println(e.getMessage());
 	            System.out.println(e.getMessage());
 	        }
+	}
+	
+	
+
+	@Override
+	public void doResponse(String id) throws SAXException {
+		// TODO Auto-generated method stub
+		AttributesImpl atts = new AttributesImpl();
+		atts.addAttribute("","","id","CDATA","id");                          // Add the "id" attribute of the "field" element. 
+        
+        hd.startElement("","","field",atts);                                                // Start element and set its attribute.
+        hd.characters(id.toCharArray(),0,id.length());          // Set the "field" tag's value.
+        hd.endElement("","","field");                                                       // Close the "field" tag.
+        atts.clear(); 
 	}
 
 	public String getFilename() {
