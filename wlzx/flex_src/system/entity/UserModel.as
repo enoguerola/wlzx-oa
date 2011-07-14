@@ -2,6 +2,7 @@ package system.entity
 {
 	import mx.collections.ArrayCollection;
 	import system.utils.CommonUtils;
+	import mx.controls.Alert;
 	[Bindable]
 	[RemoteClass(alias="system.entity.UserModel")] 
 	
@@ -40,6 +41,7 @@ package system.entity
 		{	
 			var damList:Array = new Array();
 			var roleList:ArrayCollection = ArrayCollection(roles);
+			if(mainRole!=null)roleList.addItem(mainRole);
 			for (var i:int = 0; i < roleList.length; i++){
 				var _role:Object = roleList.getItemAt(i);	
 				for (var j:int = 0; j < _role.dataAccessModes.length; j++){
@@ -54,6 +56,7 @@ package system.entity
 			var has:Boolean=false;
 			var damList:Array =getAllDams();
 			for (var i:int = 0; i < damList.length; i++){
+					//Alert.show(damList[i]);
 				if(damList[i]==symbol){
 					has=true;
 					break;

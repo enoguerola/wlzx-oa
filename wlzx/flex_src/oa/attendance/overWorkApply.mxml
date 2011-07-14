@@ -172,7 +172,7 @@
 						if(sections.split("-")[2]=="1"){
 							result=result.concat("晚上 ");
 						}
-						result=result.concat("   ");
+						result=result.concat("\n");
 						
 					}
 				}
@@ -420,11 +420,11 @@
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
 								
-								<mx:DataGridColumn textAlign="center" headerText="加班时间段"  width="200" >
+								<mx:DataGridColumn textAlign="center" headerText="加班时间段"  width="130" >
 									<mx:itemRenderer>
 										<mx:Component>
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" >
-												<mx1:Text text="{this.outerDocument.timeTip(data.times)}" width="180">
+												<mx1:Text text="{this.outerDocument.timeTip(data.times)}" width="100%">
 													
 												</mx1:Text>
 											</mx:HBox>
@@ -432,11 +432,11 @@
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
 								
-								<mx:DataGridColumn textAlign="center" headerText="加班原因"  width="300" >
+								<mx:DataGridColumn textAlign="center" headerText="加班原因"  width="400" >
 									<mx:itemRenderer>
 										<mx:Component>
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" >
-												<mx1:Text text="{data.reason}" width="180">
+												<mx1:Text text="{data.reason}" width="100%">
 													
 												</mx1:Text>
 											</mx:HBox>
@@ -512,7 +512,7 @@
 										
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="查看" width="100">
+								<mx:DataGridColumn textAlign="center" headerText="查看" width="60">
 									<mx:itemRenderer>
 										<mx:Component>
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0">
@@ -658,13 +658,13 @@
 								<mx:Label  text=""   textAlign="center" id="detail_teacher_id"  visible="false" enabled="false"/>
 							</mx:GridItem>
 							<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5"    verticalAlign="middle" horizontalAlign="center"  width="100">
-								<mx:Label  text="时间"  textAlign="center" id="detail_time_label"/>
+								<mx1:Text  text="时间"  textAlign="center" id="detail_time_label"/>
 							</mx:GridItem>
 							<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5"    verticalAlign="middle" horizontalAlign="left"  width="100%">
 							
-								<mx:Label id="detail_times">
+								<mx1:Text  id="detail_times">
 									
-								</mx:Label>
+								</mx1:Text>
 								
 							</mx:GridItem>
 							
