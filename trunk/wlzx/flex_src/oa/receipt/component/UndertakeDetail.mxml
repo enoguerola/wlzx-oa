@@ -24,6 +24,7 @@
 			
 			private var hgroup0:HGroup = new HGroup();
 			private var hgroup1:HGroup = new HGroup();
+			private var fileflowid:String;
 			
 			override protected function fileFlowServiceGetList_result(event:ResultEvent):void
 			{
@@ -42,12 +43,13 @@
 				{
 					file = list.getItemAt(index) as FileFlowModel;
 					if(file.type != 0)
-						break;
+						continue;
 					var text:TextArea = new TextArea();
 					text.text = file.text;
 					text.editable = false;
 					text.width = 150;
 					text.height = 100;
+					setNameAndDate(text, file);
 					hgroup0.addElement(text);
 				}
 				hgroup1.percentWidth = 100;
@@ -56,23 +58,31 @@
 				p_label.percentWidth = 10;
 				p_label.styleName = "receipt_formhead";
 				hgroup1.addElement(p_label);
-				for(index; index < length; index ++)
+				for(index = 0; index < length; index ++)
 				{
 					file = list.getItemAt(index) as FileFlowModel;
 					if(file.type != 1)
-						break;
+						continue;
 					var text:TextArea = new TextArea();
 					text.text = file.text;
 					text.editable = false;
 					text.width = 150;
 					text.height = 100;
+					setNameAndDate(text, file);
 					hgroup1.addElement(text);
 				}
 				for(index; index < length; index ++)
 				{
 					file = list.getItemAt(index) as FileFlowModel;
-					if(file.user == this.parentApplication.account || "超级管理员" == this.parentApplication.account)
+					if(file.user == this.parentApplication.account && file.type == 2)
 					{
+						fileflowid = file.id;
+						if(file.isCompleted == 1)
+							save1.enabled = false;
+					}
+					else if("超级管理员" == this.parentApplication.account && file.type == 2)
+					{
+						fileflowid = "super_root";
 						if(file.isCompleted == 1)
 							save1.enabled = false;
 					}
@@ -84,8 +94,12 @@
 			
 			override protected function doSave(isCompleted:int):void
 			{
+				if(fileflowid == "super_root")
+					return;
 				var hg0:int = hgroup0.numElements - 1;
 				var hg1:int = hgroup1.numElements - 1;
+				super.fileFlowServiceRO.save(fileflowid, "", isCompleted);
+				/*
 				for(var index:int = hg0 + hg1; index < super.list.length; index++)
 				{
 					var fileFlow:FileFlowModel = list.getItemAt(index) as FileFlowModel;
@@ -93,7 +107,7 @@
 					{
 						super.fileFlowServiceRO.save(fileFlow.id, "", isCompleted);
 					}
-				}
+				}*/
 			}
 			
 			override protected function fileFlowServiceSave_result(event:ResultEvent):void

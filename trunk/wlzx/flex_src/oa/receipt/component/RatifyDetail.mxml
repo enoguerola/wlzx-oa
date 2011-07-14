@@ -24,6 +24,7 @@
 			
 			private var hgroup0:HGroup = new HGroup();
 			private var hgroup1:HGroup = new HGroup();
+			private var fileflowid:String;
 			
 			
 			override protected function fileFlowServiceGetList_result(event:ResultEvent):void
@@ -43,13 +44,15 @@
 				{
 					file = list.getItemAt(index) as FileFlowModel;
 					if(file.type != 0)
-						break;
+						continue;
 					var text:TextArea = new TextArea();
 					text.text = file.text;
 					text.editable = false;
 					text.width = 150;
 					text.height = 100;
 					hgroup0.addElement(text);
+					//添加名字和时间
+					setNameAndDate(text, file);
 				}
 				hgroup1.percentWidth = 100;
 				var p_label:FormHeading = new FormHeading();
@@ -57,20 +60,35 @@
 				p_label.percentWidth = 10;
 				p_label.styleName = "receipt_formhead";
 				hgroup1.addElement(p_label);
-				for(index; index < length; index ++)
+				for(index = 0; index < length; index ++)
 				{
 					file = list.getItemAt(index) as FileFlowModel;
+					if(file.isCompleted == 1)
+					{
+						save0.enabled = false;
+						save1.enabled = false;
+					}
+					if(file.type != 1)
+						continue;
 					var text:TextArea = new TextArea();
 					text.text = file.text;
 					text.editable = false;
 					text.width = 150;
 					text.height = 100;
+					text.id = file.id;
 					if(file.user == this.parentApplication.account && file.isCompleted == 0)
 					{
+						fileflowid = file.id;
 						text.editable = true;
 					}else if("超级管理员" == this.parentApplication.account)
 					{
+						fileflowid = "super_root";
 						text.editable = true;
+					}
+					if(file.isCompleted)
+					{
+						//添加名字和时间
+						setNameAndDate(text, file);
 					}
 					hgroup1.addElement(text);
 				}
@@ -81,18 +99,18 @@
 			override protected function doSave(isCompleted:int):void
 			{
 				var h0:int = hgroup0.numElements;
+				if(fileflowid == "super_root")
+					return;
+				
 				for (var i:int=1;i < hgroup1.numElements;i++)
 				{
 					var t:TextArea= hgroup1.getElementAt(i) as TextArea;
-					var fileFlow:FileFlowModel = list.getItemAt(i-2+h0) as FileFlowModel;
-					if(fileFlow.user == this.parentApplication.account)
+					if(t.id == fileflowid)
 					{
 						if(t.editable)
-							super.fileFlowServiceRO.save(fileFlow.id, t.text, isCompleted);
+							super.fileFlowServiceRO.save(t.id, t.text, isCompleted);
 						else
 							Alert.show("不能重复提交");
-					}else if("超级管理员" == this.parentApplication.account){
-						super.fileFlowServiceRO.save(fileFlow.id, t.text, isCompleted);
 					}
 				}
 			}
@@ -103,7 +121,9 @@
 				var h0:int = hgroup0.numElements;
 				if(f.isCompleted)
 				{
-					for (var i:int=1;i < hgroup1.numElements;i++)
+					save1.enabled = false;
+					save0.enabled = false;
+					/*for (var i:int=1;i < hgroup1.numElements;i++)
 					{
 						var t:TextArea= hgroup1.getElementAt(i) as TextArea;
 						var fileFlow:FileFlowModel = list.getItemAt(i-2+h0) as FileFlowModel;
@@ -111,7 +131,7 @@
 						{
 							t.editable = false;
 						}
-					}
+					}*/
 				}
 			}
 			
