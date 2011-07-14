@@ -8,21 +8,24 @@
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
 		<s:RemoteObject concurrency="last" fault="system_faultHandler(event)" destination="fileFlowServiceDest" id="fileFlowServiceRO" showBusyCursor="true">
-			<s:method concurrency="last" name="getList" result="getList_resultHandle(event)"/>
+			<s:method concurrency="last" name="getAllList" result="getList_resultHandle(event)"/>
 		</s:RemoteObject>
 	</fx:Declarations>
 	<fx:Script>
 		<![CDATA[
+			import basic.utils.DateUtil;
+			
 			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
+			import mx.managers.PopUpManager;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
-			import mx.managers.PopUpManager;
+			import mx.controls.dataGridClasses.DataGridColumn;
 			
 			private function init():void
 			{
 				var id:String = this.id;
-				fileFlowServiceRO.getList(id);
+				fileFlowServiceRO.getAllList(id);
 			}
 			
 			protected function system_faultHandler(event:FaultEvent):void
@@ -34,6 +37,34 @@
 			{
 				var list:ArrayCollection = event.result as ArrayCollection;
 				flowRecords.dataProvider = list;
+			}
+			
+			private function labelType(item:Object, column:DataGridColumn):String
+			{
+				var type:int = item.type;
+				if(type == 0)
+					return "拟办";
+				else if(type == 1)
+					return "批示";
+				else if(type == 2)
+					return "承办";
+				else
+					return "传阅";
+			}
+			
+			private function labelUser(item:Object, column:DataGridColumn):String
+			{
+				var user:String = item.user;
+				return this.parentApplication.getTeacherNameByAccountId(user);
+			}
+			
+			private function labelCompleted(item:Object, column:DataGridColumn):String
+			{
+				var isCompleted:int = item.isCompleted;
+				if(isCompleted)
+					return "已完成";
+				else
+					return "未完成";
 			}
 		]]>
 	</fx:Script>
@@ -48,10 +79,10 @@
 								  paddingRight="10" paddingTop="10" verticalAlign="middle" horizontalCenter="0" verticalScrollPolicy="auto" y="10">
 						<mx:columns>
 							<mx:DataGridColumn dataField="id" headerText="序号" width="100"/>
-							<mx:DataGridColumn dataField="userName" headerText="流转类型" width="100"/>
-							<mx:DataGridColumn dataField="mainDepartmentName" headerText="操作人" width="100"/>
-							<mx:DataGridColumn dataField="mainRoleName" headerText="操作时间" width="150"/>
-							<mx:DataGridColumn dataField="officePhone" headerText="是否完成"/>
+							<mx:DataGridColumn headerText="流转类型" width="100" labelFunction="labelType"/>
+							<mx:DataGridColumn headerText="操作人" width="100" labelFunction="labelUser"/>
+							<mx:DataGridColumn dataField="completedDate" headerText="操作时间" width="150" labelFunction="DateUtil.datagridFormatDate"/>
+							<mx:DataGridColumn headerText="是否完成" labelFunction="labelCompleted"/>
 						</mx:columns>
 					</mx:DataGrid>
 				</s:Panel>

@@ -24,7 +24,7 @@ public class FileFlowModel extends BaseModel {
 	
 	public static enum EType{
 		DeviseHandling(0, "拟办"),
-		RatifyHandling(1, "批办"),
+		RatifyHandling(1, "批示"),
 		Undertake(2, "承办"),
 		Circulate(3, "传阅");
 		

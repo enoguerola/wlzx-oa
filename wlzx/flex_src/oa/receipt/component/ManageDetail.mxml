@@ -71,54 +71,16 @@
 					setNameAndDate(text, file);
 					hgroup1.addElement(text);
 				}
-				for(index = 0; index < length; index ++)
-				{
-					file = list.getItemAt(index) as FileFlowModel;
-					if(file.user == this.parentApplication.account && file.type == 3)
-					{
-						fileflowid = file.id;
-						if(file.isCompleted == 1)
-							save1.enabled = false;
-					}else if("超级管理员" == this.parentApplication.account && file.type == 3)
-					{
-						fileflowid = "super_root";
-						if(file.isCompleted == 1)
-							save1.enabled = false;
-					}
-				}
 				inputGroup.addElement(hgroup0);
 				inputGroup.addElement(hgroup1);
 				//inputGroup.addElement(hgroup2);
-			}
-			
-			override protected function doSave(isCompleted:int):void
-			{
-				if(fileflowid == "super_root")
-					return;
-				var hg0:int = hgroup0.numElements - 1;
-				var hg1:int = hgroup1.numElements - 1;
-				super.fileFlowServiceRO.save(fileflowid, "", isCompleted);/*
-				for(var index:int = hg0 + hg1; index < super.list.length; index++)
-				{
-					var fileFlow:FileFlowModel = list.getItemAt(index) as FileFlowModel;
-					if(fileFlow.user == this.parentApplication.account || "超级管理员" == this.parentApplication.account)
-					{
-						if(fileFlow.type == 3)
-							super.fileFlowServiceRO.save(fileFlow.id, "", isCompleted);
-					}
-				}*/
-			}
-			
-			override protected function fileFlowServiceSave_result(event:ResultEvent):void
-			{
-				save1.enabled = false;
 			}
 			
 			override protected function init():void
 			{
 				super.init();
 				save0.visible = false;
-				save1.label = "已阅";
+				save1.visible = false;
 			}
 			
 		]]>

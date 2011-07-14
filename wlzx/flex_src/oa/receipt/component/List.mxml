@@ -69,7 +69,7 @@
 				</mx:VBox>
 			</mx:VBox>
 			<mx:VBox width="100%" height="75%"  verticalAlign="middle" horizontalAlign="center" paddingTop="20">
-				<receipt:datagrid id="list"/>
+				<receipt:DRUCgrid id="list"/>
 			</mx:VBox>
 		</mx:VBox>
 	</mx:Panel>

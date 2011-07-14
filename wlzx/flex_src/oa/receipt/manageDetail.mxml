@@ -14,30 +14,45 @@
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
 			
+			import oa.entity.receipt.ReceiptModel;
+			
+			public var receipt:ReceiptModel = new ReceiptModel();
+			
+			public var _hao:String;
+			public var _zi:String;
+			public var in_date:String;
+			public var inNumber:String;
+			public var subject:String;
+			public var office:String;
+			public var status:int;
+			
 			private function init():void
 			{
-				var id:String = this.id;
-				receiptServiceRO.get(id);
+				var parms:String=((Object)(this.owner)).id;
+				receiptServiceRO.get(parms);
 			}
 			
 			protected function receiptServiceGet_result(event:ResultEvent):void
 			{
 				// TODO Auto-generated method stub
-				// for first page 
+				// for first page
 				receipt = event.result as ReceiptModel;
-				Alert.show(receipt.title);
 				receipt_text.title.text = receipt.title;
 				receipt_text.summary.text = receipt.summary;
+				receipt_text.title.enabled = false;
+				receipt_text.summary.enabled = false;
+				receipt_text.title_string_validate.triggerEvent = "";
+				receipt_text.summary_string_validate.triggerEvent = "";
 				var number:Array = receipt.doNumber.split("+");
-				receipt_file.zhutici.text = number.pop();
-				receipt_file._zi.text = number.pop();
+				_hao = number.pop();
+				_zi = number.pop();
 				if(receipt.inDate != null)
-					receipt_file.in_date.text = receipt.inDate.fullYear + "-" + receipt.inDate.month + '-' + receipt.inDate.day;
-				receipt_file.in_number.text = receipt.inNumber;
-				receipt_file.zhutici.text = receipt.subject;
-				receipt_text.title.text = receipt.title;
-				receipt_file.in_department.text = receipt.office;
-				//attachments here
+					in_date = receipt.inDate.fullYear + "-" + receipt.inDate.month + '-' + receipt.inDate.day;
+				inNumber = receipt.inNumber;
+				subject = receipt.subject;
+				office = receipt.office;
+				status = receipt.status;
+				//for attments
 			}
 			
 			protected function faultHandler(event:FaultEvent):void
@@ -52,14 +67,13 @@
 		<s:RemoteObject concurrency="last" destination="receiptServiceDest" id="receiptServiceRO" fault="faultHandler(event)" showBusyCursor="true">
 			<s:method concurrency="last" name="get" result="receiptServiceGet_result(event)"/>
 		</s:RemoteObject>
-		<valueObjects:ReceiptModel id="receipt"/>
 	</fx:Declarations>
 	<mx:TabNavigator width="100%" height="100%">
 		<s:NavigatorContent label="来文正文" width="100%" height="100%">
 			<content:receiptText width="100%" id="receipt_text"/>
 		</s:NavigatorContent>
 		<s:NavigatorContent label="来文登记单" width="100%" height="100%">
-			<content:receiptFile width="100%" id="receipt_file"/>
+			<content:ManageDetail width="100%" id="receipt_file"/>
 		</s:NavigatorContent>
 	</mx:TabNavigator>
 </mx:Module>
