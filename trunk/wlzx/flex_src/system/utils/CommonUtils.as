@@ -41,6 +41,14 @@ package system.utils
 			var currentDate:Date=new Date();
 			return new Date(currentDate.getFullYear(),currentDate.getMonth()+1,0);
 		}
+		public static function currentWeekBeginDate():Date{
+			var currentDate:Date=new Date();
+			return new Date(currentDate.getFullYear(),currentDate.getMonth(),currentDate.date-((currentDate.day+6)%7));
+		}
+		public static function currentWeekEndDate():Date{
+			var currentDate:Date=new Date();
+			return new Date(currentDate.getFullYear(),currentDate.getMonth(),currentDate.date-((currentDate.day+6)%7)+6);
+		}
 		public static function int2Boolean(num:int):Boolean{
 			if(num==0)return false;
 			else return true;
