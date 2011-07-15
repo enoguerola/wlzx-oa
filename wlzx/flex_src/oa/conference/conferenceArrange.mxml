@@ -67,14 +67,20 @@
 			
 			private function init():void {	
 				var parms:String=((Object)(this.owner)).id;
-				if(parms=='add'){
-					this.currentState='add';
-					returnArea.height=0;
+				//Alert.show(parms);
+				if(parms!=null&&parms!='null'&&parms!=''){
+					//this.currentState="";
+					enterEditConference(parms);
 				}
+//				if(parms=='add'){
+//					this.currentState='add';
+//					returnArea.height=0;
+//				}
 				//				else //if(parms=='list') 
 				//				{
 				//					this.currentState='list';
 				//				}
+				
 				search_account.dataProvider=this.parentApplication.allTeacherAcccounts;
 				search_status.selectedIndex=1;
 				search();

@@ -23,7 +23,8 @@ public class TaskVO {
 		AskForLeave_Cancle(11, "销假审批"),
 		OverWork_OfficalApprove(12, "加班处室审批"),
 		MoveRestDay_OfficalApprove(13, "调休处室审批"),
-		MoveRestDay_VicePrincipalApprove(14, "调休副校长审批");
+		MoveRestDay_VicePrincipalApprove(14, "调休副校长审批"),
+		Conference_Approve(15, "会议室安排落实");
 		
 		private Integer value;
 		private String text;
@@ -56,8 +57,8 @@ public class TaskVO {
 		AskForLeave_Cancle(11, "您有一件销假申请事务需要处理"),
 		OverWork_OfficalApprove(12, "您有一件加班申请事务需要处理"),
 		MoveRestDay_OfficalApprove(13, "您有一件调休申请事务需要处理"),
-		MoveRestDay_VicePrincipalApprove(14, "您有一件调休申请事务需要处理");
-		
+		MoveRestDay_VicePrincipalApprove(14, "您有一件调休申请事务需要处理"),
+		Conference_Approve(15, "您有一件会议室申请需要审批落实");
 		
 		private Integer value;
 		private String text;

@@ -23,6 +23,7 @@
 		<property name="moveRestDayDAO" ref="moveRestDayDAO" />
 		<property name="overWorkDAO" ref="overWorkDAO" />
 		<property name="takeLeaveDAO" ref="takeLeaveDAO" />
+		<property name="conferenceDAO" ref="conferenceDAO" />
 	</bean>
 	
 	

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml"
 		  implements="mx.core.IToolTip"
-		  width="200"
+		  width="300"
 		  alpha=".8"
 		  backgroundColor="0xCCCCCC"
 		  borderColor="black"

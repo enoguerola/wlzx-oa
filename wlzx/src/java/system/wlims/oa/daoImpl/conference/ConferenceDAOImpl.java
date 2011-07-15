@@ -8,6 +8,7 @@ import org.hibernate.criterion.Restrictions;
 
 import system.BaseDAOImpl;
 import system.utils.StringUtils;
+import system.utils.UtilDateTime;
 import system.wlims.oa.dao.conference.ConferenceDAO;
 import system.wlims.oa.entity.conference.ConferenceModel;
 
@@ -41,7 +42,32 @@ public class ConferenceDAOImpl extends BaseDAOImpl<ConferenceModel> implements C
 		if(StringUtils.isNotEmpty(applyBeginTime))
 			criteria.add(Restrictions.ge("applyDateTime",  Date.valueOf(applyBeginTime)));
 		if(StringUtils.isNotEmpty(applyEndTime))
-			criteria.add(Restrictions.ge("applyDateTime",  Date.valueOf(applyEndTime)));
+			criteria.add(Restrictions.le("applyDateTime",  Date.valueOf(applyEndTime)));
+		
+		return getListByCriteria(criteria);
+	}
+	//返回有冲突的会议记录
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ConferenceModel> validateTimeAndPositionConflict(String id,
+			java.util.Date date, String beginTime, String endTime,
+			String placeId,String states) {
+		// TODO Auto-generated method stub
+		DetachedCriteria criteria = DetachedCriteria.forClass(ConferenceModel.class);
+		
+		if(StringUtils.isNotEmpty(id))
+			criteria.add(Restrictions.ne("id", id));
+		
+		if(StringUtils.isNotEmpty(placeId))
+			criteria.add(Restrictions.eq("placeId", placeId));
+		if(StringUtils.isNotEmpty(states))
+			criteria.add(Restrictions.sqlRestriction("apply_status in ("+states+")"));
+		if(date!=null)
+			criteria.add(Restrictions.sqlRestriction("date='"+UtilDateTime.toDateString(date)+"'"));
+		
+		if(StringUtils.isNotEmpty(beginTime)&&StringUtils.isNotEmpty(endTime)){
+			criteria.add(Restrictions.and(Restrictions.sqlRestriction("time_begin between'"+beginTime+"' and '"+endTime+"'"), Restrictions.sqlRestriction("time_end between'"+beginTime+"' and '"+endTime+"'")));
+		}
 		
 		return getListByCriteria(criteria);
 	}
