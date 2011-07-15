@@ -186,6 +186,9 @@
 				}else if(typeId>="13"&&typeId<="14"){
 					parent.addTab("moveRestDayApprove-detail"+"_"+id,"调休处理",parent.nav,"oa/attendance/moveRestDayApprove.swf",null,id);
 					
+				}else if(typeId>="15"&&typeId<="15"){
+					parent.addTab("conferenceArrange-detail"+"_"+id,"会议室落实",parent.nav,"oa/conference/conferenceArrange.swf",null,id);
+					
 				}
 			}
 		]]> 		

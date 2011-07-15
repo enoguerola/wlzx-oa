@@ -5,8 +5,6 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
-
 import system.DAOException;
 import system.ServiceException;
 import system.dao.UserDAO;
@@ -204,7 +202,7 @@ public class ConferenceServiceImpl implements ConferenceService {
 					for(ConferenceModel conference : conferences){
 						// 过滤已取消会议
 						if (conference.getApplyStatus().intValue() == ConferenceModel.EStatus.Booking.getValue().intValue()||conference.getApplyStatus().intValue() == ConferenceModel.EStatus.Arranged.getValue().intValue()) {
-							String conferenceDate = UtilDateTime.toDateString(conference.getApplyDateTime());
+							String conferenceDate = UtilDateTime.toDateString(conference.getMeetingDate());
 //							if(!data.containsKey(conferenceDate)){
 //								data.put(conferenceDate, new LinkedHashMap<String, Map<String,List<ConferenceModel>>>());
 //							}
@@ -243,5 +241,25 @@ public class ConferenceServiceImpl implements ConferenceService {
 
 	public void setPlaceDao(PlaceDao placeDao) {
 		this.placeDao = placeDao;
+	}
+
+	@Override
+	public List<String> validateTimeAndPositionConflict(String id,
+			Date date, String beginTime, String endTime, String placeId) {
+		// TODO Auto-generated method stub
+		List<String> conflictConferences=new ArrayList<String>();
+		List<ConferenceModel> list=conferenceDAO.validateTimeAndPositionConflict(id, date, beginTime, endTime, placeId,ConferenceModel.EStatus.Booking.getValue()+","+ConferenceModel.EStatus.Arranged.getValue());
+		if(list!=null&&list.size()>0){
+			for(ConferenceModel model:list){
+				String data = model.getBeginTime() + "," + 
+								model.getEndTime() + "," + 
+								model.getName()+ ","+
+								model.getContactUserId()+","+
+								model.getApplyStatus();
+				conflictConferences.add(data);
+				
+			}
+		}
+		return conflictConferences;
 	}
 }

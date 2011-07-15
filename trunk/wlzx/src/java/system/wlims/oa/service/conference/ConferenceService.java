@@ -22,5 +22,5 @@ public interface ConferenceService {
 	public List<ConferenceModel> getConferencesByConditions(String applyUserId, String name,String states,
 			String placeId,String meetingBeginTime, String meetingEndTime,String applyBeginTime, String applyEndTime) ;
 	public List<ConferenceModel> getAttendConferenceByConditions(String userId, String meetingBeginTime, String meetingEndTime) ;
-
+	public  List<String> validateTimeAndPositionConflict(String id,Date date,String beginTime,String endTime,String placeId);
 }

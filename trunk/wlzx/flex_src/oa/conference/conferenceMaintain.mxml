@@ -16,6 +16,8 @@
 		<mx:RemoteObject id="conferenceServiceRO" destination="conferenceServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 			<mx:method name="addConference"  concurrency="last"  result="addConferenceResult_resultHandler(event);" />
 			<mx:method name="updateConference"  concurrency="last"  result="updateConferenceResult_resultHandler(event);" />
+			
+			<mx:method name="validateTimeAndPositionConflict"  concurrency="last"  result="validateTimeAndPositionConflict_resultHandler(event);" />
 			<mx:method name="adjustConferenceById"  concurrency="last"  result="adjustConferenceResult_resultHandler(event);" />
 			<mx:method name="get"  concurrency="last"  result="get_resultHandler(event);" />
 		</mx:RemoteObject>
@@ -87,6 +89,23 @@
 //				var parent:Object=(Object)(this.owner);
 //				parent.currentState='list';
 //				parent.search();
+			}
+			protected function validateTimeAndPositionConflict_resultHandler(event:ResultEvent):void
+			{
+				//unLockWin();
+				var list:ArrayCollection = event.result as ArrayCollection;
+				if(list!=null&&list.length>0){//冲突
+					var errorMessageArray:Array = [];
+						for(var i:int;i<list.length;i++){
+							var errFields:String=list.getItemAt(i) as String;
+							errorMessageArray.push((errFields.split(",")[0]+"--"+errFields.split(",")[1]+": " + errFields.split(",")[2]+"["+ (errFields.split(",")[4]=='1'?'预约中':'已安排')+"]"));
+						}
+						
+					Alert.show(errorMessageArray.join("\n\n"), "该场地该时间段存在以下冲突，请查阅会议安排表后调整", Alert.OK);
+				}else{//不冲突
+					conferenceServiceRO.adjustConferenceById(form.id,form.meetingDate,form.beginTime,form.endTime,form.placeId);
+				}
+				
 			}
 			protected function adjustConferenceResult_resultHandler(event:ResultEvent):void
 			{
@@ -236,7 +255,8 @@
 						form.beginTime=beginTime;
 						form.endTime=endTime;
 						form.placeId=places.selectedItem.data;						
-						conferenceServiceRO.adjustConferenceById(form.id,form.meetingDate,form.beginTime,form.endTime,form.placeId);
+						conferenceServiceRO.validateTimeAndPositionConflict(form.id,form.meetingDate,form.beginTime,form.endTime,form.placeId);
+						//lockWin();
 					}
 				}
 			}
@@ -252,7 +272,7 @@
 				attendNum.text="";
 				departments.selectedIndex=0
 				linkman_account.selectedItem=null;
-				Alert.show("aa");
+				//Alert.show("aa");
 //				linkman_account_id.text="";
 //				linkman_account.text="";
 				contactPhone.text="";

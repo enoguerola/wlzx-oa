@@ -11,8 +11,10 @@ import java.util.List;
 import system.wlims.oa.dao.attendance.MoveRestDayDAO;
 import system.wlims.oa.dao.attendance.OverWorkDAO;
 import system.wlims.oa.dao.attendance.TakeLeaveDAO;
+import system.wlims.oa.dao.conference.ConferenceDAO;
 import system.wlims.oa.dao.course.adjust.CourseAdjustDAO;
 import system.wlims.oa.dao.task.TaskDAO;
+import system.wlims.oa.entity.conference.ConferenceModel;
 import system.wlims.oa.entity.course.adjust.ApplyModel;
 import system.wlims.oa.entity.task.TaskModel;
 import system.wlims.oa.entity.workFlow.moveRestDay.MoveRestDayForm;
@@ -28,7 +30,7 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 	private MoveRestDayDAO moveRestDayDAO;
 	private OverWorkDAO overWorkDAO;
 	private TakeLeaveDAO takeLeaveDAO;
-	
+	private ConferenceDAO conferenceDAO;
 	@Override
 	public List<TaskVO> getAllDealTasksByCondition(String accountId, String beginTime, String endTime) {
 		// TODO Auto-generated method stub
@@ -296,7 +298,30 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 						list.add(taskVO1);
 						
 					
-				}		
+				}
+		//会议室申请落实审批任务
+		List<ConferenceModel> conferenceList=conferenceDAO.getConferencesByConditions(null, null, null, null, null, null, beginTime, endTime);
+		if(conferenceList!=null&&conferenceList.size()>0)
+			for(ConferenceModel conferenceModel:conferenceList){
+						TaskVO taskVO1=new TaskVO();
+						taskVO1.setType(TaskVO.EType.Conference_Approve.getText());
+						taskVO1.setTypeId(TaskVO.EType.Conference_Approve.getValue().intValue());
+						taskVO1.setAssignerId(TaskVO.EAssigner.Default.getValue().intValue()+"");
+						taskVO1.setId(conferenceModel.getId());
+						
+						taskVO1.setPostTime(UtilDateTime.toDateString(conferenceModel.getApplyDateTime(),"yyyy-MM-dd HH:mm:ss"));
+						taskVO1.setTitle(TaskVO.ETitle.Conference_Approve.getText());
+						if(conferenceModel.getApplyStatus().intValue()==ConferenceModel.EStatus.Cancled.getValue().intValue()||conferenceModel.getApplyStatus().intValue()==ConferenceModel.EStatus.ArrangedCancled.getValue().intValue()){
+								taskVO1.setStatus(TaskVO.EStatus.Cancled.getText());
+						}else if(conferenceModel.getApplyStatus().intValue()==ConferenceModel.EStatus.Booking.getValue().intValue()){
+								taskVO1.setStatus(TaskVO.EStatus.ToBeDeal.getText());
+						}
+						else taskVO1.setStatus(TaskVO.EStatus.Finished.getText());
+						taskVO1.setWorkersIds(conferenceModel.getApplyUserId());
+						list.add(taskVO1);
+						
+					
+				}
 		return list;
 	}
 	@Override
@@ -542,7 +567,27 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 						list.add(taskVO1);
 				}	
 					
-			}		
+			}	
+		//会议室申请落实审批任务
+		List<ConferenceModel> conferenceList=conferenceDAO.getConferencesByConditions(null, null, null, null, null, null, beginTime, endTime);
+		if(conferenceList!=null&&conferenceList.size()>0)
+			for(ConferenceModel conferenceModel:conferenceList){
+				if(conferenceModel.getApplyStatus().intValue()==ConferenceModel.EStatus.Booking.getValue().intValue()){
+						TaskVO taskVO1=new TaskVO();
+						taskVO1.setType(TaskVO.EType.Conference_Approve.getText());
+						taskVO1.setTypeId(TaskVO.EType.Conference_Approve.getValue().intValue());
+						taskVO1.setAssignerId(TaskVO.EAssigner.Default.getValue().intValue()+"");
+						taskVO1.setId(conferenceModel.getId());
+						
+						taskVO1.setPostTime(UtilDateTime.toDateString(conferenceModel.getApplyDateTime(),"yyyy-MM-dd HH:mm:ss"));
+						taskVO1.setTitle(TaskVO.ETitle.Conference_Approve.getText());
+						
+						taskVO1.setStatus(TaskVO.EStatus.ToBeDeal.getText());
+					
+						taskVO1.setWorkersIds(conferenceModel.getApplyUserId());
+						list.add(taskVO1);
+				}		
+			}
 		return list;
 	}
 	public TaskDAO getTaskDAO() {
@@ -583,6 +628,12 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 
 	public void setTakeLeaveDAO(TakeLeaveDAO takeLeaveDAO) {
 		this.takeLeaveDAO = takeLeaveDAO;
+	}
+	public ConferenceDAO getConferenceDAO() {
+		return conferenceDAO;
+	}
+	public void setConferenceDAO(ConferenceDAO conferenceDAO) {
+		this.conferenceDAO = conferenceDAO;
 	}
 	
 	
