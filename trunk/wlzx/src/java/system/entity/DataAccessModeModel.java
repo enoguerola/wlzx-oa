@@ -30,7 +30,7 @@ public class DataAccessModeModel extends BaseModel{
 	private String value;
 	private Set<OperationModel> operations=new TreeSet<OperationModel>();
 	private Set<DepartmentModel> departments=new TreeSet<DepartmentModel>();
-	
+	private Set<RoleModel> roles=new TreeSet<RoleModel>();
 
 	public String getDetail() {
 		return detail;
@@ -64,5 +64,11 @@ public class DataAccessModeModel extends BaseModel{
 	}
 	public void setDepartments(Set<DepartmentModel> departments) {
 		this.departments = departments;
+	}
+	public Set<RoleModel> getRoles() {
+		return roles;
+	}
+	public void setRoles(Set<RoleModel> roles) {
+		this.roles = roles;
 	}
 }

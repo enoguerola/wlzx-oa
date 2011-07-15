@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2011 年 07 月 07 日 12:58
+-- 生成日期: 2011 年 07 月 15 日 17:14
 -- 服务器版本: 5.0.91
 -- PHP 版本: 5.2.13
 
@@ -72,7 +72,6 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_data_access_mode` (
 --
 
 INSERT INTO `wlzx_system_data_access_mode` (`id`, `name`, `symbol`, `sequence`, `value`, `detail`, `creation_date`, `modified_date`) VALUES
-(7, '全部数据', 'notice_post_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-07 00:00:00', '2011-06-23 23:13:19'),
 (8, '全部数据', 'department_notice_read_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-09 00:00:00', '2011-06-16 00:05:21'),
 (9, '全部数据', 'notice_list_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-09 00:00:00', '2011-06-15 21:51:54'),
 (11, '全部数据', 'work_to_deal_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-14 00:00:00', '2011-06-27 16:15:10'),
@@ -108,7 +107,7 @@ INSERT INTO `wlzx_system_data_access_mode` (`id`, `name`, `symbol`, `sequence`, 
 (46, '全部数据', 'overWork_approve_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-06-10 00:00:00', '2011-06-10 21:15:45'),
 (47, '全部数据', 'moveRestDay_approve_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-06-10 00:00:00', '2011-06-10 21:16:34'),
 (48, '全部数据', 'staffCanculateAttendance_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-06-10 00:00:00', '2011-06-10 21:23:26'),
-(49, '全部数据', 'person_notice_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-06-16 00:00:00', '2011-06-23 23:21:09'),
+(49, '全部数据', 'person_notice_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-06-16 00:00:00', '2011-07-15 17:10:51'),
 (50, '全部数据', 'school_notice_read_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-06-16 00:00:00', '2011-06-16 00:04:50'),
 (51, '全部数据', 'personal_office_workDetail@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-01 00:00:00', '2011-07-01 09:49:35'),
 (52, '全部数据', 'person_office_workToDeal_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-01 00:00:00', '2011-07-01 09:50:45'),
@@ -218,7 +217,6 @@ INSERT INTO `wlzx_system_department_dam_relationship` (`id`, `department_id`, `d
 (40, 1, 12),
 (41, 1, 21),
 (42, 1, 20),
-(44, 1, 7),
 (45, 1, 9),
 (46, 1, 8);
 
@@ -364,7 +362,6 @@ INSERT INTO `wlzx_system_menu` (`id`, `name`, `symbol`, `sequence`, `detail`, `m
 (11, '公共事务管理', 'oa_public_affair', 1, '', 'oa_public_affair', '2011-05-06 00:00:00', '2011-05-07 22:40:33'),
 (12, '公告管理', 'notice_manage', 0, NULL, NULL, '2011-05-06 11:50:32', '2011-05-06 11:50:32'),
 (13, '公告管理', 'notice_list', 4, '', NULL, '2011-05-06 00:00:00', '2011-05-06 11:50:32'),
-(14, '公告发布', 'notice_post', 0, NULL, NULL, '2011-05-06 11:50:32', '2011-05-06 11:50:32'),
 (16, '日程管理', 'scheduleManage', 0, NULL, NULL, '2011-05-06 11:50:32', '2011-05-06 11:50:32'),
 (17, '学校管理', 'oa_school_affair', 4, '', 'oa_school_affair', '2011-05-06 00:00:00', '2011-05-07 22:40:33'),
 (18, '系统管理', 'oa_system_management', 6, '', 'oa_system_management', '2011-05-06 00:00:00', '2011-05-07 22:40:33'),
@@ -406,7 +403,7 @@ INSERT INTO `wlzx_system_menu` (`id`, `name`, `symbol`, `sequence`, `detail`, `m
 (58, '我的消息', 'personal_office_messageDeal', 2, '', '', '2011-06-03 00:00:00', '2011-06-03 11:36:28'),
 (59, '调休申请', 'moveRestDay_apply', 6, '', '', '2011-06-10 00:00:00', '2011-06-10 16:10:32'),
 (60, '调休审批', 'moveRestDay_approve', 2, '', '', '2011-06-10 00:00:00', '2011-06-10 21:14:42'),
-(61, '我的公告', 'person_notice', 1, '', '', '2011-06-16 00:00:00', '2011-06-16 00:01:41'),
+(61, '公告发布', 'person_notice', 1, '', '', '2011-06-16 00:00:00', '2011-06-16 00:01:41'),
 (62, '学校公告', 'school_notice_read', 3, '', '', '2011-06-16 00:00:00', '2011-06-16 00:02:52'),
 (63, '待办工作', 'person_office_workToDeal', 1, '', '', '2011-07-01 00:00:00', '2011-07-01 09:46:03'),
 (64, '收文登记', 'receipt_register_menu', 0, '', '', '2011-07-02 00:00:00', '2011-07-02 10:38:04'),
@@ -442,7 +439,6 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_menu_module_relationship` (
 --
 
 INSERT INTO `wlzx_system_menu_module_relationship` (`id`, `menu_id`, `module_id`) VALUES
-(5, 14, 5),
 (6, 20, 6),
 (7, 13, 7),
 (10, 26, 10),
@@ -536,7 +532,6 @@ INSERT INTO `wlzx_system_menu_treeship` (`id`, `parent_id`, `child_id`) VALUES
 (6, 11, 12),
 (7, 11, 16),
 (8, 12, 13),
-(9, 12, 14),
 (16, 12, 20),
 (17, 16, 21),
 (18, 16, 22),
@@ -639,7 +634,6 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_module` (
 --
 
 INSERT INTO `wlzx_system_module` (`id`, `name`, `symbol`, `sequence`, `detail`, `creation_date`, `modified_date`, `url`, `parms`) VALUES
-(5, '公告发布主模块', 'notice_post_main', 0, '', '2011-05-07 00:00:00', '2011-06-23 23:13:19', 'oa/notice/personNotice.swf', 'add'),
 (6, '部门公告阅读主模块', 'department_notice_read_main', 0, '', '2011-05-09 00:00:00', '2011-06-16 00:05:21', 'oa/notice/noticeList.swf', 'department'),
 (7, '公告管理主模块', 'notice_list_main', 0, '', '2011-05-09 00:00:00', '2011-06-15 21:51:54', 'oa/notice/noticeManage.swf', 'list'),
 (10, '待办工作主模块', 'work_to_deal_main', 0, '', '2011-05-14 00:00:00', '2011-06-27 16:15:10', 'oa/task/waittingTask.swf', ''),
@@ -668,7 +662,7 @@ INSERT INTO `wlzx_system_module` (`id`, `name`, `symbol`, `sequence`, `detail`, 
 (43, '加班审批主模块', 'overWork_approve_main', 0, '', '2011-06-10 00:00:00', '2011-06-10 21:15:45', 'oa/attendance/overWorkApprove.swf', NULL),
 (44, '调休审批主模块', 'moveRestDay_approve_main', 0, '', '2011-06-10 00:00:00', '2011-06-10 21:16:34', 'oa/attendance/moveRestDayApprove.swf', NULL),
 (45, '员工考勤统计主模块', 'staffCanculateAttendance_main', 0, '', '2011-06-10 00:00:00', '2011-06-10 21:23:26', 'oa/attendance/canculateAttendance.swf', NULL),
-(46, '我的公告主模块', 'person_notice_main', 0, '', '2011-06-16 00:00:00', '2011-06-23 23:21:09', 'oa/notice/personNotice.swf', 'list'),
+(46, '公告发布主模块', 'person_notice_main', 0, '', '2011-06-16 00:00:00', '2011-07-15 17:10:51', 'oa/notice/personNotice.swf', 'list'),
 (47, '学校公告主模块', 'school_notice_read_main', 0, '', '2011-06-16 00:00:00', '2011-06-16 00:04:50', 'oa/notice/noticeList.swf', 'school'),
 (48, '我的工作主模块', 'personal_office_workDetail', 0, '', '2011-07-01 00:00:00', '2011-07-01 09:49:35', 'oa/task/personTask.swf', ''),
 (49, '待办工作主模块', 'person_office_workToDeal_main', 0, '', '2011-07-01 00:00:00', '2011-07-01 09:50:45', 'oa/task/waittingTask.swf', ''),
@@ -704,7 +698,6 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_module_operation_relationship` (
 --
 
 INSERT INTO `wlzx_system_module_operation_relationship` (`id`, `module_id`, `operation_id`) VALUES
-(7, 5, 7),
 (8, 6, 8),
 (9, 7, 9),
 (11, 10, 11),
@@ -792,7 +785,6 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_operation` (
 --
 
 INSERT INTO `wlzx_system_operation` (`id`, `name`, `symbol`, `sequence`, `rs_type`, `rs_value`, `detail`, `creation_date`, `modified_date`) VALUES
-(7, '页面访问', 'notice_post_main@defaultVisit@', 0, 'URL', '/oa/notice/personNotice.swf*', NULL, '2011-05-07 00:00:00', '2011-06-23 23:13:19'),
 (8, '页面访问', 'department_notice_read_main@defaultVisit@', 0, 'URL', '/oa/notice/noticeList.swf*', NULL, '2011-05-09 00:00:00', '2011-06-16 00:05:21'),
 (9, '页面访问', 'notice_list_main@defaultVisit@', 0, 'URL', '/oa/notice/noticeManage.swf*', NULL, '2011-05-09 00:00:00', '2011-06-15 21:51:54'),
 (11, '页面访问', 'work_to_deal_main@defaultVisit@', 0, 'URL', '/oa/task/waittingTask.swf*', NULL, '2011-05-14 00:00:00', '2011-06-27 16:15:10'),
@@ -826,7 +818,7 @@ INSERT INTO `wlzx_system_operation` (`id`, `name`, `symbol`, `sequence`, `rs_typ
 (44, '页面访问', 'overWork_approve_main@defaultVisit@', 0, 'URL', '/oa/attendance/overWorkApprove.swf*', NULL, '2011-06-10 00:00:00', '2011-06-10 21:15:45'),
 (45, '页面访问', 'moveRestDay_approve_main@defaultVisit@', 0, 'URL', '/oa/attendance/moveRestDayApprove.swf*', NULL, '2011-06-10 00:00:00', '2011-06-10 21:16:34'),
 (46, '页面访问', 'staffCanculateAttendance_main@defaultVisit@', 0, 'URL', '/oa/attendance/canculateAttendance.swf*', NULL, '2011-06-10 00:00:00', '2011-06-10 21:23:26'),
-(47, '页面访问', 'person_notice_main@defaultVisit@', 0, 'URL', '/oa/notice/personNotice.swf*', NULL, '2011-06-16 00:00:00', '2011-06-23 23:21:09'),
+(47, '页面访问', 'person_notice_main@defaultVisit@', 0, 'URL', '/oa/notice/personNotice.swf*', NULL, '2011-06-16 00:00:00', '2011-07-15 17:10:51'),
 (48, '页面访问', 'school_notice_read_main@defaultVisit@', 0, 'URL', '/oa/notice/noticeList.swf*', NULL, '2011-06-16 00:00:00', '2011-06-16 00:04:50'),
 (49, '页面访问', 'personal_office_workDetail@defaultVisit@', 0, 'URL', '/oa/task/personTask.swf*', NULL, '2011-07-01 00:00:00', '2011-07-01 09:49:35'),
 (50, '页面访问', 'person_office_workToDeal_main@defaultVisit@', 0, 'URL', '/oa/task/waittingTask.swf*', NULL, '2011-07-01 00:00:00', '2011-07-01 09:50:45'),
@@ -862,7 +854,6 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_operation_dam_relationship` (
 --
 
 INSERT INTO `wlzx_system_operation_dam_relationship` (`id`, `operation_id`, `dam_id`) VALUES
-(7, 7, 7),
 (8, 8, 8),
 (9, 9, 9),
 (11, 11, 11),
@@ -1022,7 +1013,6 @@ INSERT INTO `wlzx_system_role_dam_relationship` (`id`, `role_id`, `dam_id`) VALU
 (61, 1, 14),
 (62, 1, 11),
 (63, 1, 12),
-(65, 1, 7),
 (66, 1, 9),
 (67, 1, 8),
 (68, 1, 28),
@@ -1155,7 +1145,6 @@ INSERT INTO `wlzx_system_role_dam_relationship` (`id`, `role_id`, `dam_id`) VALU
 (207, 34, 25),
 (208, 34, 27),
 (209, 34, 28),
-(210, 34, 7),
 (211, 34, 32),
 (212, 34, 31),
 (213, 34, 51),
@@ -1334,7 +1323,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_user` (
 --
 
 INSERT INTO `wlzx_system_user` (`id`, `symbol`, `sequence`, `name`, `password`, `last_login_time`, `last_login_ip`, `account_style`, `person_id`, `person_name`, `email`, `creation_date`, `modified_date`, `active`, `main_role_id`, `main_department_id`) VALUES
-(1, 'super_root', 0, 'super_root', '134bca5421a15476a1e5ebaebdba1ede', '2011-07-07 10:16:11', '127.0.0.1', -1, NULL, NULL, NULL, '2011-05-07 11:04:22', '2011-07-05 17:33:02', 1, NULL, NULL),
+(1, 'super_root', 0, 'super_root', '134bca5421a15476a1e5ebaebdba1ede', '2011-07-15 17:11:23', '127.0.0.1', -1, NULL, NULL, NULL, '2011-05-07 11:04:22', '2011-07-05 17:33:02', 1, NULL, NULL),
 (708, '666888', 0, '666888', '75e266f182b4fa3625d4a4f4f779af54', '2011-07-06 11:52:20', '127.0.0.1', 0, NULL, NULL, '', '2011-07-05 12:57:49', '2011-07-05 12:57:51', 1, 1, 1),
 (709, '666900', 0, '666900', '2e6d1125057ec7c4402a5a2ad84f6601', NULL, '', 0, NULL, NULL, '', '2011-07-05 12:57:51', '2011-07-05 12:57:52', 1, NULL, 1),
 (710, '666988', 0, '666988', 'cb3d82f7133330c48bee639908125906', NULL, '', 0, NULL, NULL, '', '2011-07-05 12:57:52', '2011-07-05 12:57:53', 1, NULL, 1),

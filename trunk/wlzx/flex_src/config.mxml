@@ -16,6 +16,9 @@
 			<mx:method name="dataAccessModeRemove"  concurrency="last"   result="dataAccessModeRemove_resultHandler(event);" />
 			
 		</mx:RemoteObject>
+		<mx:HTTPService id="reloadAuthHttp" url="reloadSpringSecurityAuthServlet" showBusyCursor="false" method="POST"  fault="systemFaultHandler(event);">  
+			
+		</mx:HTTPService>  
 	</fx:Declarations>
 	<fx:Script>
 		<![CDATA[
@@ -393,6 +396,7 @@
 				if(event.result==true){
 //					Alert.show(selectedNode.childIndex());
 					delete selectedNode.parent().node[selectedNode.childIndex()];
+					reloadAuthHttp.send();
 					disabled();
 				}else{
 					Alert.show("删除菜单失败");
@@ -436,6 +440,7 @@
 				if(event.result==true){
 					//					Alert.show(selectedNode.childIndex());
 					delete selectedNode.parent().node[selectedNode.childIndex()];
+					reloadAuthHttp.send();
 					disabled();
 				}else{
 					Alert.show("删除模块失败");
@@ -488,6 +493,7 @@
 				if(event.result==true){
 					//					Alert.show(selectedNode.childIndex());
 					delete selectedNode.parent().node[selectedNode.childIndex()];
+					reloadAuthHttp.send();
 					disabled();
 				}else{
 					Alert.show("删除操作失败");
@@ -507,6 +513,7 @@
 					//					Alert.show(selectedNode.childIndex());
 					delete selectedNode.parent().node[selectedNode.childIndex()];
 					disabled();
+					reloadAuthHttp.send();
 				}else{
 					Alert.show("删除数据访问方式失败");
 				}

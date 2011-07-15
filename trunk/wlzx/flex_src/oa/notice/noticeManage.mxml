@@ -86,7 +86,10 @@
 				[
 					{label:"请选择", data:null},
 					{label:"重要通知", data:"重要通知"}]);
-			
+			public var noticeEmergenceList:ArrayCollection = new ArrayCollection( 
+				[	{label:"全部", data:null},
+					{label:"紧急", data:"1"},  
+					{label:"普通", data:"0"}]);
 			[Bindable] 
 			public var departmentList:ArrayCollection = new ArrayCollection();
 			
@@ -141,14 +144,15 @@
 				var teacher:String=search_account_id.text;
 				var type:String=search_type.selectedItem.data;
 				var scope:String=search_scope.selectedItem.data;
-				var emergence:int = 0;
-				if(_emergence.selected)
-					emergence = 1;
+//				var emergence:int = 0;
+//				if(_emergence.selected)
+//					emergence = 1;
+				var emergence:String = _emergence.selectedItem.data;
 				var department:String = search_department.selectedItem.data;
 //				Alert.show(department);
 				var submitBeginDate:String=search_date_begin.text;
 				var submitEndDate:String=search_date_end.text;
-				noticeServiceRO.getNoticesByConditions(teacher,type,scope,emergence + "", department, "","1",
+				noticeServiceRO.getNoticesByConditions(teacher,type,scope,emergence, department, "","1",
 					submitBeginDate,submitEndDate,noticeTable.curpage, noticeTable.pagecount);
 			}
 			private function addInit():void{
@@ -238,6 +242,7 @@
 			
 			private function getDepartmentBySymbolResult(event:ResultEvent):void {
 				var _department:DepartmentModel = event.result as DepartmentModel;
+				departmentList.addItem({data:null, label:'请选择'});
 				buildSubDepartments(_department,departmentList,0);
 				postdepartment.selectedIndex = 0;
 				search_department.selectedIndex = 0;
@@ -249,7 +254,7 @@
 				for(var j:int = 0;j<depth;j++)
 					headText=headText.concat("--");
 				headText=headText.concat(department.name);
-				resultList.addItem( {data:department.id, label:headText})
+				resultList.addItem( {data:department.id, label:headText});
 				var list:ArrayCollection = ArrayCollection(department.subordinates);			
 				if(list.length>0){
 					for (var i:int = 0; i < list.length; i++){
@@ -275,14 +280,14 @@
 	
 	<mx:VBox borderVisible="true" width="100%" height="100%" borderStyle="solid">
 		<mx:VBox width="100%" height="100%" id="listPanel">
-			<mx:VBox width="100%" height="100%"  verticalGap="10" verticalAlign="middle" horizontalAlign="center" >
+			<mx:VBox width="100%" height="100%"  verticalGap="0" verticalAlign="middle" horizontalAlign="center" >
 				<mx:VBox width="100%" height="120"   horizontalGap="10" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
 					<mx:FormHeading label="条件查询">
 					</mx:FormHeading>
 					<mx:HBox>
 						<mx:HBox verticalAlign="middle">
 							<mx:Label  text="发布人"  width="100"  textAlign="right"/>
-							<hc:AutoComplete id="search_account"  labelField="name"  width="300"  matchType="anyPart" prompt="选择"  change="{ searchAccountHandleAutoCompleteChange() }" dropDownItemRenderer="{ searchAccountDropDownItemRenderer }" selectedItemStyleName="none">
+							<hc:AutoComplete id="search_account"  labelField="name"  width="200"  matchType="anyPart" prompt="选择"  change="{ searchAccountHandleAutoCompleteChange() }" dropDownItemRenderer="{ searchAccountDropDownItemRenderer }" selectedItemStyleName="none">
 							</hc:AutoComplete>
 							<mx:Label id="search_account_id" visible="false">
 							</mx:Label>
@@ -297,7 +302,7 @@
 						</mx:HBox>
 						<mx:HBox verticalAlign="middle">
 							<mx:Label  text="优先级 "  width="100"  textAlign="right"/>
-							<mx:CheckBox label="紧急" id="_emergence"/>
+							<mx:ComboBox  id="_emergence" dataProvider="{noticeEmergenceList}"  selectedIndex="0"  editable="false"/>
 						</mx:HBox>
 					</mx:HBox>
 					<mx:HBox>
@@ -320,6 +325,30 @@
 						
 						<component:WlzxPageDataGrid width="100%" height="100%"   borderVisible="false"  autoLayout="true"  borderAlpha="0.2" verticalAlign="middle"   id="noticeTable" pagecount="10"  >				
 							<component:mygridcolumns>
+								<mx:DataGridColumn textAlign="center" headerText="范围"  width="60">
+									<mx:itemRenderer>
+										<mx:Component>
+											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+												<mx:Label text="{getScope(data)}">
+												</mx:Label>
+												<mx:Script>
+													<![CDATA[
+														//提示信息														
+														import mx.controls.Alert;
+														import mx.core.UIComponent;
+														private function getScope(data:Object):String{
+															if(data.scope=='0')
+																return "校级公告";
+															else  if(data.scope=='1')
+																return "部门公告";
+															else return "异常";
+														}
+													]]>
+												</mx:Script>
+											</mx:HBox>																		
+										</mx:Component>						
+									</mx:itemRenderer>
+								</mx:DataGridColumn>
 								<mx:DataGridColumn textAlign="center" headerText="类型"  width="60">
 									<mx:itemRenderer>
 										<mx:Component>
@@ -340,7 +369,7 @@
 										</mx:Component>
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="发布时间" width="100" dataField="postTime" labelFunction="DateUtil.datagridFormatDate">
+								<mx:DataGridColumn textAlign="center" headerText="发布时间" width="100" dataField="postTime" labelFunction="DateUtil.datagridFormatDateTime">
 								</mx:DataGridColumn>
 								<mx:DataGridColumn textAlign="center" headerText="发布部门"  width="100" dataField="postDepartmentId">
 									<mx:itemRenderer>

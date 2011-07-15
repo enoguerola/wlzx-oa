@@ -62,8 +62,32 @@
 		]]> 		
 	</mx:Script> 
 	<mx:Panel width="100%" height="100%"    id="noticeScope" borderVisible="false"  dropShadowVisible="false" >
-	<component:WlzxPageDataGrid width="100%" height="100%"   borderVisible="false"  autoLayout="true"  borderAlpha="0.2" verticalAlign="middle"   id="table" pagecount="10"  >				
+	<component:WlzxPageDataGrid width="100%" height="100%"   borderVisible="false"  autoLayout="true"  borderAlpha="0.2" verticalAlign="middle"   id="table" pagecount="10"  paddingLeft="10" paddingRight="10" paddingBottom="10">				
 		<component:mygridcolumns>
+			<mx:DataGridColumn textAlign="center" headerText="范围"  width="60">
+				<mx:itemRenderer>
+					<mx:Component>
+						<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+							<mx:Label text="{getScope(data)}">
+							</mx:Label>
+							<mx:Script>
+								<![CDATA[
+									//提示信息														
+									import mx.controls.Alert;
+									import mx.core.UIComponent;
+									private function getScope(data:Object):String{
+										if(data.scope=='0')
+											return "校级公告";
+										else  if(data.scope=='1')
+											return "部门公告";
+										else return "异常";
+									}
+								]]>
+							</mx:Script>
+						</mx:HBox>																		
+					</mx:Component>						
+				</mx:itemRenderer>
+			</mx:DataGridColumn>
 			<mx:DataGridColumn textAlign="center" headerText="类型"  width="60">
 				<mx:itemRenderer>
 					<mx:Component>
@@ -84,7 +108,7 @@
 					</mx:Component>
 				</mx:itemRenderer>
 			</mx:DataGridColumn>
-			<mx:DataGridColumn textAlign="center" headerText="发布时间" width="100" dataField="postTime" labelFunction="DateUtil.datagridFormatDate">
+			<mx:DataGridColumn textAlign="center" headerText="发布时间" width="100" dataField="postTime" labelFunction="DateUtil.datagridFormatDateTime">
 			</mx:DataGridColumn>
 			<mx:DataGridColumn textAlign="center" headerText="发布部门"  width="100" >
 				<mx:itemRenderer>

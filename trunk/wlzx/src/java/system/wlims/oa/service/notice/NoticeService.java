@@ -16,7 +16,7 @@ public interface NoticeService {
 	public List<NoticeModel> getNoticesByConditions(String userId,String type,String scope,String emergence,String deparmentId,
 			String title, String status, String beginDate,String endDate, Integer index, Integer page);
 	
-	boolean remove(String id);
+	boolean deleteNoticeById(String id);
 	
 	public List<NoticeModel> getDepartmentNotice(Integer index, Integer page)throws ServiceException;
 	
