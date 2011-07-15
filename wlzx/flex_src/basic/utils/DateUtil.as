@@ -96,5 +96,14 @@ package basic.utils
 			{
 				return formatDate(data[column.dataField] as Date, "YYYY-MM-DD");
 			}
+			
+			/**
+			 * Called to format dates in the data grid.
+			 */          
+			public static function datagridFormatDateTime(data:Object, column:DataGridColumn):String
+			{
+				return formatDate(data[column.dataField] as Date, "YYYY-MM-DD JJ:NN:SS");
+			}
+			
 		}	
 }

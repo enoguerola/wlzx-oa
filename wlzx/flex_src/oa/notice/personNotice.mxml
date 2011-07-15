@@ -8,7 +8,7 @@
 		<mx:method name="addNotice"  concurrency="last"  result="addNoticeResult_resultHandler(event);" />
 		<mx:method name="updateNotice"  concurrency="last"  result="updateNoticeResult_resultHandler(event);" />
 		<mx:method name="loadNoticeInfoById"  concurrency="last"  result="loadNoticeInfoById_resultHandler(event);" />
-		<mx:method name="remove"  concurrency="last"  result="remove_resultHandler(event);" />
+		<mx:method name="deleteNoticeById"  concurrency="last"  result="deleteNoticeById_resultHandler(event);" />
 		<mx:method name="getNoticesByConditions"  concurrency="last"  result="getNoticesByConditions_resultHandler(event);" />
 		<mx:method name="publish"  concurrency="last"  result="publish_resultHandler(event);" />
 	</mx:RemoteObject>
@@ -56,17 +56,20 @@
 			
 			public var scopes:ArrayCollection = new ArrayCollection( 
 				[	{label:"全部", data:null},  
-					{label:"学校", data:"1"},  
-					{label:"部门", data:"2"}]); 
+					{label:"学校", data:"0"},  
+					{label:"部门", data:"1"}]); 
 			
 			public var noticeScopeList:ArrayCollection = new ArrayCollection( 
-				[	{label:"请选择", data:null},
+				[	
 					{label:"校级公告", data:"0"},  
 					{label:"部门公告", data:"1"}]);
-			
+			public var noticeEmergenceList:ArrayCollection = new ArrayCollection( 
+				[	{label:"全部", data:null},
+					{label:"紧急", data:"1"},  
+					{label:"普通", data:"0"}]);
 			public var noticeTypeList:ArrayCollection = new ArrayCollection( 
 				[
-					{label:"请选择", data:null},
+					{label:"全部", data:null},
 					{label:"重要通知", data:"重要通知"}]);
 			
 			[Bindable] 
@@ -99,12 +102,12 @@
 				var type:String = search_type.selectedItem.data;
 				var scope:String=search_scope.selectedItem.data;
 				var status:String= messagesView.selectedIndex + "";
-				var emergence:int = 0;
-				if(_emergence.selected)
-					emergence = 1;
+				var emergence:String = _emergence.selectedItem.data;
+//				if(_emergence.selected)
+//					emergence = 1;
 				var submitBeginDate:String=search_date_begin.text;
 				var submitEndDate:String=search_date_end.text;
-				noticeServiceRO.getNoticesByConditions(this.parentApplication.currentUser.id, type, scope,emergence + "", "", "",status,
+				noticeServiceRO.getNoticesByConditions(this.parentApplication.currentUser.id, type, scope,emergence, "", "",status,
 					submitBeginDate,submitEndDate, draftTable.curpage, draftTable.pagecount);
 			}
 			
@@ -136,7 +139,7 @@
 				search();
 			}
 			
-			protected function remove_resultHandler(event:ResultEvent):void
+			protected function deleteNoticeById_resultHandler(event:ResultEvent):void
 			{
 				if(event.result as Boolean==true){
 					Alert.show("删除成功");
@@ -196,7 +199,7 @@
 				Alert.show("你确定要删除该公告吗?","确认",Alert.YES | Alert.NO,null,function(event:CloseEvent):void{
 					if(event.detail == Alert.YES)
 					{
-						noticeServiceRO.remove(id);
+						noticeServiceRO.deleteNoticeById(id);
 					}
 				});
 			}
@@ -351,17 +354,41 @@
 						</mx:HBox>
 						<mx:HBox verticalAlign="middle">
 							<mx:Label  text="优先级 "  width="100"  textAlign="right"/>
-							<mx:CheckBox label="紧急" id="_emergence"/>
+							<mx:ComboBox  id="_emergence" dataProvider="{noticeEmergenceList}"  selectedIndex="0"  editable="false"/>
 						</mx:HBox>
 						<mx:Button  label="搜索"  width="70"   click="search();"/>
 					</mx:HBox>
 				</mx:VBox>
 			</mx:VBox>
-			<mx:VBox width="100%" height="100%"  verticalAlign="middle" horizontalAlign="center" >
+			<mx:VBox width="100%" height="100%"  verticalAlign="middle" horizontalAlign="center" paddingLeft="10" paddingRight="10" >
 				<mx:TabNavigator id="messagesView"  width="100%" height="100%" tabStyleName="customTabStyles"  horizontalGap="1" borderVisible="false"  tabWidth="120" paddingTop="0"  change="search();">
 					<mx:HBox label="草稿箱" width="100%" height="100%">
 						<component:WlzxPageDataGrid width="100%" height="100%"   borderVisible="false"  autoLayout="true"  borderAlpha="0.2" verticalAlign="middle"   id="draftTable" pagecount="10"  >				
 							<component:mygridcolumns>
+								<mx:DataGridColumn textAlign="center" headerText="范围"  width="60">
+									<mx:itemRenderer>
+										<mx:Component>
+											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+												<mx:Label text="{getScope(data)}">
+												</mx:Label>
+												<mx:Script>
+													<![CDATA[
+														//提示信息														
+														import mx.controls.Alert;
+														import mx.core.UIComponent;
+														private function getScope(data:Object):String{
+															if(data.scope=='0')
+																return "校级公告";
+															else  if(data.scope=='1')
+																return "部门公告";
+															else return "异常";
+														}
+													]]>
+												</mx:Script>
+											</mx:HBox>																		
+										</mx:Component>						
+									</mx:itemRenderer>
+								</mx:DataGridColumn>
 								<mx:DataGridColumn textAlign="center" headerText="类型"  width="60">
 									<mx:itemRenderer>
 										<mx:Component>
@@ -381,7 +408,7 @@
 										</mx:Component>
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="保存时间" width="100" dataField="lastEditTime" labelFunction="DateUtil.datagridFormatDate">
+								<mx:DataGridColumn textAlign="center" headerText="保存时间" width="100" dataField="lastEditTime" labelFunction="DateUtil.datagridFormatDateTime" >
 								</mx:DataGridColumn>
 								<mx:DataGridColumn textAlign="center" headerText="发布部门"  width="100" >
 									<mx:itemRenderer>
@@ -436,6 +463,30 @@
 					<mx:HBox label="已发布" width="100%" height="100%">
 						<component:WlzxPageDataGrid width="100%" height="100%"   borderVisible="false"  autoLayout="true"  borderAlpha="0.2" verticalAlign="middle"   id="noticeTable" pagecount="10"  >				
 							<component:mygridcolumns>
+								<mx:DataGridColumn textAlign="center" headerText="范围"  width="60">
+									<mx:itemRenderer>
+										<mx:Component>
+											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+												<mx:Label text="{getScope(data)}">
+												</mx:Label>
+												<mx:Script>
+													<![CDATA[
+														//提示信息														
+														import mx.controls.Alert;
+														import mx.core.UIComponent;
+														private function getScope(data:Object):String{
+															if(data.scope=='0')
+																return "校级公告";
+															else  if(data.scope=='1')
+																return "部门公告";
+															else return "异常";
+														}
+													]]>
+												</mx:Script>
+											</mx:HBox>																		
+										</mx:Component>						
+									</mx:itemRenderer>
+								</mx:DataGridColumn>
 								<mx:DataGridColumn textAlign="center" headerText="类型"  width="60">
 									<mx:itemRenderer>
 										<mx:Component>
@@ -455,7 +506,7 @@
 										</mx:Component>
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="发布时间" width="100" dataField="postTime" labelFunction="DateUtil.datagridFormatDate">
+								<mx:DataGridColumn textAlign="center" headerText="发布时间" width="100" dataField="postTime" labelFunction="DateUtil.datagridFormatDateTime">
 								</mx:DataGridColumn>
 								<mx:DataGridColumn textAlign="center" headerText="发布部门"  width="100" >
 									<mx:itemRenderer>

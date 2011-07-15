@@ -58,7 +58,7 @@ public class NoticeServiceImpl implements NoticeService {
 	}
 
 	@Override
-	public boolean remove(String id) {
+	public boolean deleteNoticeById(String id) {
 		// TODO Auto-generated method stub
 		try {
 			noticeDAO.remove(loadNoticeInfoById(id));
@@ -104,11 +104,13 @@ public class NoticeServiceImpl implements NoticeService {
 			criteria.add(Restrictions.like("title", title));
 		
 		if(StringUtils.isNotEmpty(beginDate))
-			criteria.add(Restrictions.ge("postTime",  Date.valueOf(beginDate)));
+		criteria.add(Restrictions.sqlRestriction("postTime >= '"+beginDate+" 00:00:00'"));
+			//criteria.add(Restrictions.ge("postTime",  Date.valueOf(beginDate)));
 		
 		if(StringUtils.isNotEmpty(endDate))
-			criteria.add(Restrictions.le("postTime",  Date.valueOf(endDate)));
-		
+			//criteria.add(Restrictions.le("postTime",  Date.valueOf(endDate)));
+		criteria.add(Restrictions.sqlRestriction("postTime <= '"+endDate+" 23:59:59'"));
+
 		if(StringUtils.isNotEmpty(status)){
 			int intstatus = Integer.parseInt(status);
 			//草稿 lasteditorid
@@ -122,8 +124,8 @@ public class NoticeServiceImpl implements NoticeService {
 			}
 			criteria.add(Restrictions.eq("status", intstatus));
 		}
-		
-		return noticeDAO.getListByCriteria(criteria, (index - 1)*page, page);
+		return noticeDAO.getListByCriteria(criteria);
+		//return noticeDAO.getListByCriteria(criteria, (index - 1)*page, page);
 	}
 
 	@Override
@@ -180,16 +182,17 @@ public class NoticeServiceImpl implements NoticeService {
 //		if(set != null && set.size() > 0){
 //			set.addAll(userDAO.getAllLeaders(userModel));
 //		}
+		
 		Set<String> stringSet = new HashSet<String>();
 		if(set!=null&&set.size()>0){
 			for(DepartmentModel model: set){
 				stringSet.add(model.getId());
 			}
-		
 			criteria.add(Restrictions.in("postDepartmentId", stringSet.toArray()));
 			
-			return noticeDAO.getListByCriteria(criteria, (index - 1)*page, page);
-		}else return null;
+			//return noticeDAO.getListByCriteria(criteria, (index - 1)*page, page);
+		}
+		return noticeDAO.getListByCriteria(criteria);
 	}
 
 	@Override
@@ -200,8 +203,8 @@ public class NoticeServiceImpl implements NoticeService {
 		criteria.add(Restrictions.eq("scope", NoticeModel.EScope.School.getValue()));
 		criteria.add(Restrictions.eq("status", 1));
 		criteria.addOrder(Order.desc("postTime"));
-		
-		return noticeDAO.getListByCriteria(criteria, (index - 1)*page, page);
+		return noticeDAO.getListByCriteria(criteria);
+		//return noticeDAO.getListByCriteria(criteria, (index - 1)*page, page);
 	}
 
 	public UserDAO getUserDAO() {
@@ -217,9 +220,10 @@ public class NoticeServiceImpl implements NoticeService {
 		// TODO Auto-generated method stub
 		NoticeModel noticeModel = noticeDAO.get(id);
 		UserModel userModel = SecurityUserHolder.getCurrentUser();
-		noticeModel.setPostDepartmentId(userModel.getId());
+		//noticeModel.setPostDepartmentId(userModel.getId());
 		noticeModel.setPostTime(UtilDateTime.nowDate());
 		noticeModel.setStatus(1);
+		noticeModel.setPosterId(userModel.getId());
 		try {
 			noticeDAO.saveOrUpdate(noticeModel);
 		} catch (DAOException e) {

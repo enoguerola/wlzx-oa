@@ -39,7 +39,7 @@
 			<key column="child_id" not-null="true" />
 			<many-to-many column="parent_id" class="system.entity.MenuModel" /> 
 		</set>
-		<set name="modules" lazy="false"  table="wlzx_system_menu_module_relationship" cascade="all">
+		<set name="modules" lazy="false"  table="wlzx_system_menu_module_relationship" cascade="all-delete-orphan">
 			<cache usage="read-write" />
 			<key column="menu_id" not-null="true" />
 			<many-to-many column="module_id" class="system.entity.ModuleModel"  order-by="sequence asc"/> 

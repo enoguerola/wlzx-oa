@@ -138,21 +138,27 @@
 
 		]]> 		
 	</mx:Script> 
-	<mx:Panel width="100%" height="100%"   title="公告详情"  borderVisible="false" id="panel" dropShadowVisible="false" >
-		<mx:VBox width="100%" height="100%" id="detailPanel">
-			<s:Group width="100%">
+	<mx:VBox borderVisible="true" width="100%" height="100%" borderStyle="solid">
+		<mx:HBox width="100%" height="30" paddingLeft="20"  horizontalGap="0" backgroundColor="#C5E497"  verticalAlign="middle">
+			<mx:Label text="|"/>
+			<mx:LinkButton label="打印" click="linkbutton1_clickHandler(event)" icon="@Embed(source='../WebContent/resources/common/tools/button_printer_icon.png')"/>
+			<!--<mx:LinkButton label="关闭"/>
+			<mx:LinkButton label="返回"/>-->
+			<mx:Label text="|"/>
+		</mx:HBox>
+		<mx:VBox width="100%" height="100%" id="detailPanel"  paddingTop="0"   paddingLeft="10" paddingRight="10">
+			
+			<!--<s:Group width="100%">
 				<s:layout>
 					<s:BasicLayout/>
 				</s:layout>
 				<s:mxmlContent>
 					<s:HGroup right="4" width="144" verticalCenter="0">
-						<mx:LinkButton label="打印" click="linkbutton1_clickHandler(event)"/>
-						<!--<mx:LinkButton label="关闭"/>
-						<mx:LinkButton label="返回"/>-->
+						
 					</s:HGroup>
 				</s:mxmlContent>
-			</s:Group>
-			<mx:VBox width="100%" id="print_content" horizontalGap="10" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10" borderStyle="solid">
+			</s:Group>-->
+			<mx:VBox width="100%" id="print_content" paddingTop="10" verticalAlign="middle" horizontalAlign="center">
 				<mx:VBox width="100%" horizontalAlign="center" verticalGap="0">
 					<mx:Label  text=""  id="detail_title" width="100%"  letterSpacing="5" textAlign="center" fontSize="16"  fontWeight="bold" height="30" />
 					<mx:HBox horizontalAlign="right" right="20">
@@ -163,7 +169,7 @@
 					</mx:HBox>
 				</mx:VBox>
 				
-				<mx:VBox width="100%" horizontalAlign="center" height="100%" verticalAlign="middle"   borderVisible="true" paddingLeft="20" paddingRight="20">
+				<mx:VBox width="100%" horizontalAlign="center" height="100%" verticalAlign="middle"   paddingLeft="20" paddingRight="20">
 					<mx1:Text id="detail_content" width="100%">
 					</mx1:Text>
 				</mx:VBox>	
@@ -176,5 +182,5 @@
 			</mx:VBox>
 		</mx:VBox>
 		
-	</mx:Panel>
+	</mx:VBox>
 </mx:Module>
