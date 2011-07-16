@@ -92,7 +92,7 @@ public class SecurityUserHolder {
 	}
 
 	public  void setTeacherDAO(TeacherDAO teacherDAO) {
-		this.teacherDAO = teacherDAO;
+		SecurityUserHolder.teacherDAO = teacherDAO;
 	}
 
 	public DataAccessModeDAO getDataAccessModeDAO() {
@@ -100,6 +100,6 @@ public class SecurityUserHolder {
 	}
 
 	public void setDataAccessModeDAO(DataAccessModeDAO dataAccessModeDAO) {
-		this.dataAccessModeDAO = dataAccessModeDAO;
+		SecurityUserHolder.dataAccessModeDAO = dataAccessModeDAO;
 	}
 }
