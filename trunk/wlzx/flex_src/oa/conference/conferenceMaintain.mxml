@@ -61,8 +61,11 @@
 				placeServiceRO.getPlacesByCondition(null,null,null,null,null,null,null);
 //				Alert.show("aaaaaaaaa");
 				linkman_account.dataProvider=this.parentApplication.allTeacherAcccounts;
-				var urlRequest:URLRequest = new URLRequest("spring/attachmentUpload.action");
+				var urlRequest:URLRequest = new URLRequest(parentApplication.homeUrl+"spring/attachmentUpload.action?"+new Date());
 				upload.urlRequest = urlRequest;
+				summaryUpload.urlRequest = urlRequest;
+//				var urlRequest:URLRequest = new URLRequest("spring/attachmentUpload.action");
+//				upload.urlRequest = urlRequest;
 
 			}
 			private function systemFaultHandler(event:FaultEvent):void {
@@ -467,7 +470,7 @@
 			<mx:LinkButton  label="会议附件区" icon="@Embed(source='../WebContent/resources/common/tools/button_attachment_icon.png')" click="showHide()"/>
 		</mx:HBox>
 		<mx:VBox  width="100%"  height="0" id="att_area" paddingLeft="10" paddingRight="10">
-				<mutiUpload:upload width="100%" id="upload">
+				<mutiUpload:upload width="100%" id="upload" >
 				</mutiUpload:upload>
 		</mx:VBox>
 	</mx:VBox>

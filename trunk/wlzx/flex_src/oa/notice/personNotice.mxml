@@ -86,7 +86,7 @@
 				{
 					this.currentState='list';
 				}
-				var urlRequest:URLRequest = new URLRequest("spring/attachmentUpload.action");
+				var urlRequest:URLRequest = new URLRequest(parentApplication.homeUrl+"spring/attachmentUpload.action");
 				upload.urlRequest = urlRequest;
 				messagesView.selectedIndex = 0;
 				search();
@@ -192,7 +192,7 @@
 			public function detailNotice(id:String):void
 			{
 				var parent:Object=(Object)(((Object)(this.owner)).owner);
-				parent.addTab("noticeDetial","查看公告",parent.nav,"oa/notice/noticeDetail.swf",null,id);
+				parent.addTab("noticeDetial-"+id,"查看公告",parent.nav,"oa/notice/noticeDetail.swf",null,id);
 			}
 			//删除
 			public function deleteNotice(id:String):void{
