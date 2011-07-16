@@ -46,7 +46,7 @@ public class AttachmentUploadHandler extends BaseFileUploadHandler{
 	}
 	
 	@Override
-	@RequestMapping("/oa/notice/spring/attachmentUpload.action") 
+	@RequestMapping("/spring/attachmentUpload.action") 
     @ResponseBody
 	public void upload(@RequestParam("file") CommonsMultipartFile file,HttpServletResponse response)throws Exception{
 		doUpload(file, response);

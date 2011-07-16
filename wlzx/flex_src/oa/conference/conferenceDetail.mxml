@@ -26,7 +26,8 @@
 			import mx.managers.PopUpManager;
 			import mx.rpc.events.*;
 			import mx.validators.Validator;
-			
+			import oa.entity.AttachmentModel;
+			import mx.controls.Button;
 			import system.component.WlzxLockWin;
 			import system.utils.*;
 			
@@ -56,6 +57,12 @@
 				services.text=form.serviceNeeded;					
 				description.text=form.description;
 				users.text="";
+				if(form.applyStatus==1)state.text= "预约中";
+				else  if(form.applyStatus==2)state.text= "申请取消";
+				else  if(form.applyStatus==4)state.text= "安排取消";
+				else  if(form.applyStatus==3)state.text= "已安排";
+				else state.text= "异常";
+				
 				var array:Array=form.teacherAttendIds.split(";");
 				if(array!=null&&array.length>0)
 					for(var i:int=0;i<array.length;i++){
@@ -63,8 +70,82 @@
 						if(array[i]!=null&&array[i]!="")
 							users.text+=parentApplication.getItemByAccountId(array[i]).name+"["+parentApplication.getItemByAccountId(array[i]).account+"]"+"  ";
 					}
+				
+				for each(var model:AttachmentModel in form.attachments){
+					//Alert.show("loaded att");
+					var b:Button =new Button();
+					b.width=100;
+					b.height=30;
+					b.label= model.name;
+					b.id = model.path;
+					att_area.addChild(b);
+					b.addEventListener(MouseEvent.CLICK, download);
+				}
+				for each(var model:AttachmentModel in form.summaryAttachments){
+					//Alert.show("loaded att");
+					var b:Button =new Button();
+					b.width=100;
+					b.height=30;
+					b.label= model.name;
+					b.id = model.path;
+					summaryAttr_area.addChild(b);
+					b.addEventListener(MouseEvent.CLICK, download);
+				}
+				
+				
 				unLockWin();
 				
+			}
+			private var downloadURL:URLRequest;
+			private var file:FileReference; //这是要主要的地方
+			
+			public function download(event:MouseEvent):void {
+				downloadURL = new URLRequest("../../uploads/oa/attachment/" + event.target.id );
+				//downloadURL = new URLRequest("http://localhost:8081/wlzx/uploads/oa/attachment/gravtar_junlu_110627085752.jpg");
+				file = new FileReference();
+				configureListeners(file);
+				file.download(downloadURL);
+				
+			}
+			private function configureListeners(dispatcher:IEventDispatcher):void {
+				dispatcher.addEventListener(Event.CANCEL, cancelHandler);
+				dispatcher.addEventListener(Event.COMPLETE, completeHandler);
+				dispatcher.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
+				dispatcher.addEventListener(Event.OPEN, openHandler);
+				dispatcher.addEventListener(ProgressEvent.PROGRESS, progressHandler);
+				dispatcher.addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
+				dispatcher.addEventListener(Event.SELECT, selectHandler);
+			}
+			private function cancelHandler(event:Event):void {
+				trace("cancelHandler: " + event);
+			}
+			
+			private function completeHandler(event:Event):void {
+				trace("completeHandler: " + event);
+				Alert.show("下载成功");
+			}
+			
+			private function ioErrorHandler(event:IOErrorEvent):void {
+				trace("ioErrorHandler: " + event);
+				Alert.show("网络连接有错");
+			}
+			
+			private function openHandler(event:Event):void {
+				trace("openHandler: " + event);
+			}
+			
+			private function progressHandler(event:ProgressEvent):void {
+				var file:FileReference = FileReference(event.target);
+				trace("progressHandler name=" + file.name + " bytesLoaded=" + event.bytesLoaded + " bytesTotal=" + event.bytesTotal);
+			}
+			
+			private function securityErrorHandler(event:SecurityErrorEvent):void {
+				trace("securityErrorHandler: " + event);
+			}
+			
+			private function selectHandler(event:Event):void {
+				var file:FileReference = FileReference(event.target);
+				trace("selectHandler: name=" + file.name + " URL=" + downloadURL.url);
 			}
 			
 			public function formatDate(date:Date):String{
@@ -95,7 +176,9 @@
 				<mx:HBox width="100%" horizontalAlign="center">
 					<mx:Label  text="会议主题：" fontWeight="bold"/>
 					<mx1:Text  text=""    letterSpacing="5" textAlign="center" fontSize="14"  fontWeight="bold" height="30"  id="cname"/>
-
+					<mx:Label  text="状态【" fontWeight="bold" />
+					<mx1:Text  text=""    letterSpacing="5" textAlign="center" fontSize="14"  fontWeight="bold" height="30"  id="state"/>
+					<mx:Label  text="】" fontWeight="bold" />
 				</mx:HBox>
 				<mx:HBox width="100%" textAlign="center"  horizontalAlign="left">
 					<mx:Label  text="会议时间:" fontWeight="bold" />
@@ -135,7 +218,7 @@
 			<mx:HBox width="100%" height="20">
 				<mx:LinkButton  label="会议附件下载区:"  fontWeight="bold" icon="@Embed(source='../WebContent/resources/common/tools/button_attachment_icon.png')" />
 			</mx:HBox>
-			<mx:VBox  width="100%"  height="0" id="att_area" paddingLeft="10" paddingRight="10">
+			<mx:VBox  width="100%"  id="att_area" paddingLeft="10" paddingRight="10">
 				
 			</mx:VBox>
 		</mx:VBox>
@@ -143,7 +226,7 @@
 			<mx:HBox width="100%" height="20">
 				<mx:LinkButton  label="会议总结下载区:" fontWeight="bold" icon="@Embed(source='../WebContent/resources/common/tools/button_attachment_icon.png')"/>
 			</mx:HBox>
-			<mx:VBox  width="100%"  height="340" id="summaryAttr_area" paddingLeft="10" paddingRight="10">
+			<mx:VBox  width="100%"  id="summaryAttr_area" paddingLeft="10" paddingRight="10">
 			
 			</mx:VBox>
 		</mx:VBox>

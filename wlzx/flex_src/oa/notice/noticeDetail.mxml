@@ -50,7 +50,7 @@
 			postTime.text = formatDate(notice.postTime);
 			department.text = this.parentApplication.getDepartmentNameById(notice.postDepartmentId);
 			for each(var model:AttachmentModel in notice.attachments){
-				Alert.show("loaded att");
+				//Alert.show("loaded att");
 				var b:Button =new Button();
 				b.width=100;
 				b.height=30;

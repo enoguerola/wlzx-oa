@@ -183,7 +183,7 @@
 			
 			public function detailNotice(id:String):void{
 				var parent:Object=(Object)(((Object)(this.owner)).owner);
-				parent.addTab("noticeDetial","查看公告",parent.nav,"oa/notice/noticeDetail.swf",null,id);
+				parent.addTab("noticeDetial-"+id,"查看公告",parent.nav,"oa/notice/noticeDetail.swf",null,id);
 			}
 			
 			protected function add_activateHandler(event:Event):void
