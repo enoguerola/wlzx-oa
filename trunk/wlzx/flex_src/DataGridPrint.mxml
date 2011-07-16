@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+<!-- printing\DGPrintCustomComp.mxml -->
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml"
+				height="450"
+				width="550">
+	<mx:states>
+		<mx:State name="printView">
+			<mx:RemoveChild target="{myForm}"/>
+			<mx:AddChild position="lastChild">
+				<mx:Panel width="388" height="303" layout="absolute">
+					<mx:Image id="img" x="10" y="10"/>
+				</mx:Panel>
+			</mx:AddChild>
+			<mx:AddChild position="lastChild">
+				<mx:Button label="Back" click="currentState=&quot;&quot;"/>
+			</mx:AddChild>
+		</mx:State>
+	</mx:states>
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.printing.FlexPrintJob;
+			//import myComponent.MyPrintView;
+			import mx.graphics.ImageSnapshot;
+			import mx.core.UIComponent;
+			private function print(u:UIComponent):void{
+				currentState="printView";
+				var bmp:BitmapData = ImageSnapshot.captureBitmapData(u);
+				var i:Bitmap = new Bitmap(bmp);
+				img.source = i;
+				img.scaleContent = true;
+			}
+			
+			public function doPrint():void {
+				// Create a FlexPrintJob instance.
+				var printJob:FlexPrintJob = new FlexPrintJob();
+				
+				// Start the print job.
+				if(printJob.start()) {
+					// Create a MyPrintView control as a child
+					// of the current view.
+					var formPrintView:MyPrintView = new MyPrintView();
+					addChild(formPrintView);
+					// Set the print control's data grid data provider to be
+					// the displayed data grid's data provider.
+					formPrintView.myDataGrid.dataProvider =
+						myDataGrid.dataProvider;
+					// Add the SimplePrintview control to the print job.
+					// For comparison, try setting the
+					// second parameter to "none".
+					printJob.addObject(formPrintView);
+					
+					// Send the job to the printer.
+					printJob.send();
+					
+					// Remove the print-specific control to free memory.
+					removeChild(formPrintView);
+				}
+			}
+		]]>
+	</mx:Script>
+	
+	<!-- The form to display-->
+	<mx:Form id="myForm">
+		<mx:FormHeading label="Contact Information"/>
+		<mx:FormItem label="Name: ">
+			<mx:TextInput id="custName"
+						  width="200"
+						  text="Samuel Smith"
+						  fontWeight="bold"/>
+		</mx:FormItem>
+		<mx:FormItem label="Phone: ">
+			<mx:TextInput id="custPhone"
+						  width="200"
+						  text="617-555-1212"
+						  fontWeight="bold"/>
+		</mx:FormItem>
+		<mx:FormItem label="Email: ">
+			<mx:TextInput id="custEmail"
+						  width="200"
+						  text="sam@sam.com"
+						  fontWeight="bold"/>
+		</mx:FormItem>
+		
+		<mx:FormHeading label="Product Information"/>
+		<mx:DataGrid id="myDataGrid" width="300">
+			<mx:dataProvider>
+				<mx:Object Product="Flash" Code="1000"/>
+				<mx:Object Product="flex" Code="2000"/>
+				<mx:Object Product="ColdFusion" Code="3000"/>
+				<mx:Object Product="JRun" Code="4000"/>
+				<mx:Object Product="Flash" Code="1000"/>
+				<mx:Object Product="flex" Code="2000"/>
+				<mx:Object Product="ColdFusion" Code="3000"/>
+				<mx:Object Product="JRun" Code="4000"/>
+				<mx:Object Product="Flash" Code="1000"/>
+				<mx:Object Product="flex" Code="2000"/>
+				<mx:Object Product="ColdFusion" Code="3000"/>
+				<mx:Object Product="JRun" Code="4000"/>
+			</mx:dataProvider>
+		</mx:DataGrid>
+		<mx:Button label="PrintView" click="print(myDataGrid)"/>
+		<mx:FormItem label="Label">
+		</mx:FormItem>
+		<mx:Button id="myButton"
+				   label="Print"
+				   click="doPrint();"/>
+	</mx:Form>
+</mx:Application>

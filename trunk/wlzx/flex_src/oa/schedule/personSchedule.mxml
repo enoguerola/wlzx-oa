@@ -152,6 +152,10 @@
 				
 				callLater(hideWaterMark);
 				search();
+				list.percentHeight=100;
+				list.visible=true;
+				schedule.height=0;
+				schedule.visible=false;
 			}
 			protected function systemFaultHandler(event:FaultEvent):void {
 				Alert.show(event.fault.faultString, 'Error');
@@ -446,6 +450,17 @@
 				if(window!=null)
 					PopUpManager.removePopUp(window);
 			}
+			import mx.printing.*;
+			protected function print_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				var job : FlexPrintJob = new FlexPrintJob();
+				job.printAsBitmap = false;
+				if(job.start()) {
+					job.addObject(list, FlexPrintJobScaleType.NONE);
+					job.send();
+				}
+			}
 		]]>
 	</mx:Script>
 	
@@ -453,7 +468,8 @@
 		[ResourceBundle("sampleApp")]
 	</mx:Metadata>-->
 		
-		
+	<mx:VBox borderVisible="true" width="100%" height="100%" borderStyle="solid">
+	
 		<mx:VBox width="100%" height="100%" id="listPanel">
 			<mx:HBox verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12"  >
 				<mx:HBox width="100%" height="30" paddingLeft="20"  horizontalGap="0" backgroundColor="#C5E497"  verticalAlign="middle" id="toolBar">
@@ -462,13 +478,13 @@
 					<mx:Label text="|"/>
 					<mx:LinkButton  label="工作提交" icon="@Embed(source='../WebContent/resources/common/tools/button_add_icon.png')"/>
 					<mx:Label text="|"/>
-					<mx:LinkButton  label="打印" icon="@Embed(source='../WebContent/resources/common/tools/button_printer_icon.png')"/>
+					<mx:LinkButton label="打印" click="print_clickHandler(event)" icon="@Embed(source='../WebContent/resources/common/tools/button_printer_icon.png')"/>
 					<mx:Label text="|"/>
 					<mx:LinkButton  label="导出" icon="@Embed(source='../WebContent/resources/common/tools/button_printer_icon.png')"/>
 					<mx:Label text="|"/>
 				</mx:HBox>
 			</mx:HBox>
-			<mx:VBox width="100%" height="100%">
+			<mx:VBox width="100%" height="100%"  paddingLeft="10" paddingRight="10">
 				<mx:HBox height="30" width="100%" verticalAlign="middle" horizontalAlign="left" id="conditionBar">
 					<mx:Label text="起止日期：" width="70">
 						
@@ -502,7 +518,7 @@
 					
 				</mx:HBox>
 				
-					<mx:VBox width="100%" height="100%" label="日程列表"  name="list" id="list">
+					<mx:VBox width="100%" height="100%" label="个人日程列表"  name="list" id="list">
 						
 						<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="false"   borderAlpha="0.2" verticalAlign="middle" id="table">				
 							<component:mygridcolumns>
@@ -733,7 +749,7 @@
 			</mx:VBox>
 		</mx:VBox>
 	
-				
+	</mx:VBox>			
 			
 		
 		

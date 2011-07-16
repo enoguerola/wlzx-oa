@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!-- printing\myComponents\MyPrintView.mxml -->
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"
+		 backgroundColor="#FFFFFF"
+		 height="250" width="450"
+		 paddingTop="50" paddingLeft="50" paddingRight="50">
+	
+	<!-- The controls to print, a PrintDataGrid control. -->
+	<mx:PrintDataGrid id="myDataGrid" width="100%">
+		<mx:columns>
+			<mx:DataGridColumn dataField="Product"/>
+			<mx:DataGridColumn dataField="Code"/>
+		</mx:columns>
+	</mx:PrintDataGrid>
+</mx:VBox>

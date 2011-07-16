@@ -405,7 +405,7 @@
 										</mx:Component>
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="提交日期" dataField="applyNo" width="100">
+								<mx:DataGridColumn textAlign="center" headerText="提交日期" dataField="applyNo" width="120">
 									<mx:itemRenderer>
 										<mx:Component>
 											<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
