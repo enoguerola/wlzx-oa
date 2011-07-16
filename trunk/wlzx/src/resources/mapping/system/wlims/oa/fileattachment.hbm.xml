@@ -20,6 +20,12 @@
 	        <property name="path" type="string">
 	            <column name="path" />
 	        </property>
+	        
+	        <property name="date" type="java.sql.Date">
+	            <column name="upload_date" />
+	        </property>
+	        
+	        <many-to-one name="receipt" class="system.wlims.oa.entity.receipt.ReceiptModel" column="receipt_id"></many-to-one>
 	
 	</class>
 </hibernate-mapping>

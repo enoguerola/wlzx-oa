@@ -1,6 +1,8 @@
 package system.wlims.oa.entity.receipt;
 
-import system.wlims.oa.entity.BaseModel;
+import java.sql.Date;
+
+import system.wlims.oa.entity.notice.AttachmentModel;
 
 
 /**
@@ -8,30 +10,25 @@ import system.wlims.oa.entity.BaseModel;
  * @author Administrator
  *
  */
-public class FileAttachmentModel extends BaseModel{
+public class FileAttachmentModel extends AttachmentModel{
 
-	private static final long serialVersionUID = -1404385406623147461L;
+	private static final long serialVersionUID = -3310487104072829040L;
+	private ReceiptModel receipt;
+	private Date date;
 
-	private String name;
-	private String path;
-	private String type;
-	
-	public String getName() {
-		return name;
+	public void setReceipt(ReceiptModel receipt) {
+		this.receipt = receipt;
 	}
-	public void setName(String name) {
-		this.name = name;
+
+	public ReceiptModel getReceipt() {
+		return receipt;
 	}
-	public String getPath() {
-		return path;
+
+	public void setDate(Date date) {
+		this.date = date;
 	}
-	public void setPath(String path) {
-		this.path = path;
-	}
-	public String getType() {
-		return type;
-	}
-	public void setType(String type) {
-		this.type = type;
+
+	public Date getDate() {
+		return date;
 	}
 }

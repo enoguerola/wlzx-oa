@@ -8,6 +8,7 @@ import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
@@ -17,9 +18,6 @@ import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
 
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
@@ -51,7 +49,7 @@ public abstract class BaseFileUploadHandler implements IUpload{
 			return filename;
 	}
 	
-	protected void doUpload(CommonsMultipartFile file,HttpServletResponse response)throws Exception{
+	protected void doUpload(CommonsMultipartFile file,HttpServletResponse response, HttpServletRequest request)throws Exception{
 		init();
 		
 		if (file != null && !file.isEmpty()) {
@@ -78,7 +76,7 @@ public abstract class BaseFileUploadHandler implements IUpload{
 		    }
 		}
 		
-		doSave(file, response);
+		doSave(file, response, request);
 	}
 	
 	/*public void upload(@RequestParam("file") CommonsMultipartFile file,HttpServletResponse response)throws Exception{
@@ -113,7 +111,7 @@ public abstract class BaseFileUploadHandler implements IUpload{
 		//doUpload(response);
 	}*/
 	
-	protected void doUpload(HttpServletResponse response, String id){
+	protected void response(HttpServletResponse response, String id){
 		 try {
 	            out = response.getWriter();
 	            StreamResult streamResult = new StreamResult(out);                                      // Used for writing debug errors to the screen.

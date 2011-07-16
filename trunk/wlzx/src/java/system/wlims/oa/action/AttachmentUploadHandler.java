@@ -1,6 +1,7 @@
 package system.wlims.oa.action;
 
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ public class AttachmentUploadHandler extends BaseFileUploadHandler{
 	private AttachmentService attachmentService;
 
 	@Override
-	public void doSave(CommonsMultipartFile file, HttpServletResponse response) {
+	public void doSave(CommonsMultipartFile file, HttpServletResponse response, HttpServletRequest request) {
 		// TODO Auto-generated method stub
 		AttachmentModel attachment = new AttachmentModel();
 		attachment.setName(file.getOriginalFilename());
@@ -32,7 +33,7 @@ public class AttachmentUploadHandler extends BaseFileUploadHandler{
 		attachment.setId(null);
 		try {
 			attachmentService.save(attachment);
-			doUpload(response, attachment.getId());
+			response(response, attachment.getId());
 		} catch (ServiceException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -48,8 +49,8 @@ public class AttachmentUploadHandler extends BaseFileUploadHandler{
 	@Override
 	@RequestMapping("/spring/attachmentUpload.action") 
     @ResponseBody
-	public void upload(@RequestParam("file") CommonsMultipartFile file,HttpServletResponse response)throws Exception{
-		doUpload(file, response);
+	public void upload(@RequestParam("file") CommonsMultipartFile file,HttpServletResponse response, HttpServletRequest request)throws Exception{
+		doUpload(file, response, request);
 	}
 
 	public AttachmentService getAttachmentService() {
