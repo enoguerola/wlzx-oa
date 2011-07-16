@@ -15,6 +15,8 @@
 			import mx.rpc.events.ResultEvent;
 			import mx.validators.Validator;
 			
+			import oa.entity.receipt.FileAttachmentModel;
+			
 			private var validatorArr:Array = new Array();
 
 			private function init():void
@@ -137,14 +139,43 @@
 
 			}
 			
-			public function deleted(id:String):void
+			public function remove(id:String):void
 			{
-				var list:ArrayCollection = receipt_text.datagrid.dataProvider as ArrayCollection;
+				fileAttachmentServiceRO.remove(id);
 			}
 			
 			public function add(id:String):void
 			{
+				fileAttachmentServiceRO.get(id);
+			}
+			
+			protected function fileAttachmentServiceRemove_result(event:ResultEvent):void
+			{
+				var id:String = event.result as String;
 				var list:ArrayCollection = receipt_text.datagrid.dataProvider as ArrayCollection;
+				var index:int = -1;
+				var fileAttachment:FileAttachmentModel;
+				if(list != null && list.length > 0)
+				{
+					for(var i=0; i<list.length; i++)
+					{
+						fileAttachment = list.getItemAt(i) as FileAttachmentModel;
+						if(fileAttachment.id == id)
+						{
+							index = i;
+							break;
+						}
+					}
+				}
+				if(index != -1)
+					list.removeItemAt(index);
+			}
+			
+			protected function fileAttachmentServiceGet_result(event:ResultEvent):void
+			{
+				var attachment:FileAttachmentModel = event.result as FileAttachmentModel;
+				var list:ArrayCollection = receipt_text.datagrid.dataProvider as ArrayCollection;
+				list.addItem(attachment);
 			}
 
 		]]>
@@ -155,6 +186,10 @@
 		<s:RemoteObject concurrency="last" destination="receiptServiceDest" id="receiptServiceRO" fault="faultHandler(event)" showBusyCursor="true">
 			<s:method concurrency="last" name="get" result="receiptServiceGet_result(event)"/>
 			<s:method concurrency="last" name="save" result="receiptServiceSave_result(event)"/>
+		</s:RemoteObject>
+		<s:RemoteObject concurrency="last" destination="fileAttachmentServiceDest" id="fileAttachmentServiceRO" fault="faultHandler(event)" showBusyCursor="true">
+			<s:method concurrency="last" name="remove" result="fileAttachmentServiceRemove_result(event)"/>
+			<s:method concurrency="last" name="get" result="fileAttachmentServiceGet_result(event)"/>
 		</s:RemoteObject>
 	</fx:Declarations>
 	<s:VGroup width="100%" height="100%">

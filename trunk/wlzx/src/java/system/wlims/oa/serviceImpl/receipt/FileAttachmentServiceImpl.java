@@ -24,4 +24,19 @@ public class FileAttachmentServiceImpl implements FileAttachmentService {
 		return fileAttachmentDAO;
 	}
 
+	@Override
+	public FileAttachmentModel get(String id) throws ServiceException {
+		// TODO Auto-generated method stub
+		FileAttachmentModel model = fileAttachmentDAO.get(id);
+		model.setReceipt(null);
+		return model;
+	}
+
+	@Override
+	public String remove(String id) throws ServiceException {
+		// TODO Auto-generated method stub
+		fileAttachmentDAO.remove(get(id));
+		return id;
+	}
+
 }

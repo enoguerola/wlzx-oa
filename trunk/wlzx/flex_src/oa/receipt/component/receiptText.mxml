@@ -16,6 +16,7 @@
 			
 			import oa.receipt.component.item.AttachmentDelete;
 			import oa.receipt.component.item.CompleteHandler;
+			import basic.utils.DateUtil;
 			
 			[Bindable]
 			public var list:ArrayCollection;
@@ -33,11 +34,11 @@
 			</s:HGroup>
 			<s:HGroup width="100%" paddingTop="10" height="80%">
 				<mx:FormHeading label="上传列表" width="100"/>
-				<mx:DataGrid width="80%" height="100%" id="datagrid" dataProvider="{list}">
+				<mx:DataGrid width="80%" height="100%" id="datagrid" dataProvider="{list}" textAlign="center">
 					<mx:columns>
 						<mx:DataGridColumn dataField="id" headerText="序号" width="50"/>
 						<mx:DataGridColumn dataField="name" headerText="附件名称" width="200"/>
-						<mx:DataGridColumn dataField="" headerText="上传时间" width="100"/>
+						<mx:DataGridColumn dataField="date" labelFunction="DateUtil.datagridFormatDate" headerText="上传时间" width="100"/>
 						<mx:DataGridColumn itemRenderer="oa.receipt.component.item.AttachmentDelete" headerText="删除" width="100"/>
 					</mx:columns>
 				</mx:DataGrid>
