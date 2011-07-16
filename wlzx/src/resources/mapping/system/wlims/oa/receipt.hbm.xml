@@ -49,7 +49,7 @@
             <column name="registed_date" />
         </property>
         
-      	<set name="attachments" lazy="false" cascade="all-delete-orphan" inverse="true">
+      	<set name="attachments" lazy="false" cascade="delete" inverse="true">
         	<key column="receipt_id" not-null="true" />
         	<one-to-many class="system.wlims.oa.entity.receipt.FileAttachmentModel" /> 
         </set>		

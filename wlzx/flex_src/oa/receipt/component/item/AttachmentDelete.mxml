@@ -5,9 +5,20 @@
 				autoDrawBackground="true">
 	<fx:Script>
 		<![CDATA[
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
+			
 			private function remove(id:String):void
 			{
 				var parent:Object = ((Object)(this.parentDocument)).parentDocument;
+				Alert.show("确定删除", "确定", Alert.YES | Alert.NO, null, function(event:CloseEvent):void
+					{
+						if(event.detail == Alert.YES)
+						{
+							parent.remove(id);
+						}
+					}
+				);
 			}
 		]]>
 	</fx:Script>	

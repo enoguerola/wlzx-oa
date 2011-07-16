@@ -186,6 +186,7 @@
 						{
 							//delete uploaded file
 							uploadImg_num --;
+							dispatchEvent( new UploadEvent( UploadEvent.DELETED, idList[i], false, false ) );
 						}else
 						{
 							

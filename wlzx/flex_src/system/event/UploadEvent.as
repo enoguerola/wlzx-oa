@@ -10,6 +10,8 @@ package system.event
 		public static const DELETED:String = "deleted";
 		
 		private var _id:String;
+		private var _name:String;
+		private var _date:Date;
 		private var _serverResponse:String = "";
 		private var _serverResponseRaw:String = "";
 		
@@ -59,6 +61,22 @@ package system.event
 		
 		public function set id(value:String):void {
 			_id = value;
+		}
+		
+		public function get name():String {
+			return _name;
+		}
+		
+		public function set name(value:String):void {
+			_name = value;
+		}
+		
+		public function get date():Date {
+			return _date;
+		}
+		
+		public function set date(value:Date):void {
+			_date = value;
 		}
 	}
 }

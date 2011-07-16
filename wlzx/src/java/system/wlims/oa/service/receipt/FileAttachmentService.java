@@ -19,6 +19,8 @@ public interface FileAttachmentService {
 	 * @param id
 	 * @throws ServiceException
 	 */
-	//public void remove(String id)throws ServiceException;
+	public String remove(String id)throws ServiceException;
+	
+	public FileAttachmentModel get(String id)throws ServiceException;
 
 }
