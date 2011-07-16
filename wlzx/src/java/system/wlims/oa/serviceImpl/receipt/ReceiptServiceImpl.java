@@ -141,8 +141,9 @@ public class ReceiptServiceImpl implements ReceiptService {
 		// TODO Auto-generated method stub
 		if(model.getStatus() != null && model.getStatus() == 1){
 			model.setRegistedDate(Date.valueOf(UtilDateTime.nowDateString("yyyy-MM-DD")));
-			model.setIsCompleted(0);
+			model.setIsCompleted(1);
 		}
+		model.setAttachments(null);
 		receiptDAO.saveOrUpdate(model);
 		return model;
 	}

@@ -37,12 +37,22 @@
 		<property name="userDAO" ref="userDAO" />
 		<property name="teacherDAO" ref="teacherDAO" />
 	</bean>
+	<bean id="fileFlowService" class="system.wlims.oa.serviceImpl.receipt.FileFlowServiceImpl">
+		<property name="fileFlowDAO" ref="fileFlowDAO" />
+		<property name="receiptDAO" ref="receiptDAO" />
+		<property name="userDAO" ref="userDAO" />
+		<property name="teacherDAO" ref="teacherDAO" />
+	</bean>
 
 	<bean id="receiptDAO" class="system.wlims.oa.daoImpl.receipt.ReceiptDAOImpl">
 		<property name="sessionFactory" ref="oaSessionFactory" />
 	</bean>
 	<bean id="receiptServiceDest" class="system.wlims.oa.serviceImpl.receipt.ReceiptServiceImpl">
 		<flex:remoting-destination />
+		<property name="receiptDAO" ref="receiptDAO" />
+		<property name="fileFlowDAO" ref="fileFlowDAO" />
+	</bean>
+	<bean id="receiptService" class="system.wlims.oa.serviceImpl.receipt.ReceiptServiceImpl">
 		<property name="receiptDAO" ref="receiptDAO" />
 		<property name="fileFlowDAO" ref="fileFlowDAO" />
 	</bean>

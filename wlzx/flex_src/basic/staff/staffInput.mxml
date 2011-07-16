@@ -705,15 +705,15 @@
 					pbrUploadProgress.label = "上传成功";
 					
 					// Create a custom event. 
-					var uploadEvent:UploadEvent = new UploadEvent("uploadevent");
+					//var uploadEvent:UploadEvent = new UploadEvent("uploadevent");
 					// Fetch the file element of the servlet's XML response.
-					uploadEvent.ServerResponse = xmlResponse.elements("file");
+					//uploadEvent.ServerResponse = xmlResponse.elements("file");
 					// Fetch the entire XML response. 
-					uploadEvent.ServerResponseRaw = event.data;
+					//uploadEvent.ServerResponseRaw = event.data;
 					//Alert.show(event.data);
 					//Alert.show(xmlResponse.elements("file"));
 					// Dispatch the custom event.
-					dispatchEvent(uploadEvent);
+					//dispatchEvent(uploadEvent);
 					
 					imageSrc = path + xmlResponse.elements("file").attribute("id").toString();
 				}

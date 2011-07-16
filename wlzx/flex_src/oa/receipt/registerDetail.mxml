@@ -6,6 +6,7 @@
 		   xmlns:valueObjects="oa.entity.receipt.*">
 	<fx:Script>
 		<![CDATA[
+			import mx.collections.ArrayCollection;
 			import mx.containers.FormItem;
 			import mx.controls.Alert;
 			import mx.events.ValidationResultEvent;
@@ -121,7 +122,9 @@
 				receipt_text.title.text = receipt.title;
 				receipt_file.in_department.text = receipt.office;
 				//attachments here
-				
+				var list:ArrayCollection = receipt.attachments as ArrayCollection;
+				receipt_text.list = list;
+				Alert.show(list.length + "");
 			}
 
 			protected function faultHandler(event:FaultEvent):void
@@ -132,6 +135,16 @@
 			
 			private function navigator_change():void{
 
+			}
+			
+			public function deleted(id:String):void
+			{
+				var list:ArrayCollection = receipt_text.datagrid.dataProvider as ArrayCollection;
+			}
+			
+			public function add(id:String):void
+			{
+				var list:ArrayCollection = receipt_text.datagrid.dataProvider as ArrayCollection;
 			}
 
 		]]>

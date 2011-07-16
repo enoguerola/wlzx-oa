@@ -49,9 +49,9 @@
             <column name="registed_date" />
         </property>
         
-      	<set name="attachments" lazy="false" cascade="all-delete-orphan" inverse="false" table="wlzx_oa_receipt_attachment_relationship">
+      	<set name="attachments" lazy="false" cascade="all-delete-orphan" inverse="true">
         	<key column="receipt_id" not-null="true" />
-        	<many-to-many column="attachment_id" class="system.wlims.oa.entity.receipt.FileAttachmentModel" /> 
+        	<one-to-many class="system.wlims.oa.entity.receipt.FileAttachmentModel" /> 
         </set>		
     </class>
 </hibernate-mapping>

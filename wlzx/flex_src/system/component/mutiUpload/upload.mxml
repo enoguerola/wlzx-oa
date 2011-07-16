@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%" fontSize="12" backgroundAlpha="0"  creationComplete="initApp()">
+	<mx:Metadata>
+		[Event(type="system.event.UploadEvent", name="deleted")]
+		[Event(type="system.event.UploadEvent", name="uploaded")]
+	</mx:Metadata>
 	<mx:Script>
 		<![CDATA[
 			import flash.events.Event;
@@ -13,6 +17,8 @@
 			import mx.controls.Alert;
 			import mx.events.CloseEvent;
 			import mx.events.IndexChangedEvent;
+			
+			import system.event.UploadEvent;
 			
 			public var fileRef:FileReferenceList = new FileReferenceList();
 			public var allTypes:Array;
@@ -65,10 +71,12 @@
 			// 单个文件上传结束
 			//===================
 			internal function completeHandler():void{
+				browse_btn.enabled = false;
 				fileRef.fileList[uploadImg_num].removeEventListener(ProgressEvent.PROGRESS,onProcessHandler);
 				fileRef.fileList[uploadImg_num].removeEventListener(Event.COMPLETE,onComplete);	
 				upload_size+=fileRef.fileList[uploadImg_num].size;
-				processBar_Total.width=(upload_size/upload_size_total)*488;
+				Alert.show(processBar_width.width + "");
+				processBar_Total.width=(upload_size/upload_size_total)*processBar_width.width;
 				tip_txt.text="已上传" + int(upload_size*100/upload_size_total) + "%  (" + (uploadImg_num+1) +"/" + fileRef.fileList.length + ")";
 				uploadImg_num++;
 				process_list.scrollToIndex(uploadImg_num);
@@ -115,7 +123,10 @@
 			private function uploadComplete(e:DataEvent):void   
 			{   
 				var xmlResponse:XML = XML(e.data);
-				idList.push(xmlResponse.elements("field").toString());
+				var id:String = xmlResponse.elements("field").toString()
+				idList.push(id);
+				// dispatchEvent completed
+				dispatchEvent( new UploadEvent( UploadEvent.COMPLETED, id, false, false ) );
 			}
 			
 			//===================
@@ -130,14 +141,19 @@
 			// 点击上传按钮
 			//===================
 			public function uploadHandler():void{
-				if(uploadImg_num!=0) return;
+				//if(uploadImg_num!=0) return;
 				if(process_list.dataProvider==null || info.length<=0){
 					Alert.show("您还未选择图片!","提示信息");
 					return;
 				}		
 				for(var i:Number=0;i<fileRef.fileList.length;i++){				
 					upload_size_total+=fileRef.fileList[i].size;										
-				}									
+				}				
+				//set upload_size
+				for(i=0; i< uploadImg_num;i++)
+				{
+					upload_size += fileRef.fileList[i].size;
+				}
 				upLoadImg(uploadImg_num);			
 			}
 			
@@ -165,6 +181,16 @@
 					for(var i:int=0;i<iCount;i++){
 						info.splice(selectIndex[i],1);
 						fileRef.fileList.splice(selectIndex[i],1);
+						//add by yufeng
+						if(i < uploadImg_num)
+						{
+							//delete uploaded file
+							uploadImg_num --;
+						}else
+						{
+							
+						}
+							
 					}
 					for(var j:Number=0;j<fileRef.fileList.length;j++){						
 						sizeMum+=fileRef.fileList[j].size;					
@@ -255,6 +281,7 @@
 			<mx:Label text="" fontWeight="bold" id="tip_txt" x="5" y="3"/>			
 		</mx:Canvas> 
 		<mx:Canvas borderStyle="solid" width="100%"  height="25" borderColor="0X124fc0" backgroundColor="0xffffff">
+			<mx:Canvas backgroundColor="0X124fc0" backgroundAlpha="0.5" id="processBar_width" width="100%" height="0.01"/>
 			<mx:Canvas backgroundColor="0X124fc0" backgroundAlpha="0.5" id="processBar_Total" width="0" height="23"/>
 		</mx:Canvas>
 		<mx:HBox width="100%" horizontalAlign="right" height="30"> 

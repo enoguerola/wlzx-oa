@@ -13,12 +13,34 @@
 		<![CDATA[
 			import mx.controls.Alert;
 			
+			import system.event.UploadEvent;
+			
 			private function init():void
 			{
-				var urlRequest:URLRequest = new URLRequest("spring/attachmentUpload.action");
+				var params:String=(Object)(((Object)(this.parentDocument)).owner).id;
+				var url:String = this.loaderInfo.url;
+				var last:int = url.lastIndexOf("/");
+				var urlRequest:URLRequest = new URLRequest(url.substr(0, last) + "/spring/attachmentUpload.action");
+				var variables:URLVariables = new URLVariables();//传过去的data
+				variables.id = params;
+				urlRequest.data = variables;
 				upload.urlRequest = urlRequest;
+			}
+			
+			// when attachment is deleted
+			private function deleted(event:UploadEvent):void
+			{
+				var parent:Object = (Object)(this.parentDocument);
+				parent.deleted(event.id);
+			}
+			
+			// when attachment is uploaded
+			private function uploaded(event:UploadEvent):void
+			{
+				var parent:Object = (Object)(this.parentDocument);
+				parent.add(event.id);
 			}
 		]]>
 	</fx:Script>
-	<mutiUpload:upload width="100%" height="100%" id="upload" paddingTop="10" paddingLeft="10" paddingRight="10"/>
+	<mutiUpload:upload width="100%" height="100%" id="upload" paddingTop="10" paddingLeft="10" paddingRight="10" deleted="deleted(event)" uploaded="uploaded(event)"/>
 </s:Group>

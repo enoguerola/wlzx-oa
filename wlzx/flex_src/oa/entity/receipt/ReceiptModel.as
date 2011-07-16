@@ -1,6 +1,8 @@
 package oa.entity.receipt
 {
 	import basic.entity.BaseModel;
+	import mx.collections.ArrayCollection;
+	
 	[Bindable]
 	[RemoteClass(alias="system.wlims.oa.entity.receipt.ReceiptModel")]
 	public class ReceiptModel extends BaseModel
@@ -16,7 +18,7 @@ package oa.entity.receipt
 		public var isCompleted:int;
 		public var registedDate:Date;
 		
-		public var attachments:Object = new Array();
+		public var attachments:ArrayCollection = new ArrayCollection();
 		public function ReceiptModel()
 		{
 			super();

@@ -4,14 +4,18 @@ package system.wlims.oa;
 import system.BaseTest;
 import system.ServiceException;
 import system.wlims.oa.entity.receipt.FileAttachmentModel;
+import system.wlims.oa.entity.receipt.ReceiptModel;
 import system.wlims.oa.service.receipt.FileAttachmentService;
+import system.wlims.oa.service.receipt.ReceiptService;
 
 public class ReceiptAttachmentTest extends BaseTest {
 
 	private FileAttachmentService fileAttachmentService;
+	private ReceiptService receiptService;
 	
 	public ReceiptAttachmentTest(){
 		setFileAttachmentService((FileAttachmentService)(applicationContext.getBean("fileAttachmentService")));
+		setReceiptService((ReceiptService)(applicationContext.getBean("receiptService")));
 	}
 	
 	public void save(){
@@ -21,6 +25,8 @@ public class ReceiptAttachmentTest extends BaseTest {
 		attachment.setPath("/////");
 		attachment.setType(".oh");
 		try {
+			ReceiptModel model = receiptService.get("1");
+			attachment.setReceipt(model);
 			fileAttachmentService.save(attachment);
 			System.out.println("save done");
 		} catch (ServiceException e) {
@@ -40,5 +46,13 @@ public class ReceiptAttachmentTest extends BaseTest {
 
 	public FileAttachmentService getFileAttachmentService() {
 		return fileAttachmentService;
+	}
+
+	public void setReceiptService(ReceiptService receiptService) {
+		this.receiptService = receiptService;
+	}
+
+	public ReceiptService getReceiptService() {
+		return receiptService;
 	}
 }

@@ -298,6 +298,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_oa_receipt_attachment` (
   `id` int(11) NOT NULL auto_increment,
   `name` varchar(100) NOT NULL,
   `type` varchar(10) NOT NULL,
+  `upload_date` date NOT NULL,
   `path` varchar(100) NOT NULL,
   `receipt_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`),
