@@ -28,21 +28,23 @@
 			
 			protected function remove():void
 			{
+				var id:String = this.data.id;
 				// TODO Auto-generated method stub
 				Alert.show("你确定要删除该公告吗?", "确定" ,Alert.YES | Alert.NO,null,function(event:CloseEvent):void{
 					if(event.detail == Alert.YES)
 					{
-						receiptServiceRO.remove(this.data.id);
+						receiptServiceRO.remove(id);
 					}
 				});
 			}
 			
 			private function register():void
 			{
+				var id:String = this.data.id;
 				Alert.show("你确定要登记该公告吗?", "确定" ,Alert.YES | Alert.NO,null,function(event:CloseEvent):void{
 					if(event.detail == Alert.YES)
 					{
-						receiptServiceRO.register(this.data.id);
+						receiptServiceRO.register(id);
 					}
 				});
 			}

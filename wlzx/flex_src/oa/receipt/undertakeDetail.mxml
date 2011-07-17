@@ -8,6 +8,7 @@
 			import mx.controls.Alert;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
+			import mx.collections.ArrayCollection;
 			
 			import oa.entity.receipt.ReceiptModel;
 			
@@ -47,7 +48,8 @@
 				office = receipt.office;
 				status = receipt.status;
 				//for attments
-				
+				var list:ArrayCollection = receipt.attachments as ArrayCollection;
+				receipt_text.list = list;
 			}
 			
 			protected function faultHandler(event:FaultEvent):void

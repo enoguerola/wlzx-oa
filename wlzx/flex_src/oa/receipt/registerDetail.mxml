@@ -126,7 +126,6 @@
 				//attachments here
 				var list:ArrayCollection = receipt.attachments as ArrayCollection;
 				receipt_text.list = list;
-				Alert.show(list.length + "");
 			}
 
 			protected function faultHandler(event:FaultEvent):void

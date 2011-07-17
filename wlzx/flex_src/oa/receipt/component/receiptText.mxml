@@ -13,6 +13,8 @@
 	<fx:Script>
 		<![CDATA[
 			import mx.collections.ArrayCollection;
+			import mx.rpc.events.*;
+			import mx.controls.Alert;
 			
 			import oa.receipt.component.item.AttachmentDelete;
 			import oa.receipt.component.item.CompleteHandler;
@@ -20,6 +22,59 @@
 			
 			[Bindable]
 			public var list:ArrayCollection;
+			private var downloadURL:URLRequest;
+			private var file:FileReference; //这是要主要的地方
+			
+			public function download(id:String):void {
+				downloadURL = new URLRequest("../../uploads/oa/attachment/" + id );
+				//downloadURL = new URLRequest("http://localhost:8081/wlzx/uploads/oa/attachment/gravtar_junlu_110627085752.jpg");
+				file = new FileReference();
+				configureListeners(file);
+				file.download(downloadURL);
+				
+			}
+			
+			private function configureListeners(dispatcher:IEventDispatcher):void {
+				dispatcher.addEventListener(Event.CANCEL, cancelHandler);
+				dispatcher.addEventListener(Event.COMPLETE, completeHandler);
+				dispatcher.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
+				dispatcher.addEventListener(Event.OPEN, openHandler);
+				dispatcher.addEventListener(ProgressEvent.PROGRESS, progressHandler);
+				dispatcher.addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
+				dispatcher.addEventListener(Event.SELECT, selectHandler);
+			}
+			
+			private function cancelHandler(event:Event):void {
+				trace("cancelHandler: " + event);
+			}
+			
+			private function completeHandler(event:Event):void {
+				trace("completeHandler: " + event);
+				Alert.show("下载成功");
+			}
+			
+			private function ioErrorHandler(event:IOErrorEvent):void {
+				trace("ioErrorHandler: " + event);
+				Alert.show("网络连接有错");
+			}
+			
+			private function openHandler(event:Event):void {
+				trace("openHandler: " + event);
+			}
+			
+			private function progressHandler(event:ProgressEvent):void {
+				var file:FileReference = FileReference(event.target);
+				trace("progressHandler name=" + file.name + " bytesLoaded=" + event.bytesLoaded + " bytesTotal=" + event.bytesTotal);
+			}
+			
+			private function securityErrorHandler(event:SecurityErrorEvent):void {
+				trace("securityErrorHandler: " + event);
+			}
+			
+			private function selectHandler(event:Event):void {
+				var file:FileReference = FileReference(event.target);
+				trace("selectHandler: name=" + file.name + " URL=" + downloadURL.url);
+			}
 		]]>
 	</fx:Script>
 	<s:Panel width="100%" height="100%">
@@ -37,7 +92,13 @@
 				<mx:DataGrid width="80%" height="100%" id="datagrid" dataProvider="{list}" textAlign="center">
 					<mx:columns>
 						<mx:DataGridColumn dataField="id" headerText="序号" width="50"/>
-						<mx:DataGridColumn dataField="name" headerText="附件名称" width="200"/>
+						<mx:DataGridColumn dataField="name" headerText="附件名称" width="200">
+							<mx:itemRenderer>
+								<fx:Component>
+									<mx:Button label="{data.name}" click="{this.outerDocument.download(data.id)}" width="90%"/>
+								</fx:Component>
+							</mx:itemRenderer>
+						</mx:DataGridColumn>
 						<mx:DataGridColumn dataField="date" labelFunction="DateUtil.datagridFormatDate" headerText="上传时间" width="100"/>
 						<mx:DataGridColumn itemRenderer="oa.receipt.component.item.AttachmentDelete" headerText="删除" width="100"/>
 					</mx:columns>
