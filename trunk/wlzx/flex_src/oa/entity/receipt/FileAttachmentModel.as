@@ -8,6 +8,7 @@ package oa.entity.receipt
 		public var name:String;
 		public var path:String;
 		public var type:String;
+		public var date:Date;
 		
 		public function FileAttachmentModel()
 		{
