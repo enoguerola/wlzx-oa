@@ -9,7 +9,7 @@ package oa.entity
 		public var name:String;
 		public var path:String;
 		public var type:String;
-		
+		public var size:String;
 		public function AttachmentModel()
 		{
 			super();

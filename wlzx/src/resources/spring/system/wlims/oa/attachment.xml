@@ -16,27 +16,12 @@
 
 	<!-- 注入配置 -->
 	
-	<bean id="noticeDAO" class="system.wlims.oa.daoImpl.notice.NoticeDAOImpl">
-		<property name="sessionFactory" ref="oaSessionFactory" />
-	</bean>
-	<bean id="noticeServiceDest" class="system.wlims.oa.serviceImpl.notice.NoticeServiceImpl">
-		<flex:remoting-destination />
-		<property name="noticeDAO" ref="noticeDAO" />
-		<property name="departmentDAO" ref="departmentDAO" />
-		<property name="userDAO" ref="userDAO" />
-		<property name="attachmentDAO" ref="attachmentDAO" />
-	</bean>
-	
-<!--	<bean id="attachmentDAO" class="system.wlims.oa.daoImpl.notice.AttachmentDAOImpl">
+	<bean id="attachmentDAO" class="system.wlims.oa.daoImpl.notice.AttachmentDAOImpl">
 		<property name="sessionFactory" ref="oaSessionFactory" />
 	</bean>
 	<bean id="attachmentServiceDest" class="system.wlims.oa.serviceImpl.notice.AttachmentServiceImpl">
 		<flex:remoting-destination />
 		<property name="attachmentDAO" ref="attachmentDAO" />
 	</bean>
-	-->
-	<bean id="attachmentService" class="system.wlims.oa.serviceImpl.notice.AttachmentServiceImpl">
-		<property name="attachmentDAO" ref="attachmentDAO" />
-	</bean>
-	
+
 </beans>

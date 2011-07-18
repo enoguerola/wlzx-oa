@@ -20,6 +20,21 @@
         <property name="path" type="string">
             <column name="path" />
         </property>
-
+        <property name="size" type="string">
+            <column name="size" />
+        </property>
+		<set name="notices" lazy="false" table="wlzx_oa_notice_attachment_relationship" cascade="none" inverse="false">
+        	<key column="id" not-null="true" />
+        	<many-to-many  column="notice_id" class="system.wlims.oa.entity.notice.NoticeModel" /> 
+        </set>
+        <set name="conferences1" lazy="false" table="wlzx_oa_conference_attachment_relationship" cascade="none" inverse="false">
+        	<key column="id" not-null="true" />
+        	<many-to-many  column="conference_id" class="system.wlims.oa.entity.conference.ConferenceModel" /> 
+        </set>
+        <set name="conferences2" lazy="false" table="wlzx_oa_conference_summary_attachment_relationship" cascade="none" inverse="false">
+        	<key column="id" not-null="true" />
+        	<many-to-many  column="conference_id" class="system.wlims.oa.entity.conference.ConferenceModel" /> 
+        </set>
+        
     </class>
 </hibernate-mapping>

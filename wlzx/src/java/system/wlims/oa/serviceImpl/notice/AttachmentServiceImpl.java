@@ -12,7 +12,7 @@ public class AttachmentServiceImpl implements AttachmentService {
 	@Override
 	public void remove(String id) throws ServiceException {
 		// TODO Auto-generated method stub
-		attachmentDAO.remove(id, AttachmentModel.class);
+		attachmentDAO.remove(attachmentDAO.get(id));
 	}
 
 	@Override

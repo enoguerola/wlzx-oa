@@ -30,6 +30,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_oa_attachment` (
   `name` varchar(100) NOT NULL,
   `path` varchar(100) NOT NULL,
   `type` varchar(10) NOT NULL,
+  `size` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 

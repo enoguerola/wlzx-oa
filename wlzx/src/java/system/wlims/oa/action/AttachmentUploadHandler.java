@@ -30,6 +30,7 @@ public class AttachmentUploadHandler extends BaseFileUploadHandler{
 		attachment.setName(file.getOriginalFilename());
 		attachment.setPath(getFilename());
 		attachment.setType(getFileType(file.getOriginalFilename()));
+		attachment.setSize(file.getSize()+"");
 		attachment.setId(null);
 		try {
 			attachmentService.save(attachment);
