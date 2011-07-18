@@ -19,7 +19,7 @@
 			import mx.events.IndexChangedEvent;
 			
 			import system.event.UploadEvent;
-			
+			import system.utils.CommonUtils;
 			public var fileRef:FileReferenceList = new FileReferenceList();
 			public var allTypes:Array;
 			public var urlRequest:URLRequest = new URLRequest("upload.php");			
@@ -75,7 +75,7 @@
 				fileRef.fileList[uploadImg_num].removeEventListener(ProgressEvent.PROGRESS,onProcessHandler);
 				fileRef.fileList[uploadImg_num].removeEventListener(Event.COMPLETE,onComplete);	
 				upload_size+=fileRef.fileList[uploadImg_num].size;
-				Alert.show(processBar_width.width + "");
+				//Alert.show(processBar_width.width + "");
 				processBar_Total.width=(upload_size/upload_size_total)*processBar_width.width;
 				tip_txt.text="已上传" + int(upload_size*100/upload_size_total) + "%  (" + (uploadImg_num+1) +"/" + fileRef.fileList.length + ")";
 				uploadImg_num++;
@@ -258,34 +258,90 @@
 				browse_btn.addEventListener(MouseEvent.CLICK,browseHandler);
 				fileRef.addEventListener(Event.SELECT,selectHandler);
 				delete_btn.addEventListener(MouseEvent.CLICK,deleteHandler);
+				delete_already_btn.addEventListener(MouseEvent.CLICK,deleteAlreadyHandler);
 				add_btn.addEventListener(MouseEvent.CLICK,addHandler);	
 //				save.addEventListener(MouseEvent.CLICK,uploadHandler);	
 				/* 注册供js调用的函数 ********************/
 //				ExternalInterface.addCallback("uploadImg",uploadHandler);		
 			}
+			
+			//===================
+			// 执行已添加附件删除操作
+			//===================
+			private function deleteAlreadyHandler(e:Event):void{
+				if(uploadAlready_list.selectedIndices.length<=0){
+					Alert.show("您还没有选择图片","提示信息");
+					return;
+				}
+				Alert.show("您确定要删除选定图片？","提示信息",Alert.YES|Alert.NO,uploadAlready_list,alertHandler,null,Alert.NO);
+				function alertHandler(evt:CloseEvent):void{
+					if(evt.detail==Alert.YES){
+						deleteItems();
+					} else {
+						
+					}
+				}
+				function deleteItems():void{
+					var selectItems:Array = uploadAlready_list.selectedItems;
+					var selectIndex:Array = process_list.selectedIndices;
+					var iCount:int = selectItems.length;
+					var sizeMum:Number = 0;
+					for(var i:int=0;i<iCount;i++){
+						//Alert.show(selectItems[i].id);
+						dispatchEvent( new UploadEvent( UploadEvent.DELETED, selectItems[i].id, false, false ) );
+					}
+					var uploadAlreadyList:Array=new Array(CommonUtils.clone(uploadAlready_list.dataProvider));
+					
+					for(var i:int=0;i<iCount;i++){
+						uploadAlreadyList.splice(selectIndex[i],1);
+					}
+					uploadAlready_list.dataProvider=uploadAlreadyList;
+				
+								
+				}
+			}	
 		]]>
 	</mx:Script>
-		<mx:HBox>
-			<mx:Button label="浏览文件" id="browse_btn"/>
-			<mx:Label text="按住 Ctrl 或 Shift 键可以多选" x="85" y="3"/>
-			<mx:Button label="添加文件" x="330" id="add_btn" enabled="false"/>
-			<mx:Button label="删除文件" x="410" id="delete_btn" enabled="false"/>
-		</mx:HBox>
+	<mx:HBox  width="100%">
+		<mx:Panel  width="50%"  title="上传附件操作区" verticalGap="0" borderVisible="false"  dropShadowVisible="false">
+			<mx:HBox>
+				<mx:Button label="浏览文件" id="browse_btn"/>
+				<mx:Label text="按住 Ctrl 或 Shift 键可以多选" x="85" y="3"/>
+				<mx:Button label="添加文件" x="330" id="add_btn" enabled="false"/>
+				<mx:Button label="删除文件" x="410" id="delete_btn" enabled="false"/>
+			</mx:HBox>
+			
+			<mx:Canvas width="100%" height="25" backgroundColor="0Xf1f1f1" x="0" y="41" borderStyle="solid" borderColor="0Xbbbbbb">
+				<mx:Label text="文件名" x="5" y="3"/>
+				<mx:Label text="文件大小" x="215" y="3"/>
+				<mx:Label text="上传进度" x="320" y="3"/>
+			</mx:Canvas> 
+			<mx:List x="0" y="67" width="100%" rowCount="10" allowMultipleSelection="true" borderStyle="solid" borderColor="0Xbbbbbb" rowHeight="25" itemRenderer="system.component.mutiUpload.ImageItem" id="process_list" height="165"/>
+			<mx:Canvas width="100%" height="25" backgroundColor="0Xf1f1f1"  borderStyle="solid" borderColor="0Xbbbbbb">
+				<mx:Label text="" fontWeight="bold" id="tip_txt" x="5" y="3"/>			
+			</mx:Canvas> 
+			<mx:Canvas borderStyle="solid" width="100%"  height="25" borderColor="0X124fc0" backgroundColor="0xffffff">
+				<mx:Canvas backgroundColor="0X124fc0" backgroundAlpha="0.5" id="processBar_width" width="100%" height="0.01"/>
+				<mx:Canvas backgroundColor="0X124fc0" backgroundAlpha="0.5" id="processBar_Total" width="0" height="23"/>
+			</mx:Canvas>
+			<mx:HBox width="100%" horizontalAlign="right" height="30"> 
+				<mx:Button label="上传" id="save" click="uploadHandler();"/>
+			</mx:HBox>
+		</mx:Panel>
+		<mx:Panel  width="50%" title="已上传附件" verticalGap="0" borderVisible="false"  dropShadowVisible="false">
+			<mx:HBox>
+				<mx:Label text="按住 Ctrl 或 Shift 键可以多选" x="85" y="3"/>
+				<mx:Button label="删除文件" x="410" id="delete_already_btn"/>
+			</mx:HBox>
+			<mx:Canvas width="100%" height="25" backgroundColor="0Xf1f1f1" x="0" y="41" borderStyle="solid" borderColor="0Xbbbbbb">
+				<mx:Label text="文件名" x="5" y="3"/>
+				<mx:Label text="文件大小" x="215" y="3"/>
+				<mx:Label text="上传进度" x="320" y="3"/>
+			</mx:Canvas> 
+			<mx:List x="0" y="67" width="100%" rowCount="10" allowMultipleSelection="true" borderStyle="solid" borderColor="0Xbbbbbb" rowHeight="25" itemRenderer="system.component.mutiUpload.ImageItem" id="uploadAlready_list" height="250"/>
+			
+			
+		</mx:Panel>
+	</mx:HBox>
 		
-		<mx:Canvas width="100%" height="25" backgroundColor="0Xf1f1f1" x="0" y="41" borderStyle="solid" borderColor="0Xbbbbbb">
-			<mx:Label text="文件名" x="5" y="3"/>
-			<mx:Label text="文件大小" x="215" y="3"/>
-			<mx:Label text="上传进度" x="320" y="3"/>
-		</mx:Canvas> 
-		<mx:List x="0" y="67" width="100%" rowCount="10" allowMultipleSelection="true" borderStyle="solid" borderColor="0Xbbbbbb" rowHeight="25" itemRenderer="system.component.mutiUpload.ImageItem" id="process_list" height="165"/>
-		<mx:Canvas width="100%" height="25" backgroundColor="0Xf1f1f1"  borderStyle="solid" borderColor="0Xbbbbbb">
-			<mx:Label text="" fontWeight="bold" id="tip_txt" x="5" y="3"/>			
-		</mx:Canvas> 
-		<mx:Canvas borderStyle="solid" width="100%"  height="25" borderColor="0X124fc0" backgroundColor="0xffffff">
-			<mx:Canvas backgroundColor="0X124fc0" backgroundAlpha="0.5" id="processBar_width" width="100%" height="0.01"/>
-			<mx:Canvas backgroundColor="0X124fc0" backgroundAlpha="0.5" id="processBar_Total" width="0" height="23"/>
-		</mx:Canvas>
-		<mx:HBox width="100%" horizontalAlign="right" height="30"> 
-			<mx:Button label="上传" id="save" click="uploadHandler();"/>
-		</mx:HBox>
 </mx:VBox>

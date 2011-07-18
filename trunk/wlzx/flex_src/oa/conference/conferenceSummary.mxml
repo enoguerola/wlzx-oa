@@ -1,0 +1,416 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Module xmlns:mx="http://www.adobe.com/2006/mxml" 
+		   xmlns:hc="com.hillelcoren.components.*"
+		   xmlns:render="system.component.render.*"
+		   layout="vertical" width="100%" creationComplete="init();"  height="100%" xmlns:component="system.component.*" xmlns:mx1="library://ns.adobe.com/flex/mx" xmlns:mutiUpload="system.component.mutiUpload.*" xmlns:conference="oa.conference.*"   currentState="list">
+	
+	<mx:RemoteObject id="conferenceServiceRO" destination="conferenceServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+		
+		<mx:method name="getConferencesByConditions"  concurrency="last"  result="getConferencesByConditions_resultHandler(event);" />
+	</mx:RemoteObject>
+	
+	<mx:states>
+		<mx:State name="list">           
+			<mx:RemoveChild target="{addPanel}"/>
+		</mx:State>
+		<mx:State name="add" enterState="add_activateHandler(event)">           
+			<mx:RemoveChild target="{listPanel}"/>
+		</mx:State>
+	</mx:states>
+	<mx:transitions>
+		<mx:Transition id="myTransition1" fromState="list" toState="*" >
+			<mx:Parallel id="t1" target="{addPanel}" >
+				<mx:WipeLeft duration="1500"></mx:WipeLeft>
+			</mx:Parallel>
+		</mx:Transition>
+		<mx:Transition id="myTransition2" fromState="*" toState="list" >
+			<mx:Parallel id="t2" target="{listPanel}" >
+				<mx:WipeRight duration="800">
+				</mx:WipeRight>
+			</mx:Parallel>
+		</mx:Transition>
+	</mx:transitions>
+	
+	<mx:Script>
+		<![CDATA[
+			import basic.utils.DateUtil;
+			
+			import mx.collections.ArrayCollection;
+			import mx.containers.*;
+			import mx.controls.*;
+			import mx.core.FlexGlobals;
+			import mx.events.*;
+			import mx.events.ListEvent;
+			import mx.events.ModuleEvent;
+			import mx.managers.PopUpManager;
+			import mx.modules.*;
+			import mx.rpc.events.*;
+			import mx.validators.Validator;
+			
+			import system.component.WlzxLockWin;
+			import system.entity.*;
+			import system.utils.*;
+			
+			
+			public var conferenceStatusList:ArrayCollection = new ArrayCollection( 
+				[
+					{label:"全部", data:null},
+					{label:"预约中", data:"1"},
+					{label:"申请取消", data:"2"},
+					{label:"安排取消", data:"4"},
+					{label:"已安排", data:"3"}]);
+			
+//			[Bindable] 
+//			public var departmentList:ArrayCollection = new ArrayCollection();
+			
+			
+			private function init():void {	
+//				var parms:String=((Object)(this.owner)).id;
+//				//Alert.show(parms);
+//				if(parms!=null&&parms!='null'&&parms!=''){
+//					//this.currentState="";
+//					enterEditConference(parms);
+//				}
+				//				if(parms=='add'){
+				//					this.currentState='add';
+				//					returnArea.height=0;
+				//				}
+				//				else //if(parms=='list') 
+				//				{
+				//					this.currentState='list';
+				//				}
+				
+//				search_account.dataProvider=this.parentApplication.allTeacherAcccounts;
+//				search_status.selectedIndex=1;
+				search();
+//				departmentList = this.parentApplication.allDepartment;
+				
+				conferenceMaintain.addEventListener("stateChangeEvent",function(event:Event):void{
+					currentState="list";
+					search();
+				});
+				
+			}
+			
+			private function systemFaultHandler(event:FaultEvent):void {
+				Alert.show(event.fault.faultString, 'Error');
+				unLockWin();
+			}
+			
+			private function search():void
+			{
+				lockWin();
+//				var status:String=search_status.selectedItem.data;
+				var name:String=search_name.text;
+				var submitBeginDate:String=search_post_date_begin.text;
+				var submitEndDate:String=search_post_date_end.text;
+				var beginDate:String=search_date_begin.text;
+				var endDate:String=search_date_end.text;
+				conferenceServiceRO.getConferencesByConditions(parentApplication.currentUser.id, name,'3',null,beginDate,endDate,submitBeginDate,submitEndDate);
+			}
+
+			
+			
+			protected function getConferencesByConditions_resultHandler(event:ResultEvent):void
+			{
+				var allList:ArrayCollection = event.result as ArrayCollection;
+				//				Alert.show( " " + messagesView.selectedIndex);
+				conferenceTable.initdata(allList);
+				unLockWin();
+			}
+			
+			protected function add_activateHandler(event:Event):void
+			{
+				if(conferenceMaintain.addUpdateFlag.text=="add")
+					conferenceMaintain.addInit();
+				else {
+					var id:String=conferenceMaintain.addUpdateFlag.text.split("_")[1];
+					//conferenceMaintain.hideSummaryArea();
+					conferenceMaintain.disabledConferenceChange();
+					conferenceMaintain.showSummaryArea();
+					//conferenceMaintain.enabledTimePositionChange();
+					conferenceMaintain.editInit(id);
+				}
+			}
+			
+			public function formatDate(date:Date):String{
+				return CommonUtils.formatDate(date);
+				
+			}
+			//			//编辑
+			//			public function enterEdit(id:String):void{
+			//				conferenceMaintain.addUpdateFlag.text="update"+"_"+id;
+			//				this.currentState='add';
+			//				returnArea.height=30;
+			//			}
+			//			//发布
+			//			public function post(id:String):void{
+			//				Alert.show("你确定要发布该会议吗?","确认",Alert.YES | Alert.NO,null,function(event:CloseEvent):void{
+			//					if(event.detail == Alert.YES)
+			//					{
+			//						conferenceServiceRO.publish(id);
+			//					}
+			//				});
+			//			}
+			public function detailConference(id:String):void
+			{
+				var parent:Object=(Object)(((Object)(this.owner)).owner);
+				parent.addTab("conferenceDetial-"+id,"查看会议",parent.nav,"oa/conference/conferenceDetail.swf",null,id);
+			}
+//			public function enterEditConference(id:String):void
+//			{
+//				
+//				conferenceMaintain.addUpdateFlag.text="adjust"+"_"+id;
+//				conferenceMaintain.disabledTimePositionChange();
+//				this.currentState='add';
+//				conferenceMaintain.saveButton.label="落实";
+//				
+//			}
+//			public function sendConferenceMessage(id:String):void
+//			{
+//				
+//			}
+			public function enterSummaryConference(id:String):void
+			{
+				conferenceMaintain.addUpdateFlag.text="summary"+"_"+id;
+				conferenceMaintain.disabledConferenceChange();
+				this.currentState='add';
+			}
+		
+			
+			private var window:WlzxLockWin=null;
+			private function lockWin():void{
+				if(window==null){
+					window=WlzxLockWin(PopUpManager.createPopUp(this,WlzxLockWin,true)); 
+					PopUpManager.centerPopUp(window);
+					window.percentHeight=100;
+					window.percentWidth=100;
+				}		
+				
+			}
+			private function unLockWin():void{
+				if(window!=null)
+					PopUpManager.removePopUp(window);
+			}
+//			private function searchAccountHandleAutoCompleteChange():void
+//			{
+//				var color:Object = search_account.selectedItem;
+//				
+//				if (color != null && color.hasOwnProperty( "id" ))
+//				{
+//					search_account_id.text=color.id;
+//				} else{
+//					search_account_id.text="";
+//				}               
+//			}
+		]]>
+	</mx:Script>
+<!--	<mx:Component id="searchAccountDropDownItemRenderer">
+		<render:AdvancedItemRenderer selectedItems="{ outerDocument.search_account.selectedItems }" />
+	</mx:Component>-->
+	<mx:VBox borderVisible="true" width="100%" height="100%" borderStyle="solid">
+		<mx:VBox width="100%" height="100%" id="listPanel">
+			<mx:HBox verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12" >
+				<mx:HBox width="100%" height="30" paddingLeft="20"  horizontalGap="0" backgroundColor="#C5E497"  verticalAlign="middle">
+					
+				</mx:HBox>
+			</mx:HBox>
+			<mx:VBox width="100%" height="100"  verticalGap="10" verticalAlign="middle" horizontalAlign="center" >
+				<mx:VBox width="100%" height="100%"   horizontalGap="10" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="0" paddingBottom="0"   paddingLeft="10" paddingRight="10">
+					<mx:FormHeading label="条件查询">
+					</mx:FormHeading>
+					
+					<mx:HBox>
+					<!--	<mx:HBox verticalAlign="middle">
+							<mx:Label  text="发起人"  width="100"  textAlign="right"/>
+							<hc:AutoComplete id="search_account"  labelField="name"  width="100"  matchType="anyPart" prompt="选择"  change="{ searchAccountHandleAutoCompleteChange() }" dropDownItemRenderer="{ searchAccountDropDownItemRenderer }" selectedItemStyleName="none">
+								
+							</hc:AutoComplete>
+							<mx:Label id="search_account_id" visible="false">
+								
+							</mx:Label>
+						</mx:HBox>	-->
+						<mx:HBox>
+							<mx:Label  text="会议名称"  width="100"  textAlign="right"/>
+							<mx:TextInput width="300" id="search_name">
+								
+							</mx:TextInput>
+						</mx:HBox>
+					</mx:HBox>
+					<mx:HBox>
+						<mx:HBox verticalAlign="middle">
+							<mx:Label  text="开会日期"  width="100"  textAlign="right"/>
+							<mx:DateField yearNavigationEnabled="true" id="search_date_begin"   formatString="YYYY-MM-DD"  editable="false" width="120"/>
+							<mx:Label  text="--"  width="20" textAlign="center"/>
+							<mx:DateField yearNavigationEnabled="true" id="search_date_end"  formatString="YYYY-MM-DD" editable="false" width="120"/>
+							<mx:Label  text="发布日期"  width="100"  textAlign="right"/>
+							<mx:DateField yearNavigationEnabled="true" id="search_post_date_begin"   formatString="YYYY-MM-DD"  editable="false" width="120"/>
+							<mx:Label  text="--"  width="20" textAlign="center"/>
+							<mx:DateField yearNavigationEnabled="true" id="search_post_date_end"  formatString="YYYY-MM-DD" editable="false" width="120"/>
+						</mx:HBox>	
+						
+						
+						<mx:Button  label="搜索"  width="70"   click="search();"/>
+					</mx:HBox>
+				</mx:VBox>
+			</mx:VBox>
+			<mx:VBox width="100%" height="100%"  verticalAlign="middle" horizontalAlign="center" >					
+				<mx:HBox  width="100%" height="100%" paddingLeft="10" paddingRight="10">
+					<component:WlzxPageDataGrid width="100%" height="100%"   borderVisible="false"  autoLayout="true"  borderAlpha="0.2" verticalAlign="middle"   id="conferenceTable" pagecount="10"  >				
+						<component:mygridcolumns>
+							<mx:DataGridColumn textAlign="center" headerText="会议时间"  width="100">
+								<mx:itemRenderer>
+									<mx:Component>
+										<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+											<mx1:Text text="{getMeetingTime(data)}" width="100">
+												<mx:Script>
+													<![CDATA[
+														//提示信息
+														import mx.controls.Alert;
+														import system.utils.CommonUtils;
+														private function getMeetingTime(data:Object):String{
+															
+															return CommonUtils.formatDate(data.meetingDate,"YYYY-MM-DD")+" "+data.beginTime+"--"+data.endTime;
+														}
+													]]>
+												</mx:Script>
+											</mx1:Text>	
+										</mx:HBox>																		
+									</mx:Component>						
+								</mx:itemRenderer>
+							</mx:DataGridColumn>
+							<mx:DataGridColumn textAlign="center" headerText="会议名称" width="200" >
+								<mx:itemRenderer>
+									<mx:Component>
+										<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" >
+											<mx1:Text text="{data.name}" width="200">
+											</mx1:Text>
+										</mx:HBox>
+									</mx:Component>
+								</mx:itemRenderer>
+							</mx:DataGridColumn>
+							
+							<mx:DataGridColumn textAlign="center" headerText="使用部门"  width="60" >
+								<mx:itemRenderer>
+									<mx:Component>
+										<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" >
+											<mx1:Text text="{data.departmentId==-1?'校外':parentApplication.getDepartmentNameById(data.departmentId)}" width="60">
+											</mx1:Text>
+										</mx:HBox>
+									</mx:Component>
+								</mx:itemRenderer>
+							</mx:DataGridColumn>
+							<mx:DataGridColumn textAlign="center" headerText="参会人数" width="60" >
+								<mx:itemRenderer>
+									<mx:Component>
+										<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" >
+											<mx1:Text text="{data.attendNum}" width="60">
+											</mx1:Text>
+										</mx:HBox>
+									</mx:Component>
+								</mx:itemRenderer>
+							</mx:DataGridColumn>
+							<mx:DataGridColumn textAlign="center" headerText="会议地点" width="140" >
+								<mx:itemRenderer>
+									<mx:Component>
+										<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" >
+											<mx1:Text text="{data.placeId==null?'待定':parentApplication.getPlaceNameById(data.placeId)}" width="140">
+											</mx1:Text>
+											
+										</mx:HBox>
+									</mx:Component>
+								</mx:itemRenderer>
+							</mx:DataGridColumn>
+							<mx:DataGridColumn textAlign="center" headerText="联系人" width="60" >
+								<mx:itemRenderer>
+									<mx:Component>
+										<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" >
+											<mx1:Text text="{parentApplication.getTeacherNameByAccountId(data.contactUserId)}" width="60">
+											</mx1:Text>
+										</mx:HBox>
+									</mx:Component>
+								</mx:itemRenderer>
+							</mx:DataGridColumn>
+							<mx:DataGridColumn textAlign="center" headerText="状态" width="60" >
+								<mx:itemRenderer>
+									<mx:Component>
+										<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" >
+											<mx1:Text text="{getStatus(data)}" width="60">
+												<mx:Script>
+													<![CDATA[
+														//提示信息
+														import mx.controls.Alert;
+														import system.utils.CommonUtils;
+														private function getStatus(data:Object):String{
+															if(data.applyStatus==1)return "预约中";
+															else  if(data.applyStatus==2)return "申请取消";
+															else  if(data.applyStatus==4)return "安排取消";
+															else  if(data.applyStatus==3)return "已安排";
+															else return "异常";
+														}
+													]]>
+												</mx:Script>
+											</mx1:Text>
+										</mx:HBox>
+									</mx:Component>
+								</mx:itemRenderer>
+							</mx:DataGridColumn>
+							<mx:DataGridColumn textAlign="center" headerText="操作" width="180">
+								<mx:itemRenderer>
+									<mx:Component>
+										<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0">
+											<mx:LinkButton  label="[总结]"   click="{this.outerDocument.enterSummaryConference(data.id);}" enabled="{checkSummaryAuth(data)}">											
+											</mx:LinkButton>
+											
+											
+											<mx:Script>
+												<![CDATA[
+													//提示信息
+													import mx.controls.Alert;
+													import system.utils.CommonUtils;
+													private function checkSummaryAuth(data:Object):Boolean{
+														if(data.applyStatus==3&&CommonUtils.formatDate(data.meetingDate,"YYYY-MM-DD")<=CommonUtils.formatDate(new Date(),"YYYY-MM-DD"))
+															return true;
+														else return false;
+													}
+													
+													
+												]]>
+											</mx:Script>
+										</mx:HBox>
+									</mx:Component>
+								</mx:itemRenderer>
+							</mx:DataGridColumn>
+							
+							<mx:DataGridColumn textAlign="center" headerText="详细" width="50">
+								<mx:itemRenderer>
+									<mx:Component>
+										<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0">
+											<mx:LinkButton  label="[详细]"  click="{this.outerDocument.detailConference(data.id);}">											
+											</mx:LinkButton>
+										</mx:HBox>
+									</mx:Component>
+								</mx:itemRenderer>
+							</mx:DataGridColumn>
+							
+						</component:mygridcolumns>
+					</component:WlzxPageDataGrid>
+				</mx:HBox>
+			</mx:VBox>
+		</mx:VBox>
+		
+		<mx:VBox width="100%" height="100%" id="addPanel">
+			<mx:HBox verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12" id="returnArea">
+				<mx:HBox width="100%" height="30" paddingLeft="20"  horizontalGap="0" backgroundColor="#C5E497"  verticalAlign="middle">
+					<mx:Label text="|"/>
+					<mx:LinkButton  label="返回" icon="@Embed(source='../WebContent/resources/common/tools/button_back_icon.png')" click="this.currentState='list';" />
+					<mx:Label text="|"/>
+				</mx:HBox>
+				
+			</mx:HBox>
+			<conference:conferenceMaintain width="100%" height="100%" id="conferenceMaintain">
+				
+			</conference:conferenceMaintain>
+		</mx:VBox>
+	</mx:VBox>
+</mx:Module>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" height="25"  borderStyle="solid">	
 	<mx:Label width="195" text="{data.label}" x="5"/>
+	<mx:Label text="{data.id}"  visible="false" width="0"/>
 	<mx:Label width="100" text="{data.data}" x="210"/>
 	<mx:Canvas width="145" borderStyle="solid" borderColor="0X124fc0" height="7" x="320" y="5">
 		<mx:Canvas width="{data.width}" id="processBar" height="7" backgroundColor="0X124fc0" backgroundAlpha="0.5"/>

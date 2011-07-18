@@ -16,11 +16,15 @@
 		<mx:RemoteObject id="conferenceServiceRO" destination="conferenceServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 			<mx:method name="addConference"  concurrency="last"  result="addConferenceResult_resultHandler(event);" />
 			<mx:method name="updateConference"  concurrency="last"  result="updateConferenceResult_resultHandler(event);" />
-			
+			<mx:method name="saveSummary"  concurrency="last"  result="saveSummary_resultHandler(event);" />
+					
 			<mx:method name="validateTimeAndPositionConflict"  concurrency="last"  result="validateTimeAndPositionConflict_resultHandler(event);" />
 			<mx:method name="adjustConferenceById"  concurrency="last"  result="adjustConferenceResult_resultHandler(event);" />
 			<mx:method name="get"  concurrency="last"  result="get_resultHandler(event);" />
 		</mx:RemoteObject>
+	<mx:RemoteObject id="attachmentServiceRO" destination="attachmentServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+		<mx:method name="remove"  concurrency="last"  result="removeAttachment_resultHandler(event);" />
+	</mx:RemoteObject>
 		<mx:Component id="searchAccountDropDownItemRenderer">
 			<render:AdvancedItemRenderer selectedItems="{ outerDocument.linkman_account.selectedItems }" />
 		</mx:Component>
@@ -45,8 +49,10 @@
 			import mx.validators.Validator;
 			
 			import oa.common.popWin.StaffSelectPopWin;
+			import oa.entity.AttachmentModel;
 			
 			import system.entity.*;
+			import system.event.UploadEvent;
 			import system.utils.*;
 			private var validatorArr:Array;
 			[Binary]
@@ -61,7 +67,7 @@
 				placeServiceRO.getPlacesByCondition(null,null,null,null,null,null,null);
 //				Alert.show("aaaaaaaaa");
 				linkman_account.dataProvider=this.parentApplication.allTeacherAcccounts;
-				var urlRequest:URLRequest = new URLRequest(parentApplication.homeUrl+"spring/attachmentUpload.action?"+new Date());
+				var urlRequest:URLRequest = new URLRequest(parentApplication.homeUrl+"spring/attachmentUpload.action");
 				upload.urlRequest = urlRequest;
 				summaryUpload.urlRequest = urlRequest;
 //				var urlRequest:URLRequest = new URLRequest("spring/attachmentUpload.action");
@@ -93,6 +99,12 @@
 //				parent.currentState='list';
 //				parent.search();
 			}
+			protected function removeAttachment_resultHandler(event:ResultEvent):void
+			{
+				Alert.show("aaa");
+			
+			}
+			
 			protected function validateTimeAndPositionConflict_resultHandler(event:ResultEvent):void
 			{
 				//unLockWin();
@@ -122,6 +134,19 @@
 //				parent.currentState='list';
 //				parent.search();
 			}
+			protected function saveSummary_resultHandler(event:ResultEvent):void
+			{
+				//				if(event.result==true){
+				Alert.show("总结保存成功");
+				dispatchEvent(new  StateChangeEvent("stateChangeEvent"));
+				
+				//				}
+				//				else Alert.show("落实失败");
+				//				var parent:Object=(Object)(this.owner);
+				//				parent.currentState='list';
+				//				parent.search();
+			}
+			
 			protected function get_resultHandler(event:ResultEvent):void
 			{
 				form = event.result as ConferenceModel;
@@ -148,8 +173,24 @@
 					usersSelected.push({data:parentApplication.getTeacherNameByAccountId(array[i]),id:array[i]});
 				}
 				organizedUsersSelected();
-				
-				
+				var uploadList:Array=new Array();
+				var summaryUploadList:Array=new Array();
+				for each(var model:AttachmentModel in form.attachments){
+					uploadList.push({label:model.name,data:parseInt(model.size)/1000+"KB",width:100,id:model.id});
+				//	uploadListfileRef.fileList
+				}
+				for each(var model:AttachmentModel in form.summaryAttachments){
+					summaryUploadList.push({label:model.name,data:parseInt(model.size)/1000+"KB",width:100,id:model.id});
+				}
+				upload.addEventListener(UploadEvent.DELETED,function(e:UploadEvent):void{
+					//Alert.show(e.id+"--");
+					attachmentServiceRO.remove(e.id);
+
+				});
+			
+				upload.uploadAlready_list.dataProvider=uploadList;
+				summaryUpload.uploadAlready_list.dataProvider=summaryUploadList;
+			
 			}
 			private function getDepartmentBySymbolResult(event:ResultEvent):void {
 				var department:Object=event.result;
@@ -259,6 +300,13 @@
 						form.endTime=endTime;
 						form.placeId=places.selectedItem.data;						
 						conferenceServiceRO.validateTimeAndPositionConflict(form.id,form.meetingDate,form.beginTime,form.endTime,form.placeId);
+						//lockWin();
+					}else if(addUpdateFlag.text == "summary"+"_"+form.id){
+//						form.meetingDate=DateFormatter.parseDateString(date.text);
+//						form.beginTime=beginTime;
+//						form.endTime=endTime;
+//						form.placeId=places.selectedItem.data;						
+						conferenceServiceRO.saveSummary(form.id,summaryUpload.idList);
 						//lockWin();
 					}
 				}
@@ -478,7 +526,7 @@
 		<mx:HBox width="100%" height="20">
 			<mx:LinkButton  label="会议总结" icon="@Embed(source='../WebContent/resources/common/tools/button_attachment_icon.png')"/>
 		</mx:HBox>
-		<mx:VBox  width="100%"  height="340" id="summaryAttr_area" paddingLeft="10" paddingRight="10">
+		<mx:VBox  width="100%"  height="360" id="summaryAttr_area" paddingLeft="10" paddingRight="10">
 			<mutiUpload:upload width="100%" id="summaryUpload">
 			</mutiUpload:upload>
 		</mx:VBox>

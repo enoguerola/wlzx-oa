@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.util.List;
 
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 import system.BaseDAOImpl;
@@ -43,7 +44,7 @@ public class ConferenceDAOImpl extends BaseDAOImpl<ConferenceModel> implements C
 			criteria.add(Restrictions.ge("applyDateTime",  Date.valueOf(applyBeginTime)));
 		if(StringUtils.isNotEmpty(applyEndTime))
 			criteria.add(Restrictions.le("applyDateTime",  Date.valueOf(applyEndTime)));
-		
+		criteria.addOrder(Order.desc("meetingDate"));
 		return getListByCriteria(criteria);
 	}
 	//返回有冲突的会议记录

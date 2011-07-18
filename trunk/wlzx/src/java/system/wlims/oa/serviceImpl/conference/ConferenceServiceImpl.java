@@ -262,4 +262,20 @@ public class ConferenceServiceImpl implements ConferenceService {
 		}
 		return conflictConferences;
 	}
+
+	@Override
+	public boolean saveSummary(String id, List list) {
+		// TODO Auto-generated method stub
+		ConferenceModel conference=conferenceDAO.get(id);
+		if(conference!=null&&list != null && list.size() > 0){
+			for(Object aid : list){
+				System.out.println(aid);
+				AttachmentModel attachmentModel = attachmentDAO.get((String)aid);
+				conference.getSummaryAttachments().add(attachmentModel);
+			}
+		}
+			
+		conferenceDAO.saveOrUpdate(conference);
+		return true;
+	}
 }

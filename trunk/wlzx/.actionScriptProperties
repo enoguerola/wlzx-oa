@@ -15,10 +15,9 @@
   <applications>
     <application path="home.mxml"/>
     <application path="config.mxml"/>
-    <application path="system/component/mutiUpload/upload.mxml"/>
     <application path="login.mxml"/>
-    <application path="system/component/checkTree/CheckTreeDemo.mxml"/>
     <application path="DataGridPrint.mxml"/>
+    <application path="system/component/checkTree/CheckTreeDemo.mxml"/>
   </applications>
   <modules>
     <module application="flex_src/home.mxml" destPath="oa/receipt/undertakeDetail.swf" optimize="true" sourcePath="flex_src/oa/receipt/undertakeDetail.mxml"/>
@@ -80,6 +79,7 @@
     <module application="flex_src/home.mxml" destPath="oa/conference/conferenceSelfAttending.swf" optimize="false" sourcePath="flex_src/oa/conference/conferenceSelfAttending.mxml"/>
     <module application="flex_src/home.mxml" destPath="oa/conference/conferenceDetail.swf" optimize="false" sourcePath="flex_src/oa/conference/conferenceDetail.mxml"/>
     <module application="flex_src/home.mxml" destPath="oa/conference/conferenceRoomCheck.swf" optimize="false" sourcePath="flex_src/oa/conference/conferenceRoomCheck.mxml"/>
+    <module application="flex_src/home.mxml" destPath="oa/conference/conferenceSummary.swf" optimize="false" sourcePath="flex_src/oa/conference/conferenceSummary.mxml"/>
   </modules>
   <buildCSSFiles/>
 </actionScriptProperties>

@@ -14,7 +14,7 @@ public interface ConferenceService {
 	@SuppressWarnings("unchecked")
 	public boolean updateConference(ConferenceModel Conference, List list);
 	public boolean adjustConferenceById(String id,Date date,String beginTime,String endTime,String placeId);
-
+	public boolean saveSummary(String id, List list);
 	public boolean remove(String id);
 	public boolean cancleConferenceById(String id);
 	public ConferenceModel get(String id)throws ServiceException;
