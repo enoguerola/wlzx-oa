@@ -14,6 +14,7 @@
 			import flash.net.FileReferenceList;
 			import flash.net.URLRequest;
 			
+			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
 			import mx.events.CloseEvent;
 			import mx.events.IndexChangedEvent;
@@ -29,6 +30,8 @@
 			private var info:Array = new Array();
 			
 			public var idList:Array = new Array();
+			public var addIds:String = "";
+			public var removeIds:String = "";
 			
 			//===================
 			// 功能设置
@@ -125,8 +128,20 @@
 				var xmlResponse:XML = XML(e.data);
 				var id:String = xmlResponse.elements("field").toString()
 				idList.push(id);
+				//idList.push(id);
 				// dispatchEvent completed
 				dispatchEvent( new UploadEvent( UploadEvent.COMPLETED, id, false, false ) );
+				
+				
+				addIds+=id+";";
+				
+				var temp:ArrayCollection=uploadAlready_list.dataProvider as ArrayCollection;
+				if(temp==null)temp=new ArrayCollection();
+				
+				for each(var o:Object in info){
+					temp.addItem({label:o.label,data:o.data,width:o.width});
+				}
+				uploadAlready_list.dataProvider=temp;
 			}
 			
 			//===================
@@ -191,7 +206,7 @@
 						{
 							
 						}
-							
+						//idList.splice(selectIndex[i],1);	
 					}
 					for(var j:Number=0;j<fileRef.fileList.length;j++){						
 						sizeMum+=fileRef.fileList[j].size;					
@@ -283,23 +298,42 @@
 				}
 				function deleteItems():void{
 					var selectItems:Array = uploadAlready_list.selectedItems;
-					var selectIndex:Array = process_list.selectedIndices;
+					var selectIndex:Array = uploadAlready_list.selectedIndices;
 					var iCount:int = selectItems.length;
 					var sizeMum:Number = 0;
 					for(var i:int=0;i<iCount;i++){
 						//Alert.show(selectItems[i].id);
 						dispatchEvent( new UploadEvent( UploadEvent.DELETED, selectItems[i].id, false, false ) );
+						removeIds+=selectItems[i].id+";";
+						//idList.splice(i,1);
 					}
-					var uploadAlreadyList:Array=new Array(CommonUtils.clone(uploadAlready_list.dataProvider));
-					
-					for(var i:int=0;i<iCount;i++){
-						uploadAlreadyList.splice(selectIndex[i],1);
+					//Alert.show(uploadAlready_list.dataProvider.length+"c");
+					var temp:ArrayCollection=uploadAlready_list.dataProvider as ArrayCollection;
+//					var uploadAlreadyList:ArrayCollection=new ArrayCollection(CommonUtils.clone(temp));
+				//	Alert.show(temp.length+"d");
+					for(var j:int=0;j<iCount;j++){
+						//Alert.show(selectIndex[j]+"a");
+						temp.removeItemAt(selectIndex[j]);
+						//idList.splice();
 					}
-					uploadAlready_list.dataProvider=uploadAlreadyList;
+				//	Alert.show(temp.length+"b");
+					uploadAlready_list.dataProvider=temp;
 				
 								
 				}
 			}	
+			public function empty():void{
+				fileRef = new FileReferenceList();
+				uploadImg_num = 0;
+				upload_size = 0;
+				upload_size_total = 0;       
+				info = new Array()			
+				idList = new Array();
+				addIds = "";
+				removeIds = "";
+				process_list.dataProvider=null;
+				uploadAlready_list.dataProvider=null;
+			}
 		]]>
 	</mx:Script>
 	<mx:HBox  width="100%">

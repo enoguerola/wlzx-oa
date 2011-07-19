@@ -87,14 +87,41 @@ public class ConferenceServiceImpl implements ConferenceService {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public boolean updateConference(ConferenceModel conference, List list) {
+	public boolean updateConference(ConferenceModel conference, String adds,String removes) {
 		// TODO Auto-generated method stub
 		try{
-			if(list != null && list.size() > 0){
-				for(Object id : list){
-					System.out.println(id);
-					AttachmentModel attachmentModel = attachmentDAO.get((String)id);
-					conference.getAttachments().add(attachmentModel);
+//			if(list != null && list.size() > 0){
+//				for(Object id : list){
+//					System.out.println(id);
+//					AttachmentModel attachmentModel = attachmentDAO.get((String)id);
+//					conference.getAttachments().add(attachmentModel);
+//				}
+//			}
+			if(StringUtils.isNotEmpty(adds)){
+				String[] adds_attr=adds.split(";");
+				for(int i=0;i<adds_attr.length;i++){
+					String id=adds_attr[i];
+					if(StringUtils.isNotEmpty(id)){
+						AttachmentModel attachmentModel = attachmentDAO.get(id);
+						if(attachmentModel!=null)
+						conference.getAttachments().add(attachmentModel);
+					}
+				}
+			}
+			if(StringUtils.isNotEmpty(removes)){
+				String[] removes_attr=removes.split(";");
+				for(int i=0;i<removes_attr.length;i++){
+					String id=removes_attr[i];
+					if(StringUtils.isNotEmpty(id)){
+						AttachmentModel attachmentModel =null;
+						for(AttachmentModel a:conference.getAttachments()){
+							if(a.getId().equals(id)){
+								attachmentModel=a;
+							}
+						}
+						if(attachmentModel!=null)
+						conference.getAttachments().remove(attachmentModel);
+					}
 				}
 			}
 			conferenceDAO.saveOrUpdate(conference);
@@ -264,16 +291,43 @@ public class ConferenceServiceImpl implements ConferenceService {
 	}
 
 	@Override
-	public boolean saveSummary(String id, List list) {
+	public boolean saveSummary(String id, String adds,String removes) {
 		// TODO Auto-generated method stub
 		ConferenceModel conference=conferenceDAO.get(id);
-		if(conference!=null&&list != null && list.size() > 0){
-			for(Object aid : list){
-				System.out.println(aid);
-				AttachmentModel attachmentModel = attachmentDAO.get((String)aid);
-				conference.getSummaryAttachments().add(attachmentModel);
+		if(StringUtils.isNotEmpty(adds)){
+			String[] adds_attr=adds.split(";");
+			for(int i=0;i<adds_attr.length;i++){
+				String tempid=adds_attr[i];
+				if(StringUtils.isNotEmpty(tempid)){
+					AttachmentModel attachmentModel = attachmentDAO.get(tempid);
+					if(attachmentModel!=null)
+					conference.getSummaryAttachments().add(attachmentModel);
+				}
 			}
 		}
+		if(StringUtils.isNotEmpty(removes)){
+			String[] removes_attr=removes.split(";");
+			for(int i=0;i<removes_attr.length;i++){
+				String tempid=removes_attr[i];
+				if(StringUtils.isNotEmpty(tempid)){
+					AttachmentModel attachmentModel =null;
+					for(AttachmentModel a:conference.getSummaryAttachments()){
+						if(a.getId().equals(tempid)){
+							attachmentModel=a;
+						}
+					}
+					if(attachmentModel!=null)
+					conference.getSummaryAttachments().remove(attachmentModel);
+				}
+			}
+		}
+//		if(conference!=null&&list != null && list.size() > 0){
+//			for(Object aid : list){
+//				System.out.println(aid);
+//				AttachmentModel attachmentModel = attachmentDAO.get((String)aid);
+//				conference.getSummaryAttachments().add(attachmentModel);
+//			}
+//		}
 			
 		conferenceDAO.saveOrUpdate(conference);
 		return true;

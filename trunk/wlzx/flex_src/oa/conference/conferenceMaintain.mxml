@@ -101,7 +101,7 @@
 			}
 			protected function removeAttachment_resultHandler(event:ResultEvent):void
 			{
-				Alert.show("aaa");
+				//Alert.show("aaa");
 			
 			}
 			
@@ -176,17 +176,17 @@
 				var uploadList:Array=new Array();
 				var summaryUploadList:Array=new Array();
 				for each(var model:AttachmentModel in form.attachments){
-					uploadList.push({label:model.name,data:parseInt(model.size)/1000+"KB",width:100,id:model.id});
+					uploadList.push({label:model.name,data:parseInt(model.size)/1000+"KB",width:145,id:model.id});
 				//	uploadListfileRef.fileList
 				}
 				for each(var model:AttachmentModel in form.summaryAttachments){
-					summaryUploadList.push({label:model.name,data:parseInt(model.size)/1000+"KB",width:100,id:model.id});
+					summaryUploadList.push({label:model.name,data:parseInt(model.size)/1000+"KB",width:145,id:model.id});
 				}
-				upload.addEventListener(UploadEvent.DELETED,function(e:UploadEvent):void{
-					//Alert.show(e.id+"--");
-					attachmentServiceRO.remove(e.id);
-
-				});
+//				upload.addEventListener(UploadEvent.DELETED,function(e:UploadEvent):void{
+//					//Alert.show(e.id+"--");
+//					attachmentServiceRO.remove(e.id);
+//
+//				});
 			
 				upload.uploadAlready_list.dataProvider=uploadList;
 				summaryUpload.uploadAlready_list.dataProvider=summaryUploadList;
@@ -293,7 +293,7 @@
 						form.serviceNeeded=services.text;					
 						form.description=description.text;
 						form.teacherAttendIds=usersIds.text;
-						conferenceServiceRO.updateConference(form, upload.idList);
+						conferenceServiceRO.updateConference(form, upload.addIds,upload.removeIds);
 					}else if(addUpdateFlag.text == "adjust"+"_"+form.id){
 						form.meetingDate=DateFormatter.parseDateString(date.text);
 						form.beginTime=beginTime;
@@ -306,7 +306,7 @@
 //						form.beginTime=beginTime;
 //						form.endTime=endTime;
 //						form.placeId=places.selectedItem.data;						
-						conferenceServiceRO.saveSummary(form.id,summaryUpload.idList);
+						conferenceServiceRO.saveSummary(form.id,summaryUpload.addIds,summaryUpload.removeIds);
 						//lockWin();
 					}
 				}
@@ -333,6 +333,8 @@
 				organizedUsersSelected();
 				hideSummaryArea();
 				enabledConferenceChange();
+				upload.empty();
+				summaryUpload.empty();
 			}
 			public function editInit(id:String):void{
 				saveButton.label="更新";
