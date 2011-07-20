@@ -135,13 +135,7 @@
 				
 				addIds+=id+";";
 				
-				var temp:ArrayCollection=uploadAlready_list.dataProvider as ArrayCollection;
-				if(temp==null)temp=new ArrayCollection();
 				
-				for each(var o:Object in info){
-					temp.addItem({label:o.label,data:o.data,width:o.width});
-				}
-				uploadAlready_list.dataProvider=temp;
 			}
 			
 			//===================
@@ -169,7 +163,14 @@
 				{
 					upload_size += fileRef.fileList[i].size;
 				}
-				upLoadImg(uploadImg_num);			
+				upLoadImg(uploadImg_num);	
+				var temp:ArrayCollection=uploadAlready_list.dataProvider as ArrayCollection;
+				if(temp==null)temp=new ArrayCollection();
+				
+				for each(var o:Object in info){
+					temp.addItem({label:o.label,data:o.data,width:o.width});
+				}
+				uploadAlready_list.dataProvider=temp;
 			}
 			
 			//===================
@@ -323,7 +324,7 @@
 				}
 			}	
 			public function empty():void{
-				fileRef = new FileReferenceList();
+//			
 				uploadImg_num = 0;
 				upload_size = 0;
 				upload_size_total = 0;       
@@ -333,13 +334,18 @@
 				removeIds = "";
 				process_list.dataProvider=null;
 				uploadAlready_list.dataProvider=null;
+				fileRef = new FileReferenceList();
+				initApp();
+				browse_btn.enabled = true;
+				tip_txt.text='';
+
 			}
 		]]>
 	</mx:Script>
 	<mx:HBox  width="100%">
 		<mx:Panel  width="50%"  title="上传附件操作区" verticalGap="0" borderVisible="false"  dropShadowVisible="false">
 			<mx:HBox>
-				<mx:Button label="浏览文件" id="browse_btn"/>
+				<mx:Button label="浏览文件" id="browse_btn" enabled="true"/>
 				<mx:Label text="按住 Ctrl 或 Shift 键可以多选" x="85" y="3"/>
 				<mx:Button label="添加文件" x="330" id="add_btn" enabled="false"/>
 				<mx:Button label="删除文件" x="410" id="delete_btn" enabled="false"/>
