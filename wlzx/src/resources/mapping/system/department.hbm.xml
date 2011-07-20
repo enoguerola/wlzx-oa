@@ -57,6 +57,11 @@
 			<key column="department_id" not-null="true" />
 			<many-to-many column="role_id" class="system.entity.RoleModel" /> 
 		</set>
+		<set name="mainUsers" lazy="false"  table="wlzx_system_user" inverse="true" cascade="none">
+			<cache usage="read-write" />
+			<key column="main_department_id" not-null="true" />
+			<one-to-many class="system.entity.UserModel" />  
+		</set>
 		
 	</class>
 </hibernate-mapping>

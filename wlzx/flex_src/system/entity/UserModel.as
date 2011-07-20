@@ -65,5 +65,50 @@ package system.entity
 			return has;
 			
 		}
+		//获得用户本部门所有下属集
+		public function getAllSubordinates():ArrayCollection {
+			var results:ArrayCollection = new ArrayCollection();
+			var roleList:ArrayCollection = ArrayCollection(roles);
+			if(mainRole!=null)
+				roleList.addItem(mainRole);
+			for (var i:int = 0; i < roleList.length; i++){
+				
+				if(roleList[i].subordinates!=null&&roleList[i].subordinates.length>0){
+					//Alert.show(roleList[i].subordinates.length+"");
+					for (var j:int = 0; j < roleList[i].subordinates.length; j++){
+						if(roleList[i].subordinates[j].getAllUsers()!=null&&roleList[i].subordinates[j].getAllUsers().length>0){
+							for (var k:int = 0; k < roleList[i].subordinates[j].getAllUsers().length; k++){
+								results.addItem(roleList[i].subordinates[j].getAllUsers()[k].id);
+							}
+						}
+					}
+				}
+				
+			}
+			//Alert.show(mainRole.supervisorFlag+"");
+
+			if(mainRole!=null&&mainRole.supervisorFlag==true){
+				var department:DepartmentModel=mainRole.getBelongDepartment();
+				if(department!=null&&department.getUsers().length>0){
+					//Alert.show(department.getUsers().length+"");
+					for (var i:int = 0; i < department.getUsers().length; i++){
+						results.addItem(department.getUsers()[i].id);
+					}
+//					for (var i:int = 0; i < department.subordinates.length; i++){
+//						if(department.subordinates[i]!=null&&department.subordinates[i].getAllRoles()!=null&&department.subordinates[i].getAllRoles().length>0){
+//							for (var j:int = 0; j < department.subordinates[i].getAllRoles().length; j++){
+//								if(department.subordinates[i].getAllRoles()[j].getAllUsers()!=null&&department.subordinates[i].getAllRoles()[j].getAllUsers().length>0){
+//									for (var k:int = 0; k< department.subordinates[i].getAllRoles()[j].getAllUsers().length; k++){
+//										results.add(department.subordinates[i].getAllRoles()[j].getAllUsers()[k]);
+//									}
+//								}
+//							}
+//						}
+//					}
+				}
+				
+			}
+			return results;
+		}
 	}
 }

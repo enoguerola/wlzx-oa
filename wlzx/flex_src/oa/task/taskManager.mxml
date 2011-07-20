@@ -13,7 +13,9 @@
 		<mx:method name="deleteTaskById"  concurrency="last"  result="deleteTaskByIdResult_resultHandler(event);" />
 		<mx:method name="getTasksByConditions"  concurrency="last"  result="getTasksByConditions_resultHandler(event);" />
 	</mx:RemoteObject>
-	
+	<mx:RemoteObject id="securityUserHolder" destination="securityUserHolder"  fault="systemFaultHandler(event);">
+		<mx:method name="getCurrentUserSubordinates"  concurrency="last"  result="getCurrentUserSubordinates_result(event);" />
+	</mx:RemoteObject>
 	<valueObjects:TaskModel id="form"/>
 	
 	<mx:StringValidator id="title_stringValidator" source="{title}" property="text"  requiredFieldError="任务标题 不能为空"/>
@@ -66,7 +68,7 @@
 			import system.utils.ComboxUtils;
 			
 			private var validatorArr:Array;
-			
+			private var allSubordinates:ArrayCollection = new ArrayCollection();
 			public var taskStateList:ArrayCollection = new ArrayCollection( 
 				[	{label:"全部", data:null},  
 					{label:"进行中", data:"0"},  
@@ -83,6 +85,10 @@
 				search_assigner.dataProvider=this.parentApplication.allTeacherAcccounts;
 				accounts.dataProvider=this.parentApplication.allTeacherAcccounts;
 				assigner.dataProvider=this.parentApplication.allTeacherAcccounts;
+//				search_subordinate_account.dataProvider=this.parentApplication.allTeacherAcccounts;
+				//Alert.show(parentApplication.currentUser.getAllSubordinates().length+"a");
+	//			Alert.show(parentApplication.currentUser.getAllSubordinates().length);
+				securityUserHolder.getCurrentUserSubordinates();
 //				taskTable.Pre.addEventListener(MouseEvent.CLICK,search);
 //				taskTable.Next.addEventListener(MouseEvent.CLICK,search);
 //				taskTable.First.addEventListener(MouseEvent.CLICK,search);
@@ -94,6 +100,17 @@
 				unLockWin();
 				Alert.show(event.fault.faultString, 'Error');
 				
+			}
+			protected function getCurrentUserSubordinates_result(event:ResultEvent):void
+			{
+				var list:ArrayCollection=event.result as ArrayCollection;
+				for(var i:int=0;i<list.length;i++){
+					var item:Object=list.getItemAt(i);
+					allSubordinates.addItem({id:item.id,name:parentApplication.getTeacherNameByAccountId(item.id),account:item.name});
+				}
+				search_subordinate_account.dataProvider=allSubordinates;
+				allListTree.dataProvider=allSubordinates;
+
 			}
 			protected function updateTaskResult_resultHandler(event:ResultEvent):void
 			{
@@ -158,7 +175,20 @@
 //				Alert.show(s_pageSize+"b");
 				taskServiceRO.getTasksByConditions(s_assignerId, s_workerIds,s_status,s_beginDate,s_endDate);
 			}
+			private function searchSubordinate():void{
+				if(search_subordinate_account_id.text==null||search_subordinate_account_id.text=='')
+				allListTree.dataProvider=allSubordinates;
+				else {
+					var temp:ArrayCollection=new ArrayCollection();
+					var item:Object=parentApplication.getItemByAccountId(search_subordinate_account_id.text);
+					temp.addItem(item);
+					allListTree.dataProvider=temp;
+				}
+			}
 			private function addInit():void{
+				assigner.selectedItem=parentApplication.getItemByAccountId(parentApplication.currentUser.id);
+				assigner.text=parentApplication.getTeacherNameByAccountId(parentApplication.currentUser.id)
+				assigner_id.text=parentApplication.currentUser.id;
 				postButton.label="指派";
 			}
 			public function enterAdd(type:int):void{
@@ -183,6 +213,10 @@
 						taskServiceRO.deleteTaskById(id);
 					}
 				});
+			}
+			public function detailPersonTask(id:String):void{
+				var parent:Object=(Object)(((Object)(this.owner)).owner);
+				parent.addTab("personTaskDetial-"+id,"查看任务",parent.nav,"oa/task/personTask.swf",null,id+";"+CommonUtils.formatDate(CommonUtils.currentMonthBeginDate(),"YYYY-MM-DD")+";"+CommonUtils.formatDate(CommonUtils.currentMonthEndDate(),"YYYY-MM-DD"));
 			}
 			
 			//public function detailTask(id:String):void{
@@ -254,6 +288,22 @@
 				}
 			}
 			
+			private function searchSubordinateAccountHandleAutoCompleteChange():void
+			{
+				var items:ArrayCollection = search_subordinate_account.selectedItems;
+				search_subordinate_account_id.text="";
+				for(var i:int=0;i<items.length;i++){
+					var item:Object=items.getItemAt(i);
+					if (item != null && item.hasOwnProperty( "id" ))
+					{
+						search_subordinate_account_id.text+=item.id+";";
+					} else{
+						search_subordinate_account_id.text+=";";
+					}             
+				}
+				
+				
+			}
 			private function searchAccountsHandleAutoCompleteChange():void
 			{
 				var items:ArrayCollection = search_accounts.selectedItems;
@@ -358,6 +408,14 @@
 				//Alert.show(result);
 				return result2;
 			}
+
+			protected function allListTree_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				var id:String=allListTree.selectedItem.id;
+				detailPersonTask(id);
+			}
+
 		]]> 		
 	</mx:Script> 
 	<mx:Component id="searchAccountsDropDownItemRenderer">
@@ -372,7 +430,12 @@
 	<mx:Component id="assignerDropDownItemRenderer">
 		<render:AdvancedItemRenderer selectedItems="{ outerDocument.assigner.selectedItems }" />
 	</mx:Component>
+	<mx:Component id="searchSubordinateAccountDropDownItemRenderer">
+		<render:AdvancedItemRenderer selectedItems="{ outerDocument.search_subordinate_account.selectedItems }" />
+	</mx:Component>
 	
+	<mx:VBox borderVisible="true" width="100%" height="100%" borderStyle="solid">
+
 		<mx:VBox width="100%" height="100%" id="listPanel">
 			<mx:HBox verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12"  >
 				<mx:HBox width="100%" height="30" paddingLeft="20"  horizontalGap="0" backgroundColor="#C5E497"  verticalAlign="middle" id="toolBar">
@@ -528,7 +591,7 @@
 								<mx:TextInput width="100%" id="title"/>
 							</mx:FormItem>
 							<mx:FormItem label="任务责任人" width="100%">
-								<hc:AutoComplete id="accounts"  labelField="name"  width="300"  matchType="anyPart"  allowMultipleSelection="true"  prompt="选择"  change="{ accountsHandleAutoCompleteChange() }" dropDownItemRenderer="{ accountsDropDownItemRenderer }" selectedItemStyleName="none">
+								<hc:AutoComplete id="accounts"  labelField="name"  width="100%"  matchType="anyPart"  allowMultipleSelection="true"  prompt="选择"  change="{ accountsHandleAutoCompleteChange() }" dropDownItemRenderer="{ accountsDropDownItemRenderer }" selectedItemStyleName="none">
 								</hc:AutoComplete>
 								<mx:Label id="accounts_id" visible="false">
 								</mx:Label>
@@ -541,7 +604,7 @@
 								
 							</mx:FormItem>
 							<mx:FormItem label="任务指派人" width="100%">
-								<hc:AutoComplete id="assigner"  labelField="name"  width="300"  matchType="anyPart" prompt="选择"  change="{ assignerHandleAutoCompleteChange() }" dropDownItemRenderer="{ assignerDropDownItemRenderer }" selectedItemStyleName="none">
+								<hc:AutoComplete id="assigner"  labelField="name"  width="200"  matchType="anyPart" prompt="选择"    enabled="false" change="{ assignerHandleAutoCompleteChange() }" dropDownItemRenderer="{ assignerDropDownItemRenderer }" selectedItemStyleName="none">
 								</hc:AutoComplete>
 								<mx:Label id="assigner_id" visible="false">
 								</mx:Label>
@@ -549,8 +612,17 @@
 						</mx:Form>
 					</mx:VBox>
 					<mx:VBox width="200" height="100%">
-						<mx:Panel width="100%" height="100%"  styleName="customPanel" title="通讯录"   dropShadowVisible="false" borderVisible="true">
-							<mx:Tree  id="departments" labelField="@label"   width="100%" height="100%" >
+						<mx:Panel width="100%" height="100%"  styleName="customPanel" title="下级工作查看"   dropShadowVisible="false" borderVisible="true">
+							<mx:HBox  verticalAlign="middle"   horizontalAlign="center" width="100%" height="40" horizontalGap="0">
+								<hc:AutoComplete id="search_subordinate_account"  labelField="name"  width="130"  matchType="anyPart" prompt="选择教师"  change="{ searchSubordinateAccountHandleAutoCompleteChange() }" dropDownItemRenderer="{ searchSubordinateAccountDropDownItemRenderer }" selectedItemStyleName="none">
+									
+								</hc:AutoComplete>
+								<mx:Label id="search_subordinate_account_id" visible="false" width="0">
+									
+								</mx:Label>
+								<mx:LinkButton icon="@Embed(source='../WebContent/resources/common/tools/button_search_icon.png')"  click="searchSubordinate();"/>
+							</mx:HBox>
+							<mx:Tree  id="allListTree"   labelField="name"  width="100%" height="100%"   borderVisible="false" click="allListTree_clickHandler(event)">
 							</mx:Tree>
 						</mx:Panel>
 					</mx:VBox>
@@ -562,4 +634,5 @@
 				</mx:HBox>
 			</mx:VBox>
 		</mx:VBox>
+	</mx:VBox>
 </mx:Module>
