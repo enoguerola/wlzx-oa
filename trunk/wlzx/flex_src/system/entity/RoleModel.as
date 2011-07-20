@@ -47,6 +47,41 @@
 			
 			return list;
 		}
+		/** 
+		 * 获取角色所在部门
+		 * @创建时间 2011-4-15 上午10:41:15
+		 */ 
+		public function getBelongDepartment():DepartmentModel {
+			var role:RoleModel=getTopLeadRole(this);
+			var list:ArrayCollection = ArrayCollection(role.departments);
+			if(list!=null&&list.length>0){
+				var _department:DepartmentModel = list.getItemAt(0) as DepartmentModel;	
+				return _department;
+			}
+			
+			return null;
+			
+		}
+		/**
+		 * 获取角色本部门主管角色
+		 * */
+		public static function getTopLeadRole(role:RoleModel):RoleModel{
+			if(getLeaderRole(role)==null) return role;
+			else return getTopLeadRole(getLeaderRole(role));
+		}
+		/** 
+		 * 获取角色直属领导角色
+		 * @创建时间 2011-4-15 上午10:41:15
+		 */ 
+		public static function  getLeaderRole(role:RoleModel):RoleModel {
+			var list:ArrayCollection = ArrayCollection(role.leaders);
+			if(list!=null&&list.length>0){
+				var _role:RoleModel = list.getItemAt(0) as RoleModel;	
+				return _role;
+			}
+			
+			return null;
+		}
 
 	}
 }

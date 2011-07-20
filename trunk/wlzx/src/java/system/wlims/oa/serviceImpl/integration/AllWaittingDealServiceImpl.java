@@ -300,7 +300,7 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 					
 				}
 		//会议室申请落实审批任务
-		List<ConferenceModel> conferenceList=conferenceDAO.getConferencesByConditions(null, null, null, null, null, null, beginTime, endTime);
+		List<ConferenceModel> conferenceList=conferenceDAO.getConferencesByConditions(accountId, null, null, null, null, null, beginTime, endTime);
 		if(conferenceList!=null&&conferenceList.size()>0)
 			for(ConferenceModel conferenceModel:conferenceList){
 						TaskVO taskVO1=new TaskVO();
@@ -569,7 +569,7 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 					
 			}	
 		//会议室申请落实审批任务
-		List<ConferenceModel> conferenceList=conferenceDAO.getConferencesByConditions(null, null, null, null, null, null, beginTime, endTime);
+		List<ConferenceModel> conferenceList=conferenceDAO.getConferencesByConditions(accountId, null, null, null, null, null, beginTime, endTime);
 		if(conferenceList!=null&&conferenceList.size()>0)
 			for(ConferenceModel conferenceModel:conferenceList){
 				if(conferenceModel.getApplyStatus().intValue()==ConferenceModel.EStatus.Booking.getValue().intValue()){

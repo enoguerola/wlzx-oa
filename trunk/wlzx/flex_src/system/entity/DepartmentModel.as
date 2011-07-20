@@ -14,6 +14,7 @@
 		public var dataAccessModes:Object=new Array();//部门数据访问权限
 		public var leaderRoles:Object=new Array();//部门上级领导角色集
 		public var users:Object=new Array();//部门用户集
+		public var mainUsers:Object=new Array();//主部门用户集
 		public function DepartmentModel()
 		{
 			super();
@@ -47,6 +48,37 @@
 			
 			return null;
 		}
-
+		//获得部门及子部门所有用户集
+		public function getUsers():ArrayCollection{
+			var results:ArrayCollection=ArrayCollection(mainUsers);
+			if(this.getAllRoles()!=null&&this.getAllRoles().length>0)
+			for (var i:int = 0; i < this.getAllRoles().length; i++){
+				var _role:RoleModel = this.getAllRoles().getItemAt(0) as RoleModel;
+				if(_role.getAllUsers()!=null&&_role.getAllUsers().length>0){
+					for (var j:int = 0; j < _role.getAllUsers().length; j++){
+						results.addItem(_role.getAllUsers()[j]);
+					}
+				}
+			}
+			return results;
+		}
+		//获得部门及子部门所有岗位
+		public function getAllRoles():ArrayCollection{
+			var result:ArrayCollection=new ArrayCollection();
+			for (var i:int = 0; i < roles.length; i++){
+				result.addItem(roles[i]);
+				addSubRoles(roles[i],result);
+			}
+			return result;
+		}
+		public function addSubRoles(role:RoleModel ,result:ArrayCollection):void{
+			if(role==null)return ;
+			for (var i:int = 0; i < role.subordinates.length; i++){
+				result.addItem(role.subordinates[i]);
+				addSubRoles(role.subordinates[i],result);
+			}
+			
+		}
+		
 	}
 }

@@ -1,11 +1,13 @@
 package system.components;
 
 
+import java.util.Set;
 import java.util.TreeSet;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import system.dao.DataAccessModeDAO;
+import system.dao.UserDAO;
 import system.entity.DataAccessModeModel;
 import system.entity.PersonModel;
 import system.entity.RoleModel;
@@ -20,6 +22,7 @@ public class SecurityUserHolder {
 	
 	private static TeacherDAO teacherDAO;
 	private static DataAccessModeDAO dataAccessModeDAO;
+	private static UserDAO userDAO;
 	/**
 	 * 获取当前系统登录用户信息
 	 * @return
@@ -53,6 +56,21 @@ public class SecurityUserHolder {
 		}catch(Exception e){
 			return null;
 		}
+	}
+	public static Set<UserModel> getCurrentUserSubordinates(){
+		UserModel user=getCurrentUser();
+		try{
+			if(user.getAccountStyle()==PersonModel.PersonStyle.SuperRoot.getStyle()){
+				return new TreeSet<UserModel>(userDAO.getAllUsers());
+			}
+			else if(user.getAccountStyle()==PersonModel.PersonStyle.Teacher.getStyle()){
+				return user.getAllSubordinates();
+			}
+			 
+		}catch(Exception e){
+			return null;
+		}
+		return null;
 	}
 	
 	public static boolean isSuperRootUser(){
@@ -101,5 +119,11 @@ public class SecurityUserHolder {
 
 	public void setDataAccessModeDAO(DataAccessModeDAO dataAccessModeDAO) {
 		SecurityUserHolder.dataAccessModeDAO = dataAccessModeDAO;
+	}
+	public static UserDAO getUserDAO() {
+		return userDAO;
+	}
+	public static void setUserDAO(UserDAO userDAO) {
+		SecurityUserHolder.userDAO = userDAO;
 	}
 }
