@@ -22,7 +22,7 @@ public class NoticeTest extends BaseTest {
 			List list = new ArrayList();
 			list.add("24");
 			list.add("25");
-			noticeService.updateNotice(notice, list);
+//			noticeService.updateNotice(notice, list);
 		} catch (ServiceException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

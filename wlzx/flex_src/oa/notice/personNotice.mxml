@@ -50,7 +50,7 @@
 			import mx.events.*;
 			import mx.rpc.events.*;
 			import mx.validators.Validator;
-
+			import oa.entity.AttachmentModel;
 			import system.utils.*;
 			import basic.utils.DateUtil;
 			
@@ -133,6 +133,12 @@
 				if(form.emergence == 1)
 					emergence.selected = true;
 				rte.text = form.content;
+				var uploadList:Array=new Array();
+				for each(var model:AttachmentModel in form.attachments){
+					uploadList.push({label:model.name,data:parseInt(model.size)/1000+"KB",width:145,id:model.id});
+					//	uploadListfileRef.fileList
+				}
+				upload.uploadAlready_list.dataProvider=uploadList;
 			}
 			protected function publish_resultHandler(event:ResultEvent):void
 			{
@@ -238,7 +244,7 @@
 						form.title = title.text;
 						form.status = 0;
 						form.type = noticeType.selectedItem.data;
-						noticeServiceRO.updateNotice(form, upload.idList);
+						noticeServiceRO.updateNotice(form, upload.addIds,upload.removeIds);
 					}
 				}
 			}
@@ -312,6 +318,7 @@
 				noticeScope.selectedIndex = 1;
 				postdepartment.selectedIndex = 1;
 				emergence.selected = false;
+				upload.empty();
 			}
 			
 			public function enterAdd(type:int):void{
@@ -320,6 +327,7 @@
 			}
 			
 			public function editInit(id:String):void{
+				upload.empty();
 				noticeServiceRO.loadNoticeInfoById(id);
 			}
 			
@@ -610,16 +618,18 @@
 							<mx:RichTextEditor id="rte" title="Halo RichTextEditor"   headerHeight="0" width="100%" height="100%" dropShadowVisible="false" text="" >
 							</mx:RichTextEditor>
 						</mx:FormItem>
-						<mx:HBox width="100%" height="20">
-							<mx:LinkButton  label="附件区" icon="@Embed(source='../WebContent/resources/common/tools/button_attachment_icon.png')" click="showHide()"/>
-						</mx:HBox>
-						<mx:FormItem  width="100%"  height="0" id="att_area" paddingLeft="10" paddingRight="10">
-							<mx:VBox width="100%">
-								<mutiUpload:upload width="100%" id="upload">
-								</mutiUpload:upload>
-							</mx:VBox>
-						</mx:FormItem>
 					</mx:Form>
+				</mx:VBox>
+				<mx:VBox width="100%">
+					<mx:HBox width="100%" height="20">
+						<mx:LinkButton  label="附件区" icon="@Embed(source='../WebContent/resources/common/tools/button_attachment_icon.png')" click="showHide()"/>
+					</mx:HBox>
+					<mx:FormItem  width="100%"  height="0" id="att_area" paddingLeft="10" paddingRight="10">
+						<mx:VBox width="100%">
+							<mutiUpload:upload width="100%" id="upload">
+							</mutiUpload:upload>
+						</mx:VBox>
+					</mx:FormItem>
 				</mx:VBox>
 				<mx:HBox horizontalAlign="right" width="100%">
 					<mx:Label id="addUpdateFlag" visible="false" text="add"/>

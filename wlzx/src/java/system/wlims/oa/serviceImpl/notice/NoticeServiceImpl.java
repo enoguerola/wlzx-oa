@@ -135,14 +135,42 @@ public class NoticeServiceImpl implements NoticeService {
 	}
 
 	@Override
-	public boolean updateNotice(NoticeModel notice, List list) {
+	public boolean updateNotice(NoticeModel notice,String adds,String removes) {
 		// TODO Auto-generated method stub
 		try{
-			if(list != null && list.size() > 0){
-				for(Object id : list){
-					System.out.println(id);
-					AttachmentModel attachmentModel = attachmentDAO.get((String)id);
-					notice.getAttachments().add(attachmentModel);
+//			if(list != null && list.size() > 0){
+//				for(Object id : list){
+//					System.out.println(id);
+//					AttachmentModel attachmentModel = attachmentDAO.get((String)id);
+//					notice.getAttachments().add(attachmentModel);
+//				}
+//			}
+			if(StringUtils.isNotEmpty(adds)){
+				String[] adds_attr=adds.split(";");
+				for(int i=0;i<adds_attr.length;i++){
+					String id=adds_attr[i];
+					if(StringUtils.isNotEmpty(id)){
+						AttachmentModel attachmentModel = attachmentDAO.get(id);
+						if(attachmentModel!=null)
+						notice.getAttachments().add(attachmentModel);
+					}
+				}
+			}
+			if(StringUtils.isNotEmpty(removes)){
+				String[] removes_attr=removes.split(";");
+				for(int i=0;i<removes_attr.length;i++){
+					String id=removes_attr[i];
+					if(StringUtils.isNotEmpty(id)){
+						AttachmentModel attachmentModel =null;
+						for(AttachmentModel a:notice.getAttachments()){
+							if(a.getId().equals(id)){
+								attachmentModel=a;
+								break;
+							}
+						}
+						if(attachmentModel!=null)
+						notice.getAttachments().remove(attachmentModel);
+					}
 				}
 			}
 			noticeDAO.saveOrUpdate(notice);

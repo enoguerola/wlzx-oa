@@ -117,6 +117,7 @@ public class ConferenceServiceImpl implements ConferenceService {
 						for(AttachmentModel a:conference.getAttachments()){
 							if(a.getId().equals(id)){
 								attachmentModel=a;
+								break;
 							}
 						}
 						if(attachmentModel!=null)

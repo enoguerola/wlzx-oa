@@ -9,7 +9,7 @@ public interface NoticeService {
 	
 	public void addNotice(NoticeModel notice, List list);
 	
-	public boolean updateNotice(NoticeModel notice, List list);
+	public boolean updateNotice(NoticeModel notice, String adds,String removes);
 	
 	public NoticeModel loadNoticeInfoById(String id);
 		
