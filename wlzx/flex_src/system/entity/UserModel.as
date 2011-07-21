@@ -21,6 +21,7 @@ package system.entity
 		public var roles:Object=new Array();//角色集
 		public var departments:Object=new Array();//所属部门集
 		public var mainRole:RoleModel;//角色集
+		public var mainDepartment:DepartmentModel;//角色集
 		public function UserModel()
 		{
 			super();
@@ -36,6 +37,28 @@ package system.entity
 				result=result.concat(_role.name).concat("  |  ");
 			}
 			return result;
+		}
+		public function getAllRolesList():ArrayCollection
+		{	var results:ArrayCollection = new ArrayCollection();
+			if(mainRole!=null)
+			results.addItem(mainRole);
+			var roleList:ArrayCollection = ArrayCollection(roles);
+			CommonUtils.sortByCondition(roleList,'level');
+			for (var i:int = 0; i < roleList.length; i++){
+				var _role:Object = roleList.getItemAt(i);	
+				results.addItem(_role);
+			}
+			return results;
+		}
+		public function getDepartments():ArrayCollection
+		{	var results:ArrayCollection = new ArrayCollection();
+			var list:ArrayCollection=getAllRolesList();
+			for (var i:int = 0; i < list.length; i++){
+				var _role:Object = list.getItemAt(i);	
+				if(_role.getBelongDepartment()!=null)
+					results.addItem(_role.getBelongDepartment());
+			}
+			return results;
 		}
 		public function getAllDams():Array
 		{	
@@ -65,50 +88,50 @@ package system.entity
 			return has;
 			
 		}
-		//获得用户本部门所有下属集
-		public function getAllSubordinates():ArrayCollection {
-			var results:ArrayCollection = new ArrayCollection();
-			var roleList:ArrayCollection = ArrayCollection(roles);
-			if(mainRole!=null)
-				roleList.addItem(mainRole);
-			for (var i:int = 0; i < roleList.length; i++){
-				
-				if(roleList[i].subordinates!=null&&roleList[i].subordinates.length>0){
-					//Alert.show(roleList[i].subordinates.length+"");
-					for (var j:int = 0; j < roleList[i].subordinates.length; j++){
-						if(roleList[i].subordinates[j].getAllUsers()!=null&&roleList[i].subordinates[j].getAllUsers().length>0){
-							for (var k:int = 0; k < roleList[i].subordinates[j].getAllUsers().length; k++){
-								results.addItem(roleList[i].subordinates[j].getAllUsers()[k].id);
-							}
-						}
-					}
-				}
-				
-			}
-			//Alert.show(mainRole.supervisorFlag+"");
-
-			if(mainRole!=null&&mainRole.supervisorFlag==true){
-				var department:DepartmentModel=mainRole.getBelongDepartment();
-				if(department!=null&&department.getUsers().length>0){
-					//Alert.show(department.getUsers().length+"");
-					for (var i:int = 0; i < department.getUsers().length; i++){
-						results.addItem(department.getUsers()[i].id);
-					}
-//					for (var i:int = 0; i < department.subordinates.length; i++){
-//						if(department.subordinates[i]!=null&&department.subordinates[i].getAllRoles()!=null&&department.subordinates[i].getAllRoles().length>0){
-//							for (var j:int = 0; j < department.subordinates[i].getAllRoles().length; j++){
-//								if(department.subordinates[i].getAllRoles()[j].getAllUsers()!=null&&department.subordinates[i].getAllRoles()[j].getAllUsers().length>0){
-//									for (var k:int = 0; k< department.subordinates[i].getAllRoles()[j].getAllUsers().length; k++){
-//										results.add(department.subordinates[i].getAllRoles()[j].getAllUsers()[k]);
-//									}
-//								}
+//		//获得用户本部门所有下属集
+//		public function getAllSubordinates():ArrayCollection {
+//			var results:ArrayCollection = new ArrayCollection();
+//			var roleList:ArrayCollection = ArrayCollection(roles);
+//			if(mainRole!=null)
+//				roleList.addItem(mainRole);
+//			for (var i:int = 0; i < roleList.length; i++){
+//				
+//				if(roleList[i].subordinates!=null&&roleList[i].subordinates.length>0){
+//					//Alert.show(roleList[i].subordinates.length+"");
+//					for (var j:int = 0; j < roleList[i].subordinates.length; j++){
+//						if(roleList[i].subordinates[j].getAllUsers()!=null&&roleList[i].subordinates[j].getAllUsers().length>0){
+//							for (var k:int = 0; k < roleList[i].subordinates[j].getAllUsers().length; k++){
+//								results.addItem(roleList[i].subordinates[j].getAllUsers()[k].id);
 //							}
 //						}
 //					}
-				}
-				
-			}
-			return results;
-		}
+//				}
+//				
+//			}
+//			//Alert.show(mainRole.supervisorFlag+"");
+//
+//			if(mainRole!=null&&mainRole.supervisorFlag==true){
+//				var department:DepartmentModel=mainRole.getBelongDepartment();
+//				if(department!=null&&department.getUsers().length>0){
+//					//Alert.show(department.getUsers().length+"");
+//					for (var i:int = 0; i < department.getUsers().length; i++){
+//						results.addItem(department.getUsers()[i].id);
+//					}
+////					for (var i:int = 0; i < department.subordinates.length; i++){
+////						if(department.subordinates[i]!=null&&department.subordinates[i].getAllRoles()!=null&&department.subordinates[i].getAllRoles().length>0){
+////							for (var j:int = 0; j < department.subordinates[i].getAllRoles().length; j++){
+////								if(department.subordinates[i].getAllRoles()[j].getAllUsers()!=null&&department.subordinates[i].getAllRoles()[j].getAllUsers().length>0){
+////									for (var k:int = 0; k< department.subordinates[i].getAllRoles()[j].getAllUsers().length; k++){
+////										results.add(department.subordinates[i].getAllRoles()[j].getAllUsers()[k]);
+////									}
+////								}
+////							}
+////						}
+////					}
+//				}
+//				
+//			}
+//			return results;
+//		}
 	}
 }

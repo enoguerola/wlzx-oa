@@ -6,19 +6,21 @@
 		   xmlns:validator="system.component.validator.*" 
 		   xmlns:valueObjects="oa.entity.*" 
 		   xmlns:component="system.component.*" currentState="list" xmlns:mx1="library://ns.adobe.com/flex/mx" 
-		   xmlns:mutiUpload="system.component.mutiUpload.*">
-		<mx:RemoteObject id="noticeServiceRO" destination="noticeServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+		   xmlns:mutiUpload="system.component.mutiUpload.*" >
+		<mx:RemoteObject id="noticeServiceRO" destination="noticeServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);" >
 			<mx:method name="updateNotice"  concurrency="last"  result="updateNoticeResult_resultHandler(event);" />
 			<mx:method name="loadNoticeInfoById"  concurrency="last"  result="loadNoticeInfoById_resultHandler(event);" />
 			<mx:method name="deleteNoticeById"  concurrency="last"  result="deleteNoticeByIdResult_resultHandler(event);" />
 			<mx:method name="getNoticesByConditions"  concurrency="last"  result="getNoticesByConditions_resultHandler(event);" />
 		</mx:RemoteObject>
-		
+		<mx:RemoteObject id="directoryServiceRO" destination="directoryServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+			<mx:method name="getDirectoryItemsByType"  concurrency="multiple"  result="getDirectoryItemsByType_resultHandler(event);" />
+		</mx:RemoteObject>
 		<valueObjects:NoticeModel id="form"/>
 		
-		<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+		<!--<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 			<mx:method name="getDepartmentBySymbol"  concurrency="last"  result="getDepartmentBySymbolResult(event);" />
-		</mx:RemoteObject>
+		</mx:RemoteObject>-->
 	
 	<mx:StringValidator id="title_stringValidator" source="{title}" property="text"  requiredFieldError="不能为空"/>
 	<mx:StringValidator id="content_stringValidator" source="{rte}" property="text"  requiredFieldError="不能为空"/>
@@ -82,10 +84,8 @@
 					{label:"校级公告", data:"0"},  
 					{label:"部门公告", data:"1"}]);
 			
-			public var noticeTypeList:ArrayCollection = new ArrayCollection( 
-				[
-					{label:"请选择", data:null},
-					{label:"重要通知", data:"重要通知"}]);
+			public var noticeTypeList:ArrayCollection = new ArrayCollection();
+			public var typeList:ArrayCollection = new ArrayCollection();
 			public var noticeEmergenceList:ArrayCollection = new ArrayCollection( 
 				[	{label:"全部", data:null},
 					{label:"紧急", data:"1"},  
@@ -94,14 +94,42 @@
 			public var departmentList:ArrayCollection = new ArrayCollection();
 			
 			private function init():void{
-				this.currentState='list';
+				search_date_begin.text=CommonUtils.formatDate(CommonUtils.currentMonthBeginDate(),"YYYY-MM-DD");
+				search_date_end.text=CommonUtils.formatDate(CommonUtils.currentMonthEndDate(),"YYYY-MM-DD");
+				directoryServiceRO.getDirectoryItemsByType("noticeType");
+				//this.currentState='list';
 				var urlRequest:URLRequest = new URLRequest("spring/attachmentUpload.action");
 				upload.urlRequest = urlRequest;
 				search_account.dataProvider=this.parentApplication.allTeacherAcccounts;
-				systemServiceRO.getDepartmentBySymbol("root");
+				//systemServiceRO.getDepartmentBySymbol("root");
+				departmentList = this.parentApplication.allDepartment;
 			}
 			protected function systemFaultHandler(event:FaultEvent):void {
+				unLockWin();
 				Alert.show(event.fault.faultString, 'Error');
+				
+			}
+			protected function getDirectoryItemsByType_resultHandler(event:ResultEvent):void{
+				typeList.addItem({label:"全部", data:null});
+				typeList.addItem({label:"其他", data:"其他"});
+				var list:ArrayCollection=event.result as ArrayCollection;
+				for(var i:int=0;i<list.length;i++){
+					var directoryItem:Object=list.getItemAt(i);
+					if(directoryItem.type=='noticeType'){
+						noticeTypeList.addItem({label:directoryItem.name, data:directoryItem.value});
+						typeList.addItem({label:directoryItem.name, data:directoryItem.value});
+						//						if(i==list.length-1){
+						//							search_type.dataProvider=typeList;
+						//							seachType.dataProvider=noticeTypeList
+						//						}
+						
+					}
+				}
+				noticeTypeList.addItem({label:"其他", data:"其他"});
+				search_type.dataProvider=typeList;
+				noticeType.dataProvider=noticeTypeList;
+				callLater(search);
+				
 				
 			}
 			protected function updateNoticeResult_resultHandler(event:ResultEvent):void
@@ -112,7 +140,7 @@
 			}
 			protected function loadNoticeInfoById_resultHandler(event:ResultEvent):void
 			{
-				Alert.show("load");
+				//Alert.show("load");
 				form = event.result as NoticeModel;
 				title.text = form.title;
 				noticeType.selectedIndex = ComboxUtils.findIndex(noticeTypeList, form.type);
@@ -137,10 +165,13 @@
 			
 			protected function getNoticesByConditions_resultHandler(event:ResultEvent):void
 			{
+				unLockWin();
 				var allList:ArrayCollection = event.result as ArrayCollection;
 				noticeTable.initdata(allList);
+				
 			}
 			private function search():void{
+				lockWin();
 				var teacher:String=search_account_id.text;
 				var type:String=search_type.selectedItem.data;
 				var scope:String=search_scope.selectedItem.data;
@@ -240,30 +271,30 @@
 				}               
 			}
 			
-			private function getDepartmentBySymbolResult(event:ResultEvent):void {
-				var _department:DepartmentModel = event.result as DepartmentModel;
-				departmentList.addItem({data:null, label:'请选择'});
-				buildSubDepartments(_department,departmentList,0);
-				postdepartment.selectedIndex = 0;
-				search_department.selectedIndex = 0;
-				search();
-			}
-			
-			private function buildSubDepartments(department:DepartmentModel,resultList:ArrayCollection,depth:int):void{
-				var headText:String="";
-				for(var j:int = 0;j<depth;j++)
-					headText=headText.concat("--");
-				headText=headText.concat(department.name);
-				resultList.addItem( {data:department.id, label:headText});
-				var list:ArrayCollection = ArrayCollection(department.subordinates);			
-				if(list.length>0){
-					for (var i:int = 0; i < list.length; i++){
-						var _department:DepartmentModel = list.getItemAt(i) as DepartmentModel;	
-						buildSubDepartments(_department,resultList,depth+1);
-					}
-				}		
-				
-			}
+//			private function getDepartmentBySymbolResult(event:ResultEvent):void {
+//				var _department:DepartmentModel = event.result as DepartmentModel;
+//				departmentList.addItem({data:null, label:'请选择'});
+//				buildSubDepartments(_department,departmentList,0);
+//				postdepartment.selectedIndex = 0;
+//				search_department.selectedIndex = 0;
+//				search();
+//			}
+//			
+//			private function buildSubDepartments(department:DepartmentModel,resultList:ArrayCollection,depth:int):void{
+//				var headText:String="";
+//				for(var j:int = 0;j<depth;j++)
+//					headText=headText.concat("--");
+//				headText=headText.concat(department.name);
+//				resultList.addItem( {data:department.id, label:headText});
+//				var list:ArrayCollection = ArrayCollection(department.subordinates);			
+//				if(list.length>0){
+//					for (var i:int = 0; i < list.length; i++){
+//						var _department:DepartmentModel = list.getItemAt(i) as DepartmentModel;	
+//						buildSubDepartments(_department,resultList,depth+1);
+//					}
+//				}		
+//				
+//			}
 			
 			private function showHide():void
 			{
@@ -271,6 +302,22 @@
 					att_area.height=350;
 				else 
 					att_area.height=0;
+			}
+			import mx.managers.PopUpManager;
+			import system.component.WlzxLockWin;
+			private var window:WlzxLockWin=null;
+			private function lockWin():void{
+				if(window==null){
+					window=WlzxLockWin(PopUpManager.createPopUp(this,WlzxLockWin,true)); 
+					PopUpManager.centerPopUp(window);
+					window.percentHeight=100;
+					window.percentWidth=100;
+				}		
+				
+			}
+			private function unLockWin():void{
+				if(window!=null)
+					PopUpManager.removePopUp(window);
 			}
 		]]> 		
 	</mx:Script> 
@@ -287,14 +334,14 @@
 					<mx:HBox>
 						<mx:HBox verticalAlign="middle">
 							<mx:Label  text="发布人"  width="100"  textAlign="right"/>
-							<hc:AutoComplete id="search_account"  labelField="name"  width="200"  matchType="anyPart" prompt="选择"  change="{ searchAccountHandleAutoCompleteChange() }" dropDownItemRenderer="{ searchAccountDropDownItemRenderer }" selectedItemStyleName="none">
+							<hc:AutoComplete id="search_account"  labelField="name"  width="150"  matchType="anyPart" prompt="选择"  change="{ searchAccountHandleAutoCompleteChange() }" dropDownItemRenderer="{ searchAccountDropDownItemRenderer }" selectedItemStyleName="none">
 							</hc:AutoComplete>
 							<mx:Label id="search_account_id" visible="false">
 							</mx:Label>
 						</mx:HBox>	
 						<mx:HBox>
 							<mx:Label  text="公告类型"  width="100"  textAlign="right"/>
-							<mx:ComboBox id="search_type"  dataProvider="{noticeTypeList}" selectedIndex="0"  editable="false" width="80"/>
+							<mx:ComboBox id="search_type"    editable="false" width="80"/>
 						</mx:HBox>
 						<mx:HBox verticalAlign="middle">
 							<mx:Label  text="公告范围"  width="100"  textAlign="right"/>
@@ -308,7 +355,7 @@
 					<mx:HBox>
 						<mx:HBox>
 							<mx:Label  text="发布部门"  width="100"  textAlign="right"/>
-							<mx:ComboBox id="search_department"  selectedIndex="0" dataProvider="{departmentList}" editable="false" width="120"/>
+							<mx:ComboBox id="search_department"  selectedIndex="0" dataProvider="{departmentList}" editable="false" width="150"/>
 						</mx:HBox>
 						<mx:HBox verticalAlign="middle">
 							<mx:Label  text="发布日期"  width="100"  textAlign="right"/>
@@ -435,7 +482,7 @@
 		
 		<mx:VBox width="100%" height="100%" id="addPanel">
 			<mx:HBox verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12" id="returnArea">
-				<mx:HBox width="100%" height="30" paddingLeft="20"  horizontalGap="0" backgroundColor="#C5E497"  verticalAlign="middle">
+				<mx:HBox width="100%" height="25" paddingLeft="20"  horizontalGap="10" backgroundColor="#C5E497"  verticalAlign="middle">
 					<mx:Label text="|"/>
 					<mx:LinkButton  label="返回" icon="@Embed(source='../WebContent/resources/common/tools/button_back_icon.png')" click="this.currentState='list';" />
 					<mx:Label text="|"/>
@@ -452,7 +499,7 @@
 							<mx:HBox width="100%">
 								<mx:ComboBox id="noticeType" dataProvider="{noticeTypeList}" selectedIndex="1" labelField="label"/>
 								<mx:FormItem label="公告范围">
-									<mx:ComboBox id="noticeScope" dataProvider="{noticeScopeList}" selectedIndex="1" labelField="label"/>
+									<mx:ComboBox id="noticeScope"  selectedIndex="1" labelField="label" dataProvider="noticeScopeList"/>
 								</mx:FormItem>
 								<mx:FormItem label="发布部门">
 									<mx:ComboBox id="postdepartment" dataProvider="{departmentList}" labelField="label"/>

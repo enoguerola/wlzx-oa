@@ -7,6 +7,7 @@ import system.wlims.oa.entity.notice.NoticeModel;
 
 public interface NoticeService {
 	
+	@SuppressWarnings("unchecked")
 	public void addNotice(NoticeModel notice, List list);
 	
 	public boolean updateNotice(NoticeModel notice, String adds,String removes);
@@ -18,9 +19,9 @@ public interface NoticeService {
 	
 	boolean deleteNoticeById(String id);
 	
-	public List<NoticeModel> getDepartmentNotice(Integer index, Integer page)throws ServiceException;
+	public List<NoticeModel> getDepartmentNotice(String beginDate, String endDate)throws ServiceException;
 	
-	public List<NoticeModel> getSchoolNotice(Integer index, Integer page)throws ServiceException;
+	public List<NoticeModel> getSchoolNotice(String beginDate, String endDate)throws ServiceException;
 	
 	public boolean publish(String id)throws ServiceException;
 	

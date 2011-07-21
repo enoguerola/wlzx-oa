@@ -66,6 +66,7 @@
 			public var allDepartment:ArrayCollection = new ArrayCollection();
 			public var allRole:ArrayCollection = new ArrayCollection();
 			public var allPlace:ArrayCollection = new ArrayCollection();
+			public var currentUserDepartment:ArrayCollection=new ArrayCollection();
 			public var homeUrl:String=null;
 			import system.component.MyToolTip;
 			private function init():void{
@@ -158,6 +159,16 @@
 				mainRole=currentUser.mainRole.name;
 				if(currentUser.lastLoginTime!=null)
 				lastLoginTime=CommonUtils.formatDate(currentUser.lastLoginTime);
+				
+				if(currentUser.name=="super_root"){
+					currentUserDepartment=allDepartment;
+				}else{
+					var list:ArrayCollection=currentUser.getDepartments();
+					for(var i:int=0;i<list.length;i++){
+						var department:Object=list.getItemAt(i);
+						currentUserDepartment.addItem( {data:department.id, label:department.name})
+					}
+				}
 //				Alert.show(event.result.name);
 				callLater(function():void{
 					loadModule(default_url);
