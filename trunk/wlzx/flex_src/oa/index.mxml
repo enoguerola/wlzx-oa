@@ -328,9 +328,9 @@
 		<s:VGroup width="25%" height="100%" paddingLeft="30" verticalAlign="middle">
 			<s:HGroup width="35%">
 				<s:Label id="account" text="当前用户："/>
-				<s:Label id="mainRole" text="主角色："/>
+				<s:Label id="mainRole" text="主职务："/>
 			</s:HGroup>
-			<s:Label id="roles" text="所有角色："/>
+			<s:Label id="roles" text="所有职务："/>
 			<!--<s:HGroup width="35%">
 				<s:Label id="lastLoginTime" text="上次登录："/>
 				<s:Label text="当前时间："/>

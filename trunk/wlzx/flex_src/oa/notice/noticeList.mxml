@@ -24,22 +24,25 @@
 		import basic.utils.DateUtil;
 				
 		private function init():void{
+			var date:Date=new Date();
+			search_date_begin.text=CommonUtils.formatDate(CommonUtils.currentMonthBeginDate(),"YYYY-MM-DD");
+			search_date_end.text=CommonUtils.formatDate(CommonUtils.currentMonthEndDate(),"YYYY-MM-DD");
 			var parms:String=((Object)(this.owner)).id;
 			if(parms=='department'){
-				noticeScope.title="部门公告";
+				noticeScope.text="部门公告";
 			}
 			else if(parms=='school') {
-				noticeScope.title="学校公告";
+				noticeScope.text="学校公告";
 			}
 			search();
 		}
 			
 		private function search():void
 		{
-			if(noticeScope.title == "部门公告")
-				noticeServiceRO.getDepartmentNotice(table.curpage, table.pagecount);
+			if(noticeScope.text == "部门公告")
+				noticeServiceRO.getDepartmentNotice(search_date_begin.text,search_date_end.text);
 			else
-				noticeServiceRO.getSchoolNotice(table.curpage, table.pagecount);
+				noticeServiceRO.getSchoolNotice(search_date_begin.text,search_date_end.text);
 		}
 			
 		private function systemFaultHandler(event:FaultEvent):void {
@@ -60,8 +63,21 @@
 		}
 		
 		]]> 		
-	</mx:Script> 
-	<mx:Panel width="100%" height="100%"    id="noticeScope" borderVisible="false"  dropShadowVisible="false" >
+	</mx:Script>
+	<mx:VBox borderVisible="true" width="100%" height="100%" borderStyle="solid"  paddingTop="10">
+		<mx:VBox width="100%" horizontalAlign="center" verticalGap="0" height="60">
+			<mx:HBox width="100%" horizontalAlign="center">
+				<mx:Label  text=""    width="100%"  letterSpacing="5" textAlign="center" fontSize="14"  fontWeight="bold" height="30"  id="noticeScope"/>
+			</mx:HBox>
+			<mx:HBox width="100%" horizontalAlign="right">
+				<mx:Label  text="时间区间"  width="100"  textAlign="right"/>
+				<mx:DateField yearNavigationEnabled="true" id="search_date_begin"   formatString="YYYY-MM-DD"  editable="false" width="120"/>
+				<mx:Label  text="--"  width="20" textAlign="center"/>
+				<mx:DateField yearNavigationEnabled="true" id="search_date_end"  formatString="YYYY-MM-DD" editable="false" width="120"/>
+				<mx:Button  label="搜索"  width="60"   click="search()"/>
+			</mx:HBox>
+			
+		</mx:VBox>
 	<component:WlzxPageDataGrid width="100%" height="100%"   borderVisible="false"  autoLayout="true"  borderAlpha="0.2" verticalAlign="middle"   id="table" pagecount="10"  paddingLeft="10" paddingRight="10" paddingBottom="10">				
 		<component:mygridcolumns>
 			<mx:DataGridColumn textAlign="center" headerText="范围"  width="60">
@@ -143,5 +159,5 @@
 			
 		</component:mygridcolumns>
 	</component:WlzxPageDataGrid>
-	</mx:Panel>
+	</mx:VBox>
 </mx:Module>

@@ -1,6 +1,5 @@
 package system.wlims.oa.serviceImpl.notice;
 
-import java.sql.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -31,6 +30,7 @@ public class NoticeServiceImpl implements NoticeService {
 	private UserDAO userDAO;
 	private AttachmentDAO attachmentDAO;
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void addNotice(NoticeModel notice, List list) {
 		// TODO Auto-generated method stub
@@ -70,6 +70,7 @@ public class NoticeServiceImpl implements NoticeService {
 		return true;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<NoticeModel> getNoticesByConditions(String userId, String type,
 			String scope, String emergence, String deparmentId, String title, String status,
@@ -103,13 +104,7 @@ public class NoticeServiceImpl implements NoticeService {
 		if(StringUtils.isNotEmpty(title))
 			criteria.add(Restrictions.like("title", title));
 		
-		if(StringUtils.isNotEmpty(beginDate))
-		criteria.add(Restrictions.sqlRestriction("postTime >= '"+beginDate+" 00:00:00'"));
-			//criteria.add(Restrictions.ge("postTime",  Date.valueOf(beginDate)));
 		
-		if(StringUtils.isNotEmpty(endDate))
-			//criteria.add(Restrictions.le("postTime",  Date.valueOf(endDate)));
-		criteria.add(Restrictions.sqlRestriction("postTime <= '"+endDate+" 23:59:59'"));
 
 		if(StringUtils.isNotEmpty(status)){
 			int intstatus = Integer.parseInt(status);
@@ -117,10 +112,24 @@ public class NoticeServiceImpl implements NoticeService {
 			if(intstatus == 0){
 				if(StringUtils.isNotEmpty(userId))
 					criteria.add(Restrictions.eq("lastEditorId", userId));
+				if(StringUtils.isNotEmpty(beginDate))
+					criteria.add(Restrictions.sqlRestriction("last_edit_time >= '"+beginDate+" 00:00:00'"));
+						//criteria.add(Restrictions.ge("postTime",  Date.valueOf(beginDate)));
+					
+					if(StringUtils.isNotEmpty(endDate))
+						//criteria.add(Restrictions.le("postTime",  Date.valueOf(endDate)));
+					criteria.add(Restrictions.sqlRestriction("last_edit_time <= '"+endDate+" 23:59:59'"));
 			//发布 posterid
 			}else{
 				if(StringUtils.isNotEmpty(userId))
 					criteria.add(Restrictions.eq("posterId", userId));
+				if(StringUtils.isNotEmpty(beginDate))
+					criteria.add(Restrictions.sqlRestriction("postTime >= '"+beginDate+" 00:00:00'"));
+						//criteria.add(Restrictions.ge("postTime",  Date.valueOf(beginDate)));
+					
+					if(StringUtils.isNotEmpty(endDate))
+						//criteria.add(Restrictions.le("postTime",  Date.valueOf(endDate)));
+					criteria.add(Restrictions.sqlRestriction("postTime <= '"+endDate+" 23:59:59'"));
 			}
 			criteria.add(Restrictions.eq("status", intstatus));
 		}
@@ -196,43 +205,49 @@ public class NoticeServiceImpl implements NoticeService {
 		return departmentDAO;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public List<NoticeModel> getDepartmentNotice(Integer index, Integer page) throws ServiceException {
+	public List<NoticeModel> getDepartmentNotice(String beginDate, String endDate) throws ServiceException {
 		// TODO Auto-generated method stub
 		DetachedCriteria criteria = DetachedCriteria.forClass(NoticeModel.class);
-		
+		if(StringUtils.isNotEmpty(beginDate))
+			criteria.add(Restrictions.sqlRestriction("postTime >= '"+beginDate+" 00:00:00'"));
+		if(StringUtils.isNotEmpty(endDate))
+			criteria.add(Restrictions.sqlRestriction("postTime <= '"+endDate+" 23:59:59'"));
 		criteria.add(Restrictions.eq("scope", NoticeModel.EScope.Department.getValue()));
-		criteria.add(Restrictions.eq("status", 1));
+		criteria.add(Restrictions.eq("status", NoticeModel.EStatus.Published.getValue()));
 		criteria.addOrder(Order.desc("postTime"));
-		
-		UserModel userModel = SecurityUserHolder.getCurrentUser();
-		Set<DepartmentModel> set = userModel.getDepartments();
-//		if(set != null && set.size() > 0){
-//			set.addAll(userDAO.getAllLeaders(userModel));
-//		}
-		
-		Set<String> stringSet = new HashSet<String>();
-		if(set!=null&&set.size()>0){
-			for(DepartmentModel model: set){
-				stringSet.add(model.getId());
-			}
-			criteria.add(Restrictions.in("postDepartmentId", stringSet.toArray()));
+		if(!SecurityUserHolder.isSuperRootUser()){
+			UserModel userModel = SecurityUserHolder.getCurrentUser();
+			Set<DepartmentModel> set = userModel.getAllDepartments();
 			
-			//return noticeDAO.getListByCriteria(criteria, (index - 1)*page, page);
+			Set<String> stringSet = new HashSet<String>();
+			if(set!=null&&set.size()>0){
+				for(DepartmentModel model: set){
+					stringSet.add(model.getId());
+				}
+				criteria.add(Restrictions.in("postDepartmentId", stringSet.toArray()));
+				
+			}
 		}
+
+		
 		return noticeDAO.getListByCriteria(criteria);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public List<NoticeModel> getSchoolNotice(Integer index, Integer page) throws ServiceException {
+	public List<NoticeModel> getSchoolNotice(String beginDate, String endDate) throws ServiceException {
 		// TODO Auto-generated method stub
 		DetachedCriteria criteria = DetachedCriteria.forClass(NoticeModel.class);
-		
+		if(StringUtils.isNotEmpty(beginDate))
+			criteria.add(Restrictions.sqlRestriction("postTime >= '"+beginDate+" 00:00:00'"));
+		if(StringUtils.isNotEmpty(endDate))
+			criteria.add(Restrictions.sqlRestriction("postTime <= '"+endDate+" 23:59:59'"));
 		criteria.add(Restrictions.eq("scope", NoticeModel.EScope.School.getValue()));
-		criteria.add(Restrictions.eq("status", 1));
+		criteria.add(Restrictions.eq("status", NoticeModel.EStatus.Published.getValue()));
 		criteria.addOrder(Order.desc("postTime"));
 		return noticeDAO.getListByCriteria(criteria);
-		//return noticeDAO.getListByCriteria(criteria, (index - 1)*page, page);
 	}
 
 	public UserDAO getUserDAO() {

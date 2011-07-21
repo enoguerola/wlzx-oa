@@ -209,6 +209,30 @@ public class UserModel  extends BaseModel implements UserDetails{
 		}
 		return departments;
 	}
+	//获得用户所属部门及所有子部门集
+	public Set<DepartmentModel> getAllDepartments() {
+		Set<DepartmentModel> results=new HashSet<DepartmentModel>();
+		if(getMainDepartment()!=null)
+			results.add(getMainDepartment());
+		for(RoleModel role:getAllRoles()){
+				addSubDepartment(role.getBelongDepartment(),results);
+		}
+		return results;
+	}
+	private void addSubDepartment(DepartmentModel department,Set<DepartmentModel> results){
+		if(department!=null){
+			results.add(department);
+			if(department.getSubordinates()!=null&&department.getSubordinates().size()>0){
+				for(DepartmentModel subDepartment:department.getSubordinates()){
+					addSubDepartment(subDepartment,results);
+				}
+			}
+		}
+			
+		
+	}
+	
+	
 	//获得用户所有下属集
 	public Set<UserModel> getAllSubordinates() {
 		Set<UserModel> results=new HashSet<UserModel>();

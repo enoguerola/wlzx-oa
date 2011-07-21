@@ -32,7 +32,8 @@
 				[
 					{label:"场所类型", data:"placeType"} ,
 					{label:"教学楼", data:"building"},
-					{label:"会议室资源", data:"meetingRoom"}
+					//{label:"会议室资源", data:"meetingRoom"},
+					{label:"公告类型", data:"noticeType"}
 				]); 
 			private function init():void {
 				validatorArr = new Array();
