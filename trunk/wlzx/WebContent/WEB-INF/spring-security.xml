@@ -20,6 +20,8 @@
 		<intercept-url pattern="/home.swf" access="IS_AUTHENTICATED_FULLY"/>
 		<intercept-url pattern="/config.html" access="ROLE_SUPER_ROOT"/>
 		<intercept-url pattern="/config.swf" access="ROLE_SUPER_ROOT"/>
+<!--		<intercept-url pattern="/system/accessDenied.swf"  access="ROLE_ANONYMOUS" />-->
+<!--		<intercept-url pattern="/system/accessDenied.html"  access="ROLE_ANONYMOUS" />-->
 		<!--尝试访问没有权限的页面时跳转的页面 -->
 		<access-denied-handler error-page="/system/accessDenied.swf" />
 		<!--使用记住用户名、密码功能，指定数据源和加密的-->

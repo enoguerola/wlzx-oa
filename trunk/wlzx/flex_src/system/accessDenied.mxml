@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Module xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		   xmlns:s="library://ns.adobe.com/flex/spark" 
-		   xmlns:mx="library://ns.adobe.com/flex/mx" layout="absolute" width="400" height="300">
-	<fx:Declarations>
-		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
-	</fx:Declarations>
-	<s:Panel width="100%" height="100%" title="无访问权限" styleName="customPanel">
-		
-	</s:Panel>
+		   xmlns:mx="library://ns.adobe.com/flex/mx" layout="absolute" width="100%" height="100%" >
+	<mx:VBox   borderVisible="true" width="100%" height="100%" borderStyle="solid" verticalAlign="middle"  horizontalAlign="center">
+		<mx:VBox width="100%" height="20%">
+			
+		</mx:VBox>
+		<mx:HBox  borderVisible="true" width="100%" height="60%"  verticalAlign="top"  horizontalAlign="center">
+			<mx:HBox width="30%"  horizontalAlign="right">
+				<mx:Image source="@Embed(source='../WebContent/resources/404.jpg')"/>
+			</mx:HBox>
+			<mx:VBox width="70%" horizontalAlign="left" verticalGap="10" paddingLeft="50">
+				<mx:Label text="访问异常，这可能是以下原因引起的:"  fontWeight="bold"/>		
+				<mx:Label text="1.长时间未操作，用户认证过期。请重新登录"/>
+				<mx:Label text="2.无访问权限。请联系系统管理员配置相应权限"/>
+				<mx:Label text="3.网络异常。请检查网络"/>		
+			</mx:VBox>
+		</mx:HBox>
+	</mx:VBox>
+	
+	
 </mx:Module>
