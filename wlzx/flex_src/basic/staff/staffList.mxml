@@ -174,7 +174,7 @@
 					lockWin();
 					var params:URLVariables = new URLVariables();
 					params.name = "123213";
-					var request:URLRequest = new URLRequest("spring/excelUpload.action");
+					var request:URLRequest = new URLRequest(parentApplication.homeUrl+"basic/staff/spring/excelUpload.action");
 					request.data = params;
 					try    
 					{      

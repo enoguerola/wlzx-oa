@@ -61,6 +61,7 @@
 					dataAccessMode.detail=detail.text;
 					dataAccessMode.symbol=symbol.text;
 					dataAccessMode.sequence=parseInt(sequence.text);
+					dataAccessMode.emptyFlag=true;
 //					dataAccessMode.rsValue=dataAccessModeUrl.text;
 //					dataAccessMode.rsType="METHOD";
 					if(this.toolTip=='Update'){

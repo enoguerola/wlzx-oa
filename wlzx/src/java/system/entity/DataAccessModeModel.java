@@ -28,7 +28,7 @@ public class DataAccessModeModel extends BaseModel{
 	private static final long serialVersionUID = -6537176421866028228L;
 	private String detail;
 	private String value;
-	private Boolean emptyFlag=true;
+	private Boolean emptyFlag=true;//额外数据访问方式【非默认数据访问方式】
 	private Set<OperationModel> operations=new TreeSet<OperationModel>();
 	private Set<DepartmentModel> departments=new TreeSet<DepartmentModel>();
 	private Set<RoleModel> roles=new TreeSet<RoleModel>();
