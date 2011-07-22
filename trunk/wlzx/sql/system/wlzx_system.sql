@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2011 年 07 月 15 日 17:14
+-- 生成日期: 2011 年 07 月 22 日 11:40
 -- 服务器版本: 5.0.91
 -- PHP 版本: 5.2.13
 
@@ -63,67 +63,72 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_data_access_mode` (
   `detail` text,
   `creation_date` datetime NOT NULL,
   `modified_date` timestamp NOT NULL default '0000-00-00 00:00:00' on update CURRENT_TIMESTAMP,
+  `empty_flag` tinyint(1) NOT NULL default '1',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `symbol` (`symbol`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=66 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=72 ;
 
 --
 -- 转存表中的数据 `wlzx_system_data_access_mode`
 --
 
-INSERT INTO `wlzx_system_data_access_mode` (`id`, `name`, `symbol`, `sequence`, `value`, `detail`, `creation_date`, `modified_date`) VALUES
-(8, '全部数据', 'department_notice_read_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-09 00:00:00', '2011-06-16 00:05:21'),
-(9, '全部数据', 'notice_list_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-09 00:00:00', '2011-06-15 21:51:54'),
-(11, '全部数据', 'work_to_deal_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-14 00:00:00', '2011-06-27 16:15:10'),
-(12, '全部数据', 'public_schedule_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-14 00:00:00', '2011-06-16 10:38:11'),
-(13, '全部数据', 'person_schedule_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-14 00:00:00', '2011-06-16 10:38:57'),
-(14, '全部数据', 'person_work_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-14 00:00:00', '2011-06-16 10:33:33'),
-(15, '全部数据', 'staff_work_assign_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-14 00:00:00', '2011-06-16 10:47:07'),
-(16, '全部数据', 'public_address_book_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-14 00:00:00', '2011-05-22 15:05:30'),
-(19, '全部数据', 'staff_file_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-21 00:00:00', '2011-05-22 15:05:30'),
-(20, '全部数据', 'system_account_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-21 00:00:00', '2011-05-22 15:05:30'),
-(21, '全部数据', 'oa_department_set_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-21 00:00:00', '2011-05-22 15:05:30'),
-(22, '全部数据', 'oa_role_set_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-21 00:00:00', '2011-05-22 15:05:30'),
-(24, '全部数据', 'oa_role_authorization_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-21 00:00:00', '2011-05-22 15:05:30'),
-(25, '全部数据', 'oa_pw_change_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-23 00:00:00', '2011-05-23 23:11:11'),
-(27, '全部数据', 'places_manage_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-25 00:00:00', '2011-05-25 16:19:12'),
-(28, '全部数据', 'basic_directory_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-26 00:00:00', '2011-05-26 09:51:43'),
-(30, '全部数据', '@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-26 00:00:00', '2011-05-26 23:00:03'),
-(31, '全部数据', 'staff_input_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-26 00:00:00', '2011-05-26 23:03:14'),
-(32, '全部数据', 'adjust_class_apply_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-27 00:00:00', '2011-05-27 22:36:32'),
-(33, '全部数据', 'adjust_class_apply_approve_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-27 00:00:00', '2011-05-27 22:37:40'),
-(34, '全部数据', 'personal_message_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-06-06 00:00:00', '2011-06-06 17:19:37'),
-(35, '全部数据', 'takeLeaveApply_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-06-06 00:00:00', '2011-06-06 17:21:58'),
-(36, '全部数据', 'overWorkApply_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-06-06 00:00:00', '2011-06-10 16:09:35'),
-(37, '全部数据', 'selfCanculateAttendance_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-06-06 00:00:00', '2011-06-10 21:22:21'),
-(38, '全部数据', 'takeLeaveApprove_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-06-08 00:00:00', '2011-06-08 11:45:47'),
-(39, '全部数据', 'takeLeaveWorkDeal@noFilter@', 0, NULL, NULL, '2011-06-08 00:00:00', '2011-06-08 13:32:46'),
-(40, '全部数据', 'takeLeaveOfficeApprove@noFilter@', 0, NULL, NULL, '2011-06-08 00:00:00', '2011-06-08 13:26:23'),
-(41, '全部数据', 'takeLeaveVicePrincipalApprove@noFilter@', 0, NULL, NULL, '2011-06-08 00:00:00', '2011-06-08 13:32:34'),
-(42, '全部数据', 'takeLeavePrincipalApprove@noFilter@', 0, NULL, NULL, '2011-06-08 00:00:00', '2011-06-08 13:32:40'),
-(43, '本处室请假出差数据（处室领导级别有效）', 'takeLeaveApprove_main@defaultVisit@@notSelfOfficeFilter@', 1, NULL, '', '2011-06-09 00:00:00', '2011-06-09 11:14:42'),
-(44, '分管处室请假出差数据（副校长级别有效）', 'takeLeaveApprove_main@defaultVisit@@notSelfManagerFilter@', 2, NULL, '', '2011-06-09 00:00:00', '2011-06-09 11:14:09'),
-(45, '全部数据', 'moveRestDay_apply_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-06-10 00:00:00', '2011-06-10 16:11:49'),
-(46, '全部数据', 'overWork_approve_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-06-10 00:00:00', '2011-06-10 21:15:45'),
-(47, '全部数据', 'moveRestDay_approve_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-06-10 00:00:00', '2011-06-10 21:16:34'),
-(48, '全部数据', 'staffCanculateAttendance_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-06-10 00:00:00', '2011-06-10 21:23:26'),
-(49, '全部数据', 'person_notice_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-06-16 00:00:00', '2011-07-15 17:10:51'),
-(50, '全部数据', 'school_notice_read_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-06-16 00:00:00', '2011-06-16 00:04:50'),
-(51, '全部数据', 'personal_office_workDetail@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-01 00:00:00', '2011-07-01 09:49:35'),
-(52, '全部数据', 'person_office_workToDeal_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-01 00:00:00', '2011-07-01 09:50:45'),
-(53, '全部数据', 'receipt_register_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-02 00:00:00', '2011-07-02 12:21:05'),
-(54, '全部数据', 'receipt_devise_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-02 00:00:00', '2011-07-02 16:41:02'),
-(55, '全部数据', 'receipt_ratify_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-02 00:00:00', '2011-07-02 16:42:12'),
-(56, '全部数据', 'receipt_undertake_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-02 00:00:00', '2011-07-02 16:43:22'),
-(57, '全部数据', 'receipt_circulate_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-02 00:00:00', '2011-07-02 16:44:14'),
-(58, '全部数据', 'receipt_manage_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-02 00:00:00', '2011-07-02 16:45:20'),
-(59, '全部数据', 'conferenceApply_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-06 00:00:00', '2011-07-06 12:10:25'),
-(60, '全部数据', 'conferenceRoomCheck_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-06 00:00:00', '2011-07-06 12:10:11'),
-(61, '全部数据', 'conferenceSummary_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-06 00:00:00', '2011-07-06 12:09:24'),
-(62, '全部数据', 'conferenceArrange_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-06 00:00:00', '2011-07-07 10:43:58'),
-(63, '全部数据', 'conferenceSelfAttending_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-06 00:00:00', '2011-07-06 12:13:03'),
-(64, '全部数据', 'person_conferenceAttending_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-06 00:00:00', '2011-07-06 12:15:47'),
-(65, '全部数据', 'system_person_setting_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-06 00:00:00', '2011-07-06 12:19:36');
+INSERT INTO `wlzx_system_data_access_mode` (`id`, `name`, `symbol`, `sequence`, `value`, `detail`, `creation_date`, `modified_date`, `empty_flag`) VALUES
+(8, '全部数据', 'department_notice_read_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-09 00:00:00', '2011-07-22 09:45:36', 1),
+(9, '全部数据', 'notice_list_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-09 00:00:00', '2011-07-22 09:45:36', 1),
+(11, '全部数据', 'work_to_deal_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-14 00:00:00', '2011-07-22 09:45:36', 1),
+(12, '全部数据', 'public_schedule_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-14 00:00:00', '2011-07-22 09:45:36', 1),
+(13, '全部数据', 'person_schedule_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-14 00:00:00', '2011-07-22 09:45:36', 1),
+(14, '全部数据', 'person_work_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-14 00:00:00', '2011-07-22 09:45:36', 1),
+(15, '全部数据', 'staff_work_assign_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-14 00:00:00', '2011-07-22 09:45:36', 1),
+(16, '全部数据', 'public_address_book_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-14 00:00:00', '2011-07-22 09:45:36', 1),
+(19, '全部数据', 'staff_file_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-21 00:00:00', '2011-07-22 09:45:36', 1),
+(20, '全部数据', 'system_account_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-21 00:00:00', '2011-07-22 09:45:36', 1),
+(21, '全部数据', 'oa_department_set_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-21 00:00:00', '2011-07-22 09:45:36', 1),
+(22, '全部数据', 'oa_role_set_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-21 00:00:00', '2011-07-22 09:45:36', 1),
+(24, '全部数据', 'oa_role_authorization_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-21 00:00:00', '2011-07-22 09:45:36', 1),
+(25, '全部数据', 'oa_pw_change_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-23 00:00:00', '2011-07-22 09:45:36', 1),
+(27, '全部数据', 'places_manage_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-25 00:00:00', '2011-07-22 09:45:36', 1),
+(28, '全部数据', 'basic_directory_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-26 00:00:00', '2011-07-22 09:45:36', 1),
+(30, '全部数据', '@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-26 00:00:00', '2011-07-22 09:45:36', 1),
+(31, '全部数据', 'staff_input_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-26 00:00:00', '2011-07-22 09:45:36', 1),
+(32, '全部数据', 'adjust_class_apply_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-27 00:00:00', '2011-07-22 09:45:36', 1),
+(33, '全部数据', 'adjust_class_apply_approve_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-27 00:00:00', '2011-07-22 09:45:36', 1),
+(34, '全部数据', 'personal_message_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-06-06 00:00:00', '2011-07-22 09:45:36', 1),
+(35, '全部数据', 'takeLeaveApply_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-06-06 00:00:00', '2011-07-22 09:45:36', 1),
+(36, '全部数据', 'overWorkApply_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-06-06 00:00:00', '2011-07-22 09:45:36', 1),
+(37, '全部数据', 'selfCanculateAttendance_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-06-06 00:00:00', '2011-07-22 09:45:36', 1),
+(38, '全部数据', 'takeLeaveApprove_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-06-08 00:00:00', '2011-07-22 09:45:36', 1),
+(39, '全部数据', 'takeLeaveWorkDeal@noFilter@', 0, NULL, NULL, '2011-06-08 00:00:00', '2011-07-22 09:45:36', 1),
+(40, '全部数据', 'takeLeaveOfficeApprove@noFilter@', 0, NULL, NULL, '2011-06-08 00:00:00', '2011-07-22 09:45:36', 1),
+(41, '全部数据', 'takeLeaveVicePrincipalApprove@noFilter@', 0, NULL, NULL, '2011-06-08 00:00:00', '2011-07-22 09:45:36', 1),
+(42, '全部数据', 'takeLeavePrincipalApprove@noFilter@', 0, NULL, NULL, '2011-06-08 00:00:00', '2011-07-22 09:45:36', 1),
+(43, '本处室请假出差数据（处室领导级别有效）', 'takeLeaveApprove_main@defaultVisit@@notSelfOfficeFilter@', 1, NULL, '', '2011-06-09 00:00:00', '2011-07-22 10:06:43', 0),
+(44, '分管处室请假出差数据（副校长级别有效）', 'takeLeaveApprove_main@defaultVisit@@notSelfManagerFilter@', 2, NULL, '', '2011-06-09 00:00:00', '2011-07-22 10:06:59', 0),
+(45, '全部数据', 'moveRestDay_apply_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-06-10 00:00:00', '2011-07-22 09:45:36', 1),
+(46, '全部数据', 'overWork_approve_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-06-10 00:00:00', '2011-07-22 09:45:36', 1),
+(47, '全部数据', 'moveRestDay_approve_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-06-10 00:00:00', '2011-07-22 09:45:36', 1),
+(48, '全部数据', 'staffCanculateAttendance_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-06-10 00:00:00', '2011-07-22 09:45:36', 1),
+(49, '全部数据', 'person_notice_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-06-16 00:00:00', '2011-07-22 09:45:36', 1),
+(50, '全部数据', 'school_notice_read_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-06-16 00:00:00', '2011-07-22 09:45:36', 1),
+(51, '全部数据', 'personal_office_workDetail@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-01 00:00:00', '2011-07-22 09:45:36', 1),
+(52, '全部数据', 'person_office_workToDeal_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-01 00:00:00', '2011-07-22 09:45:36', 1),
+(53, '全部数据', 'receipt_register_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-02 00:00:00', '2011-07-22 09:45:36', 1),
+(54, '全部数据', 'receipt_devise_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-02 00:00:00', '2011-07-22 09:45:36', 1),
+(55, '全部数据', 'receipt_ratify_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-02 00:00:00', '2011-07-22 09:45:36', 1),
+(56, '全部数据', 'receipt_undertake_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-02 00:00:00', '2011-07-22 09:45:36', 1),
+(57, '全部数据', 'receipt_circulate_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-02 00:00:00', '2011-07-22 09:45:36', 1),
+(58, '全部数据', 'receipt_manage_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-02 00:00:00', '2011-07-22 09:45:36', 1),
+(59, '全部数据', 'conferenceApply_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-06 00:00:00', '2011-07-22 09:45:36', 1),
+(60, '全部数据', 'conferenceRoomCheck_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-06 00:00:00', '2011-07-22 09:45:36', 1),
+(61, '全部数据', 'conferenceSummary_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-06 00:00:00', '2011-07-22 09:45:36', 1),
+(62, '全部数据', 'conferenceArrange_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-06 00:00:00', '2011-07-22 09:45:36', 1),
+(63, '全部数据', 'conferenceSelfAttending_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-06 00:00:00', '2011-07-22 09:45:36', 1),
+(64, '全部数据', 'person_conferenceAttending_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-06 00:00:00', '2011-07-22 09:45:36', 1),
+(65, '全部数据', 'system_person_setting_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-06 00:00:00', '2011-07-22 09:45:36', 1),
+(66, '全部数据', 'postSelfDepartmentSchoolScopeNotice@noFilter@', 0, NULL, NULL, '2011-07-22 00:00:00', '2011-07-22 09:45:36', 1),
+(68, '全部数据', 'postAnyNotice@noFilter@', 0, NULL, NULL, '2011-07-22 00:00:00', '2011-07-22 09:45:36', 1),
+(70, '全部数据', 'editSelfDepartmentSchoolScopeNotice@noFilter@', 0, NULL, NULL, '2011-07-22 00:00:00', '2011-07-22 10:51:44', 1),
+(71, '全部数据', 'editAnyNotice@noFilter@', 0, NULL, NULL, '2011-07-22 00:00:00', '2011-07-22 10:52:51', 1);
 
 -- --------------------------------------------------------
 
@@ -691,7 +696,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_module_operation_relationship` (
   `module_id` bigint(20) NOT NULL,
   `operation_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=64 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=68 ;
 
 --
 -- 转存表中的数据 `wlzx_system_module_operation_relationship`
@@ -740,7 +745,11 @@ INSERT INTO `wlzx_system_module_operation_relationship` (`id`, `module_id`, `ope
 (60, 59, 60),
 (61, 60, 61),
 (62, 61, 62),
-(63, 62, 63);
+(63, 62, 63),
+(64, 46, 64),
+(65, 46, 65),
+(66, 7, 66),
+(67, 7, 67);
 
 -- --------------------------------------------------------
 
@@ -778,7 +787,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_operation` (
   `modified_date` timestamp NOT NULL default '0000-00-00 00:00:00' on update CURRENT_TIMESTAMP,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `symbol` (`symbol`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=64 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=68 ;
 
 --
 -- 转存表中的数据 `wlzx_system_operation`
@@ -834,7 +843,11 @@ INSERT INTO `wlzx_system_operation` (`id`, `name`, `symbol`, `sequence`, `rs_typ
 (60, '页面访问', 'conferenceArrange_main@defaultVisit@', 0, 'URL', '/oa/conference/conferenceArrange.swf*', NULL, '2011-07-06 00:00:00', '2011-07-07 10:43:58'),
 (61, '页面访问', 'conferenceSelfAttending_main@defaultVisit@', 0, 'URL', '/oa/conference/conferenceSelfAttending.swf*', NULL, '2011-07-06 00:00:00', '2011-07-06 12:13:03'),
 (62, '页面访问', 'person_conferenceAttending_main@defaultVisit@', 0, 'URL', '/oa/conference/conferenceSelfAttending.swf*', NULL, '2011-07-06 00:00:00', '2011-07-06 12:15:47'),
-(63, '页面访问', 'system_person_setting_main@defaultVisit@', 0, 'URL', '/oa/system/userSetting.swf*', NULL, '2011-07-06 00:00:00', '2011-07-06 12:19:36');
+(63, '页面访问', 'system_person_setting_main@defaultVisit@', 0, 'URL', '/oa/system/userSetting.swf*', NULL, '2011-07-06 00:00:00', '2011-07-06 12:19:36'),
+(64, '发布本部门校级公告', 'postSelfDepartmentSchoolScopeNotice', 1, 'METHOD', 'addNotice()', '', '2011-07-22 00:00:00', '2011-07-22 10:53:14'),
+(65, '发布任意公告', 'postAnyNotice', 1, 'METHOD', 'addNotice()', '', '2011-07-22 00:00:00', '2011-07-22 10:53:14'),
+(66, '编辑删除本部门校级公告', 'editSelfDepartmentSchoolScopeNotice', 0, 'METHOD', 'updateNotice()', '', '2011-07-22 00:00:00', '2011-07-22 10:51:44'),
+(67, '编辑删除所有公告', 'editAnyNotice', 0, 'METHOD', 'updateNotice()', '', '2011-07-22 00:00:00', '2011-07-22 10:52:51');
 
 -- --------------------------------------------------------
 
@@ -847,7 +860,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_operation_dam_relationship` (
   `operation_id` bigint(20) NOT NULL,
   `dam_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=66 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=72 ;
 
 --
 -- 转存表中的数据 `wlzx_system_operation_dam_relationship`
@@ -905,7 +918,11 @@ INSERT INTO `wlzx_system_operation_dam_relationship` (`id`, `operation_id`, `dam
 (62, 60, 62),
 (63, 61, 63),
 (64, 62, 64),
-(65, 63, 65);
+(65, 63, 65),
+(66, 64, 66),
+(68, 65, 68),
+(70, 66, 70),
+(71, 67, 71);
 
 -- --------------------------------------------------------
 
@@ -994,7 +1011,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_role_dam_relationship` (
   `role_id` bigint(20) NOT NULL,
   `dam_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=229 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=238 ;
 
 --
 -- 转存表中的数据 `wlzx_system_role_dam_relationship`
@@ -1162,7 +1179,15 @@ INSERT INTO `wlzx_system_role_dam_relationship` (`id`, `role_id`, `dam_id`) VALU
 (225, 2, 8),
 (226, 2, 25),
 (227, 2, 37),
-(228, 2, 50);
+(228, 2, 50),
+(229, 1, 59),
+(230, 1, 64),
+(231, 1, 65),
+(232, 1, 62),
+(233, 1, 63),
+(234, 1, 60),
+(235, 1, 61),
+(236, 1, 66);
 
 -- --------------------------------------------------------
 
@@ -1316,15 +1341,15 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_user` (
   `main_department_id` bigint(20) default NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `symbol` (`symbol`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='系统用户' AUTO_INCREMENT=1004 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='系统用户' AUTO_INCREMENT=1006 ;
 
 --
 -- 转存表中的数据 `wlzx_system_user`
 --
 
 INSERT INTO `wlzx_system_user` (`id`, `symbol`, `sequence`, `name`, `password`, `last_login_time`, `last_login_ip`, `account_style`, `person_id`, `person_name`, `email`, `creation_date`, `modified_date`, `active`, `main_role_id`, `main_department_id`) VALUES
-(1, 'super_root', 0, 'super_root', '134bca5421a15476a1e5ebaebdba1ede', '2011-07-15 17:11:23', '127.0.0.1', -1, NULL, NULL, NULL, '2011-05-07 11:04:22', '2011-07-05 17:33:02', 1, NULL, NULL),
-(708, '666888', 0, '666888', '75e266f182b4fa3625d4a4f4f779af54', '2011-07-06 11:52:20', '127.0.0.1', 0, NULL, NULL, '', '2011-07-05 12:57:49', '2011-07-05 12:57:51', 1, 1, 1),
+(1, 'super_root', 0, 'super_root', '134bca5421a15476a1e5ebaebdba1ede', '2011-07-22 10:43:50', '127.0.0.1', -1, NULL, NULL, NULL, '2011-05-07 11:04:22', '2011-07-05 17:33:02', 1, NULL, NULL),
+(708, '666888', 0, '666888', '75e266f182b4fa3625d4a4f4f779af54', '2011-07-22 11:00:29', '127.0.0.1', 0, NULL, NULL, '', '2011-07-05 12:57:49', '2011-07-05 12:57:51', 1, 1, 1),
 (709, '666900', 0, '666900', '2e6d1125057ec7c4402a5a2ad84f6601', NULL, '', 0, NULL, NULL, '', '2011-07-05 12:57:51', '2011-07-05 12:57:52', 1, NULL, 1),
 (710, '666988', 0, '666988', 'cb3d82f7133330c48bee639908125906', NULL, '', 0, NULL, NULL, '', '2011-07-05 12:57:52', '2011-07-05 12:57:53', 1, NULL, 1),
 (711, '666898', 0, '666898', '25eb84aab86275ed44073ce95057b9c4', NULL, '', 0, NULL, NULL, '', '2011-07-05 12:57:53', '2011-07-05 12:57:55', 1, NULL, 1),
@@ -1619,7 +1644,9 @@ INSERT INTO `wlzx_system_user` (`id`, `symbol`, `sequence`, `name`, `password`, 
 (1000, '666915', 0, '666915', '27227d807496fdfecf34396ea708d55d', NULL, '', 0, NULL, NULL, '', '2011-07-05 13:05:00', '2011-07-05 13:05:02', 1, NULL, 11),
 (1001, '666921', 0, '666921', '8f6c53e4a8b097b556eeae5ba98f9472', NULL, '', 0, NULL, NULL, '', '2011-07-05 13:05:02', '2011-07-05 13:05:04', 1, NULL, 11),
 (1002, '666920', 0, '666920', 'c3f477b4403cf76b200daead6b9adda2', NULL, '', 0, NULL, NULL, '', '2011-07-05 13:05:04', '2011-07-05 13:05:05', 1, NULL, 11),
-(1003, '666919', 0, '666919', '293567d725ba8399ed93e46ba0bda193', NULL, '', 0, NULL, NULL, '', '2011-07-05 13:05:05', '2011-07-05 13:05:07', 1, NULL, 11);
+(1003, '666919', 0, '666919', '293567d725ba8399ed93e46ba0bda193', NULL, '', 0, NULL, NULL, '', '2011-07-05 13:05:05', '2011-07-05 13:05:07', 1, NULL, 11),
+(1004, '561963', 0, '561963', 'dbac5d7ccc16692c49ff7908bb3f7b70', NULL, '', 0, NULL, NULL, 'yufeng@126.com', '2011-07-21 09:27:33', '2011-07-21 09:27:33', 1, 1, 1),
+(1005, '561997', 0, '561997', '82972ecd5fa6a0c5d278e47255bdc3e4', NULL, '', 0, NULL, NULL, 'wuyuyue@126.com', '2011-07-21 09:27:33', '2011-07-21 09:27:34', 1, 15, 9);
 
 -- --------------------------------------------------------
 

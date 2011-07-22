@@ -93,9 +93,20 @@
 				var urlRequest:URLRequest = new URLRequest(parentApplication.homeUrl+"spring/attachmentUpload.action");
 				upload.urlRequest = urlRequest;
 				messagesView.selectedIndex = 0;
+				noticeScope.dataProvider=  new ArrayCollection([{label:"部门公告", data:"1"}]);
 				departmentList = this.parentApplication.currentUserDepartment;
 				postdepartment.dataProvider= departmentList;
 				postdepartment.selectedIndex=0;
+				//权限控制部分
+				if(this.parentApplication.currentUser.hasDam("postSelfDepartmentSchoolScopeNotice@noFilter@")){
+					noticeScope.dataProvider= new ArrayCollection([{label:"校级公告", data:"0"},{label:"部门公告", data:"1"}]);
+				}
+				if(this.parentApplication.currentUser.hasDam("postAnyNotice@noFilter@")){
+					noticeScope.dataProvider= new ArrayCollection([{label:"校级公告", data:"0"},{label:"部门公告", data:"1"}]);
+					departmentList = this.parentApplication.allDepartment;
+					postdepartment.dataProvider= departmentList;
+					postdepartment.selectedIndex=0;
+				}
 //				callLater(search);
 			}
 			
@@ -651,7 +662,7 @@
 							<mx:HBox width="100%">
 								<mx:ComboBox id="noticeType"  labelField="label"/>
 								<mx:FormItem label="公告范围">
-									<mx:ComboBox id="noticeScope" dataProvider="{noticeScopeList}" selectedIndex="0" labelField="label"/>
+									<mx:ComboBox id="noticeScope"  labelField="label"/>
 								</mx:FormItem>
 								<mx:FormItem label="发布部门">
 									<mx:ComboBox id="postdepartment"  labelField="label" selectedIndex="-1"/>

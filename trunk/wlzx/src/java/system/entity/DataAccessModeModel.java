@@ -28,6 +28,7 @@ public class DataAccessModeModel extends BaseModel{
 	private static final long serialVersionUID = -6537176421866028228L;
 	private String detail;
 	private String value;
+	private Boolean emptyFlag=true;
 	private Set<OperationModel> operations=new TreeSet<OperationModel>();
 	private Set<DepartmentModel> departments=new TreeSet<DepartmentModel>();
 	private Set<RoleModel> roles=new TreeSet<RoleModel>();
@@ -70,5 +71,11 @@ public class DataAccessModeModel extends BaseModel{
 	}
 	public void setRoles(Set<RoleModel> roles) {
 		this.roles = roles;
+	}
+	public Boolean getEmptyFlag() {
+		return emptyFlag;
+	}
+	public void setEmptyFlag(Boolean emptyFlag) {
+		this.emptyFlag = emptyFlag;
 	}
 }

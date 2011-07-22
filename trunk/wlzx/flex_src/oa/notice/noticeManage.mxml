@@ -80,8 +80,7 @@
 					{label:"部门", data:"2"}]); 
 			
 			public var noticeScopeList:ArrayCollection = new ArrayCollection( 
-				[	{label:"请选择", data:null},
-					{label:"校级公告", data:"0"},  
+				[	{label:"校级公告", data:"0"},  
 					{label:"部门公告", data:"1"}]);
 			
 			public var noticeTypeList:ArrayCollection = new ArrayCollection();
@@ -103,6 +102,8 @@
 				search_account.dataProvider=this.parentApplication.allTeacherAcccounts;
 				//systemServiceRO.getDepartmentBySymbol("root");
 				departmentList = this.parentApplication.allDepartment;
+				
+				
 			}
 			protected function systemFaultHandler(event:FaultEvent):void {
 				unLockWin();
@@ -241,7 +242,7 @@
 					
 					form.title = title.text;
 					form.type = noticeType.selectedItem.data;
-					noticeServiceRO.updateNotice(form, upload.idList);
+					noticeServiceRO.updateNotice(form, upload.addIds,upload.removeIds);
 				}
 			}
 			
@@ -455,7 +456,27 @@
 														import mx.controls.Alert;
 														import mx.core.UIComponent;
 														private function checkAuth(data:Object):Boolean{
-															return true;
+															//权限控制部分
+															for(var i:int=0;i<parentApplication.currentUserDepartment.length;i++){
+																var temp:Object=parentApplication.currentUserDepartment.getItemAt(i);
+																//Alert.show(temp.id);
+																if(temp.data==data.postDepartmentId){
+																	if(data.scope==1)return true;//本部门部门公告编辑
+																	else {
+																		if(parentApplication.currentUser.hasDam("editSelfDepartmentSchoolScopeNotice@noFilter@")){
+																			return true;//本部门校级公告编辑
+																		}
+																	}
+																}
+															}
+
+															if(parentApplication.currentUser.hasDam("editAnyNotice@noFilter@")){
+																return true;
+															}
+															return false;
+//															
+														
+//															
 														}
 													]]>
 												</mx:Script>
@@ -499,7 +520,7 @@
 							<mx:HBox width="100%">
 								<mx:ComboBox id="noticeType" dataProvider="{noticeTypeList}" selectedIndex="1" labelField="label"/>
 								<mx:FormItem label="公告范围">
-									<mx:ComboBox id="noticeScope"  selectedIndex="1" labelField="label" dataProvider="noticeScopeList"/>
+									<mx:ComboBox id="noticeScope"  selectedIndex="1" labelField="label" dataProvider="{noticeScopeList}"/>
 								</mx:FormItem>
 								<mx:FormItem label="发布部门">
 									<mx:ComboBox id="postdepartment" dataProvider="{departmentList}" labelField="label"/>
