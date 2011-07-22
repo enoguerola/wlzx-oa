@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2011 年 07 月 22 日 16:54
+-- 生成日期: 2011 年 07 月 22 日 22:00
 -- 服务器版本: 5.0.91
 -- PHP 版本: 5.2.13
 
@@ -99,8 +99,8 @@ INSERT INTO `wlzx_system_data_access_mode` (`id`, `name`, `symbol`, `sequence`, 
 (37, '全部数据', 'selfCanculateAttendance_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-06-06 00:00:00', '2011-07-22 09:45:36', 1),
 (38, '全部数据', 'takeLeaveApprove_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-06-08 00:00:00', '2011-07-22 09:45:36', 1),
 (39, '全部数据', 'takeLeaveWorkDeal@noFilter@', 0, NULL, NULL, '2011-06-08 00:00:00', '2011-07-22 09:45:36', 1),
-(40, '全部数据', 'takeLeaveOfficeApprove@noFilter@', 0, NULL, NULL, '2011-06-08 00:00:00', '2011-07-22 09:45:36', 1),
-(41, '全部数据', 'takeLeaveVicePrincipalApprove@noFilter@', 0, NULL, NULL, '2011-06-08 00:00:00', '2011-07-22 09:45:36', 1),
+(40, '全部数据', 'takeLeaveOfficeApprove@noFilter@', 0, NULL, NULL, '2011-06-08 00:00:00', '2011-06-08 15:27:31', 1),
+(41, '全部数据', 'takeLeaveVicePrincipalApprove@noFilter@', 0, NULL, NULL, '2011-06-08 00:00:00', '2011-06-08 15:27:37', 1),
 (42, '全部数据', 'takeLeavePrincipalApprove@noFilter@', 0, NULL, NULL, '2011-06-08 00:00:00', '2011-07-22 09:45:36', 1),
 (43, '本处室请假出差数据（处室领导级别有效）', 'takeLeaveApprove_main@defaultVisit@@notSelfOfficeFilter@', 1, NULL, '', '2011-06-09 00:00:00', '2011-07-22 10:06:43', 0),
 (44, '分管处室请假出差数据（副校长级别有效）', 'takeLeaveApprove_main@defaultVisit@@notSelfManagerFilter@', 2, NULL, '', '2011-06-09 00:00:00', '2011-07-22 10:06:59', 0),
@@ -856,8 +856,8 @@ INSERT INTO `wlzx_system_operation` (`id`, `name`, `symbol`, `sequence`, `rs_typ
 (37, '页面访问', 'selfCanculateAttendance_main@defaultVisit@', 0, 'URL', '/oa/attendance/selfCanculateAttendance.swf*', NULL, '2011-06-06 00:00:00', '2011-06-10 21:22:21'),
 (38, '页面访问', 'takeLeaveApprove_main@defaultVisit@', 0, 'URL', '/oa/attendance/takeLeaveApprove.swf*', NULL, '2011-06-08 00:00:00', '2011-06-08 11:45:47'),
 (39, '请假出差工作落实', 'takeLeaveWorkDeal', 4, 'METHOD', 'takeLeaveWorkDeal()', '', '2011-06-08 00:00:00', '2011-06-08 15:27:48'),
-(40, '请假出差处室审批', 'takeLeaveOfficeApprove', 1, 'METHOD', 'takeLeaveOfficeApprove()', '', '2011-06-08 00:00:00', '2011-06-08 15:27:31'),
-(41, '请假出差副校长审批', 'takeLeaveVicePrincipalApprove', 2, 'METHOD', 'takeLeaveVicePrincipalApprove()', '', '2011-06-08 00:00:00', '2011-06-08 15:27:37'),
+(40, '请假出差本处室审批', 'takeLeaveOfficeApprove', 1, 'METHOD', 'takeLeaveOfficeApprove()', '', '2011-06-08 00:00:00', '2011-07-22 21:39:13'),
+(41, '请假出差分管副校长审批', 'takeLeaveVicePrincipalApprove', 2, 'METHOD', 'takeLeaveVicePrincipalApprove()', '', '2011-06-08 00:00:00', '2011-07-22 21:39:22'),
 (42, '请假出差校长审批', 'takeLeavePrincipalApprove', 3, 'METHOD', 'takeLeavePrincipalApprove()', '', '2011-06-08 00:00:00', '2011-06-08 15:27:42'),
 (43, '页面访问', 'moveRestDay_apply_main@defaultVisit@', 0, 'URL', '/oa/attendance/moveRestDay.swf*', NULL, '2011-06-10 00:00:00', '2011-06-10 16:11:49'),
 (44, '页面访问', 'overWork_approve_main@defaultVisit@', 0, 'URL', '/oa/attendance/overWorkApprove.swf*', NULL, '2011-06-10 00:00:00', '2011-06-10 21:15:45'),
@@ -1396,9 +1396,9 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_user` (
 --
 
 INSERT INTO `wlzx_system_user` (`id`, `symbol`, `sequence`, `name`, `password`, `last_login_time`, `last_login_ip`, `account_style`, `person_id`, `person_name`, `email`, `creation_date`, `modified_date`, `active`, `main_role_id`, `main_department_id`) VALUES
-(1, 'super_root', 0, 'super_root', '134bca5421a15476a1e5ebaebdba1ede', '2011-07-22 15:57:56', '127.0.0.1', -1, NULL, NULL, NULL, '2011-05-07 11:04:22', '2011-07-05 17:33:02', 1, NULL, NULL),
-(708, '666888', 0, '666888', '75e266f182b4fa3625d4a4f4f779af54', '2011-07-22 13:58:49', '127.0.0.1', 0, NULL, NULL, '', '2011-07-05 12:57:49', '2011-07-05 12:57:51', 1, 1, 1),
-(709, '666900', 0, '666900', '2e6d1125057ec7c4402a5a2ad84f6601', NULL, '', 0, NULL, NULL, '', '2011-07-05 12:57:51', '2011-07-05 12:57:52', 1, NULL, 1),
+(1, 'super_root', 0, 'super_root', '134bca5421a15476a1e5ebaebdba1ede', '2011-07-22 21:31:33', '127.0.0.1', -1, NULL, NULL, NULL, '2011-05-07 11:04:22', '2011-07-05 17:33:02', 1, NULL, NULL),
+(708, '666888', 0, '666888', '75e266f182b4fa3625d4a4f4f779af54', '2011-07-22 21:36:07', '127.0.0.1', 0, NULL, NULL, '', '2011-07-05 12:57:49', '2011-07-05 12:57:51', 1, 1, 1),
+(709, '666900', 0, '666900', '2e6d1125057ec7c4402a5a2ad84f6601', '2011-07-22 19:49:46', '127.0.0.1', 0, NULL, NULL, '', '2011-07-05 12:57:51', '2011-07-05 12:57:52', 1, NULL, 1),
 (710, '666988', 0, '666988', 'cb3d82f7133330c48bee639908125906', NULL, '', 0, NULL, NULL, '', '2011-07-05 12:57:52', '2011-07-05 12:57:53', 1, NULL, 1),
 (711, '666898', 0, '666898', '25eb84aab86275ed44073ce95057b9c4', NULL, '', 0, NULL, NULL, '', '2011-07-05 12:57:53', '2011-07-05 12:57:55', 1, NULL, 1),
 (712, '668555', 0, '668555', '22df6af3d0353199f97000559339f2d1', NULL, '', 0, NULL, NULL, '', '2011-07-05 12:57:55', '2011-07-05 12:57:56', 1, NULL, 1),

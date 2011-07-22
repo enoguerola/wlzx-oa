@@ -74,7 +74,7 @@ public class TakeLeaveServiceImpl implements TakeLeaveService {
 			UserModel user=SecurityUserHolder.getCurrentUser();
 			if(newTakeLeave.getArrangeTechDealAlready()!=takeLeave.getArrangeTechDealAlready()&&takeLeave.getArrangeTechDealAlready()==true){
 				TakeLeaveWorkFlowLog log=new TakeLeaveWorkFlowLog();
-				log.setOperationName("落实请假/出差期间工作");
+				log.setOperationName("落实请假/出差期间教学工作");
 				log.setOperationResult("落实编号为"+takeLeave.getApplyNo()+"的申请请假/出差期间教学工作");
 				log.setOperationTime(new Date());
 				log.setOperationTeacherId(user.getId());
@@ -101,7 +101,9 @@ public class TakeLeaveServiceImpl implements TakeLeaveService {
 				log.setOperationName("处室审批");
 				if(takeLeave.getOfficeChiefStatus()==1){
 					log.setOperationResult("处室审批编号为"+takeLeave.getApplyNo()+"的申请通过");
-					newTakeLeave.setStatus(TakeLeaveForm.Status.OfficePass.getValue());
+					if(newTakeLeave.getSections()/3.0<=TakeLeaveForm.Rules.FirstApprove.getValue()*1.0)
+						newTakeLeave.setStatus(TakeLeaveForm.Status.Pass.getValue());
+					else newTakeLeave.setStatus(TakeLeaveForm.Status.OfficePass.getValue());
 				}
 				else if(takeLeave.getOfficeChiefStatus()==2){
 					log.setOperationResult("处室审批编号为"+takeLeave.getApplyNo()+"的申请不通过");
@@ -116,7 +118,10 @@ public class TakeLeaveServiceImpl implements TakeLeaveService {
 				log.setOperationName("分管副校长审批");
 				if(takeLeave.getVicePrincipalStatus().intValue()==1){
 					log.setOperationResult("分管副校长审批编号为"+takeLeave.getApplyNo()+"的申请通过");
-					newTakeLeave.setStatus(TakeLeaveForm.Status.VicePrincipalPass.getValue());	
+					if(newTakeLeave.getSections()/3.0<=TakeLeaveForm.Rules.SecordApprove.getValue()*1.0)
+						newTakeLeave.setStatus(TakeLeaveForm.Status.Pass.getValue());
+					else newTakeLeave.setStatus(TakeLeaveForm.Status.VicePrincipalPass.getValue());	
+					
 				}
 				else if(takeLeave.getVicePrincipalStatus().intValue()==2){
 					log.setOperationResult("分管副校长审批编号为"+takeLeave.getApplyNo()+"的申请不通过");
@@ -131,6 +136,9 @@ public class TakeLeaveServiceImpl implements TakeLeaveService {
 				log.setOperationName("校长审批");
 				if(takeLeave.getPrincipalStatus().intValue()==1){
 					log.setOperationResult("校长审批编号为"+takeLeave.getApplyNo()+"的申请通过");
+//					if(newTakeLeave.getSections()/3.0<=TakeLeaveForm.Rules.ThirdApprove.getValue()*1.0)
+//						newTakeLeave.setStatus(TakeLeaveForm.Status.Pass.getValue());
+//					else newTakeLeave.setStatus(TakeLeaveForm.Status.Pass.getValue());	
 					newTakeLeave.setStatus(TakeLeaveForm.Status.Pass.getValue());	
 				}
 				else if(takeLeave.getPrincipalStatus().intValue()==2){

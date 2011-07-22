@@ -1,9 +1,12 @@
 package system.wlims.oa.entity.workFlow.takeLeave;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Set;
 import java.util.TreeSet;
 
+import system.constants.Constants;
 import system.entity.workFlow.AbstractForm;
 
 public class TakeLeaveForm extends AbstractForm {
@@ -43,6 +46,34 @@ public class TakeLeaveForm extends AbstractForm {
 	private String remark;
 	private Integer status;
 	private Set<TakeLeaveWorkFlowLog> logs=new TreeSet<TakeLeaveWorkFlowLog>();
+	public static enum Rules{
+		FirstApprove(1, "处室负责人审批"),
+		SecordApprove(2, "分管副校长审批"),
+		ThirdApprove(3, "校长审批");
+		private Integer value;
+		private String name;
+		
+		private Rules(Integer value, String name){
+			this.setValue(value);
+			this.setName(name);
+		}
+
+		public void setValue(Integer value) {
+			this.value = value;
+		}
+
+		public Integer getValue() {
+			return value;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+
+		public String getName() {
+			return name;
+		}
+	}
 	public static enum Types{
 		Leave(0, "请假"),
 		BusinessTrip(1, "出差");
@@ -269,5 +300,22 @@ public class TakeLeaveForm extends AbstractForm {
 	}
 	public void setPrincipalStatus(Integer principalStatus) {
 		this.principalStatus = principalStatus;
+	}
+	@SuppressWarnings("finally")
+	public int getSections(){
+		int result=0;
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		try {
+			Date d1= df.parse(getBeginTime().split(" ")[0]);
+		    Date d2 = df.parse(getEndTime().split(" ")[0]);
+		    long diff = d1.getTime() - d2.getTime();
+		    long days = diff / (1000 * 60 * 60 * 24);
+		    result+=days*Constants.DaysOfSections+(Integer.parseInt(getEndTime().split(" ")[1])-Integer.parseInt(getBeginTime().split(" ")[1]));
+	    }catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally{
+			return result;
+		}
 	}
 }
