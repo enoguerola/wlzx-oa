@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2011 年 07 月 22 日 11:40
+-- 生成日期: 2011 年 07 月 22 日 16:54
 -- 服务器版本: 5.0.91
 -- PHP 版本: 5.2.13
 
@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_data_access_mode` (
   `empty_flag` tinyint(1) NOT NULL default '1',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `symbol` (`symbol`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=72 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=78 ;
 
 --
 -- 转存表中的数据 `wlzx_system_data_access_mode`
@@ -128,7 +128,13 @@ INSERT INTO `wlzx_system_data_access_mode` (`id`, `name`, `symbol`, `sequence`, 
 (66, '全部数据', 'postSelfDepartmentSchoolScopeNotice@noFilter@', 0, NULL, NULL, '2011-07-22 00:00:00', '2011-07-22 09:45:36', 1),
 (68, '全部数据', 'postAnyNotice@noFilter@', 0, NULL, NULL, '2011-07-22 00:00:00', '2011-07-22 09:45:36', 1),
 (70, '全部数据', 'editSelfDepartmentSchoolScopeNotice@noFilter@', 0, NULL, NULL, '2011-07-22 00:00:00', '2011-07-22 10:51:44', 1),
-(71, '全部数据', 'editAnyNotice@noFilter@', 0, NULL, NULL, '2011-07-22 00:00:00', '2011-07-22 10:52:51', 1);
+(71, '全部数据', 'editAnyNotice@noFilter@', 0, NULL, NULL, '2011-07-22 00:00:00', '2011-07-22 10:52:51', 1),
+(72, '全部数据', 'documentDrafting_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-22 00:00:00', '2011-07-22 16:40:11', 1),
+(73, '全部数据', 'documentCheckDraft_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-22 00:00:00', '2011-07-22 16:39:43', 1),
+(74, '全部数据', 'documentCountersign_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-22 00:00:00', '2011-07-22 16:41:32', 1),
+(75, '全部数据', 'documentIssue_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-22 00:00:00', '2011-07-22 16:42:27', 1),
+(76, '全部数据', 'documentCirculate_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-22 00:00:00', '2011-07-22 16:43:19', 1),
+(77, '全部数据', 'documentManage_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-22 00:00:00', '2011-07-22 16:43:57', 1);
 
 -- --------------------------------------------------------
 
@@ -355,7 +361,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_menu` (
   `modified_date` timestamp NOT NULL default '0000-00-00 00:00:00' on update CURRENT_TIMESTAMP,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `symbol` (`symbol`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=79 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=85 ;
 
 --
 -- 转存表中的数据 `wlzx_system_menu`
@@ -424,7 +430,13 @@ INSERT INTO `wlzx_system_menu` (`id`, `name`, `symbol`, `sequence`, `detail`, `m
 (75, '会议调整', 'conferenceArrange', 2, '', '', '2011-07-06 00:00:00', '2011-07-06 12:04:16'),
 (76, '我参与的会议', 'conferenceSelfAttending', 4, '', '', '2011-07-06 00:00:00', '2011-07-06 12:05:05'),
 (77, '我参与的会议', 'person_conferenceAttending', 7, '', '', '2011-07-06 00:00:00', '2011-07-06 12:14:50'),
-(78, '用户设置', 'system_person_setting', 0, '', '', '2011-07-06 00:00:00', '2011-07-06 12:17:22');
+(78, '用户设置', 'system_person_setting', 0, '', '', '2011-07-06 00:00:00', '2011-07-06 12:17:22'),
+(79, '发文拟稿', 'documentDrafting', 0, '', '', '2011-07-22 00:00:00', '2011-07-22 16:27:26'),
+(80, '发文核稿', 'documentCheckDraft', 1, '', '', '2011-07-22 00:00:00', '2011-07-22 16:31:33'),
+(81, '发文会签', 'documentCountersign', 2, '', '', '2011-07-22 00:00:00', '2011-07-22 16:32:33'),
+(82, '发文签发', 'documentIssue', 3, '', '', '2011-07-22 00:00:00', '2011-07-22 16:34:13'),
+(83, '发文传阅', 'documentCirculation ', 4, '', '', '2011-07-22 00:00:00', '2011-07-22 16:35:03'),
+(84, '发文管理', 'documentManage', 5, '', '', '2011-07-22 00:00:00', '2011-07-22 16:35:41');
 
 -- --------------------------------------------------------
 
@@ -437,7 +449,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_menu_module_relationship` (
   `menu_id` bigint(20) NOT NULL,
   `module_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=59 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=65 ;
 
 --
 -- 转存表中的数据 `wlzx_system_menu_module_relationship`
@@ -488,7 +500,13 @@ INSERT INTO `wlzx_system_menu_module_relationship` (`id`, `menu_id`, `module_id`
 (55, 75, 59),
 (56, 76, 60),
 (57, 77, 61),
-(58, 78, 62);
+(58, 78, 62),
+(59, 79, 63),
+(60, 80, 64),
+(61, 81, 65),
+(62, 82, 66),
+(63, 83, 67),
+(64, 84, 68);
 
 -- --------------------------------------------------------
 
@@ -527,7 +545,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_menu_treeship` (
   `parent_id` bigint(20) NOT NULL,
   `child_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=73 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=79 ;
 
 --
 -- 转存表中的数据 `wlzx_system_menu_treeship`
@@ -589,7 +607,13 @@ INSERT INTO `wlzx_system_menu_treeship` (`id`, `parent_id`, `child_id`) VALUES
 (69, 71, 75),
 (70, 71, 76),
 (71, 50, 77),
-(72, 18, 78);
+(72, 18, 78),
+(73, 35, 79),
+(74, 35, 80),
+(75, 35, 81),
+(76, 35, 82),
+(77, 35, 83),
+(78, 35, 84);
 
 -- --------------------------------------------------------
 
@@ -632,7 +656,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_module` (
   `parms` varchar(300) default NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `symbol` (`symbol`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=63 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=69 ;
 
 --
 -- 转存表中的数据 `wlzx_system_module`
@@ -683,7 +707,13 @@ INSERT INTO `wlzx_system_module` (`id`, `name`, `symbol`, `sequence`, `detail`, 
 (59, '会议调整主模块', 'conferenceArrange_main', 0, '', '2011-07-06 00:00:00', '2011-07-07 10:43:58', 'oa/conference/conferenceArrange.swf', ''),
 (60, '我参与的会议主模块', 'conferenceSelfAttending_main', 0, '', '2011-07-06 00:00:00', '2011-07-06 12:13:03', 'oa/conference/conferenceSelfAttending.swf', ''),
 (61, '我参与的会议主模块', 'person_conferenceAttending_main', 0, '', '2011-07-06 00:00:00', '2011-07-06 12:15:47', 'oa/conference/conferenceSelfAttending.swf', ''),
-(62, '用户设置主模块', 'system_person_setting_main', 0, '', '2011-07-06 00:00:00', '2011-07-06 12:19:36', 'oa/system/userSetting.swf', '');
+(62, '用户设置主模块', 'system_person_setting_main', 0, '', '2011-07-06 00:00:00', '2011-07-06 12:19:36', 'oa/system/userSetting.swf', ''),
+(63, '发文拟稿主模块', 'documentDrafting_main', 0, '', '2011-07-22 00:00:00', '2011-07-22 16:40:11', 'oa/sendingFiles/documentDrafting.swf', ''),
+(64, '发文核稿主模块', 'documentCheckDraft_main', 0, '', '2011-07-22 00:00:00', '2011-07-22 16:39:43', 'oa/sendingFiles/documentCheckDraft.swf', ''),
+(65, '发文会签主模块', 'documentCountersign_main', 0, '', '2011-07-22 00:00:00', '2011-07-22 16:41:32', 'oa/sendingFiles/documentCountersign.swf', ''),
+(66, '发文签发主模块', 'documentIssue_main', 0, '', '2011-07-22 00:00:00', '2011-07-22 16:42:27', 'oa/sendingFiles/documentIssue.swf', ''),
+(67, '发文传阅主模块', 'documentCirculate_main', 0, '', '2011-07-22 00:00:00', '2011-07-22 16:43:19', 'oa/sendingFiles/documentCirculate.swf', ''),
+(68, '发文管理主模块', 'documentManage_main', 0, '', '2011-07-22 00:00:00', '2011-07-22 16:43:57', 'oa/sendingFiles/documentManage.swf', '');
 
 -- --------------------------------------------------------
 
@@ -696,7 +726,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_module_operation_relationship` (
   `module_id` bigint(20) NOT NULL,
   `operation_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=68 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=74 ;
 
 --
 -- 转存表中的数据 `wlzx_system_module_operation_relationship`
@@ -749,7 +779,13 @@ INSERT INTO `wlzx_system_module_operation_relationship` (`id`, `module_id`, `ope
 (64, 46, 64),
 (65, 46, 65),
 (66, 7, 66),
-(67, 7, 67);
+(67, 7, 67),
+(68, 63, 68),
+(69, 64, 69),
+(70, 65, 70),
+(71, 66, 71),
+(72, 67, 72),
+(73, 68, 73);
 
 -- --------------------------------------------------------
 
@@ -787,7 +823,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_operation` (
   `modified_date` timestamp NOT NULL default '0000-00-00 00:00:00' on update CURRENT_TIMESTAMP,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `symbol` (`symbol`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=68 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=74 ;
 
 --
 -- 转存表中的数据 `wlzx_system_operation`
@@ -847,7 +883,13 @@ INSERT INTO `wlzx_system_operation` (`id`, `name`, `symbol`, `sequence`, `rs_typ
 (64, '发布本部门校级公告', 'postSelfDepartmentSchoolScopeNotice', 1, 'METHOD', 'addNotice()', '', '2011-07-22 00:00:00', '2011-07-22 10:53:14'),
 (65, '发布任意公告', 'postAnyNotice', 1, 'METHOD', 'addNotice()', '', '2011-07-22 00:00:00', '2011-07-22 10:53:14'),
 (66, '编辑删除本部门校级公告', 'editSelfDepartmentSchoolScopeNotice', 0, 'METHOD', 'updateNotice()', '', '2011-07-22 00:00:00', '2011-07-22 10:51:44'),
-(67, '编辑删除所有公告', 'editAnyNotice', 0, 'METHOD', 'updateNotice()', '', '2011-07-22 00:00:00', '2011-07-22 10:52:51');
+(67, '编辑删除所有公告', 'editAnyNotice', 0, 'METHOD', 'updateNotice()', '', '2011-07-22 00:00:00', '2011-07-22 10:52:51'),
+(68, '页面访问', 'documentDrafting_main@defaultVisit@', 0, 'URL', '/oa/sendingFiles/documentDrafting.swf*', NULL, '2011-07-22 00:00:00', '2011-07-22 16:40:11'),
+(69, '页面访问', 'documentCheckDraft_main@defaultVisit@', 0, 'URL', '/oa/sendingFiles/documentCheckDraft.swf*', NULL, '2011-07-22 00:00:00', '2011-07-22 16:39:43'),
+(70, '页面访问', 'documentCountersign_main@defaultVisit@', 0, 'URL', '/oa/sendingFiles/documentCountersign.swf*', NULL, '2011-07-22 00:00:00', '2011-07-22 16:41:32'),
+(71, '页面访问', 'documentIssue_main@defaultVisit@', 0, 'URL', '/oa/sendingFiles/documentIssue.swf*', NULL, '2011-07-22 00:00:00', '2011-07-22 16:42:27'),
+(72, '页面访问', 'documentCirculate_main@defaultVisit@', 0, 'URL', '/oa/sendingFiles/documentCirculate.swf*', NULL, '2011-07-22 00:00:00', '2011-07-22 16:43:19'),
+(73, '页面访问', 'documentManage_main@defaultVisit@', 0, 'URL', '/oa/sendingFiles/documentManage.swf*', NULL, '2011-07-22 00:00:00', '2011-07-22 16:43:57');
 
 -- --------------------------------------------------------
 
@@ -860,7 +902,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_operation_dam_relationship` (
   `operation_id` bigint(20) NOT NULL,
   `dam_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=72 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=78 ;
 
 --
 -- 转存表中的数据 `wlzx_system_operation_dam_relationship`
@@ -922,7 +964,13 @@ INSERT INTO `wlzx_system_operation_dam_relationship` (`id`, `operation_id`, `dam
 (66, 64, 66),
 (68, 65, 68),
 (70, 66, 70),
-(71, 67, 71);
+(71, 67, 71),
+(72, 68, 72),
+(73, 69, 73),
+(74, 70, 74),
+(75, 71, 75),
+(76, 72, 76),
+(77, 73, 77);
 
 -- --------------------------------------------------------
 
@@ -1348,8 +1396,8 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_user` (
 --
 
 INSERT INTO `wlzx_system_user` (`id`, `symbol`, `sequence`, `name`, `password`, `last_login_time`, `last_login_ip`, `account_style`, `person_id`, `person_name`, `email`, `creation_date`, `modified_date`, `active`, `main_role_id`, `main_department_id`) VALUES
-(1, 'super_root', 0, 'super_root', '134bca5421a15476a1e5ebaebdba1ede', '2011-07-22 10:43:50', '127.0.0.1', -1, NULL, NULL, NULL, '2011-05-07 11:04:22', '2011-07-05 17:33:02', 1, NULL, NULL),
-(708, '666888', 0, '666888', '75e266f182b4fa3625d4a4f4f779af54', '2011-07-22 11:00:29', '127.0.0.1', 0, NULL, NULL, '', '2011-07-05 12:57:49', '2011-07-05 12:57:51', 1, 1, 1),
+(1, 'super_root', 0, 'super_root', '134bca5421a15476a1e5ebaebdba1ede', '2011-07-22 15:57:56', '127.0.0.1', -1, NULL, NULL, NULL, '2011-05-07 11:04:22', '2011-07-05 17:33:02', 1, NULL, NULL),
+(708, '666888', 0, '666888', '75e266f182b4fa3625d4a4f4f779af54', '2011-07-22 13:58:49', '127.0.0.1', 0, NULL, NULL, '', '2011-07-05 12:57:49', '2011-07-05 12:57:51', 1, 1, 1),
 (709, '666900', 0, '666900', '2e6d1125057ec7c4402a5a2ad84f6601', NULL, '', 0, NULL, NULL, '', '2011-07-05 12:57:51', '2011-07-05 12:57:52', 1, NULL, 1),
 (710, '666988', 0, '666988', 'cb3d82f7133330c48bee639908125906', NULL, '', 0, NULL, NULL, '', '2011-07-05 12:57:52', '2011-07-05 12:57:53', 1, NULL, 1),
 (711, '666898', 0, '666898', '25eb84aab86275ed44073ce95057b9c4', NULL, '', 0, NULL, NULL, '', '2011-07-05 12:57:53', '2011-07-05 12:57:55', 1, NULL, 1),

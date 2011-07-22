@@ -80,6 +80,7 @@
     <module application="flex_src/home.mxml" destPath="oa/conference/conferenceDetail.swf" optimize="false" sourcePath="flex_src/oa/conference/conferenceDetail.mxml"/>
     <module application="flex_src/home.mxml" destPath="oa/conference/conferenceRoomCheck.swf" optimize="false" sourcePath="flex_src/oa/conference/conferenceRoomCheck.mxml"/>
     <module application="flex_src/home.mxml" destPath="oa/conference/conferenceSummary.swf" optimize="false" sourcePath="flex_src/oa/conference/conferenceSummary.mxml"/>
+    <module application="flex_src/home.mxml" destPath="system/accessDenied.swf" optimize="false" sourcePath="flex_src/system/accessDenied.mxml"/>
   </modules>
   <buildCSSFiles/>
 </actionScriptProperties>
