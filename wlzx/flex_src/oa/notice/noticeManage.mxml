@@ -71,7 +71,7 @@
 			import system.entity.DepartmentModel;
 			import system.utils.*;
 			import basic.utils.DateUtil;
-			
+			import oa.entity.AttachmentModel;
 			private var validatorArr:Array;
 			
 			public var scopes:ArrayCollection = new ArrayCollection( 
@@ -151,6 +151,12 @@
 				if(form.emergence == 1)
 					emergence.selected = true;
 				rte.text = form.content;
+				var uploadList:Array=new Array();
+				for each(var model:AttachmentModel in form.attachments){
+					uploadList.push({label:model.name,data:parseInt(model.size)/1000+"KB",width:145,id:model.id});
+					//	uploadListfileRef.fileList
+				}
+				upload.uploadAlready_list.dataProvider=uploadList;
 			}
 			
 			protected function deleteNoticeByIdResult_resultHandler(event:ResultEvent):void
@@ -535,20 +541,22 @@
 							<mx:RichTextEditor id="rte" title="Halo RichTextEditor"   headerHeight="0" width="100%" height="100%" dropShadowVisible="false" text="" >
 							</mx:RichTextEditor>
 						</mx:FormItem>
-						<mx:HBox width="100%" height="20">
-							<mx:LinkButton  label="附件区" icon="@Embed(source='../WebContent/resources/common/tools/button_attachment_icon.png')" click="showHide()"/>
-						</mx:HBox>
-						<mx:FormItem  width="100%"  height="0" id="att_area" paddingLeft="10" paddingRight="10">
-							<mx:VBox width="100%">
-								<mutiUpload:upload width="100%" height="100%" id="upload">
-								</mutiUpload:upload>
-							</mx:VBox>
-						</mx:FormItem>
+						
 					</mx:Form>
+					
 				</mx:VBox>
+				<mx:HBox width="100%" height="20">
+					<mx:LinkButton  label="附件区" icon="@Embed(source='../WebContent/resources/common/tools/button_attachment_icon.png')" click="showHide()"/>
+				</mx:HBox>
+				<mx:FormItem  width="100%"  height="0" id="att_area" paddingLeft="10" paddingRight="10">
+					<mx:VBox width="100%">
+						<mutiUpload:upload width="100%" height="100%" id="upload">
+						</mutiUpload:upload>
+					</mx:VBox>
+				</mx:FormItem>
 				<mx:HBox horizontalAlign="right" width="100%">
 					<mx:Label id="addUpdateFlag" visible="false" text="add"/>
-					<mx:Button label="发布" id="postButton" click="add_clickHandler(event)"/>
+					<mx:Button label="保存" id="postButton" click="add_clickHandler(event)"/>
 				</mx:HBox>
 			</mx:VBox>
 		</mx:VBox>
