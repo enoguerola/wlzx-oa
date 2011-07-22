@@ -23,6 +23,9 @@
 		<property name="value" type="string">
 			<column name="value" />
 		</property>
+		<property name="emptyFlag" type="boolean">
+			<column name="empty_flag" />
+		</property>
 		<property name="creationDate" type="java.util.Date">
 			<column name="creation_date" />
 		</property>

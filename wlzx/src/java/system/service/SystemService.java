@@ -688,6 +688,22 @@ public class SystemService{
 					}
 				}
 			}
+			if(operation.getDataAccessModes()!=null&&operation.getDataAccessModes().size()==1){
+				DataAccessModeModel dam=operation.getDataAccessModes().iterator().next();
+				if(dam.getEmptyFlag()==true){
+					int state2=0;
+					if(dams.contains(dam))state2=1;
+					sb.append("<node  state='"+state2+"' type='dam' id='"+dam.getId()+"' label='"+operation.getName()+"'>");
+					sb.append("</node>");
+				}else{
+					int state3=0;
+					if(dams.contains(dam))state3=1;
+					sb.append("<node  state='"+state3+"' type='dam' id='"+dam.getId()+"' label='"+dam.getName()+"'>");
+					sb.append("</node>");
+				}
+				return;
+				
+			}
 			sb.append("<node  state='"+state+"' type='operation' label='"+operation.getName()+"'>");
 			if(operation.getDataAccessModes()!=null&&operation.getDataAccessModes().size()>0)
 				for(DataAccessModeModel dam:operation.getDataAccessModes()){
