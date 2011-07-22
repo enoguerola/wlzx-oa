@@ -19,6 +19,7 @@
 	<bean id="allWaittingDealServiceDest" class="system.wlims.oa.serviceImpl.integration.AllWaittingDealServiceImpl">
 		<flex:remoting-destination />
 		<property name="taskDAO" ref="taskDAO" />
+		<property name="userDAO" ref="userDAO" />
 		<property name="courseAdjustDAO" ref="courseAdjustDAO" />
 		<property name="moveRestDayDAO" ref="moveRestDayDAO" />
 		<property name="overWorkDAO" ref="overWorkDAO" />

@@ -179,7 +179,42 @@
 				
 				remark.text=form.remark;
 				
-				
+				//权限控制部分
+				if(this.parentApplication.currentUser.hasDam("takeLeaveWorkDeal@noFilter@")){
+					arrange_tech_already.enabled=true;
+					arrange_manage_already.enabled=true;
+					arrange_service_already.enabled=true;
+					arrange_tech.enabled=true;
+					arrange_manage.enabled=true;
+					arrange_service.enabled=true;
+				}
+				if(this.parentApplication.currentUser.hasDam("takeLeaveOfficeApprove@noFilter@")&&parentApplication.currentUser.hasSubordinateUser(form.teacherId)){
+					officeChief_approver_name.enabled=true;
+					officeChief_approver_id.enabled=true;
+					officeChief_approve_time.enabled=true;
+					officeChief_approve_status_pass.enabled=true;
+					officeChief_approve_status_deny.enabled=true;
+					officeChief_approve_option.enabled=true;
+					remark.enabled=true;
+				}
+				if(this.parentApplication.currentUser.hasDam("takeLeaveVicePrincipalApprove@noFilter@")&&parentApplication.currentUser.hasSubordinateUser(form.teacherId)){
+					vicePrincipal_approver_name.enabled=true;
+					vicePrincipal_approver_id.enabled=true;
+					vicePrincipal_approve_time.enabled=true;
+					vicePrincipal_approve_status_pass.enabled=true;
+					vicePrincipal_approve_status_deny.enabled=true;
+					vicePrincipal_approve_option.enabled=true;
+					remark.enabled=true;
+				}
+				if(this.parentApplication.currentUser.hasDam("takeLeavePrincipalApprove@noFilter@")){
+					principal_approver_name.enabled=true;
+					principal_approver_id.enabled=true;
+					principal_approve_time.enabled=true;
+					principal_approve_status_pass.enabled=true;
+					principal_approve_status_deny.enabled=true;
+					principal_approve_option.enabled=true;
+					remark.enabled=true;
+				}
 			}
 			protected function getDetailInfoByIdById_resultHandler(event:ResultEvent):void{
 				form=event.result as TakeLeaveForm;
@@ -366,40 +401,8 @@
 				else {
 					var applyId:String=addUpdateFlag.text.split("_")[1];
 					editInit(applyId);
-					Alert.show(parentApplication.currentUser.hasDam("takeLeaveWorkDeal@noFilter@")+"");
-					//权限控制部分
-					if(this.parentApplication.currentUser.hasDam("takeLeaveWorkDeal@noFilter@")){
-						arrange_tech_already.enabled=true;
-						arrange_manage_already.enabled=true;
-						arrange_service_already.enabled=true;
-					}
-					if(this.parentApplication.currentUser.hasDam("takeLeaveOfficeApprove@noFilter@")){
-						officeChief_approver_name.enabled=true;
-						officeChief_approver_id.enabled=true;
-						officeChief_approve_time.enabled=true;
-						officeChief_approve_status_pass.enabled=true;
-						officeChief_approve_status_deny.enabled=true;
-						officeChief_approve_option.enabled=true;
-						remark.enabled=true;
-					}
-					if(this.parentApplication.currentUser.hasDam("takeLeaveVicePrincipalApprove@noFilter@")){
-						vicePrincipal_approver_name.enabled=true;
-						vicePrincipal_approver_id.enabled=true;
-						vicePrincipal_approve_time.enabled=true;
-						vicePrincipal_approve_status_pass.enabled=true;
-						vicePrincipal_approve_status_deny.enabled=true;
-						vicePrincipal_approve_option.enabled=true;
-						remark.enabled=true;
-					}
-					if(this.parentApplication.currentUser.hasDam("takeLeavePrincipalApprove@noFilter@")){
-						principal_approver_name.enabled=true;
-						principal_approver_id.enabled=true;
-						principal_approve_time.enabled=true;
-						principal_approve_status_pass.enabled=true;
-						principal_approve_status_deny.enabled=true;
-						principal_approve_option.enabled=true;
-						remark.enabled=true;
-					}
+					//Alert.show(parentApplication.currentUser.hasDam("takeLeaveWorkDeal@noFilter@")+"");
+					
 				}
 			}
 			

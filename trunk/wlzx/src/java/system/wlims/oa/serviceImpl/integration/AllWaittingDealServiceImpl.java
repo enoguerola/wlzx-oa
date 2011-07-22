@@ -7,7 +7,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import system.wlims.oa.dao.attendance.MoveRestDayDAO;
 import system.wlims.oa.dao.attendance.OverWorkDAO;
 import system.wlims.oa.dao.attendance.TakeLeaveDAO;
@@ -22,6 +21,9 @@ import system.wlims.oa.entity.workFlow.overWork.OverWorkForm;
 import system.wlims.oa.entity.workFlow.takeLeave.TakeLeaveForm;
 import system.wlims.oa.service.integration.AllWaittingDealService;
 import system.wlims.oa.vo.TaskVO;
+import system.components.SecurityUserHolder;
+import system.dao.UserDAO;
+import system.entity.UserModel;
 import system.utils.UtilDateTime;;
 
 public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
@@ -31,10 +33,14 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 	private OverWorkDAO overWorkDAO;
 	private TakeLeaveDAO takeLeaveDAO;
 	private ConferenceDAO conferenceDAO;
+	private UserDAO userDAO;
 	@Override
 	public List<TaskVO> getAllDealTasksByCondition(String accountId, String beginTime, String endTime) {
 		// TODO Auto-generated method stub
 		List<TaskVO> list=new ArrayList<TaskVO>();
+		UserModel user=userDAO.get(accountId);
+		if(user==null)return null;
+		
 		//领导指派任务
 		List<TaskModel> taskList=taskDAO.getTasksByConditions(null, accountId, null, beginTime, endTime);
 		if(taskList!=null&&taskList.size()>0)
@@ -53,11 +59,14 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 			taskVO.setWorkersIds(task.getWorkerIds());
 			list.add(taskVO);
 		}
+		
 		//请假出差审批任务
-		List<TakeLeaveForm> takeLeaveList=takeLeaveDAO.getTakeLeaveAppliesByConditions(accountId,null,null,beginTime,endTime,null,null);
+		List<TakeLeaveForm> takeLeaveList=takeLeaveDAO.getTakeLeaveAppliesByConditions(null,null,null,beginTime,endTime,null,null);
 		if(takeLeaveList!=null&&takeLeaveList.size()>0)
 			for(TakeLeaveForm takeLeaveForm:takeLeaveList){
-					//请假出差期间工作落实
+				//请假出差期间工作落实
+				if(user.hasDam("takeLeaveWorkDeal@noFilter@")){
+
 					TaskVO taskVO=new TaskVO();
 					taskVO.setStatus(TaskVO.EStatus.ToBeDeal.getText());
 					if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.BusinessTrip.getValue().intValue()){
@@ -80,7 +89,7 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 						taskVO.setTitle(TaskVO.ETitle.AskForLeave_BusinessTrip_TechArrange.getText());}
 					else if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.Leave.getValue().intValue())
 						taskVO.setTitle(TaskVO.ETitle.AskForLeave_Leave_TechArrange.getText());
-					taskVO.setWorkersIds(takeLeaveForm.getTeacherId());
+					taskVO.setWorkersIds(getWorkersIds(TaskVO.EType.AskForLeave_BusinessTrip_TechArrange.getValue()));
 					if(takeLeaveForm.getArrangeTechDealAlready()==true){
 						taskVO.setStatus(TaskVO.EStatus.Finished.getText());
 						
@@ -91,8 +100,9 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 					}
 					
 					list.add(taskVO);
-					
-					//请假出差处室审批
+				}
+				//请假出差本处室审批
+				if(user.hasDam("takeLeaveOfficeApprove@noFilter@")&&SecurityUserHolder.getCurrentUser()!=null&&SecurityUserHolder.getCurrentUser().getSubordinates()!=null&&SecurityUserHolder.getCurrentUser().getSubordinates().contains(user)){
 					if(takeLeaveForm.getArrangeTechDealAlready()==true){
 						TaskVO taskVO1=new TaskVO();
 						taskVO1.setStatus(TaskVO.EStatus.ToBeDeal.getText());
@@ -123,10 +133,13 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 							else taskVO1.setStatus(TaskVO.EStatus.ToBeDeal.getText());
 						}
 						else taskVO1.setStatus(TaskVO.EStatus.Finished.getText());
-						taskVO1.setWorkersIds(takeLeaveForm.getTeacherId());
+						taskVO1.setWorkersIds(getWorkersIds(TaskVO.EType.AskForLeave_BusinessTrip_OfficalApprove.getValue()));
+						//taskVO1.setWorkersIds(takeLeaveForm.getTeacherId());
 						list.add(taskVO1);
 					}
-					//请假出差副校长审批
+				}
+				//请假出差分管副校长审批
+				if(user.hasDam("takeLeaveVicePrincipalApprove@noFilter@")&&SecurityUserHolder.getCurrentUser()!=null&&SecurityUserHolder.getCurrentUser().getSubordinates()!=null&&SecurityUserHolder.getCurrentUser().getSubordinates().contains(user)){
 					if(takeLeaveForm.getOfficeChiefStatus()!=null&&takeLeaveForm.getOfficeChiefStatus().intValue()==1){
 						TaskVO taskVO2=new TaskVO();
 						taskVO2.setStatus(TaskVO.EStatus.ToBeDeal.getText());
@@ -156,11 +169,13 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 							else taskVO2.setStatus(TaskVO.EStatus.ToBeDeal.getText());
 						}
 						else taskVO2.setStatus(TaskVO.EStatus.Finished.getText());
-						taskVO2.setWorkersIds(takeLeaveForm.getTeacherId());
+						taskVO2.setWorkersIds(getWorkersIds(TaskVO.EType.AskForLeave_BusinessTrip_VicePrincipalApprove.getValue()));
+						//taskVO2.setWorkersIds(takeLeaveForm.getTeacherId());
 						list.add(taskVO2);
 					}
-					
-					//请假出差校长审批
+				}	
+				//请假出差校长审批
+				if(user.hasDam("takeLeavePrincipalApprove@noFilter@")){
 					if(takeLeaveForm.getVicePrincipalStatus()!=null&&takeLeaveForm.getVicePrincipalStatus().intValue()==1){
 						TaskVO taskVO3=new TaskVO();
 						taskVO3.setStatus(TaskVO.EStatus.ToBeDeal.getText());
@@ -191,12 +206,14 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 							
 						}
 						else taskVO3.setStatus(TaskVO.EStatus.Finished.getText());
-						taskVO3.setWorkersIds(takeLeaveForm.getTeacherId());
+						taskVO3.setWorkersIds(getWorkersIds(TaskVO.EType.AskForLeave_BusinessTrip_PrincipalApprove.getValue()));
+						//taskVO3.setWorkersIds(takeLeaveForm.getTeacherId());
 						list.add(taskVO3);
 					}
 				}
+				}
 		//加班审批任务
-		List<OverWorkForm> overWorkList=overWorkDAO.getOverWorkAppliesByConditions(accountId, null, beginTime, endTime, null, null);
+		List<OverWorkForm> overWorkList=overWorkDAO.getOverWorkAppliesByConditions(null, null, beginTime, endTime, null, null);
 		if(overWorkList!=null&&overWorkList.size()>0)
 			for(OverWorkForm overWorkForm:overWorkList){
 						TaskVO taskVO1=new TaskVO();
@@ -223,7 +240,7 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 					
 				}
 		//调休审批任务
-		List<MoveRestDayForm> moveRestDayList=moveRestDayDAO.getMoveRestDayAppliesByConditions(accountId, null, beginTime, endTime, null, null);
+		List<MoveRestDayForm> moveRestDayList=moveRestDayDAO.getMoveRestDayAppliesByConditions(null, null, beginTime, endTime, null, null);
 		if(moveRestDayList!=null&&moveRestDayList.size()>0)
 			for(MoveRestDayForm moveRestDayForm:moveRestDayList){
 						//处室审批
@@ -273,7 +290,7 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 					
 				}	
 		//调课审批任务
-		List<ApplyModel> applyList=courseAdjustDAO.getAppliesByCondition(accountId, null, null, beginTime, endTime);
+		List<ApplyModel> applyList=courseAdjustDAO.getAppliesByCondition(null, null, null, beginTime, endTime);
 		if(applyList!=null&&applyList.size()>0)
 			for(ApplyModel applyModel:applyList){
 						TaskVO taskVO1=new TaskVO();
@@ -300,7 +317,7 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 					
 				}
 		//会议室申请落实审批任务
-		List<ConferenceModel> conferenceList=conferenceDAO.getConferencesByConditions(accountId, null, null, null, null, null, beginTime, endTime);
+		List<ConferenceModel> conferenceList=conferenceDAO.getConferencesByConditions(null, null, null, null, null, null, beginTime, endTime);
 		if(conferenceList!=null&&conferenceList.size()>0)
 			for(ConferenceModel conferenceModel:conferenceList){
 						TaskVO taskVO1=new TaskVO();
@@ -328,6 +345,9 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 	public List<TaskVO> getAllWaittingDealTasksByCondition(String accountId, String beginTime, String endTime) {
 		// TODO Auto-generated method stub
 		List<TaskVO> list=new ArrayList<TaskVO>();
+		UserModel user=userDAO.get(accountId);
+		if(user==null)return null;
+		
 		//领导指派任务
 		List<TaskModel> taskList=taskDAO.getTasksByConditions(null, accountId, TaskModel.EStatus.OnGoing.getValue().intValue()+"", beginTime, endTime);
 		if(taskList!=null&&taskList.size()>0)
@@ -347,40 +367,43 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 			list.add(taskVO);
 		}
 		//请假出差审批任务
-		List<TakeLeaveForm> takeLeaveList=takeLeaveDAO.getTakeLeaveAppliesByConditions(accountId,null,null,beginTime,endTime,null,null);
+		List<TakeLeaveForm> takeLeaveList=takeLeaveDAO.getTakeLeaveAppliesByConditions(null,null,null,beginTime,endTime,null,null);
 		if(takeLeaveList!=null&&takeLeaveList.size()>0)
 			for(TakeLeaveForm takeLeaveForm:takeLeaveList){
-					//请假出差期间工作落实
-				if(takeLeaveForm.getArrangeTechDealAlready()==false&&takeLeaveForm.getStatus().intValue()!=TakeLeaveForm.Status.Cancle.getValue().intValue()){
-					TaskVO taskVO=new TaskVO();
-					taskVO.setStatus(TaskVO.EStatus.ToBeDeal.getText());
-					if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.BusinessTrip.getValue().intValue()){
-						taskVO.setType(TaskVO.EType.AskForLeave_BusinessTrip_TechArrange.getText());
-						taskVO.setTypeId(TaskVO.EType.AskForLeave_BusinessTrip_TechArrange.getValue().intValue());
+				//请假出差期间工作落实
+				if(user.hasDam("takeLeaveWorkDeal@noFilter@")){
+					if(takeLeaveForm.getArrangeTechDealAlready()==false&&takeLeaveForm.getStatus().intValue()!=TakeLeaveForm.Status.Cancle.getValue().intValue()){
+						TaskVO taskVO=new TaskVO();
+						taskVO.setStatus(TaskVO.EStatus.ToBeDeal.getText());
+						if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.BusinessTrip.getValue().intValue()){
+							taskVO.setType(TaskVO.EType.AskForLeave_BusinessTrip_TechArrange.getText());
+							taskVO.setTypeId(TaskVO.EType.AskForLeave_BusinessTrip_TechArrange.getValue().intValue());
+						}
+						else if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.Leave.getValue().intValue()){
+							taskVO.setType(TaskVO.EType.AskForLeave_Leave_TechArrange.getText());
+							taskVO.setTypeId(TaskVO.EType.AskForLeave_Leave_TechArrange.getValue().intValue());
+						}
+							
+						taskVO.setAssignerId(TaskVO.EAssigner.Default.getValue().intValue()+"");
+						taskVO.setId(takeLeaveForm.getId());
+						try {
+							Date postDate = new SimpleDateFormat("yyyyMMddHHmmss").parse(takeLeaveForm.getApplyNo());
+							taskVO.setPostTime(UtilDateTime.toDateString(postDate,"yyyy-MM-dd HH:mm:ss"));
+						} catch (ParseException e) {
+							e.printStackTrace();
+						}
+						if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.BusinessTrip.getValue().intValue())
+							taskVO.setTitle(TaskVO.ETitle.AskForLeave_BusinessTrip_TechArrange.getText());
+						else if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.Leave.getValue().intValue())
+							taskVO.setTitle(TaskVO.ETitle.AskForLeave_Leave_TechArrange.getText());
+						taskVO.setWorkersIds(getWorkersIds(TaskVO.EType.AskForLeave_BusinessTrip_TechArrange.getValue()));
+						//taskVO.setWorkersIds(takeLeaveForm.getTeacherId());
+						taskVO.setStatus(TaskVO.EStatus.ToBeDeal.getText());
+						list.add(taskVO);
 					}
-					else if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.Leave.getValue().intValue()){
-						taskVO.setType(TaskVO.EType.AskForLeave_Leave_TechArrange.getText());
-						taskVO.setTypeId(TaskVO.EType.AskForLeave_Leave_TechArrange.getValue().intValue());
-					}
-						
-					taskVO.setAssignerId(TaskVO.EAssigner.Default.getValue().intValue()+"");
-					taskVO.setId(takeLeaveForm.getId());
-					try {
-						Date postDate = new SimpleDateFormat("yyyyMMddHHmmss").parse(takeLeaveForm.getApplyNo());
-						taskVO.setPostTime(UtilDateTime.toDateString(postDate,"yyyy-MM-dd HH:mm:ss"));
-					} catch (ParseException e) {
-						e.printStackTrace();
-					}
-					if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.BusinessTrip.getValue().intValue())
-						taskVO.setTitle(TaskVO.ETitle.AskForLeave_BusinessTrip_TechArrange.getText());
-					else if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.Leave.getValue().intValue())
-						taskVO.setTitle(TaskVO.ETitle.AskForLeave_Leave_TechArrange.getText());
-					taskVO.setWorkersIds(takeLeaveForm.getTeacherId());
-					taskVO.setStatus(TaskVO.EStatus.ToBeDeal.getText());
-					list.add(taskVO);
-				}
-					
-					//请假出差处室审批
+				}	
+				//请假出差本处室审批
+				if(user.hasDam("takeLeaveOfficeApprove@noFilter@")&&SecurityUserHolder.getCurrentUser()!=null&&SecurityUserHolder.getCurrentUser().getSubordinates()!=null&&SecurityUserHolder.getCurrentUser().getSubordinates().contains(user)){
 					if(takeLeaveForm.getArrangeTechDealAlready()==true&&takeLeaveForm.getOfficeChiefStatus()==null&&takeLeaveForm.getStatus().intValue()!=TakeLeaveForm.Status.Cancle.getValue().intValue()){
 						TaskVO taskVO1=new TaskVO();
 						taskVO1.setStatus(TaskVO.EStatus.ToBeDeal.getText());
@@ -404,10 +427,13 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 							taskVO1.setTitle(TaskVO.ETitle.AskForLeave_BusinessTrip_OfficalApprove.getText());
 						else if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.Leave.getValue().intValue())
 							taskVO1.setTitle(TaskVO.ETitle.AskForLeave_Leave_OfficalApprove.getText());
+						taskVO1.setWorkersIds(getWorkersIds(TaskVO.EType.AskForLeave_BusinessTrip_OfficalApprove.getValue()));
 						taskVO1.setStatus(TaskVO.EStatus.ToBeDeal.getText());
-						
+						list.add(taskVO1);
 					}
-					//请假出差副校长审批
+				}
+				//请假出差分管副校长审批
+				if(user.hasDam("takeLeaveVicePrincipalApprove@noFilter@")&&SecurityUserHolder.getCurrentUser()!=null&&SecurityUserHolder.getCurrentUser().getSubordinates()!=null&&SecurityUserHolder.getCurrentUser().getSubordinates().contains(user)){
 					if(takeLeaveForm.getOfficeChiefStatus()!=null&&takeLeaveForm.getOfficeChiefStatus().intValue()==1&&takeLeaveForm.getVicePrincipalStatus()==null&&takeLeaveForm.getStatus().intValue()!=TakeLeaveForm.Status.Cancle.getValue().intValue()){
 						TaskVO taskVO2=new TaskVO();
 						taskVO2.setStatus(TaskVO.EStatus.ToBeDeal.getText());
@@ -433,12 +459,13 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 							taskVO2.setTitle(TaskVO.ETitle.AskForLeave_Leave_VicePrincipalApprove.getText());
 						
 						taskVO2.setStatus(TaskVO.EStatus.ToBeDeal.getText());
-						
-						taskVO2.setWorkersIds(takeLeaveForm.getTeacherId());
+						taskVO2.setWorkersIds(getWorkersIds(TaskVO.EType.AskForLeave_BusinessTrip_VicePrincipalApprove.getValue()));
+						//taskVO2.setWorkersIds(takeLeaveForm.getTeacherId());
 						list.add(taskVO2);
 					}
-					
-					//请假出差校长审批
+				}
+				//请假出差校长审批
+				if(user.hasDam("takeLeavePrincipalApprove@noFilter@")){
 					if(takeLeaveForm.getVicePrincipalStatus()!=null&&takeLeaveForm.getVicePrincipalStatus().intValue()==1&&takeLeaveForm.getPrincipalStatus()==null&&takeLeaveForm.getStatus().intValue()!=TakeLeaveForm.Status.Cancle.getValue().intValue()){
 						TaskVO taskVO3=new TaskVO();
 						taskVO3.setStatus(TaskVO.EStatus.ToBeDeal.getText());
@@ -465,13 +492,14 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 
 							taskVO3.setStatus(TaskVO.EStatus.ToBeDeal.getText());
 							
-						
-						taskVO3.setWorkersIds(takeLeaveForm.getTeacherId());
+						taskVO3.setWorkersIds(getWorkersIds(TaskVO.EType.AskForLeave_BusinessTrip_PrincipalApprove.getValue()));
+						//taskVO3.setWorkersIds(takeLeaveForm.getTeacherId());
 						list.add(taskVO3);
 					}
 				}
+			}
 		//加班审批任务
-		List<OverWorkForm> overWorkList=overWorkDAO.getOverWorkAppliesByConditions(accountId, null, beginTime, endTime, null, null);
+		List<OverWorkForm> overWorkList=overWorkDAO.getOverWorkAppliesByConditions(null, null, beginTime, endTime, null, null);
 		if(overWorkList!=null&&overWorkList.size()>0)
 			for(OverWorkForm overWorkForm:overWorkList){
 					if(overWorkForm.getOfficeChiefStatus()==null&&overWorkForm.getStatus().intValue()!=OverWorkForm.Status.Cancle.getValue().intValue()){
@@ -495,7 +523,7 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 					
 				}
 		//调休审批任务
-		List<MoveRestDayForm> moveRestDayList=moveRestDayDAO.getMoveRestDayAppliesByConditions(accountId, null, beginTime, endTime, null, null);
+		List<MoveRestDayForm> moveRestDayList=moveRestDayDAO.getMoveRestDayAppliesByConditions(null, null, beginTime, endTime, null, null);
 		if(moveRestDayList!=null&&moveRestDayList.size()>0)
 			for(MoveRestDayForm moveRestDayForm:moveRestDayList){
 						//处室审批
@@ -544,7 +572,7 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 				}
 			}	
 		//调课审批任务
-		List<ApplyModel> applyList=courseAdjustDAO.getAppliesByCondition(accountId, null, null, beginTime, endTime);
+		List<ApplyModel> applyList=courseAdjustDAO.getAppliesByCondition(null, null, null, beginTime, endTime);
 		if(applyList!=null&&applyList.size()>0)
 			for(ApplyModel applyModel:applyList){
 				if(applyModel.getApplyStatus()==ApplyModel.ApplyStatus.WAITING.getStatus()){
@@ -569,7 +597,7 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 					
 			}	
 		//会议室申请落实审批任务
-		List<ConferenceModel> conferenceList=conferenceDAO.getConferencesByConditions(accountId, null, null, null, null, null, beginTime, endTime);
+		List<ConferenceModel> conferenceList=conferenceDAO.getConferencesByConditions(null, null, null, null, null, null, beginTime, endTime);
 		if(conferenceList!=null&&conferenceList.size()>0)
 			for(ConferenceModel conferenceModel:conferenceList){
 				if(conferenceModel.getApplyStatus().intValue()==ConferenceModel.EStatus.Booking.getValue().intValue()){
@@ -589,6 +617,30 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 				}		
 			}
 		return list;
+	}
+	public String getWorkersIds(Integer type){
+		StringBuilder result=new StringBuilder() ;
+		List<UserModel> users=userDAO.getAllUsers();
+		
+			if(type.intValue()==TaskVO.EType.AskForLeave_BusinessTrip_TechArrange.getValue().intValue()){
+				for(UserModel user:users)
+				if(user.hasDam("takeLeaveWorkDeal@noFilter@"))
+					result.append(user.getId()+";");
+			}else if(type.intValue()==TaskVO.EType.AskForLeave_BusinessTrip_OfficalApprove.getValue().intValue()){
+				for(UserModel user:users)
+				if(user.hasDam("takeLeaveOfficeApprove@noFilter@"))
+					result.append(user.getId()+";");
+			}else if(type.intValue()==TaskVO.EType.AskForLeave_BusinessTrip_VicePrincipalApprove.getValue().intValue()){
+				for(UserModel user:users)
+				if(user.hasDam("takeLeaveVicePrincipalApprove@noFilter@"))
+					result.append(user.getId()+";");
+			}else if(type.intValue()==TaskVO.EType.AskForLeave_BusinessTrip_PrincipalApprove.getValue().intValue()){
+				for(UserModel user:users)
+				if(user.hasDam("takeLeavePrincipalApprove@noFilter@"))
+					result.append(user.getId()+";");
+			}
+		
+		return result.toString();		
 	}
 	public TaskDAO getTaskDAO() {
 		return taskDAO;
@@ -634,6 +686,12 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 	}
 	public void setConferenceDAO(ConferenceDAO conferenceDAO) {
 		this.conferenceDAO = conferenceDAO;
+	}
+	public UserDAO getUserDAO() {
+		return userDAO;
+	}
+	public void setUserDAO(UserDAO userDAO) {
+		this.userDAO = userDAO;
 	}
 	
 	
