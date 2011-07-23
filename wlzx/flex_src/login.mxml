@@ -57,6 +57,7 @@
 						 resultArea.visible=true;
 		             }
 					  private function init():void{
+						  initKeyboard();
 						  myHttp.addEventListener(ResultEvent.RESULT, onExecuteSuccess);
 						  validatorArr = new Array();
 						  validatorArr.push(name_stringValidator);
@@ -68,7 +69,7 @@
 						  
 						  
 					  }
-					   private function validateForm(evt:MouseEvent):void {
+					   private function validateForm():void {
 						   var validatorErrorArray:Array = Validator.validateAll(validatorArr);;
 						   var isValidForm:Boolean = validatorErrorArray.length == 0;
 						   if (isValidForm) {
@@ -103,6 +104,20 @@
 						   j_password.text="";
 						  j_username.setFocus();
 					   }
+					   /* 初始化监听键盘事件 */
+					   public function initKeyboard():void
+					   {
+						   loginButton.addEventListener(KeyboardEvent.KEY_DOWN,sendMessageUseEnterKey);  
+					   } 
+					   
+					   /*监听回车键 */
+					   private function sendMessageUseEnterKey(evt:KeyboardEvent):void
+					   {
+						   if(evt.keyCode==13)
+						   {
+							   validateForm();
+						   }
+					   }
 					  
 			         ]]>    
 		 </fx:Script> 
@@ -130,7 +145,7 @@
 				</s:HGroup>
 				<s:HGroup width="100%" >
 					<s:HGroup width="50"></s:HGroup>
-					<mx:LinkButton  icon="@Embed(source='../WebContent/resources/oa/login_button_green.jpg')" click="validateForm(event);"  width="80" paddingLeft="0" paddingRight="0" paddingTop="0" paddingBottom="0">
+					<mx:LinkButton  icon="@Embed(source='../WebContent/resources/oa/login_button_green.jpg')" click="validateForm();" id="loginButton"  width="80" paddingLeft="0" paddingRight="0" paddingTop="0" paddingBottom="0">
 						
 					</mx:LinkButton>
 					

@@ -53,10 +53,10 @@
 			var results:ArrayCollection=ArrayCollection(mainUsers);
 			if(this.getAllRoles()!=null&&this.getAllRoles().length>0)
 			for (var i:int = 0; i < this.getAllRoles().length; i++){
-				var _role:RoleModel = this.getAllRoles().getItemAt(0) as RoleModel;
+				var _role:RoleModel = this.getAllRoles().getItemAt(i) as RoleModel;
 				if(_role.getAllUsers()!=null&&_role.getAllUsers().length>0){
 					for (var j:int = 0; j < _role.getAllUsers().length; j++){
-						results.addItem(_role.getAllUsers()[j]);
+						results.addItem(_role.getAllUsers().getItemAt(j));
 					}
 				}
 			}

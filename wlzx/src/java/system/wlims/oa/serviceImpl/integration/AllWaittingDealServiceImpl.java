@@ -61,7 +61,7 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 		}
 		
 		//请假出差审批任务
-		List<TakeLeaveForm> takeLeaveList=takeLeaveDAO.getTakeLeaveAppliesByConditions(null,null,null,beginTime,endTime,null,null);
+		List<TakeLeaveForm> takeLeaveList=takeLeaveDAO.getTakeLeaveAppliesByConditions(null,null,TakeLeaveForm.Status.Waiting.getValue().intValue()+","+TakeLeaveForm.Status.OfficePass.getValue().intValue()+","+TakeLeaveForm.Status.VicePrincipalPass.getValue().intValue(),beginTime,endTime,null,null);
 		if(takeLeaveList!=null&&takeLeaveList.size()>0)
 			for(TakeLeaveForm takeLeaveForm:takeLeaveList){
 				//请假出差期间工作落实
@@ -367,7 +367,7 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 			list.add(taskVO);
 		}
 		//请假出差审批任务
-		List<TakeLeaveForm> takeLeaveList=takeLeaveDAO.getTakeLeaveAppliesByConditions(null,null,null,beginTime,endTime,null,null);
+		List<TakeLeaveForm> takeLeaveList=takeLeaveDAO.getTakeLeaveAppliesByConditions(null,null,TakeLeaveForm.Status.Waiting.getValue().intValue()+","+TakeLeaveForm.Status.OfficePass.getValue().intValue()+","+TakeLeaveForm.Status.VicePrincipalPass.getValue().intValue(),beginTime,endTime,null,null);
 		if(takeLeaveList!=null&&takeLeaveList.size()>0)
 			for(TakeLeaveForm takeLeaveForm:takeLeaveList){
 				//请假出差期间工作落实
