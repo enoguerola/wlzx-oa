@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml" fontFamily="宋体" fontSize="12" layout="horizontal">
+	<mx:Script>
+		<![CDATA[
+			/*
+			import mx.containers.Panel;
+			import mx.containers.HBox;
+			import mx.controls.CheckBox;
+			import mx.controls.NumericStepper;
+			import mx.controls.Label;
+			import mx.controls.Button;
+			
+			public var titleHBox:HBox;
+			public var titleCheckBox:CheckBox;
+			public var titleNumericStepper:NumericStepper;
+			public var titleLabel:Label;
+			public var titleButton:Button;
+			
+			override protected function createChildren():void
+			{
+				super.createChildren();
+				titleHBox = new HBox();
+				titleHBox.setStyle("fontSize", 12);
+				titleHBox.setStyle("color", 0x333333);
+				titleHBox.setStyle("verticalAlign", "middle");
+				titleBar.addChild(titleHBox);
+				
+				titleCheckBox = new CheckBox();
+				titleCheckBox.label="允许";    
+				titleHBox.addChild(titleCheckBox);
+				
+				titleNumericStepper = new NumericStepper();
+				titleNumericStepper.setStyle("textAlign", "center");
+				titleHBox.addChild(titleNumericStepper);
+				
+				titleLabel = new Label();
+				titleLabel.text = "（秒）自动刷新";
+				titleHBox.addChild(titleLabel);
+				
+				titleButton = new Button();
+				titleButton.label="刷新";
+				titleHBox.addChild(titleButton);
+			}
+			
+			override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
+			{
+				super.updateDisplayList(unscaledWidth, unscaledHeight);
+				
+				// Do this or the HBox won't appear!
+				titleHBox.setActualSize(titleHBox.getExplicitOrMeasuredWidth(),
+					titleHBox.getExplicitOrMeasuredHeight());
+				
+				// Position the HBox
+				var y:int = 4;
+				var x:int = this.width - titleHBox.width - 12;
+				titleHBox.move(x, y);
+			}*/
+			
+			import mx.containers.HBox;
+			
+			private var _titleHBox:HBox;
+			private var titleBoxChanged:Boolean;
+			public function get titleBox():HBox{
+				return _titleHBox;
+			}
+			
+			public function set titleBox(value:HBox):void{
+				if(_titleHBox == value)
+					return;
+				if(_titleHBox && titleBar.contains(_titleHBox))
+					titleBar.removeChild(_titleHBox);
+				_titleHBox = value;
+				titleBoxChanged = true;
+				invalidateProperties();
+				invalidateDisplayList();
+			}
+			
+			override protected function commitProperties():void{
+				super.commitProperties();
+				if(titleBoxChanged){
+					if(_titleHBox)
+						titleBar.addChild(_titleHBox);
+					titleBoxChanged = false;
+				}
+			}
+			
+			override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void{
+				super.updateDisplayList(unscaledWidth,unscaledHeight);
+				
+				if(_titleHBox && titleBar.contains(_titleHBox)){
+					// Do this or the HBox won't appear!
+					_titleHBox.setActualSize(_titleHBox.getExplicitOrMeasuredWidth(),
+						_titleHBox.getExplicitOrMeasuredHeight());
+					
+					//_titleHBox.height = titleBar.height;
+					//_titleHBox.width = titleBar.width*0.8;
+					//_titleHBox.x = 0;
+					//_titleHBox.y = 0;
+					// Position the HBox
+					var y:int = 4;
+					var x:int = this.width - _titleHBox.width - 12;
+					_titleHBox.move(x, y);
+				}
+			}
+		]]>
+	</mx:Script>
+</mx:Panel>

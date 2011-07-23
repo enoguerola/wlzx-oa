@@ -1,10 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
-		 xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="100%">
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="100%" creationComplete="init()">
 	<s:layout>
 		<s:VerticalLayout/>
 	</s:layout>
+	<fx:Script>
+		<![CDATA[
+			import mx.controls.Alert;
+			
+			import oa.entity.receipt.ReceiptModel;
+			
+			private function init():void
+			{
+				var parent:Object = this.parentDocument;
+				var receipt:ReceiptModel = parent.receipt;
+				if(receipt.id != null && parent.receipt.id != "")
+				{
+					var number:Array = receipt.doNumber.split("+");
+					var letter:String = number.pop();
+					_hao.text = letter;
+					_zi.text = number.pop();
+					if(receipt.inDate != null)
+						in_date.text = dateformate.format(receipt.inDate);//.fullYear + "-" + receipt.inDate.month + '-' + receipt.inDate.day;
+					in_number.text = receipt.inNumber;
+					zhutici.text = receipt.subject;
+					in_department.text = receipt.office;
+				}
+			}
+			
+			private function changed():void
+			{
+				var parent:Object = this.parentDocument;
+				parent.isChanged = true;
+			}
+		]]>
+	</fx:Script>
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
 		<mx:StringValidator id="zi_string_validate" source="{_zi}" property="text"  requiredFieldError="不能为空"/>
@@ -13,6 +44,7 @@
 		<mx:StringValidator id="number_string_validate" source="{in_number}" property="text"  requiredFieldError="不能为空"/>
 		<mx:DateValidator id="date_string_validate" source="{in_date}" property="text"  requiredFieldError="请选择" inputFormat="YYYY-MM-DD"/>
 		<mx:StringValidator id="zhutici_string_validate" source="{zhutici}" property="text"  requiredFieldError="不能为空"/>
+		<mx:DateFormatter formatString="YYYY-MM-DD" id="dateformate"/>
 	</fx:Declarations>
 	<s:Panel width="100%" height="100%">
 		<s:VGroup width="100%" height="100%" horizontalAlign="center">
@@ -24,25 +56,25 @@
 					<s:Label text="温  岭  中 学 收  文  处  理 专 用 纸"  id="detail_title" width="100%" textAlign="center" fontSize="16" fontWeight="bold" height="30"/>
 					<s:HGroup width="100%" horizontalAlign="left">
 						<mx:FormHeading label="收文:" textAlign="left" width="100"/>
-						<s:TextInput id="_zi"/>
+						<s:TextInput id="_zi" change="changed()"/>
 						<mx:FormHeading label="字： 第" width="100"/>
-						<s:TextInput text="" id="_hao"/>
+						<s:TextInput text="" id="_hao" change="changed()"/>
 						<mx:FormHeading label="号" id="postTime"/>
 					</s:HGroup>
 				</s:VGroup>
 				<s:HGroup width="100%" horizontalAlign="left" height="100%" verticalAlign="middle">
 					<mx:FormHeading label="来文机关:" width="100" textAlign="left"/>
-					<s:TextInput text="" id="in_department"/>
+					<s:TextInput text="" id="in_department" change="changed()"/>
 					<mx:FormHeading label="来文号:" width="100"/>
-					<s:TextInput text="" id="in_number"/>
+					<s:TextInput text="" id="in_number" change="changed()"/>
 					<mx:FormHeading label="来文日期:" width="100"/>
-					<mx:DateField text="" id="in_date" formatString="yyyy-mm-dd"/>
+					<mx:DateField text="" id="in_date" formatString="YYYY-MM-DD" change="changed()"/>
 				</s:HGroup>
 				
 				<s:VGroup width="100%" horizontalAlign="left" height="100%" verticalAlign="middle">
 					<s:HGroup width="100%">
 						<mx:FormHeading label="主题词:" width="100"/>
-						<s:TextInput id="zhutici" width="100%" height="100%"/>
+						<s:TextInput id="zhutici" width="100%" height="100%" change="changed()"/>
 					</s:HGroup>
 					<!--<s:HGroup>
 						<s:Label text="拟办"/>

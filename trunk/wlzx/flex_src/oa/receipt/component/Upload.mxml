@@ -17,12 +17,12 @@
 			
 			private function init():void
 			{
-				var params:String=(Object)(((Object)(this.parentDocument)).owner).id;
+				var parent:Object = this.parentDocument;
 				var url:String = this.loaderInfo.url;
 				var last:int = url.lastIndexOf("/");
 				var urlRequest:URLRequest = new URLRequest(url.substr(0, last) + "/spring/attachmentUpload.action");
 				var variables:URLVariables = new URLVariables();//传过去的data
-				variables.id = params;
+				variables.id = parent.receipt.id;
 				urlRequest.data = variables;
 				upload.urlRequest = urlRequest;
 			}
