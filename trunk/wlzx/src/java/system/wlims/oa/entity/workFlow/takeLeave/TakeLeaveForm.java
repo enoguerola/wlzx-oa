@@ -45,6 +45,7 @@ public class TakeLeaveForm extends AbstractForm {
 	private String principalApproveOption; 
 	private String remark;
 	private Integer status;
+	private TakeLeaveTerminateForm takeLeaveTerminateForm;
 	private Set<TakeLeaveWorkFlowLog> logs=new TreeSet<TakeLeaveWorkFlowLog>();
 	public static enum Rules{
 		FirstApprove(1, "处室负责人审批"),
@@ -107,7 +108,10 @@ public class TakeLeaveForm extends AbstractForm {
 		VicePrincipalPass(2, "审批中-分管副校长通过"),
 		Pass(3, "审批通过"),
 		Deny(4, "审批不通过"),
-		Cancle(5, "取消");
+		Cancle(5, "取消"),
+		TerminateWaiting(6, "等待销假审批"),
+		TerminatePass(7, "销假审批通过"),
+		TerminateDeny(8, "销假审批不通过");
 		private Integer value;
 		private String name;
 		
@@ -317,5 +321,12 @@ public class TakeLeaveForm extends AbstractForm {
 		}finally{
 			return result;
 		}
+	}
+	public TakeLeaveTerminateForm getTakeLeaveTerminateForm() {
+		return takeLeaveTerminateForm;
+	}
+	public void setTakeLeaveTerminateForm(
+			TakeLeaveTerminateForm takeLeaveTerminateForm) {
+		this.takeLeaveTerminateForm = takeLeaveTerminateForm;
 	}
 }

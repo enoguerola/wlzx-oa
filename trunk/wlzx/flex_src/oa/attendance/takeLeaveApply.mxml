@@ -161,7 +161,7 @@
 				var allList:ArrayCollection=event.result as ArrayCollection;
 				applyTable.initdata(allList);
 			}
-			private function search():void{
+			public function search():void{
 				takeLeaveServiceRO.getUserTakeLeaveApplies(this.parentApplication.currentUser.id);
 			}
 			private function addInit():void{
@@ -237,6 +237,21 @@
 			public function enterEdit(applyId:String):void{
 				addUpdateFlag.text="update"+"_"+applyId;
 				this.currentState='add';
+				
+			}
+			import oa.attendance.popWin.TerminateLeavePopWin;
+			public var pop:TerminateLeavePopWin=null;
+			public function enterTerminateLeave(applyId:String):void{
+				if(pop!=null)PopUpManager.removePopUp(pop);
+				pop=TerminateLeavePopWin(PopUpManager.createPopUp(this,TerminateLeavePopWin,true));  
+				pop.owner=this;
+				PopUpManager.centerPopUp(pop);
+				pop.percentHeight=100;
+				pop.percentWidth=100;
+				pop.x=FlexGlobals.topLevelApplication.stage.stageWidth/2-pop.width/2;
+				pop.y=FlexGlobals.topLevelApplication.stage.stageHeight/2-pop.height/2;
+				pop.id=applyId;//参数传递使用
+				pop.toolTip="Apply";
 				
 			}
 			public function cancleApply(applyId:String):void{
@@ -492,6 +507,42 @@
 															
 															if(data!=null){	
 																if(data.status==0){
+																	return true;
+																}else
+																	return false;
+																
+															}else{
+																return false;
+															}
+														}
+													]]>
+												</mx:Script>
+											</mx:HBox>
+											
+											
+										</mx:Component>
+										
+									</mx:itemRenderer>
+								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="销假" width="60">
+									<mx:itemRenderer>
+										<mx:Component>
+											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0">
+												<mx:LinkButton  label="[销假]"   click="{this.outerDocument.enterTerminateLeave(data.id);}" enabled="{checkAuth(data)}">											
+												</mx:LinkButton>
+												
+												<mx:Script>
+													<![CDATA[
+														
+														//提示信息
+														import cn.org.rapid_framework.flex_security.SecurityControler;
+														
+														import mx.controls.Alert;
+														import mx.core.UIComponent;
+														private function checkAuth(data:Object):Boolean{
+															
+															if(data!=null){	
+																if(data.status==3){
 																	return true;
 																}else
 																	return false;

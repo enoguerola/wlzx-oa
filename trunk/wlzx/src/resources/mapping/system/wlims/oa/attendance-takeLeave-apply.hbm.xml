@@ -89,6 +89,35 @@
 		<set name="logs" lazy="false" table="wlzx_oa_workflow_log" cascade="all-delete-orphan" where="operation_object_type='TakeLeaveWorkFlowLog'" order-by="operation_time">
         	<key column="operation_object_id" not-null="true" />
         	<one-to-many  class="system.wlims.oa.entity.workFlow.takeLeave.TakeLeaveWorkFlowLog" /> 
-        </set>		
+        </set>	
+        <one-to-one class="system.wlims.oa.entity.workFlow.takeLeave.TakeLeaveTerminateForm" 	name="takeLeaveTerminateForm" cascade="all-delete-orphan" lazy="false" property-ref="takeLeaveForm" />		
+	</class>
+	<class name="system.wlims.oa.entity.workFlow.takeLeave.TakeLeaveTerminateForm" table="wlzx_oa_takeleave_terminate">
+		<id name="id">
+			<column name="id" />
+			<generator class="native" />
+		</id>
+		<property name="terminateDateTime" type="string">
+			<column name="terminate_dateTime" />
+		</property>
+		<property name="terminateReason" type="string">
+			<column name="terminate_reason" />
+		</property>
+		<property name="terminateApplyTime" type="java.util.Date">
+			<column name="terminate_applyTime" />
+		</property>
+		<property name="terminateOfficeApproverId" type="string">
+			<column name="terminate_officeApprover_id" />
+		</property>
+		<property name="terminateOfficeApproverOption" type="string">
+			<column name="terminate_officeApprover_option" />
+		</property>
+		<property name="terminateApproveTime" type="java.util.Date">
+			<column name="terminate_approveTime" />
+		</property>
+		<property name="status" type="int">
+			<column name="terminate_status" />
+		</property>		
+	    <many-to-one name="takeLeaveForm" class="system.wlims.oa.entity.workFlow.takeLeave.TakeLeaveForm" column="takeLeave_id" unique="true" />   
 	</class>
 </hibernate-mapping>

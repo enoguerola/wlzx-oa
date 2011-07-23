@@ -1,5 +1,6 @@
 package system.wlims.oa.service.attendance;
 
+import java.util.Date;
 import java.util.List;
 
 import system.wlims.oa.entity.workFlow.takeLeave.TakeLeaveForm;
@@ -14,5 +15,7 @@ public interface TakeLeaveService {
 	public List<TakeLeaveForm> getTakeLeaveAppliesByConditions(String teacherId,String type,String status,String submitBeginDate,String submitEndDate,String takeLeaveBeginDate,String takeLeaveEndDate);
 	boolean deleteTakeLeaveById(String id);
 	boolean approveTakeLeave(TakeLeaveForm takeLeave);
+	boolean terminateLeaveApply(String id, String date,String reason);
+	boolean terminateLeaveApprove(String id,String option,Integer status,String approverId,Date approverDate);
 
 }

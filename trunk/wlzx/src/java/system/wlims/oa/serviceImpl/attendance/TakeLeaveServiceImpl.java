@@ -5,9 +5,11 @@ import java.util.List;
 
 import system.components.SecurityUserHolder;
 import system.entity.UserModel;
+import system.utils.StringUtils;
 import system.utils.UtilDateTime;
 import system.wlims.oa.dao.attendance.TakeLeaveDAO;
 import system.wlims.oa.entity.workFlow.takeLeave.TakeLeaveForm;
+import system.wlims.oa.entity.workFlow.takeLeave.TakeLeaveTerminateForm;
 import system.wlims.oa.entity.workFlow.takeLeave.TakeLeaveWorkFlowLog;
 import system.wlims.oa.service.attendance.TakeLeaveService;
 
@@ -216,6 +218,68 @@ public class TakeLeaveServiceImpl implements TakeLeaveService {
 	@Override
 	public boolean deleteTakeLeaveById(String id){
 		takeLeaveDAO.remove(takeLeaveDAO.get(id));
+		return true;
+	}
+	@Override
+	public boolean terminateLeaveApply(String id, String date, String reason) {
+		// TODO Auto-generated method stub
+		TakeLeaveForm takeLeave=takeLeaveDAO.get(id);
+		if(takeLeave==null)return false;
+		if(takeLeave.getStatus().intValue()<TakeLeaveForm.Status.Pass.getValue().intValue())return false;
+		TakeLeaveTerminateForm takeLeaveTerminateForm=takeLeave.getTakeLeaveTerminateForm();
+		if(takeLeaveTerminateForm==null||StringUtils.isEmpty(takeLeaveTerminateForm.getId())){
+			takeLeaveTerminateForm=new TakeLeaveTerminateForm();
+		}else{
+			if(takeLeaveTerminateForm.getStatus().intValue()!=TakeLeaveTerminateForm.Status.Waiting.getValue().intValue())return false;
+			
+		}
+		takeLeaveTerminateForm.setTerminateDateTime(date);
+		takeLeaveTerminateForm.setTerminateReason(reason);
+		takeLeaveTerminateForm.setTerminateApplyTime(new Date());
+		TakeLeaveWorkFlowLog log=new TakeLeaveWorkFlowLog();
+		log.setOperationName("销假申请");
+		log.setOperationResult("编号为"+takeLeave.getApplyNo()+"的记录申请销假");
+		log.setOperationTime(new Date());
+		log.setOperationTeacherId(takeLeave.getTeacherId());
+		takeLeave.getLogs().add(log);
+		takeLeave.setStatus(TakeLeaveForm.Status.TerminateWaiting.getValue());
+		takeLeave.setTakeLeaveTerminateForm(takeLeaveTerminateForm);
+		takeLeaveDAO.saveOrUpdate(takeLeave);
+		return true;
+	}
+	@Override
+	public boolean terminateLeaveApprove(String id, String option,
+			Integer status,String approverId,Date approverDate) {
+		TakeLeaveForm takeLeave=takeLeaveDAO.get(id);
+		if(takeLeave==null)return false;
+		TakeLeaveTerminateForm takeLeaveTerminateForm=takeLeave.getTakeLeaveTerminateForm();
+		if(takeLeaveTerminateForm==null||StringUtils.isEmpty(takeLeaveTerminateForm.getId())){
+			takeLeaveTerminateForm=new TakeLeaveTerminateForm();
+		}
+//		else{
+//			if(takeLeaveTerminateForm.getStatus().intValue()!=TakeLeaveTerminateForm.Status.Waiting.getValue().intValue())return false;
+//			
+//		}
+		takeLeaveTerminateForm.setTerminateApproveTime(approverDate);
+		takeLeaveTerminateForm.setTerminateOfficeApproverOption(option);
+		takeLeaveTerminateForm.setTerminateOfficeApproverId(approverId);
+		takeLeaveTerminateForm.setStatus(status);
+
+		TakeLeaveWorkFlowLog log=new TakeLeaveWorkFlowLog();
+		log.setOperationName("销假审批");
+		if(status.intValue()==TakeLeaveTerminateForm.Status.Pass.getValue().intValue()){
+			log.setOperationResult("编号为"+takeLeave.getApplyNo()+"的销假申请审批通过");
+			takeLeave.setStatus(TakeLeaveForm.Status.TerminatePass.getValue());
+		}
+		else if(status.intValue()==TakeLeaveTerminateForm.Status.Deny.getValue().intValue()){
+			log.setOperationResult("编号为"+takeLeave.getApplyNo()+"的销假申请审批不通过");
+			takeLeave.setStatus(TakeLeaveForm.Status.TerminateDeny.getValue());
+		}
+		log.setOperationTime(new Date());
+		log.setOperationTeacherId(approverId);
+		takeLeave.getLogs().add(log);
+		takeLeave.setTakeLeaveTerminateForm(takeLeaveTerminateForm);
+		takeLeaveDAO.saveOrUpdate(takeLeave);
 		return true;
 	}
 

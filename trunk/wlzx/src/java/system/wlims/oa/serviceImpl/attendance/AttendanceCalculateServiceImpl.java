@@ -114,15 +114,17 @@ public class AttendanceCalculateServiceImpl implements AttendanceCalculateServic
 		// TODO Auto-generated method stub
 		int result=0;
 		List<TakeLeaveForm> list=takeLeaveDAO.getTakeLeaveAppliesByConditions(userId,type,TakeLeaveForm.Status.Pass.getValue().toString(),null,null,beginTime,endTime);
-		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		if(list!=null){
 			for(TakeLeaveForm form:list){
 				try {
-					Date d1= df.parse(form.getBeginTime().split(" ")[0]);
-				    Date d2 = df.parse(form.getEndTime().split(" ")[0]);
-				    long diff = d1.getTime() - d2.getTime();
+					String day1=form.getBeginTime().split(" ")[0].toString();
+					String day2=form.getEndTime().split(" ")[0].toString();
+					Date d1=  (Date)df.parse(day1);
+				    Date d2 =  (Date)df.parse(day2);
+				    long diff = d2.getTime() - d1.getTime();
 				    long days = diff / (1000 * 60 * 60 * 24);
-				    result+=days*Constants.DaysOfSections+(Integer.parseInt(form.getEndTime().split(" ")[1])-Integer.parseInt(form.getBeginTime().split(" ")[1]));
+				    result+=days*Constants.DaysOfSections+(Integer.parseInt(form.getEndTime().split(" ")[1])-Integer.parseInt(form.getBeginTime().split(" ")[1])+1);
 			    }catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
