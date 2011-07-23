@@ -880,6 +880,28 @@ public class SystemService{
 //		module.setSymbol("rg22222");
 //		module.setSequence(1);
 //		systemService.moduleAdd(module,"menu","gweg");
+		 for(int i=50;i<=55;i++){
+			 ModuleModel module=systemService.getModuleDAO().get(i+"");
+//			 OperationModel operation=systemService.getOperationDAO().get(i+"");
+//			 operation.setName("页面访问");
+//			 operation.setSymbol(module.getSymbol()+"@defaultVisit@");
+//			 operation.setRsType("URL");
+//			 operation.setRsValue("/"+module.getUrl()+"*");
+//			 operation.setCreationDate(module.getCreationDate());
+//			 operation.setModifiedDate(module.getModifiedDate());
+//			 systemService.getOperationDAO().saveOrUpdate(operation);
+//			 DataAccessModeModel dam=new DataAccessModeModel();
+//			 dam.setName("全部数据");
+//			 dam.setSymbol(operation.getSymbol()+"@noFilter@");
+//			 dam.setCreationDate(operation.getCreationDate());
+//			 dam.setModifiedDate(operation.getModifiedDate());		
+//			 systemService.getDataAccessModeDAO().saveOrUpdate(dam);
+			 OperationModel operation=systemService.getOperationDAO().get(i+1+"");
+			 module.getOperations().add(operation);
+			 systemService.getModuleDAO().saveOrUpdate(module);
+//			 module.getOperations().add(operation);
+	//		 systemService.getOperationDAO().merge(operation);
+		 }
 	}
 	
 }

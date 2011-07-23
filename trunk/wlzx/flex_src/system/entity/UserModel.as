@@ -95,13 +95,14 @@ package system.entity
 			var roleList:ArrayCollection = ArrayCollection(roles);
 			if(mainRole!=null)
 				roleList.addItem(mainRole);
+			//Alert.show(roleList.length+"a");
 			for (var i:int = 0; i < roleList.length; i++){
 				var _role:RoleModel=roleList.getItemAt(i) as RoleModel;
 				if(_role.subordinates!=null&&_role.subordinates.length>0){
 					for (var j:int = 0; j < _role.subordinates.length; j++){
 						if(_role.subordinates[j].getAllUsers()!=null&&_role.subordinates[j].getAllUsers().length>0){
 							for (var k:int = 0; k < _role.subordinates[j].getAllUsers().length; k++){
-								results.push(_role.subordinates[j].getAllUsers()[k].id);
+								results.push(_role.subordinates[j].getAllUsers().getItemAt(k).id);
 							}
 						}
 					}
@@ -111,23 +112,15 @@ package system.entity
 			//Alert.show(mainRole.supervisorFlag+"");
 
 			if(mainRole!=null&&mainRole.supervisorFlag==true){
-				var department:DepartmentModel=mainRole.getBelongDepartment();
-				if(department!=null&&department.getUsers().length>0){
-					//Alert.show(department.getUsers().length+"");
-					for (var i:int = 0; i < department.getUsers().length; i++){
-						results.push(department.getUsers()[i].id);
+				var _department:DepartmentModel=mainRole.getBelongDepartment();
+				//Alert.show(_department.getUsers().length+"");
+				if(_department!=null&&_department.getUsers().length>0){
+					var departmentUsers:ArrayCollection=_department.getUsers();
+					for (var l:int = 0; l <departmentUsers.length; l++){
+						if(!results.hasOwnProperty(departmentUsers.getItemAt(l).id))
+						results.push(departmentUsers.getItemAt(l).id);
 					}
-//					for (var i:int = 0; i < department.subordinates.length; i++){
-//						if(department.subordinates[i]!=null&&department.subordinates[i].getAllRoles()!=null&&department.subordinates[i].getAllRoles().length>0){
-//							for (var j:int = 0; j < department.subordinates[i].getAllRoles().length; j++){
-//								if(department.subordinates[i].getAllRoles()[j].getAllUsers()!=null&&department.subordinates[i].getAllRoles()[j].getAllUsers().length>0){
-//									for (var k:int = 0; k< department.subordinates[i].getAllRoles()[j].getAllUsers().length; k++){
-//										results.add(department.subordinates[i].getAllRoles()[j].getAllUsers()[k]);
-//									}
-//								}
-//							}
-//						}
-//					}
+
 				}
 				
 			}

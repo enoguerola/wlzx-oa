@@ -147,7 +147,7 @@
 			public 	 function getWorkers(data:Object, column:DataGridColumn):String{
 				if(data!=null){
 					var result1:String="";
-					var ids:String=data.workerIds;
+					var ids:String=data.workersIds;
 					
 					if(ids!=null&&ids!=""){
 						var attr:Array=ids.split(";");
@@ -228,7 +228,7 @@
 						
 						<mx:DataGridColumn textAlign="center" headerText="发布时间" width="100" dataField="postTime">
 						</mx:DataGridColumn>
-						<mx:DataGridColumn textAlign="center" headerText="责任人" width="100" dataField="workerIds" labelFunction="getWorkers">
+						<mx:DataGridColumn textAlign="center" headerText="责任人" width="100" dataField="workersIds" labelFunction="getWorkers">
 							
 						</mx:DataGridColumn>
 						<mx:DataGridColumn textAlign="center" headerText="指派人" width="60" dataField="assignerId" labelFunction="getAssigner">
