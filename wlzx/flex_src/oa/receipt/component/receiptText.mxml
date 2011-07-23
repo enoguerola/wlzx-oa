@@ -1,29 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
-		 xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="100%">
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="100%" initialize="init()"
+		 xmlns:component="system.component.panel.*">
 	<s:layout>
 		<s:VerticalLayout/>
 	</s:layout>
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
-		<mx:StringValidator id="title_string_validate" source="{title}" property="text"  requiredFieldError="不能为空"/>
-		<mx:StringValidator id="summary_string_validate" source="{summary}" property="text"  requiredFieldError="不能为空"/>
+		<mx:StringValidator id="title_string_validate" source="{title}" property="text"  requiredFieldError="不能为空" triggerEvent=""/>
+		<mx:StringValidator id="summary_string_validate" source="{summary}" property="text"  requiredFieldError="不能为空" triggerEvent=""/>
 	</fx:Declarations>
 	<fx:Script>
 		<![CDATA[
+			import basic.utils.DateUtil;
+			
 			import mx.collections.ArrayCollection;
-			import mx.rpc.events.*;
+			import mx.containers.HBox;
 			import mx.controls.Alert;
+			import mx.rpc.events.*;
 			
 			import oa.receipt.component.item.AttachmentDelete;
 			import oa.receipt.component.item.CompleteHandler;
-			import basic.utils.DateUtil;
+			
+			import spark.components.Button;
 			
 			[Bindable]
 			public var list:ArrayCollection;
 			private var downloadURL:URLRequest;
 			private var file:FileReference; //这是要主要的地方
+			public var titleHBox:HBox;
+			public var titleButton:Button;
+			public var saveButton:Button;
+			private var validatorArr:Array = new Array();
+			
+			private function init():void
+			{
+				/*titleHBox = new HBox();
+				titleHBox.setStyle("fontSize", 12);
+				titleHBox.setStyle("color", 0x333333);
+				
+				titleHBox.setStyle("verticalAlign", "middle");
+				titleButton = new Button();
+				titleButton.label="下一步";
+				titleButton.addEventListener(MouseEvent.CLICK, next);
+				titleHBox.addChild(titleButton);
+				
+				saveButton = new Button();
+				saveButton.label="保存";
+				saveButton.addEventListener(MouseEvent.CLICK, save, true);
+				titleHBox.addChild(saveButton);
+				
+				text_panel.titleBox = titleHBox;*/
+			}
+			
+			public function next():void
+			{
+				save();
+			}
+			
+			public function save():void
+			{
+				Alert.show("ss");
+				//var parent:Object = this.parentDocument;
+				//parent.save(0);
+			}
 			
 			public function download(id:String):void {
 				downloadURL = new URLRequest(parentApplication.homeUrl+"/uploads/oa/attachment/" + id );
@@ -75,17 +116,23 @@
 				var file:FileReference = FileReference(event.target);
 				trace("selectHandler: name=" + file.name + " URL=" + downloadURL.url);
 			}
+			
+			private function changed():void
+			{
+				var parent:Object = this.parentDocument;
+				parent.isChanged = true;
+			}
 		]]>
 	</fx:Script>
-	<s:Panel width="100%" height="100%">
-		<s:VGroup width="100%" height="100%">
+	<component:AdvancedTitleBarPanel width="100%" height="100%" id="text_panel">
+		<s:VGroup width="100%" height="100%" id="text_group">
 			<s:HGroup width="100%" height="10%">
 				<mx:FormHeading label="来文标题" width="100"/>
-				<s:TextInput id="title" width="200"/>
+				<s:TextInput id="title" width="200" change="changed()"/>
 			</s:HGroup>
 			<s:HGroup width="100%" height="10%">
 				<mx:FormHeading label="来文摘要" width="100"/>
-				<s:TextArea id="summary" width="80%"/>
+				<s:TextArea id="summary" width="80%" change="changed()"/>
 			</s:HGroup>
 			<s:HGroup width="100%" paddingTop="10" height="80%">
 				<mx:FormHeading label="上传列表" width="100"/>
@@ -105,5 +152,5 @@
 				</mx:DataGrid>
 			</s:HGroup>
 		</s:VGroup>
-	</s:Panel>
+	</component:AdvancedTitleBarPanel>
 </s:Group>

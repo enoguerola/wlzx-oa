@@ -18,9 +18,13 @@
 			import oa.entity.receipt.FileAttachmentModel;
 			
 			private var validatorArr:Array = new Array();
+			
+			private var isMove:Boolean = false;
+			private var isChanged:Boolean = false;
 
 			private function init():void
 			{
+				this.currentState = "text_body";
 				var parms:String=((Object)(this.owner)).id;
 				if(parms != null && parms!="" && parms!= "null"){
 					//编辑
@@ -32,7 +36,7 @@
 			}
 			
 			//保存
-			private function save(event:MouseEvent):void
+			/*private function save(event:MouseEvent):void
 			{
 				receipt.title = receipt_text.title.text;
 				receipt.doNumber = receipt_file._zi.text + "+" + receipt_file._hao.text;
@@ -60,11 +64,56 @@
 					}
 				}
 				
+			}*/
+			
+			public function save(type:int):void
+			{
+				receipt.title = receipt_text.title.text;
+				receipt.summary = receipt_text.summary.text;
+
+				if(isMove)
+				{
+					receipt.doNumber = receipt_file._zi.text + "+" + receipt_file._hao.text;
+					receipt.inNumber = receipt_file.in_number.text;
+					receipt.subject = receipt_file.zhutici.text;
+					receipt.inDate = DateFormatter.parseDateString(receipt_file.in_date.text);
+					receipt.office = receipt_file.in_department.text;
+				}
+				if(type == 2 || type == 1 || !isChanged)
+				{
+					if(type == 0 || type == 1)
+					{
+						Alert.show('receipt save begin');
+						receipt.status = 0;
+						if(this.currentState == "register_file")
+						{
+							if(validateRegister())
+							{
+								receiptServiceRO.save(receipt);
+							}
+						}else
+						{
+							if(validateSave())
+							{
+								receiptServiceRO.save(receipt);
+							}
+						}
+					}else
+					{
+						receipt.status = 1;
+						Alert.show("register");
+						if(validateRegister())
+						{
+							receiptServiceRO.save(receipt);
+						}
+					}
+				}
 			}
 			
 			private function validateSave():Boolean
 			{
 				validatorArr.push(receipt_text.title_string_validate);
+				validatorArr.push(receipt_text.summary_string_validate);
 				return doValidate();
 			}
 			
@@ -99,6 +148,33 @@
 				}
 			}
 			
+			public function next():void
+			{
+				if(this.currentState == "text_body")
+				{
+					if(validateSave())
+					{
+						this.currentState = "registe_file";
+					}
+				}
+				else if(this.currentState == "registe_file")
+				{
+					if(validateRegister())
+					{
+						this.currentState = "upload";
+					}
+				}
+					
+			}
+			
+			private function pre():void
+			{
+				if(this.currentState == "registe_file")
+					this.currentState = "text_body";
+				else if(this.currentState == "upload")
+					this.currentState = "registe_file";
+			}
+			
 			protected function receiptServiceSave_result(event:ResultEvent):void
 			{
 				// TODO Auto-generated method stub
@@ -113,16 +189,7 @@
 				receipt = event.result as ReceiptModel;
 				receipt_text.title.text = receipt.title;
 				receipt_text.summary.text = receipt.summary;
-				var number:Array = receipt.doNumber.split("+");
-				var letter:String = number.pop();
-				receipt_file.zhutici.text = letter;
-				receipt_file._zi.text = number.pop();
-				if(receipt.inDate != null)
-					receipt_file.in_date.text = receipt.inDate.fullYear + "-" + receipt.inDate.month + '-' + receipt.inDate.day;
-				receipt_file.in_number.text = receipt.inNumber;
-				receipt_file.zhutici.text = receipt.subject;
 				receipt_text.title.text = receipt.title;
-				receipt_file.in_department.text = receipt.office;
 				//attachments here
 				var list:ArrayCollection = receipt.attachments as ArrayCollection;
 				receipt_text.list = list;
@@ -132,10 +199,6 @@
 			{
 				// TODO Auto-generated method stub
 				Alert.show(event.fault.faultString, 'Error');
-			}
-			
-			private function navigator_change():void{
-
 			}
 			
 			public function remove(id:String):void
@@ -176,6 +239,19 @@
 				var list:ArrayCollection = receipt_text.datagrid.dataProvider as ArrayCollection;
 				list.addItem(attachment);
 			}
+			
+			private function saveReceiptBeforeUpload():void
+			{
+				this.button_pre.enabled = true;
+				this.button_next.enabled = true;
+				save(0);
+			}
+			
+			private function back():void
+			{
+				var parent:Object=(Object)(((Object)(this.owner)).owner);
+				parent.addTab("receipt_register_menu","收文登记",parent.nav,"oa/receipt/registerList.swf",null,"");
+			}
 
 		]]>
 	</fx:Script>
@@ -191,22 +267,51 @@
 			<s:method concurrency="last" name="get" result="fileAttachmentServiceGet_result(event)"/>
 		</s:RemoteObject>
 	</fx:Declarations>
+	<mx:states>
+		<mx:State name="text_body" enterState="{this.button_pre.enabled=false;}"/>
+		<mx:State name="registe_file" enterState="saveReceiptBeforeUpload();isMove=true;"/>
+		<mx:State name="upload" enterState="{this.button_next.enabled=false;save(0);}"/>
+	</mx:states>
+	<mx:transitions>
+		<mx:Transition id="text_right" fromState="text_body" toState="*" >
+			<mx:Parallel id="t1" target="{register_box}" >
+				<mx:WipeLeft duration="1500"></mx:WipeLeft>
+			</mx:Parallel>
+		</mx:Transition>
+		<mx:Transition id="register_left" fromState="registe_file" toState="upload" >
+			<mx:Parallel id="t2" target="{upload_box}" >
+				<mx:WipeRight duration="800">
+				</mx:WipeRight>
+			</mx:Parallel>
+		</mx:Transition>
+		<mx:Transition id="register_right" fromState="registe_file" toState="text_body" >
+			<mx:Parallel id="t3" target="{text_box}" >
+				<mx:WipeLeft duration="800"></mx:WipeLeft>
+			</mx:Parallel>
+		</mx:Transition>
+		<mx:Transition id="upload" fromState="upload" toState="*" >
+			<mx:Parallel id="t4" target="{register_box}" >
+				<mx:WipeRight duration="800">
+				</mx:WipeRight>
+			</mx:Parallel>
+		</mx:Transition>
+	</mx:transitions>
 	<s:VGroup width="100%" height="100%">
-		<s:HGroup>
-			<mx:LinkButton label="保存" click="save(event)" id="button_save"/>
-			<mx:LinkButton label="登记" click="save(event)" id="button_register"/>
-			<mx:LinkButton label="返回"/>
+		<s:HGroup height="6%">
+			<s:Button label="保存" click="save(1)" id="button_save"/>
+			<s:Button label="登记" click="save(2)" id="button_register"/>
+			<s:Button label="返回" click="back()"/>
+			<s:Button label="下一步" click="next()" id="button_next"/>
+			<s:Button label="上一步" click="pre()" id="button_pre"/>
 		</s:HGroup>
-		<mx:TabNavigator width="100%" height="100%" id="receipt_navigator" change="navigator_change()" creationPolicy="all">
-			<mx:VBox label="来文正文" width="100%" height="100%">
-				<content:receiptText width="100%" id="receipt_text"/>
-			</mx:VBox>
-			<mx:VBox label="附件上传" width="100%" height="100%">
-				<content:Upload width="100%" id="receipt_upload"/>
-			</mx:VBox>
-			<mx:VBox label="来文登记单" width="100%" height="100%">
-				<content:receiptFileInput width="100%" id="receipt_file"/>
-			</mx:VBox>
-		</mx:TabNavigator>
+		<mx:VBox label="来文正文" width="100%" height="94%" includeIn="text_body" id="text_box">
+			<content:receiptText width="100%" id="receipt_text"/>
+		</mx:VBox>
+		<mx:VBox label="来文登记单" direction="vertical" width="100%" height="94%" includeIn="registe_file" id="register_box">
+			<content:receiptFileInput width="100%" id="receipt_file"/>
+		</mx:VBox>
+		<mx:VBox label="附件上传" width="100%" height="94%" includeIn="upload" id="upload_box">
+			<content:Upload width="100%" id="receipt_upload"/>
+		</mx:VBox>
 	</s:VGroup>
 </mx:Module>

@@ -17,6 +17,9 @@
 		<s:RemoteObject id="teacherAccountBridgeServiceRO" destination="teacherAccountBridgeServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 			<s:method name="getUserAddressesByConditions"  concurrency="last"  result="getUserAddressesByConditions_resultHandler(event);" />
 		</s:RemoteObject>
+		<fx:Component>
+			<render:AdvancedItemRenderer selectedItems="{ outerDocument.search_account.selectedItems }"/>
+		</fx:Component>
 	</fx:Declarations>
 
 	<fx:Script>
@@ -127,6 +130,7 @@
 				
 				return resultXML;
 			}
+			
 			private function getUserAddressesByConditions_resultHandler(event:ResultEvent):void{
 				var allList:ArrayCollection=event.result as ArrayCollection;				
 				table.initdata(allList);
@@ -138,12 +142,13 @@
 	<mx:VBox borderVisible="true" width="100%" height="100%" borderStyle="solid">
 		<mx:VBox  width="100%" height="100%" >
 			<mx:HBox  width="100%" height="7%" backgroundColor="#C5E497" horizontalGap="10" paddingLeft="20" verticalAlign="middle">
-				<hc:AutoComplete id="search_account"  labelField="name"  width="100"  matchType="anyPart" prompt="选择" change="searchAccountHandleAutoCompleteChange()" selectedItemStyleName="none">
+				<hc:AutoComplete id="search_account"  labelField="name"  width="100"  matchType="anyPart" prompt="选择" 
+								 change="searchAccountHandleAutoCompleteChange()" selectedItemStyleName="none">
 				</hc:AutoComplete>
 				<mx:Label id="search_account_id" visible="false" width="0">
 					
 				</mx:Label>
-				<mx:LinkButton  label="快速查找" icon="@Embed(source='../WebContent/resources/oa/buttonIcon/search_icon.jpg')">
+				<mx:LinkButton  label="快速查找" icon="@Embed(source='../WebContent/resources/oa/buttonIcon/search_icon.jpg')" click="search();">
 				</mx:LinkButton>
 				<mx:Label text="|"/>
 			</mx:HBox>
