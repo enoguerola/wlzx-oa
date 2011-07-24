@@ -2,7 +2,6 @@ package system.wlims.oa.entity.workFlow.takeLeave;
 
 
 import java.util.Date;
-
 import system.entity.workFlow.AbstractForm;
 
 public class TakeLeaveTerminateForm extends AbstractForm {
@@ -27,6 +26,7 @@ public class TakeLeaveTerminateForm extends AbstractForm {
 	private Date terminateApproveTime;
 	private Integer status;
 	private TakeLeaveForm takeLeaveForm;
+
 	public static enum Rules{
 		FirstApprove(1, "处室负责人审批");
 		private Integer value;
@@ -138,4 +138,15 @@ public class TakeLeaveTerminateForm extends AbstractForm {
 		this.takeLeaveForm = takeLeaveForm;
 	}
 	
+//	public Set<TakeLeaveForm> getTakeLeaveForms() {
+//		return takeLeaveForms;
+//	}
+//	public void setTakeLeaveForms(Set<TakeLeaveForm> takeLeaveForms) {
+//		this.takeLeaveForms = takeLeaveForms;
+//	}
+//	public TakeLeaveForm getTakeLeaveForm() {
+//		if(getTakeLeaveForms()!=null&&getTakeLeaveForms().size()>0)
+//			return getTakeLeaveForms().iterator().next();
+//		else return null;
+//	}
 }

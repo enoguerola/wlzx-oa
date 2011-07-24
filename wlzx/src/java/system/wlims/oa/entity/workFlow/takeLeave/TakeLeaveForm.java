@@ -45,8 +45,8 @@ public class TakeLeaveForm extends AbstractForm {
 	private String principalApproveOption; 
 	private String remark;
 	private Integer status;
-	private TakeLeaveTerminateForm takeLeaveTerminateForm;
 	private Set<TakeLeaveWorkFlowLog> logs=new TreeSet<TakeLeaveWorkFlowLog>();
+	private Set<TakeLeaveTerminateForm> terminateForms=new TreeSet<TakeLeaveTerminateForm>();
 	public static enum Rules{
 		FirstApprove(1, "处室负责人审批"),
 		SecordApprove(2, "分管副校长审批"),
@@ -322,11 +322,15 @@ public class TakeLeaveForm extends AbstractForm {
 			return result;
 		}
 	}
-	public TakeLeaveTerminateForm getTakeLeaveTerminateForm() {
-		return takeLeaveTerminateForm;
+	public Set<TakeLeaveTerminateForm> getTerminateForms() {
+		return terminateForms;
 	}
-	public void setTakeLeaveTerminateForm(
-			TakeLeaveTerminateForm takeLeaveTerminateForm) {
-		this.takeLeaveTerminateForm = takeLeaveTerminateForm;
+	public void setTerminateForms(Set<TakeLeaveTerminateForm> terminateForms) {
+		this.terminateForms = terminateForms;
+	}
+	public TakeLeaveTerminateForm getTakeLeaveTerminateForm() {
+		if(getTerminateForms()!=null&&getTerminateForms().size()>0)
+			return getTerminateForms().iterator().next();
+		else return null;
 	}
 }

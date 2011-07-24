@@ -16,6 +16,6 @@ public interface TakeLeaveService {
 	boolean deleteTakeLeaveById(String id);
 	boolean approveTakeLeave(TakeLeaveForm takeLeave);
 	boolean terminateLeaveApply(String id, String date,String reason);
-	boolean terminateLeaveApprove(String id,String option,Integer status,String approverId,Date approverDate);
+	boolean terminateLeaveApprove(String id,String date, String reason, String option,Integer status,String approverId,Date approverDate);
 
 }

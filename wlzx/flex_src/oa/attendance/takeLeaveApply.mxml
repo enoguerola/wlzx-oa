@@ -474,6 +474,12 @@
 															return "审批不通过";
 														}else if(data.status==5){
 															return "取消";
+														}else if(data.status==6){
+															return "销假申请";
+														}else if(data.status==7){
+															return "销假审批通过";
+														}else if(data.status==8){
+															return "销假审批不通过";
 														}
 														
 														}
@@ -542,7 +548,7 @@
 														private function checkAuth(data:Object):Boolean{
 															
 															if(data!=null){	
-																if(data.status==3){
+																if(data.status==3||data.status>=6){
 																	return true;
 																}else
 																	return false;

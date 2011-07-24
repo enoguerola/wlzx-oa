@@ -36,12 +36,18 @@ package oa.entity
 		public var vicePrincipalStatus:int;
 		public var principalStatus:int;
 		public var logs:Object=new Array();
-		
+		public var terminateForms:Object=new Array();
+		//public var takeLeaveTerminateForm:Object=null;
 		public function TakeLeaveForm()
 		{
 			super();
-		}
-		
+		};
+		public function getTakeLeaveTerminateForm():Object{
+			if(terminateForms!=null&&ArrayCollection(terminateForms).length>0){
+				return ArrayCollection(terminateForms).getItemAt(0);
+			}
+			else return null;
+		};
 		
 	}
 }
