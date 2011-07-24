@@ -2,6 +2,8 @@ package system.wlims.oa.serviceImpl.attendance;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import system.components.SecurityUserHolder;
 import system.entity.UserModel;
@@ -229,13 +231,14 @@ public class TakeLeaveServiceImpl implements TakeLeaveService {
 		TakeLeaveTerminateForm takeLeaveTerminateForm=takeLeave.getTakeLeaveTerminateForm();
 		if(takeLeaveTerminateForm==null||StringUtils.isEmpty(takeLeaveTerminateForm.getId())){
 			takeLeaveTerminateForm=new TakeLeaveTerminateForm();
+			takeLeaveTerminateForm.setTerminateApplyTime(new Date());
 		}else{
 			if(takeLeaveTerminateForm.getStatus().intValue()!=TakeLeaveTerminateForm.Status.Waiting.getValue().intValue())return false;
-			
+			takeLeave.getTerminateForms().removeAll(takeLeave.getTerminateForms());
 		}
 		takeLeaveTerminateForm.setTerminateDateTime(date);
 		takeLeaveTerminateForm.setTerminateReason(reason);
-		takeLeaveTerminateForm.setTerminateApplyTime(new Date());
+		takeLeaveTerminateForm.setStatus(TakeLeaveTerminateForm.Status.Waiting.getValue());
 		TakeLeaveWorkFlowLog log=new TakeLeaveWorkFlowLog();
 		log.setOperationName("销假申请");
 		log.setOperationResult("编号为"+takeLeave.getApplyNo()+"的记录申请销假");
@@ -243,23 +246,29 @@ public class TakeLeaveServiceImpl implements TakeLeaveService {
 		log.setOperationTeacherId(takeLeave.getTeacherId());
 		takeLeave.getLogs().add(log);
 		takeLeave.setStatus(TakeLeaveForm.Status.TerminateWaiting.getValue());
-		takeLeave.setTakeLeaveTerminateForm(takeLeaveTerminateForm);
+		takeLeaveDAO.saveOrUpdate(takeLeave);
+		Set<TakeLeaveTerminateForm> terminateForms=new TreeSet<TakeLeaveTerminateForm>();
+		terminateForms.add(takeLeaveTerminateForm);
+		takeLeave.setTerminateForms(terminateForms);
 		takeLeaveDAO.saveOrUpdate(takeLeave);
 		return true;
 	}
 	@Override
-	public boolean terminateLeaveApprove(String id, String option,
+	public boolean terminateLeaveApprove(String id, String date, String reason, String option,
 			Integer status,String approverId,Date approverDate) {
 		TakeLeaveForm takeLeave=takeLeaveDAO.get(id);
 		if(takeLeave==null)return false;
 		TakeLeaveTerminateForm takeLeaveTerminateForm=takeLeave.getTakeLeaveTerminateForm();
 		if(takeLeaveTerminateForm==null||StringUtils.isEmpty(takeLeaveTerminateForm.getId())){
 			takeLeaveTerminateForm=new TakeLeaveTerminateForm();
+			takeLeaveTerminateForm.setTerminateApplyTime(new Date());
 		}
-//		else{
+		else{
 //			if(takeLeaveTerminateForm.getStatus().intValue()!=TakeLeaveTerminateForm.Status.Waiting.getValue().intValue())return false;
-//			
-//		}
+			takeLeave.getTerminateForms().removeAll(takeLeave.getTerminateForms());
+		}
+		takeLeaveTerminateForm.setTerminateDateTime(date);
+		takeLeaveTerminateForm.setTerminateReason(reason);
 		takeLeaveTerminateForm.setTerminateApproveTime(approverDate);
 		takeLeaveTerminateForm.setTerminateOfficeApproverOption(option);
 		takeLeaveTerminateForm.setTerminateOfficeApproverId(approverId);
@@ -278,7 +287,10 @@ public class TakeLeaveServiceImpl implements TakeLeaveService {
 		log.setOperationTime(new Date());
 		log.setOperationTeacherId(approverId);
 		takeLeave.getLogs().add(log);
-		takeLeave.setTakeLeaveTerminateForm(takeLeaveTerminateForm);
+		takeLeaveDAO.saveOrUpdate(takeLeave);
+		Set<TakeLeaveTerminateForm> terminateForms=new TreeSet<TakeLeaveTerminateForm>();
+		terminateForms.add(takeLeaveTerminateForm);
+		takeLeave.setTerminateForms(terminateForms);
 		takeLeaveDAO.saveOrUpdate(takeLeave);
 		return true;
 	}

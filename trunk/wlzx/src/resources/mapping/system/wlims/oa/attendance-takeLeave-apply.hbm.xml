@@ -90,7 +90,15 @@
         	<key column="operation_object_id" not-null="true" />
         	<one-to-many  class="system.wlims.oa.entity.workFlow.takeLeave.TakeLeaveWorkFlowLog" /> 
         </set>	
-        <one-to-one class="system.wlims.oa.entity.workFlow.takeLeave.TakeLeaveTerminateForm" 	name="takeLeaveTerminateForm" cascade="all-delete-orphan" lazy="false" property-ref="takeLeaveForm" />		
+        <set name="terminateForms" lazy="false" table="wlzx_oa_takeleave_terminate" cascade="all-delete-orphan" inverse="true">
+        	<key column="takeLeave_id" not-null="true" />
+        	<one-to-many  class="system.wlims.oa.entity.workFlow.takeLeave.TakeLeaveTerminateForm" /> 
+        </set>	
+<!--        <set name="terminateForms" lazy="false" table="wlzx_oa_takeleave_apply_terminate_relationship" cascade="all-delete-orphan">-->
+<!--        	<cache usage="read-write" />-->
+<!--        	<key column="takeLeave_terminate_id" not-null="true" />-->
+<!--        	<many-to-many  class="system.wlims.oa.entity.workFlow.takeLeave.TakeLeaveTerminateForm" /> -->
+<!--        </set>	-->
 	</class>
 	<class name="system.wlims.oa.entity.workFlow.takeLeave.TakeLeaveTerminateForm" table="wlzx_oa_takeleave_terminate">
 		<id name="id">
@@ -117,7 +125,12 @@
 		</property>
 		<property name="status" type="int">
 			<column name="terminate_status" />
-		</property>		
-	    <many-to-one name="takeLeaveForm" class="system.wlims.oa.entity.workFlow.takeLeave.TakeLeaveForm" column="takeLeave_id" unique="true" />   
+		</property>	
+		<many-to-one class="system.wlims.oa.entity.workFlow.takeLeave.TakeLeaveForm" name="takeLeaveForm" column="takeLeave_id"/>	
+<!--		<set name="takeLeaveForms" lazy="false" table="wlzx_oa_takeleave_apply_terminate_relationship">-->
+<!--        	<cache usage="read-write" />-->
+<!--        	<key column="takeLeave_id" not-null="true" />-->
+<!--        	<many-to-many  class="system.wlims.oa.entity.workFlow.takeLeave.TakeLeaveForm" /> -->
+<!--        </set>-->
 	</class>
 </hibernate-mapping>

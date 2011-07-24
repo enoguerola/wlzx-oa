@@ -15,7 +15,9 @@
        http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
 
 	<!-- 注入配置 -->
-	
+	<bean id="takeLeaveDAO" class="system.wlims.oa.daoImpl.attendance.TakeLeaveDAOImpl">
+		<property name="sessionFactory" ref="oaSessionFactory" />
+	</bean>
 	<bean id="scheduleDAO" class="system.wlims.oa.daoImpl.schedule.ScheduleDAOImpl">
 		<property name="sessionFactory" ref="oaSessionFactory" />
 	</bean>
