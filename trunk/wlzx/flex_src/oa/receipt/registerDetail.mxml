@@ -79,7 +79,7 @@
 					receipt.inDate = DateFormatter.parseDateString(receipt_file.in_date.text);
 					receipt.office = receipt_file.in_department.text;
 				}
-				if(type == 2 || type == 1 || !isChanged)
+				if(type == 2 || type == 1 || isChanged)
 				{
 					if(type == 0 || type == 1)
 					{
@@ -193,6 +193,11 @@
 				//attachments here
 				var list:ArrayCollection = receipt.attachments as ArrayCollection;
 				receipt_text.list = list;
+				if(receipt.status == 1)
+				{
+					button_save.enabled = false;
+					button_register.enabled = false;
+				}
 			}
 
 			protected function faultHandler(event:FaultEvent):void

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
-		 xmlns:mx="library://ns.adobe.com/flex/mx" width="800" height="500"
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="840" height="500"
 		 xmlns:ab="oa.receipt.component.*"
 		 xmlns:component="system.component.*" creationComplete="init()">
 	<s:layout>
@@ -118,6 +118,18 @@
 				}
 				flow_combo.selectedIndex = ComboxUtils.findIndex(flowArray, result[0].email);
 			}
+			
+			private function remove():void
+			{
+				if(involvedTeachers.selectedIndex == -1)
+				{
+					Alert.show("请选择");
+					return;
+				}
+				var ac:ArrayCollection = involvedTeachers.dataProvider as ArrayCollection;
+				var index = ac.getItemIndex(involvedTeachers.selectedItem);
+				ac.removeItemAt(index);
+			}
 
 		]]>
 	</fx:Script>
@@ -145,6 +157,7 @@
 						</mx:DataGrid>
 						<s:Button label="确定" click="save()"/>
 						<s:Button label="重置" click="reset()"/>
+						<s:Button label="删除" click="remove()"/>
 					</s:HGroup>
 				</s:VGroup>
 			</s:HGroup>

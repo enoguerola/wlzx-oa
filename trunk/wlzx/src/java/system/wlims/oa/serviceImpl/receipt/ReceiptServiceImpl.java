@@ -44,13 +44,13 @@ public class ReceiptServiceImpl implements ReceiptService {
 	private void addSearchRestrictions(DetachedCriteria criteria, String inNumber, String office, String doNumber, 
 			  String title, String startDate, String endDate, int page, int pageCount){
 		if(StringUtils.isNotEmpty(inNumber))
-			criteria.add(Restrictions.eq("inNumber", inNumber));
+			criteria.add(Restrictions.ilike("inNumber", inNumber, MatchMode.ANYWHERE));
 		
 		if(StringUtils.isNotEmpty(doNumber))
-			criteria.add(Restrictions.eq("doNumber", doNumber));
+			criteria.add(Restrictions.ilike("doNumber", doNumber, MatchMode.ANYWHERE));
 		
 		if(StringUtils.isNotEmpty(office))
-			criteria.add(Restrictions.eq("office", office));
+			criteria.add(Restrictions.ilike("office", office, MatchMode.ANYWHERE));
 		
 		if(StringUtils.isNotEmpty(title))
 			criteria.add(Restrictions.or(Restrictions.like("title", title, MatchMode.ANYWHERE), 
