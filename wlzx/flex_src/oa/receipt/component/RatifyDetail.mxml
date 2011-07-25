@@ -30,12 +30,8 @@
 			override protected function fileFlowServiceGetList_result(event:ResultEvent):void
 			{
 				super.list = event.result as ArrayCollection;
-				hgroup0.percentWidth = 100;
-				var label:FormHeading = new FormHeading();
-				label.label = " 拟办:";
-				label.percentWidth = 10;
-				label.styleName = "receipt_formhead";
-				hgroup0.addElement(label);
+				var first:Boolean = true;
+				
 				Alert.show(this.parentApplication.account + "" + list.length);
 				var index:int = 0;
 				var length:int = list.length;
@@ -45,6 +41,16 @@
 					file = list.getItemAt(index) as FileFlowModel;
 					if(file.type != 0)
 						continue;
+					if(first)
+					{
+						hgroup0.percentWidth = 100;
+						var label:FormHeading = new FormHeading();
+						label.label = " 拟办:";
+						label.percentWidth = 10;
+						label.styleName = "receipt_formhead";
+						hgroup0.addElement(label);
+						first = false;
+					}
 					var text:TextArea = new TextArea();
 					text.text = file.text;
 					text.editable = false;
@@ -54,42 +60,61 @@
 					//添加名字和时间
 					setNameAndDate(text, file);
 				}
-				hgroup1.percentWidth = 100;
-				var p_label:FormHeading = new FormHeading();
-				p_label.label = " 批示:";
-				p_label.percentWidth = 10;
-				p_label.styleName = "receipt_formhead";
-				hgroup1.addElement(p_label);
+				first = true;
+				
 				for(index = 0; index < length; index ++)
 				{
 					file = list.getItemAt(index) as FileFlowModel;
-					if(file.isCompleted == 1)
-					{
-						save0.enabled = false;
-						save1.enabled = false;
-					}
 					if(file.type != 1)
 						continue;
-					var text:TextArea = new TextArea();
-					text.text = file.text;
-					text.editable = false;
-					text.width = 150;
-					text.height = 100;
-					text.id = file.id;
-					if(file.user == this.parentApplication.account && file.isCompleted == 0)
+					if(first)
 					{
+						hgroup1.percentWidth = 100;
+						var p_label:FormHeading = new FormHeading();
+						p_label.label = " 批示:";
+						p_label.percentWidth = 10;
+						p_label.styleName = "receipt_formhead";
+						hgroup1.addElement(p_label);
+					}
+					
+					if(file.user == this.parentApplication.currentUser.id)
+					{
+						var text:TextArea = new TextArea();
+						if(file.text == null)
+							text.text = "";
+						else
+							text.text = file.text;
+						text.width = 150;
+						text.height = 100;
+						text.id = file.id;
 						fileflowid = file.id;
 						text.editable = true;
+						
+						if(file.isCompleted)
+						{
+							setNameAndDate(text, file);
+							text.editable = false;
+							save0.enabled = false;
+							save1.enabled = false;
+						}
 					}else if("超级管理员" == this.parentApplication.account)
 					{
+						var text:TextArea = new TextArea();
+						if(file.text == null)
+							text.text = "";
+						else
+							text.text = file.text;
+						text.width = 150;
+						text.height = 100;
 						fileflowid = "super_root";
-						text.editable = true;
+						text.editable = false;
+						if(file.isCompleted)
+						{
+							//添加名字和时间
+							setNameAndDate(text, file);
+						}
 					}
-					if(file.isCompleted)
-					{
-						//添加名字和时间
-						setNameAndDate(text, file);
-					}
+					
 					hgroup1.addElement(text);
 				}
 				inputGroup.addElement(hgroup0);
@@ -113,6 +138,7 @@
 							Alert.show("不能重复提交");
 					}
 				}
+				Alert.show("保存成功");
 			}
 			
 			override protected function fileFlowServiceSave_result(event:ResultEvent):void
@@ -132,6 +158,16 @@
 							t.editable = false;
 						}
 					}*/
+				}
+			}
+			
+			override protected function init():void
+			{
+				super.init();
+				if("超级管理员" == this.parentApplication.account)
+				{
+					save0.enabled = false;
+					save1.enabled = false;
 				}
 			}
 			

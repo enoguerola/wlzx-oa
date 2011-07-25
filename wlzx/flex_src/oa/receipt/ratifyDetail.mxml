@@ -42,7 +42,7 @@
 				_hao = number.pop();
 				_zi = number.pop();
 				if(receipt.inDate != null)
-					in_date = receipt.inDate.fullYear + "-" + receipt.inDate.month + '-' + receipt.inDate.day;
+					in_date = dateformate.format(receipt.inDate);
 				inNumber = receipt.inNumber;
 				subject = receipt.subject;
 				office = receipt.office;
@@ -64,6 +64,7 @@
 		<s:RemoteObject concurrency="last" destination="receiptServiceDest" id="receiptServiceRO" fault="faultHandler(event)" showBusyCursor="true">
 			<s:method concurrency="last" name="get" result="receiptServiceGet_result(event)"/>
 		</s:RemoteObject>
+		<mx:DateFormatter formatString="YYYY-MM-DD" id="dateformate"/>
 	</fx:Declarations>
 	<mx:TabNavigator width="100%" height="100%">
 		<s:NavigatorContent label="来文正文" width="100%" height="100%">

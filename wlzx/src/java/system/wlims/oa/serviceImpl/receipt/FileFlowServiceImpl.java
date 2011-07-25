@@ -50,6 +50,8 @@ public class FileFlowServiceImpl implements FileFlowService {
 					if(model.getUser().equals(userid))
 						exist = true;
 				}
+				if(model.getIsCompleted() == 1)
+					update(model);
 				if(!exist){
 					iterator.remove();
 					remove(model);
@@ -143,7 +145,7 @@ public class FileFlowServiceImpl implements FileFlowService {
 	@Override
 	public void update(FileFlowModel model) throws ServiceException {
 		// TODO Auto-generated method stub
-		if(model.getIsCompleted() == 1){
+		if(model.getIsCompleted() == 1 && model.getCompletedDate() != null){
 			Date date = Date.valueOf(UtilDateTime.nowDateString("yyyy-MM-dd"));
 			model.setCompletedDate(date);
 		}

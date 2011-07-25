@@ -26,7 +26,7 @@
 				// TODO Auto-generated method stub
 				var parent:Object = this.parentDocument as Object;
 				var id:String = parent.id;
-				fileFlowServiceRO.getList(id, parent.status/2 - 1);
+				fileFlowServiceRO.getAllList(id);
 				
 				_hao.text = parent._hao;
 				_zi.text = parent._zi;
@@ -78,7 +78,7 @@
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
 		<s:RemoteObject concurrency="last" destination="fileFlowServiceDest" id="fileFlowServiceRO" fault="faultHandler(event)" showBusyCursor="true">
-			<s:method concurrency="last" name="getList" result="fileFlowServiceGetList_result(event)"/>
+			<s:method concurrency="last" name="getAllList" result="fileFlowServiceGetList_result(event)"/>
 			<s:method concurrency="last" name="save" result="fileFlowServiceSave_result(event)"/>
 		</s:RemoteObject>
 		<mx:DateFormatter formatString="YYYY-MM-DD" id="dateformatter"/>

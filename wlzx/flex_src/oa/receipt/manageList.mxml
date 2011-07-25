@@ -19,13 +19,13 @@
 			
 			private function init():void
 			{
+				search_panel.status.dataProvider = search_panel.step_list;
+				search_panel.status.selectedIndex = 0;
 				search();
 			}
 			
 			public function search():void
 			{
-				search_panel.status.dataProvider = search_panel.step_list;
-				search_panel.status.selectedIndex = 0;
 				var in_number:String = search_panel.in_number.text;
 				var office:String = search_panel.in_office.text;
 				var do_number:String = search_panel.do_number.text;

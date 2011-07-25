@@ -29,12 +29,9 @@
 			override protected function fileFlowServiceGetList_result(event:ResultEvent):void
 			{
 				super.list = event.result as ArrayCollection;
+				var first:Boolean = true;
+				
 				hgroup0.percentWidth = 100;
-				var label:FormHeading = new FormHeading();
-				label.label = " 拟办:";
-				label.percentWidth = 10;
-				label.styleName = "receipt_formhead";
-				hgroup0.addElement(label);
 				Alert.show(this.parentApplication.account + "" + list.length);
 				var index:int = 0;
 				var length:int = list.length;
@@ -44,6 +41,15 @@
 					file = list.getItemAt(index) as FileFlowModel;
 					if(file.type != 0)
 						continue;
+					if(first)
+					{
+						var label:FormHeading = new FormHeading();
+						label.label = " 拟办:";
+						label.percentWidth = 10;
+						label.styleName = "receipt_formhead";
+						hgroup0.addElement(label);
+						first = false;
+					}
 					var text:TextArea = new TextArea();
 					text.text = file.text;
 					text.editable = false;
@@ -52,17 +58,24 @@
 					setNameAndDate(text, file);
 					hgroup0.addElement(text);
 				}
-				hgroup1.percentWidth = 100;
-				var p_label:FormHeading = new FormHeading();
-				p_label.label = " 批示:";
-				p_label.percentWidth = 10;
-				p_label.styleName = "receipt_formhead";
-				hgroup1.addElement(p_label);
+				first = true;
+				
+				
 				for(index = 0; index < length; index ++)
 				{
 					file = list.getItemAt(index) as FileFlowModel;
 					if(file.type != 1)
 						continue;
+					if(first)
+					{
+						hgroup1.percentWidth = 100;
+						var p_label:FormHeading = new FormHeading();
+						p_label.label = " 批示:";
+						p_label.percentWidth = 10;
+						p_label.styleName = "receipt_formhead";
+						hgroup1.addElement(p_label);
+						first = false;
+					}
 					var text:TextArea = new TextArea();
 					text.text = file.text;
 					text.editable = false;
@@ -71,10 +84,10 @@
 					setNameAndDate(text, file);
 					hgroup1.addElement(text);
 				}
-				for(index; index < length; index ++)
+				for(index = 0; index < length; index ++)
 				{
 					file = list.getItemAt(index) as FileFlowModel;
-					if(file.user == this.parentApplication.account && file.type == 2)
+					if(file.user == this.parentApplication.currentUser.id && file.type == 2)
 					{
 						fileflowid = file.id;
 						if(file.isCompleted == 1)
@@ -99,20 +112,12 @@
 				var hg0:int = hgroup0.numElements - 1;
 				var hg1:int = hgroup1.numElements - 1;
 				super.fileFlowServiceRO.save(fileflowid, "", isCompleted);
-				/*
-				for(var index:int = hg0 + hg1; index < super.list.length; index++)
-				{
-					var fileFlow:FileFlowModel = list.getItemAt(index) as FileFlowModel;
-					if(fileFlow.user == this.parentApplication.account || "超级管理员" == this.parentApplication.account)
-					{
-						super.fileFlowServiceRO.save(fileFlow.id, "", isCompleted);
-					}
-				}*/
 			}
 			
 			override protected function fileFlowServiceSave_result(event:ResultEvent):void
 			{
 				save1.enabled = false;
+				Alert.show("保存成功");
 			}
 			
 			override protected function init():void
