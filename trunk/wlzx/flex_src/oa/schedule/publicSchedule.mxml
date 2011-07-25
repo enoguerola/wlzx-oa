@@ -282,35 +282,60 @@
 			<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="false"   borderAlpha="0.2" verticalAlign="middle" id="table">				
 				<component:mygridcolumns>
 					
-					<mx:DataGridColumn textAlign="center" headerText="标记" dataField="loginaccount" width="50">
+					<mx:DataGridColumn textAlign="center" headerText="标记" dataField="loginaccount" width="100">
 						<mx:itemRenderer>
 							<mx:Component>
 								<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
-										<mx:Image source="@Embed(source='../WebContent/resources/common/ui/circle.png')"  visible="{checkCircle(data)}"/>
-										<mx:Script>
-											<![CDATA[
-												
-												//提示信息
-												import cn.org.rapid_framework.flex_security.SecurityControler;
-												
-												import mx.controls.Alert;
-												import mx.core.UIComponent;
-												private function checkCircle(data:Object):Boolean{
-													
-													if(data!=null){	
-														if(data.repeatStatus==1){
-															return true;
-														}else
-															return false;
-														
-													}else{
-														return false;
-													}
-												}
-											]]>
-										</mx:Script>
+									<mx:Image source="@Embed(source='../WebContent/resources/common/ui/circle.png')"  visible="{checkCircle(data)}"/>
+									<mx:Image source="@Embed(source='../WebContent/resources/common/ui/emergence1.png')"  visible="{checkEmergence1(data.emergence)}" toolTip="重要紧急"/>
+									<mx:Image source="@Embed(source='../WebContent/resources/common/ui/emergence2.png')"  visible="{checkEmergence2(data.emergence)}" toolTip="紧急非重要"/>
+									<mx:Image source="@Embed(source='../WebContent/resources/common/ui/emergence3.png')"  visible="{checkEmergence3(data.emergence)}" toolTip="重要非紧急"/>
 									
-								</mx:HBox>																			
+									<mx:Script>
+										<![CDATA[
+											
+											//提示信息
+											import cn.org.rapid_framework.flex_security.SecurityControler;
+											
+											import mx.controls.Alert;
+											import mx.core.UIComponent;
+											private function checkCircle(data:Object):Boolean{
+												
+												if(data!=null){	
+													if(data.repeatStatus==1){
+														return true;
+													}else
+														return false;
+													
+												}else{
+													return false;
+												}
+											}
+											private function checkEmergence1(emergence:int):Boolean{
+												
+												if(emergence==0){
+													return true;
+												}else return false;
+												
+											}
+											private function checkEmergence2(emergence:int):Boolean{
+												
+												if(emergence==2){
+													return true;
+												}else return false;
+												
+											}
+											private function checkEmergence3(emergence:int):Boolean{
+												
+												if(emergence==1){
+													return true;
+												}else return false;
+												
+											}
+										]]>
+									</mx:Script>
+									
+								</mx:HBox>															
 							</mx:Component>						
 						</mx:itemRenderer>
 					</mx:DataGridColumn>

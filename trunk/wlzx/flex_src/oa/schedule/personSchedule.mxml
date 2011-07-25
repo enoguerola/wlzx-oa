@@ -366,7 +366,7 @@
 			private var converter:MyItemEditorVOConverter = new MyItemEditorVOConverter();
 			public function add(beginDate:Date=null,endDate:Date=null):void{
 				if(beginDate==null)beginDate=new Date();
-				if(endDate==null)endDate=new Date();
+				if(endDate==null)endDate=new Date(beginDate.fullYear,beginDate.month,beginDate.date,beginDate.hours+1,beginDate.minutes,beginDate.seconds,beginDate.milliseconds);
 				if(pop!=null)PopUpManager.removePopUp(pop);
 				pop=MyBaloonEditorPanel(PopUpManager.createPopUp(this,MyBaloonEditorPanel,true)); 
 				pop.owner=this;
@@ -377,8 +377,7 @@
 				pop.y=FlexGlobals.topLevelApplication.stage.stageHeight/2-pop.height/2;
 				pop.toolTip="Add";
 				var calendarItem:CalendarItem;calendarItem 
-						=new CalendarItem(beginDate,endDate,
-							ResourceManager.getInstance().getString("FlexCalendar", "editor.newItem"));
+						=new CalendarItem(beginDate,endDate,"新日程");
 				pop.item = converter.calendarItemToItemEditorVO(calendarItem);
 				pop.cancelCallback=function():void{
 					PopUpManager.removePopUp(pop);
@@ -523,11 +522,15 @@
 						<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="false"   borderAlpha="0.2" verticalAlign="middle" id="table">				
 							<component:mygridcolumns>
 								
-								<mx:DataGridColumn textAlign="center" headerText="标记" dataField="loginaccount" width="50">
+								<mx:DataGridColumn textAlign="center" headerText="标记" dataField="loginaccount" width="100">
 									<mx:itemRenderer>
 										<mx:Component>
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
 												<mx:Image source="@Embed(source='../WebContent/resources/common/ui/circle.png')"  visible="{checkCircle(data)}"/>
+												<mx:Image source="@Embed(source='../WebContent/resources/common/ui/emergence1.png')"  visible="{checkEmergence1(data.emergence)}" toolTip="重要紧急"/>
+												<mx:Image source="@Embed(source='../WebContent/resources/common/ui/emergence2.png')"  visible="{checkEmergence2(data.emergence)}" toolTip="紧急非重要"/>
+												<mx:Image source="@Embed(source='../WebContent/resources/common/ui/emergence3.png')"  visible="{checkEmergence3(data.emergence)}" toolTip="重要非紧急"/>
+
 												<mx:Script>
 													<![CDATA[
 														
@@ -547,6 +550,27 @@
 															}else{
 																return false;
 															}
+														}
+														private function checkEmergence1(emergence:int):Boolean{
+															
+															if(emergence==0){
+																return true;
+															}else return false;
+															
+														}
+														private function checkEmergence2(emergence:int):Boolean{
+															
+															if(emergence==2){
+																return true;
+															}else return false;
+															
+														}
+														private function checkEmergence3(emergence:int):Boolean{
+															
+															if(emergence==1){
+																return true;
+															}else return false;
+															
 														}
 													]]>
 												</mx:Script>

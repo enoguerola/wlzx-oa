@@ -3,6 +3,7 @@ package system.wlims.oa.serviceImpl.schedule;
 import java.util.List;
 
 import system.dao.UserDAO;
+import system.entity.PersonModel;
 import system.entity.UserModel;
 import system.wlims.oa.dao.schedule.ScheduleDAO;
 import system.wlims.oa.entity.schedule.ScheduleModel;
@@ -15,8 +16,12 @@ public class ScheduleServiceImpl implements ScheduleService {
 	public void addSchedule(ScheduleModel schedule) {
 		// TODO Auto-generated method stub
 		UserModel user=userDAO.get(schedule.getPosterId());
-		if(user!=null)
-		schedule.setDepartmentId(user.getMainRole().getBelongDepartment().getId());
+		if(user.getAccountStyle()==PersonModel.PersonStyle.SuperRoot.getStyle()){
+			schedule.setDepartmentId(null);
+		}else{
+			if(user.getMainDepartment()!=null)
+			schedule.setDepartmentId(user.getMainDepartment().getId());
+		}
 		scheduleDAO.saveOrUpdate(schedule);
 	}
 	@Override

@@ -118,8 +118,31 @@
 				<mx:itemRenderer>
 					<mx:Component>
 						<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" >
+							<mx:Image source="@Embed(source='../WebContent/resources/common/ui/emergence2.png')"  visible="{checkEmergence(data)}" toolTip="紧急公告"/>
 							<mx1:Text text="{data.title}" width="100">
 							</mx1:Text>
+							<mx:Script>
+								<![CDATA[
+									
+									//提示信息
+									import cn.org.rapid_framework.flex_security.SecurityControler;
+									
+									import mx.controls.Alert;
+									import mx.core.UIComponent;
+									private function checkEmergence(data:Object):Boolean{
+										
+										if(data!=null){	
+											if(data.emergence==1){
+												return true;
+											}else
+												return false;
+											
+										}else{
+											return false;
+										}
+									}
+								]]>
+							</mx:Script>
 						</mx:HBox>
 					</mx:Component>
 				</mx:itemRenderer>
