@@ -68,6 +68,11 @@
 			{
 				
 				var list:ArrayCollection=event.result as ArrayCollection;
+				var sort:Sort=new Sort();  
+				//按照sequence升序排序  
+				sort.fields=[new SortField("postTime")];  
+				list.sort=sort;
+				list.refresh();//更新  
 				taskTable.initdata(list);
 				unLockWin();
 				

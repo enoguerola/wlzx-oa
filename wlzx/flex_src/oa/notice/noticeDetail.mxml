@@ -49,6 +49,11 @@
 			detail_content.text = notice.content;
 			postTime.text = formatDate(notice.postTime);
 			department.text = this.parentApplication.getDepartmentNameById(notice.postDepartmentId);
+			if(notice.emergence==1){
+				emergence_icon.visible=true;
+				emergence_text.visible=true;
+			}
+				
 			for each(var model:AttachmentModel in notice.attachments){
 				//Alert.show("loaded att");
 				var b:Button =new Button();
@@ -160,7 +165,13 @@
 			</s:Group>-->
 			<mx:VBox width="100%" id="print_content" paddingTop="10" verticalAlign="middle" horizontalAlign="center">
 				<mx:VBox width="100%" horizontalAlign="center" verticalGap="0">
-					<mx:Label  text=""  id="detail_title" width="100%"  letterSpacing="5" textAlign="center" fontSize="16"  fontWeight="bold" height="30" />
+					<mx:HBox width="100%" horizontalAlign="center" verticalGap="0">
+						<mx:Label  text=""  id="detail_title" width="100%"  letterSpacing="5" textAlign="center" fontSize="16"  fontWeight="bold" height="30" />
+						<mx:Image id="emergence_icon" source="@Embed(source='../WebContent/resources/common/ui/emergence2.png')"  visible="false"/>
+						<mx:Label id="emergence_text" text="紧急公告"   visible="false"/>
+	
+					</mx:HBox>
+					
 					<mx:HBox horizontalAlign="right" right="20">
 						<mx:Label text="发布部门：" visible="true" textAlign="right" />
 						<mx:Label text="" id="department"/>

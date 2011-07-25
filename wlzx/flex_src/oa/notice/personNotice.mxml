@@ -133,7 +133,9 @@
 				}
 				noticeTypeList.addItem({label:"其他", data:"其他"});
 				search_type.dataProvider=typeList;
+				search_type.selectedIndex=0;
 				noticeType.dataProvider=noticeTypeList;
+				noticeType.selectedIndex=0;
 				callLater(search);
 				
 				
@@ -150,6 +152,7 @@
 //					emergence = 1;
 				var submitBeginDate:String=search_date_begin.text;
 				var submitEndDate:String=search_date_end.text;
+//				Alert.show(type);
 				noticeServiceRO.getNoticesByConditions(this.parentApplication.currentUser.id, type, scope,emergence, "", "",status,
 					submitBeginDate,submitEndDate, draftTable.curpage, draftTable.pagecount);
 			}
@@ -438,7 +441,7 @@
 			<mx:VBox width="100%" height="100%"  verticalAlign="middle" horizontalAlign="center" paddingLeft="10" paddingRight="10" >
 				<mx:TabNavigator id="messagesView"  width="100%" height="100%" tabStyleName="customTabStyles"  horizontalGap="1" borderVisible="false"  tabWidth="120" paddingTop="0"  change="search();">
 					<mx:HBox label="草稿箱" width="100%" height="100%">
-						<component:WlzxPageDataGrid width="100%" height="100%"   borderVisible="false"  autoLayout="true"  borderAlpha="0.2" verticalAlign="middle"   id="draftTable" pagecount="10"  >				
+						<component:WlzxPageDataGrid width="100%" height="100%"   borderVisible="false"  autoLayout="true"  borderAlpha="0.2" verticalAlign="middle"   id="draftTable" pagecount="13"  >				
 							<component:mygridcolumns>
 								<mx:DataGridColumn textAlign="center" headerText="范围"  width="60">
 									<mx:itemRenderer>
@@ -477,9 +480,33 @@
 									<mx:itemRenderer>
 										<mx:Component>
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" >
+												<mx:Image source="@Embed(source='../WebContent/resources/common/ui/emergence2.png')"  visible="{checkEmergence(data)}" toolTip="紧急公告"/>
 												<mx1:Text text="{data.title}" width="100">
 												</mx1:Text>
+												<mx:Script>
+													<![CDATA[
+														
+														//提示信息
+														import cn.org.rapid_framework.flex_security.SecurityControler;
+														
+														import mx.controls.Alert;
+														import mx.core.UIComponent;
+														private function checkEmergence(data:Object):Boolean{
+															
+															if(data!=null){	
+																if(data.emergence==1){
+																	return true;
+																}else
+																	return false;
+																
+															}else{
+																return false;
+															}
+														}
+													]]>
+												</mx:Script>
 											</mx:HBox>
+											
 										</mx:Component>
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
