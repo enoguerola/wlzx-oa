@@ -59,6 +59,10 @@
 		<mx:method name="getDetailInfoById"  concurrency="last"  result="getDetailInfoByIdById_resultHandler(event);" />
 		<mx:method name="getOverWorkAppliesByConditions"  concurrency="last"  result="getOverWorkAppliesByConditions_resultHandler(event);" />
 	</mx:RemoteObject>
+	<mx:RemoteObject id="attendanceCalculateServiceRO" destination="attendanceCalculateServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+		<mx:method name="getSectionsOfValidMoveRestDay"  concurrency="last"  result="getSectionsOfValidMoveRestDay_result(event);" />
+		<mx:method name="getSectionsOfValidOverWork"  concurrency="last"  result="getSectionsOfValidOverWork_result(event);" />
+	</mx:RemoteObject>
 	<mx:Script> 
 		<![CDATA[
 			import mx.collections.ArrayCollection;
@@ -112,7 +116,18 @@
 				Alert.show(event.fault.faultString, 'Error');
 				
 			}
-			
+			protected function getSectionsOfValidOverWork_result(event:ResultEvent):void
+			{
+				yearOverWork.text=event.result.toString();
+				if(yearOverWork.text!=""&&yearMoveRest.text!="")
+					yearLeftMoveRest.text=(parseInt(yearOverWork.text)-parseInt(yearMoveRest.text))+"";
+			}
+			protected function getSectionsOfValidMoveRestDay_result(event:ResultEvent):void
+			{
+				yearMoveRest.text=event.result.toString();
+				if(yearOverWork.text!=""&&yearMoveRest.text!="")
+					yearLeftMoveRest.text=(parseInt(yearOverWork.text)-parseInt(yearMoveRest.text))+"";
+			}
 			
 			protected function addOverWorkApplyResult_resultHandler(event:ResultEvent):void
 			{
@@ -307,6 +322,9 @@
 				teacher_id.text=this.parentApplication.currentUser.id;
 			}
 			public function enterAdd(type:int):void{
+				attendanceCalculateServiceRO.getSectionsOfValidMoveRestDay(parentApplication.currentUser.id,CommonUtils.formatDate(CommonUtils.currentYearBeginDate(),"YYYY-MM-DD"),CommonUtils.formatDate(CommonUtils.currentYearEndDate(),"YYYY-MM-DD"));
+				attendanceCalculateServiceRO.getSectionsOfValidOverWork(parentApplication.currentUser.id,CommonUtils.formatDate(CommonUtils.currentYearBeginDate(),"YYYY-MM-DD"),CommonUtils.formatDate(CommonUtils.currentYearEndDate(),"YYYY-MM-DD"));
+			
 				addUpdateFlag.text="add";
 				this.currentState='add';
 				applyType.text=type+"";
@@ -323,6 +341,9 @@
 				overWorkServiceRO.loadApplyInfoById(applyId);
 			}
 			public function enterEdit(applyId:String):void{
+				attendanceCalculateServiceRO.getSectionsOfValidMoveRestDay(parentApplication.currentUser.id,CommonUtils.formatDate(CommonUtils.currentYearBeginDate(),"YYYY-MM-DD"),CommonUtils.formatDate(CommonUtils.currentYearEndDate(),"YYYY-MM-DD"));
+				attendanceCalculateServiceRO.getSectionsOfValidOverWork(parentApplication.currentUser.id,CommonUtils.formatDate(CommonUtils.currentYearBeginDate(),"YYYY-MM-DD"),CommonUtils.formatDate(CommonUtils.currentYearEndDate(),"YYYY-MM-DD"));
+				
 				addUpdateFlag.text="update"+"_"+applyId;
 				this.currentState='add';
 				
@@ -807,7 +828,15 @@
 						</mx:GridRow>
 					</mx:Grid>	
 					<mx:HBox horizontalAlign="left" width="100%">
-						<mx:Label  id="total"  text="小结：今年已加班天数/已调休天数/剩余可调休天数：**"  visible="true" width="100%"  letterSpacing="5" textAlign="left" fontSize="14"  fontWeight="bold" height="20" />
+						<mx:Label    text="小结：今年已加班天数"  visible="true"  letterSpacing="5" textAlign="left" fontSize="14"  fontWeight="normal" height="20" />
+						<mx:Label  id="yearOverWork"  text=""     letterSpacing="5" textAlign="left" fontSize="14"  fontWeight="bold" height="20" />
+						<mx:Label    text="[*1/3天]"     letterSpacing="5" textAlign="left" fontSize="14"  fontWeight="bold" height="20" />
+						<mx:Label    text="/已调休天数"    letterSpacing="5" textAlign="left" fontSize="14"  fontWeight="normal" height="20" />
+						<mx:Label  id="yearMoveRest"  text=""    letterSpacing="5" textAlign="left" fontSize="14"  fontWeight="bold" height="20" />
+						<mx:Label    text="[*1/3天]"     letterSpacing="5" textAlign="left" fontSize="14"  fontWeight="bold" height="20" />
+						<mx:Label   text="/剩余可调休天数"   letterSpacing="5" textAlign="left" fontSize="14"  fontWeight="normal" height="20" />
+						<mx:Label  id="yearLeftMoveRest"  text=""   letterSpacing="5" textAlign="left" fontSize="14"  fontWeight="bold" height="20" />
+						<mx:Label    text="[*1/3天]"     letterSpacing="5" textAlign="left" fontSize="14"  fontWeight="bold" height="20" />
 					</mx:HBox>
 					<mx:HBox horizontalAlign="right" width="100%">
 						<mx:Label id="addUpdateFlag" visible="false"/>

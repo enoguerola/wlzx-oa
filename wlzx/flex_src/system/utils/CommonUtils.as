@@ -33,6 +33,14 @@ package system.utils
 			else dateFormatter.formatString=patten;
 			return dateFormatter.format(date);
 		}
+		public static function currentYearBeginDate():Date{
+			var currentDate:Date=new Date();
+			return new Date(currentDate.getFullYear(),0,1);
+		}
+		public static function currentYearEndDate():Date{
+			var currentDate:Date=new Date();
+			return new Date(currentDate.getFullYear()+1,0,0);
+		}
 		public static function currentMonthBeginDate():Date{
 			var currentDate:Date=new Date();
 			return new Date(currentDate.getFullYear(),currentDate.getMonth(),1);

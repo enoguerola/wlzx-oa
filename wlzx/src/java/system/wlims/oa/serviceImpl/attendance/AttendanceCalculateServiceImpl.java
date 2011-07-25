@@ -113,18 +113,18 @@ public class AttendanceCalculateServiceImpl implements AttendanceCalculateServic
 			String endTime,String type) {
 		// TODO Auto-generated method stub
 		int result=0;
-		List<TakeLeaveForm> list=takeLeaveDAO.getTakeLeaveAppliesByConditions(userId,type,TakeLeaveForm.Status.Pass.getValue().toString(),null,null,beginTime,endTime);
+		List<TakeLeaveForm> list=takeLeaveDAO.getTakeLeaveAppliesByConditions(userId,type,TakeLeaveForm.Status.Pass.getValue().toString()+","+TakeLeaveForm.Status.TerminatePass.getValue().toString()+","+TakeLeaveForm.Status.TerminateDeny.getValue().toString(),null,null,beginTime,endTime);
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		if(list!=null){
 			for(TakeLeaveForm form:list){
 				try {
 					String day1=form.getBeginTime().split(" ")[0].toString();
-					String day2=form.getEndTime().split(" ")[0].toString();
+					String day2=(form.getTakeLeaveTerminateForm()==null?form.getEndTime().split(" ")[0].toString():form.getTakeLeaveTerminateForm().getTerminateDateTime().split(" ")[0].toString());
 					Date d1=  (Date)df.parse(day1);
 				    Date d2 =  (Date)df.parse(day2);
 				    long diff = d2.getTime() - d1.getTime();
 				    long days = diff / (1000 * 60 * 60 * 24);
-				    result+=days*Constants.DaysOfSections+(Integer.parseInt(form.getEndTime().split(" ")[1])-Integer.parseInt(form.getBeginTime().split(" ")[1])+1);
+				    result+=days*Constants.DaysOfSections+(Integer.parseInt((form.getTakeLeaveTerminateForm()==null?form.getEndTime().split(" ")[1].toString():form.getTakeLeaveTerminateForm().getTerminateDateTime().split(" ")[1].toString()))-Integer.parseInt(form.getBeginTime().split(" ")[1])+1);
 			    }catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -155,7 +155,7 @@ public class AttendanceCalculateServiceImpl implements AttendanceCalculateServic
 	public int getTimesOfValidTakeLeave(String userId, String beginTime,
 			String endTime,String type) {
 		// TODO Auto-generated method stub
-		List<TakeLeaveForm> list=takeLeaveDAO.getTakeLeaveAppliesByConditions(userId,type,TakeLeaveForm.Status.Pass.getValue().toString(),null,null,beginTime,endTime);
+		List<TakeLeaveForm> list=takeLeaveDAO.getTakeLeaveAppliesByConditions(userId,type,TakeLeaveForm.Status.Pass.getValue().toString()+","+TakeLeaveForm.Status.TerminatePass.getValue().toString()+","+TakeLeaveForm.Status.TerminateDeny.getValue().toString(),null,null,beginTime,endTime);
 		if(list==null)return 0;
 		return list.size();
 	}
@@ -213,13 +213,13 @@ public class AttendanceCalculateServiceImpl implements AttendanceCalculateServic
 	public List<TakeLeaveForm> getValidTakeLeave_BusinessTripAttendanceByCondition(
 			String userId, String beginTime, String endTime) {
 		// TODO Auto-generated method stub
-		return takeLeaveDAO.getTakeLeaveAppliesByConditions(userId,TakeLeaveForm.Types.BusinessTrip.getValue().toString(),TakeLeaveForm.Status.Pass.getValue().toString(),null,null,beginTime,endTime);
+		return takeLeaveDAO.getTakeLeaveAppliesByConditions(userId,TakeLeaveForm.Types.BusinessTrip.getValue().toString(),TakeLeaveForm.Status.Pass.getValue().toString()+","+TakeLeaveForm.Status.TerminatePass.getValue().toString()+","+TakeLeaveForm.Status.TerminateDeny.getValue().toString(),null,null,beginTime,endTime);
 	}
 	@Override
 	public List<TakeLeaveForm> getValidTakeLeave_LeaveAttendanceByCondition(
 			String userId, String beginTime, String endTime) {
 		// TODO Auto-generated method stub
-		return takeLeaveDAO.getTakeLeaveAppliesByConditions(userId,TakeLeaveForm.Types.Leave.getValue().toString(),TakeLeaveForm.Status.Pass.getValue().toString(),null,null,beginTime,endTime);
+		return takeLeaveDAO.getTakeLeaveAppliesByConditions(userId,TakeLeaveForm.Types.Leave.getValue().toString(),TakeLeaveForm.Status.Pass.getValue().toString()+","+TakeLeaveForm.Status.TerminatePass.getValue().toString()+","+TakeLeaveForm.Status.TerminateDeny.getValue().toString(),null,null,beginTime,endTime);
 	}
 	
 	

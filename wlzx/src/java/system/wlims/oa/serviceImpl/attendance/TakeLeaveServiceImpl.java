@@ -246,10 +246,10 @@ public class TakeLeaveServiceImpl implements TakeLeaveService {
 		log.setOperationTeacherId(takeLeave.getTeacherId());
 		takeLeave.getLogs().add(log);
 		takeLeave.setStatus(TakeLeaveForm.Status.TerminateWaiting.getValue());
-		takeLeaveDAO.saveOrUpdate(takeLeave);
-		Set<TakeLeaveTerminateForm> terminateForms=new TreeSet<TakeLeaveTerminateForm>();
-		terminateForms.add(takeLeaveTerminateForm);
-		takeLeave.setTerminateForms(terminateForms);
+//		takeLeaveDAO.saveOrUpdate(takeLeave);
+//		Set<TakeLeaveTerminateForm> terminateForms=new TreeSet<TakeLeaveTerminateForm>();
+//		terminateForms.add(takeLeaveTerminateForm);
+		takeLeave.getTerminateForms().add(takeLeaveTerminateForm);
 		takeLeaveDAO.saveOrUpdate(takeLeave);
 		return true;
 	}
@@ -276,21 +276,22 @@ public class TakeLeaveServiceImpl implements TakeLeaveService {
 
 		TakeLeaveWorkFlowLog log=new TakeLeaveWorkFlowLog();
 		log.setOperationName("销假审批");
-		if(status.intValue()==TakeLeaveTerminateForm.Status.Pass.getValue().intValue()){
+		if(status.intValue()==TakeLeaveForm.Status.TerminatePass.getValue().intValue()){
 			log.setOperationResult("编号为"+takeLeave.getApplyNo()+"的销假申请审批通过");
 			takeLeave.setStatus(TakeLeaveForm.Status.TerminatePass.getValue());
 		}
-		else if(status.intValue()==TakeLeaveTerminateForm.Status.Deny.getValue().intValue()){
+		else if(status.intValue()==TakeLeaveForm.Status.TerminateDeny.getValue().intValue()){
 			log.setOperationResult("编号为"+takeLeave.getApplyNo()+"的销假申请审批不通过");
 			takeLeave.setStatus(TakeLeaveForm.Status.TerminateDeny.getValue());
 		}
 		log.setOperationTime(new Date());
 		log.setOperationTeacherId(approverId);
 		takeLeave.getLogs().add(log);
-		takeLeaveDAO.saveOrUpdate(takeLeave);
-		Set<TakeLeaveTerminateForm> terminateForms=new TreeSet<TakeLeaveTerminateForm>();
-		terminateForms.add(takeLeaveTerminateForm);
-		takeLeave.setTerminateForms(terminateForms);
+		takeLeave.getTerminateForms().add(takeLeaveTerminateForm);
+//		takeLeaveDAO.saveOrUpdate(takeLeave);
+//		Set<TakeLeaveTerminateForm> terminateForms=new TreeSet<TakeLeaveTerminateForm>();
+//		terminateForms.add(takeLeaveTerminateForm);
+//		takeLeave.setTerminateForms(terminateForms);
 		takeLeaveDAO.saveOrUpdate(takeLeave);
 		return true;
 	}

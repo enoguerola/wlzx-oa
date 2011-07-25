@@ -90,7 +90,7 @@
         	<key column="operation_object_id" not-null="true" />
         	<one-to-many  class="system.wlims.oa.entity.workFlow.takeLeave.TakeLeaveWorkFlowLog" /> 
         </set>	
-        <set name="terminateForms" lazy="false" table="wlzx_oa_takeleave_terminate" cascade="all-delete-orphan" inverse="true">
+        <set name="terminateForms" lazy="false" table="wlzx_oa_takeleave_terminate" cascade="all-delete-orphan" inverse="false">
         	<key column="takeLeave_id" not-null="true" />
         	<one-to-many  class="system.wlims.oa.entity.workFlow.takeLeave.TakeLeaveTerminateForm" /> 
         </set>	
@@ -126,7 +126,7 @@
 		<property name="status" type="int">
 			<column name="terminate_status" />
 		</property>	
-		<many-to-one class="system.wlims.oa.entity.workFlow.takeLeave.TakeLeaveForm" name="takeLeaveForm" column="takeLeave_id"/>	
+		<many-to-one class="system.wlims.oa.entity.workFlow.takeLeave.TakeLeaveForm" name="takeLeaveForm" column="takeLeave_id" insert="false" update="false"/>	
 <!--		<set name="takeLeaveForms" lazy="false" table="wlzx_oa_takeleave_apply_terminate_relationship">-->
 <!--        	<cache usage="read-write" />-->
 <!--        	<key column="takeLeave_id" not-null="true" />-->
