@@ -240,7 +240,7 @@
 				
 			}
 			import oa.attendance.popWin.TerminateLeavePopWin;
-			public var pop:TerminateLeavePopWin=null;
+			private var pop:TerminateLeavePopWin=null;
 			public function enterTerminateLeave(applyId:String):void{
 				if(pop!=null)PopUpManager.removePopUp(pop);
 				pop=TerminateLeavePopWin(PopUpManager.createPopUp(this,TerminateLeavePopWin,true));  
@@ -477,9 +477,9 @@
 														}else if(data.status==6){
 															return "销假申请";
 														}else if(data.status==7){
-															return "销假审批通过";
+															return "销假通过";
 														}else if(data.status==8){
-															return "销假审批不通过";
+															return "销假不通过";
 														}
 														
 														}

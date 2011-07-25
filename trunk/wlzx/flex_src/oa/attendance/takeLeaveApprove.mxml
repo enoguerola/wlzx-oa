@@ -93,7 +93,7 @@
 			
 			public var status:ArrayCollection = new ArrayCollection( 
 				[	{label:"全部", data:"0,1,2,3,4,5,6,7,8"},  
-					{label:"待审批", data:"0,1,2"},  
+					{label:"待审批", data:"0,1,2,6"},  
 					{label:"审批中-处室通过", data:"1"},
 					{label:"审批中-分管副校长通过", data:"2"},
 					{label:"审批通过", data:"3,6,7,8"},
@@ -403,18 +403,18 @@
 				
 			}
 			import oa.attendance.popWin.TerminateLeavePopWin;
-			public var pop:TerminateLeavePopWin=null;
+			private var popWin:TerminateLeavePopWin=null;
 			public function enterTerminateLeave(applyId:String):void{
-				if(pop!=null)PopUpManager.removePopUp(pop);
-				pop=TerminateLeavePopWin(PopUpManager.createPopUp(this,TerminateLeavePopWin,true));  
-				pop.owner=this;
-				PopUpManager.centerPopUp(pop);
-				pop.percentHeight=100;
-				pop.percentWidth=100;
-				pop.x=FlexGlobals.topLevelApplication.stage.stageWidth/2-pop.width/2;
-				pop.y=FlexGlobals.topLevelApplication.stage.stageHeight/2-pop.height/2;
-				pop.id=applyId;//参数传递使用
-				pop.toolTip="Approve";
+				if(popWin!=null)PopUpManager.removePopUp(popWin);
+				popWin=TerminateLeavePopWin(PopUpManager.createPopUp(this,TerminateLeavePopWin,true));  
+				popWin.owner=this;
+				PopUpManager.centerPopUp(popWin);
+				popWin.percentHeight=100;
+				popWin.percentWidth=100;
+				popWin.x=FlexGlobals.topLevelApplication.stage.stageWidth/2-popWin.width/2;
+				popWin.y=FlexGlobals.topLevelApplication.stage.stageHeight/2-popWin.height/2;
+				popWin.id=applyId;//参数传递使用
+				popWin.toolTip="Approve";
 				
 			}
 			public function deleteApply(applyId:String):void{
@@ -817,9 +817,9 @@
 														}else if(data.status==6){
 															return "销假申请";
 														}else if(data.status==7){
-															return "销假审批通过";
+															return "销假通过";
 														}else if(data.status==8){
-															return "销假审批不通过";
+															return "销假不通过";
 														}
 														
 														}

@@ -2,13 +2,14 @@
 <s:VGroup xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
 		 xmlns:mx="library://ns.adobe.com/flex/mx" 
-		 xmlns:mx1="library://ns.adobe.com/flex/mx" xmlns:valueObjects="oa.entity.*" xmlns:flexlib="http://code.google.com/p/flexlib/"   creationComplete="init();" width="800" height="350">
+		 xmlns:mx1="library://ns.adobe.com/flex/mx" xmlns:valueObjects="oa.entity.*" xmlns:flexlib="http://code.google.com/p/flexlib/"   creationComplete="init();" width="800" height="450">
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
 		
 		<mx:RemoteObject id="takeLeaveServiceRO" destination="takeLeaveServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 			<mx:method name="getDetailInfoById"  concurrency="last"  result="getDetailInfoByIdById_resultHandler(event);" />
 			<mx:method name="terminateLeaveApply"  concurrency="last"  result="terminateLeaveApply_resultHandler(event);" />
+			<mx:method name="terminateLeaveApprove"  concurrency="last"  result="terminateLeaveApprove_resultHandler(event);" />
 		</mx:RemoteObject>
 		<valueObjects:TakeLeaveForm id="form"/>
 		<mx:StringValidator id="date_stringValidator" source="{terminate_date}"  property="text" required="true" requiredFieldError="销假时间不能为空"/>
@@ -49,14 +50,16 @@
 				takeLeaveServiceRO.getDetailInfoById(id);
 				if(this.toolTip=='Apply'){		
 					this.win.title="销假申请";
-					approveArea.visible=false;
-					approveArea.height=0;
+					//approveArea.visible=false;
+				//	approveArea.height=0;
 					saveButton.label="申请";
+					approveArea1.enabled=false;
+					approveArea2.enabled=false;
 					
 				}else if(this.toolTip=='Approve'){
 					this.win.title="销假审批";
-					approveArea.visible=true;
-					approveArea.height=50;
+					//approveArea.visible=true;
+					//approveArea.height=70;
 					saveButton.label="审批";
 					
 				}
@@ -84,10 +87,15 @@
 				detail_endDate_section.selectedIndex=parseInt(form.endTime.split(" ")[1]);
 				detail_reason.text=form.reason;
 				if(form.getTakeLeaveTerminateForm()!=null&&form.getTakeLeaveTerminateForm().id!=""){
+					if(this.toolTip=='Apply'){	
+						saveButton.visible=false;
+					}
+					officeChief_approveStatus.dataProvider=approveStatus;
+					terminate_reason.text=form.getTakeLeaveTerminateForm().terminateReason;
 					terminate_date.text=form.getTakeLeaveTerminateForm().terminateDateTime.split(" ")[0];
 					terminate_date_section.selectedIndex=parseInt(form.getTakeLeaveTerminateForm().terminateDateTime.split(" ")[1]);
-					
-					if(form.getTakeLeaveTerminateForm().terminateApproveTime!=null)officeChief_approveDate.text=CommonUtils.formatDate(form.getTakeLeaveTerminateForm().terminateApproveTime);
+					officeChief_approve_option.text=form.getTakeLeaveTerminateForm().terminateOfficeApproverOption;
+					if(form.getTakeLeaveTerminateForm().terminateApproveTime!=null)officeChief_approveDate.text=CommonUtils.formatDate(form.getTakeLeaveTerminateForm().terminateApproveTime,"YYYY-MM-DD");
 					if(form.getTakeLeaveTerminateForm().status>=7)
 						officeChief_approveStatus.selectedIndex=form.getTakeLeaveTerminateForm().status-7;
 					if(form.getTakeLeaveTerminateForm().terminateOfficeApproverId==null){
@@ -111,7 +119,7 @@
 					}else if(this.toolTip=='Approve'){
 						var option:String=officeChief_approve_option.text;
 						var approverId:String=officeChief_approver_id.text;
-						var approverDate:String=officeChief_approveDate.text;
+						var approverDate:Date=DateFormatter.parseDateString(officeChief_approveDate.text);
 						var status:Object=officeChief_approveStatus.selectedItem.data;
 						takeLeaveServiceRO.terminateLeaveApprove(form.id,dateTime,reason, option,status,approverId,approverDate);
 					}
@@ -141,28 +149,26 @@
 				}
 				
 			}
-			import oa.attendance.takeLeaveApply;
 			protected function terminateLeaveApply_resultHandler(event:ResultEvent):void
 			{
 				//var takeLeave:Object=event.result;
 				if(event.result==true){
-					var parent:takeLeaveApply = this.owner as takeLeaveApply;
+					var parent:Object = this.owner;
 					parent.search();
 					PopUpManager.removePopUp(this);
 				}else{
 					Alert.show("申请失败");
 				}
 			}
-			import oa.attendance.takeLeaveApprove;
 			protected function terminateLeaveApprove_resultHandler(event:ResultEvent):void
 			{
 			//	var takeLeave:Object=event.result;
 				if(event.result==true){
-					var parent:takeLeaveApprove = this.owner as takeLeaveApprove;
+					var parent:Object = this.owner;
 					parent.search();
 					PopUpManager.removePopUp(this);
 				}else{
-					Alert.show("申请失败");
+					Alert.show("审批失败");
 				}
 			}
 			
@@ -235,35 +241,37 @@
 						<mx1:Text text="销假事由"  textAlign="center" width="80" id="terminate_reason_label"/>
 					</mx:GridItem>
 					<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5"   paddingLeft="5" paddingRight="5"    verticalAlign="middle"   horizontalAlign="center">
-						<mx:TextArea width="100%" height="50" id="terminate_reason" enabled="true">
+						<mx:TextArea width="100%" height="60" id="terminate_reason" enabled="true">
 							
 						</mx:TextArea>
 					</mx:GridItem>
 					
 				</mx:GridRow>
-				<mx:GridRow width="100%" id="approveArea">
+				<mx:GridRow width="100%" id="approveArea1">
 					<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5"     verticalAlign="middle" horizontalAlign="center">
-						<mx1:Text text="处室负责人意见"  textAlign="center" width="80" />
+						<mx1:Text text="处室意见"  textAlign="center" width="80" />
 					</mx:GridItem>
 					<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5"     verticalAlign="middle"  horizontalAlign="center">
 						<mx:VBox width="100%" horizontalAlign="right">
-							<mx:TextArea width="100%" height="50" id="officeChief_approve_option" enabled="true">
+							<mx:TextArea width="100%" height="60" id="officeChief_approve_option" enabled="true">
 								
 							</mx:TextArea>
-							<mx:HBox>
-								<mx:ComboBox id="officeChief_approveStatus"   editable="false" width="100" dataProvider="{approveStatus}"/> 
-								<mx:Label text="签名："/>
-								<mx:TextInput width="120"   alpha="0.5" id="officeChief_approver_name" enabled="false"/>
-								<mx:Label  text=""   id="officeChief_approver_id" visible="false"/>
-								<mx:Label text="日期："/>
-								<mx:DateField yearNavigationEnabled="true" width="120" id="officeChief_approveDate" enabled="true" formatString="YYYY-MM-DD"/>
-							</mx:HBox>
+							
 						</mx:VBox>
 						
 					</mx:GridItem>
 					
 				</mx:GridRow>
+				
 			</mx:Grid>
+			<mx:HBox id="approveArea2">
+				<mx:ComboBox id="officeChief_approveStatus"   editable="false" width="100"/> 
+				<mx:Label text="签名："/>
+				<mx:TextInput width="120"   alpha="0.5" id="officeChief_approver_name" enabled="false"/>
+				<mx:Label  text=""   id="officeChief_approver_id" visible="false"/>
+				<mx:Label text="日期："/>
+				<mx:DateField yearNavigationEnabled="true" width="120" id="officeChief_approveDate" enabled="true" formatString="YYYY-MM-DD"/>
+			</mx:HBox>
 			<mx:HBox horizontalAlign="right" width="100%" height="60" verticalAlign="middle">
 				<mx:Button label="申请" id="saveButton" click="save_clickHandler(event)"/>
 			</mx:HBox>
