@@ -68,8 +68,8 @@ public class ConferenceServiceImpl implements ConferenceService {
 	@Override
 	public boolean cancleConferenceById(String id) {
 		ConferenceModel conference=conferenceDAO.get(id);
-		if(conference.getApplyStatus().intValue()!=ConferenceModel.EStatus.Booking.getValue().intValue())return false;
-		else{
+//		if(conference.getApplyStatus().intValue()!=ConferenceModel.EStatus.Booking.getValue().intValue()||conference.getApplyStatus().intValue()!=ConferenceModel.EStatus.ArrangedCancled.getValue().intValue())return false;
+//		else{
 			if(conference.getApplyStatus().intValue()==ConferenceModel.EStatus.Arranged.getValue().intValue())
 				conference.setApplyStatus(ConferenceModel.EStatus.ArrangedCancled.getValue());
 			else conference.setApplyStatus(ConferenceModel.EStatus.Cancled.getValue());
@@ -81,7 +81,7 @@ public class ConferenceServiceImpl implements ConferenceService {
 //			conference.getLogs().add(log);
 			conferenceDAO.saveOrUpdate(conference);
 			return true;
-		}
+//		}
 	}
 
 	
