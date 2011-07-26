@@ -672,7 +672,7 @@
 			 * @param event Event object contains details of the event triggering this handler.
 			 */ 
 			private function uploadHandler(event:Event):void {
-				var url:String = 'teacherImgaeUploadServlet';
+				var url:String =parentApplication.homeUrl+'basic/staff/teacherImgaeUploadServlet';
 				var request:URLRequest = new URLRequest(url);
 				request.method = URLRequestMethod.POST;
 				

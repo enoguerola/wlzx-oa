@@ -74,7 +74,7 @@
 			// 单个文件上传结束
 			//===================
 			internal function completeHandler():void{
-				browse_btn.enabled = false;
+				//browse_btn.enabled = false;
 				fileRef.fileList[uploadImg_num].removeEventListener(ProgressEvent.PROGRESS,onProcessHandler);
 				fileRef.fileList[uploadImg_num].removeEventListener(Event.COMPLETE,onComplete);	
 				upload_size+=fileRef.fileList[uploadImg_num].size;
@@ -347,7 +347,7 @@
 			<mx:HBox>
 				<mx:Button label="浏览文件" id="browse_btn" enabled="true"/>
 				<mx:Label text="按住 Ctrl 或 Shift 键可以多选" x="85" y="3"/>
-				<mx:Button label="添加文件" x="330" id="add_btn" enabled="false"/>
+				<mx:Button label="添加文件" x="330" id="add_btn" enabled="false" visible="false"/>
 				<mx:Button label="删除文件" x="410" id="delete_btn" enabled="false"/>
 			</mx:HBox>
 			

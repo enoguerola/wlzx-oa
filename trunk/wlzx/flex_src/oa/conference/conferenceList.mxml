@@ -172,7 +172,8 @@
 			}
 			public function enterEditConference(id:String):void
 			{
-				
+				conferenceMaintain.upload.empty();
+				conferenceMaintain.summaryUpload.empty();
 				conferenceMaintain.addUpdateFlag.text="update"+"_"+id;
 				conferenceMaintain.disabledTimePositionChange();
 				conferenceMaintain.hideSummaryArea();
@@ -184,6 +185,8 @@
 			}
 			public function enterSummaryConference(id:String):void
 			{
+				conferenceMaintain.upload.empty();
+				conferenceMaintain.summaryUpload.empty();
 				conferenceMaintain.addUpdateFlag.text="update"+"_"+id;
 //				conferenceMaintain.hideSummaryArea();
 				conferenceMaintain.disabledConferenceChange();
@@ -207,6 +210,8 @@
 			public function enterAdd():void{
 //				conferenceMaintain.hideSummaryArea();
 //				conferenceMaintain.enabledConferenceChange();
+				conferenceMaintain.upload.empty();
+				conferenceMaintain.summaryUpload.empty();
 				conferenceMaintain.addUpdateFlag.text="add";
 				this.currentState='add';
 			}
