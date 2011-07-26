@@ -113,10 +113,10 @@
 				
 				validatorArr = new Array();
 				validatorArr.push(name_stringValidator);
-				validatorArr.push(birthday_dateValidator);
-				validatorArr.push(nation_stringValidator);
-				validatorArr.push(idCode_stringValidator);
-				validatorArr.push(nativePlace_stringValidator);
+				//validatorArr.push(birthday_dateValidator);
+				//validatorArr.push(nation_stringValidator);
+				//validatorArr.push(idCode_stringValidator);
+				//validatorArr.push(nativePlace_stringValidator);
 				validatorArr.push(teacherno_stringValidator);
 				validatorArr.push(position_stringValidator);
 				//validatorArr.push(cellphone_phoneNumberValidator);
@@ -878,10 +878,10 @@
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
 		<mx:StringValidator id="teacherno_stringValidator" source="{teacherno}" property="text"  requiredFieldError="不能为空"/>
 		<mx:StringValidator id="name_stringValidator" source="{teacherName}" property="text"  requiredFieldError="不能为空"/>
-		<mx:DateValidator id="birthday_dateValidator" inputFormat="YYYY-MM-DD" source="{birthday}" property="text"  requiredFieldError="请选择"/>
+	<!--	<mx:DateValidator id="birthday_dateValidator" inputFormat="YYYY-MM-DD" source="{birthday}" property="text"  requiredFieldError="请选择"/>
 		<mx:StringValidator id="nation_stringValidator" source="{nation}" property="text"  requiredFieldError="不能为空"/>
 		<mx:RegExpValidator id="idCode_stringValidator" expression="^[0-9]\{18\}[\w]?$" noMatchError="格式错误" source="{idCode}" property="text"  requiredFieldError="不能为空"/>
-		<mx:StringValidator id="nativePlace_stringValidator" source="{nativePlace}" property="text"  requiredFieldError="不能为空"/>
+		--><mx:StringValidator id="nativePlace_stringValidator" source="{nativePlace}" property="text"  requiredFieldError="不能为空"/>
 		<mx:StringValidator id="position_stringValidator" source="{position}" property="text"  requiredFieldError="不能为空"/>
 		<mx:PhoneNumberValidator id="cellphone_phoneNumberValidator" source="{cellPhone}" property="text" minDigits="6" requiredFieldError="错误格式的电话"/>
 		<mx:PhoneNumberValidator id="homephone_phoneNumberValidator" source="{homePhone}" required="false" property="text" minDigits="6" requiredFieldError="错误格式的电话"/>

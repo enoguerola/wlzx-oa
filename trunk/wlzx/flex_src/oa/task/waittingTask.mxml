@@ -64,6 +64,8 @@
 				Alert.show(event.fault.faultString, 'Error');
 				unLockWin();
 			}
+			import mx.collections.Sort;
+			import mx.collections.SortField;
 			protected function getAllWaittingDealTasksByCondition_result(event:ResultEvent):void
 			{
 				
