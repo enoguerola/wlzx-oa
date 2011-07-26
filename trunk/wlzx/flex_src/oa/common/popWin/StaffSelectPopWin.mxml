@@ -7,9 +7,9 @@
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
 		<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 			
-			<mx:method name="getAllRoles"  concurrency="last"  result="getAllRolesResult_resultHandler(event);" />
+		<!--	<mx:method name="getAllRoles"  concurrency="last"  result="getAllRolesResult_resultHandler(event);" />-->
 			<!-- <mx:method name="getDepartmentBySymbol"  concurrency="last"  result="getDepartmentBySymbolResult(event);" /> -->
-			<mx:method name="getDepartmentBySymbol"  concurrency="last"  result="getDepartmentBySymbolResult(event);" />
+	<!--		<mx:method name="getDepartmentBySymbol"  concurrency="last"  result="getDepartmentBySymbolResult(event);" />-->
 			
 
 		</mx:RemoteObject>
@@ -41,12 +41,16 @@
 			private function init():void {
 				//accounts.addItem("");
 				search_account.dataProvider=parentApplication.allTeacherAcccounts;
+//				departments.dataProvider=parentApplication.allDepartment;
+//				roles.dataProvider=parentApplication.allRole;	
+//				Alert.show(parentApplication.allRole.length+"");
 				teacherAccountBridgeServiceRO.getUsersByCondition(null,null,null);
 				callLater(initWin);
 				
 			}
 			private function initWin():void{
-				winParent=this.owner as Object
+				winParent=this.owner as Object;
+				alreadyChoose = new Array();
 				for(var i:int=0;i<winParent.usersSelected.length;i++){
 					alreadyChoose.push({data:winParent.usersSelected[i].data,id:winParent.usersSelected[i].id});
 				}
@@ -71,10 +75,13 @@
 				var selectIndex:int=view.selectedIndex;
 				if(selectIndex==0){
 					allListTree.dataProvider=organzizeUsers(allList);
+					allListTree.validateNow();
 				}else if(selectIndex==1){
 					departmentListTree.dataProvider=organzizeUsers(allList);
+					departmentListTree.validateNow();
 				}else if(selectIndex==2){
 					roleListTree.dataProvider=organzizeUsers(allList);
+					roleListTree.validateNow();
 				}
 				
 			}
@@ -133,51 +140,51 @@
 				unAuthListTree.dataProvider=organzizeUsers(allList);
 			}
 			
-			private function getDepartmentBySymbolResult(event:ResultEvent):void {
-				var department:Object=event.result;
-				var resultList:ArrayCollection = new ArrayCollection();
-				buildSubDepartments(department,resultList,0);
-				
-				this.departments.dataProvider=resultList;
-				this.departments.selectedIndex=0;
-				teacherAccountBridgeServiceRO.getUsersByCondition(null,departments.selectedItem.dataField,null);
-			}
-			private function buildSubDepartments(department:Object,resultList:ArrayCollection,depth:int):void{
-				var headText:String="";
-				for(var j:int = 0;j<depth;j++)
-					headText=headText.concat("----");
-				headText=headText.concat(department.name);
-				resultList.addItem( {dataField:department.id, headerText:headText})
-				var list:ArrayCollection = ArrayCollection(department.subordinates);			
-				if(list.length>0){
-					for (var i:int = 0; i < list.length; i++){
-						var _department:Object = list.getItemAt(i);	
-						buildSubDepartments(_department,resultList,depth+1);
-					}
-					//					CommonUtils.sortBySequence(resultList);
-				}		
-				
-			}
-			private function getAllRolesResult_resultHandler(event:ResultEvent):void {
-				var resultList:ArrayCollection = new ArrayCollection();
-				var allList:ArrayCollection=event.result as ArrayCollection;
-				if(allList.length>0){
-					for (var i:int = 0; i < allList.length; i++){
-						var _role:RoleModel = allList.getItemAt(i) as RoleModel;
-						var headText:String="";
-						for(var j:int = 0;j<_role.level;j++)
-							headText=headText.concat("--");
-						headText=headText.concat(_role.name);
-						resultList.addItem( {dataField:_role.id, headerText:headText})
-					}
-				}	
-				this.roles.dataProvider=resultList;	
-				this.roles.selectedIndex=0;
-				teacherAccountBridgeServiceRO.getUsersByCondition(null,null,roles.selectedItem.dataField);
-//			systemServiceRO.getRoleUsers(roles.selectedItem.dataField);
-				//				switchRoleAuthorization();
-				
-			}
+//			private function getDepartmentBySymbolResult(event:ResultEvent):void {
+//				var department:Object=event.result;
+//				var resultList:ArrayCollection = new ArrayCollection();
+//				buildSubDepartments(department,resultList,0);
+//				
+//				this.departments.dataProvider=resultList;
+//				this.departments.selectedIndex=0;
+//				teacherAccountBridgeServiceRO.getUsersByCondition(null,departments.selectedItem.data,null);
+//			}
+//			private function buildSubDepartments(department:Object,resultList:ArrayCollection,depth:int):void{
+//				var headText:String="";
+//				for(var j:int = 0;j<depth;j++)
+//					headText=headText.concat("----");
+//				headText=headText.concat(department.name);
+//				resultList.addItem( {dataField:department.id, headerText:headText})
+//				var list:ArrayCollection = ArrayCollection(department.subordinates);			
+//				if(list.length>0){
+//					for (var i:int = 0; i < list.length; i++){
+//						var _department:Object = list.getItemAt(i);	
+//						buildSubDepartments(_department,resultList,depth+1);
+//					}
+//					//					CommonUtils.sortBySequence(resultList);
+//				}		
+//				
+//			}
+//			private function getAllRolesResult_resultHandler(event:ResultEvent):void {
+//				var resultList:ArrayCollection = new ArrayCollection();
+//				var allList:ArrayCollection=event.result as ArrayCollection;
+//				if(allList.length>0){
+//					for (var i:int = 0; i < allList.length; i++){
+//						var _role:RoleModel = allList.getItemAt(i) as RoleModel;
+//						var headText:String="";
+//						for(var j:int = 0;j<_role.level;j++)
+//							headText=headText.concat("--");
+//						headText=headText.concat(_role.name);
+//						resultList.addItem( {dataField:_role.id, headerText:headText})
+//					}
+//				}	
+//				this.roles.dataProvider=resultList;	
+//				this.roles.selectedIndex=0;
+//				teacherAccountBridgeServiceRO.getUsersByCondition(null,null,roles.selectedItem.data);
+////			systemServiceRO.getRoleUsers(roles.selectedItem.data);
+//				//				switchRoleAuthorization();
+//				
+//			}
 			/*
 				protected function getDepartmentBySymbolResult(event:ResultEvent):void {
 					var department:DepartmentModel=event.result as DepartmentModel;	
@@ -217,9 +224,23 @@
 				if(selectIndex==0){
 					teacherAccountBridgeServiceRO.getUsersByCondition(null,null,null);
 				}else if(selectIndex==1){
-					systemServiceRO.getDepartmentBySymbol("root");
+//					departments.dataProvider=parentApplication.allDepartment;
+//					departments.selectedIndex=0;
+					callLater(function():void{
+						var item:Object=departments.selectedItem;
+						teacherAccountBridgeServiceRO.getUsersByCondition(null,item.data,null);
+					
+					});
+					//systemServiceRO.getDepartmentBySymbol("root");
 				}else if(selectIndex==2){
-					systemServiceRO.getAllRoles();
+//					roles.dataProvider=parentApplication.allRole;	
+//					roles.selectedIndex=0;
+					callLater(function():void{
+						var item:Object=roles.selectedItem;
+						teacherAccountBridgeServiceRO.getUsersByCondition(null,null,item.data);
+						
+					});
+					//systemServiceRO.getAllRoles();
 				}else if(selectIndex==3){
 					teacherAccountBridgeServiceRO.getUnAuthUsers();
 				}
@@ -227,16 +248,14 @@
 			}
 			
 			private function departmentSelectionChangedHandler(event:Event):void{
-				
-				//				Alert.show(departments.selectedItem.dataField);
-				teacherAccountBridgeServiceRO.getUsersByCondition(null,departments.selectedItem.dataField,null);
+				var item:Object=departments.selectedItem;
+				teacherAccountBridgeServiceRO.getUsersByCondition(null,item.data,null);
 				
 			}
 			private function roleSelectionChangedHandler(event:Event):void{
-				
-				//				Alert.show(departments.selectedItem.dataField);
-				teacherAccountBridgeServiceRO.getUsersByCondition(null,null,roles.selectedItem.dataField);
-				systemServiceRO.getRoleUsers(roles.selectedItem.dataField);
+				var item:Object=roles.selectedItem;
+				teacherAccountBridgeServiceRO.getUsersByCondition(null,null,item.data);
+				systemServiceRO.getRoleUsers(item.data);
 				
 			}
 			private function addOneUser():void{
@@ -280,13 +299,22 @@
 					alreadyChooseListTree.dataProvider=organzizeChooseUsers(alreadyChoose);
 					var selectIndex:int=view.selectedIndex;
 					if(selectIndex==0){
-						systemServiceRO.getAllUsers();
+						teacherAccountBridgeServiceRO.getUsersByCondition(null,null,null);
+						//systemServiceRO.getAllUsers();
 					}else if(selectIndex==1){
-						systemServiceRO.getDepartmentBySymbol("root");
+//						this.departments.dataProvider=parentApplication.allDepartment;
+//						this.departments.selectedIndex=0;
+						var item:Object=departments.selectedItem;
+						teacherAccountBridgeServiceRO.getUsersByCondition(null,item.data,null);
+//						systemServiceRO.getDepartmentBySymbol("root");
 					}else if(selectIndex==2){
-						systemServiceRO.getAllRoles();
+//						this.roles.dataProvider=parentApplication.allRole;	
+//						this.roles.selectedIndex=0;
+						var item:Object=roles.selectedItem;
+						teacherAccountBridgeServiceRO.getUsersByCondition(null,null,item.data);
+						//systemServiceRO.getAllRoles();
 					}else if(selectIndex==3){
-						systemServiceRO.getUnAuthUsers();
+						teacherAccountBridgeServiceRO.getUnAuthUsers();
 					}
 				
 				}
@@ -351,17 +379,24 @@
 				}
 			}
 			private function removeAllUser():void{
-					alreadyChoose.splice(0);
+					alreadyChoose=new Array();
 					alreadyChooseListTree.dataProvider=organzizeChooseUsers(alreadyChoose);
 					var selectIndex:int=view.selectedIndex;
 					if(selectIndex==0){
-						systemServiceRO.getAllUsers();
+						teacherAccountBridgeServiceRO.getUsersByCondition(null,null,null);
+					//	systemServiceRO.getAllUsers();
 					}else if(selectIndex==1){
-						systemServiceRO.getDepartmentBySymbol("root");
+//						this.departments.dataProvider=parentApplication.allDepartment;
+//						this.departments.selectedIndex=0;
+						teacherAccountBridgeServiceRO.getUsersByCondition(null,departments.selectedItem.data,null);
+					//	systemServiceRO.getDepartmentBySymbol("root");
 					}else if(selectIndex==2){
-						systemServiceRO.getAllRoles();
+//						this.roles.dataProvider=parentApplication.allRole;	
+//						this.roles.selectedIndex=0;
+						teacherAccountBridgeServiceRO.getUsersByCondition(null,null,roles.selectedItem.data);
+						//systemServiceRO.getAllRoles();
 					}else if(selectIndex==3){
-						systemServiceRO.getUnAuthUsers();
+						teacherAccountBridgeServiceRO.getUnAuthUsers();
 					}
 					
 			}
@@ -380,8 +415,9 @@
 			{
 				view.selectedIndex=0;
 				var account:String=search_account_id.text;
-				teacherAccountBridgeServiceRO.getUsersByCondition(account,null,null);
 				
+				teacherAccountBridgeServiceRO.getUsersByCondition(account,null,null);
+				if(account=="")callLater(initWin);
 			}
 			private function searchAccountHandleAutoCompleteChange():void
 			{
@@ -445,13 +481,13 @@
 						
 						<mx:Box label="按部门选择员工" fontSize="20" width="100%" height="100%">
 							
-							<mx:ComboBox  width="100%" id="departments"  fontSize="12" labelField="headerText"  textAlign="left" change="departmentSelectionChangedHandler(event);" />
-							<mx:Tree id="departmentListTree" iconField="@icon"   width="100%" height="100%" labelField="@label"   textAlign="left"  paddingLeft="10" showRoot="false" />    
+							<mx:ComboBox  width="100%" id="departments"  fontSize="12" labelField="label"  dataProvider="{parentApplication.allDepartment}" textAlign="left" change="departmentSelectionChangedHandler(event);" />
+							<mx:Tree id="departmentListTree" iconField="@icon"   width="100%" height="100%"  labelField="@label"   textAlign="left"  paddingLeft="10" showRoot="false" />    
 							
 						</mx:Box>
 						<mx:Box label="按岗位选择员工" fontSize="20" width="100%" height="100%">
 							
-							<mx:ComboBox  width="100%" id="roles"    fontSize="12" labelField="headerText"  textAlign="left" change="roleSelectionChangedHandler(event);"/>
+							<mx:ComboBox  width="100%" id="roles"    fontSize="12" labelField="label" dataProvider="{parentApplication.allRole}"  textAlign="left" change="roleSelectionChangedHandler(event);"/>
 							<mx:Tree id="roleListTree" iconField="@icon"   width="100%" height="100%" labelField="@label"   textAlign="left"  paddingLeft="10" showRoot="false" />    
 							
 						</mx:Box>

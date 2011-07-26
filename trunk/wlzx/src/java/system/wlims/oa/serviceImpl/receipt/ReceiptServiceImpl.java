@@ -55,12 +55,16 @@ public class ReceiptServiceImpl implements ReceiptService {
 		if(StringUtils.isNotEmpty(title))
 			criteria.add(Restrictions.or(Restrictions.like("title", title, MatchMode.ANYWHERE), 
 					Restrictions.like("summary", title,  MatchMode.ANYWHERE)));
-		
 		if(StringUtils.isNotEmpty(startDate))
-			criteria.add(Restrictions.ge("inDate", Date.valueOf(startDate)));
-		
+			criteria.add(Restrictions.sqlRestriction("in_date >= '"+startDate+" 00:00:00'"));		
 		if(StringUtils.isNotEmpty(endDate))
-			criteria.add(Restrictions.le("inDate", Date.valueOf(endDate)));
+			criteria.add(Restrictions.sqlRestriction("in_date <= '"+endDate+" 23:59:59'"));
+		
+//		if(StringUtils.isNotEmpty(startDate))
+//			criteria.add(Restrictions.ge("inDate", Date.valueOf(startDate)));
+//		
+//		if(StringUtils.isNotEmpty(endDate))
+//			criteria.add(Restrictions.le("inDate", Date.valueOf(endDate)));
 		
 		criteria.addOrder(Order.asc("status")).addOrder(Order.asc("isCompleted")).addOrder(Order.desc("inDate"));
 			}

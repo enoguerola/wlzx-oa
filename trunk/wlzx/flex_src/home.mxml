@@ -75,6 +75,7 @@
 				securityUserHolder.getCurrentUser();
 				teacherAccountBridgeServiceRO.teacherAccountGetAll();
 				systemServiceRO.getDepartmentBySymbol("root");
+				systemServiceRO.getAllRoles();
 				placeServiceRO.getPlacesByCondition(null,null,null,null,null,null,null);
 				var swfUrl:String = this.parent.loaderInfo.url; //获取swf加载路径
 				var endIndex:int = swfUrl.indexOf("home.swf"); //搜索swf目录的路径位置
@@ -185,12 +186,12 @@
 			}
 			private function getAllRolesResult(event:ResultEvent):void {
 				//				var resultList:ArrayCollection = new ArrayCollection();
-				//				Alert.show(resultList.length+"");
+							
 				var allList:ArrayCollection=event.result as ArrayCollection;
-				
+//				Alert.show(allList.length+"gewg");
 				for(var i:int=0;i<allList.length;i++){
 					var role:RoleModel=allList.getItemAt(i) as RoleModel;
-					allRole.addItem( {data:role.id, label:role.name})
+					allRole.addItem({data:role.id, label:role.name});
 				}
 			}
 			private function getPlacesByCondition_resultHandler(event:ResultEvent):void{

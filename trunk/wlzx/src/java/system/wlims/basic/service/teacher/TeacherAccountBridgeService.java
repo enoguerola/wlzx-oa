@@ -107,12 +107,12 @@ public class TeacherAccountBridgeService {
 		}else if(StringUtils.isNotEmpty(departmentId)){
 			DepartmentModel department=departmentDAO.get(departmentId);
 			
-			Set<UserModel> users=department.getUsers();
-			List<UserModel> mainUsers=userDAO.getUsersByMainDepartment(departmentId);
-			if(mainUsers!=null&&mainUsers.size()>0){
-				for(UserModel user:mainUsers)
-					users.add(user);
-			}
+			Set<UserModel> users=department.getMainUsers();
+//			List<UserModel> mainUsers=userDAO.getUsersByMainDepartment(departmentId);
+//			if(mainUsers!=null&&mainUsers.size()>0){
+//				for(UserModel user:mainUsers)
+//					users.add(user);
+//			}
 			for(UserModel user:users){
 				triples.add(new TripleObject<String, String,String>(null,user.getName(),user.getId()));
 			}
