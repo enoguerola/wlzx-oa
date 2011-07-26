@@ -33,17 +33,24 @@ public class ConferenceDAOImpl extends BaseDAOImpl<ConferenceModel> implements C
 			criteria.add(Restrictions.sqlRestriction("apply_status in ("+states+")"));
 		if(StringUtils.isNotEmpty(placeId))
 			criteria.add(Restrictions.sqlRestriction("place_id='"+placeId+"'"));
-		
 		if(StringUtils.isNotEmpty(meetingBeginTime))
-			criteria.add(Restrictions.ge("meetingDate",  Date.valueOf(meetingBeginTime)));
-		
+			criteria.add(Restrictions.sqlRestriction("date >= '"+meetingBeginTime+" 00:00:00'"));		
 		if(StringUtils.isNotEmpty(meetingEndTime))
-			criteria.add(Restrictions.le("meetingDate",  Date.valueOf(meetingEndTime)));
-		
+			criteria.add(Restrictions.sqlRestriction("date <= '"+meetingEndTime+" 23:59:59'"));
 		if(StringUtils.isNotEmpty(applyBeginTime))
-			criteria.add(Restrictions.ge("applyDateTime",  Date.valueOf(applyBeginTime)));
+			criteria.add(Restrictions.sqlRestriction("apply_time >= '"+applyBeginTime+" 00:00:00'"));		
 		if(StringUtils.isNotEmpty(applyEndTime))
-			criteria.add(Restrictions.le("applyDateTime",  Date.valueOf(applyEndTime)));
+			criteria.add(Restrictions.sqlRestriction("apply_time <= '"+applyEndTime+" 23:59:59'"));
+//		if(StringUtils.isNotEmpty(meetingBeginTime))
+//			criteria.add(Restrictions.ge("meetingDate",  Date.valueOf(meetingBeginTime)));
+//		
+//		if(StringUtils.isNotEmpty(meetingEndTime))
+//			criteria.add(Restrictions.le("meetingDate",  Date.valueOf(meetingEndTime)));
+//		
+//		if(StringUtils.isNotEmpty(applyBeginTime))
+//			criteria.add(Restrictions.ge("applyDateTime",  Date.valueOf(applyBeginTime)));
+//		if(StringUtils.isNotEmpty(applyEndTime))
+//			criteria.add(Restrictions.le("applyDateTime",  Date.valueOf(applyEndTime)));
 		criteria.addOrder(Order.desc("meetingDate"));
 		return getListByCriteria(criteria);
 	}

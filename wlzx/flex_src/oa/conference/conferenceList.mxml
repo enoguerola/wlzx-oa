@@ -78,7 +78,8 @@
 //				{
 //					this.currentState='list';
 //				}
-
+				search_post_date_begin.text=CommonUtils.formatDate(CommonUtils.currentMonthBeginDate(),"YYYY-MM-DD");
+				search_post_date_end.text=CommonUtils.formatDate(CommonUtils.currentMonthEndDate(),"YYYY-MM-DD");
 				search();
 				departmentList = this.parentApplication.allDepartment;
 				conferenceMaintain.addEventListener("stateChangeEvent",function(event:Event):void{
@@ -120,11 +121,17 @@
 				search();
 			}			
 			
-			
+			import mx.collections.Sort;
+			import mx.collections.SortField;
 			protected function getConferencesByConditions_resultHandler(event:ResultEvent):void
 			{
 				var allList:ArrayCollection = event.result as ArrayCollection;
 				//				Alert.show( " " + messagesView.selectedIndex);
+				var sort:Sort=new Sort();  
+				//按照sequence升序排序  
+				sort.fields=[new SortField("meetingDate"),new SortField("beginTime"),new SortField("endTime")];  
+				allList.sort=sort;
+				allList.refresh();//更新  
 					conferenceTable.initdata(allList);
 					unLockWin();
 			}
