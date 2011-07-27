@@ -25,7 +25,10 @@
 		 <property name="workerIds" type="string">
             <column name="worker_ids" />
         </property>
-          <property name="lastEditorId" type="string">
+         <property name="workerStatus" type="string">
+            <column name="worker_status" />
+        </property>
+        <property name="lastEditorId" type="string">
             <column name="last_editor_id" />
         </property>
         <property name="lastEditTime" type="java.util.Date">

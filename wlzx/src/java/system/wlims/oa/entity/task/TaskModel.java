@@ -16,6 +16,7 @@ public class TaskModel extends BaseModel {
 	private String assignerId;
 	private Date postTime;
 	private String workerIds;
+	private String workerStatus;
 	private String lastEditorId;
 	private Date lastEditTime;
 	private Integer status;
@@ -121,6 +122,52 @@ public class TaskModel extends BaseModel {
 	public void setStatus(Integer status) {
 		this.status = status;
 	}
+
+
+	public String getWorkerStatus() {
+		return workerStatus;
+	}
+
+
+	public void setWorkerStatus(String workerStatus) {
+		this.workerStatus = workerStatus;
+	}
 	
-	
+	public String getStatusByWorkerId(String workerId){
+		String[] workerIdsAttr=workerIds.split(";");
+		String[] workerStatusAttr= workerStatus.split(";");
+		for(int i=0;i<workerIdsAttr.length;i++){
+			if(workerIdsAttr[i].equals(workerId)){
+				return workerStatusAttr[i];
+			}
+		}
+		return null;
+	}
+	public void setStatusByWorkerId(String state,String workerId){
+		String[] workerIdsAttr=workerIds.split(";");
+		String[] workerStatusAttr= workerStatus.split(";");
+		for(int i=0;i<workerIdsAttr.length;i++){
+			if(workerIdsAttr[i].equals(workerId)){
+				String result="";
+				for(int j=0;j<i;j++){
+					result+=workerStatusAttr[j]+";";
+				}
+				result+=state+";";
+				for(int k=i+1;k<workerStatusAttr.length;k++){
+					result+=workerStatusAttr[k]+";";
+				}
+				setWorkerStatus(result);
+			}
+		}
+		
+	}
+	public boolean isAllFinished(){
+		String[] workerStatusAttr= workerStatus.split(";");
+		for(int i=0;i<workerStatusAttr.length;i++){
+			if(!workerStatusAttr[i].equals(TaskModel.EStatus.Finished.getValue().intValue()+"")){
+				return false;
+			}
+		}
+		return true;
+	}
 }

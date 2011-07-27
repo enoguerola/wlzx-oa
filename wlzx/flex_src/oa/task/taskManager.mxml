@@ -88,7 +88,9 @@
 //				search_subordinate_account.dataProvider=this.parentApplication.allTeacherAcccounts;
 				//Alert.show(parentApplication.currentUser.getAllSubordinates().length+"a");
 	//			Alert.show(parentApplication.currentUser.getAllSubordinates().length);
-				securityUserHolder.getCurrentUserSubordinates();
+				if(parentApplication.currentUser.name=="super_root"){
+					allListTree.dataProvider=parentApplication.allTeacherAcccounts;
+				}else securityUserHolder.getCurrentUserSubordinates();
 //				taskTable.Pre.addEventListener(MouseEvent.CLICK,search);
 //				taskTable.Next.addEventListener(MouseEvent.CLICK,search);
 //				taskTable.First.addEventListener(MouseEvent.CLICK,search);
@@ -176,6 +178,10 @@
 				taskServiceRO.getTasksByConditions(s_assignerId, s_workerIds,s_status,s_beginDate,s_endDate);
 			}
 			private function searchSubordinate():void{
+				if(parentApplication.currentUser.name=="super_root"){
+					allListTree.dataProvider=parentApplication.allTeacherAcccounts;
+					return;
+				}
 				if(search_subordinate_account_id.text==null||search_subordinate_account_id.text=='')
 				allListTree.dataProvider=allSubordinates;
 				else {
@@ -385,10 +391,10 @@
 							
 							if(temp==null||temp=="")continue;
 							var name:String=this.parentApplication.getTeacherNameByAccountId(temp);
-							if(data.title=="a"){
-								Alert.show(name);
-								Alert.show(temp);
-							}
+//							if(data.title=="a"){
+//								Alert.show(name);
+//								Alert.show(temp);
+//							}
 							result1=result1.concat(name+"  ");
 							
 						}
