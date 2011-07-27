@@ -107,7 +107,10 @@
 				//Alert.show(parms);
 				if(parms!=null&&parms!='null'&&parms!=''){
 					//this.currentState="";
-					enterEdit(parms);
+					var attr:Array=parms.split(";");
+					if(attr[1]=="Leave")
+						enterEdit(attr[0]);
+					else enterTerminateLeave(attr[0]);
 				}
 				
 				callLater(search);

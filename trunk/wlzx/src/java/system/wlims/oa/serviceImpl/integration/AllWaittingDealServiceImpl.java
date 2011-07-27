@@ -19,11 +19,13 @@ import system.wlims.oa.entity.task.TaskModel;
 import system.wlims.oa.entity.workFlow.moveRestDay.MoveRestDayForm;
 import system.wlims.oa.entity.workFlow.overWork.OverWorkForm;
 import system.wlims.oa.entity.workFlow.takeLeave.TakeLeaveForm;
+import system.wlims.oa.entity.workFlow.takeLeave.TakeLeaveTerminateForm;
 import system.wlims.oa.service.integration.AllWaittingDealService;
 import system.wlims.oa.vo.TaskVO;
 import system.components.SecurityUserHolder;
 import system.dao.UserDAO;
 import system.entity.UserModel;
+import system.utils.StringUtils;
 import system.utils.UtilDateTime;;
 
 public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
@@ -61,7 +63,7 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 		}
 		
 		//请假出差审批任务
-		List<TakeLeaveForm> takeLeaveList=takeLeaveDAO.getTakeLeaveAppliesByConditions(null,null,TakeLeaveForm.Status.Waiting.getValue().intValue()+","+TakeLeaveForm.Status.OfficePass.getValue().intValue()+","+TakeLeaveForm.Status.VicePrincipalPass.getValue().intValue(),beginTime,endTime,null,null);
+		List<TakeLeaveForm> takeLeaveList=takeLeaveDAO.getTakeLeaveAppliesByConditions(null,null,TakeLeaveForm.Status.Waiting.getValue().intValue()+","+TakeLeaveForm.Status.OfficePass.getValue().intValue()+","+TakeLeaveForm.Status.VicePrincipalPass.getValue().intValue()+","+TakeLeaveForm.Status.TerminateWaiting.getValue().intValue()+","+TakeLeaveForm.Status.TerminatePass.getValue().intValue()+","+TakeLeaveForm.Status.TerminateDeny.getValue().intValue(),beginTime,endTime,null,null);
 		if(takeLeaveList!=null&&takeLeaveList.size()>0)
 			for(TakeLeaveForm takeLeaveForm:takeLeaveList){
 				//请假出差期间工作落实
@@ -211,6 +213,25 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 						list.add(taskVO3);
 					}
 				}
+				//销假审批
+				if(user.hasDam("takeLeaveTerminateApprove@noFilter@")){
+					if(takeLeaveForm.getTakeLeaveTerminateForm()!=null&&StringUtils.isNotEmpty(takeLeaveForm.getTakeLeaveTerminateForm().getId())){
+						TaskVO taskVO3=new TaskVO();
+						taskVO3.setStatus(TaskVO.EStatus.ToBeDeal.getText());
+						taskVO3.setType(TaskVO.EType.AskForLeave_Cancle.getText());
+						taskVO3.setTypeId(TaskVO.EType.AskForLeave_Cancle.getValue().intValue());
+						taskVO3.setAssignerId(TaskVO.EAssigner.Default.getValue().intValue()+"");
+						taskVO3.setId(takeLeaveForm.getId());
+						taskVO3.setPostTime(UtilDateTime.toDateString(takeLeaveForm.getTakeLeaveTerminateForm().getTerminateApplyTime(),"yyyy-MM-dd HH:mm:ss"));
+						taskVO3.setTitle(TaskVO.ETitle.AskForLeave_Cancle.getText());
+						if(takeLeaveForm.getTakeLeaveTerminateForm().getStatus().intValue()==TakeLeaveTerminateForm.Status.Waiting.getValue().intValue()){
+							taskVO3.setStatus(TaskVO.EStatus.ToBeDeal.getText());
+						}	else taskVO3.setStatus(TaskVO.EStatus.Finished.getText());
+						taskVO3.setWorkersIds(getWorkersIds(TaskVO.EType.AskForLeave_Cancle.getValue()));
+						//taskVO3.setWorkersIds(takeLeaveForm.getTeacherId());
+						list.add(taskVO3);
+					}
+				}
 				}
 		//加班审批任务
 		List<OverWorkForm> overWorkList=overWorkDAO.getOverWorkAppliesByConditions(null, null, beginTime, endTime, null, null);
@@ -235,7 +256,7 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 							else taskVO1.setStatus(TaskVO.EStatus.ToBeDeal.getText());
 						}
 						else taskVO1.setStatus(TaskVO.EStatus.Finished.getText());
-						taskVO1.setWorkersIds(overWorkForm.getTeacherId());
+						taskVO1.setWorkersIds(getWorkersIds(TaskVO.EType.OverWork_OfficalApprove.getValue()));
 						list.add(taskVO1);
 				}
 					
@@ -264,7 +285,7 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 							else taskVO1.setStatus(TaskVO.EStatus.ToBeDeal.getText());
 						}
 						else taskVO1.setStatus(TaskVO.EStatus.Finished.getText());
-						taskVO1.setWorkersIds(moveRestDayForm.getTeacherId());
+						taskVO1.setWorkersIds(getWorkersIds(TaskVO.EType.MoveRestDay_OfficalApprove.getValue()));
 						list.add(taskVO1);
 				}	
 				//副校长审批
@@ -288,7 +309,7 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 								else taskVO2.setStatus(TaskVO.EStatus.ToBeDeal.getText());
 							}
 							else taskVO2.setStatus(TaskVO.EStatus.Finished.getText());
-							taskVO2.setWorkersIds(moveRestDayForm.getTeacherId());
+							taskVO2.setWorkersIds(getWorkersIds(TaskVO.EType.MoveRestDay_VicePrincipalApprove.getValue()));
 							list.add(taskVO2);
 						}
 				}
@@ -317,7 +338,8 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 								taskVO1.setStatus(TaskVO.EStatus.ToBeDeal.getText());
 						}
 						else taskVO1.setStatus(TaskVO.EStatus.Finished.getText());
-						taskVO1.setWorkersIds(applyModel.getApplyTeacherId());
+						//taskVO1.setWorkersIds(applyModel.getApplyTeacherId());
+						taskVO1.setWorkersIds(getWorkersIds(TaskVO.EType.CourseAdjust_Approve.getValue()));
 						list.add(taskVO1);
 				}		
 					
@@ -342,7 +364,8 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 								taskVO1.setStatus(TaskVO.EStatus.ToBeDeal.getText());
 						}
 						else taskVO1.setStatus(TaskVO.EStatus.Finished.getText());
-						taskVO1.setWorkersIds(conferenceModel.getApplyUserId());
+						taskVO1.setWorkersIds(getWorkersIds(TaskVO.EType.Conference_Approve.getValue()));
+						//taskVO1.setWorkersIds(conferenceModel.getApplyUserId());
 						list.add(taskVO1);
 						
 					
@@ -378,7 +401,7 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 			}
 		}
 		//请假出差审批任务
-		List<TakeLeaveForm> takeLeaveList=takeLeaveDAO.getTakeLeaveAppliesByConditions(null,null,TakeLeaveForm.Status.Waiting.getValue().intValue()+","+TakeLeaveForm.Status.OfficePass.getValue().intValue()+","+TakeLeaveForm.Status.VicePrincipalPass.getValue().intValue(),beginTime,endTime,null,null);
+		List<TakeLeaveForm> takeLeaveList=takeLeaveDAO.getTakeLeaveAppliesByConditions(null,null,TakeLeaveForm.Status.Waiting.getValue().intValue()+","+TakeLeaveForm.Status.OfficePass.getValue().intValue()+","+TakeLeaveForm.Status.VicePrincipalPass.getValue().intValue()+","+TakeLeaveForm.Status.TerminateWaiting.getValue().intValue()+","+TakeLeaveForm.Status.TerminatePass.getValue().intValue()+","+TakeLeaveForm.Status.TerminateDeny.getValue().intValue(),beginTime,endTime,null,null);
 		if(takeLeaveList!=null&&takeLeaveList.size()>0)
 			for(TakeLeaveForm takeLeaveForm:takeLeaveList){
 				//请假出差期间工作落实
@@ -508,6 +531,25 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 						list.add(taskVO3);
 					}
 				}
+				//销假审批
+				if(user.hasDam("takeLeaveTerminateApprove@noFilter@")){
+					if(takeLeaveForm.getTakeLeaveTerminateForm()!=null&&StringUtils.isNotEmpty(takeLeaveForm.getTakeLeaveTerminateForm().getId())&&takeLeaveForm.getTakeLeaveTerminateForm().getStatus().intValue()==TakeLeaveTerminateForm.Status.Waiting.getValue().intValue()){
+						TaskVO taskVO3=new TaskVO();
+						taskVO3.setStatus(TaskVO.EStatus.ToBeDeal.getText());
+						taskVO3.setType(TaskVO.EType.AskForLeave_Cancle.getText());
+						taskVO3.setTypeId(TaskVO.EType.AskForLeave_Cancle.getValue().intValue());
+						taskVO3.setAssignerId(TaskVO.EAssigner.Default.getValue().intValue()+"");
+						taskVO3.setId(takeLeaveForm.getId());
+						taskVO3.setPostTime(UtilDateTime.toDateString(takeLeaveForm.getTakeLeaveTerminateForm().getTerminateApplyTime(),"yyyy-MM-dd HH:mm:ss"));
+						taskVO3.setTitle(TaskVO.ETitle.AskForLeave_Cancle.getText());
+						if(takeLeaveForm.getTakeLeaveTerminateForm().getStatus().intValue()==TakeLeaveTerminateForm.Status.Waiting.getValue().intValue()){
+							taskVO3.setStatus(TaskVO.EStatus.ToBeDeal.getText());
+						}	else taskVO3.setStatus(TaskVO.EStatus.Finished.getText());
+						taskVO3.setWorkersIds(getWorkersIds(TaskVO.EType.AskForLeave_Cancle.getValue()));
+						//taskVO3.setWorkersIds(takeLeaveForm.getTeacherId());
+						list.add(taskVO3);
+					}
+				}
 			}
 		//加班审批任务
 		List<OverWorkForm> overWorkList=overWorkDAO.getOverWorkAppliesByConditions(null, null, beginTime, endTime, null, null);
@@ -529,7 +571,7 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 							}
 							taskVO1.setTitle(TaskVO.ETitle.OverWork_OfficalApprove.getText());
 							taskVO1.setStatus(TaskVO.EStatus.ToBeDeal.getText());
-							taskVO1.setWorkersIds(overWorkForm.getTeacherId());
+							taskVO1.setWorkersIds(getWorkersIds(TaskVO.EType.OverWork_OfficalApprove.getValue()));
 							list.add(taskVO1);
 					}
 				}	
@@ -557,7 +599,7 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 						
 							taskVO1.setStatus(TaskVO.EStatus.ToBeDeal.getText());
 							
-							taskVO1.setWorkersIds(moveRestDayForm.getTeacherId());
+							taskVO1.setWorkersIds(getWorkersIds(TaskVO.EType.MoveRestDay_OfficalApprove.getValue()));
 							list.add(taskVO1);
 						}
 				}		
@@ -580,7 +622,7 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 								taskVO2.setTitle(TaskVO.ETitle.MoveRestDay_VicePrincipalApprove.getText());
 								taskVO2.setStatus(TaskVO.EStatus.ToBeDeal.getText());
 								
-								taskVO2.setWorkersIds(moveRestDayForm.getTeacherId());
+								taskVO2.setWorkersIds(getWorkersIds(TaskVO.EType.MoveRestDay_VicePrincipalApprove.getValue()));
 								list.add(taskVO2);
 							}
 					}
@@ -607,7 +649,7 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 							
 							taskVO1.setStatus(TaskVO.EStatus.ToBeDeal.getText());
 							
-							taskVO1.setWorkersIds(applyModel.getApplyTeacherId());
+							taskVO1.setWorkersIds(getWorkersIds(TaskVO.EType.CourseAdjust_Approve.getValue()));
 							list.add(taskVO1);
 					}
 				}	
@@ -630,7 +672,7 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 							
 							taskVO1.setStatus(TaskVO.EStatus.ToBeDeal.getText());
 						
-							taskVO1.setWorkersIds(conferenceModel.getApplyUserId());
+							taskVO1.setWorkersIds(getWorkersIds(TaskVO.EType.Conference_Approve.getValue()));
 							list.add(taskVO1);
 					}
 				}		
@@ -657,6 +699,30 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 				for(UserModel user:users)
 				if(user.hasDam("takeLeavePrincipalApprove@noFilter@"))
 					result.append(user.getId()+";");
+			}else if(type.intValue()==TaskVO.EType.AskForLeave_Cancle.getValue().intValue()){
+				for(UserModel user:users)
+					if(user.hasDam("takeLeaveTerminateApprove@noFilter@"))
+						result.append(user.getId()+";");
+			}else if(type.intValue()==TaskVO.EType.OverWork_OfficalApprove.getValue().intValue()){
+				for(UserModel user:users)
+					if(user.hasDam("overWork_approve_main@defaultVisit@@noFilter@"))
+						result.append(user.getId()+";");
+			}else if(type.intValue()==TaskVO.EType.MoveRestDay_OfficalApprove.getValue().intValue()){
+				for(UserModel user:users)
+					if(user.hasDam("moveRestDayOfficeApprove@noFilter@"))
+						result.append(user.getId()+";");
+			}else if(type.intValue()==TaskVO.EType.MoveRestDay_VicePrincipalApprove.getValue().intValue()){
+				for(UserModel user:users)
+					if(user.hasDam("moveRestDayVicePrincipalApprove@noFilter@"))
+						result.append(user.getId()+";");
+			}else if(type.intValue()==TaskVO.EType.CourseAdjust_Approve.getValue().intValue()){
+				for(UserModel user:users)
+					if(user.hasDam("adjust_class_apply_approve_main@defaultVisit@@noFilter@"))
+						result.append(user.getId()+";");
+			}else if(type.intValue()==TaskVO.EType.Conference_Approve.getValue().intValue()){
+				for(UserModel user:users)
+					if(user.hasDam("conferenceArrange_main@defaultVisit@@noFilter@"))
+						result.append(user.getId()+";");
 			}
 		
 		return result.toString();		

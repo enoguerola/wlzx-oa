@@ -137,7 +137,8 @@ INSERT INTO `wlzx_system_data_access_mode` (`id`, `name`, `symbol`, `sequence`, 
 (77, '全部数据', 'documentManage_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-22 00:00:00', '2011-07-22 16:43:57', 1),
 (80, '全部数据', 'moveRestDayOfficeApprove@noFilter@', 0, NULL, '', '2011-07-26 00:00:00', '2011-07-27 09:36:37', 1),
 (81, '全部数据', 'moveRestDayVicePrincipalApprove@noFilter@', 0, NULL, NULL, '2011-07-26 00:00:00', '2011-07-26 16:03:36', 1),
-(83, '全部数据', 'moveRestDayAllApprove@noFilter@', 0, NULL, NULL, '2011-07-26 00:00:00', '2011-07-26 16:04:47', 1);
+(83, '全部数据', 'moveRestDayAllApprove@noFilter@', 0, NULL, NULL, '2011-07-26 00:00:00', '2011-07-26 16:04:47', 1),
+(84, '全部数据', 'takeLeaveTerminateApprove@noFilter@', 0, NULL, NULL, '2011-07-27 00:00:00', '2011-07-27 14:40:59', 1);
 
 -- --------------------------------------------------------
 
