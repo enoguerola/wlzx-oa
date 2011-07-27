@@ -112,6 +112,7 @@
 					//this.currentState="";
 					enterEdit(parms);
 				}
+				callLater(search);
 			}
 			protected function systemFaultHandler(event:FaultEvent):void {
 				unLockWin();
@@ -203,7 +204,74 @@
 				
 				//				officeChief_approve_status.selectedValue=form.officeChiefStatus;
 				
+				//权限控制部分
 				
+				
+				if(this.parentApplication.currentUser.hasDam("moveRestDayAllApprove@noFilter@")){
+					//					officeChief_approver_name.enabled=true;
+					//					officeChief_approver_id.enabled=true;
+					officeChief_approve_time.enabled=true;
+					officeChief_approve_status_pass.enabled=true;
+					officeChief_approve_status_deny.enabled=true;
+					officeChief_approve_option.enabled=true;
+					if(form.officeChiefApproverId==null||form.officeChiefApproverId==''){
+						officeChief_approver_id.text=parentApplication.currentUser.id;
+						officeChief_approver_name.selectedItem=parentApplication.getItemByAccountId(parentApplication.currentUser.id);
+					}
+					
+					//					vicePrincipal_approver_name.enabled=true;
+					//					vicePrincipal_approver_id.enabled=true;
+					vicePrincipal_approve_time.enabled=true;
+					vicePrincipal_approve_status_pass.enabled=true;
+					vicePrincipal_approve_status_deny.enabled=true;
+					vicePrincipal_approve_option.enabled=true;
+					if(form.vicePrincipalApproverId==null||form.vicePrincipalApproverId==''){
+						vicePrincipal_approver_id.text=parentApplication.currentUser.id;
+						vicePrincipal_approver_name.selectedItem=parentApplication.getItemByAccountId(parentApplication.currentUser.id);
+					}
+					
+					//remark.enabled=true;
+				}
+				else if(this.parentApplication.currentUser.hasDam("moveRestDayVicePrincipalApprove@noFilter@")&&parentApplication.currentUser.hasSubordinateUser(form.teacherId)){
+					
+					//					officeChief_approver_name.enabled=true;
+					//					officeChief_approver_id.enabled=true;
+					officeChief_approve_time.enabled=true;
+					officeChief_approve_status_pass.enabled=true;
+					officeChief_approve_status_deny.enabled=true;
+					officeChief_approve_option.enabled=true;
+					if(form.officeChiefApproverId==null||form.officeChiefApproverId==''){
+						officeChief_approver_id.text=parentApplication.currentUser.id;
+						officeChief_approver_name.selectedItem=parentApplication.getItemByAccountId(parentApplication.currentUser.id);
+					}
+					
+					//					vicePrincipal_approver_name.enabled=true;
+					//					vicePrincipal_approver_id.enabled=true;
+					vicePrincipal_approve_time.enabled=true;
+					vicePrincipal_approve_status_pass.enabled=true;
+					vicePrincipal_approve_status_deny.enabled=true;
+					vicePrincipal_approve_option.enabled=true;
+					if(form.vicePrincipalApproverId==null||form.vicePrincipalApproverId==''){
+						vicePrincipal_approver_id.text=parentApplication.currentUser.id;
+						vicePrincipal_approver_name.selectedItem=parentApplication.getItemByAccountId(parentApplication.currentUser.id);
+					}
+					
+					//remark.enabled=true;
+				}
+				else if(this.parentApplication.currentUser.hasDam("moveRestDayOfficeApprove@noFilter@")&&parentApplication.currentUser.hasSubordinateUser(form.teacherId)){
+					
+					//					officeChief_approver_name.enabled=true;
+					//					officeChief_approver_id.enabled=true;
+					officeChief_approve_time.enabled=true;
+					officeChief_approve_status_pass.enabled=true;
+					officeChief_approve_status_deny.enabled=true;
+					officeChief_approve_option.enabled=true;
+					if(form.officeChiefApproverId==null||form.officeChiefApproverId==''){
+						officeChief_approver_id.text=parentApplication.currentUser.id;
+						officeChief_approver_name.selectedItem=parentApplication.getItemByAccountId(parentApplication.currentUser.id);
+					}
+					
+				}
 				
 			}
 			protected function addItem(time:String=null):void
@@ -409,21 +477,21 @@
 					editInit(applyId);
 					//权限控制部分
 					
-					//					if(this.parentApplication.currentUser.hasDam("moveRestDayOfficeApprove@noFilter@")){
-					officeChief_approver_name.enabled=true;
-					officeChief_approver_id.enabled=true;
-					officeChief_approve_time.enabled=true;
-					officeChief_approve_status_pass.enabled=true;
-					officeChief_approve_status_deny.enabled=true;
-					officeChief_approve_option.enabled=true;
-					//					}
-					//					if(this.parentApplication.currentUser.hasDam("moveRestDayOfficeApprove@noFilter@")){
-					vicePrincipal_approver_name.enabled=true;
-					vicePrincipal_approver_id.enabled=true;
-					vicePrincipal_approve_time.enabled=true;
-					vicePrincipal_approve_status_pass.enabled=true;
-					vicePrincipal_approve_status_deny.enabled=true;
-					vicePrincipal_approve_option.enabled=true;
+//					//					if(this.parentApplication.currentUser.hasDam("moveRestDayOfficeApprove@noFilter@")){
+//					officeChief_approver_name.enabled=true;
+//					officeChief_approver_id.enabled=true;
+//					officeChief_approve_time.enabled=true;
+//					officeChief_approve_status_pass.enabled=true;
+//					officeChief_approve_status_deny.enabled=true;
+//					officeChief_approve_option.enabled=true;
+//					//					}
+//					//					if(this.parentApplication.currentUser.hasDam("moveRestDayOfficeApprove@noFilter@")){
+//					vicePrincipal_approver_name.enabled=true;
+//					vicePrincipal_approver_id.enabled=true;
+//					vicePrincipal_approve_time.enabled=true;
+//					vicePrincipal_approve_status_pass.enabled=true;
+//					vicePrincipal_approve_status_deny.enabled=true;
+//					vicePrincipal_approve_option.enabled=true;
 					//					}
 					
 				}
@@ -684,7 +752,7 @@
 						
 						<component:WlzxPageDataGrid width="100%" height="100%"   borderVisible="false"  autoLayout="true"  borderAlpha="0.2" verticalAlign="middle"   id="applyTable" pagecount="10"  >				
 							<component:mygridcolumns>
-								<mx:DataGridColumn textAlign="center" headerText="申请编号">
+								<mx:DataGridColumn textAlign="center" headerText="申请编号"  width="150">
 									<mx:itemRenderer>
 										<mx:Component>
 											<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
@@ -693,7 +761,7 @@
 										</mx:Component>						
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="申请人" >
+								<mx:DataGridColumn textAlign="center" headerText="申请人"  width="150">
 									<mx:itemRenderer>
 										<mx:Component>
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" >
@@ -762,7 +830,7 @@
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
 								
-								<mx:DataGridColumn textAlign="center" headerText="操作" width="100">
+								<mx:DataGridColumn textAlign="center" headerText="操作" width="150">
 									<mx:itemRenderer>
 										<mx:Component>
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0">
@@ -899,7 +967,7 @@
 										</mx:Label>
 										
 										<mx:Label text="日期："/>
-										<mx:DateField yearNavigationEnabled="true" width="120" id="officeChief_approve_time" formatString="YYYY-MM-DD" enabled="true"/>
+										<mx:DateField yearNavigationEnabled="true" width="120" id="officeChief_approve_time" formatString="YYYY-MM-DD" enabled="false"/>
 									</mx:HBox>
 								</mx:VBox>
 								
