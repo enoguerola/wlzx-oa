@@ -99,9 +99,9 @@ INSERT INTO `wlzx_system_data_access_mode` (`id`, `name`, `symbol`, `sequence`, 
 (37, '全部数据', 'selfCanculateAttendance_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-06-06 00:00:00', '2011-07-22 09:45:36', 1),
 (38, '全部数据', 'takeLeaveApprove_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-06-08 00:00:00', '2011-07-22 09:45:36', 1),
 (39, '全部数据', 'takeLeaveWorkDeal@noFilter@', 0, NULL, NULL, '2011-06-08 00:00:00', '2011-07-22 09:45:36', 1),
-(40, '全部数据', 'takeLeaveOfficeApprove@noFilter@', 0, NULL, NULL, '2011-06-08 00:00:00', '2011-06-08 15:27:31', 1),
-(41, '全部数据', 'takeLeaveVicePrincipalApprove@noFilter@', 0, NULL, NULL, '2011-06-08 00:00:00', '2011-06-08 15:27:37', 1),
-(42, '全部数据', 'takeLeavePrincipalApprove@noFilter@', 0, NULL, NULL, '2011-06-08 00:00:00', '2011-07-22 09:45:36', 1),
+(40, '全部数据', 'takeLeaveOfficeApprove@noFilter@', 0, NULL, NULL, '2011-06-08 00:00:00', '2011-07-26 15:56:37', 1),
+(41, '全部数据', 'takeLeaveVicePrincipalApprove@noFilter@', 0, NULL, NULL, '2011-06-08 00:00:00', '2011-07-26 15:57:06', 1),
+(42, '全部数据', 'takeLeavePrincipalApprove@noFilter@', 0, NULL, NULL, '2011-06-08 00:00:00', '2011-07-26 16:02:20', 1),
 (43, '本处室请假出差数据（处室领导级别有效）', 'takeLeaveApprove_main@defaultVisit@@notSelfOfficeFilter@', 1, NULL, '', '2011-06-09 00:00:00', '2011-07-22 10:06:43', 0),
 (44, '分管处室请假出差数据（副校长级别有效）', 'takeLeaveApprove_main@defaultVisit@@notSelfManagerFilter@', 2, NULL, '', '2011-06-09 00:00:00', '2011-07-22 10:06:59', 0),
 (45, '全部数据', 'moveRestDay_apply_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-06-10 00:00:00', '2011-07-22 09:45:36', 1),
@@ -134,7 +134,10 @@ INSERT INTO `wlzx_system_data_access_mode` (`id`, `name`, `symbol`, `sequence`, 
 (74, '全部数据', 'documentCountersign_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-22 00:00:00', '2011-07-22 16:41:32', 1),
 (75, '全部数据', 'documentIssue_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-22 00:00:00', '2011-07-22 16:42:27', 1),
 (76, '全部数据', 'documentCirculate_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-22 00:00:00', '2011-07-22 16:43:19', 1),
-(77, '全部数据', 'documentManage_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-22 00:00:00', '2011-07-22 16:43:57', 1);
+(77, '全部数据', 'documentManage_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-22 00:00:00', '2011-07-22 16:43:57', 1),
+(80, '全部数据', 'moveRestDayOfficeApprove@noFilter@', 0, NULL, '', '2011-07-26 00:00:00', '2011-07-27 09:36:37', 1),
+(81, '全部数据', 'moveRestDayVicePrincipalApprove@noFilter@', 0, NULL, NULL, '2011-07-26 00:00:00', '2011-07-26 16:03:36', 1),
+(83, '全部数据', 'moveRestDayAllApprove@noFilter@', 0, NULL, NULL, '2011-07-26 00:00:00', '2011-07-26 16:04:47', 1);
 
 -- --------------------------------------------------------
 
