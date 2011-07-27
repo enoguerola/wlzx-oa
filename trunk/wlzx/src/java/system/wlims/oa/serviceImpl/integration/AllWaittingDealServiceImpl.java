@@ -45,19 +45,19 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 		List<TaskModel> taskList=taskDAO.getTasksByConditions(null, accountId, null, beginTime, endTime);
 		if(taskList!=null&&taskList.size()>0)
 		for(TaskModel task:taskList){
-			TaskVO taskVO=new TaskVO();
-			taskVO.setType(TaskVO.EType.Task.getText());
-			taskVO.setTypeId(TaskVO.EType.Task.getValue().intValue());
-			taskVO.setAssignerId(task.getAssignerId());
-			taskVO.setId(task.getId());
-			taskVO.setPostTime(UtilDateTime.toDateString(task.getPostTime(),"yyyy-MM-dd HH:mm:ss"));
-			taskVO.setTitle(task.getTitle());
-			if(task.getStatus().intValue()==0)
-				taskVO.setStatus(TaskVO.EStatus.OnGoing.getText());
-			else if(task.getStatus().intValue()==1)
-				taskVO.setStatus(TaskVO.EStatus.Finished.getText());
-			taskVO.setWorkersIds(task.getWorkerIds());
-			list.add(taskVO);
+				TaskVO taskVO=new TaskVO();
+				taskVO.setType(TaskVO.EType.Task.getText());
+				taskVO.setTypeId(TaskVO.EType.Task.getValue().intValue());
+				taskVO.setAssignerId(task.getAssignerId());
+				taskVO.setId(task.getId());
+				taskVO.setPostTime(UtilDateTime.toDateString(task.getPostTime(),"yyyy-MM-dd HH:mm:ss"));
+				taskVO.setTitle(task.getTitle());
+				if(task.getStatusByWorkerId(accountId).equals(TaskModel.EStatus.OnGoing.getValue().intValue()+""))
+					taskVO.setStatus(TaskVO.EStatus.ToBeDeal.getText());
+				else if(task.getStatusByWorkerId(accountId).equals(TaskModel.EStatus.Finished.getValue().intValue()+""))
+					taskVO.setStatus(TaskVO.EStatus.Finished.getText());
+				taskVO.setWorkersIds(task.getWorkerIds());
+				list.add(taskVO);
 		}
 		
 		//请假出差审批任务
@@ -352,19 +352,21 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 		List<TaskModel> taskList=taskDAO.getTasksByConditions(null, accountId, TaskModel.EStatus.OnGoing.getValue().intValue()+"", beginTime, endTime);
 		if(taskList!=null&&taskList.size()>0)
 		for(TaskModel task:taskList){
-			TaskVO taskVO=new TaskVO();
-			taskVO.setType(TaskVO.EType.Task.getText());
-			taskVO.setTypeId(TaskVO.EType.Task.getValue().intValue());
-			taskVO.setAssignerId(task.getAssignerId());
-			taskVO.setId(task.getId());
-			taskVO.setPostTime(UtilDateTime.toDateString(task.getPostTime(),"yyyy-MM-dd HH:mm:ss"));
-			taskVO.setTitle(task.getTitle());
-			if(task.getStatus().intValue()==0)
-				taskVO.setStatus(TaskVO.EStatus.OnGoing.getText());
-			else if(task.getStatus().intValue()==1)
-				taskVO.setStatus(TaskVO.EStatus.Finished.getText());
-			taskVO.setWorkersIds(task.getWorkerIds());
-			list.add(taskVO);
+			if(task.getStatusByWorkerId(accountId).equals(TaskModel.EStatus.OnGoing.getValue().intValue()+"")){
+				TaskVO taskVO=new TaskVO();
+				taskVO.setType(TaskVO.EType.Task.getText());
+				taskVO.setTypeId(TaskVO.EType.Task.getValue().intValue());
+				taskVO.setAssignerId(task.getAssignerId());
+				taskVO.setId(task.getId());
+				taskVO.setPostTime(UtilDateTime.toDateString(task.getPostTime(),"yyyy-MM-dd HH:mm:ss"));
+				taskVO.setTitle(task.getTitle());
+			//	if(task.getStatusByWorkerId(accountId).equals(TaskModel.EStatus.OnGoing.getValue().intValue()+""))
+					taskVO.setStatus(TaskVO.EStatus.ToBeDeal.getText());
+//				else if(task.getStatusByWorkerId(accountId).equals(TaskModel.EStatus.Finished.getValue().intValue()+""))
+//					taskVO.setStatus(TaskVO.EStatus.Finished.getText());
+				taskVO.setWorkersIds(task.getWorkerIds());
+				list.add(taskVO);
+			}
 		}
 		//请假出差审批任务
 		List<TakeLeaveForm> takeLeaveList=takeLeaveDAO.getTakeLeaveAppliesByConditions(null,null,TakeLeaveForm.Status.Waiting.getValue().intValue()+","+TakeLeaveForm.Status.OfficePass.getValue().intValue()+","+TakeLeaveForm.Status.VicePrincipalPass.getValue().intValue(),beginTime,endTime,null,null);

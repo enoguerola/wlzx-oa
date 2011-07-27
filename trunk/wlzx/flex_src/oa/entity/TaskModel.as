@@ -10,6 +10,7 @@ package oa.entity
 		public var content:String;
 		public var assignerId:String;
 		public var workerIds:String;
+		public var workerStatus:String;
 		public var postTime:Date;
 		public var lastEditorId:String;
 		public var lastEditTime:Date;

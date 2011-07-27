@@ -655,6 +655,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_oa_task` (
   `last_editor_id` bigint(20) default NULL,
   `last_edit_time` timestamp NULL default NULL on update CURRENT_TIMESTAMP,
   `worker_ids` text NOT NULL,
+  `worker_status` text NOT NULL,
   `status` smallint(6) NOT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;

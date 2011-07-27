@@ -12,7 +12,10 @@
 			<mx:method name="getAllWaittingDealTasksByCondition"  concurrency="last"  result="getAllWaittingDealTasksByCondition_result(event);" />
 			
 		</mx:RemoteObject>
-		
+		<mx:RemoteObject id="taskServiceRO" destination="taskServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+			<mx:method name="finishTask"  concurrency="last"  result="finishTaskResult_resultHandler(event);" />
+			
+		</mx:RemoteObject>
 	</fx:Declarations>
 	
 	<fx:Script> 
@@ -79,7 +82,12 @@
 				unLockWin();
 				
 			}
-			
+			protected function finishTaskResult_resultHandler(event:ResultEvent):void
+			{
+				//Alert.show("更新成功");
+				//this.currentState='list';
+				search();
+			}
 			
 			protected function search():void
 			{
@@ -176,7 +184,14 @@
 			public function enterEdit(id:String,typeId:String):void{
 					//	Alert.show(type);
 				var parent:Object=(Object)(((Object)(this.owner)).owner);
-				if(typeId=="2"){
+				if(typeId=="1"){
+					Alert.show("确定已完成该指派任务?","确认",Alert.YES | Alert.NO,null,function(event:CloseEvent):void{
+						if(event.detail == Alert.YES)
+						{
+							taskServiceRO.finishTask(id,parentApplication.currentUser.id);
+						}
+					});
+				}else if(typeId=="2"){
 					parent.addTab("adjustApprove-detail"+"_"+id,"调课处理",parent.nav,"oa/course/adjust/adjustApprove.swf",null,id);
 				}else if(typeId>="3"&&typeId<="6"){
 					parent.addTab("takeLeaveApprove-leave-detail"+"_"+id,"请假处理",parent.nav,"oa/attendance/takeLeaveApprove.swf",null,id);
@@ -255,7 +270,7 @@
 						<mx:itemRenderer>
 							<fx:Component>
 								<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0">
-									<mx:LinkButton  label="[处理]"   click="{this.outerDocument.enterEdit(data.id,data.typeId);}" enabled="{checkAuth(data)}">											
+									<mx:LinkButton  label="{data.typeId!=1?'[处理]':'[完成]'}"   click="{this.outerDocument.enterEdit(data.id,data.typeId);}" enabled="{checkAuth(data)}">											
 									</mx:LinkButton>
 									
 									<fx:Script>
@@ -266,9 +281,9 @@
 										import mx.controls.Alert;
 										import mx.core.UIComponent;
 										private function checkAuth(data:Object):Boolean{
-										if(data.status!=1&&data.typeId!=1)
-										return true;
-										else return false;
+											if(data.status!=1)
+												return true;
+											else return false;
 										}
 										]]>
 									</fx:Script>

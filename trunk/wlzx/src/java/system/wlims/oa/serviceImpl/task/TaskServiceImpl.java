@@ -13,6 +13,12 @@ public class TaskServiceImpl implements TaskService {
 	@Override
 	public void addTask(TaskModel task) {
 		// TODO Auto-generated method stub
+		String[] workerIdAttr=task.getWorkerIds().split(";");
+		String workerStatus="";
+		for(int i=0;i<workerIdAttr.length;i++){
+			workerStatus+="0;";
+		}
+		task.setWorkerStatus(workerStatus);
 		taskDAO.saveOrUpdate(task);
 	}
 
@@ -44,9 +50,30 @@ public class TaskServiceImpl implements TaskService {
 	@Override
 	public boolean updateTask(TaskModel task) {
 		// TODO Auto-generated method stub
+		TaskModel preTask=taskDAO.get(task.getId());
+		String[] workerIdAttr=task.getWorkerIds().split(";");
+		String workerStatus="";
+		for(int i=0;i<workerIdAttr.length;i++){
+			if(preTask.getStatusByWorkerId(workerIdAttr[i])!=null)
+				workerStatus+=preTask.getStatusByWorkerId(workerIdAttr[i])+";";
+			else workerStatus+="0;";
+		}
+		task.setWorkerStatus(workerStatus);
+		if(task.isAllFinished())
+			task.setStatus(TaskModel.EStatus.Finished.getValue());
+		taskDAO.merge(task);
+		return true;
+	}
+	public boolean finishTask(String taskId,String workerId) {
+		// TODO Auto-generated method stub
+		TaskModel task=taskDAO.get(taskId);
+		task.setStatusByWorkerId(TaskModel.EStatus.Finished.getValue().intValue()+"", workerId);
+		if(task.isAllFinished())
+			task.setStatus(TaskModel.EStatus.Finished.getValue());
 		taskDAO.saveOrUpdate(task);
 		return true;
 	}
+
 
 	public TaskDAO getTaskDAO() {
 		return taskDAO;
