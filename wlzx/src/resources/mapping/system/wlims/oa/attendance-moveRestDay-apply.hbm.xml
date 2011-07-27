@@ -48,7 +48,7 @@
 		</property>
 		<set name="logs" lazy="false" table="wlzx_oa_workflow_log" cascade="all-delete-orphan" where="operation_object_type='MoveRestDayWorkFlowLog'" order-by="operation_time">
         	<key column="operation_object_id" not-null="true" />
-        	<one-to-many  class="system.wlims.oa.entity.workFlow.moveRestDay.MoveRestDayWorkFlowLog" /> 
+        	<one-to-many not-found="ignore"  class="system.wlims.oa.entity.workFlow.moveRestDay.MoveRestDayWorkFlowLog" /> 
         </set>		
 	</class>
 </hibernate-mapping>

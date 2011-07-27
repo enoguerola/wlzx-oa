@@ -7,8 +7,8 @@
 		<!--定义 RemoteObject 组件-->
 		<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 			<mx:method name="getDepartmentById"  concurrency="last"  result="getDepartmentByIdResult(event);" />
-			<mx:method name="getDepartmentBySymbol"  concurrency="last"  result="getDepartmentBySymbolResult(event);" />
-			<mx:method name="getRoleById"  concurrency="last"  result="getRoleByIdResult(event);" />
+<!--			<mx:method name="getDepartmentBySymbol"  concurrency="last"  result="getDepartmentBySymbolResult(event);" />
+-->			<mx:method name="getRoleById"  concurrency="last"  result="getRoleByIdResult(event);" />
 			<mx:method name="roleRemove"  concurrency="last"   result="roleRemove_resultHandler(event);" />
 		</mx:RemoteObject>
 
@@ -39,7 +39,10 @@
 			public var selectedNode:XML;
 			private function init():void {
 //				systemServiceRO.getRoleBySymbol("root_supervisor");
-				systemServiceRO.getDepartmentBySymbol("root");
+				//systemServiceRO.getDepartmentBySymbol("root");
+				departments.dataProvider=parentApplication.allDepartment;
+				departments.selectedIndex=0;
+				systemServiceRO.getDepartmentById(departments.selectedItem.data);
 			}
 			private function systemFaultHandler(event:FaultEvent):void {
 				Alert.show(event.fault.faultString, 'Error');
@@ -68,32 +71,32 @@
 				callLater(function():void{roles.selectedItem=roleData[0];systemServiceRO.getRoleById(roleId);roles.validateNow();roles.expandChildrenOf(roleData[0],true);});
 
 			}
-			private function getDepartmentBySymbolResult(event:ResultEvent):void {
-				var department:Object=event.result;
-				var resultList:ArrayCollection = new ArrayCollection();
-				buildSubDepartments(department,resultList,0);
-				
-				this.departments.dataProvider=resultList;
-				this.departments.selectedIndex=0;
-				systemServiceRO.getDepartmentById(departments.selectedItem.dataField);
-			}
-			
-			private function buildSubDepartments(department:Object,resultList:ArrayCollection,depth:int):void{
-				var headText:String="";
-				for(var j:int = 0;j<depth;j++)
-					headText=headText.concat("----");
-				headText=headText.concat(department.name);
-				resultList.addItem( {dataField:department.id, headerText:headText})
-				var list:ArrayCollection = ArrayCollection(department.subordinates);			
-				if(list.length>0){
-					for (var i:int = 0; i < list.length; i++){
-						var _department:Object = list.getItemAt(i);	
-						buildSubDepartments(_department,resultList,depth+1);
-					}
-//					CommonUtils.sortBySequence(resultList);
-				}		
-				
-			}
+//			private function getDepartmentBySymbolResult(event:ResultEvent):void {
+//				var department:Object=event.result;
+//				var resultList:ArrayCollection = new ArrayCollection();
+//				buildSubDepartments(department,resultList,0);
+//				
+//				this.departments.dataProvider=resultList;
+//				this.departments.selectedIndex=0;
+//				systemServiceRO.getDepartmentById(departments.selectedItem.dataField);
+//			}
+//			
+//			private function buildSubDepartments(department:Object,resultList:ArrayCollection,depth:int):void{
+//				var headText:String="";
+//				for(var j:int = 0;j<depth;j++)
+//					headText=headText.concat("----");
+//				headText=headText.concat(department.name);
+//				resultList.addItem( {dataField:department.id, headerText:headText})
+//				var list:ArrayCollection = ArrayCollection(department.subordinates);			
+//				if(list.length>0){
+//					for (var i:int = 0; i < list.length; i++){
+//						var _department:Object = list.getItemAt(i);	
+//						buildSubDepartments(_department,resultList,depth+1);
+//					}
+////					CommonUtils.sortBySequence(resultList);
+//				}		
+//				
+//			}
 			private function buildSubRoles(role:Object):String{
 				var resultXML:String="";
 				var list:ArrayCollection = ArrayCollection(role.subordinates);
@@ -171,7 +174,7 @@
 			private function selectionChangedHandler(event:Event):void{
 				
 //				Alert.show(departments.selectedItem.dataField);
-				systemServiceRO.getDepartmentById(departments.selectedItem.dataField);
+				systemServiceRO.getDepartmentById(departments.selectedItem.data);
 				
 			}
 			public function loadRoleDetail(role:Object):void{
@@ -210,7 +213,7 @@
 				<mx:LinkButton  label="删除" icon="@Embed(source='../WebContent/resources/common/tools/button_delete_icon.png')"  click="deleteRole();"/>
 				<mx:Label text="|"/>
 				<mx:Label  text="部门选择" textAlign="center" />
-				<s:DropDownList  width="200" id="departments" labelField="headerText" change="selectionChangedHandler(event);" />
+				<mx:ComboBox  width="200" id="departments" labelField="label" change="selectionChangedHandler(event);" />
 			</mx:HBox>
 			<mx:HBox  width="100%" height="100%" verticalAlign="middle" paddingTop="10" paddingBottom="10"  paddingLeft="10" paddingRight="10">
 				<mx:Tree id="roles"  labelField="@label"  borderVisible="false" width="60%" height="100%" change="tree_itemClick(event);" >

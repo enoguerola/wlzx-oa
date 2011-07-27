@@ -38,11 +38,11 @@
 		
 		<set name="applyItems" lazy="false" table="wlzx_oa_course_adjust_apply_item" cascade="all-delete-orphan" inverse="true">
         	<key column="apply_id" not-null="true" />
-        	<one-to-many  class="system.wlims.oa.entity.course.adjust.ApplyItemModel" /> 
+        	<one-to-many not-found="ignore"  class="system.wlims.oa.entity.course.adjust.ApplyItemModel" /> 
         </set>	
         <set name="logs" lazy="false" table="wlzx_oa_workflow_log" cascade="all-delete-orphan" where="operation_object_type='ApplyWorkFlowLog'" order-by="operation_time">
         	<key column="operation_object_id" not-null="true" />
-        	<one-to-many  class="system.wlims.oa.entity.course.adjust.ApplyWorkFlowLog" /> 
+        	<one-to-many not-found="ignore"  class="system.wlims.oa.entity.course.adjust.ApplyWorkFlowLog" /> 
         </set>		
 	</class>
 	<class name="system.wlims.oa.entity.course.adjust.ApplyItemModel" table="wlzx_oa_course_adjust_apply_item">
@@ -78,7 +78,7 @@
 			<column name="adjust_actual_teacher_id" />
 		</property>
 		
-		<many-to-one class="system.wlims.oa.entity.course.adjust.ApplyModel" 
+		<many-to-one not-found="ignore" class="system.wlims.oa.entity.course.adjust.ApplyModel" 
 			name="apply" 
 			column="apply_id"/>	
 		

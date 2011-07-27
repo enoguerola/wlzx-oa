@@ -56,11 +56,11 @@
 
       	<set name="attachments" lazy="false" table="wlzx_oa_conference_attachment_relationship" cascade="all-delete-orphan" inverse="false">
         	<key column="conference_id" not-null="true" />
-        	<many-to-many  column="attachment_id" class="system.wlims.oa.entity.notice.AttachmentModel" /> 
+        	<many-to-many not-found="ignore"  column="attachment_id" class="system.wlims.oa.entity.notice.AttachmentModel" /> 
         </set>
         <set name="summaryAttachments" lazy="false" table="wlzx_oa_conference_summary_attachment_relationship" cascade="all-delete-orphan" inverse="false">
         	<key column="conference_id" not-null="true" />
-        	<many-to-many  column="attachment_id" class="system.wlims.oa.entity.notice.AttachmentModel" /> 
+        	<many-to-many not-found="ignore"  column="attachment_id" class="system.wlims.oa.entity.notice.AttachmentModel" /> 
         </set>
         		
     </class>

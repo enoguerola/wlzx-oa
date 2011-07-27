@@ -51,7 +51,7 @@
         
       	<set name="attachments" lazy="false" cascade="delete" inverse="true">
         	<key column="receipt_id" not-null="true" />
-        	<one-to-many class="system.wlims.oa.entity.receipt.FileAttachmentModel" /> 
+        	<one-to-many not-found="ignore" class="system.wlims.oa.entity.receipt.FileAttachmentModel" /> 
         </set>		
     </class>
 </hibernate-mapping>

@@ -32,22 +32,22 @@
 		<set name="children" lazy="false"  table="wlzx_system_menu_treeship" cascade="all">
 			<cache usage="read-write" />
 			<key column="parent_id" not-null="true" />
-			<many-to-many column="child_id" class="system.entity.MenuModel" order-by="sequence asc"/> 
+			<many-to-many not-found="ignore" column="child_id" class="system.entity.MenuModel" order-by="sequence asc"/> 
 		</set>
 		<set name="parents" lazy="false"  table="wlzx_system_menu_treeship">
 			<cache usage="read-write" />
 			<key column="child_id" not-null="true" />
-			<many-to-many column="parent_id" class="system.entity.MenuModel" /> 
+			<many-to-many not-found="ignore" column="parent_id" class="system.entity.MenuModel" /> 
 		</set>
 		<set name="modules" lazy="false"  table="wlzx_system_menu_module_relationship" cascade="all-delete-orphan">
 			<cache usage="read-write" />
 			<key column="menu_id" not-null="true" />
-			<many-to-many column="module_id" class="system.entity.ModuleModel"  order-by="sequence asc"/> 
+			<many-to-many not-found="ignore" column="module_id" class="system.entity.ModuleModel"  order-by="sequence asc"/> 
 		</set>
 		<set name="systems" lazy="false"  table="wlzx_system_menu_relationship">
 			<cache usage="read-write" />
 			<key column="menu_id" not-null="true" />
-			<many-to-many column="system_id" class="system.entity.SystemModel" /> 
+			<many-to-many not-found="ignore" column="system_id" class="system.entity.SystemModel" /> 
 		</set>
 	</class>
 </hibernate-mapping>

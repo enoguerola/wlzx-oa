@@ -88,16 +88,16 @@
 		</property>
 		<set name="logs" lazy="false" table="wlzx_oa_workflow_log" cascade="all-delete-orphan" where="operation_object_type='TakeLeaveWorkFlowLog'" order-by="operation_time">
         	<key column="operation_object_id" not-null="true" />
-        	<one-to-many  class="system.wlims.oa.entity.workFlow.takeLeave.TakeLeaveWorkFlowLog" /> 
+        	<one-to-many not-found="ignore"  class="system.wlims.oa.entity.workFlow.takeLeave.TakeLeaveWorkFlowLog" /> 
         </set>	
         <set name="terminateForms" lazy="false" table="wlzx_oa_takeleave_terminate" cascade="all-delete-orphan" inverse="false">
         	<key column="takeLeave_id" not-null="true" />
-        	<one-to-many  class="system.wlims.oa.entity.workFlow.takeLeave.TakeLeaveTerminateForm" /> 
+        	<one-to-many not-found="ignore"  class="system.wlims.oa.entity.workFlow.takeLeave.TakeLeaveTerminateForm" /> 
         </set>	
 <!--        <set name="terminateForms" lazy="false" table="wlzx_oa_takeleave_apply_terminate_relationship" cascade="all-delete-orphan">-->
 <!--        	<cache usage="read-write" />-->
 <!--        	<key column="takeLeave_terminate_id" not-null="true" />-->
-<!--        	<many-to-many  class="system.wlims.oa.entity.workFlow.takeLeave.TakeLeaveTerminateForm" /> -->
+<!--        	<many-to-many not-found="ignore"  class="system.wlims.oa.entity.workFlow.takeLeave.TakeLeaveTerminateForm" /> -->
 <!--        </set>	-->
 	</class>
 	<class name="system.wlims.oa.entity.workFlow.takeLeave.TakeLeaveTerminateForm" table="wlzx_oa_takeleave_terminate">
@@ -126,11 +126,11 @@
 		<property name="status" type="int">
 			<column name="terminate_status" />
 		</property>	
-		<many-to-one class="system.wlims.oa.entity.workFlow.takeLeave.TakeLeaveForm" name="takeLeaveForm" column="takeLeave_id" insert="false" update="false"/>	
+		<many-to-one not-found="ignore" class="system.wlims.oa.entity.workFlow.takeLeave.TakeLeaveForm" name="takeLeaveForm" column="takeLeave_id" insert="false" update="false"/>	
 <!--		<set name="takeLeaveForms" lazy="false" table="wlzx_oa_takeleave_apply_terminate_relationship">-->
 <!--        	<cache usage="read-write" />-->
 <!--        	<key column="takeLeave_id" not-null="true" />-->
-<!--        	<many-to-many  class="system.wlims.oa.entity.workFlow.takeLeave.TakeLeaveForm" /> -->
+<!--        	<many-to-many not-found="ignore"  class="system.wlims.oa.entity.workFlow.takeLeave.TakeLeaveForm" /> -->
 <!--        </set>-->
 	</class>
 </hibernate-mapping>
