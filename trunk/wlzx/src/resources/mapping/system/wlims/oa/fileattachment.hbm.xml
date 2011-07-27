@@ -25,7 +25,7 @@
 	            <column name="upload_date" />
 	        </property>
 	        
-	        <many-to-one name="receipt" class="system.wlims.oa.entity.receipt.ReceiptModel" column="receipt_id" lazy="proxy"></many-to-one>
+	        <many-to-one not-found="ignore" name="receipt" class="system.wlims.oa.entity.receipt.ReceiptModel" column="receipt_id" lazy="proxy"/>
 	
 	</class>
 </hibernate-mapping>

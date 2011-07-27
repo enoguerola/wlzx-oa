@@ -20,7 +20,7 @@
 		<property name="endDate" type="java.sql.Date">
 			<column name="experience_end_date" />
 		</property>
-		<many-to-one class="system.wlims.basic.entity.teacher.TeacherModel" 
+		<many-to-one not-found="ignore" class="system.wlims.basic.entity.teacher.TeacherModel" 
 			name="teacher" 
 			column="teacher_id" lazy="proxy"/>	
 	</class>

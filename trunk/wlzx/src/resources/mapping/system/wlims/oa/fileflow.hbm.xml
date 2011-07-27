@@ -37,7 +37,7 @@
             <column name="completed_date" />
         </property>
         
-    	<many-to-one class="system.wlims.oa.entity.receipt.ReceiptModel" name="receipt" column="receipt_id" lazy="false"/>
+    	<many-to-one not-found="ignore" class="system.wlims.oa.entity.receipt.ReceiptModel" name="receipt" column="receipt_id" lazy="false"/>
   
     </class>
 </hibernate-mapping>
