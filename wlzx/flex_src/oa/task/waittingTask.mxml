@@ -10,7 +10,7 @@
 		
 		<mx:RemoteObject id="allWaittingDealServiceRO" destination="allWaittingDealServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 			<mx:method name="getAllWaittingDealTasksByCondition"  concurrency="last"  result="getAllWaittingDealTasksByCondition_result(event);" />
-			
+			<mx:method name="getAllHistoryTasksByCondition"  concurrency="last"  result="getAllHistoryTasksByCondition_result(event);" />
 		</mx:RemoteObject>
 		<mx:RemoteObject id="taskServiceRO" destination="taskServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 			<mx:method name="finishTask"  concurrency="last"  result="finishTaskResult_resultHandler(event);" />
@@ -43,14 +43,14 @@
 					var beginDate:String=parms.split(";")[1];
 					var endDate:String=parms.split(";")[2];
 					search_account_id.text=accountId;
-					search_account_name.text=this.parentApplication.getTeacherNameByAccountId(search_account_id.text)+"待办工作";
+					search_account_name.text=this.parentApplication.getTeacherNameByAccountId(search_account_id.text)+"的工作";
 					search_date_begin.text=beginDate;
 					search_date_end.text=endDate;
 				}else{
 					
 					search_account_id.text=this.parentApplication.currentUser.id;
 					//Alert.show(search_account_id.text);
-					search_account_name.text=this.parentApplication.getTeacherNameByAccountId(search_account_id.text)+"待办工作";
+					search_account_name.text=this.parentApplication.getTeacherNameByAccountId(search_account_id.text)+"的工作";
 					var date:Date=new Date();
 					search_date_begin.text=CommonUtils.formatDate(CommonUtils.currentMonthBeginDate(),"YYYY-MM-DD");
 					search_date_end.text=CommonUtils.formatDate(CommonUtils.currentMonthEndDate(),"YYYY-MM-DD");
@@ -82,6 +82,20 @@
 				unLockWin();
 				
 			}
+			protected function getAllHistoryTasksByCondition_result(event:ResultEvent):void
+			{
+				
+				var list:ArrayCollection=event.result as ArrayCollection;
+				var sort:Sort=new Sort();  
+				//按照sequence升序排序  
+				sort.fields=[new SortField("postTime")];  
+				list.sort=sort;
+				list.refresh();//更新  
+				historyTaskTable.initdata(list);
+				unLockWin();
+				
+			}
+			
 			protected function finishTaskResult_resultHandler(event:ResultEvent):void
 			{
 				//Alert.show("更新成功");
@@ -97,7 +111,7 @@
 				var endTime:String=search_date_end.text;
 				var status:String=null;
 				allWaittingDealServiceRO.getAllWaittingDealTasksByCondition(accountId,beginTime,endTime);
-				
+				allWaittingDealServiceRO.getAllHistoryTasksByCondition(accountId,beginTime,endTime);
 			}
 			public function formatDate(date:Date):String{
 				return CommonUtils.formatDate(date);
@@ -235,6 +249,8 @@
 				</mx:HBox>
 				
 			</mx:VBox>
+			<mx:Panel width="100%"   styleName="customPanel" title="待办工作"  cornerRadius="5" borderVisible="false" dropShadowVisible="false" verticalScrollPolicy="auto" height="50%">
+
 			<component:WlzxPageDataGrid width="100%" height="100%"   borderVisible="false"  autoLayout="true"  borderAlpha="0.2" verticalAlign="middle"   id="taskTable" pagecount="10"  >				
 				<component:mygridcolumns>				
 					<mx:DataGridColumn textAlign="center" headerText="任务类型" width="70">
@@ -294,8 +310,50 @@
 					
 				</component:mygridcolumns>
 			</component:WlzxPageDataGrid>
+			</mx:Panel>	
+			<mx:Panel width="100%"   styleName="customPanel" title="历史工作"  cornerRadius="5" borderVisible="false" dropShadowVisible="false" verticalScrollPolicy="auto" height="50%">
 				
+				<component:WlzxPageDataGrid width="100%" height="100%"   borderVisible="false"  autoLayout="true"  borderAlpha="0.2" verticalAlign="middle"   id="historyTaskTable" pagecount="5"  >				
+					<component:mygridcolumns>						
+						<mx:DataGridColumn textAlign="center" headerText="任务类型" width="80">
+							<mx:itemRenderer>
+								<fx:Component>
+									<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" >
+										<mx1:Text text="{data.type}" width="100">
+										</mx1:Text>
+									</mx:HBox>
+								</fx:Component>
+							</mx:itemRenderer>
+						</mx:DataGridColumn>
+						<mx:DataGridColumn textAlign="center" headerText="任务主题" width="300">
+							<mx:itemRenderer>
+								<fx:Component>
+									<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" >
+										<mx1:Text text="{data.title}" width="100%">
+										</mx1:Text>
+									</mx:HBox>
+								</fx:Component>
+							</mx:itemRenderer>
+						</mx:DataGridColumn>
+						
+						<mx:DataGridColumn textAlign="center" headerText="发布时间" width="100" dataField="postTime">
+						</mx:DataGridColumn>
+						<mx:DataGridColumn textAlign="center" headerText="责任人" width="100" dataField="workersIds" labelFunction="getWorkers">
+							
+						</mx:DataGridColumn>
+						<mx:DataGridColumn textAlign="center" headerText="指派人" width="60" dataField="assignerId" labelFunction="getAssigner">
+							
+						</mx:DataGridColumn>
+						
+						<mx:DataGridColumn textAlign="center" headerText="状态" width="60"  dataField="status">
+							
+						</mx:DataGridColumn>
+						
+						
+					</component:mygridcolumns>
+				</component:WlzxPageDataGrid>
 				
+			</mx:Panel>	
 			
 		</mx:VBox>
 		
