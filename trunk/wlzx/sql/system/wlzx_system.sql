@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2011 年 07 月 26 日 15:14
+-- 生成日期: 2011 年 07 月 28 日 12:30
 -- 服务器版本: 5.0.91
 -- PHP 版本: 5.2.13
 
@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_data_access_mode` (
   `empty_flag` tinyint(1) NOT NULL default '1',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `symbol` (`symbol`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=78 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=85 ;
 
 --
 -- 转存表中的数据 `wlzx_system_data_access_mode`
@@ -98,10 +98,10 @@ INSERT INTO `wlzx_system_data_access_mode` (`id`, `name`, `symbol`, `sequence`, 
 (36, '全部数据', 'overWorkApply_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-06-06 00:00:00', '2011-07-22 09:45:36', 1),
 (37, '全部数据', 'selfCanculateAttendance_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-06-06 00:00:00', '2011-07-22 09:45:36', 1),
 (38, '全部数据', 'takeLeaveApprove_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-06-08 00:00:00', '2011-07-22 09:45:36', 1),
-(39, '全部数据', 'takeLeaveWorkDeal@noFilter@', 0, NULL, NULL, '2011-06-08 00:00:00', '2011-07-22 09:45:36', 1),
-(40, '全部数据', 'takeLeaveOfficeApprove@noFilter@', 0, NULL, NULL, '2011-06-08 00:00:00', '2011-07-26 15:56:37', 1),
-(41, '全部数据', 'takeLeaveVicePrincipalApprove@noFilter@', 0, NULL, NULL, '2011-06-08 00:00:00', '2011-07-26 15:57:06', 1),
-(42, '全部数据', 'takeLeavePrincipalApprove@noFilter@', 0, NULL, NULL, '2011-06-08 00:00:00', '2011-07-26 16:02:20', 1),
+(39, '全部数据', 'takeLeaveWorkDeal@noFilter@', 0, NULL, NULL, '2011-06-08 00:00:00', '2011-06-08 15:27:48', 1),
+(40, '全部数据', 'takeLeaveOfficeApprove@noFilter@', 0, NULL, NULL, '2011-06-08 00:00:00', '2011-07-26 16:01:20', 1),
+(41, '全部数据', 'takeLeaveVicePrincipalApprove@noFilter@', 0, NULL, NULL, '2011-06-08 00:00:00', '2011-07-26 16:01:43', 1),
+(42, '全部数据', 'takeLeavePrincipalApprove@noFilter@', 0, NULL, NULL, '2011-06-08 00:00:00', '2011-07-26 16:02:54', 1),
 (43, '本处室请假出差数据（处室领导级别有效）', 'takeLeaveApprove_main@defaultVisit@@notSelfOfficeFilter@', 1, NULL, '', '2011-06-09 00:00:00', '2011-07-22 10:06:43', 0),
 (44, '分管处室请假出差数据（副校长级别有效）', 'takeLeaveApprove_main@defaultVisit@@notSelfManagerFilter@', 2, NULL, '', '2011-06-09 00:00:00', '2011-07-22 10:06:59', 0),
 (45, '全部数据', 'moveRestDay_apply_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-06-10 00:00:00', '2011-07-22 09:45:36', 1),
@@ -730,7 +730,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_module_operation_relationship` (
   `module_id` bigint(20) NOT NULL,
   `operation_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=80 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=87 ;
 
 --
 -- 转存表中的数据 `wlzx_system_module_operation_relationship`
@@ -795,7 +795,11 @@ INSERT INTO `wlzx_system_module_operation_relationship` (`id`, `module_id`, `ope
 (76, 52, 53),
 (77, 53, 54),
 (78, 54, 55),
-(79, 55, 56);
+(79, 55, 56),
+(82, 44, 76),
+(83, 44, 77),
+(85, 44, 79),
+(86, 41, 80);
 
 -- --------------------------------------------------------
 
@@ -833,7 +837,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_operation` (
   `modified_date` timestamp NOT NULL default '0000-00-00 00:00:00' on update CURRENT_TIMESTAMP,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `symbol` (`symbol`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=74 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=81 ;
 
 --
 -- 转存表中的数据 `wlzx_system_operation`
@@ -865,10 +869,10 @@ INSERT INTO `wlzx_system_operation` (`id`, `name`, `symbol`, `sequence`, `rs_typ
 (36, '页面访问', 'overWorkApply_main@defaultVisit@', 0, 'URL', '/oa/attendance/overWorkApply.swf*', NULL, '2011-06-06 00:00:00', '2011-06-10 16:09:35'),
 (37, '页面访问', 'selfCanculateAttendance_main@defaultVisit@', 0, 'URL', '/oa/attendance/selfCanculateAttendance.swf*', NULL, '2011-06-06 00:00:00', '2011-06-10 21:22:21'),
 (38, '页面访问', 'takeLeaveApprove_main@defaultVisit@', 0, 'URL', '/oa/attendance/takeLeaveApprove.swf*', NULL, '2011-06-08 00:00:00', '2011-06-08 11:45:47'),
-(39, '请假出差工作落实', 'takeLeaveWorkDeal', 4, 'METHOD', 'takeLeaveWorkDeal()', '', '2011-06-08 00:00:00', '2011-06-08 15:27:48'),
-(40, '请假出差本处室审批', 'takeLeaveOfficeApprove', 1, 'METHOD', 'takeLeaveOfficeApprove()', '', '2011-06-08 00:00:00', '2011-07-22 21:39:13'),
-(41, '请假出差分管副校长审批', 'takeLeaveVicePrincipalApprove', 2, 'METHOD', 'takeLeaveVicePrincipalApprove()', '', '2011-06-08 00:00:00', '2011-07-22 21:39:22'),
-(42, '请假出差校长审批', 'takeLeavePrincipalApprove', 3, 'METHOD', 'takeLeavePrincipalApprove()', '', '2011-06-08 00:00:00', '2011-06-08 15:27:42'),
+(39, '请假出差工作落实', 'takeLeaveWorkDeal', 1, 'METHOD', 'takeLeaveWorkDeal()', '', '2011-06-08 00:00:00', '2011-07-27 14:38:57'),
+(40, '分管下属请假出差1天以内[含1天]审批权限', 'takeLeaveOfficeApprove', 2, 'METHOD', 'takeLeaveOfficeApprove()', '', '2011-06-08 00:00:00', '2011-07-27 14:39:03'),
+(41, '分管下属请假出差3天以内[含3天]审批权限', 'takeLeaveVicePrincipalApprove', 3, 'METHOD', 'takeLeaveVicePrincipalApprove()', '', '2011-06-08 00:00:00', '2011-07-27 14:39:08'),
+(42, '所有审批权限', 'takeLeavePrincipalApprove', 5, 'METHOD', 'takeLeavePrincipalApprove()', '', '2011-06-08 00:00:00', '2011-07-27 14:39:15'),
 (43, '页面访问', 'moveRestDay_apply_main@defaultVisit@', 0, 'URL', '/oa/attendance/moveRestDay.swf*', NULL, '2011-06-10 00:00:00', '2011-06-10 16:11:49'),
 (44, '页面访问', 'overWork_approve_main@defaultVisit@', 0, 'URL', '/oa/attendance/overWorkApprove.swf*', NULL, '2011-06-10 00:00:00', '2011-06-10 21:15:45'),
 (45, '页面访问', 'moveRestDay_approve_main@defaultVisit@', 0, 'URL', '/oa/attendance/moveRestDayApprove.swf*', NULL, '2011-06-10 00:00:00', '2011-06-10 21:16:34'),
@@ -899,7 +903,11 @@ INSERT INTO `wlzx_system_operation` (`id`, `name`, `symbol`, `sequence`, `rs_typ
 (70, '页面访问', 'documentCountersign_main@defaultVisit@', 0, 'URL', '/oa/sendingFiles/documentCountersign.swf*', NULL, '2011-07-22 00:00:00', '2011-07-22 16:41:32'),
 (71, '页面访问', 'documentIssue_main@defaultVisit@', 0, 'URL', '/oa/sendingFiles/documentIssue.swf*', NULL, '2011-07-22 00:00:00', '2011-07-22 16:42:27'),
 (72, '页面访问', 'documentCirculate_main@defaultVisit@', 0, 'URL', '/oa/sendingFiles/documentCirculate.swf*', NULL, '2011-07-22 00:00:00', '2011-07-22 16:43:19'),
-(73, '页面访问', 'documentManage_main@defaultVisit@', 0, 'URL', '/oa/sendingFiles/documentManage.swf*', NULL, '2011-07-22 00:00:00', '2011-07-22 16:43:57');
+(73, '页面访问', 'documentManage_main@defaultVisit@', 0, 'URL', '/oa/sendingFiles/documentManage.swf*', NULL, '2011-07-22 00:00:00', '2011-07-22 16:43:57'),
+(76, '分管下属调休1天以内[含1天]审批权限', 'moveRestDayOfficeApprove', 1, 'METHOD', 'moveRestDayOfficeApprove()', '', '2011-07-26 00:00:00', '2011-07-27 09:37:43'),
+(77, '分管下属调休1天以上审批权限', 'moveRestDayVicePrincipalApprove', 2, 'METHOD', 'moveRestDayVicePrincipalApprove()', '', '2011-07-26 00:00:00', '2011-07-27 09:37:28'),
+(79, '所有审批权限', 'moveRestDayAllApprove', 3, 'METHOD', 'moveRestDayAllApprove()', '', '2011-07-26 00:00:00', '2011-07-27 09:37:57'),
+(80, '销假审批权限', 'takeLeaveTerminateApprove', 4, 'METHOD', 'takeLeaveTerminateApprove()', '', '2011-07-27 00:00:00', '2011-07-27 14:40:59');
 
 -- --------------------------------------------------------
 
@@ -912,7 +920,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_operation_dam_relationship` (
   `operation_id` bigint(20) NOT NULL,
   `dam_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=78 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=85 ;
 
 --
 -- 转存表中的数据 `wlzx_system_operation_dam_relationship`
@@ -980,7 +988,11 @@ INSERT INTO `wlzx_system_operation_dam_relationship` (`id`, `operation_id`, `dam
 (74, 70, 74),
 (75, 71, 75),
 (76, 72, 76),
-(77, 73, 77);
+(77, 73, 77),
+(80, 76, 80),
+(81, 77, 81),
+(83, 79, 83),
+(84, 80, 84);
 
 -- --------------------------------------------------------
 
