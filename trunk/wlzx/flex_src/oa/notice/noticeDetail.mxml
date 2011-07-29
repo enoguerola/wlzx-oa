@@ -32,9 +32,12 @@
 		private function init():void{
 			_id = ((Object)(this.owner)).id;
 			this.addEventListener(IndexChangedEvent.CHANGE, change);
-			detail();
+			search();
 		}
+		public function search(){
+			detail();
 			
+		}	
 		public function change(event:IndexChangedEvent):void{
 			noticeServiceRO.loadNoticeInfoById(_id);
 		}

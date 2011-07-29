@@ -49,8 +49,14 @@
 			
 			private function init():void{
 				var id:String=((Object)(this.owner)).id;
+				formId=id;
 				lockWin();
-				detailApply(id);
+				search();
+				//detailApply(id);
+			}
+			private var formId:String=null;
+			public function search(){
+				detailApply(formId);
 			}
 			protected function systemFaultHandler(event:FaultEvent):void {
 				unLockWin();
