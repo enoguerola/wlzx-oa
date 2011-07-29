@@ -19,7 +19,7 @@ public interface NoticeService {
 	
 	boolean deleteNoticeById(String id);
 	
-	public List<NoticeModel> getDepartmentNotice(String beginDate, String endDate)throws ServiceException;
+	public List<NoticeModel> getDepartmentNotice(String beginDate, String endDate,String departments)throws ServiceException;
 	
 	public List<NoticeModel> getSchoolNotice(String beginDate, String endDate)throws ServiceException;
 	

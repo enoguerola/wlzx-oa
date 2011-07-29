@@ -207,7 +207,7 @@ public class NoticeServiceImpl implements NoticeService {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<NoticeModel> getDepartmentNotice(String beginDate, String endDate) throws ServiceException {
+	public List<NoticeModel> getDepartmentNotice(String beginDate, String endDate,String departments) throws ServiceException {
 		// TODO Auto-generated method stub
 		DetachedCriteria criteria = DetachedCriteria.forClass(NoticeModel.class);
 		if(StringUtils.isNotEmpty(beginDate))
@@ -216,20 +216,23 @@ public class NoticeServiceImpl implements NoticeService {
 			criteria.add(Restrictions.sqlRestriction("postTime <= '"+endDate+" 23:59:59'"));
 		criteria.add(Restrictions.eq("scope", NoticeModel.EScope.Department.getValue()));
 		criteria.add(Restrictions.eq("status", NoticeModel.EStatus.Published.getValue()));
+		if(StringUtils.isNotEmpty(departments))
+			criteria.add(Restrictions.sqlRestriction("post_department_id in("+departments+")"));
 		criteria.addOrder(Order.desc("postTime"));
-		if(!SecurityUserHolder.isSuperRootUser()){
-			UserModel userModel = SecurityUserHolder.getCurrentUser();
-			Set<DepartmentModel> set = userModel.getAllDepartments();
-			
-			Set<String> stringSet = new HashSet<String>();
-			if(set!=null&&set.size()>0){
-				for(DepartmentModel model: set){
-					stringSet.add(model.getId());
-				}
-				criteria.add(Restrictions.in("postDepartmentId", stringSet.toArray()));
-				
-			}
-		}
+
+//		if(!SecurityUserHolder.isSuperRootUser()){
+//			UserModel userModel = SecurityUserHolder.getCurrentUser();
+//			Set<DepartmentModel> set = userModel.getAllDepartments();
+//			
+//			Set<String> stringSet = new HashSet<String>();
+//			if(set!=null&&set.size()>0){
+//				for(DepartmentModel model: set){
+//					stringSet.add(model.getId());
+//				}
+//				criteria.add(Restrictions.in("postDepartmentId", stringSet.toArray()));
+//				
+//			}
+//		}
 
 		
 		return noticeDAO.getListByCriteria(criteria);

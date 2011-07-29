@@ -56,8 +56,10 @@ package system.entity
 			var list:ArrayCollection=getAllRolesList();
 			for (var i:int = 0; i < list.length; i++){
 				var _role:Object = list.getItemAt(i);	
-				if(_role.getBelongDepartment()!=null)
+				if(_role.getBelongDepartment()!=null){
+					if(results.contains(_role.getBelongDepartment())==false)
 					results.addItem(_role.getBelongDepartment());
+				}
 			}
 			return results;
 		}
