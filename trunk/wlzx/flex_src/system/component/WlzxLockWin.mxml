@@ -9,7 +9,7 @@
 		<![CDATA[ 
 			import  org.bytearray.gif.player.GIFPlayer;	
 			public var gifPath:String="resources/common/ui/loading.gif";
-			public function init():void { 
+			private function init():void { 
 				var myGIFPlayer:GIFPlayer = new GIFPlayer(true); 
 				var request:URLRequest = new URLRequest(gifPath); 
 				myGIFPlayer.load(request); 

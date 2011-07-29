@@ -3,18 +3,30 @@
 		   xmlns:flexcalendar="com.flexcalendar.components.calendar.*"
 		   xmlns:myflexcalendar="oa.schedule.flexCalendar"
 		   xmlns:component="system.component.*"
+		   xmlns:valueObjects="oa.entity.*"
 		   height="100%" width="100%" creationComplete="init();" xmlns:flexCalendar="oa.schedule.flexCalendar.*"
 		  >
 
 	<!-- To build with maven comment this line -->
 	<!--<mx:Style source="flex3/defaults.css" />-->
-	
+	<mx:Metadata>
+		[Event(type="system.event.BaseEvent", name="reloadModule")]
+	</mx:Metadata>
+	<!--<mx:RemoteObject id="scheduleServiceRO" destination="scheduleServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+		<mx:method name="getSchedulesByConditions"  concurrency="last"  result="getSchedulesByConditions_resultHandler(event);" />
+	</mx:RemoteObject>-->
 	<mx:RemoteObject id="scheduleServiceRO" destination="scheduleServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 		<mx:method name="getSchedulesByConditions"  concurrency="last"  result="getSchedulesByConditions_resultHandler(event);" />
+		<mx:method name="addSchedule"  concurrency="last"  result="addSchedule_resultHandler(event);" />
+		<mx:method name="updateSchedule"  concurrency="last"  result="updateSchedule_resultHandler(event);" />
+		<mx:method name="deleteSchedule"  concurrency="last"  result="deleteSchedule_resultHandler(event);" />
+		<mx:method name="finishSchedule"  concurrency="last"  result="finishSchedule_resultHandler(event);" />
+		<mx:method name="getSchedule"  concurrency="last"  result="getSchedule_resultHandler(event);" />
 	</mx:RemoteObject>
-	<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+	<valueObjects:ScheduleModel id="model"/>
+<!--	<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 		<mx:method name="getDepartmentBySymbol"  concurrency="last"  result="getDepartmentBySymbolResult(event);" />
-	</mx:RemoteObject>
+	</mx:RemoteObject>-->
 	<mx:Script>
 		<![CDATA[
 			import com.flexcalendar.components.calendar.core.DateRange;
@@ -36,8 +48,8 @@
 			import mx.controls.Alert;
 			import mx.events.CalendarLayoutChangeEvent;
 			import mx.events.CloseEvent;
-			import mx.events.FlexEvent;
 			import mx.events.DragEvent;
+			import mx.events.FlexEvent;
 			import mx.events.ItemClickEvent;
 			import mx.formatters.DateFormatter;
 			import mx.managers.*;
@@ -48,6 +60,7 @@
 			
 			import system.component.WlzxLockWin;
 			import system.entity.*;
+			import system.event.BaseEvent;
 			import system.utils.CommonUtils;
 			[Bindable]
 			public var dp:CalendarDataProvider;
@@ -55,7 +68,7 @@
 			[Bindable]
 			public var visibleDateRange:DateRange;
 			
-			public var scheduleScope:ArrayCollection = new ArrayCollection(); 
+			public var scheduleScope:ArrayCollection = null; 
 			public var scheduleState:ArrayCollection = new ArrayCollection( 
 				[ {label:"全部", data:null},  
 					{label:"进行中", data:1},
@@ -63,7 +76,10 @@
 			
 			protected function init(event:Event = null):void {
 				
-				
+				addEventListener(system.event.BaseEvent.Reload,function():void{
+					//Alert.show("aaaaaaa");
+					search();
+				});
 				var today:Date = DateUtils.startOfDay(new Date());
 				
 				var startRange:Date = DateUtils.startOfDay(new Date());
@@ -76,7 +92,7 @@
 				visibleDateRange = new DateRange(startRange, endRange);
 				fromDateChooser.text=CommonUtils.formatDate(startRange,"YYYY-MM-DD");
 				toDateChooser.text=CommonUtils.formatDate(endRange,"YYYY-MM-DD");
-				systemServiceRO.getDepartmentBySymbol("root");//初始化部门数据字典
+			//	systemServiceRO.getDepartmentBySymbol("root");//初始化部门数据字典
 
 				fromDateChooser.addEventListener(CalendarLayoutChangeEvent.CHANGE, updateRange);
 				toDateChooser.addEventListener(CalendarLayoutChangeEvent.CHANGE, updateRange);
@@ -87,6 +103,91 @@
 				schedule.height=0;
 				schedule.visible=false;
 				
+//				var _init1:Object = {data:null,label:'全部'};
+//				scheduleScope.addItemAt(_init1,0);
+				scheduleScope=new ArrayCollection();
+				//var _init2:Object = ;
+				if(parentApplication.currentUser.hasDam('public_schedule_main@defaultVisit@@notSchoolFilter@')){
+					if(!scheduleScope.contains({data:'0',label:'学校日程'}))
+						scheduleScope.addItemAt({data:'0',label:'学校日程'},0);	
+				}
+				if(parentApplication.currentUser.hasDam('public_schedule_main@defaultVisit@@notselfDepartmentFilter@')){
+					scheduleScope=ArrayCollection(parentApplication.currentUserDepartment);
+//					if(!scheduleScope.contains(_init1))
+//						scheduleScope.addItemAt(_init1,0);
+//					if(!scheduleScope.contains(_init2))
+//						scheduleScope.addItemAt(_init2,1);	
+					
+				}
+				if(parentApplication.currentUser.hasDam('public_schedule_main@defaultVisit@@noFilter@')){
+					scheduleScope=ArrayCollection(parentApplication.allDepartment);
+//					if(!scheduleScope.contains(_init1))
+//						scheduleScope.addItemAt(_init1,0);
+					if(!scheduleScope.contains({data:'0',label:'学校日程'}))
+						scheduleScope.addItemAt({data:'0',label:'学校日程'},0);	
+					
+				}
+//				var dataString:String="";
+//				for(var i:int=0;i<scheduleScope.length-1;i++){
+//					dataString+=scheduleScope.getItemAt(i).data+",";
+//				}
+//				dataString+=scheduleScope.getItemAt(scheduleScope.length-1).data;
+//				scheduleScope.addItemAt({data:dataString, label:"全部"},0);
+				scope.dataProvider=scheduleScope;
+				scope.selectedIndex = 0;
+				
+				if (flexCalendar.itemEditor != null)
+				{
+					flexCalendar.removeEventListener(CalendarMouseEvent.CALENDAR_MOUSE_CLICK, flexCalendar.itemEditor.calendarClickHandler);
+					flexCalendar.removeEventListener(CalendarMouseEvent.CALENDAR_MOUSE_DOUBLE_CLICK, flexCalendar.itemEditor.calendarDoubleClickHandler);
+					flexCalendar.removeEventListener(CalendarMouseEvent.CALENDAR_RENDERER_MOUSE_CLICK, flexCalendar.itemEditor.rendererClickHandler);
+					flexCalendar.removeEventListener(CalendarMouseEvent.CALENDAR_RENDERER_MOUSE_DOUBLE_CLICK, flexCalendar.itemEditor.rendererDoubleClickHandler);
+					flexCalendar.removeEventListener(CalendarMouseEvent.CALENDAR_SPACE_RENDERER_MOUSE_CLICK, flexCalendar.itemEditor.spaceRendererClickHandler);
+					flexCalendar.removeEventListener(CalendarMouseEvent.CALENDAR_SPACE_RENDERER_MOUSE_DOUBLE_CLICK, flexCalendar.itemEditor.spaceRendererDoubleClickHandler);
+					
+					flexCalendar.addEventListener(CalendarMouseEvent.CALENDAR_MOUSE_CLICK,function(event:CalendarMouseEvent):void{
+						//Alert.show(event.type);
+						//						Alert.show(event.selectedDate+"");
+						add(event.selectedDate,new Date(event.selectedDate.time + event.preferredTimeInMills));
+					});
+					flexCalendar.addEventListener(CalendarMouseEvent.CALENDAR_RENDERER_MOUSE_CLICK,function(event:CalendarMouseEvent):void{enterEdit(event.item.itemId)});
+					flexCalendar.addEventListener(CalendarMouseEvent.CALENDAR_SPACE_RENDERER_MOUSE_CLICK,function(event:CalendarMouseEvent):void{
+						add(event.selectedDate,new Date(event.selectedDate.time + event.preferredTimeInMills));
+					});
+					//					flexCalendar.addEventListener(CalendarItemModificationEvent.MODIFICATION_TYPE_ITEM_MOVED,function():void{
+					//						Alert.show("a");
+					//					});
+					//					flexCalendar.addEventListener(CalendarItemModificationEvent.MODIFICATION_TYPE_ITEM_RESIZED,function():void{
+					//						Alert.show("b");
+					//					});
+					
+					//flexCalendar.addEventListener(CalendarMouseEvent.CALENDAR_MOUSE_CLICK,);
+					
+				}
+				
+				callLater(search);
+			}
+			protected function getSchedule_resultHandler(event:ResultEvent):void
+			{
+				model=event.result as ScheduleModel;
+				editPopWin();
+				//				Alert.show(model.title);
+			}
+			protected function addSchedule_resultHandler(event:ResultEvent):void
+			{
+				search();
+			}
+			protected function updateSchedule_resultHandler(event:ResultEvent):void
+			{
+				search();
+			}
+			protected function deleteSchedule_resultHandler(event:ResultEvent):void
+			{
+				search();
+			}
+			protected function finishSchedule_resultHandler(event:ResultEvent):void
+			{
+				search();
 			}
 			protected function getSchedulesByConditions_resultHandler(event:ResultEvent):void
 			{
@@ -103,30 +204,30 @@
 				Alert.show(event.fault.faultString, 'Error');
 				
 			}
-			private function getDepartmentBySymbolResult(event:ResultEvent):void {
-				var _department:DepartmentModel = event.result as DepartmentModel;
-				buildSubDepartments(_department,scheduleScope,0);
-				var _init1:Object = {dataField:null,name:'全部'};
-				scheduleScope.addItemAt(_init1,0);
-				var _init2:Object = {dataField:'0',name:'学校日程'};
-				scheduleScope.addItemAt(_init2,1);
-				scope.selectedIndex = 0;
-				callLater(search);
-			}
-			private function buildSubDepartments(department:DepartmentModel,resultList:ArrayCollection,depth:int):void{
-				var headText:String="";
-				for(var j:int = 0;j<depth;j++)
-					headText=headText.concat("--");
-				headText=headText.concat(department.name);
-				resultList.addItem( {dataField:department.id, name:headText})
-				var list:ArrayCollection = ArrayCollection(department.subordinates);			
-				if(list.length>0){
-					for (var i:int = 0; i < list.length; i++){
-						var _department:DepartmentModel = list.getItemAt(i) as DepartmentModel;	
-						buildSubDepartments(_department,resultList,depth+1);
-					}
-				}		
-			}
+//			private function getDepartmentBySymbolResult(event:ResultEvent):void {
+//				var _department:DepartmentModel = event.result as DepartmentModel;
+//				buildSubDepartments(_department,scheduleScope,0);
+//				var _init1:Object = {dataField:null,name:'全部'};
+//				scheduleScope.addItemAt(_init1,0);
+//				var _init2:Object = {dataField:'0',name:'学校日程'};
+//				scheduleScope.addItemAt(_init2,1);
+//				scope.selectedIndex = 0;
+//				callLater(search);
+//			}
+//			private function buildSubDepartments(department:DepartmentModel,resultList:ArrayCollection,depth:int):void{
+//				var headText:String="";
+//				for(var j:int = 0;j<depth;j++)
+//					headText=headText.concat("--");
+//				headText=headText.concat(department.name);
+//				resultList.addItem( {dataField:department.id, name:headText})
+//				var list:ArrayCollection = ArrayCollection(department.subordinates);			
+//				if(list.length>0){
+//					for (var i:int = 0; i < list.length; i++){
+//						var _department:DepartmentModel = list.getItemAt(i) as DepartmentModel;	
+//						buildSubDepartments(_department,resultList,depth+1);
+//					}
+//				}		
+//			}
 			//隐藏水印代码
 			private function hideWaterMark():void{
 				var sy:Sprite=flexCalendar.getChildAt(3) as Sprite;
@@ -167,7 +268,7 @@
 				}
 				
 			}
-			private function search():void{
+			public function search():void{
 				//Alert.show("aa");
 				lockWin();
 				var scheduleBeginDate:String=fromDateChooser.text;
@@ -184,7 +285,7 @@
 				//Alert.show("a");
 				var item:Object=scope.selectedItem;
 				//Alert.show(item.name);
-				var scheduleScope:String=item.dataField;
+				var scheduleScope:String=item.data;
 				//Alert.show(scheduleScope);
 				if(scheduleScope==null){
 					scheduelDepartmentShare=null;
@@ -229,6 +330,155 @@
 					job.send();
 				}
 			}
+			import mx.core.FlexGlobals;
+			import mx.managers.PopUpManager;
+			import com.flexcalendar.components.calendar.core.dataModel.*;
+			public var pop:MyBaloonEditorPanel=null;
+			private var converter:MyItemEditorVOConverter = new MyItemEditorVOConverter();
+			public function add(beginDate:Date=null,endDate:Date=null):void{
+				if(beginDate==null)beginDate=new Date();
+				if(endDate==null)endDate=new Date(beginDate.fullYear,beginDate.month,beginDate.date,beginDate.hours+1,beginDate.minutes,beginDate.seconds,beginDate.milliseconds);
+				if(pop!=null)PopUpManager.removePopUp(pop);
+				pop=MyBaloonEditorPanel(PopUpManager.createPopUp(this,MyBaloonEditorPanel,true)); 
+				pop.owner=this;
+				PopUpManager.centerPopUp(pop);
+				pop.percentHeight=100;
+				pop.percentWidth=100;
+				pop.x=FlexGlobals.topLevelApplication.stage.stageWidth/2-pop.width/2;
+				pop.y=FlexGlobals.topLevelApplication.stage.stageHeight/2-pop.height/2;
+				pop.toolTip="Add";
+				var calendarItem:CalendarItem;calendarItem 
+				=new CalendarItem(beginDate,endDate,"新日程");
+				pop.item = converter.calendarItemToItemEditorVO(calendarItem);
+				pop.cancelCallback=function():void{
+					PopUpManager.removePopUp(pop);
+				};
+				pop.saveCallback = function():void{
+					model=new ScheduleModel();
+					model.beginTime=CommonUtils.formatDate(pop.item.start);
+					model.endTime=CommonUtils.formatDate(pop.item.end);
+					model.title=pop.item.summary;
+					model.content=pop.item.description;
+					model.type=pop.item.type;
+					model.departmentShare=int(pop.item.departmentShare);
+					model.schoolShare=int(pop.item.schoolShare);
+					model.emergence=pop.item.emergence;
+					model.finishStatus=0;
+					model.posterId=this.parentApplication.currentUser.id;
+					//					Alert.show(pop.item.endDate+"");
+					//					Alert.show(pop.item.endDateSpecified+"");
+					if(pop.item.endDateSpecified)
+						model.repeatEndTime=CommonUtils.formatDate(pop.item.endDate);
+					model.repeatStatus=int(pop.item.recurring);
+					model.repeatInterval=pop.item.interval;
+					model.repeatOnDays=int(pop.item.MO)+";"+int(pop.item.TU)+";"+int(pop.item.WE)+";"+int(pop.item.TH)+";"+int(pop.item.FR)+";"+int(pop.item.SA)+";"+int(pop.item.SU);
+					model.repeatType=pop.item.repeatRuleId;
+					model.submitStatus=0;
+					scheduleServiceRO.addSchedule(model);
+					PopUpManager.removePopUp(pop);
+				};
+				pop.deleteCallback = function():void{
+					PopUpManager.removePopUp(pop);
+				};
+				
+				
+			}
+			public  function enterEdit(id:String):void{
+				//				Alert.show(id);
+				scheduleServiceRO.getSchedule(id);
+				
+				
+			}
+			public function editPopWin():void{
+				//					Alert.show("aaa");
+				//					Alert.show(model.beginTime);
+				if(pop!=null)PopUpManager.removePopUp(pop);
+				pop=MyBaloonEditorPanel(PopUpManager.createPopUp(this,MyBaloonEditorPanel,true)); 
+				pop.owner=this;
+				
+				pop.toolTip="Update";
+				
+				var calendarItem:CalendarItem=new CalendarItem(DateFormatter.parseDateString(model.beginTime),DateFormatter.parseDateString(model.endTime),model.title);
+				
+				var recurString:String = new String();
+				recurString += MyItemEditorVOConverter.getFreqType(model.repeatType);
+				recurString += MyItemEditorVOConverter.getByDay2(model.repeatType,model.repeatOnDays);
+				//					Alert.show(MyItemEditorVOConverter.getByDay2(model.repeatType,model.repeatOnDays));
+				recurString += MyItemEditorVOConverter.getInterval(model.repeatInterval);
+				
+				calendarItem.recur = new Recur(recurString);
+				pop.item = converter.calendarItemToItemEditorVO(calendarItem);
+				pop.item.departmentShare=CommonUtils.int2Boolean(model.departmentShare);
+				pop.item.schoolShare=CommonUtils.int2Boolean(model.schoolShare);
+				pop.item.emergence=model.emergence;
+				pop.item.interval=model.repeatInterval;
+				pop.item.recurring=CommonUtils.int2Boolean(model.repeatStatus);
+				pop.item.repeatRuleId=model.repeatType;
+				pop.item.type=model.type;
+				pop.item.endDateSpecified=(model.repeatEndTime!=null?true:false);
+				pop.item.endDate=DateFormatter.parseDateString(model.repeatEndTime);
+				//					pop.item.MO=!model.repeatOnDays.split(";")[0] as Boolean;
+				////					Alert.show(pop.item.MO+"");
+				//					pop.item.TU=Boolean(model.repeatOnDays.split(";")[1]);
+				//					pop.item.WE=Boolean(model.repeatOnDays.split(";")[2]);
+				//					pop.item.TH=Boolean(model.repeatOnDays.split(";")[3]);
+				//					pop.item.FR=Boolean(model.repeatOnDays.split(";")[4]);
+				//					pop.item.SA=Boolean(model.repeatOnDays.split(";")[5]);
+				//					pop.item.SU=Boolean(model.repeatOnDays.split(";")[6]);
+				//					Alert.show(pop.item.SU+"");
+				pop.cancelCallback=function():void{
+					PopUpManager.removePopUp(this);
+				};
+				pop.saveCallback = function():void{
+					//						model=new ScheduleModel();
+					model.beginTime=CommonUtils.formatDate(pop.item.start);
+					model.endTime=CommonUtils.formatDate(pop.item.end);
+					model.title=pop.item.summary;
+					model.content=pop.item.description;
+					model.type=pop.item.type;
+					model.departmentShare=int(pop.item.departmentShare);
+					model.schoolShare=int(pop.item.schoolShare);
+					model.emergence=pop.item.emergence;
+					//						model.finishStatus=0;
+					model.posterId=this.parentApplication.currentUser.id;
+					//					Alert.show(pop.item.endDate+"");
+					//					Alert.show(pop.item.endDateSpecified+"");
+					if(pop.item.endDateSpecified)
+						model.repeatEndTime=CommonUtils.formatDate(pop.item.endDate);
+					else model.repeatEndTime=null;
+					model.repeatStatus=int(pop.item.recurring);
+					model.repeatInterval=pop.item.interval;
+					model.repeatOnDays=int(pop.item.MO)+";"+int(pop.item.TU)+";"+int(pop.item.WE)+";"+int(pop.item.TH)+";"+int(pop.item.FR)+";"+int(pop.item.SA)+";"+int(pop.item.SU);
+					model.repeatType=pop.item.repeatRuleId;
+					//						model.submitStatus=0;
+					scheduleServiceRO.updateSchedule(model);
+					PopUpManager.removePopUp(pop);
+				};
+				pop.deleteCallback = function():void{
+					
+					Alert.show("你确定要删除该日程吗?","确认删除",Alert.YES|Alert.NO,null,function(event:CloseEvent):void{
+						if(event.detail == Alert.YES){
+							var id:String=model.id;
+							scheduleServiceRO.deleteSchedule(id);
+							PopUpManager.removePopUp(pop);
+						}
+						
+					},null,Alert.NO);
+				};
+				PopUpManager.centerPopUp(pop);
+				pop.percentHeight=100;
+				pop.percentWidth=100;
+				pop.x=FlexGlobals.topLevelApplication.stage.stageWidth/2-pop.width/2;
+				pop.y=FlexGlobals.topLevelApplication.stage.stageHeight/2-pop.height/2;
+				
+			}
+			
+			public function remove(id:String):void{
+				Alert.show("你确定要删除该日程吗?","确认删除",Alert.YES|Alert.NO,null,function(event:CloseEvent):void{
+					if(event.detail == Alert.YES)
+						scheduleServiceRO.deleteSchedule(id);
+				},null,Alert.NO);
+			}
 		]]>
 	</mx:Script>
 	
@@ -262,7 +512,7 @@
 			<mx:Label text="日程范围：" width="70" >
 				
 			</mx:Label>
-			<mx:ComboBox id="scope" width="130" dataProvider="{scheduleScope}" selectedIndex="0" labelField="name">
+			<mx:ComboBox id="scope" width="130" dataProvider="{scheduleScope}" selectedIndex="0" labelField="label">
 				
 			</mx:ComboBox>
 			<mx:Label text="日程状态：" width="70">
@@ -496,7 +746,7 @@
 		<mx:VBox label="日历视图" width="100%" height="0" name="schedule" id="schedule" horizontalAlign="right">
 			<flexCalendar:MyFlexCalendar license="xxxx-xxx-xxx-xx-xxx" id="flexCalendar" width="100%" height="100%" dataProvider="{dp}" scaleX="1" visibleRange="{visibleDateRange}"
 										 scaleY="1"
-										 calendarMode="{CalendarMode.READ_ONLY_MODE}"
+										 calendarMode="{parentApplication.currentUser.hasDam('publicScheduleEditAndDelete@noFilter@')?CalendarMode.FREE_EDIT_MODE:CalendarMode.READ_ONLY_MODE}"
 										 firstDayOfWeek="1"
 										 initialHourPosition="9"
 										 itemEditor="{new MyBaloonItemEditor(flexCalendar, false, false)}"

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2011 年 07 月 28 日 16:02
+-- 生成日期: 2011 年 07 月 29 日 13:48
 -- 服务器版本: 5.0.91
 -- PHP 版本: 5.2.13
 
@@ -66,20 +66,20 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_data_access_mode` (
   `empty_flag` tinyint(1) NOT NULL default '1',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `symbol` (`symbol`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=85 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=92 ;
 
 --
 -- 转存表中的数据 `wlzx_system_data_access_mode`
 --
 
 INSERT INTO `wlzx_system_data_access_mode` (`id`, `name`, `symbol`, `sequence`, `value`, `detail`, `creation_date`, `modified_date`, `empty_flag`) VALUES
-(8, '全部数据', 'department_notice_read_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-09 00:00:00', '2011-07-22 09:45:36', 1),
+(8, '所有部门公告', 'department_notice_read_main@defaultVisit@@noFilter@', 0, NULL, '', '2011-05-09 00:00:00', '2011-07-28 16:52:42', 1),
 (9, '全部数据', 'notice_list_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-09 00:00:00', '2011-07-22 09:45:36', 1),
-(12, '全部数据', 'public_schedule_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-14 00:00:00', '2011-07-22 09:45:36', 1),
+(12, '所有日程', 'public_schedule_main@defaultVisit@@noFilter@', 0, NULL, '', '2011-05-14 00:00:00', '2011-07-29 10:30:52', 1),
 (13, '全部数据', 'person_schedule_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-14 00:00:00', '2011-07-22 09:45:36', 1),
 (15, '全部数据', 'staff_work_assign_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-14 00:00:00', '2011-07-22 09:45:36', 1),
 (16, '全部数据', 'public_address_book_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-14 00:00:00', '2011-07-22 09:45:36', 1),
-(19, '全部数据', 'staff_file_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-21 00:00:00', '2011-07-22 09:45:36', 1),
+(19, '所有教师数据', 'staff_file_main@defaultVisit@@noFilter@', 0, NULL, '', '2011-05-21 00:00:00', '2011-07-28 17:29:11', 1),
 (20, '全部数据', 'system_account_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-21 00:00:00', '2011-07-22 09:45:36', 1),
 (21, '全部数据', 'oa_department_set_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-21 00:00:00', '2011-07-22 09:45:36', 1),
 (22, '全部数据', 'oa_role_set_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-05-21 00:00:00', '2011-07-22 09:45:36', 1),
@@ -134,7 +134,14 @@ INSERT INTO `wlzx_system_data_access_mode` (`id`, `name`, `symbol`, `sequence`, 
 (80, '全部数据', 'moveRestDayOfficeApprove@noFilter@', 0, NULL, '', '2011-07-26 00:00:00', '2011-07-27 09:36:37', 1),
 (81, '全部数据', 'moveRestDayVicePrincipalApprove@noFilter@', 0, NULL, NULL, '2011-07-26 00:00:00', '2011-07-26 16:03:36', 1),
 (83, '全部数据', 'moveRestDayAllApprove@noFilter@', 0, NULL, NULL, '2011-07-26 00:00:00', '2011-07-26 16:04:47', 1),
-(84, '全部数据', 'takeLeaveTerminateApprove@noFilter@', 0, NULL, NULL, '2011-07-27 00:00:00', '2011-07-27 14:40:59', 1);
+(84, '全部数据', 'takeLeaveTerminateApprove@noFilter@', 0, NULL, NULL, '2011-07-27 00:00:00', '2011-07-27 14:40:59', 1),
+(85, '所属部门公告', 'department_notice_read_main@defaultVisit@@departmentFilter@', 1, NULL, '', '2011-07-28 00:00:00', '2011-07-28 16:53:22', 0),
+(86, '全部数据', 'staff_edit_delete_so_on@noFilter@', 0, NULL, NULL, '2011-07-28 00:00:00', '2011-07-28 17:47:33', 1),
+(87, '全部数据', 'canShareInSchool@noFilter@', 0, NULL, NULL, '2011-07-29 00:00:00', '2011-07-29 10:03:17', 1),
+(88, '全部数据', 'canShareInDepartment@noFilter@', 0, NULL, NULL, '2011-07-29 00:00:00', '2011-07-29 10:03:44', 1),
+(89, '学校日程', 'public_schedule_main@defaultVisit@@notSchoolFilter@', 1, NULL, '', '2011-07-29 00:00:00', '2011-07-29 10:32:52', 1),
+(90, '所在部门日程', 'public_schedule_main@defaultVisit@@notselfDepartmentFilter@', 1, NULL, '', '2011-07-29 00:00:00', '2011-07-29 10:32:32', 1),
+(91, '全部数据', 'publicScheduleEditAndDelete@noFilter@', 0, NULL, NULL, '2011-07-29 00:00:00', '2011-07-29 10:34:37', 1);
 
 -- --------------------------------------------------------
 
@@ -709,7 +716,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_module_operation_relationship` (
   `module_id` bigint(20) NOT NULL,
   `operation_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=87 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=91 ;
 
 --
 -- 转存表中的数据 `wlzx_system_module_operation_relationship`
@@ -774,7 +781,11 @@ INSERT INTO `wlzx_system_module_operation_relationship` (`id`, `module_id`, `ope
 (82, 44, 76),
 (83, 44, 77),
 (85, 44, 79),
-(86, 41, 80);
+(86, 41, 80),
+(87, 18, 81),
+(88, 12, 82),
+(89, 12, 83),
+(90, 11, 84);
 
 -- --------------------------------------------------------
 
@@ -812,7 +823,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_operation` (
   `modified_date` timestamp NOT NULL default '0000-00-00 00:00:00' on update CURRENT_TIMESTAMP,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `symbol` (`symbol`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=81 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=85 ;
 
 --
 -- 转存表中的数据 `wlzx_system_operation`
@@ -878,7 +889,11 @@ INSERT INTO `wlzx_system_operation` (`id`, `name`, `symbol`, `sequence`, `rs_typ
 (76, '分管下属调休1天以内[含1天]审批权限', 'moveRestDayOfficeApprove', 1, 'METHOD', 'moveRestDayOfficeApprove()', '', '2011-07-26 00:00:00', '2011-07-27 09:37:43'),
 (77, '分管下属调休1天以上审批权限', 'moveRestDayVicePrincipalApprove', 2, 'METHOD', 'moveRestDayVicePrincipalApprove()', '', '2011-07-26 00:00:00', '2011-07-27 09:37:28'),
 (79, '所有审批权限', 'moveRestDayAllApprove', 3, 'METHOD', 'moveRestDayAllApprove()', '', '2011-07-26 00:00:00', '2011-07-27 09:37:57'),
-(80, '销假审批权限', 'takeLeaveTerminateApprove', 4, 'METHOD', 'takeLeaveTerminateApprove()', '', '2011-07-27 00:00:00', '2011-07-27 14:40:59');
+(80, '销假审批权限', 'takeLeaveTerminateApprove', 4, 'METHOD', 'takeLeaveTerminateApprove()', '', '2011-07-27 00:00:00', '2011-07-27 14:40:59'),
+(81, '教师信息修改_转正、离职、退休、删除操作', 'staff_edit_delete_so_on', 0, 'METHOD', 'staffEdit()', '', '2011-07-28 00:00:00', '2011-07-28 17:47:33'),
+(82, '共享为学校日程权限', 'canShareInSchool', 2, 'METHOD', 'canShareInSchool()', '', '2011-07-29 00:00:00', '2011-07-29 10:03:17'),
+(83, '共享为部门日程权限', 'canShareInDepartment', 1, 'METHOD', 'canShareInDepartment()', '', '2011-07-29 00:00:00', '2011-07-29 10:03:44'),
+(84, '公共日程修改删除', 'publicScheduleEditAndDelete', 1, 'METHOD', 'publicScheduleEditAndDelete()', '', '2011-07-29 00:00:00', '2011-07-29 10:34:37');
 
 -- --------------------------------------------------------
 
@@ -891,7 +906,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_operation_dam_relationship` (
   `operation_id` bigint(20) NOT NULL,
   `dam_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=85 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=92 ;
 
 --
 -- 转存表中的数据 `wlzx_system_operation_dam_relationship`
@@ -959,7 +974,14 @@ INSERT INTO `wlzx_system_operation_dam_relationship` (`id`, `operation_id`, `dam
 (80, 76, 80),
 (81, 77, 81),
 (83, 79, 83),
-(84, 80, 84);
+(84, 80, 84),
+(85, 8, 85),
+(86, 81, 86),
+(87, 82, 87),
+(88, 83, 88),
+(89, 12, 89),
+(90, 12, 90),
+(91, 84, 91);
 
 -- --------------------------------------------------------
 
@@ -1052,7 +1074,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_role_dam_relationship` (
   `role_id` bigint(20) NOT NULL,
   `dam_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=356 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=362 ;
 
 --
 -- 转存表中的数据 `wlzx_system_role_dam_relationship`
@@ -1068,11 +1090,8 @@ INSERT INTO `wlzx_system_role_dam_relationship` (`id`, `role_id`, `dam_id`) VALU
 (57, 1, 15),
 (58, 1, 16),
 (59, 1, 13),
-(63, 1, 12),
 (66, 1, 9),
-(67, 1, 8),
 (68, 1, 28),
-(69, 1, 31),
 (70, 1, 27),
 (71, 1, 33),
 (72, 1, 32),
@@ -1312,7 +1331,12 @@ INSERT INTO `wlzx_system_role_dam_relationship` (`id`, `role_id`, `dam_id`) VALU
 (352, 18, 9),
 (353, 18, 8),
 (354, 18, 54),
-(355, 18, 50);
+(355, 18, 50),
+(356, 1, 85),
+(357, 1, 8),
+(359, 1, 87),
+(360, 1, 90),
+(361, 1, 88);
 
 -- --------------------------------------------------------
 
@@ -1504,8 +1528,8 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_user` (
 --
 
 INSERT INTO `wlzx_system_user` (`id`, `symbol`, `sequence`, `name`, `password`, `last_login_time`, `last_login_ip`, `account_style`, `person_id`, `person_name`, `email`, `creation_date`, `modified_date`, `active`, `main_role_id`, `main_department_id`) VALUES
-(1, 'super_root', 0, 'super_root', '134bca5421a15476a1e5ebaebdba1ede', '2011-07-28 14:36:42', '127.0.0.1', -1, NULL, NULL, NULL, '2011-05-07 11:04:22', '2011-07-05 17:33:02', 1, NULL, NULL),
-(708, '666888', 0, '666888', '75e266f182b4fa3625d4a4f4f779af54', '2011-07-28 15:57:10', '127.0.0.1', 0, NULL, NULL, '', '2011-07-05 12:57:49', '2011-07-05 12:57:51', 1, 1, 1),
+(1, 'super_root', 0, 'super_root', '134bca5421a15476a1e5ebaebdba1ede', '2011-07-29 13:33:31', '127.0.0.1', -1, NULL, NULL, NULL, '2011-05-07 11:04:22', '2011-07-05 17:33:02', 1, NULL, NULL),
+(708, '666888', 0, '666888', '75e266f182b4fa3625d4a4f4f779af54', '2011-07-29 13:33:18', '127.0.0.1', 0, NULL, NULL, '', '2011-07-05 12:57:49', '2011-07-05 12:57:51', 1, 1, 1),
 (709, '666900', 0, '666900', '2e6d1125057ec7c4402a5a2ad84f6601', '2011-07-26 11:52:55', '127.0.0.1', 0, NULL, NULL, '', '2011-07-05 12:57:51', '2011-07-05 12:57:52', 1, 20, 1),
 (710, '666988', 0, '666988', 'cb3d82f7133330c48bee639908125906', NULL, '', 0, NULL, NULL, '', '2011-07-05 12:57:52', '2011-07-05 12:57:53', 1, NULL, 1),
 (711, '666898', 0, '666898', '25eb84aab86275ed44073ce95057b9c4', NULL, '', 0, NULL, NULL, '', '2011-07-05 12:57:53', '2011-07-05 12:57:55', 1, NULL, 1),

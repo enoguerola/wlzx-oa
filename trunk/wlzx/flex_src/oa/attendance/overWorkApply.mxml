@@ -202,7 +202,7 @@
 				var allList:ArrayCollection=event.result as ArrayCollection;
 				applyTable.initdata(allList);
 			}
-			private function search():void{
+			public function search():void{
 				overWorkServiceRO.getUserOverWorkApplies(this.parentApplication.currentUser.id);
 			}
 			private function addInit():void{

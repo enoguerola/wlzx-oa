@@ -152,7 +152,7 @@
 				lockWin();
 				applyServiceRO.getApplyById(applyId);
 			}
-			private function search():void{
+			public function search():void{
 				lockWin();
 				applyServiceRO.personalApplySearch();
 			}

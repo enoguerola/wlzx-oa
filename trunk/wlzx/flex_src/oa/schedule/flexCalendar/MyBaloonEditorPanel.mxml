@@ -219,10 +219,10 @@
 			<mx:Label text="{resourceManager.getString('FlexCalendar','editor.emergence')}" width="{descWidth}"/>
 			<mx:ComboBox id="emergence" labelField="label" dataProvider="{emergences}" change="item.emergence = emergence.selectedItem.data"/>
 		</mx:HBox>
-		<mx:HBox horizontalGap="10" width="100%">
+		<mx:HBox horizontalGap="10" width="100%" visible="{item.type==1}">
 			<mx:Label text="{resourceManager.getString('FlexCalendar','editor.share')}" width="{descWidth}"/>
-			<mx:CheckBox id="schoolShare" label="{resourceManager.getString('FlexCalendar','editor.schoolShare')}" change="item.schoolShare = schoolShare.selected" enabled="{item.type==1}"/>
-			<mx:CheckBox id="departmentShare" label="{resourceManager.getString('FlexCalendar','editor.departmentShare')}" change="item.departmentShare = departmentShare.selected" enabled="{item.type==1}"/>
+			<mx:CheckBox id="schoolShare" label="{resourceManager.getString('FlexCalendar','editor.schoolShare')}" change="item.schoolShare = schoolShare.selected"   enabled="{parentApplication.currentUser.hasDam('canShareInSchool@noFilter@')}"/>
+			<mx:CheckBox id="departmentShare" label="{resourceManager.getString('FlexCalendar','editor.departmentShare')}" change="item.departmentShare = departmentShare.selected"  enabled="{parentApplication.currentUser.hasDam('canShareInDepartment@noFilter@')}"/>
 		</mx:HBox>
 	
 		<mx:HBox horizontalGap="10" width="100%">

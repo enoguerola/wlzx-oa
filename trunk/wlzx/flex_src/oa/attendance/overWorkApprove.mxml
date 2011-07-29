@@ -291,7 +291,7 @@
 				applyTable.initdata(allList);
 				unLockWin();
 			}
-			private function search():void{
+			public function search():void{
 				lockWin();
 				var teacher:String=search_account_id.text;
 				var status:String=search_state.selectedItem.data;

@@ -1,0 +1,636 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Module xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		   xmlns:s="library://ns.adobe.com/flex/spark" 
+		   xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:valueObjects="basic.entity.*" xmlns:mutiComboBox="system.component.mutiComboBox.*" xmlns:component="system.component.*" layout="vertical" width="100%" height="100%" creationComplete="init();" xmlns:staff="basic.staff.*">
+	
+	
+	<fx:Script>
+		<![CDATA[
+			import basic.entity.*;
+			import basic.service.TeacherRemoteService;
+			import basic.utils.DateUtil;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.CalendarLayoutChangeEvent;
+			import mx.events.CloseEvent;
+			import mx.events.FlexEvent;
+			import mx.events.ValidationResultEvent;
+			import mx.formatters.DateFormatter;
+			import mx.modules.*;
+			import mx.rpc.events.*;
+			import mx.validators.Validator;
+			
+			import system.entity.*;
+			import system.event.UploadEvent;
+			import system.utils.ComboxUtils;
+			import system.utils.CommonUtils;
+			
+			private var validatorArr:Array;
+			private var createDate:Date;
+			private var modifiedDate:Date;
+			private var style:int;
+			[binary]
+			private var teacherId:String;
+			private var userID:String;
+			private var showFirst:Boolean;
+			
+			public var sexArr:ArrayCollection = new ArrayCollection(
+				[    
+					{data:"0", label:"男"}, 
+					{data:"1", label:"女"}
+				]                
+			);
+			public var marriageArr:ArrayCollection = new ArrayCollection(
+				[    
+					{data:"0", label:"未婚"}, 
+					{data:"1", label:"已婚"}
+				]                
+			);
+			
+			public var politicArr:ArrayCollection = new ArrayCollection(
+				[    
+					{data:"0", label:"党员"}, 
+					{data:"1", label:"团员"},
+					{data:"2", label:"其他"}
+				]                
+			);
+			
+			public var educationArr:ArrayCollection = new ArrayCollection(
+				[    
+					{data:"0", label:"本科"}, 
+					{data:"1", label:"高中"},
+					{data:"2", label:"大专"},
+					{data:"3", label:"硕士"},
+					{data:"4", label:"博士"}
+				]                
+			);
+			
+			public var statusArr:ArrayCollection = new ArrayCollection(
+				[    
+					{data:"0", label:"正式"}, 
+					{data:"1", label:"适用"},
+					{data:"2", label:"离职"},
+					{data:"3", label:"离休"}
+				]                
+			);
+			
+			public var departmentList:ArrayCollection = new ArrayCollection();
+			
+			public var roleList:ArrayCollection = new ArrayCollection();
+			
+			private var file:FileReference;
+			private var path:String;
+			[Bindable] 
+			private var imageSrc:String;  
+			
+			private function init():void
+			{
+				systemServiceRO.getDepartmentBySymbol("root");//初始化部门数据字典
+				
+				showFirst = true;
+				
+				callLater(initStaffWin);
+				
+			}
+			
+			private function initStaffWin():void{
+				
+				var parms:String=((Object)(this.owner)).id;
+				teacher = new TeacherModel();	
+				if(parms != null && parms!="" && parms!= "null"){		
+					teacherId = parms ;//弹出窗口时设定的中转参数
+					lockWin();
+					teacherServiceRO.get(teacherId);
+					//staffInputDepartmentPosition.teacherId=teacherId;
+					
+				}else{
+					//					department.selectedIndex=departmentList.length-1;
+					//					systemServiceRO.getDepartmentRoles(department.selectedItem.data);
+					teacher = new TeacherModel();					
+					imageSrc = "uploads/basic/teacherProfile/default_head.jpg";
+				}
+				
+				
+				
+			}
+			
+			protected function teacherGetResult_resultHandler(event:ResultEvent):void
+			{
+				teacher = event.result as TeacherModel;
+				style = teacher.style;
+				createDate = teacher.creationDate;
+				modifiedDate = teacher.modifiedDate;
+				userID = teacher.userID;
+				if(teacher.teacherPhoto != null && teacher.teacherPhoto != "")
+					imageSrc = teacher.teacherPhoto;
+				else
+					imageSrc = "resources/oa/layout/default_head.jpg";
+				teacherName.text = teacher.name;
+				mail.text = teacher.teacherMail;
+				teacherno.text = teacher.teacherNo;
+				sex.selectedIndex = ComboxUtils.findIndex(sexArr, teacher.sex + "");
+				birthday.text = DateUtil.formatDate(teacher.birthday as Date, "YYYY-MM-DD");
+				marriage..selectedIndex = ComboxUtils.findIndex(politicArr, teacher.teacherMarried + "") ;
+				nation.text = teacher.nation;
+				politicStatus.selectedIndex = ComboxUtils.findIndex(politicArr, teacher.politicsStatus + "");
+				idCode.text = teacher.teacherID;
+				nativePlace.text = teacher.teacherNativePlace;
+				homePhone.text = teacher.homePhone;
+				cellPhone.text = teacher.teacherMobilePhone;
+				education..selectedIndex = ComboxUtils.findIndex(politicArr, teacher.teacherEducation) ;
+				profession.text = teacher.teacherProfession;
+				school.text = teacher.teacherGraduateSchool;
+				professionalTitle.text = teacher.teacherProfessionTitle;
+				skillLevel.text = teacher.teacherSkillLevel;
+				skillLevelDate.text = DateUtil.formatDate(teacher.teacherSkillLevelDate as Date, "YYYY-MM-DD");
+				
+				contactPhone.text = teacher.teacherContactPhone;
+				officePhone.text = teacher.teacherOfficePhone;
+				workDate.text = DateUtil.formatDate(teacher.teacherWorkDate as Date, "YYYY-MM-DD");
+				attendDate.text = DateUtil.formatDate(teacher.teacherAttendDate as Date, "YYYY-MM-DD");
+				teacherAddress.text = teacher.address;
+				
+				department.selectedIndex = ComboxUtils.findIndex(departmentList, teacher.teacherDepartment) ;
+				systemServiceRO.getDepartmentRoles(teacher.teacherDepartment);
+				teacherAccountBridgeServiceRO.get(teacher.id, departments_table.curpage, departments_table.pagecount);
+				
+				//				for(var i:int=0;i<2000;i++){
+				//					trace("");
+				//				}
+				//
+				//				callLater(function():void{
+				//					position.dataProvider=roleList;
+				//					//position.selectedIndex=0;
+				//					callLater(function():void{
+				//						Alert.show(roleList.length+"");
+				//						Alert.show(teacher.teacherPosition);
+				//						Alert.show(ComboxUtils.findIndex(roleList,  teacher.teacherPosition)+"bb");
+				//						position.selectedIndex = ComboxUtils.findIndex(roleList,  teacher.teacherPosition);
+				//					});
+				//
+				//				});
+				//				for (var i:int = 0; i < departmentList.length; i++){
+				//					var _item:Object = departmentList.getItemAt(i);
+				//					if(_item.data==teacher.teacherDepartment){
+				//						this.department.selectedIndex=i;
+				//						break;
+				//					}
+				//				}
+				//				for (var j:int = 0; j < departmentList.length; j++){
+				//					var _item2:Object = departmentList.getItemAt(j);
+				//					if(_item.data==teacher.teacherPosition){
+				//						this.department.selectedIndex=i;
+				//						break;
+				//					}
+				//				}
+				status.selectedIndex = ComboxUtils.findIndex(statusArr, teacher.teacherStatus + "") ;
+				callLater(function():void{
+					showPeriod(teacher.teacherWorkDate, teacher.teacherAttendDate);
+				});
+				unLockWin();
+			}
+			
+			
+			
+			protected function systemFaultHandler(event:FaultEvent):void {
+				Alert.show(event.fault.faultString, 'Error');
+			}
+			
+			
+			
+			
+		
+			
+		
+			
+			protected function teacherExperienceAddResult_resultHandler(event:ResultEvent):void
+			{
+				this.currentState = "list";
+				getExperience();
+			}
+			
+			protected function teacherExperienceRemoveResult_resultHandler(event:ResultEvent):void
+			{
+				this.currentState = "list";
+				getExperience();
+			}
+			
+			protected function teacherExperienceGetResult_resultHandler(event:ResultEvent):void
+			{
+				this.currentState = "list";
+				var allList:ArrayCollection = event.result as ArrayCollection;
+				experiences_table.initdata(allList);
+			}
+			
+			private function getExperience():void
+			{
+				//				Alert.show(teacherId);
+				teacherExperienceServiceRO.get(teacherId, experiences_table.curpage,experiences_table.pagecount);
+			}
+			
+			/**********************
+			 *   relation
+			 * */
+			
+		
+			
+			protected function teacherRelationAddResult_resultHandler(event:ResultEvent):void
+			{
+				this.currentState = "relation_list";
+				getRelation();
+			}
+			
+			protected function teacherRelationRemoveResult_resultHandler(event:ResultEvent):void
+			{
+				this.currentState = "relation_list";
+				getRelation();
+			}
+			
+			protected function teacherRelationGetResult_resultHandler(event:ResultEvent):void
+			{
+				this.currentState = "relation_list";
+				var allList:ArrayCollection = event.result as ArrayCollection;
+				relations_table.initdata(allList);
+			}
+			
+			private function getRelation()
+			{
+				teacherRelationServiceRO.get(teacherId, relations_table.curpage,relations_table.pagecount);
+			}
+			
+			
+			
+			/*
+			*  tab页 跳转到  其他信息时显示
+			*/
+			protected function navigatorcontent1_activateHandler(event:Event):void
+			{
+				// TODO Auto-generated method stub
+				this.currentState = "list";
+				if(showFirst && teacherId != null)
+				{
+					getExperience();
+					getRelation();
+					showFirst = false;
+				}
+			}
+			
+			/**
+			 * Called to format dates in the data grid.
+			 */          
+			private function formatDate(data:Object, column:DataGridColumn):String
+			{
+				return DateUtil.formatDate(data[column.dataField] as Date, "YYYY-MM-DD");
+			}
+			
+			
+			protected function navigatorcontent2_showHandler(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				this.currentState = "department_list";
+			}
+			
+			
+			private function getDepartmentBySymbolResult(event:ResultEvent):void {
+				var _department:DepartmentModel=event.result as DepartmentModel;
+				
+				buildSubDepartments(_department,departmentList,0);
+				//Alert.show(_department.name);
+				systemServiceRO.getDepartmentRoles(_department.id);
+				callLater(function():void{
+					//					department.dataProvider=departmentList;
+					//					var temp:Object=departmentList.getItemAt(0);
+					//					//Alert.show(temp.id+"");
+					
+				});
+			}
+		
+			private function getDepartmentRolesResult(event:ResultEvent):void {
+				roleList.removeAll();
+				var allList:ArrayCollection=event.result as ArrayCollection;
+				if(allList.length>0){
+					for (var i:int = 0; i < allList.length; i++){
+						var _role:RoleModel = allList.getItemAt(i) as RoleModel;
+						var headText:String="";
+						for(var j:int = 0;j<_role.level;j++)
+							headText=headText.concat("--");
+						headText=headText.concat(_role.name);
+						roleList.addItem( {data:_role.id, label:headText})
+					}
+				}	
+				if(teacher!=null&&teacher.id!=null&&teacher.id!="")
+					position.selectedIndex = ComboxUtils.findIndex(roleList,  teacher.teacherPosition);
+				else position.selectedIndex =0;
+				//Alert.show(position.selectedIndex +"a");
+				
+			}
+			private function buildSubDepartments(department:DepartmentModel,resultList:ArrayCollection,depth:int):void{
+				var headText:String="";
+				for(var j:int = 0;j<depth;j++)
+					headText = headText.concat("--");
+				headText = headText.concat(department.name);
+				resultList.addItem( {data:department.id, label:headText})
+				var list:ArrayCollection = ArrayCollection(department.subordinates);			
+				if(list.length>0){
+					for (var i:int = 0; i < list.length; i++){
+						var _department:DepartmentModel = list.getItemAt(i) as DepartmentModel;	
+						buildSubDepartments(_department,resultList,depth+1);
+					}
+					//					CommonUtils.sortBySequence(resultList);
+				}		
+				
+			}
+			private function departmentSelectionChangedHandlerMain(event:Event):void{
+				var target:mx.controls.ComboBox=event.target as mx.controls.ComboBox
+				systemServiceRO.getDepartmentRoles(target.selectedItem.data);
+				callLater(function():void{
+					position.dataProvider=roleList;
+					position.selectedIndex=0;
+				});
+			}
+			//			private function departmentSelectionChangedHandler(event:Event):void{
+			//				var target:mx.controls.ComboBox=event.target as mx.controls.ComboBox
+			//				systemServiceRO.getDepartmentRoles(target.selectedItem.data);
+			//				callLater(function():void{
+			//					departmentPosition.dataProvider=roleList;
+			//					departmentPosition.selectedIndex=0;
+			//				});
+			//			}
+			
+			protected function workDate_changeHandler(event:CalendarLayoutChangeEvent):void
+			{
+				// TODO Auto-generated method stub
+				changeHandler(event.newDate, workPeriod);
+			}
+			
+			private function changeHandler(date:Date, target):void
+			{
+				if(date == null)
+					return ;
+				var currentDate:Date = new Date();
+				var text:String = "";
+				var _year:int = (currentDate.getFullYear() - date.getFullYear());
+				if(_year > 0)
+					text = _year + "年"
+				var _month:int = (currentDate.getMonth() - date.getMonth());
+				if(_month > 0)
+					text += _month + "月";
+				target.text = text;
+			}
+			
+			
+			protected function attendDate_changeHandler(event:CalendarLayoutChangeEvent):void
+			{
+				// TODO Auto-generated method stub
+				changeHandler(event.newDate, attendPeriod);
+			}
+			
+			private function showPeriod(workDate:Date, attendDate:Date):void
+			{
+				changeHandler(workDate, workPeriod);
+				changeHandler(attendDate, attendPeriod);
+			}
+			import system.component.WlzxLockWin;
+			import mx.core.FlexGlobals;
+			import mx.managers.PopUpManager;
+			private var window:WlzxLockWin=null;
+			private function lockWin():void{
+				if(window==null){
+					window=WlzxLockWin(PopUpManager.createPopUp(this,WlzxLockWin,true)); 
+					PopUpManager.centerPopUp(window);
+					window.percentHeight=100;
+					window.percentWidth=100;
+				}		
+				
+			}
+			private function unLockWin():void{
+				if(window!=null)
+					PopUpManager.removePopUp(window);
+			}
+			protected function teacherDepartmentGetResult_resultHandler(event:ResultEvent):void
+			{
+				var allList:ArrayCollection = event.result as ArrayCollection;
+				departments_table.initdata(allList);
+				unLockWin();
+			}
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+
+		<valueObjects:TeacherModel id="teacher"/>
+		<mx:RemoteObject id="teacherServiceRO" destination="teacherServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+			<mx:method name="get"  concurrency="last"  result="teacherGetResult_resultHandler(event);" />
+		</mx:RemoteObject>
+		<mx:RemoteObject id="teacherExperienceServiceRO" destination="teacherExperienceServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+			<mx:method name="get"  concurrency="last"  result="teacherExperienceGetResult_resultHandler(event);" />
+		</mx:RemoteObject>
+		
+		<mx:RemoteObject id="teacherRelationServiceRO" destination="teacherRelationServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+			<mx:method name="get"  concurrency="last"  result="teacherRelationGetResult_resultHandler(event);" />
+		</mx:RemoteObject>
+		<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+			<mx:method name="getDepartmentBySymbol"  concurrency="last"  result="getDepartmentBySymbolResult(event);" />
+			<mx:method name="getDepartmentRoles"  concurrency="multiple"  result="getDepartmentRolesResult(event);" />
+		</mx:RemoteObject>
+		<mx:RemoteObject id="teacherAccountBridgeServiceRO" destination="teacherAccountBridgeServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+			<mx:method name="get"  concurrency="last"  result="teacherDepartmentGetResult_resultHandler(event);" />
+		</mx:RemoteObject>
+	</fx:Declarations>
+	<mx:VBox borderVisible="true" width="100%" height="100%" borderStyle="solid">
+		
+		<s:VGroup width="100%" height="100%">
+			
+					<mx:Form width="100%"  textAlign="left" labelWidth="70" id="teacherForm">
+							<s:VGroup width="100%" height="100%">							
+								<s:HGroup  width="100%" height="40%">
+									<s:VGroup width="10%" height="100%" >
+										<s:Label>
+											<s:text>基本信息</s:text>
+										</s:Label>
+									</s:VGroup>
+									<s:VGroup width="40%" height="100%">
+										<s:HGroup width="100%">
+											<mx:FormItem label="姓名" width="50%"><s:TextInput id="teacherName" width="100%"/></mx:FormItem>
+											<mx:FormItem label="性别" width="50%">
+												<s:DropDownList id="sex" selectedIndex="0" width="100%" dataProvider="{sexArr}" labelField="label"/> 
+											</mx:FormItem>
+										</s:HGroup>
+										<s:HGroup width="100%">
+											<mx:FormItem label="婚姻状况" width="50%">
+												<s:DropDownList id="marriage" width="100%" selectedIndex="0" dataProvider="{marriageArr}" labelField="label"/>
+											</mx:FormItem>
+											<mx:FormItem label="民族" width="50%"><mx:TextInput id="nation" width="100%"/></mx:FormItem>
+										</s:HGroup>
+										<mx:FormItem label="身份证号" width="100%"><mx:TextInput id="idCode" width="100%"/></mx:FormItem>
+										<mx:FormItem label="邮箱" width="100%"><mx:TextInput id="mail" width="100%"/></mx:FormItem>
+										<mx:FormItem label="家庭地址" width="100%"><mx:TextInput id="teacherAddress" width="100%"/></mx:FormItem>
+										<mx:FormItem label="短号" width="100%"><mx:TextInput id="teacherno" width="100%"/></mx:FormItem>
+									</s:VGroup>
+									<s:VGroup width="30%">
+										<s:HGroup width="100%">
+											<mx:FormItem label="出生年月" width="100%">
+												<mx:DateField yearNavigationEnabled="true" id="birthday" width="100%"  formatString="YYYY-MM-DD"/>
+											</mx:FormItem>
+										</s:HGroup>
+										<mx:FormItem label="政治面貌" width="100%">
+											<s:DropDownList 
+												id="politicStatus" 
+												width="100%" dataProvider="{politicArr}"
+												selectedIndex="0" 
+												labelField="label"/> 
+										</mx:FormItem>
+										<mx:FormItem label="籍贯" width="100%">
+											<mx:TextInput id="nativePlace" width="100%"/>
+										</mx:FormItem>
+										<mx:FormItem label="家庭电话" width="100%">
+											<mx:TextInput id="homePhone" width="100%"/>
+										</mx:FormItem>
+										<mx:FormItem label="手机" width="100%"><mx:TextInput id="cellPhone" width="100%"/></mx:FormItem>
+									</s:VGroup>
+									<s:VGroup width="20%">
+										<mx:FormItem label="照片" width="100%" height="200%">
+											<mx:Image id="imgPhoto" visible="true" autoLoad="true" width="100" height="100" source="{imageSrc}" />
+											
+										</mx:FormItem>
+									</s:VGroup>
+								</s:HGroup>
+								<s:HGroup  width="100%" height="20%">
+									<s:VGroup width="10%" height="100%">
+										<s:Label>
+											<s:text>教育背景</s:text>
+										</s:Label>
+									</s:VGroup>
+									<s:VGroup width="25%">
+										<mx:FormItem label="学历" width="100%">
+											<mx:ComboBox id="education" width="100%" selectedIndex="0" dataProvider="{educationArr}" labelField="label"/>
+										</mx:FormItem>
+										<mx:FormItem label="职称" width="100%">
+											<mx:TextInput id='professionalTitle' width="100%"/>
+										</mx:FormItem>
+									</s:VGroup>
+									<s:VGroup width="30%">
+										<mx:FormItem label="专业" width="100%">
+											<mx:TextInput id='profession' width="100%"/>
+										</mx:FormItem>
+										<mx:FormItem label="技能等级" width="100%">
+											<mx:TextInput id='skillLevel' width="100%"/>
+										</mx:FormItem>
+									</s:VGroup>
+									<s:VGroup width="45%">
+										<mx:FormItem label="毕业院校" width="100%" labelWidth="100">
+											<mx:TextInput id='school' width="90%"/>
+										</mx:FormItem>
+										<mx:FormItem label="技能鉴定时间" width="100%" labelWidth="100">
+											<mx:DateField yearNavigationEnabled="true" id="skillLevelDate" width="90%" formatString="YYYY-MM-DD" />
+										</mx:FormItem>
+									</s:VGroup>
+								</s:HGroup>
+								<s:HGroup  width="100%" height="40%">
+									<s:VGroup width="10%" height="100%">
+										<s:Label>
+											<s:text>温中聘请信息</s:text>
+										</s:Label>
+									</s:VGroup>								
+									<s:VGroup width="100%">
+										<s:HGroup width="100%">
+											<mx:FormItem label="部门" width="20%">
+												<mx:ComboBox  id="department" 
+															  width="100%" labelField="label" dataProvider="{departmentList}"
+															  change="departmentSelectionChangedHandlerMain(event);"/>
+												
+											</mx:FormItem>
+											<mx:FormItem label="职务" width="35%">
+												<mx:ComboBox  width="90%" id="position"  dataProvider="{roleList}" fontSize="12" labelField="label"  textAlign="left" />
+												
+											</mx:FormItem>
+											<mx:FormItem label="办公电话" width="45%">
+												<mx:TextInput id='officePhone' width="90%"/>
+											</mx:FormItem>
+										</s:HGroup>
+										<s:HGroup width="100%">
+											<mx:FormItem label="紧要联络电话" width="25%">
+												<mx:TextInput id='contactPhone' width="100%"/>
+											</mx:FormItem>
+											<mx:FormItem label="何时工作" width="30%">
+												<mx:DateField yearNavigationEnabled="true" id='workDate' width="100%"  formatString="YYYY-MM-DD" change="workDate_changeHandler(event)"/>
+											</mx:FormItem>
+											<mx:FormItem label="工龄" width="45%" labelWidth="100">
+												<mx:TextInput id='workPeriod' width="90%" editable="false"/>
+											</mx:FormItem>
+										</s:HGroup>
+										<s:HGroup width="100%">
+											<mx:FormItem label="入校时间" width="25%">
+												<mx:DateField yearNavigationEnabled="true" id="attendDate" width="100%"  formatString="YYYY-MM-DD" change="attendDate_changeHandler(event)"/>
+											</mx:FormItem>
+											<mx:FormItem label="校龄" width="30%">
+												<mx:TextInput id='attendPeriod' width="100%" editable="false"/>
+											</mx:FormItem>
+											<mx:FormItem label="状态" width="25%" labelWidth="100">
+												<s:DropDownList id='status' width="100%" 
+																dataProvider="{statusArr}" 
+																labelField="label" selectedIndex="0"/>
+											</mx:FormItem>
+										</s:HGroup>
+									</s:VGroup>
+								</s:HGroup>
+								<s:HGroup width="100%">
+									<mx:Panel width="100%" height="100%"  styleName="customPanel" title="部门记录"  cornerRadius="5" borderVisible="false" dropShadowVisible="false">
+										<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="false"   borderAlpha="0.2" verticalAlign="middle"   id="departments_table" pagecount="10"  >				
+											<component:mygridcolumns>
+												
+												<mx:DataGridColumn textAlign="center" headerText="部门" dataField="departmentName" width="150"></mx:DataGridColumn>
+												<mx:DataGridColumn textAlign="center" headerText="职务" dataField="positionName" width="250"></mx:DataGridColumn>
+												
+											</component:mygridcolumns>
+										</component:WlzxPageDataGrid>
+									</mx:Panel>
+								</s:HGroup>
+								
+							</s:VGroup>
+					</mx:Form>
+					<s:Panel width="100%"  title="工作经历"  borderVisible="false" id="work_experience" dropShadowVisible="false">
+						<s:VGroup width="100%" height="100%" id="work_experience_listPanel">
+							
+							<s:VGroup width="100%" height="100%"  gap="10" verticalAlign="middle" horizontalAlign="center">
+								<s:HGroup width="100%" height="100%" paddingLeft="10" paddingRight="10" paddingBottom="10">
+									<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="false"   borderAlpha="0.2" verticalAlign="middle"   id="experiences_table" pagecount="10" >				
+										<component:mygridcolumns>
+											<mx:DataGridColumn textAlign="center" headerText="开始时间" dataField="startDate" width="100" labelFunction="formatDate"></mx:DataGridColumn>
+											<mx:DataGridColumn textAlign="center" headerText="截止时间" dataField="endDate" width="170" labelFunction="formatDate"></mx:DataGridColumn>
+											<mx:DataGridColumn textAlign="center" headerText="工作单位" dataField="company" width="120"></mx:DataGridColumn>
+											<mx:DataGridColumn textAlign="center" headerText="职务" dataField="position" width="120"></mx:DataGridColumn>
+											
+										</component:mygridcolumns>
+									</component:WlzxPageDataGrid>
+								</s:HGroup>
+							</s:VGroup>
+						</s:VGroup>
+						
+					</s:Panel>
+					<s:Panel width="100%"  title="社会关系"  borderVisible="false" id="relations" dropShadowVisible="false">
+						<s:VGroup width="100%" height="100%" id="relation_listPanel" >
+							
+							<s:VGroup width="100%" height="100%"  gap="10" verticalAlign="middle" horizontalAlign="center">
+								<s:HGroup width="100%" height="100%" paddingLeft="10" paddingRight="10" paddingBottom="10">
+									<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="false"   borderAlpha="0.2" verticalAlign="middle"   id="relations_table" pagecount="10"  >				
+										<component:mygridcolumns>
+											
+											<mx:DataGridColumn textAlign="center" headerText="姓名" dataField="name" width="100"></mx:DataGridColumn>
+											<mx:DataGridColumn textAlign="center" headerText="与本人关系" dataField="relation" width="170"></mx:DataGridColumn>
+											<mx:DataGridColumn textAlign="center" headerText="工作单位" dataField="company" width="120"></mx:DataGridColumn>
+											<mx:DataGridColumn textAlign="center" headerText="联系电话" dataField="phone" width="120"></mx:DataGridColumn>
+											
+										</component:mygridcolumns>
+									</component:WlzxPageDataGrid>
+								</s:HGroup>
+							</s:VGroup>
+						</s:VGroup>
+						
+					</s:Panel>
+				
+		</s:VGroup>
+	</mx:VBox>
+</mx:Module>

@@ -177,7 +177,7 @@
 				noticeTable.initdata(allList);
 				
 			}
-			private function search():void{
+			public function search():void{
 				lockWin();
 				var teacher:String=search_account_id.text;
 				var type:String=search_type.selectedItem.data;

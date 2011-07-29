@@ -256,6 +256,11 @@
 				var parent:Object=(Object)(((Object)(this.owner)).owner);
 				parent.addTab("staff_input_menu-edit"+item_id,"教师编辑",parent.nav,"basic/staff/staffInput.swf",null,item_id);
 			}
+			public function editDetail(item_id:String):void
+			{
+				var parent:Object=(Object)(((Object)(this.owner)).owner);
+				parent.addTab("staff_detail"+item_id,"教师详细",parent.nav,"basic/staff/staffDetail.swf",null,item_id);
+			}
 			
 			public function changestatus(item_id:String, status:int):void
 			{
@@ -450,7 +455,7 @@
 							<mx:DataGridColumn textAlign="center" headerText="详细"  width="60">
 								<mx:itemRenderer>
 									<fx:Component>
-										<mx:LinkButton  label="[详细]" click="{this.outerDocument.editItem(data.id);}" >											
+										<mx:LinkButton  label="[详细]" click="{this.outerDocument.editDetail(data.id);}" >											
 										</mx:LinkButton>								
 									</fx:Component>
 								</mx:itemRenderer>

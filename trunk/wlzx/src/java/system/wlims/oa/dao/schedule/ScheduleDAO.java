@@ -9,6 +9,6 @@ import system.wlims.oa.entity.schedule.ScheduleModel;
 public interface ScheduleDAO  extends BaseDAO<ScheduleModel>{
 
 	public List<ScheduleModel> getSchedulesByConditions(String userId, String type,String state,
-			String departmentShare,String departmentId,String schoolShare, String emergence,  String title,
+			String departmentShare,String departmentIds,String schoolShare, String emergence,  String title,
 			String beginDate, String endDate) ;
 }
