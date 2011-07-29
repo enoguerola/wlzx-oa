@@ -52,7 +52,7 @@
 				search();
 			}
 			
-			private function search():void{
+			public function search():void{
 				lockWin();
 				var departmentId:String= treeSelectedItemId();
 				var userId:String=search_account_id.text;

@@ -8,7 +8,9 @@
 		<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" result="systemResultHandler(event);" fault="systemFaultHandler(event);"/>
 		<s:Move id="hideEffect" xTo="{-this.stage.width}" />
 		<s:Move id="showEffect" xFrom="{this.stage.width}"/> 
+		
 	</fx:Declarations>
+	
 	<fx:Script>
 		<![CDATA[
 			import flexlib.controls.IconLoader;
@@ -37,6 +39,7 @@
 			
 			import system.component.WlzxLockWin;
 			import system.entity.*;
+			import system.event.BaseEvent;
 			import system.utils.CommonUtils;
 			private var fade:Fade;
 			private var rotate:Rotate;
@@ -177,8 +180,12 @@
 					var obj:* = navigator.getChildAt(i);
 					if(obj.name == symbol){
 						navigator.selectedIndex = i;
+						obj.child.search();
+						obj.child.dispatchEvent(new BaseEvent(BaseEvent.Reload));
+						//Alert.show(obj.child);
+						
 						if(symbol == "noticeDetial"){
-							obj.detail();
+							obj.child.detail();
 						}
 						return;
 					}

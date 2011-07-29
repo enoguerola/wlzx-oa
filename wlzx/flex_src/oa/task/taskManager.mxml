@@ -164,7 +164,7 @@
 				unLockWin();
 
 			}
-			private function search():void{
+			public function search():void{
 				lockWin();
 				var s_workerIds:String=search_accounts_id.text;
 				var s_assignerId:String=search_assigner_id.text;

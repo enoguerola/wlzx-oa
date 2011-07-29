@@ -57,7 +57,7 @@
 			public var roleList2:ArrayCollection = new ArrayCollection();
 			
 			private var validatorArr:Array;
-			public function init():void{
+			private function init():void{
 				
 				systemServiceRO2.getDepartmentBySymbol("root");//初始化部门数据字典
 				//getDepartment();

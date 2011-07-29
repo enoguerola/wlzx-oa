@@ -426,7 +426,7 @@
 					maxFlag=false;
 				}
 			}
-			private function search():void{
+			public function search():void{
 				//Alert.show("aa");
 				lockWin();
 				var scheduleBeginDate:String=fromDateChooser.text;
