@@ -22,6 +22,7 @@
 			import mx.managers.PopUpManager;
 			import mx.rpc.events.*;
 			import mx.validators.Validator;
+			
 			import system.component.WlzxLockWin;
 			import system.utils.*;
 			
@@ -47,14 +48,18 @@
 			
 			private function init():void{
 				var id:String=((Object)(this.owner)).id;
+				formId=id;
 				lockWin();
-				detailApply(id);
+				search();
 			}
 			protected function systemFaultHandler(event:FaultEvent):void {
 				Alert.show(event.fault.faultString, 'Error');
 				unLockWin();
 			}
-			
+			private var formId:String=null;
+			public function search(){
+				detailApply(formId);
+			}
 			protected function getDetailInfoByIdById_resultHandler(event:ResultEvent):void{
 				form=event.result as TakeLeaveForm;
 				switchDetailTextView();

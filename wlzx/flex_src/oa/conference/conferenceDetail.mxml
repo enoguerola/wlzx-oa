@@ -35,7 +35,13 @@
 			private function init():void{
 				var id:String=((Object)(this.owner)).id;
 				lockWin();
-				conferenceServiceRO.get(id);
+				formId=id;
+				search();
+			}
+			private var formId:String=null;
+			public function search(){
+				conferenceServiceRO.get(formId);
+
 			}
 			protected function systemFaultHandler(event:FaultEvent):void {
 				unLockWin();

@@ -155,7 +155,9 @@
 				if(parms != null && parms!="" && parms!= "null"){		
 					teacherId = parms ;//弹出窗口时设定的中转参数
 					lockWin();
-					teacherServiceRO.get(teacherId);
+					formId=teacherId;
+					search();
+					//teacherServiceRO.get(teacherId);
 					staffInputDepartmentPosition.teacherId=teacherId;
 					
 				}else{
@@ -168,7 +170,11 @@
 				
 				
 			}
-			
+			private var formId:String=null;
+			public function search(){
+				teacherServiceRO.get(formId);
+				
+			}
 			protected function teacherGetResult_resultHandler(event:ResultEvent):void
 			{
 				teacher = event.result as TeacherModel;
