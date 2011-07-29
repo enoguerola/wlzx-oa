@@ -7,6 +7,8 @@
 	</mx:RemoteObject>
 	<mx:Script> 
 		<![CDATA[
+		import basic.utils.DateUtil;
+		
 		import mx.collections.ArrayCollection;
 		import mx.containers.FormItem;
 		import mx.controls.Alert;
@@ -19,9 +21,9 @@
 		import mx.managers.PopUpManager;
 		import mx.rpc.events.*;
 		import mx.validators.Validator;
+		
 		import system.component.WlzxLockWin;
 		import system.utils.*;
-		import basic.utils.DateUtil;
 				
 		private function init():void{
 			var date:Date=new Date();
@@ -30,17 +32,40 @@
 			var parms:String=((Object)(this.owner)).id;
 			if(parms=='department'){
 				noticeScope.text="部门公告";
+				if(parentApplication.currentUser.hasDam("department_notice_read_main@defaultVisit@@departmentFilter@")){
+					//Alert.show("aaaaa");
+					var temp:ArrayCollection=ArrayCollection(parentApplication.currentUserDepartment);
+					var dataString:String="";
+					for(var i:int=0;i<temp.length-1;i++){
+						dataString+=temp.getItemAt(i).data+",";
+					}
+					dataString+=temp.getItemAt(temp.length-1).data;
+					temp.addItemAt({data:dataString, label:"全部"},0);
+					departments.dataProvider=temp;
+				}
+				if(parentApplication.currentUser.hasDam("department_notice_read_main@defaultVisit@@noFilter@")){
+					var temp:ArrayCollection=ArrayCollection(parentApplication.allDepartment);
+					temp.addItemAt({data:null, label:"全部"},0);
+					departments.dataProvider=temp;
+				}
 			}
 			else if(parms=='school') {
 				noticeScope.text="学校公告";
+				departments.visible=false;
+
 			}
 			search();
 		}
 			
 		private function search():void
 		{
-			if(noticeScope.text == "部门公告")
-				noticeServiceRO.getDepartmentNotice(search_date_begin.text,search_date_end.text);
+			
+		
+			if(noticeScope.text == "部门公告"){
+				var item:Object=departments.selectedItem;
+				//Alert.show(item.data);
+				noticeServiceRO.getDepartmentNotice(search_date_begin.text,search_date_end.text,item.data);
+			}
 			else
 				noticeServiceRO.getSchoolNotice(search_date_begin.text,search_date_end.text);
 		}
@@ -69,11 +94,13 @@
 			<mx:HBox width="100%" horizontalAlign="center">
 				<mx:Label  text=""    width="100%"  letterSpacing="5" textAlign="center" fontSize="14"  fontWeight="bold" height="30"  id="noticeScope"/>
 			</mx:HBox>
-			<mx:HBox width="100%" horizontalAlign="right">
-				<mx:Label  text="时间区间"  width="100"  textAlign="right"/>
-				<mx:DateField yearNavigationEnabled="true" id="search_date_begin"   formatString="YYYY-MM-DD"  editable="false" width="120"/>
-				<mx:Label  text="--"  width="20" textAlign="center"/>
-				<mx:DateField yearNavigationEnabled="true" id="search_date_end"  formatString="YYYY-MM-DD" editable="false" width="120"/>
+			<mx:HBox width="100%" horizontalAlign="right"  horizontalGap="0">
+				<mx:Label  text="部门选择："  width="80"  textAlign="right"/>
+				<mx:ComboBox  width="100" id="departments"    labelField="label"  textAlign="left" />
+				<mx:Label  text="时间区间："  width="80"  textAlign="right"/>
+				<mx:DateField yearNavigationEnabled="true" id="search_date_begin"   formatString="YYYY-MM-DD"  editable="false" width="100"/>
+				<mx:Label  text="--"  width="10" textAlign="center"/>
+				<mx:DateField yearNavigationEnabled="true" id="search_date_end"  formatString="YYYY-MM-DD" editable="false" width="100"/>
 				<mx:Button  label="搜索"  width="60"   click="search()"/>
 			</mx:HBox>
 			

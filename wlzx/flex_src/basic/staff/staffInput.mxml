@@ -988,7 +988,7 @@
 										<mx:VBox>
 											<mx:HBox>
 												<mx:Button id="btnBrowse" label="浏览" click="browseHandler(event)" />
-												<mx:Button id="btnUpload" label="上传" click="uploadHandler(event)" visible="false" />
+												<mx:Button id="btnUpload" label="上传" click="uploadHandler(event)" visible="false"  />
 											</mx:HBox>
 											<mx:ProgressBar id="pbrUploadProgress" indeterminate="false" mode="manual"
 															fontWeight="bold" color="red" labelPlacement="bottom" trackHeight="9" visible="false" />
@@ -1072,7 +1072,7 @@
 															dataProvider="{statusArr}" 
 															labelField="label" selectedIndex="0"/>
 										</mx:FormItem>
-										<s:Button click="validateForm(event)" label="保存"/>
+										<s:Button click="validateForm(event)" label="保存"  />
 									</s:HGroup>
 								</s:VGroup>
 							</s:HGroup>
@@ -1113,7 +1113,7 @@
 															<mx:DataGridColumn textAlign="center" headerText="编辑" width="60">
 																<mx:itemRenderer>
 																	<fx:Component>
-																		<mx:LinkButton  label="[编辑]"   click="{this.outerDocument.work_enterEdit(data);}">											
+																		<mx:LinkButton  label="[编辑]"   click="{this.outerDocument.work_enterEdit(data);}"  >											
 																		</mx:LinkButton>										
 																	</fx:Component>
 																</mx:itemRenderer>
@@ -1121,7 +1121,7 @@
 															<mx:DataGridColumn textAlign="center" headerText="删除"  width="60">
 																<mx:itemRenderer>
 																	<fx:Component>
-																		<mx:LinkButton  label="[删除]"   click="{this.outerDocument.work_cancleApply(data.id);}">											
+																		<mx:LinkButton  label="[删除]"   click="{this.outerDocument.work_cancleApply(data.id);}"  >											
 																		</mx:LinkButton>										
 																	</fx:Component>
 																</mx:itemRenderer>
@@ -1169,7 +1169,7 @@
 															<mx:TextInput id="workId" visible="false"/>
 														</mx:GridItem>
 														<mx:GridItem  verticalAlign="middle" horizontalAlign="center" >
-															<mx:Button label="保存" width="60" click="work_save_clickHandler(event)"/>
+															<mx:Button label="保存" width="60" click="work_save_clickHandler(event)" />
 														</mx:GridItem>
 													</mx:GridRow>
 												</mx:Grid>
@@ -1198,14 +1198,14 @@
 															<mx:DataGridColumn textAlign="center" headerText="编辑" width="60">
 																<mx:itemRenderer>
 																	<fx:Component>
-																		<mx:LinkButton  label="[编辑]"   click="{this.outerDocument.relation_enterEdit(data);}">											</mx:LinkButton>										
+																		<mx:LinkButton  label="[编辑]"   click="{this.outerDocument.relation_enterEdit(data);}"  >											</mx:LinkButton>										
 																	</fx:Component>
 																</mx:itemRenderer>
 															</mx:DataGridColumn>
 															<mx:DataGridColumn textAlign="center" headerText="删除"  width="60">
 																<mx:itemRenderer>
 																	<fx:Component>
-																		<mx:LinkButton  label="[删除]"   click="{this.outerDocument.relation_cancleApply(data.id);}">											</mx:LinkButton>										
+																		<mx:LinkButton  label="[删除]"   click="{this.outerDocument.relation_cancleApply(data.id);}" >											</mx:LinkButton>										
 																	</fx:Component>
 																</mx:itemRenderer>
 															</mx:DataGridColumn>
@@ -1254,7 +1254,7 @@
 															<mx:TextInput id="relationId" visible="false"/>
 														</mx:GridItem>
 														<mx:GridItem  verticalAlign="middle" horizontalAlign="center" >
-															<mx:Button label="保存" width="60" click="relation_save_clickHandler(event)"/>
+															<mx:Button label="保存" width="60" click="relation_save_clickHandler(event)"  />
 														</mx:GridItem>
 													</mx:GridRow>
 												</mx:Grid>													

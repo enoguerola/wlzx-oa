@@ -368,7 +368,7 @@
 					<component:WlzxPageDataGrid width="100%" height="100%" paddingLeft="10" paddingRight="10" borderVisible="false"   borderAlpha="0.2" verticalAlign="middle"   id="teacherDG" pagecount="13">				
 						<component:mygridcolumns>
 							
-							<mx:DataGridColumn textAlign="center" headerText="姓名" dataField="name" width="100"></mx:DataGridColumn>
+							<mx:DataGridColumn textAlign="center" headerText="姓名" dataField="name" width="80"></mx:DataGridColumn>
 							<mx:DataGridColumn textAlign="center" headerText="性别" dataField="sex" width="40" labelFunction="formatSex"></mx:DataGridColumn>
 							<mx:DataGridColumn textAlign="center" headerText="出生年月" dataField="birthday" width="100" labelFunction="formatDate"></mx:DataGridColumn>
 							<mx:DataGridColumn textAlign="center" headerText="手机/短号" width="150">
@@ -394,7 +394,7 @@
 							</mx:DataGridColumn>
 
 							<mx:DataGridColumn textAlign="center" headerText="办公电话" dataField="teacherOfficePhone" width="100"></mx:DataGridColumn>
-							<mx:DataGridColumn textAlign="center" headerText="当前状态"  width="60">
+							<mx:DataGridColumn textAlign="center" headerText="状态"  width="60">
 								<mx:itemRenderer>
 									<fx:Component>
 										<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
@@ -406,13 +406,13 @@
 														private function getStatus(data:Object):String{
 															if(data!=null){
 																if(data.teacherStatus==0){
-																	return "正式员工";
+																	return "正式";
 																}else if(data.teacherStatus==1){
-																	return "试用员工";
+																	return "试用";
 																}else if(data.teacherStatus==2){
-																	return "离职员工";
+																	return "离职";
 																}else if(data.teacherStatus==3){
-																	return "退休员工";
+																	return "退休";
 																}
 															}
 															return null;
@@ -428,42 +428,30 @@
 							</mx:DataGridColumn>
 
 							<mx:DataGridColumn textAlign="center" headerText="入校时间" dataField="teacherAttendDate" width="100" labelFunction="formatDate"></mx:DataGridColumn>
-							<mx:DataGridColumn textAlign="center" headerText="离职"  width="60">
+							<mx:DataGridColumn textAlign="center" headerText="操作"  width="320">
 								<mx:itemRenderer>
 									<fx:Component>
-										<mx:LinkButton  label="[离职]" click="{this.outerDocument.changestatus(data.id, 2);}"></mx:LinkButton>										
+										<mx:HBox width="100%" horizontalGap="0">
+											<mx:LinkButton  label="[离职]" click="{this.outerDocument.changestatus(data.id, 2);}" enabled="{parentApplication.currentUser.hasDam('staff_input_main@defaultVisit@@noFilter@')}"></mx:LinkButton>										
+											<mx:LinkButton  label="[退休]" click="{this.outerDocument.changestatus(data.id, 3);}" enabled="{parentApplication.currentUser.hasDam('staff_input_main@defaultVisit@@noFilter@')}">											
+											</mx:LinkButton>	
+											<mx:LinkButton  label="[转正]" click="{this.outerDocument.changestatus(data.id, 0);}" enabled="{parentApplication.currentUser.hasDam('staff_input_main@defaultVisit@@noFilter@')}">											
+											</mx:LinkButton>
+											<mx:LinkButton  label="[编辑]" click="{this.outerDocument.editItem(data.id);}" enabled="{parentApplication.currentUser.hasDam('staff_input_main@defaultVisit@@noFilter@')}">											
+											</mx:LinkButton>
+											<mx:LinkButton  label="[删除]" click="{this.outerDocument.deleteItem(data.id);}" enabled="{parentApplication.currentUser.hasDam('staff_input_main@defaultVisit@@noFilter@')}">											
+											</mx:LinkButton>	
+										</mx:HBox>
+										
 									</fx:Component>
 								</mx:itemRenderer>
 							</mx:DataGridColumn>
-							<mx:DataGridColumn textAlign="center" headerText="退休"  width="60">
+							
+							<mx:DataGridColumn textAlign="center" headerText="详细"  width="60">
 								<mx:itemRenderer>
 									<fx:Component>
-										<mx:LinkButton  label="[退休]" click="{this.outerDocument.changestatus(data.id, 3);}">											
-										</mx:LinkButton>										
-									</fx:Component>
-								</mx:itemRenderer>
-							</mx:DataGridColumn>
-							<mx:DataGridColumn textAlign="center" headerText="转正"  width="60">
-								<mx:itemRenderer>
-									<fx:Component>
-										<mx:LinkButton  label="[转正]" click="{this.outerDocument.changestatus(data.id, 0);}">											
-										</mx:LinkButton>										
-									</fx:Component>
-								</mx:itemRenderer>
-							</mx:DataGridColumn>
-							<mx:DataGridColumn textAlign="center" headerText="编辑" width="60">
-								<mx:itemRenderer>
-									<fx:Component>
-										<mx:LinkButton  label="[编辑]" click="{this.outerDocument.editItem(data.id);}">											
-										</mx:LinkButton>										
-									</fx:Component>
-								</mx:itemRenderer>
-							</mx:DataGridColumn>
-							<mx:DataGridColumn textAlign="center" headerText="删除"  width="60">
-								<mx:itemRenderer>
-									<fx:Component>
-										<mx:LinkButton  label="[删除]" click="{this.outerDocument.deleteItem(data.id);}">											
-										</mx:LinkButton>										
+										<mx:LinkButton  label="[详细]" click="{this.outerDocument.editItem(data.id);}" >											
+										</mx:LinkButton>								
 									</fx:Component>
 								</mx:itemRenderer>
 							</mx:DataGridColumn>
