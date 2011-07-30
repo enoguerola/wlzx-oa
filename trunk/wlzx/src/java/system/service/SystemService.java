@@ -20,6 +20,8 @@ import system.dao.*;
 import system.entity.*;
 import system.utils.CipherUtil;
 import system.utils.StringUtils;
+import system.utils.UtilDateTime;
+import system.vo.MessageVO;
 
 
 
@@ -801,47 +803,96 @@ public class SystemService{
 		return true;
 	}
 	//获得自身接受未读消息
-	public List<MessageModel> getSelfReceivedNotReadMessages(){
+	public List<MessageVO> getSelfReceivedNotReadMessages(String beginDate,String endDate){
 		UserModel user=SecurityUserHolder.getCurrentUser();
 		if(user!=null){
-			return messageDAO.getMessagesByConditions(null, user.getId(), MessageModel.MessageStatus.NOT_READ.getValue());
+			return messageDAO.getMessagesByConditions(null, user.getId(), MessageModel.MessageStatus.NOT_READ.getValue(),beginDate,endDate);
 		}else return null;
 		
 	}
-	//获得自身接受未读消息
-	public List<MessageModel> getSelfReceivedAlreadyReadMessages(){
+	
+	
+	
+	//获得自身接受已读消息
+	public List<MessageVO> getSelfReceivedAlreadyReadMessages(String beginDate,String endDate){
 		UserModel user=SecurityUserHolder.getCurrentUser();
 		if(user!=null){
-			return messageDAO.getMessagesByConditions(null, user.getId(), MessageModel.MessageStatus.ALREADY_READ.getValue());
+			return messageDAO.getMessagesByConditions(null, user.getId(), MessageModel.MessageStatus.ALREADY_READ.getValue(),beginDate,endDate);
 		}else return null;
 		
 	}
 	//获得自身所有发送消息
-	public List<MessageModel> getSelfPostedMessages(){
+	public List<MessageVO> getSelfPostedMessages(String beginDate,String endDate){
 		UserModel user=SecurityUserHolder.getCurrentUser();
 		if(user!=null){
-			return messageDAO.getMessagesByConditions(user.getId(),null, null);
+			return messageDAO.getMessagesByConditions(user.getId(),null, null,beginDate,endDate);
 		}else return null;
 		
 	}
+	//获得消息
+	public MessageModel getMessage(String id){
+		return messageDAO.get(id);
+	}
 	//发送消息
-	public boolean sendMessage(String fromId,String toId,int type,String content){
+	public boolean sendMessage(String fromId,String toIds,int type,String content){
 		MessageModel message=new MessageModel();
-		if(StringUtils.isNotEmpty(fromId)){
-			message.setFrom(userDAO.get(fromId));
-		}
-		if(StringUtils.isNotEmpty(toId)){
-			message.setTo(userDAO.get(toId));
-		}else return false;
+		message.setFromId(fromId);
+		message.setToIds(toIds);
 		message.setType(type);
 		message.setContent(content);
 		message.setCreationDate(new Date());
-		message.setStatus(MessageModel.MessageStatus.NOT_READ.getValue());
+		String[] toIdsAttr=toIds.split(";");
+		String readFlags="";
+		String readDates="";
+		String receiveRemovedFlags="";
+		String postRemovedFlag=MessageModel.MessageStatus.NOT_READ.getValue()+"";
+		for(int i=0;i<toIdsAttr.length;i++){
+			readFlags+=MessageModel.MessageStatus.NOT_READ.getValue()+";";
+			readDates+="NULL;";
+			receiveRemovedFlags+=MessageModel.MessageStatus.NOT_READ.getValue()+";";
+		}
+		message.setReadFlags(readFlags);
+		message.setReadDates(readDates);
+		message.setReceiveRemovedFlags(receiveRemovedFlags);
+		message.setPostRemovedFlag(postRemovedFlag);
 		messageDAO.saveOrUpdate(message);
 		return true;
 	}
 	
+	//删除消息
+	public boolean deleteMessage(String id){
+		MessageModel message=messageDAO.get(id);
+		if(message==null)return false;
+		else messageDAO.remove(message);
+		return true;
+	}
+	//伪删除消息
+	public boolean deletePostMessage(String id){
+		MessageModel message=messageDAO.get(id);
+		if(message==null)return false;
+		message.setPostRemovedFlag("1");
+		messageDAO.saveOrUpdate(message);
+		return true;
+	}
+	//伪删除消息
+	public boolean deleteReceiveMessage(String id,String userId){
+		MessageModel message=messageDAO.get(id);
+		if(message==null)return false;
+		message.setRemoveFlagByUserId("1", userId);
+//		message.setPostRemovedFlag("1");
+		messageDAO.saveOrUpdate(message);
+		return true;
+	}
 	
+	//标记消息为已读
+	public boolean readMessage(String id,String userId){
+		MessageModel message=messageDAO.get(id);
+		if(message==null)return false;
+		message.setReadFlagByUserId(MessageModel.MessageStatus.ALREADY_READ.getValue()+"",userId);
+		message.setReadDateByUserId(UtilDateTime.toDateString(new Date(),"yyyy-MM-dd HH:mm:ss"),userId);
+		messageDAO.saveOrUpdate(message);
+		return true;
+	}
 	public static void main(String[] args) {
 		 ApplicationContext applicationContext = new ClassPathXmlApplicationContext(new String[]{"system/service/system.xml","system/service/spring-system.xml"});	 
 		 SystemService systemService=(SystemService)applicationContext.getBean("systemService");

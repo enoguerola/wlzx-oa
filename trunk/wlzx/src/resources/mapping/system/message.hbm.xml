@@ -8,9 +8,14 @@
 			<column name="id" /> 
 			<generator class="native" />
 		</id>
-	
-		<property name="status" type="int">
-			<column name="status" />
+		<property name="fromId" type="string">
+			<column name="from_id" />
+		</property>
+		<property name="toIds" type="string">
+			<column name="to_ids" />
+		</property>
+		<property name="readFlags" type="string">
+			<column name="read_flags" />
 		</property>
 		<property name="type" type="int">
 			<column name="type" />
@@ -21,10 +26,14 @@
 		<property name="creationDate" type="java.util.Date">
 			<column name="creation_date" />
 		</property>
-		<property name="readDate" type="java.util.Date">
-			<column name="read_date" />
+		<property name="readDates" type="string">
+			<column name="read_dates" />
 		</property>
-		<many-to-one not-found="ignore" class="system.entity.UserModel" name="from" column="from_user_id" lazy="false"/>	
-		<many-to-one not-found="ignore" class="system.entity.UserModel" name="to" column="to_user_id" lazy="false"/>	
+		<property name="postRemovedFlag" type="string">
+			<column name="postRemoved_flag" />
+		</property>
+		<property name="receiveRemovedFlags" type="string">
+			<column name="receiveRemoved_flags" />
+		</property>
 	</class>
 </hibernate-mapping>

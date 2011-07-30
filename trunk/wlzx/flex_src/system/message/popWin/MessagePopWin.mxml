@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox  xmlns:hc="com.hillelcoren.components.*"
+		  xmlns:render="system.component.render.*"
+		  xmlns:mx="http://www.adobe.com/2006/mxml"    xmlns:flexlib="http://code.google.com/p/flexlib/"   creationComplete="init();" width="600" height="320">
+	
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+		<mx:StringValidator id="content_stringValidator" source="{messageContent}" property="text"  requiredFieldError="消息内容不能为空"/>
+		<mx:StringValidator id="toIds_stringValidator"  source="{search_accounts_id}" property="text" requiredFieldError="消息接收人不能为空"/>
+<!--		<valueObjects:MessageModel id="message"/>
+-->		<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+			<mx:method name="sendMessage"  concurrency="last"  result="sendMessageResult_resultHandler(event);" />
+		</mx:RemoteObject>
+		<mx:Component id="searchAccountsDropDownItemRenderer">
+			<render:AdvancedItemRenderer selectedItems="{ outerDocument.search_accounts.selectedItems }" />
+		</mx:Component>
+	
+	<mx:Script> 
+		
+		<![CDATA[  
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.ValidationResultEvent;
+			import mx.formatters.DateFormatter;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.*;
+			import mx.validators.Validator;
+			import mx.validators.ZipCodeValidatorDomainType;
+			
+			import system.message.messageList;
+			import system.utils.*;
+			private var validatorArr:Array;
+			
+			private function init():void
+			{
+				search_accounts.dataProvider=parentApplication.allTeacherAcccounts;
+				callLater(initMessageWin);
+				
+			} 
+			private function initMessageWin():void{
+				if(this.toolTip=='Transpond'){		
+					this.messageWin.title="消息转发";
+					var toIds:String=this.id;
+					var content:String=this.name;
+					messageContent.text=content;
+					search_accounts_id.text=toIds;
+					var array:ArrayCollection=new ArrayCollection();
+					var toIdsAttr:Array=toIds.split(";");
+					for(var i:int=0;i<toIdsAttr.length;i++){
+						if(toIdsAttr[i]!=null&&toIdsAttr[i]!=''){
+							array.addItem(parentApplication.getItemByAccountId(toIdsAttr[i]));
+						}
+					}
+					search_accounts.selectedItems=array;
+//				
+				}else if(this.toolTip=='Add'){
+//					message=new MessageModel();
+					this.messageWin.title="消息发送";					
+					
+				}
+			//	search_accounts.dataProvider=parentApplication.allTeacherAcccounts;
+			}
+			private function sendMessage():void {
+				
+				if (validateInput()) {
+//					message.content=messageContent.text;
+//					if(this.toolTip=='Update'){
+//						systemServiceRO.messageUpdate(message);
+//					}else if(this.toolTip=='Add'){
+//						var parentType:String=this.id;//弹出窗口时设定的中转参数
+//						var parentSymbol:String=this.name;//弹出窗口时设定的中转参数
+//						systemServiceRO.messageAdd(message,parentType,parentSymbol);
+//						
+//					}
+					systemServiceRO.sendMessage(parentApplication.currentUser.id,search_accounts_id.text,1,messageContent.text);
+					
+				} 
+//					else {
+////					var err:ValidationResultEvent;
+////					var errorMessageArray:Array = [];
+////					for each (err in validatorErrorArray) {
+////						var errField:String = FormItem(err.currentTarget.source.parent).label
+////						errorMessageArray.push(errField + ": " + err.message);
+////					}
+////					Alert.show(errorMessageArray.join("\n\n"), "请按照以下错误提示信息重新填写", Alert.OK);
+////					return ;
+//				}
+			}
+			public function validateInput():Boolean
+			{
+				validatorArr = new Array();
+				validatorArr.push(content_stringValidator);
+				validatorArr.push(toIds_stringValidator);
+				var validatorErrorArray:Array = Validator.validateAll(validatorArr);;
+				var isValidForm:Boolean = validatorErrorArray.length == 0;
+				if (isValidForm) {
+					return true;
+				}
+				return false;
+			}
+			protected function sendMessageResult_resultHandler(event:ResultEvent):void
+			{
+//				var message:MessageModel=event.result as MessageModel;
+				if(event.result==true){
+//					var messageData:XML=new XML("<node type='message' label='"+message.name+"[消息]'  symbol='"+message.symbol+"' id='"+message.id+"'></node>");
+//					this.parentApplication.selectedNode.appendChild(messageData);
+					var parent:messageList=this.owner as messageList;
+					parent.search();
+					PopUpManager.removePopUp(this);
+				}else{
+					Alert.show("添加失败");
+				}
+			}
+//			protected function getMessageBySymbol_resultHandler(event:ResultEvent):void
+//			{
+//				message=event.result as MessageModel;
+////				messageName.text=message.name;
+////				creationDate.text=CommonUtils.formatDate(message.creationDate,"YYYY-MM-DD");
+////				detail.text=message.detail;
+////				symbol.text=message.symbol;
+////				sequence.text=message.sequence.toString();
+//				//				messageUrl.text=message.rsValue;
+//				
+//			}
+//			protected function messageUpdate_resultHandler(event:ResultEvent):void
+//			{
+//				var message:MessageModel=event.result as MessageModel;
+//				if(message!=null){
+////					this.parentApplication.selectedNode.@label=message.name+"[消息]";
+////					this.parentApplication.selectedNode.@symbol=message.symbol;
+////					this.parentApplication.selectedNode.@id=message.id;
+//					PopUpManager.removePopUp(this);
+//				}else{
+//					Alert.show("更新失败");
+//				}
+//			}
+			
+			protected function systemFaultHandler(event:FaultEvent):void {
+				Alert.show(event.fault.faultString, 'Error');
+			}
+//			private function resetForm(evt:MouseEvent):void{
+//				if(this.toolTip=='Update'){		
+//					messageName.text=message.name;
+//					creationDate.text=CommonUtils.formatDate(message.creationDate,"YYYY-MM-DD");
+//					detail.text=message.detail;
+//					symbol.text=message.symbol;
+//					sequence.text=message.sequence.toString();
+//					//					messageUrl.text=message.rsValue;
+//				}else if(this.toolTip=='Add'){
+//					messageName.text="";
+//					creationDate.text="";
+//					detail.text="";
+//					symbol.text="";
+//					sequence.text="";
+//					//					messageUrl.text="";			
+//					
+//				}
+//			} 	
+			private function searchAccountsHandleAutoCompleteChange():void
+			{
+				var items:ArrayCollection = search_accounts.selectedItems;
+				search_accounts_id.text="";
+				for(var i:int=0;i<items.length;i++){
+					var item:Object=items.getItemAt(i);
+					if (item != null && item.hasOwnProperty( "id" ))
+					{
+						search_accounts_id.text+=item.id+";";
+					} else{
+						search_accounts_id.text+=";";
+					}             
+				}
+				
+				
+			}
+		]]> 
+		
+	</mx:Script> 
+	
+	<mx:TitleWindow  id="messageWin" width="100%" height="100%"  close="PopUpManager.removePopUp(this);">
+		<mx:Form width="100%" height="100%" id="dform">
+			<mx:FormHeading label="短信息" fontSize="15" width="100%" textAlign="center"/>
+			
+			<mx:FormItem label="消息接收人">
+				<mx:HBox>
+					<hc:AutoComplete id="search_accounts"  labelField="name"  width="200" allowMultipleSelection="true"   matchType="anyPart" prompt="选择"  change="{ searchAccountsHandleAutoCompleteChange() }" dropDownItemRenderer="{ searchAccountsDropDownItemRenderer }" selectedItemStyleName="none">
+					</hc:AutoComplete>
+					<mx:Label id="search_accounts_id" visible="false">
+					</mx:Label>
+				</mx:HBox>
+				
+			</mx:FormItem>
+		<!--	<mx:FormItem label="消息类型">
+				<mx:TextInput id="messageType" width="200"/>
+			</mx:FormItem>
+	-->		
+			<mx:FormItem label="消息内容">
+				<mx:TextArea id="messageContent" width="400" height="150"/>
+			</mx:FormItem>
+			<mx:FormItem width="100%">
+				<mx:HBox verticalAlign="middle" horizontalAlign="right" width="100%">
+					<mx:Button label="发送" click="sendMessage()" />
+					<mx:Button label="关闭" click="PopUpManager.removePopUp(this);" />
+				</mx:HBox>
+			</mx:FormItem> 
+		</mx:Form>
+		
+	</mx:TitleWindow>
+	
+</mx:VBox>
