@@ -22,7 +22,8 @@ public interface NoticeService {
 	public List<NoticeModel> getDepartmentNotice(String beginDate, String endDate,String departments)throws ServiceException;
 	
 	public List<NoticeModel> getSchoolNotice(String beginDate, String endDate)throws ServiceException;
-	
+	public List<NoticeModel> getTop5DepartmentNotice(String departments)throws ServiceException;
+	public List<NoticeModel> getTop5SchoolNotice()throws ServiceException;
 	public boolean publish(String id)throws ServiceException;
 	
 	public NoticeModel get(String id)throws ServiceException;

@@ -1,5 +1,6 @@
 package system.wlims.oa.serviceImpl.notice;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -293,6 +294,31 @@ public class NoticeServiceImpl implements NoticeService {
 	public NoticeModel get(String id) throws ServiceException {
 		// TODO Auto-generated method stub
 		return noticeDAO.get(id);
+	}
+
+	@Override
+	public List<NoticeModel> getTop5DepartmentNotice(String departments)
+			throws ServiceException {
+		// TODO Auto-generated method stub
+		List<NoticeModel> result=new ArrayList<NoticeModel>();
+		List<NoticeModel> list=getDepartmentNotice(null,null,departments);
+		int countMax=5;
+		for(int i=0;i<list.size()&&i<countMax;i++){
+			result.add(list.get(i));
+		}
+		return result;
+	}
+
+	@Override
+	public List<NoticeModel> getTop5SchoolNotice() throws ServiceException {
+		// TODO Auto-generated method stub
+		List<NoticeModel> result=new ArrayList<NoticeModel>();
+		List<NoticeModel> list=getSchoolNotice(null,null);
+		int countMax=5;
+		for(int i=0;i<list.size()&&i<countMax;i++){
+			result.add(list.get(i));
+		}
+		return result;
 	}
 
 }
