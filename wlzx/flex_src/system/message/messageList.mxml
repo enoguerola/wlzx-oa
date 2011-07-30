@@ -8,7 +8,9 @@
 			<mx:method name="getSelfReceivedNotReadMessages"  concurrency="last"  result="getSelfReceivedNotReadMessages_resultHandler(event);" />
 			<mx:method name="getSelfReceivedAlreadyReadMessages"  concurrency="last"  result="getSelfReceivedAlreadyReadMessages_resultHandler(event);" />
 			<mx:method name="getSelfPostedMessages"  concurrency="last"  result="getSelfPostedMessages_resultHandler(event);" />
-
+			<mx:method name="deleteReceiveMessage"  concurrency="last"  result="deleteReceiveMessage_resultHandler(event);" />
+			<mx:method name="deletePostMessage"  concurrency="last"  result="deletePostMessage_resultHandler(event);" />
+			<mx:method name="readMessage"  concurrency="last"  result="readMessage_resultHandler(event);" />
 		</mx:RemoteObject>
 	</fx:Declarations>
 	<fx:Style>
@@ -23,14 +25,42 @@
 			import mx.controls.*;
 			import mx.events.*;
 			import mx.rpc.events.*;
+			
 			import system.utils.CommonUtils;
 			private function init():void {	
-				switchMessagesView();
+				var parms:String=((Object)(this.owner)).id;
+				//Alert.show(parms);
+				if(parms!=null&&parms!=''&&parms!='null'){
+					var beginDate:String=parms.split(";")[0];
+					var endDate:String=parms.split(";")[1];
+					search_date_begin.text=beginDate;
+					search_date_end.text=endDate;
+				}else{
+					var date:Date=new Date();
+					search_date_begin.text=CommonUtils.formatDate(CommonUtils.currentMonthBeginDate(),"YYYY-MM-DD");
+					search_date_end.text=CommonUtils.formatDate(CommonUtils.currentMonthEndDate(),"YYYY-MM-DD");
+				}
+				
+				callLater(search);
 			}
 			private function systemFaultHandler(event:FaultEvent):void {
 				Alert.show(event.fault.faultString, 'Error');
 			}
-			
+			protected function deletePostMessage_resultHandler(event:ResultEvent):void{
+//				var allList:ArrayCollection=event.result as ArrayCollection;
+//				notReadTable.initdata(allList);
+				search();
+			}
+			protected function deleteReceiveMessage_resultHandler(event:ResultEvent):void{
+				//				var allList:ArrayCollection=event.result as ArrayCollection;
+				//				notReadTable.initdata(allList);
+				search();
+			}
+			protected function readMessage_resultHandler(event:ResultEvent):void{
+				//				var allList:ArrayCollection=event.result as ArrayCollection;
+				//				notReadTable.initdata(allList);
+				search();
+			}
 			protected function getSelfReceivedNotReadMessages_resultHandler(event:ResultEvent):void{
 				var allList:ArrayCollection=event.result as ArrayCollection;
 				notReadTable.initdata(allList);
@@ -45,15 +75,232 @@
 			}
 			private function switchMessagesView():void{
 				var index:int=messagesView.selectedIndex;
-				if(index==0)systemServiceRO.getSelfReceivedNotReadMessages();
-				else if(index==1)systemServiceRO.getSelfReceivedAlreadyReadMessages();
-				else if(index==2)systemServiceRO.getSelfPostedMessages();
+				if(index==0)readControl.enabled=true;
+				else if(index==1)readControl.enabled=false;
+				else if(index==2)readControl.enabled=false;
 				
+				search();
+			}
+			public function search():void{
+				var index:int=messagesView.selectedIndex;
+				if(index==0)systemServiceRO.getSelfReceivedNotReadMessages(search_date_begin.text,search_date_end.text);
+				else if(index==1)systemServiceRO.getSelfReceivedAlreadyReadMessages(search_date_begin.text,search_date_end.text);
+				else if(index==2)systemServiceRO.getSelfPostedMessages(search_date_begin.text,search_date_end.text);
 			}
 			public function formatDate(date:Date):String{
 				return CommonUtils.formatDate(date);
 				
 			}
+			import system.message.popWin.*;
+			import mx.core.FlexGlobals;
+			import mx.managers.PopUpManager;
+			public var pop:MessagePopWin=null;
+			private function addMessage():void{
+					if(pop!=null)PopUpManager.removePopUp(pop);
+					pop=MessagePopWin(PopUpManager.createPopUp(this,MessagePopWin,true)); 
+					pop.owner=this;
+					PopUpManager.centerPopUp(pop);
+					pop.percentHeight=100;
+					pop.percentWidth=100;
+					pop.x=FlexGlobals.topLevelApplication.stage.stageWidth/2-pop.width/2;
+					pop.y=FlexGlobals.topLevelApplication.stage.stageHeight/2-pop.height/2;
+//					pop.id=selectId;//参数传递使用
+					pop.toolTip="Add";
+			}
+			public var popDetail:MessageDetailPopWin=null;
+
+			public function enterDetailMessage(id:String):void{
+				//Alert.show(id);
+				if(popDetail!=null)PopUpManager.removePopUp(popDetail);
+				popDetail=MessageDetailPopWin(PopUpManager.createPopUp(this,MessageDetailPopWin,true)); 
+				popDetail.owner=this;
+				PopUpManager.centerPopUp(popDetail);
+				popDetail.percentHeight=100;
+				popDetail.percentWidth=100;
+				popDetail.x=FlexGlobals.topLevelApplication.stage.stageWidth/2-popDetail.width/2;
+				popDetail.y=FlexGlobals.topLevelApplication.stage.stageHeight/2-popDetail.height/2;
+				popDetail.id=id;//参数传递使用
+			}
+			public 	 function getWorkers(data:Object, column:DataGridColumn):String{
+				if(data!=null){
+					var result1:String="";
+					var ids:String=data.toIds;
+					//Alert.show(ids);
+					if(ids!=null&&ids!=""){
+						var attr:Array=ids.split(";");
+						for(var i:int=0;i<attr.length;i++){
+							[Binary]var temp:String=attr[i] as String;
+							
+							if(temp==null||temp=="")continue;
+							var name:String=this.parentApplication.getTeacherNameByAccountId(temp);
+							//							if(data.title=="a"){
+							//								Alert.show(name);
+							//								Alert.show(temp);
+							//							}
+							result1=result1.concat(name+"  ");
+							
+						}
+						return result1;
+					}else return null;
+					//Alert.show(result);
+					
+				}else return null;
+			}
+			private function multiDelete():void{
+				Alert.show("你确定要删除所有选中消息?","确认",Alert.YES | Alert.NO,null,function(event:CloseEvent):void{
+					if(event.detail == Alert.YES)
+					{
+						var deleteIds:String='';
+						var index:int=messagesView.selectedIndex;
+						if(index==0){
+							//notReadTable.cudg.get
+							for(var i:int =0;i<notReadTable.cudg.dataProvider.length;i++){
+								 var itemRenderer:Object = notReadTable.cudg.indexToItemRenderer(i) as Object;
+								if(itemRenderer.data!=null&&itemRenderer.data.checked){
+									deleteIds+=itemRenderer.data.id+";";
+								}
+							  }
+							if(deleteIds==''){
+								Alert.show("当前未选中消息");
+							}else{
+								//Alert.show(deleteIds);return;
+								var attr:Array=deleteIds.split(";");
+								for(var i:int=0;i<attr.length;i++){
+									var id:String=attr[i] as String;
+									if(id==null||id=="")continue;
+									deleteReceiveMessage(id);
+								}
+								
+							}
+						}
+						else if(index==1){
+							for(var i:int =0;i<readTable.cudg.dataProvider.length;i++){
+								var itemRenderer:Object = readTable.cudg.indexToItemRenderer(i) as Object;
+								if(itemRenderer.data!=null&&itemRenderer.data.checked){
+									deleteIds+=itemRenderer.data.id+";";
+								}
+							}
+							if(deleteIds==''){
+								Alert.show("当前未选中消息");
+							}else{
+								//Alert.show(deleteIds);return;
+								var attr:Array=deleteIds.split(";");
+								for(var i:int=0;i<attr.length;i++){
+									var id:String=attr[i] as String;
+									if(id==null||id=="")continue;
+									deleteReceiveMessage(id);
+								}
+								
+							}
+							
+						}
+						else if(index==2){
+							for(var i:int =0;i<postTable.cudg.dataProvider.length;i++){
+								var itemRenderer:Object = postTable.cudg.indexToItemRenderer(i) as Object;
+								if(itemRenderer.data!=null&&itemRenderer.data.checked){
+									deleteIds+=itemRenderer.data.id+";";
+								}
+							}
+							if(deleteIds==''){
+								Alert.show("当前未选中消息");
+							}else{
+								//Alert.show(deleteIds);return;
+								var attr:Array=deleteIds.split(";");
+								for(var i:int=0;i<attr.length;i++){
+									var id:String=attr[i] as String;
+									if(id==null||id=="")continue;
+									deletePostMessage(id);
+								}
+								
+							}
+						}
+						
+						
+					}
+				});
+				
+	
+			}
+			private function multiRead():void{
+				Alert.show("你确定要标记所有选中消息为已读?","确认",Alert.YES | Alert.NO,null,function(event:CloseEvent):void{
+					if(event.detail == Alert.YES)
+					{
+						var readIds:String='';
+						var index:int=messagesView.selectedIndex;
+						if(index==0){
+							//notReadTable.cudg.get
+							for(var i:int =0;i<notReadTable.cudg.dataProvider.length;i++){
+								var itemRenderer:Object = notReadTable.cudg.indexToItemRenderer(i) as Object;
+								if(itemRenderer.data!=null&&itemRenderer.data.checked){
+									readIds+=itemRenderer.data.id+";";
+								}
+							}
+						}
+//						else if(index==1){
+//							for(var i:int =0;i<readTable.cudg.dataProvider.length;i++){
+//								var itemRenderer:Object = readTable.cudg.indexToItemRenderer(i) as Object;
+//								if(itemRenderer.data!=null&&itemRenderer.data.checked){
+//									readIds+=itemRenderer.data.id+";";
+//								}
+//							}
+//							
+//						}
+//						else if(index==2){
+//							for(var i:int =0;i<postTable.cudg.dataProvider.length;i++){
+//								var itemRenderer:Object = postTable.cudg.indexToItemRenderer(i) as Object;
+//								if(itemRenderer.data!=null&&itemRenderer.data.checked){
+//									readIds+=itemRenderer.data.id+";";
+//								}
+//							}
+//						}
+						
+						if(readIds==''){
+							Alert.show("当前未选中消息");
+						}else{
+							//Alert.show(readIds);return;
+							var attr:Array=readIds.split(";");
+							for(var i:int=0;i<attr.length;i++){
+								var id:String=attr[i] as String;
+								if(id==null||id=="")continue;
+								readMessage(id);
+							}
+							
+						}
+					}
+				});
+				
+				
+			}
+			public function readMessage(id:String):void{
+				systemServiceRO.readMessage(id,parentApplication.currentUser.id);
+			}
+			public function deletePostMessage(id:String):void{
+				Alert.show("你确定要删除发件箱中的该消息?","确认",Alert.YES | Alert.NO,null,function(event:CloseEvent):void{
+					if(event.detail == Alert.YES)
+					{systemServiceRO.deletePostMessage(id);}
+				});
+			}
+			public function deleteReceiveMessage(id:String):void{
+				Alert.show("你确定要删除收件箱中的该消息?","确认",Alert.YES | Alert.NO,null,function(event:CloseEvent):void{
+					if(event.detail == Alert.YES)
+					{systemServiceRO.deleteReceiveMessage(id,parentApplication.currentUser.id);}
+				});
+				
+			}
+			public function transpondMessage(toIds:String,content:String):void{
+				if(pop!=null)PopUpManager.removePopUp(pop);
+				pop=MessagePopWin(PopUpManager.createPopUp(this,MessagePopWin,true)); 
+				pop.owner=this;
+				PopUpManager.centerPopUp(pop);
+				pop.percentHeight=100;
+				pop.percentWidth=100;
+				pop.x=FlexGlobals.topLevelApplication.stage.stageWidth/2-pop.width/2;
+				pop.y=FlexGlobals.topLevelApplication.stage.stageHeight/2-pop.height/2;
+				pop.id=toIds;//参数传递使用
+				pop.name=content;//参数传递使用
+				pop.toolTip="Transpond";
+			}
+			
 		]]>
 	</fx:Script>
 	<mx:VBox borderVisible="true" width="100%" height="100%" borderStyle="solid">
@@ -61,14 +308,21 @@
 			<s:HGroup verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12">
 				<mx:HBox width="100%" height="25" paddingLeft="20"  horizontalGap="10" backgroundColor="#C5E497"  verticalAlign="middle">
 					<mx:Label text="|"/>
-					<mx:LinkButton  label="发消息" icon="@Embed(source='../WebContent/resources/common/tools/button_add_icon.png')" />
+					<mx:LinkButton  label="发消息"  icon="@Embed(source='../WebContent/resources/common/tools/button_add_icon.png')"  click="addMessage()"/>
 					<mx:Label text="|"/>
-					<mx:LinkButton  label="已读" icon="@Embed(source='../WebContent/resources/common/tools/button_detail_icon.png')" />
+					<mx:LinkButton  label="标记已读" id="readControl" icon="@Embed(source='../WebContent/resources/common/tools/button_detail_icon.png')" click="multiRead()"/>
 					<mx:Label text="|"/>
-					<mx:LinkButton  label="删除" icon="@Embed(source='../WebContent/resources/common/tools/button_delete_icon.png')"  />
+					<mx:LinkButton  label="删除" icon="@Embed(source='../WebContent/resources/common/tools/button_delete_icon.png')" click="multiDelete()" />
 					<mx:Label text="|"/>
+					<mx:Label  text="时间区间"  width="100"  textAlign="right"/>
+					<mx:DateField yearNavigationEnabled="true" id="search_date_begin"   formatString="YYYY-MM-DD"  editable="false" width="100"/>
+					<mx:Label  text="--"  width="20" textAlign="center"/>
+					<mx:DateField yearNavigationEnabled="true" id="search_date_end"  formatString="YYYY-MM-DD" editable="false" width="100"/>
+					<mx:Button  label="搜索"  width="60"   click="search()"/>
 				</mx:HBox>
+				
 			</s:HGroup>
+			
 			<s:VGroup width="100%" height="100%" gap="10" verticalAlign="middle" horizontalAlign="center"  paddingLeft="10" paddingRight="10">
 				<mx:TabNavigator id="messagesView"  width="100%" height="100%" tabStyleName="customTabStyles"   horizontalGap="1" borderVisible="false"  tabWidth="120" paddingTop="0"  change="switchMessagesView();">
 					<mx:HBox label="收件箱-未读" width="100%" height="100%">
@@ -78,36 +332,54 @@
 								<mx:DataGridColumn textAlign="center" headerText="选择"  width="50">
 									<mx:itemRenderer>
 										<fx:Component>
-											<mx:CheckBox name="{data.id}"/>
+											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0">
+												<mx:CheckBox selected="{data.checked}" change="{data.checked=!data.checked;}"/>
+											</mx:HBox>
 										</fx:Component>
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
 								<mx:DataGridColumn textAlign="center" headerText="发送人"  width="100">
 									<mx:itemRenderer>
 										<fx:Component>
-											<mx:Label text="{data.from==null?'系统':data.from.name}"/>
+											<mx:Label text="{data.fromId=='0'?'系统':parentApplication.getTeacherNameByAccountId(data.fromId)}"/>
 										</fx:Component>
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
 								<mx:DataGridColumn textAlign="center" headerText="类型"  width="100">
 									<mx:itemRenderer>
 										<fx:Component>
-											<mx:Label text="{data.type}"/>
+											<mx:Label text="{data.type==0?'系统消息':'个人消息'}"/>
 										</fx:Component>
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
 								<mx:DataGridColumn textAlign="center" headerText="内容" dataField="content" width="300">
 									
 								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="发送时间" width="100">
+								<mx:DataGridColumn textAlign="center" headerText="发送时间" width="100" >
 									<mx:itemRenderer>
 									<fx:Component>
-										<mx:Label text="{this.outerDocument.formatDate(data.modifiedDate as Date)}"/>
+										<mx:Label text="{this.outerDocument.formatDate(data.creationDate)}"/>
 									</fx:Component>
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="状态"  width="100">
+									<mx:itemRenderer>
+										<fx:Component>
+											<mx:Label text="未读"/>
+										</fx:Component>
+									</mx:itemRenderer>
+								</mx:DataGridColumn>
 								<mx:DataGridColumn textAlign="center" headerText="操作"  width="150">
-									
+									<mx:itemRenderer>
+										<fx:Component>
+										<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0">
+											<mx:LinkButton  label="[阅读]"  click="{this.outerDocument.enterDetailMessage(data.id);this.outerDocument.readMessage(data.id);}">											
+											</mx:LinkButton>
+											<mx:LinkButton  label="[删除]"  click="{this.outerDocument.deleteReceiveMessage(data.id);}">											
+											</mx:LinkButton>
+										</mx:HBox>
+										</fx:Component>
+									</mx:itemRenderer>
 								</mx:DataGridColumn>
 							</component:mygridcolumns>
 						</component:WlzxPageDataGrid>
@@ -119,21 +391,23 @@
 								<mx:DataGridColumn textAlign="center" headerText="选择"  width="50">
 									<mx:itemRenderer>
 										<fx:Component>
-											<mx:CheckBox name="{data.id}"/>
+											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0">
+												<mx:CheckBox selected="{data.checked}" change="{data.checked=!data.checked;}"/>
+											</mx:HBox>
 										</fx:Component>
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
 								<mx:DataGridColumn textAlign="center" headerText="发送人"  width="100">
 									<mx:itemRenderer>
 										<fx:Component>
-											<mx:Label text="{data.from==null?'系统':data.from.name}"/>
+											<mx:Label text="{data.fromId=='0'?'系统':parentApplication.getTeacherNameByAccountId(data.fromId)}"/>
 										</fx:Component>
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
 								<mx:DataGridColumn textAlign="center" headerText="类型"  width="100">
 									<mx:itemRenderer>
 										<fx:Component>
-											<mx:Label text="{data.type}"/>
+											<mx:Label text="{data.type==0?'系统消息':'个人消息'}"/>
 										</fx:Component>
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
@@ -143,12 +417,28 @@
 								<mx:DataGridColumn textAlign="center" headerText="发送时间" width="100">
 									<mx:itemRenderer>
 										<fx:Component>
-											<mx:Label text="{this.outerDocument.formatDate(data.modifiedDate as Date)}"/>
+											<mx:Label text="{this.outerDocument.formatDate(data.creationDate as Date)}"/>
+										</fx:Component>
+									</mx:itemRenderer>
+								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="状态"  width="100">
+									<mx:itemRenderer>
+										<fx:Component>
+											<mx:Label text="已读"/>
 										</fx:Component>
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
 								<mx:DataGridColumn textAlign="center" headerText="操作"  width="150">
-									
+									<mx:itemRenderer>
+										<fx:Component>
+											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0">
+												<mx:LinkButton  label="[详细]"  click="{this.outerDocument.enterDetailMessage(data.id);}">											
+												</mx:LinkButton>
+												<mx:LinkButton  label="[删除]"  click="{this.outerDocument.deleteReceiveMessage(data.id);}">											
+												</mx:LinkButton>
+											</mx:HBox>
+										</fx:Component>
+									</mx:itemRenderer>
 								</mx:DataGridColumn>
 							</component:mygridcolumns>
 						</component:WlzxPageDataGrid>
@@ -160,43 +450,52 @@
 								<mx:DataGridColumn textAlign="center" headerText="选择"  width="50">
 									<mx:itemRenderer>
 										<fx:Component>
-											<mx:CheckBox name="{data.id}"/>
+											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0">
+												<mx:CheckBox selected="{data.checked}" change="{data.checked=!data.checked;}"/>
+											</mx:HBox>
 										</fx:Component>
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="发送人"  width="100">
+								<mx:DataGridColumn textAlign="center" headerText="接收人"  width="100" dataField="toIds" labelFunction="getWorkers">
+									
+								</mx:DataGridColumn>
+								<!--<mx:DataGridColumn textAlign="center" headerText="类型"  width="100">
 									<mx:itemRenderer>
 										<fx:Component>
-											<mx:Label text="{data.from==null?'系统':data.from.name}"/>
+											<mx:Label text="{data.type==0?'系统消息':'个人消息'}"/>
 										</fx:Component>
 									</mx:itemRenderer>
-								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="类型"  width="100">
-									<mx:itemRenderer>
-										<fx:Component>
-											<mx:Label text="{data.type}"/>
-										</fx:Component>
-									</mx:itemRenderer>
-								</mx:DataGridColumn>
+								</mx:DataGridColumn>-->
 								<mx:DataGridColumn textAlign="center" headerText="内容" dataField="content" width="300">
 									
 								</mx:DataGridColumn>
 								<mx:DataGridColumn textAlign="center" headerText="发送时间" width="100">
 									<mx:itemRenderer>
 										<fx:Component>
-											<mx:Label text="{this.outerDocument.formatDate(data.modifiedDate as Date)}"/>
+											<mx:Label text="{this.outerDocument.formatDate(data.creationDate as Date)}"/>
 										</fx:Component>
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="状态"  width="100">
+								<!--<mx:DataGridColumn textAlign="center" headerText="状态"  width="100">
 									<mx:itemRenderer>
 										<fx:Component>
 											<mx:Label text="{data.status}"/>
 										</fx:Component>
 									</mx:itemRenderer>
-								</mx:DataGridColumn>
+								</mx:DataGridColumn>-->
 								<mx:DataGridColumn textAlign="center" headerText="操作"  width="150">
-									
+									<mx:itemRenderer>
+										<fx:Component>
+											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0">
+												<mx:LinkButton  label="[转发]"  click="{this.outerDocument.transpondMessage(data.toIds,data.content);}">											
+												</mx:LinkButton>
+												<mx:LinkButton  label="[删除]"  click="{this.outerDocument.deletePostMessage(data.id);}">											
+												</mx:LinkButton>
+												<mx:LinkButton  label="[详细]"  click="{this.outerDocument.enterDetailMessage(data.id);}">											
+												</mx:LinkButton>
+											</mx:HBox>
+										</fx:Component>
+									</mx:itemRenderer>
 								</mx:DataGridColumn>
 							</component:mygridcolumns>
 						</component:WlzxPageDataGrid>

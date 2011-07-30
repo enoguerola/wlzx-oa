@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2011 年 07 月 29 日 13:48
+-- 生成日期: 2011 年 07 月 30 日 12:01
 -- 服务器版本: 5.0.91
 -- PHP 版本: 5.2.13
 
@@ -617,20 +617,30 @@ INSERT INTO `wlzx_system_menu_treeship` (`id`, `parent_id`, `child_id`) VALUES
 
 CREATE TABLE IF NOT EXISTS `wlzx_system_message` (
   `id` bigint(20) NOT NULL auto_increment,
-  `from_user_id` bigint(20) default NULL,
-  `to_user_id` bigint(20) NOT NULL,
-  `status` int(11) NOT NULL default '0',
+  `from_id` bigint(20) NOT NULL default '0' COMMENT '默认0表示系统发送的消息',
+  `to_ids` text NOT NULL,
   `type` int(11) NOT NULL,
   `content` text NOT NULL,
   `creation_date` datetime NOT NULL,
-  `read_date` datetime default NULL,
+  `read_flags` text,
+  `read_dates` text,
+  `postRemoved_flag` text,
+  `receiveRemoved_flags` text,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=9 ;
 
 --
 -- 转存表中的数据 `wlzx_system_message`
 --
 
+INSERT INTO `wlzx_system_message` (`id`, `from_id`, `to_ids`, `type`, `content`, `creation_date`, `read_flags`, `read_dates`, `postRemoved_flag`, `receiveRemoved_flags`) VALUES
+(1, 0, '1;', 1, '1', '2011-07-29 15:49:49', '0;', 'Null;', '0', '0;'),
+(3, 708, '840;864;708;', 1, '我国巍峨各位iguewgew我国巍峨各位iguewgew我国巍峨各位iguewgew我国巍峨各位iguewgew我国巍峨各位iguewgew我国巍峨各位iguewgew我国巍峨各位iguewgew我国巍峨各位iguewgew我国巍峨各位iguewgew我国巍峨各位iguewgew我国巍峨各位iguewgew我国巍峨各位iguewgew我国巍峨各位iguewgew我国巍峨各位iguewgew我国巍峨各位iguewgew我国巍峨各位iguewgew我国巍峨各位iguewgew我国巍峨各位iguewgew我国巍峨各位iguewgew我国巍峨各位iguewgew我国巍峨各位iguewgew我国巍峨各位iguewgew我国巍峨各位iguewgew我国巍峨各位iguewgew', '2011-07-29 17:19:31', '0;0;0;', 'Null;Null;Null;', '0', '0;0;1;'),
+(4, 708, '708;1;', 1, '111111111', '2011-07-30 10:17:37', '1;1;', '2011-07-30;2011-07-30;', '1', '1;0;'),
+(5, 708, '708;', 1, '11111', '2011-07-30 10:42:23', '1;', '2011-07-30;', '0', '0;'),
+(6, 708, '840;864;708;', 1, '12', '2011-07-30 11:47:49', '0;0;0;', 'NULL;NULL;NULL;', '0', '0;0;0;'),
+(7, 708, '708;1;', 1, '111111111', '2011-07-30 11:58:12', '0;0;', 'NULL;NULL;', '0', '0;0;'),
+(8, 708, '708;', 1, '222222222222222222222222', '2011-07-30 11:58:31', '0;', 'NULL;', '0', '0;');
 
 -- --------------------------------------------------------
 
@@ -1528,8 +1538,8 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_user` (
 --
 
 INSERT INTO `wlzx_system_user` (`id`, `symbol`, `sequence`, `name`, `password`, `last_login_time`, `last_login_ip`, `account_style`, `person_id`, `person_name`, `email`, `creation_date`, `modified_date`, `active`, `main_role_id`, `main_department_id`) VALUES
-(1, 'super_root', 0, 'super_root', '134bca5421a15476a1e5ebaebdba1ede', '2011-07-29 13:33:31', '127.0.0.1', -1, NULL, NULL, NULL, '2011-05-07 11:04:22', '2011-07-05 17:33:02', 1, NULL, NULL),
-(708, '666888', 0, '666888', '75e266f182b4fa3625d4a4f4f779af54', '2011-07-29 13:33:18', '127.0.0.1', 0, NULL, NULL, '', '2011-07-05 12:57:49', '2011-07-05 12:57:51', 1, 1, 1),
+(1, 'super_root', 0, 'super_root', '134bca5421a15476a1e5ebaebdba1ede', '2011-07-30 10:27:24', '127.0.0.1', -1, NULL, NULL, NULL, '2011-05-07 11:04:22', '2011-07-05 17:33:02', 1, NULL, NULL),
+(708, '666888', 0, '666888', '75e266f182b4fa3625d4a4f4f779af54', '2011-07-30 11:20:51', '127.0.0.1', 0, NULL, NULL, '', '2011-07-05 12:57:49', '2011-07-05 12:57:51', 1, 1, 1),
 (709, '666900', 0, '666900', '2e6d1125057ec7c4402a5a2ad84f6601', '2011-07-26 11:52:55', '127.0.0.1', 0, NULL, NULL, '', '2011-07-05 12:57:51', '2011-07-05 12:57:52', 1, 20, 1),
 (710, '666988', 0, '666988', 'cb3d82f7133330c48bee639908125906', NULL, '', 0, NULL, NULL, '', '2011-07-05 12:57:52', '2011-07-05 12:57:53', 1, NULL, 1),
 (711, '666898', 0, '666898', '25eb84aab86275ed44073ce95057b9c4', NULL, '', 0, NULL, NULL, '', '2011-07-05 12:57:53', '2011-07-05 12:57:55', 1, NULL, 1),
