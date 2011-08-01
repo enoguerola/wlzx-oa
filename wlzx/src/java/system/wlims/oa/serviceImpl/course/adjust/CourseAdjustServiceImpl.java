@@ -5,7 +5,10 @@ import java.util.Set;
 
 
 import system.components.SecurityUserHolder;
+import system.entity.MessageModel;
+import system.service.SystemService;
 import system.utils.UtilDateTime;
+import system.wlims.basic.service.teacher.TeacherService;
 import system.wlims.oa.dao.course.adjust.CourseAdjustDAO;
 import system.wlims.oa.entity.course.adjust.ApplyItemModel;
 import system.wlims.oa.entity.course.adjust.ApplyModel;
@@ -14,7 +17,8 @@ import system.wlims.oa.service.course.adjust.CourseAdjustService;
 
 public class CourseAdjustServiceImpl implements CourseAdjustService{
 	private CourseAdjustDAO courseAdjustDAO;
-
+	private SystemService systemService;
+	private TeacherService teacherService;
 	public CourseAdjustDAO getCourseAdjustDAO() {
 		return courseAdjustDAO;
 	}
@@ -37,6 +41,9 @@ public class CourseAdjustServiceImpl implements CourseAdjustService{
 		log.setOperationTeacherId(apply.getApplyTeacherId());
 		apply.getLogs().add(log);
 		courseAdjustDAO.saveOrUpdate(apply);
+		
+//		systemService.sendMessage(MessageModel.DefaultFromId, systemService.getWorkersIds(TaskVO.EType.CourseAdjust_Approve.getValue()), MessageModel.MessageType.SYSTEM.getValue(), "您有一项调课申请需要进行审批");
+		
 		return true;
 	}
 
@@ -61,7 +68,12 @@ public class CourseAdjustServiceImpl implements CourseAdjustService{
 			log.setOperationTime(new Date());
 			log.setOperationTeacherId(apply.getApplyTeacherId());
 			apply.getLogs().add(log);
+			
 			courseAdjustDAO.saveOrUpdate(apply);
+			String content="您于"+UtilDateTime.toDateString(apply.getApplyCreationDate(), "yyyy-MM-dd HH:mm:ss")+"调课申请记录已取消，详情请查看调课申请记录";
+
+			systemService.sendMessage(MessageModel.DefaultFromId, apply.getApplyTeacherId(), MessageModel.MessageType.SYSTEM.getValue(), content);
+
 			return true;
 		}
 	
@@ -144,10 +156,32 @@ public class CourseAdjustServiceImpl implements CourseAdjustService{
 		if(apply.getApplyStatus()==ApplyModel.ApplyStatus.PASS.getStatus()){
 			log.setOperationResult("课程处审批编号为"+apply.getApplyNo()+"的申请通过");
 			newApply.setApplyStatus(ApplyModel.ApplyStatus.PASS.getStatus());
+			//系统通知
+			String adjustTeachers="";
+			String adjustClasses="";
+			String adjustTimes="";
+			for(ApplyItemModel item:apply.getApplyItems()){
+				String name=teacherService.getTeacherNameByUserId(item.getAdjustActualTeacherId());
+				if(name!=null){
+					adjustTeachers+=name+"/";
+					adjustClasses+=item.getApplyClass()+"/";
+					adjustTimes+=item.getAdjustActualTime()+"/";
+					String content2=teacherService.getTeacherNameByUserId(apply.getApplyTeacherId())+"老师申请与您调课已经审批通过，所带班级为"+item.getApplyClass()+"，科目是"+item.getApplyCourse()+"，上课时间为"+item.getApplyCourseTime()+"，请准时上课";
+					systemService.sendMessage(MessageModel.DefaultFromId, item.getAdjustActualTeacherId(), MessageModel.MessageType.SYSTEM.getValue(), content2);
+
+				}
+			}
+			String content="您申请的调课审批已经通过，调课教师为"+adjustTeachers+"，调课班级为"+adjustClasses+"，调课时间为"+adjustTimes+"";
+			systemService.sendMessage(MessageModel.DefaultFromId, apply.getApplyTeacherId(), MessageModel.MessageType.SYSTEM.getValue(), content);
+
 		}
 		else if(apply.getApplyStatus()==ApplyModel.ApplyStatus.DENY.getStatus()){
 			log.setOperationResult("课程处审批编号为"+apply.getApplyNo()+"的申请不通过");
 			newApply.setApplyStatus(ApplyModel.ApplyStatus.DENY.getStatus());
+			
+			String content="您申请的调课审批未通过，具体情况请查看调课申请记录详细";
+			systemService.sendMessage(MessageModel.DefaultFromId, apply.getApplyTeacherId(), MessageModel.MessageType.SYSTEM.getValue(), content);
+
 		}
 		log.setOperationTime(new Date());
 		log.setOperationTeacherId(apply.getApproveTeacherId());
@@ -156,5 +190,24 @@ public class CourseAdjustServiceImpl implements CourseAdjustService{
 		courseAdjustDAO.saveOrUpdate(newApply);
 		return true;
 	}
+
+
+
+	public SystemService getSystemService() {
+		return systemService;
+	}
+
+	public void setSystemService(SystemService systemService) {
+		this.systemService = systemService;
+	}
+
+	public TeacherService getTeacherService() {
+		return teacherService;
+	}
+
+	public void setTeacherService(TeacherService teacherService) {
+		this.teacherService = teacherService;
+	}
+
 	
 }

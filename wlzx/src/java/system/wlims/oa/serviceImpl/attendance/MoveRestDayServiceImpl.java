@@ -4,14 +4,21 @@ import java.util.Date;
 import java.util.List;
 
 
+import system.entity.MessageModel;
+import system.service.SystemService;
 import system.utils.UtilDateTime;
+import system.wlims.basic.service.teacher.TeacherService;
 import system.wlims.oa.dao.attendance.MoveRestDayDAO;
 import system.wlims.oa.entity.workFlow.moveRestDay.MoveRestDayForm;
 import system.wlims.oa.entity.workFlow.moveRestDay.MoveRestDayWorkFlowLog;
+import system.wlims.oa.entity.workFlow.takeLeave.TakeLeaveForm;
 import system.wlims.oa.service.attendance.MoveRestDayService;
+import system.wlims.oa.vo.TaskVO;
 
 public class MoveRestDayServiceImpl implements MoveRestDayService {
-	public MoveRestDayDAO moveRestDayDAO;
+	private MoveRestDayDAO moveRestDayDAO;
+	private SystemService systemService;
+	private TeacherService teacherService;
 	@Override
 	public void addMoveRestDayApply(MoveRestDayForm moveRestDay) {
 		// TODO Auto-generated method stub
@@ -63,13 +70,29 @@ public class MoveRestDayServiceImpl implements MoveRestDayService {
 				log.setOperationName("处室审批");
 				if(moveRestDay.getOfficeChiefStatus().intValue()==1){
 					log.setOperationResult("处室审批编号为"+moveRestDay.getApplyNo()+"的申请通过");
-					newMoveRestDay.setOfficeChiefStatus(moveRestDay.getOfficeChiefStatus().intValue());
-					newMoveRestDay.setStatus(MoveRestDayForm.Status.OfficePass.getValue());
+					if(moveRestDay.getSections()/3.0<=TakeLeaveForm.Rules.FirstApprove.getValue()*1.0){
+						newMoveRestDay.setOfficeChiefStatus(moveRestDay.getOfficeChiefStatus().intValue());
+						newMoveRestDay.setStatus(MoveRestDayForm.Status.Pass.getValue());
+						String content="您申请的编号为"+moveRestDay.getApplyNo()+"的调休审批已经通过";
+						systemService.sendMessage(MessageModel.DefaultFromId, moveRestDay.getTeacherId(),MessageModel.MessageType.SYSTEM.getValue(), content);
+					}
+					else {
+						newMoveRestDay.setOfficeChiefStatus(moveRestDay.getOfficeChiefStatus().intValue());
+						newMoveRestDay.setStatus(MoveRestDayForm.Status.OfficePass.getValue());
+						String content="处室审批已经通过编号为"+moveRestDay.getApplyNo()+"的调休申请";
+						systemService.sendMessage(MessageModel.DefaultFromId,systemService.getWorkersIds(TaskVO.EType.MoveRestDay_VicePrincipalApprove.getValue()),MessageModel.MessageType.SYSTEM.getValue(), content);
+
+					
+					}
+				
 				}
 				else if(moveRestDay.getOfficeChiefStatus().intValue()==2){
 					log.setOperationResult("处室审批编号为"+moveRestDay.getApplyNo()+"的申请不通过");
 					newMoveRestDay.setOfficeChiefStatus(moveRestDay.getOfficeChiefStatus().intValue());
 					newMoveRestDay.setStatus(MoveRestDayForm.Status.Deny.getValue());	
+					String content="您申请的编号为"+moveRestDay.getApplyNo()+"的调休申请处室审批不通过";
+					systemService.sendMessage(MessageModel.DefaultFromId, moveRestDay.getTeacherId(),MessageModel.MessageType.SYSTEM.getValue(), content);
+
 				}
 				log.setOperationTime(new Date());
 				log.setOperationTeacherId(moveRestDay.getOfficeChiefApproverId());
@@ -82,11 +105,17 @@ public class MoveRestDayServiceImpl implements MoveRestDayService {
 					log.setOperationResult("分管副校长审批编号为"+moveRestDay.getApplyNo()+"的申请通过");
 					newMoveRestDay.setVicePrincipalStatus(moveRestDay.getVicePrincipalStatus().intValue());
 					newMoveRestDay.setStatus(MoveRestDayForm.Status.Pass.getValue());	
+					String content="您申请的编号为"+moveRestDay.getApplyNo()+"的调休审批已经通过";
+					systemService.sendMessage(MessageModel.DefaultFromId, moveRestDay.getTeacherId(),MessageModel.MessageType.SYSTEM.getValue(), content);
+
 				}
 				else if(moveRestDay.getVicePrincipalStatus().intValue()==2){
 					log.setOperationResult("分管副校长审批编号为"+moveRestDay.getApplyNo()+"的申请不通过");
 					newMoveRestDay.setVicePrincipalStatus(moveRestDay.getVicePrincipalStatus().intValue());
 					newMoveRestDay.setStatus(MoveRestDayForm.Status.Deny.getValue());	
+					String content="您申请的编号为"+moveRestDay.getApplyNo()+"的调休申请分管副校长审批不通过";
+					systemService.sendMessage(MessageModel.DefaultFromId, moveRestDay.getTeacherId(),MessageModel.MessageType.SYSTEM.getValue(), content);
+
 				}
 				log.setOperationTime(new Date());
 				log.setOperationTeacherId(moveRestDay.getVicePrincipalApproverId());
@@ -155,6 +184,18 @@ public class MoveRestDayServiceImpl implements MoveRestDayService {
 	public boolean deleteMoveRestDayById(String id){
 		moveRestDayDAO.remove(moveRestDayDAO.get(id));
 		return true;
+	}
+	public SystemService getSystemService() {
+		return systemService;
+	}
+	public void setSystemService(SystemService systemService) {
+		this.systemService = systemService;
+	}
+	public TeacherService getTeacherService() {
+		return teacherService;
+	}
+	public void setTeacherService(TeacherService teacherService) {
+		this.teacherService = teacherService;
 	}
 
 }

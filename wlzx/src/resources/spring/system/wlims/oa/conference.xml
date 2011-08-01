@@ -25,6 +25,8 @@
 		<property name="userDAO" ref="userDAO" />
 		<property name="placeDao" ref="placeDao" />
 		<property name="attachmentDAO" ref="attachmentDAO" />
+		<property name="systemService" ref="systemServiceDest" />
+		<property name="teacherService" ref="teacherService" />
 	</bean>
 	
 <!--	<bean id="attachmentDAO" class="system.wlims.oa.daoImpl.conference.AttachmentDAOImpl">

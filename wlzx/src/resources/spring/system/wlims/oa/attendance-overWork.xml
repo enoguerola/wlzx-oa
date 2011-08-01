@@ -22,6 +22,8 @@
 	<bean id="overWorkServiceDest" class="system.wlims.oa.serviceImpl.attendance.OverWorkServiceImpl">
 		<flex:remoting-destination />
 		<property name="overWorkDAO" ref="overWorkDAO" />
+		<property name="systemService" ref="systemServiceDest" />
+		<property name="teacherService" ref="teacherService" />
 	</bean>
 	
 </beans>

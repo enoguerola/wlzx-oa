@@ -22,6 +22,8 @@
 	<bean id="takeLeaveServiceDest" class="system.wlims.oa.serviceImpl.attendance.TakeLeaveServiceImpl">
 		<flex:remoting-destination />
 		<property name="takeLeaveDAO" ref="takeLeaveDAO" />
+		<property name="systemService" ref="systemServiceDest" />
+		<property name="teacherService" ref="teacherService" />
 	</bean>
 	
 </beans>

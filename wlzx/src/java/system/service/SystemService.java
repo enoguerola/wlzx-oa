@@ -22,6 +22,7 @@ import system.utils.CipherUtil;
 import system.utils.StringUtils;
 import system.utils.UtilDateTime;
 import system.vo.MessageVO;
+import system.wlims.oa.vo.TaskVO;
 
 
 
@@ -893,6 +894,55 @@ public class SystemService{
 		messageDAO.saveOrUpdate(message);
 		return true;
 	}
+	public String getWorkersIds(Integer type){
+		StringBuilder result=new StringBuilder() ;
+		List<UserModel> users=userDAO.getAllUsers();
+		
+			if(type.intValue()==TaskVO.EType.AskForLeave_BusinessTrip_TechArrange.getValue().intValue()){
+				for(UserModel user:users)
+				if(user.hasDam("takeLeaveWorkDeal@noFilter@"))
+					result.append(user.getId()+";");
+			}else if(type.intValue()==TaskVO.EType.AskForLeave_BusinessTrip_OfficalApprove.getValue().intValue()){
+				for(UserModel user:users)
+				if(user.hasDam("takeLeaveOfficeApprove@noFilter@"))
+					result.append(user.getId()+";");
+			}else if(type.intValue()==TaskVO.EType.AskForLeave_BusinessTrip_VicePrincipalApprove.getValue().intValue()){
+				for(UserModel user:users)
+				if(user.hasDam("takeLeaveVicePrincipalApprove@noFilter@"))
+					result.append(user.getId()+";");
+			}else if(type.intValue()==TaskVO.EType.AskForLeave_BusinessTrip_PrincipalApprove.getValue().intValue()){
+				for(UserModel user:users)
+				if(user.hasDam("takeLeavePrincipalApprove@noFilter@"))
+					result.append(user.getId()+";");
+			}else if(type.intValue()==TaskVO.EType.AskForLeave_Cancle.getValue().intValue()){
+				for(UserModel user:users)
+					if(user.hasDam("takeLeaveTerminateApprove@noFilter@"))
+						result.append(user.getId()+";");
+			}else if(type.intValue()==TaskVO.EType.OverWork_OfficalApprove.getValue().intValue()){
+				for(UserModel user:users)
+					if(user.hasDam("overWork_approve_main@defaultVisit@@noFilter@"))
+						result.append(user.getId()+";");
+			}else if(type.intValue()==TaskVO.EType.MoveRestDay_OfficalApprove.getValue().intValue()){
+				for(UserModel user:users)
+					if(user.hasDam("moveRestDayOfficeApprove@noFilter@"))
+						result.append(user.getId()+";");
+			}else if(type.intValue()==TaskVO.EType.MoveRestDay_VicePrincipalApprove.getValue().intValue()){
+				for(UserModel user:users)
+					if(user.hasDam("moveRestDayVicePrincipalApprove@noFilter@"))
+						result.append(user.getId()+";");
+			}else if(type.intValue()==TaskVO.EType.CourseAdjust_Approve.getValue().intValue()){
+				for(UserModel user:users)
+					if(user.hasDam("adjust_class_apply_approve_main@defaultVisit@@noFilter@"))
+						result.append(user.getId()+";");
+			}else if(type.intValue()==TaskVO.EType.Conference_Approve.getValue().intValue()){
+				for(UserModel user:users)
+					if(user.hasDam("conferenceArrange_main@defaultVisit@@noFilter@"))
+						result.append(user.getId()+";");
+			}
+		
+		return result.toString();		
+	}
+	
 	public static void main(String[] args) {
 		 ApplicationContext applicationContext = new ClassPathXmlApplicationContext(new String[]{"system/service/system.xml","system/service/spring-system.xml"});	 
 		 SystemService systemService=(SystemService)applicationContext.getBean("systemService");

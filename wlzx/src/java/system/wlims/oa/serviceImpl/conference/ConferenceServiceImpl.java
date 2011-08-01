@@ -8,10 +8,13 @@ import java.util.Map;
 import system.DAOException;
 import system.ServiceException;
 import system.dao.UserDAO;
+import system.entity.MessageModel;
+import system.service.SystemService;
 import system.utils.StringUtils;
 import system.utils.UtilDateTime;
 import system.wlims.basic.dao.PlaceDao;
 import system.wlims.basic.entity.PlaceModel;
+import system.wlims.basic.service.teacher.TeacherService;
 import system.wlims.oa.dao.notice.AttachmentDAO;
 import system.wlims.oa.dao.conference.ConferenceDAO;
 import system.wlims.oa.entity.notice.AttachmentModel;
@@ -24,6 +27,8 @@ public class ConferenceServiceImpl implements ConferenceService {
 	private UserDAO userDAO;
 	private AttachmentDAO attachmentDAO;
 	private PlaceDao placeDao;
+	private SystemService systemService;
+	private TeacherService teacherService;
 	@SuppressWarnings("unchecked")
 	@Override
 	public void addConference(ConferenceModel conference, List list) {
@@ -80,6 +85,9 @@ public class ConferenceServiceImpl implements ConferenceService {
 //			log.setOperationTeacherId(conference.getTeacherId());
 //			conference.getLogs().add(log);
 			conferenceDAO.saveOrUpdate(conference);
+			String content="您于"+UtilDateTime.toDateString(conference.getApplyDateTime(), "yyyy-MM-dd HH:mm:ss")+"会议申请记录已取消，详情请查看会议申请记录";
+			systemService.sendMessage(MessageModel.DefaultFromId, conference.getApplyUserId(), MessageModel.MessageType.SYSTEM.getValue(), content);
+
 			return true;
 //		}
 	}
@@ -191,6 +199,9 @@ public class ConferenceServiceImpl implements ConferenceService {
 			model.setPlaceId(placeId);
 			model.setApplyStatus(ConferenceModel.EStatus.Arranged.getValue());
 			conferenceDAO.saveOrUpdate(model);
+			String content="您申请的"+UtilDateTime.toDateString(model.getMeetingDate())+"  "+model.getBeginTime()+"--"+model.getEndTime()+"会议地点为"+placeDao.get(placeId).getName()+"，会议安排人员会为您做好准备工作";
+			systemService.sendMessage(MessageModel.DefaultFromId, model.getApplyUserId(), MessageModel.MessageType.SYSTEM.getValue(), content);
+
 			return true;
 		
 		}
@@ -332,5 +343,28 @@ public class ConferenceServiceImpl implements ConferenceService {
 			
 		conferenceDAO.saveOrUpdate(conference);
 		return true;
+	}
+	public boolean sendConferenceMessages(String id) {
+		ConferenceModel model=conferenceDAO.get(id);
+		if(model==null)return false;
+		String content=UtilDateTime.toDateString(model.getMeetingDate())+"  "+model.getBeginTime()+"--"+model.getEndTime()+"于"+placeDao.get(model.getPlaceId()).getName()+"举行的会议\""+model.getName()+"\"，请准时与会";
+		systemService.sendMessage(model.getApplyUserId(),model.getTeacherAttendIds(), MessageModel.MessageType.Person.getValue(), content);
+
+		return true;
+	}
+	public SystemService getSystemService() {
+		return systemService;
+	}
+
+	public void setSystemService(SystemService systemService) {
+		this.systemService = systemService;
+	}
+
+	public TeacherService getTeacherService() {
+		return teacherService;
+	}
+
+	public void setTeacherService(TeacherService teacherService) {
+		this.teacherService = teacherService;
 	}
 }
