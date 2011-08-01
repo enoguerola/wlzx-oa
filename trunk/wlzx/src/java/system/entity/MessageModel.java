@@ -25,6 +25,7 @@ public class MessageModel extends SimpleBaseModel{
 	/**
 	 * 
 	 */
+	public static String DefaultFromId="0";
 	private String fromId;//0表示系统消息
 	private String toIds;
 	private int type;

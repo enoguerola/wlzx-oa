@@ -233,7 +233,11 @@ public class TeacherService {
 		}
     	return teacher;
     }
-
+    public String getTeacherNameByUserId(String userId){
+    	TeacherModel model=teacherDAO.getTeacherByUserId(userId);
+    	if(model!=null)return model.getName();
+    	else return null;
+    }
 	public void setTeacherDAO(TeacherDAO teacherDAO) {
 		this.teacherDAO = teacherDAO;
 	}

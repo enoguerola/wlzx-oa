@@ -3,14 +3,21 @@ package system.wlims.oa.serviceImpl.attendance;
 import java.util.Date;
 import java.util.List;
 
+import system.entity.MessageModel;
+import system.service.SystemService;
 import system.utils.UtilDateTime;
+import system.wlims.basic.service.teacher.TeacherService;
 import system.wlims.oa.dao.attendance.OverWorkDAO;
 import system.wlims.oa.entity.workFlow.overWork.OverWorkForm;
 import system.wlims.oa.entity.workFlow.overWork.OverWorkWorkFlowLog;
+import system.wlims.oa.entity.workFlow.takeLeave.TakeLeaveForm;
 import system.wlims.oa.service.attendance.OverWorkService;
+import system.wlims.oa.vo.TaskVO;
 
 public class OverWorkServiceImpl implements OverWorkService {
-	public OverWorkDAO overWorkDAO;
+	private OverWorkDAO overWorkDAO;
+	private SystemService systemService;
+	private TeacherService teacherService;
 	@Override
 	public void addOverWorkApply(OverWorkForm overWork) {
 		// TODO Auto-generated method stub
@@ -63,11 +70,16 @@ public class OverWorkServiceImpl implements OverWorkService {
 					log.setOperationResult("处室审批编号为"+overWork.getApplyNo()+"的申请通过");
 					newOverWork.setOfficeChiefStatus(OverWorkForm.Status.OfficePass.getValue());
 					newOverWork.setStatus(OverWorkForm.Status.OfficePass.getValue());
+					String content="您的申请编号为"+overWork.getApplyNo()+"加班申请已通过";
+					systemService.sendMessage(MessageModel.DefaultFromId,overWork.getTeacherId(), MessageModel.MessageType.SYSTEM.getValue(), content);
+
 				}
 				else if(overWork.getOfficeChiefStatus().intValue()==2){
 					log.setOperationResult("处室审批编号为"+overWork.getApplyNo()+"的申请不通过");
 					newOverWork.setOfficeChiefStatus(OverWorkForm.Status.OfficeDeny.getValue());
 					newOverWork.setStatus(OverWorkForm.Status.OfficeDeny.getValue());
+					String content="您的申请编号为"+overWork.getApplyNo()+"加班申请处室未通过";
+					systemService.sendMessage(MessageModel.DefaultFromId,overWork.getTeacherId(), MessageModel.MessageType.SYSTEM.getValue(), content);
 				}
 				log.setOperationTime(new Date());
 				log.setOperationTeacherId(overWork.getOfficeChiefApproverId());
@@ -136,6 +148,18 @@ public class OverWorkServiceImpl implements OverWorkService {
 	public boolean deleteOverWorkById(String id){
 		overWorkDAO.remove(overWorkDAO.get(id));
 		return true;
+	}
+	public SystemService getSystemService() {
+		return systemService;
+	}
+	public void setSystemService(SystemService systemService) {
+		this.systemService = systemService;
+	}
+	public TeacherService getTeacherService() {
+		return teacherService;
+	}
+	public void setTeacherService(TeacherService teacherService) {
+		this.teacherService = teacherService;
 	}
 
 }

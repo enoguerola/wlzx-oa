@@ -8,6 +8,8 @@
 	
 		<mx:method name="cancleConferenceById"  concurrency="last"  result="cancleConferenceById_resultHandler(event);" />
 		<mx:method name="getConferencesByConditions"  concurrency="last"  result="getConferencesByConditions_resultHandler(event);" />
+		<mx:method name="sendConferenceMessages"  concurrency="last"  result="sendConferenceMessages_resultHandler(event);" />
+		
 		<mx:method name="publish"  concurrency="last"  result="publish_resultHandler(event);" />
 	</mx:RemoteObject>
 
@@ -106,6 +108,16 @@
 			}
 			
 			
+			protected function sendConferenceMessages_resultHandler(event:ResultEvent):void
+			{
+				if(event.result as Boolean==true){
+					Alert.show("通知成功");
+				}else{
+					Alert.show("通知失败");
+				}
+				
+			}
+			
 			protected function publish_resultHandler(event:ResultEvent):void
 			{
 				search();
@@ -181,7 +193,7 @@
 			}
 			public function sendConferenceMessage(id:String):void
 			{
-				
+				conferenceServiceRO.sendConferenceMessages(id);
 			}
 			public function enterSummaryConference(id:String):void
 			{

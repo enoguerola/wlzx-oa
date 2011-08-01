@@ -22,6 +22,8 @@
 	<bean id="moveRestDayServiceDest" class="system.wlims.oa.serviceImpl.attendance.MoveRestDayServiceImpl">
 		<flex:remoting-destination />
 		<property name="moveRestDayDAO" ref="moveRestDayDAO" />
+		<property name="systemService" ref="systemServiceDest" />
+		<property name="teacherService" ref="teacherService" />
 	</bean>
 	
 </beans>

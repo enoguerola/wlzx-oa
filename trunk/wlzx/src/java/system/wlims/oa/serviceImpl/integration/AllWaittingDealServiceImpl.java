@@ -25,6 +25,7 @@ import system.wlims.oa.vo.TaskVO;
 import system.components.SecurityUserHolder;
 import system.dao.UserDAO;
 import system.entity.UserModel;
+import system.service.SystemService;
 import system.utils.StringUtils;
 import system.utils.UtilDateTime;;
 
@@ -36,6 +37,8 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 	private TakeLeaveDAO takeLeaveDAO;
 	private ConferenceDAO conferenceDAO;
 	private UserDAO userDAO;
+	private SystemService systemService;
+
 	@Override
 	public List<TaskVO> getAllDealTasksByCondition(String accountId, String beginTime, String endTime) {
 		return getTasksByCondition(accountId,beginTime,endTime);
@@ -701,52 +704,53 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 		return list;
 	}
 	public String getWorkersIds(Integer type){
-		StringBuilder result=new StringBuilder() ;
-		List<UserModel> users=userDAO.getAllUsers();
-		
-			if(type.intValue()==TaskVO.EType.AskForLeave_BusinessTrip_TechArrange.getValue().intValue()){
-				for(UserModel user:users)
-				if(user.hasDam("takeLeaveWorkDeal@noFilter@"))
-					result.append(user.getId()+";");
-			}else if(type.intValue()==TaskVO.EType.AskForLeave_BusinessTrip_OfficalApprove.getValue().intValue()){
-				for(UserModel user:users)
-				if(user.hasDam("takeLeaveOfficeApprove@noFilter@"))
-					result.append(user.getId()+";");
-			}else if(type.intValue()==TaskVO.EType.AskForLeave_BusinessTrip_VicePrincipalApprove.getValue().intValue()){
-				for(UserModel user:users)
-				if(user.hasDam("takeLeaveVicePrincipalApprove@noFilter@"))
-					result.append(user.getId()+";");
-			}else if(type.intValue()==TaskVO.EType.AskForLeave_BusinessTrip_PrincipalApprove.getValue().intValue()){
-				for(UserModel user:users)
-				if(user.hasDam("takeLeavePrincipalApprove@noFilter@"))
-					result.append(user.getId()+";");
-			}else if(type.intValue()==TaskVO.EType.AskForLeave_Cancle.getValue().intValue()){
-				for(UserModel user:users)
-					if(user.hasDam("takeLeaveTerminateApprove@noFilter@"))
-						result.append(user.getId()+";");
-			}else if(type.intValue()==TaskVO.EType.OverWork_OfficalApprove.getValue().intValue()){
-				for(UserModel user:users)
-					if(user.hasDam("overWork_approve_main@defaultVisit@@noFilter@"))
-						result.append(user.getId()+";");
-			}else if(type.intValue()==TaskVO.EType.MoveRestDay_OfficalApprove.getValue().intValue()){
-				for(UserModel user:users)
-					if(user.hasDam("moveRestDayOfficeApprove@noFilter@"))
-						result.append(user.getId()+";");
-			}else if(type.intValue()==TaskVO.EType.MoveRestDay_VicePrincipalApprove.getValue().intValue()){
-				for(UserModel user:users)
-					if(user.hasDam("moveRestDayVicePrincipalApprove@noFilter@"))
-						result.append(user.getId()+";");
-			}else if(type.intValue()==TaskVO.EType.CourseAdjust_Approve.getValue().intValue()){
-				for(UserModel user:users)
-					if(user.hasDam("adjust_class_apply_approve_main@defaultVisit@@noFilter@"))
-						result.append(user.getId()+";");
-			}else if(type.intValue()==TaskVO.EType.Conference_Approve.getValue().intValue()){
-				for(UserModel user:users)
-					if(user.hasDam("conferenceArrange_main@defaultVisit@@noFilter@"))
-						result.append(user.getId()+";");
-			}
-		
-		return result.toString();		
+//		StringBuilder result=new StringBuilder() ;
+//		List<UserModel> users=userDAO.getAllUsers();
+//		
+//			if(type.intValue()==TaskVO.EType.AskForLeave_BusinessTrip_TechArrange.getValue().intValue()){
+//				for(UserModel user:users)
+//				if(user.hasDam("takeLeaveWorkDeal@noFilter@"))
+//					result.append(user.getId()+";");
+//			}else if(type.intValue()==TaskVO.EType.AskForLeave_BusinessTrip_OfficalApprove.getValue().intValue()){
+//				for(UserModel user:users)
+//				if(user.hasDam("takeLeaveOfficeApprove@noFilter@"))
+//					result.append(user.getId()+";");
+//			}else if(type.intValue()==TaskVO.EType.AskForLeave_BusinessTrip_VicePrincipalApprove.getValue().intValue()){
+//				for(UserModel user:users)
+//				if(user.hasDam("takeLeaveVicePrincipalApprove@noFilter@"))
+//					result.append(user.getId()+";");
+//			}else if(type.intValue()==TaskVO.EType.AskForLeave_BusinessTrip_PrincipalApprove.getValue().intValue()){
+//				for(UserModel user:users)
+//				if(user.hasDam("takeLeavePrincipalApprove@noFilter@"))
+//					result.append(user.getId()+";");
+//			}else if(type.intValue()==TaskVO.EType.AskForLeave_Cancle.getValue().intValue()){
+//				for(UserModel user:users)
+//					if(user.hasDam("takeLeaveTerminateApprove@noFilter@"))
+//						result.append(user.getId()+";");
+//			}else if(type.intValue()==TaskVO.EType.OverWork_OfficalApprove.getValue().intValue()){
+//				for(UserModel user:users)
+//					if(user.hasDam("overWork_approve_main@defaultVisit@@noFilter@"))
+//						result.append(user.getId()+";");
+//			}else if(type.intValue()==TaskVO.EType.MoveRestDay_OfficalApprove.getValue().intValue()){
+//				for(UserModel user:users)
+//					if(user.hasDam("moveRestDayOfficeApprove@noFilter@"))
+//						result.append(user.getId()+";");
+//			}else if(type.intValue()==TaskVO.EType.MoveRestDay_VicePrincipalApprove.getValue().intValue()){
+//				for(UserModel user:users)
+//					if(user.hasDam("moveRestDayVicePrincipalApprove@noFilter@"))
+//						result.append(user.getId()+";");
+//			}else if(type.intValue()==TaskVO.EType.CourseAdjust_Approve.getValue().intValue()){
+//				for(UserModel user:users)
+//					if(user.hasDam("adjust_class_apply_approve_main@defaultVisit@@noFilter@"))
+//						result.append(user.getId()+";");
+//			}else if(type.intValue()==TaskVO.EType.Conference_Approve.getValue().intValue()){
+//				for(UserModel user:users)
+//					if(user.hasDam("conferenceArrange_main@defaultVisit@@noFilter@"))
+//						result.append(user.getId()+";");
+//			}
+//		
+//		return result.toString();		
+		return systemService.getWorkersIds(type);
 	}
 	public TaskDAO getTaskDAO() {
 		return taskDAO;
@@ -798,6 +802,12 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 	}
 	public void setUserDAO(UserDAO userDAO) {
 		this.userDAO = userDAO;
+	}
+	public SystemService getSystemService() {
+		return systemService;
+	}
+	public void setSystemService(SystemService systemService) {
+		this.systemService = systemService;
 	}
 	
 	

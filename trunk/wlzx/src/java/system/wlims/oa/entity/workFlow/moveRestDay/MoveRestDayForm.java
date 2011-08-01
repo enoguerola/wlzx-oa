@@ -1,9 +1,12 @@
 package system.wlims.oa.entity.workFlow.moveRestDay;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Set;
 import java.util.TreeSet;
 
+import system.constants.Constants;
 import system.entity.workFlow.AbstractForm;
 
 public class MoveRestDayForm extends AbstractForm {
@@ -38,6 +41,33 @@ public class MoveRestDayForm extends AbstractForm {
 	
 	private Integer status;
 	private Set<MoveRestDayWorkFlowLog> logs=new TreeSet<MoveRestDayWorkFlowLog>();
+	public static enum Rules{
+		FirstApprove(1, "处室负责人审批"),
+		SecordApprove(2, "分管副校长审批");
+		private Integer value;
+		private String name;
+		
+		private Rules(Integer value, String name){
+			this.setValue(value);
+			this.setName(name);
+		}
+
+		public void setValue(Integer value) {
+			this.value = value;
+		}
+
+		public Integer getValue() {
+			return value;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+
+		public String getName() {
+			return name;
+		}
+	}
 	public static enum Status{
 		Waiting(0, "待审批"),
 		OfficePass(1, "审批中-处室通过"),
@@ -183,7 +213,19 @@ public class MoveRestDayForm extends AbstractForm {
 	public void setStatus(Integer status) {
 		this.status = status;
 	}
-
+	public int getSections(){
+		int result=0;
+		String times=getTimes();
+		String[] times_attr=times.split(";");
+		for(String time:times_attr){
+			int morning=Integer.parseInt(time.split(" ")[1].split("-")[0]);
+			int afternoon=Integer.parseInt(time.split(" ")[1].split("-")[1]);
+			int evening=Integer.parseInt(time.split(" ")[1].split("-")[2]);
+			result+=morning+afternoon+evening;
+			
+		}
+		return result;
+	}
 	public String getTimes() {
 		return times;
 	}

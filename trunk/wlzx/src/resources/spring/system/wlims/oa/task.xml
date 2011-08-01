@@ -22,7 +22,8 @@
 	<bean id="taskServiceDest" class="system.wlims.oa.serviceImpl.task.TaskServiceImpl">
 		<flex:remoting-destination />
 		<property name="taskDAO" ref="taskDAO" />
-		
+		<property name="systemService" ref="systemServiceDest" />
+		<property name="teacherService" ref="teacherService" />
 	</bean>
 	
 	

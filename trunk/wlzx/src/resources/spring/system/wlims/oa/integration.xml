@@ -25,6 +25,7 @@
 		<property name="overWorkDAO" ref="overWorkDAO" />
 		<property name="takeLeaveDAO" ref="takeLeaveDAO" />
 		<property name="conferenceDAO" ref="conferenceDAO" />
+		<property name="systemService" ref="systemServiceDest" />
 	</bean>
 	
 	
