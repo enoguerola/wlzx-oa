@@ -4,6 +4,15 @@
 @namespace mx "http://www.adobe.com/2006/mxml";
 @namespace supertabs "flexlib.controls.tabBarClasses.*"; 
 
+/*  色彩说明
+
+1. EEF0FF	TabNavigator中的背景色
+2. D0DDF0	整个页面背景色
+3. A0DDFF	鼠标滑过高亮色
+4. D0DDF0	项目选中颜色
+5. 6080E0	边框默认统一色
+
+*/
 
 
 global
@@ -75,6 +84,8 @@ s|BorderContainer{
  tab-height:25;
  tab-width:120;
 }
+
+/***********   Button **************/
 .customButton {
 	upSkin:ClassReference('flexlib.skins.EnhancedButtonSkin');
 	overSkin:ClassReference('flexlib.skins.EnhancedButtonSkin');
@@ -104,4 +115,28 @@ s|BorderContainer{
 }
 .customPanel {
 	skin: ClassReference("system.skins.WlzxPanelSkin");
+}
+
+/************   带边框的VBox (用于容纳Form ) ***************/
+.CustomBorderVBoxStyle{
+	border-skin:ClassReference("system.skins.WlzxBorderVBoxSkin");
+	
+}
+.CustomTextAreaStyle{
+	/*	skin-class:ClassReference("skin.CustomTextAreaSkin");*/
+	/*	skin-class:ClassReference("skin.CustomTextAreaSkin");*/
+	/*	skin:ClassReference("skin.NewSkin");*/
+	font-family:"宋体";
+	font-size:14;
+	font-weight:bold;
+	color:#000000;
+	border-thickness:0;
+	content-background-color:#EEF0FF;
+	border-visible:false;
+	border-alpha:0;
+	text-align:center;
+	shadow-color:#EEF0FF;
+	show-track-highlight:false;
+	stroke-width:0;
+		
 }
