@@ -25,7 +25,7 @@
 	</s:Rect>
 	
 	<!-- layer 1: Background Selected Tab 渐变下端的颜色同于TabNavigator的背景色 -->
-	<s:Rect left="1" right="1" top="1" bottom="1"  excludeFrom="up">
+	<s:Rect left="1" right="1" top="1" bottom="0"  excludeFrom="up">
 		<s:fill>
 			<s:LinearGradient rotation="90">
 				<s:GradientEntry color="white"/>
