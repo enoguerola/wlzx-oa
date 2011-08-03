@@ -15,12 +15,12 @@
 	<mx:RemoteObject id="directoryServiceRO" destination="directoryServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 		<mx:method name="getDirectoryItemsByType"  concurrency="multiple"  result="getDirectoryItemsByType_resultHandler(event);" />
 	</mx:RemoteObject>
-	<mx:Style>
+<!--	<mx:Style>
 		.customTabStyles {
 		skin: ClassReference("system.skins.WlzxSubTabSkin");
 		border:1px;
 		}
-	</mx:Style>
+	</mx:Style>-->
 	<mx:StringValidator id="title_stringValidator" source="{title}" property="text"  requiredFieldError="公告标题不能为空"/>
 	<mx:StringValidator id="content_stringValidator" source="{rte}" property="text"  requiredFieldError="公告内容不能为空"/>
 	

@@ -13,12 +13,12 @@
 			<mx:method name="readMessage"  concurrency="last"  result="readMessage_resultHandler(event);" />
 		</mx:RemoteObject>
 	</fx:Declarations>
-	<fx:Style>
+<!--	<fx:Style>
 		.customTabStyles {
 			skin: ClassReference("system.skins.WlzxSubTabSkin");
 			border:1px;
 		}
-	</fx:Style>
+	</fx:Style>-->
 	<fx:Script>
 		<![CDATA[
 			import mx.collections.ArrayCollection;

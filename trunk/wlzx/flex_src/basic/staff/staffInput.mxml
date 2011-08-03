@@ -19,12 +19,12 @@
 	<fx:Metadata>
 		[Event(name="uploadevent", type="system.event.UploadEvent")]
 	</fx:Metadata>
-	<fx:Style>
+<!--	<fx:Style>
 		.customTabStyles {
 			skin: ClassReference("system.skins.WlzxSubTabSkin");
 			border:1px;
 		}
-	</fx:Style>
+	</fx:Style>-->
 	<fx:Script>
 		<![CDATA[
 			import basic.entity.*;
@@ -935,7 +935,7 @@
 	<s:Panel width="100%" height="100%" title="教师信息编辑"  styleName="customPanel"   borderVisible="true" dropShadowVisible="false">
 
 		<s:VGroup width="100%" height="100%">
-			<mx:TabNavigator id="systems"  width="100%" height="100%" tabStyleName="customTabStyles"  horizontalGap="1" borderVisible="false"  tabWidth="120" paddingTop="0">
+			<mx:TabNavigator id="systems"  width="100%" height="100%" tabStyleName="customTabStyles"   horizontalGap="1" borderVisible="false"  tabWidth="120" paddingTop="0">
 				<s:NavigatorContent label="基础信息" show="navigatorcontent2_showHandler(event)" >
 					<s:layout>
 						<s:VerticalLayout/>
