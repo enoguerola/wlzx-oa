@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" 
+				xmlns:flexiframe="http://code.google.com/p/flex-iframe/"
+				xmlns:rtf="controls.rtf.*"
+				width="100%" height="100%" creationComplete="init();"   alpha="0">
+
+	<mx:Script>
+		<![CDATA[		
+			import mx.events.FlexEvent;
+			import mx.controls.Alert;
+			private function init():void
+			{
+				iframe.visible=false;
+				this.addEventListener(FlexEvent.HIDE,function():void{
+					iframe.visible=false;
+					iframe.removeAllChildren();
+					iframe.validateNow();
+				});
+				this.addEventListener(FlexEvent.SHOW,function():void{
+					
+						iframe.visible=true;
+						iframe.source=parentApplication.homeUrl+'iframe_rtf.html';
+
+						iframe.validateNow();
+						
+				});
+				
+			}
+		]]>
+	</mx:Script>
+			<!--<rtf:RtfEditor  id="editor" width="100%" height="100%">
+				
+			</rtf:RtfEditor>-->
+		<!--<mx:Text id="help" width="100%" height="20%" />	-->
+		<!--<flexiframe:IFrame id="iframe"      label="文本编辑器"  overlayDetection="false"  source="{parentApplication.homeUrl+'frame.html'}"   width="100%"  height="100%" clipContent="true" > 
+		</flexiframe:IFrame>    -->
+
+		<flexiframe:IFrame  id="iframe"   width="100%" height="100%" x="0" y="0"  paddingLeft="0" paddingTop="0" alpha="0">  
+		 </flexiframe:IFrame>    
+
+</mx:VBox>

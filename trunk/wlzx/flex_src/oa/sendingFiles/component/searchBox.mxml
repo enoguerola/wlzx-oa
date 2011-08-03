@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%" creationComplete="init();">
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			
+			import system.utils.*;
+			[Binary]
+			public var departments:ArrayCollection=new ArrayCollection();
+			private function init():void{
+			
+				search_date_begin.text=CommonUtils.formatDate(CommonUtils.currentMonthBeginDate(),"YYYY-MM-DD");
+				search_date_end.text=CommonUtils.formatDate(CommonUtils.currentMonthEndDate(),"YYYY-MM-DD");
+				
+				callLater(function():void{
+					departments=ArrayCollection(parentApplication.allDepartment);
+					//Alert.show(departments.length+"a");
+					departments.addItemAt({data:null, label:"全部"},0);
+					//Alert.show(departments.length+"b");
+					search_department.dataProvider=departments;
+					search_department.validateNow();
+				});
+				//dataProvider="{parentApplication.allDepartment}" 
+			}
+			
+			public function search():void
+			{
+				var parent:Object = (Object)(this.parentDocument);
+				parent.search();
+				Alert.show(search_department.selectedItem.data);
+			}
+		
+		]]>
+	</mx:Script>
+	<mx:FormHeading label="条件查询"></mx:FormHeading>
+	<mx:HBox verticalAlign="middle" width="100%" horizontalGap="10" paddingLeft="30" horizontalAlign="left">
+		<mx:Label text="发文字号" width="100" textAlign="right"/>
+		<mx:TextInput id="search_num" width="200"/>
+		<mx:Label text="主办单位" width="100" textAlign="right"/>
+		<mx:ComboBox  id="search_department"  width="140" />
+<!--		<mx:TextInput id="search_department" width="150"/>
+-->		<mx:Label text="发文时间" width="100" textAlign="right"/>
+		<mx:DateField id="search_date_begin" yearNavigationEnabled="true" width="100" formatString="YYYY-MM-DD"></mx:DateField>
+		<mx:Label  text="----"  width="60" textAlign="center"/>
+		<mx:DateField id="search_date_end" yearNavigationEnabled="true" width="100" formatString="YYYY-MM-DD"></mx:DateField>
+	</mx:HBox>
+	
+	<mx:HBox verticalAlign="middle" width="100%" paddingLeft="30" horizontalGap="10" horizontalAlign="left">
+		<mx:Label text="发文标题" width="100" textAlign="right"/>
+		<mx:TextInput id="search_title" width="450"/>
+		<mx:Button label="搜索" width="70" click="search();"/>
+	</mx:HBox>
+</mx:VBox>
