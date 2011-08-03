@@ -63,7 +63,20 @@ mx|Accordion{
 
 /************** 一般的容器 ****************/
 s|BorderContainer{
-	background-color:#D0DDF0;
+	background-color:#EEF0FF;   /*	D0DDF0;*/
+
+}
+.CustomHBoxStyle{
+	background-color:#EEF0FF; 
+}
+/*mx|HBox{
+	background-color:#EEF0FF;
+}
+mx|VBox{
+	background-color:#EEF0FF;
+}*/
+.PanelStyle{
+	background-color:#EEF0FF;
 }
 /************** TabNavigator ****************/
 .customTabStyles {
