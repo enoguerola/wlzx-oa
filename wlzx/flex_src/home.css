@@ -9,10 +9,10 @@
 global
 {
 	content-background-alpha: 1.0;
-	chrome-color: #F7F4F4;
-	focus-color: #C7E399;
-	selection-color: #C7E399;
-	roll-over-color: #E2FBB8;
+	chrome-color: #D0DDF0;
+	focus-color: #D0DDF0;
+	selection-color: #D0DDF0;
+	roll-over-color: #A0DDFF;
 	tabCloseButtonStyleName: "closeButton";
 	color: #000000; 
 	font-family:"宋体";
@@ -31,14 +31,32 @@ global
 	overSkin:Embed(source="../WebContent/resources/common/ui/tabClose.swf", symbol="firefox_close_over"); 
 }
 
-.customAccordionHeadStyles {
-	skin: ClassReference("system.skins.WlzxAccordionHeaderSkin");
-	border:0;
-	font-family:"宋体";
-	font-size:12; 
-	font-style:"normal"; 
-	font-weight:"normal"; 
+/************** 顶栏 head ****************/
+#HeadIconContainer{
+	border-style:solid;
+	background-alpha:0.5;
+	background-color:#A0C0F0;
+	skinClass:ClassReference("system.skins.WlzxBorderContainerSkin");
 }
+/************** 左侧菜单栏 ****************/
+mx|Accordion{
+	open-duration:500;
+	border-style:solid;
+	border-color:#8090E0;
+}
+.customAccordionHeadStyles{
+	skin:ClassReference("system.skins.WlzxAccordionHeaderSkin");
+	font-family:"宋体";
+	font-size:12;
+	font-weight:bold;
+	
+}
+
+/************** 一般的容器 ****************/
+s|BorderContainer{
+	background-color:#D0DDF0;
+}
+/**************  ****************/
 .customTabStyles {
 	skin: ClassReference("system.skins.WlzxTabSkin");
 	border:1px;
