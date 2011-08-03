@@ -3,7 +3,7 @@
 <!--当 Application 完成构建后立即触发 init() 方法，以实现对 Server 端 Java 的调用-->
 <s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
 			   xmlns:s="library://ns.adobe.com/flex/spark" 
-			   xmlns:mx="library://ns.adobe.com/flex/mx"   width="100%" pageTitle="登陆页面"   creationComplete="init();" height="100%" backgroundColor="#ADBF91" xmlns:flexlib="http://code.google.com/p/flexlib/"  xmlns:viewers="flexlib.scheduling.scheduleClasses.viewers.*" xmlns:sliderClasses="flexlib.controls.sliderClasses.*" xmlns:baseClasses="flexlib.baseClasses.*">
+			   xmlns:mx="library://ns.adobe.com/flex/mx"   width="100%" pageTitle="登陆页面"   creationComplete="init();" height="100%"  xmlns:flexlib="http://code.google.com/p/flexlib/"  xmlns:viewers="flexlib.scheduling.scheduleClasses.viewers.*" xmlns:sliderClasses="flexlib.controls.sliderClasses.*" xmlns:baseClasses="flexlib.baseClasses.*">
 	<fx:Style source="login.css"/>
 	<fx:Declarations>
 		<mx:StringValidator id="name_stringValidator" source="{j_username}" property="text"  requiredFieldError="登陆账号不能为空"/>
