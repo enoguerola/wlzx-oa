@@ -3,6 +3,7 @@
 @namespace mx "library://ns.adobe.com/flex/mx";
 @namespace mx "http://www.adobe.com/2006/mxml";
 @namespace supertabs "flexlib.controls.tabBarClasses.*"; 
+@namespace mx1 "library://ns.adobe.com/flex/mx";
 
 /*  色彩说明
 
@@ -79,6 +80,9 @@ mx|VBox{
 	background-color:#EEF0FF;
 }
 /************** TabNavigator ****************/
+mx|TabNavigator{
+	background-color:#EEF0FF;
+}
 .customTabStyles {
 	skin: ClassReference("system.skins.WlzxTabSkin");
 	border:1px;
