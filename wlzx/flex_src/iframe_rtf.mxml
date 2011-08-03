@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute"
+				creationComplete="init()" xmlns:rtf="controls.rtf.*"  width="100%" height="100%" >
+	<mx:Style>
+		Application  {
+			backgroundGradientColors: #04305F, #1268A1;
+			font-size:12
+		}
+		ToolTip {
+			backgroundColor: #d0F3FF;
+			color: #135095;
+			textAlign: left;
+			fontSize: 12;
+			cornerRadius: 0;
+		}
+	</mx:Style>
+	<mx:Script>
+		<![CDATA[		
+			private function init():void
+			{
+				var serverObject:Object = new Object();
+				serverObject.url = "http://localhost:8080/ServerObject/";
+				serverObject.treeServer = "GetTree?folder=content";
+				serverObject.uploadServer = "UploadServlet?folder=content";
+				serverObject.removeServer = "RemoveFile?file=";
+				editor.serverObject = serverObject;
+				
+//				help.text = "";
+//				help.text += "注意事项：\n1、必须定义serverObject属性，否则无法上传图片。"; 
+//				help.text += "\n2、请注意html-template/index.template.html文件有所改动，分别为:";
+//				help.text += "\n\t(1)<style>#${application}{position:relative}</style>";
+//				help.text += "\n\t(2)'wmode','transparent'";
+//				help.text += "\n\t(3)<param name='wmode' value='transparent' />";
+			}
+		]]>
+	</mx:Script>
+	<mx:VBox  width="100%" height="100%"  verticalScrollPolicy="auto">
+		<rtf:RtfEditor id="editor" width="100%" height="100%" />
+		<!--<mx:Text id="help" width="100%" height="20%" color="#FFFFFF"  />	-->
+	</mx:VBox>
+	
+</mx:Application>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" 
+		 xmlns:sendingFiles="oa.sendingFiles.component.*" 
+		 width="100%" height="100%" currentState="part1">
+	<mx:Script>
+		<![CDATA[		
+			import mx.events.FlexEvent;
+			
+		]]>
+	</mx:Script>
+	<mx:states>
+		<mx:State name="part1">           
+			<mx:RemoveChild target="{documentMaintainPart2}"/>
+			<mx:RemoveChild target="{documentMaintainPart3}"/>
+		</mx:State>
+		<mx:State name="part2">           
+			<mx:RemoveChild target="{documentMaintainPart1}"/>
+			<mx:RemoveChild target="{documentMaintainPart3}"/>
+		</mx:State>
+		<mx:State name="part3">           
+			<mx:RemoveChild target="{documentMaintainPart1}"/>
+			<mx:RemoveChild target="{documentMaintainPart2}"/>
+		</mx:State>
+		
+	</mx:states>
+	<mx:HBox width="100%" height="100%"  horizontalGap="0">
+		<mx:VBox width="100" height="100%" verticalAlign="top">
+			<mx:LinkButton label="起草正文" icon="@Embed(source='../WebContent/resources/oa/buttonIcon/documentMaintainPart1.png')" click="this.currentState='part1';documentMaintainPart1.dispatchEvent(new Event(FlexEvent.SHOW));"/>
+			<mx:LinkButton label="附件上传" icon="@Embed(source='../WebContent/resources/oa/buttonIcon/documentMaintainPart2.png')" click="this.currentState='part2';documentMaintainPart1.dispatchEvent(new Event(FlexEvent.HIDE));"/>
+			<mx:LinkButton label="发文稿纸" icon="@Embed(source='../WebContent/resources/oa/buttonIcon/documentMaintainPart3.png')" click="this.currentState='part3';documentMaintainPart1.dispatchEvent(new Event(FlexEvent.HIDE));"/>
+		</mx:VBox>
+		<mx:VBox width="100%" height="100%" verticalGap="0">
+			<sendingFiles:documentMaintainPart1 width="100%" height="100%" id="documentMaintainPart1">
+			</sendingFiles:documentMaintainPart1>
+			<sendingFiles:documentMaintainPart2 width="100%" height="100%" id="documentMaintainPart2">
+			</sendingFiles:documentMaintainPart2>
+			<sendingFiles:documentMaintainPart3 width="100%" height="100%" id="documentMaintainPart3">
+			</sendingFiles:documentMaintainPart3>
+		</mx:VBox>
+	</mx:HBox>
+</mx:VBox>
