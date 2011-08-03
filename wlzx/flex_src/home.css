@@ -56,14 +56,24 @@ mx|Accordion{
 s|BorderContainer{
 	background-color:#D0DDF0;
 }
-/**************  ****************/
+/************** TabNavigator ****************/
 .customTabStyles {
 	skin: ClassReference("system.skins.WlzxTabSkin");
 	border:1px;
+	border-style:solid;
+	border-visible:true;
+	border-alpha:1;
 }
 .customSubTabStyles {
 	skin: ClassReference("system.skins.WlzxSubTabSkin");
 	border:1px;
+	border-style:solid;
+	border-visible:true;
+	border-alpha:1;
+}
+.customTabNavStyle{
+ tab-height:25;
+ tab-width:120;
 }
 .customButton {
 	upSkin:ClassReference('flexlib.skins.EnhancedButtonSkin');
