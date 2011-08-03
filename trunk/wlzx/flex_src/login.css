@@ -2,13 +2,15 @@
 @namespace s "library://ns.adobe.com/flex/spark";
 @namespace mx "library://ns.adobe.com/flex/mx";
 
-
+s|Application{
+	background-color:#D0DDF0;
+}
 global
 {
-	roll-over-color: #E2FBB8;
-	focus-color: #C7E399;
-	selection-color: #C7E399;
-	font-family:"ËÎÌå";
+	roll-over-color: #A0DDFF;
+	focus-color: #D0DDF0;
+	selection-color: #D0DDF0;
+	font-family:"å®‹ä½“";
 	font-size:12; 
 	font-style:"normal"; 
 	font-weight:"normal"; 
