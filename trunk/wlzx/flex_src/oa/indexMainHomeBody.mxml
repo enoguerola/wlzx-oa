@@ -124,7 +124,7 @@
 		<mx:HBox width="100%" height="100%">
 			<mx:VBox width="60%" height="100%">
 				<mx:VBox width="100%"  height="50%" verticalGap="0">
-					<mx:HBox width="100%" height="25"  paddingLeft="20"   horizontalGap="10" backgroundColor="#C5E497"  verticalAlign="middle">
+					<mx:HBox width="100%" height="25"  paddingLeft="20"   horizontalGap="10" styleName="CustomHBoxStyle"   verticalAlign="middle">
 						<mx:Label text="校级公告" width="90%"  fontWeight="bold"/>
 						<mx:LinkButton  label="更多>>" width="10%" fontWeight="bold" fontStyle="italic" click="openSchoolNoticeList();">											
 						</mx:LinkButton>
@@ -201,7 +201,7 @@
 					</mx:DataGrid>
 				</mx:VBox>
 				<mx:VBox width="100%"  height="50%" verticalGap="0">
-					<mx:HBox width="100%" height="25" paddingLeft="20"  horizontalGap="10" backgroundColor="#C5E497"  verticalAlign="middle">
+					<mx:HBox width="100%" height="25" paddingLeft="20"  horizontalGap="10" styleName="CustomHBoxStyle"  verticalAlign="middle">
 						<mx:Label text="部门公告" width="90%" fontWeight="bold"/>
 						<mx:LinkButton  label="更多>>" width="10%" fontWeight="bold" fontStyle="italic" click="openDepartmentNoticeList();"/>											
 
@@ -283,7 +283,7 @@
 			</mx:VBox>
 			<mx:VBox width="40%" height="100%">
 				<mx:VBox width="100%"  height="100%" verticalGap="0">
-					<mx:HBox width="100%" height="25" paddingLeft="20"   horizontalGap="10" backgroundColor="#C5E497"  verticalAlign="middle">
+					<mx:HBox width="100%" height="25" paddingLeft="20"   horizontalGap="10" styleName="CustomHBoxStyle"   verticalAlign="middle">
 						<mx:Label text="今日日程" width="70%" fontWeight="bold"/>
 					</mx:HBox>
 					<mx:DataGrid width="100%" height="100%" id="scheduleList">
@@ -366,7 +366,7 @@
 					</mx:DataGrid>
 				</mx:VBox>
 				<mx:VBox width="100%"  height="100" verticalGap="0">
-					<mx:HBox width="100%" height="25"  paddingLeft="20"   horizontalGap="10" backgroundColor="#C5E497"  verticalAlign="middle">
+					<mx:HBox width="100%" height="25"  paddingLeft="20"   horizontalGap="10" styleName="CustomHBoxStyle"   verticalAlign="middle">
 						<mx:Label text="提醒区" width="70%" fontWeight="bold"/>
 					</mx:HBox>
 					<mx:VBox width="100%" height="100%" borderStyle="solid" horizontalAlign="center" verticalAlign="middle">

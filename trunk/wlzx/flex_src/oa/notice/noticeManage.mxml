@@ -6,7 +6,7 @@
 		   xmlns:validator="system.component.validator.*" 
 		   xmlns:valueObjects="oa.entity.*" 
 		   xmlns:component="system.component.*" currentState="list" xmlns:mx1="library://ns.adobe.com/flex/mx" 
-		   xmlns:mutiUpload="system.component.mutiUpload.*" >
+		   xmlns:mutiUpload="system.component.mutiUpload.*" xmlns:s="library://ns.adobe.com/flex/spark" >
 		<mx:RemoteObject id="noticeServiceRO" destination="noticeServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);" >
 			<mx:method name="updateNotice"  concurrency="last"  result="updateNoticeResult_resultHandler(event);" />
 			<mx:method name="loadNoticeInfoById"  concurrency="last"  result="loadNoticeInfoById_resultHandler(event);" />
@@ -336,8 +336,9 @@
 		<mx:VBox width="100%" height="100%" id="listPanel">
 			<mx:VBox width="100%" height="100%"  verticalGap="0" verticalAlign="middle" horizontalAlign="center" >
 				<mx:VBox width="100%" height="120" styleName="CustomBorderVBoxStyle"   horizontalGap="10" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
-					<mx:FormHeading label="条件查询">
-					</mx:FormHeading>
+					<!--<mx:FormHeading label="条件查询"></mx:FormHeading>-->
+					<s:TextArea  text="条件查询" x="10"  styleName="CustomTextAreaStyle" height="25" width="100"  >
+					</s:TextArea >
 					<mx:HBox>
 						<mx:HBox verticalAlign="middle">
 							<mx:Label  text="发布人"  width="100"  textAlign="right"/>
@@ -532,7 +533,7 @@
 		
 		<mx:VBox width="100%" height="100%" id="addPanel">
 			<mx:HBox verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12" id="returnArea">
-				<mx:HBox width="100%" height="25" paddingLeft="20"  horizontalGap="10" backgroundColor="#C5E497"  verticalAlign="middle">
+				<mx:HBox width="100%" height="25" paddingLeft="20"  horizontalGap="10" styleName="CustomHBoxStyle"   verticalAlign="middle">
 					<mx:Label text="|"/>
 					<mx:LinkButton  label="返回" icon="@Embed(source='../WebContent/resources/common/tools/button_back_icon.png')" click="this.currentState='list';" />
 					<mx:Label text="|"/>
