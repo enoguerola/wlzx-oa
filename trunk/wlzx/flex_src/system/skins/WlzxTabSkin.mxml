@@ -17,24 +17,28 @@
 	</s:states>
 	
 	
+	<!-- layer 0: border -->
+	<s:Rect left="0" right="0" top="0" bottom="1">
+		<s:stroke>
+			<s:SolidColorStroke color="0x6080E0" alpha="1" weight="1"  />
+		</s:stroke>
+	</s:Rect>
 	
-	
-	
-	<!-- layer 2: border -->
-	<s:Rect left="0" right="0" top="0" bottom="0"  excludeFrom="up">
+	<!-- layer 1: Background Selected Tab 渐变下端的颜色同于TabNavigator的背景色 -->
+	<s:Rect left="1" right="1" top="1" bottom="1"  excludeFrom="up">
 		<s:fill>
 			<s:LinearGradient rotation="90">
 				<s:GradientEntry color="white"/>
-				<s:GradientEntry color="white"/>
+				<s:GradientEntry color="0xEEF0FF"/> 
 			</s:LinearGradient>
 		</s:fill>
 	</s:Rect>
-	<!-- layer 2: border -->
-	<s:Rect left="0" right="0" top="0" bottom="0"  excludeFrom="down,over,disabled,selectedUp,selectedOver,selectedDown,selectedDisabled">
+	<!-- layer 2: Background Other Tabs -->
+	<s:Rect left="1" right="1" top="1" bottom="1"  excludeFrom="down,over,disabled,selectedUp,selectedOver,selectedDown,selectedDisabled">
 		<s:fill>
 			<s:LinearGradient rotation="90">
-				<s:GradientEntry color="white"/>
-				<s:GradientEntry color="0xD0E8AA"/>
+				<s:GradientEntry color="0xDDDDDD"/>
+				<s:GradientEntry color="0xA0D0F0" />  <!--<s:GradientEntry color="0xD0E8AA"/>-->
 			</s:LinearGradient>
 		</s:fill>
 	</s:Rect>
