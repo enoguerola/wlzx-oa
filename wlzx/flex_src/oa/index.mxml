@@ -10,9 +10,11 @@
 		<s:Move id="showEffect" xFrom="{this.stage.width}"/> 
 		
 	</fx:Declarations>
-	
+	<fx:Style source="home.css"/>
 	<fx:Script>
 		<![CDATA[
+			import flashx.textLayout.formats.BackgroundColor;
+			
 			import flexlib.controls.IconLoader;
 			import flexlib.controls.SuperTabBar;
 			import flexlib.controls.iconLoaderClasses.IconParserFactory;
@@ -119,7 +121,7 @@
 						tree=new Tree();
 						tree.setStyle("borderVisible",false);
 						tree.setStyle("fontSize","12");
-						tree.percentWidth=100;
+						tree.percentWidth=99;    // 99% Changed by William
 						tree.percentHeight=100;
 						tree.showRoot=false;
 						tree.labelField="@label";
@@ -200,6 +202,7 @@
 				child.name = symbol;				
 				child.icon = icon;	
 				child.url = moduleUrl+"?uid=" + new Date().getTime();
+				child.setStyle( "backgroundColor","0xEEF0FF");
 				child.owner=this;
 				child.id=parms;//传递参数用
 				//Flex 使用ModuleLoader调用多模块时出现强制类型转换错误的解决方法
@@ -311,20 +314,15 @@
 
 		]]>
 	</fx:Script>
-	
-	
-	
-	
-	
-	
-	
-	<s:BorderContainer width="100%" height="65"  borderColor="#6DA752" backgroundImage="@Embed(source='../WebContent/resources/oa/layout/head.jpg')">
+
+	<!--************* 顶部横幅  ***************-->
+	<s:BorderContainer width="100%" height="65"  borderColor="#A0C0F0" backgroundImage="@Embed(source='../WebContent/resources/oa/layout/head.jpg')">
 		<s:layout>
 			<s:HorizontalLayout  verticalAlign="top" horizontalAlign="right"/>
 		</s:layout>
 		<s:VGroup width="20%" height="100%" verticalAlign="middle">
-			<s:BorderContainer width="203"  height="50" backgroundImage="@Embed(source='../WebContent/resources/oa/layout/button_bar_bg.png')" borderVisible="false"  alpha="0.5">
-				<s:HGroup  width="100%"  height="100%" verticalAlign="middle"  paddingLeft="30" gap="30" alpha="2">
+			<s:BorderContainer width="203"  height="50" id="HeadIconContainer"  >
+				<s:HGroup  width="100%"  height="100%" verticalAlign="middle"  paddingLeft="30" gap="30" >
 					<mx:Image  source="@Embed(source='../WebContent/resources/oa/buttonIcon/home_icon.png')"   toolTip="首页"  mouseOver="image_mouseOverHandler(event)" mouseOut="image_mouseOutHandler(event)" click="homeTab();"/>
 					<mx:Image  source="@Embed(source='../WebContent/resources/oa/buttonIcon/help_icon.png')"   toolTip="帮助"  mouseOver="image_mouseOverHandler(event)" mouseOut="image_mouseOutHandler(event)" click="Alert.show('帮助文档建设中');"/>
 					<mx:Image  source="@Embed(source='../WebContent/resources/oa/buttonIcon/exit_icon.png')"   toolTip="退出"  mouseOver="image_mouseOverHandler(event)" mouseOut="image_mouseOutHandler(event)" click="exitSystem();"/>
@@ -350,15 +348,18 @@
 			<mx:Image source="@Embed(source='../WebContent/resources/oa/buttonIcon/full_screen.png')"  toolTip="全屏|退出全屏控制" alpha="0.6" id="full_screen" mouseOver="full_screen.alpha=1;"   mouseOut="full_screen.alpha=0.6;" click="if(stage.displayState != StageDisplayState.FULL_SCREEN)stage.displayState = StageDisplayState.FULL_SCREEN;else stage.displayState = StageDisplayState.NORMAL;"></mx:Image>
 		</s:VGroup>
 		
-		
 	</s:BorderContainer>
-	<s:BorderContainer height="5" width="100%" backgroundColor="#A6C17A"  borderVisible="false"></s:BorderContainer>
-	<s:BorderContainer width="100%" height="100%" backgroundColor="#A6C17A"  borderVisible="false">
+	
+	<s:BorderContainer height="5" width="100%"   borderVisible="false"></s:BorderContainer>
+	
+	<!--************    顶栏以下整大块区域   ***************-->
+	<s:BorderContainer width="100%" height="100%"   borderVisible="false">
 		<s:layout>
 			<s:HorizontalLayout verticalAlign="middle" gap="0"/>
 		</s:layout>
 		
-		<mx:Accordion   headerStyleName="customAccordionHeadStyles" width="160"  top="15" height="100%"  selectedIndex="-1" id="menus" dropShadowVisible="false" backgroundAlpha="0.0" headerHeight="35" fontSize="15" textAlign="center">
+		<!--*******  左侧菜单栏 *********-->
+		<mx:Accordion   headerStyleName="customAccordionHeadStyles" width="160"  top="15" height="100%"  selectedIndex="-1" id="menus"  headerHeight="30" fontSize="15" textAlign="center">
 			
 		</mx:Accordion>
 		
@@ -369,7 +370,7 @@
 		</flexlib:SuperTabNavigator>
 	</s:BorderContainer>
 	
-	<s:BorderContainer width="100%" height="30" backgroundColor="#A6C17A" borderVisible="false">
+	<s:BorderContainer width="100%" height="30"  borderVisible="false">
 		<s:layout>
 			<s:HorizontalLayout verticalAlign="middle" horizontalAlign="center"/>
 		</s:layout>
