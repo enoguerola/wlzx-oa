@@ -81,6 +81,12 @@
     <module application="flex_src/home.mxml" destPath="oa/conference/conferenceRoomCheck.swf" optimize="false" sourcePath="flex_src/oa/conference/conferenceRoomCheck.mxml"/>
     <module application="flex_src/home.mxml" destPath="oa/conference/conferenceSummary.swf" optimize="false" sourcePath="flex_src/oa/conference/conferenceSummary.mxml"/>
     <module application="flex_src/home.mxml" destPath="system/accessDenied.swf" optimize="false" sourcePath="flex_src/system/accessDenied.mxml"/>
+    <module destPath="oa/sendingFiles/documentDrafting.swf" optimize="false" sourcePath="flex_src/oa/sendingFiles/documentDrafting.mxml"/>
+    <module destPath="oa/sendingFiles/documentCheckDraft.swf" optimize="false" sourcePath="flex_src/oa/sendingFiles/documentCheckDraft.mxml"/>
+    <module destPath="oa/sendingFiles/documentCountersign.swf" optimize="false" sourcePath="flex_src/oa/sendingFiles/documentCountersign.mxml"/>
+    <module destPath="oa/sendingFiles/documentIssue.swf" optimize="false" sourcePath="flex_src/oa/sendingFiles/documentIssue.mxml"/>
+    <module destPath="oa/sendingFiles/documentCirculate.swf" optimize="false" sourcePath="flex_src/oa/sendingFiles/documentCirculate.mxml"/>
+    <module destPath="oa/sendingFiles/documentManage.swf" optimize="false" sourcePath="flex_src/oa/sendingFiles/documentManage.mxml"/>
   </modules>
   <buildCSSFiles/>
 </actionScriptProperties>

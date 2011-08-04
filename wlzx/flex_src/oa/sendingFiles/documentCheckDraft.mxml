@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Module xmlns:mx="http://www.adobe.com/2006/mxml"  layout="vertical" creationComplete="init();" width="100%" height="100%"
 		   xmlns:sendingFiles="oa.sendingFiles.component.*"   currentState="list">
-		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
-		<!--<mx:RemoteObject id="receiptServiceRO" destination="receiptServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
-			<mx:method name="get"  concurrency="last" result="get_resultHandler(event);"/>
-		</mx:RemoteObject>-->
+	<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	<!--<mx:RemoteObject id="receiptServiceRO" destination="receiptServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+	<mx:method name="get"  concurrency="last" result="get_resultHandler(event);"/>
+	</mx:RemoteObject>-->
 	<mx:states>
 		<mx:State name="list">           
 			<mx:RemoveChild target="{editPanel}"/>
@@ -30,30 +30,30 @@
 			
 			public function search():void
 			{
-//				var in_number:String = search_panel.in_number.text;
-//				var office:String = search_panel.in_office.text;
-//				var do_number:String = search_panel.do_number.text;
-//				var status:String = search_panel.status.selectedItem.data;
-//				var title:String = search_panel.title.text;
-//				var start_date:String = search_panel.in_date_begin.text;
-//				var end_date:String = search_panel.in_date_end.text;
-//				
-//				receiptServiceRO.get(in_number, office, do_number, status, title, start_date, end_date,
-//					register_grid.grid.curpage, register_grid.grid.pagecount);
+				//				var in_number:String = search_panel.in_number.text;
+				//				var office:String = search_panel.in_office.text;
+				//				var do_number:String = search_panel.do_number.text;
+				//				var status:String = search_panel.status.selectedItem.data;
+				//				var title:String = search_panel.title.text;
+				//				var start_date:String = search_panel.in_date_begin.text;
+				//				var end_date:String = search_panel.in_date_end.text;
+				//				
+				//				receiptServiceRO.get(in_number, office, do_number, status, title, start_date, end_date,
+				//					register_grid.grid.curpage, register_grid.grid.pagecount);
 			}
 			
-//			private function get_resultHandler(event:ResultEvent):void
-//			{
-//				var result = event.result as ArrayCollection;
-//				register_grid.grid.initdata(result);
-//			}
-//			
+			//			private function get_resultHandler(event:ResultEvent):void
+			//			{
+			//				var result = event.result as ArrayCollection;
+			//				register_grid.grid.initdata(result);
+			//			}
+			//			
 			public function add(id:String):void
 			{
 				var parent:Object=(Object)(((Object)(this.owner)).owner);
 				parent.addTab("add_receipt" + id,"正文登记",parent.nav,"oa/receipt/registerDetail.swf",null,id);
 			}
-//			
+			//			
 			private function systemFaultHandler(event:FaultEvent):void
 			{
 				Alert.show(event.fault.faultString, 'Error');
@@ -62,13 +62,6 @@
 	</mx:Script>
 	<mx:VBox borderVisible="true" width="100%" height="100%" borderStyle="solid" horizontalAlign="center" verticalAlign="middle">
 		<mx:VBox width="100%" height="100%" id="listPanel">
-			<mx:HBox verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12" >
-				<mx:HBox width="100%" height="25" paddingLeft="20"  horizontalGap="10" backgroundColor="#C5E497"  verticalAlign="middle">
-					<mx:Label text="|"/>
-					<mx:LinkButton  label="新增" icon="@Embed(source='../WebContent/resources/common/tools/button_add_icon.png')" click="this.currentState='add';documentMaintain.initStep();"/>
-					<mx:Label text="|"/>
-				</mx:HBox>
-			</mx:HBox>
 			<mx:VBox width="100%" height="80"  verticalGap="0" verticalAlign="middle" horizontalAlign="center" >
 				<mx:VBox width="100%" height="100%"   horizontalGap="10" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="0" paddingBottom="0"   paddingLeft="10" paddingRight="10">
 					<sendingFiles:searchBox id="search_panel" width="100%" height="100%"/>
@@ -83,9 +76,10 @@
 				<mx:Label text="|"/>
 				<mx:LinkButton  label="返回" icon="@Embed(source='../WebContent/resources/common/tools/button_back_icon.png')" click="this.currentState='list';documentMaintain.documentMaintainPart1.dispatchEvent(new Event(FlexEvent.HIDE));"/>
 				<mx:LinkButton  label="保存" icon="@Embed(source='../WebContent/resources/common/tools/button_draftSave_icon.png')" />
-				<mx:LinkButton  label="拟稿完毕" icon="@Embed(source='../WebContent/resources/common/tools/button_save_icon.png')" />
+				<mx:LinkButton  label="核稿通过" icon="@Embed(source='../WebContent/resources/common/tools/button_save_icon.png')" />
+				<mx:LinkButton  label="退回重拟" icon="@Embed(source='../WebContent/resources/common/tools/button_back_icon.png')" />
 				<mx:LinkButton  label="打印" icon="@Embed(source='../WebContent/resources/common/tools/button_printer_icon.png')" />
-
+				
 				<mx:Label text="|"/>
 			</mx:HBox>
 			<sendingFiles:documentMaintain width="100%" height="100%" id="documentMaintain"/>
