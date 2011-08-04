@@ -3,7 +3,7 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping auto-import="false">
-<class name="system.wlims.oa.entity.receipt.FileFlowModel" table="wlzx_oa_receipt_flow">
+<class name="system.wlims.oa.entity.sendingFiles.FileFlowModel" table="wlzx_oa_sendingfile_flow">
         <id name="id">
             <column name="id" />
             <generator class="native" />
@@ -21,23 +21,18 @@
             <column name="text" />
         </property>
         
-        <property name="step" type="int">
-            <column name="step" />
-        </property>
-        
+      
         <property name="user" type="string">
             <column name="user_id" />
         </property>
         
-        <property name="department" type="string">
-            <column name="department_id" />
-        </property>
+    
         
-        <property name="completedDate" type="java.sql.Date">
+        <property name="completedDate" type="java.util.Date">
             <column name="completed_date" />
         </property>
         
-    	<many-to-one not-found="ignore" class="system.wlims.oa.entity.receipt.ReceiptModel" name="receipt" column="receipt_id" lazy="false"/>
+<!--    	<many-to-one not-found="ignore" class="system.wlims.oa.entity.sendingFiles.SendingFileModel" name="sendingFile" column="sendingFile_id" lazy="false"/>-->
   
     </class>
 </hibernate-mapping>

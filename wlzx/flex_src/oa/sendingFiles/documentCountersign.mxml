@@ -72,7 +72,7 @@
 			</mx:VBox>
 		</mx:VBox>
 		<mx:VBox width="100%" height="100%" id="editPanel">
-			<mx:HBox width="100%" height="25" paddingLeft="20"  horizontalGap="10" backgroundColor="#C5E497"  verticalAlign="middle">
+			<mx:HBox width="100%" height="25" paddingLeft="20"  horizontalGap="10" styleName="CustomHBoxStyle"   verticalAlign="middle">
 				<mx:Label text="|"/>
 				<mx:LinkButton  label="返回" icon="@Embed(source='../WebContent/resources/common/tools/button_back_icon.png')" click="this.currentState='list';documentMaintain.documentMaintainPart1.dispatchEvent(new Event(FlexEvent.HIDE));"/>
 				<mx:LinkButton  label="保存" icon="@Embed(source='../WebContent/resources/common/tools/button_draftSave_icon.png')" />
