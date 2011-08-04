@@ -42,12 +42,21 @@ global
 }
 
 /************** 顶栏 head ****************/
+.TopBannerStyle{
+	vertical-align:middle;
+	horizontal-align:left;
+	background-image:Embed(source="../WebContent/resources/oa/layout/head.png");
+	background-image-fill-mode:repeat;
+	
+}
+
 #HeadIconContainer{
 	border-style:solid;
 	background-alpha:0.5;
 	background-color:#A0C0F0;
 	skinClass:ClassReference("system.skins.WlzxBorderContainerSkin");
 }
+
 /************** 左侧菜单栏 ****************/
 mx|Accordion{
 	open-duration:500;
