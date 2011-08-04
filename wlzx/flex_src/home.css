@@ -109,9 +109,12 @@ mx|TabNavigator{
 .customTabNavStyle{
  tab-height:25;
  tab-width:120;
+ border-thickness:0;
 /* border-visible:false;*/
-/* border-style:solid;*/
-/* border-color:#AA0000;*/
+ border-style:solid;
+ border-color:#EEF0FF;   /* 注意这里采用背景色作为边界，是因为SuperTabNavigator组件的border是包络标签加主题一圈的，这个边界显示
+							的效果不好，所以将该边界隐去。而主体部分有border,标签亦有border,只是选中标签的填充色将自己和主体的border
+  							一并盖住了。故实现了需要的效果 */
 /*	 #8090E0;*/
 }
 
