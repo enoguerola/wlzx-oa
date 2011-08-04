@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2011 年 07 月 26 日 15:13
+-- 生成日期: 2011 年 08 月 04 日 16:52
 -- 服务器版本: 5.0.91
 -- PHP 版本: 5.2.13
 
@@ -473,14 +473,15 @@ CREATE TABLE IF NOT EXISTS `wlzx_oa_receipt` (
   `is_completed` int(4) NOT NULL,
   `registed_date` date default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
 --
 -- 转存表中的数据 `wlzx_oa_receipt`
 --
 
 INSERT INTO `wlzx_oa_receipt` (`id`, `do_number`, `office`, `in_number`, `in_date`, `subject`, `title`, `summary`, `status`, `is_completed`, `registed_date`) VALUES
-(1, 'a+1', 'b', 'c', NULL, 'd', 'aaaaaaaa', 'bbbbbbbbbbbbbb', 1, 0, NULL);
+(1, 'a+1', 'b', 'c', NULL, 'd', 'aaaaaaaa', 'bbbbbbbbbbbbbb', 1, 0, NULL),
+(2, '1+2', '1', '2', '2011-08-02', '11', '1', '2', 2, 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -528,12 +529,15 @@ CREATE TABLE IF NOT EXISTS `wlzx_oa_receipt_flow` (
   `receipt_id` bigint(20) NOT NULL,
   `completed_date` date default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
 --
 -- 转存表中的数据 `wlzx_oa_receipt_flow`
 --
 
+INSERT INTO `wlzx_oa_receipt_flow` (`id`, `type`, `is_completed`, `text`, `step`, `user_id`, `department_id`, `receipt_id`, `completed_date`) VALUES
+(1, 0, 1, '2222222222222222', 1, 708, 0, 2, '2011-08-02'),
+(2, 0, 0, NULL, 2, 708, 0, 2, NULL);
 
 -- --------------------------------------------------------
 
@@ -561,7 +565,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_oa_schedule` (
   `repeat_on_days` varchar(200) default NULL,
   `repeat_end_time` varchar(200) default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=9 ;
 
 --
 -- 转存表中的数据 `wlzx_oa_schedule`
@@ -569,7 +573,86 @@ CREATE TABLE IF NOT EXISTS `wlzx_oa_schedule` (
 
 INSERT INTO `wlzx_oa_schedule` (`id`, `title`, `content`, `begin_time`, `end_time`, `poster_id`, `type`, `department_share`, `school_share`, `department_id`, `emergence`, `finish_status`, `submit_status`, `repeat_status`, `repeat_type`, `repeat_interval`, `repeat_on_days`, `repeat_end_time`) VALUES
 (1, '新日程', '222222222', '2011-07-15 20:56:55', '2011-07-15 21:56:00', 708, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, '0;0;0;0;0;0;0', NULL),
-(2, '新日程', NULL, '2011-07-15 20:57:33', '2011-07-15 20:57:33', 708, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, '0;0;0;0;0;0;0', NULL);
+(2, '新日程', NULL, '2011-07-15 20:57:33', '2011-07-15 20:57:33', 708, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, '0;0;0;0;0;0;0', NULL),
+(3, '2', NULL, '2011-07-29 10:27:39', '2011-07-29 12:27:00', 708, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, '0;0;0;0;0;0;0', NULL),
+(4, '21212', NULL, '2011-07-28 11:00:00', '2011-07-29 12:00:00', 1, 1, 1, 1, NULL, 0, 0, 0, 0, 0, 1, '0;0;0;0;0;0;0', NULL),
+(5, '新日程', NULL, '2011-07-29 12:00:00', '2011-07-30 15:00:00', 1, 0, 0, 0, NULL, 0, 0, 0, 0, 0, 1, '0;0;0;0;0;0;0', NULL),
+(6, '333333333', NULL, '2011-07-29 12:58:30', '2011-07-29 13:58:30', 1, 1, 1, 1, NULL, 0, 0, 0, 0, 0, 1, '0;0;0;0;0;0;0', NULL),
+(7, '新日程', NULL, '2011-07-19 17:21:00', '2011-07-30 18:21:06', 708, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, '0;0;0;0;0;0;0', NULL),
+(8, '新日程', NULL, '2011-07-30 17:22:51', '2011-07-30 18:22:51', 708, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, '0;0;0;0;0;0;0', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `wlzx_oa_sendingfiles`
+--
+
+CREATE TABLE IF NOT EXISTS `wlzx_oa_sendingfiles` (
+  `id` bigint(20) NOT NULL auto_increment,
+  `title` varchar(500) character set utf8 default NULL COMMENT '标题',
+  `content` text character set utf8 NOT NULL COMMENT '内容',
+  `author_id` bigint(20) NOT NULL COMMENT '拟稿人',
+  `creation_date` datetime NOT NULL COMMENT '创建日期',
+  `auspice_department` varchar(200) character set utf8 default NULL COMMENT '主办单位',
+  `subject` varchar(500) character set utf8 default NULL COMMENT '事由',
+  `main_sends` varchar(500) character set utf8 default NULL COMMENT '主送机关',
+  `up_sends` varchar(500) character set utf8 default NULL COMMENT '抄报',
+  `down_sends` varchar(500) character set utf8 default NULL COMMENT '抄送',
+  `dispatch_word` varchar(100) character set utf8 default NULL COMMENT '发文机关代字',
+  `dispatch_year` varchar(50) character set utf8 default NULL COMMENT '发文年份',
+  `dispatch_number` varchar(50) character set utf8 default NULL COMMENT '发文序号',
+  `dispatch_date` date default NULL COMMENT '封发日期',
+  `status` smallint(6) NOT NULL default '0',
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+--
+-- 转存表中的数据 `wlzx_oa_sendingfiles`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `wlzx_oa_sendingfiles_attachment`
+--
+
+CREATE TABLE IF NOT EXISTS `wlzx_oa_sendingfiles_attachment` (
+  `id` bigint(20) NOT NULL auto_increment,
+  `name` varchar(100) NOT NULL,
+  `type` varchar(10) NOT NULL,
+  `path` varchar(100) NOT NULL,
+  `sendingfile_id` bigint(20) NOT NULL,
+  `upload_date` datetime default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+--
+-- 转存表中的数据 `wlzx_oa_sendingfiles_attachment`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `wlzx_oa_sendingfile_flow`
+--
+
+CREATE TABLE IF NOT EXISTS `wlzx_oa_sendingfile_flow` (
+  `id` bigint(20) NOT NULL auto_increment,
+  `type` smallint(4) NOT NULL,
+  `is_completed` smallint(4) NOT NULL default '0',
+  `text` text,
+  `user_id` bigint(20) NOT NULL,
+  `sendingfile_id` bigint(20) NOT NULL,
+  `completed_date` date default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+--
+-- 转存表中的数据 `wlzx_oa_sendingfile_flow`
+--
+
 
 -- --------------------------------------------------------
 

@@ -81,8 +81,8 @@
 				<mx:HBox>
 					<mx:Label text="发文"  color="red" width="80"/>
 					<mx:TextInput width="100"/>
-					<mx:Label text="字（20" color="red"/>
-					<mx:TextInput width="80"/>
+					<mx:Label text="字（" color="red"/>
+					<mx:TextInput width="100"/>
 					<mx:Label text="）第" color="red"/>
 					<mx:TextInput width="80"/>
 					<mx:Label text="号" color="red"/>

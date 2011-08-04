@@ -3,7 +3,7 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping auto-import="false">
-	<class name="system.wlims.oa.entity.receipt.FileAttachmentModel" table="wlzx_oa_receipt_attachment">
+	<class name="system.wlims.oa.entity.sendingFiles.FileAttachmentModel" table="wlzx_oa_sendingfile_attachment">
 	        <id name="id">
 	            <column name="id" />
 	            <generator class="native" />
@@ -20,12 +20,15 @@
 	        <property name="path" type="string">
 	            <column name="path" />
 	        </property>
-	        
-	        <property name="date" type="java.sql.Date">
-	            <column name="upload_date" />
+	        <property name="size" type="string">
+	            <column name="size" />
 	        </property>
 	        
-	        <many-to-one not-found="ignore" name="receipt" class="system.wlims.oa.entity.receipt.ReceiptModel" column="receipt_id" lazy="proxy"/>
+	        <property name="date" type="java.util.Date">
+	            <column name="upload_date" />
+	        </property>
+<!--	        <many-to-one not-found="ignore" class="system.wlims.oa.entity.sendingFiles.SendingFileModel" name="sendingFile" column="sendingFile_id" lazy="proxy"/>-->
+	        
 	
 	</class>
 </hibernate-mapping>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+<class name="system.wlims.oa.entity.sendingFiles.SendingFileModel" table="wlzx_oa_sendingfiles">
+        <id name="id">
+            <column name="id" />
+            <generator class="native" />
+        </id>
+      <property name="title" type="string">
+            <column name="title"/>
+      </property>
+      <property name="content" type="string">
+            <column name="content"/>
+      </property>
+      <property name="authorId" type="string">
+            <column name="author_id"/>
+      </property>
+      <property name="creationDate" type="java.util.Date">
+            <column name="creation_date"/>
+      </property>
+      <property name="auspiceDepartment" type="string">
+            <column name="auspice_department"/>
+      </property>
+      <property name="subject" type="string">
+            <column name="subject"/>
+      </property>
+      <property name="mainSends" type="string">
+            <column name="main_sends"/>
+      </property>
+      <property name="upSends" type="string">
+            <column name="up_sends"/>
+      </property>
+      <property name="downSends" type="string">
+            <column name="down_sends"/>
+      </property>
+      <property name="dispatchWord" type="string">
+            <column name="dispatch_word"/>
+      </property>
+      <property name="dispatchYear" type="string">
+            <column name="dispatch_year"/>
+      </property>
+      <property name="dispatchNumber" type="string">
+            <column name="dispatch_number"/>
+      </property>
+      <property name="dispatchDate" type="java.util.Date">
+            <column name="dispatch_date"/>
+      </property>
+      <property name="status" type="int">
+            <column name="status"/>
+      </property>
+      <set name="fileFlows" lazy="false" cascade="delete" inverse="true" table="wlzx_oa_sendingfile_flow">
+        	<key column="sendingfile_id" not-null="true" />
+        	<one-to-many not-found="ignore" class="system.wlims.oa.entity.sendingFiles.FileFlowModel" /> 
+       </set>	
+        
+      <set name="attachments" lazy="false" cascade="delete" inverse="true" table="wlzx_oa_sendingfiles_attachment">
+        	<key column="sendingfile_id" not-null="true" />
+        	<one-to-many not-found="ignore" class="system.wlims.oa.entity.sendingFiles.FileAttachmentModel" /> 
+       </set>		
+    </class>
+</hibernate-mapping>
