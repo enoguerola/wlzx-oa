@@ -316,10 +316,13 @@
 	</fx:Script>
 
 	<!--************* 顶部横幅  ***************-->
-	<s:BorderContainer width="100%" height="65"  borderColor="#A0C0F0" backgroundImage="@Embed(source='../WebContent/resources/oa/layout/head.jpg')">
+	<s:BorderContainer width="100%" height="65"  styleName="TopBannerStyle" >
 		<s:layout>
 			<s:HorizontalLayout  verticalAlign="top" horizontalAlign="right"/>
 		</s:layout>
+		<s:HGroup height="100%" verticalAlign="bottom" >
+			<mx:Image source="@Embed(source='../WebContent/resources/oa/layout/TopBanerLogo.png')" top="50" />
+		</s:HGroup>
 		<s:VGroup width="20%" height="100%" verticalAlign="middle">
 			<s:BorderContainer width="203"  height="50" id="HeadIconContainer"  >
 				<s:HGroup  width="100%"  height="100%" verticalAlign="middle"  paddingLeft="30" gap="30" >
