@@ -366,10 +366,9 @@
 			
 		</mx:Accordion>
 		
+		<!--************  右侧标签TabNavigator 面板 ****************-->
 		<flexlib:DockableToolBar x="150" y="65" toolTip="隐藏|展开左区域菜单" height="100%" paddingTop="200" dropShadowVisible="false" borderVisible="false"  doubleClickEnabled="true" doubleClick="showHideLeftbody_handler(event)" ></flexlib:DockableToolBar>
-		<flexlib:SuperTabNavigator id="nav" styleName="customTabNavStyle" borderStyle="solid" borderColor="0xC0D0FF" tabStyleName="customTabStyles" horizontalGap="1" paddingTop="0" paddingBottom="0" paddingLeft="0" paddingRight="0" closePolicy="SuperTab.CLOSE_ROLLOVER|SuperTab.CLOSE_ALWAYS|SuperTab.CLOSE_SELECTED|SuperTab.CLOSE_NEVER" width="100%" height="100%" allowTabSqueezing="false"  dragEnabled="false">
-			
-			
+		<flexlib:SuperTabNavigator id="nav" styleName="customTabNavStyle"  tabStyleName="customTabStyles" horizontalGap="1" paddingTop="0" paddingBottom="0" paddingLeft="0" paddingRight="0" closePolicy="SuperTab.CLOSE_ROLLOVER|SuperTab.CLOSE_ALWAYS|SuperTab.CLOSE_SELECTED|SuperTab.CLOSE_NEVER" width="100%" height="100%" allowTabSqueezing="false"  dragEnabled="false">
 		</flexlib:SuperTabNavigator>
 	</s:BorderContainer>
 	

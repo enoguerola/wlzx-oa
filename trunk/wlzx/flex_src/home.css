@@ -109,6 +109,10 @@ mx|TabNavigator{
 .customTabNavStyle{
  tab-height:25;
  tab-width:120;
+/* border-visible:false;*/
+/* border-style:solid;*/
+/* border-color:#AA0000;*/
+/*	 #8090E0;*/
 }
 
 /***********   Button **************/
