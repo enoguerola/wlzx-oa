@@ -321,7 +321,7 @@
 			<s:HorizontalLayout  verticalAlign="top" horizontalAlign="right"/>
 		</s:layout>
 		<s:HGroup height="100%" verticalAlign="bottom" >
-			<mx:Image source="@Embed(source='../WebContent/resources/oa/layout/TopBanerLogo.png')" top="50" />
+			<mx:Image source="@Embed(source='../WebContent/resources/oa/layout/TopBanerLogo.png')" />
 		</s:HGroup>
 		<s:VGroup width="20%" height="100%" verticalAlign="middle">
 			<s:BorderContainer width="203"  height="50" id="HeadIconContainer"  >
