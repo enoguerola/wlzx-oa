@@ -2,29 +2,60 @@
 <mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" 
 				xmlns:flexiframe="http://code.google.com/p/flex-iframe/"
 				xmlns:rtf="controls.rtf.*"
-				width="100%" height="100%" creationComplete="init();"   alpha="0">
+				width="100%" height="100%" creationComplete="init();" paddingRight="10" paddingLeft="10" paddingBottom="10">
 
 	<mx:Script>
 		<![CDATA[		
-			import mx.events.FlexEvent;
 			import mx.controls.Alert;
+			import mx.events.FlexEvent;
 			private function init():void
 			{
-				iframe.visible=false;
-				this.addEventListener(FlexEvent.HIDE,function():void{
-					iframe.visible=false;
-					iframe.removeAllChildren();
-					iframe.validateNow();
-				});
-				this.addEventListener(FlexEvent.SHOW,function():void{
-					
-						iframe.visible=true;
-						iframe.source=parentApplication.homeUrl+'iframe_rtf.html';
-
-						iframe.validateNow();
-						
-				});
+//				iframe.visible=false;
+//				this.addEventListener(FlexEvent.HIDE,function():void{
+//					iframe.visible=false;
+//					iframe.removeAllChildren();
+//					iframe.validateNow();
+//				});
+//				this.addEventListener(FlexEvent.SHOW,function():void{
+//					
+//						iframe.visible=true;
+//						iframe.source=parentApplication.homeUrl+'soaOffice.jsp';
+//
+//						iframe.validateNow();
+//						
+//				});
+//				iframe.addEventListener(FocusEvent.FOCUS_IN, focusInHandler);
+//				function focusInHandler(e:FocusEvent):void 
+//				{
+//					Alert.show("a");
+//					IME.enabled = true;
+//				}
+//				
+			
 				
+			}
+			public function empty():void{
+				rte.htmlText="";
+			}
+			public  function getContent():String{
+				//return iframe.callIFrameFunction(,null);
+				return rte.htmlText;
+			}
+			public  function setContent(content:String):void{
+				
+//				iframe.callIFrameFunction("soaOpen",[fileName] ,function():void{
+//					Alert.show("aaaaaaa");
+//				});
+				//iframe.content=content;
+				rte.htmlText=content;
+			}
+			public function isValid():Boolean{
+				if(rte.text!=null&&rte.text!='')
+					return true;
+				else {
+					Alert.show("正文内容不能为空");
+					return false;
+				}
 			}
 		]]>
 	</mx:Script>
@@ -34,8 +65,8 @@
 		<!--<mx:Text id="help" width="100%" height="20%" />	-->
 		<!--<flexiframe:IFrame id="iframe"      label="文本编辑器"  overlayDetection="false"  source="{parentApplication.homeUrl+'frame.html'}"   width="100%"  height="100%" clipContent="true" > 
 		</flexiframe:IFrame>    -->
-
-		<flexiframe:IFrame  id="iframe"   width="100%" height="100%" x="0" y="0"  paddingLeft="0" paddingTop="0" alpha="0">  
-		 </flexiframe:IFrame>    
-
+		<!--<flexiframe:IFrame  id="iframe"   width="100%" height="100%" x="0" y="0"  paddingLeft="0" paddingTop="0" alpha="0" >  
+		 </flexiframe:IFrame>    -->
+	<mx:RichTextEditor id="rte" title="Halo RichTextEditor"   headerHeight="0" width="100%" height="100%" dropShadowVisible="false" text="" >
+	</mx:RichTextEditor>
 </mx:VBox>

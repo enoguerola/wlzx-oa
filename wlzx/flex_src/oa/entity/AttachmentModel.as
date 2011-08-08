@@ -10,6 +10,7 @@ package oa.entity
 		public var path:String;
 		public var type:String;
 		public var size:String;
+		public var date:Date;
 		public function AttachmentModel()
 		{
 			super();

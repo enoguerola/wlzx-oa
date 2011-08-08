@@ -1,40 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" 
 		 xmlns:sendingFiles="oa.sendingFiles.component.*" 
+		 xmlns:valueObjects="oa.entity.sendingFiles.*"
 		 width="100%" height="100%" currentState="part1">
+	<valueObjects:SendingFileModel id="sendingFile"/>
 	<mx:Script>
 		<![CDATA[		
+			import mx.controls.Alert;
 			import mx.events.FlexEvent;
+			
+			import oa.entity.sendingFiles.SendingFileModel;
 			public function preStep():void{
 				next.enabled=true;
 				if(this.currentState=="part1"){
 					
 				}else if(this.currentState=="part2"){
 					this.currentState='part1';
-					documentMaintainPart1.dispatchEvent(new Event(FlexEvent.SHOW));
+					documentMaintainPart1Button.enabled=true;
+					documentMaintainPart2Button.enabled=false;
+					documentMaintainPart3Button.enabled=false;
+					//documentMaintainPart1.dispatchEvent(new Event(FlexEvent.SHOW));
 					pre.enabled=false;
+					documentMaintainPart1.setContent(sendingFile.content);
+					//Alert.show(sendingFile.content);
 				}else if(this.currentState=="part3"){
+					documentMaintainPart1Button.enabled=false;
+					documentMaintainPart2Button.enabled=true;
+					documentMaintainPart3Button.enabled=false;
 					this.currentState='part2';
-					documentMaintainPart1.dispatchEvent(new Event(FlexEvent.HIDE));
+					//documentMaintainPart1.dispatchEvent(new Event(FlexEvent.HIDE));
 				}
 			}
 			public function nextStep():void{
 				pre.enabled=true;
 				if(this.currentState=="part1"){
+					sendingFile.content=documentMaintainPart1.getContent();
 					this.currentState='part2';
-					documentMaintainPart1.dispatchEvent(new Event(FlexEvent.HIDE));
+					documentMaintainPart1Button.enabled=false;
+					documentMaintainPart2Button.enabled=true;
+					documentMaintainPart3Button.enabled=false;
+					//documentMaintainPart1.dispatchEvent(new Event(FlexEvent.HIDE));
+					//Alert.show(sendingFile.content);
 				}else if(this.currentState=="part2"){
 					this.currentState='part3';
-					documentMaintainPart1.dispatchEvent(new Event(FlexEvent.HIDE));
+					//documentMaintainPart1.dispatchEvent(new Event(FlexEvent.HIDE));
+					documentMaintainPart1Button.enabled=false;
+					documentMaintainPart2Button.enabled=false;
+					documentMaintainPart3Button.enabled=true;
 					next.enabled=false;
 				}else if(this.currentState=="part3"){
+					
 				}
 			}
-			public function initStep():void{
-				this.currentState='part1';
-				documentMaintainPart1.dispatchEvent(new Event(FlexEvent.SHOW));
+			public function initStep(id:String=null):void{
+			//	this.currentState='part1';
+				//documentMaintainPart1.dispatchEvent(new Event(FlexEvent.SHOW));
 				pre.enabled=false;
 				next.enabled=true;
+				documentMaintainPart1Button.enabled=true;
+				documentMaintainPart2Button.enabled=false;
+				documentMaintainPart3Button.enabled=false;
+				if(this.currentState!='part1')this.currentState='part1';
+				if(id==null){
+					sendingFile=new SendingFileModel();
+					documentMaintainPart1.empty();
+					documentMaintainPart2.empty();
+					documentMaintainPart3.empty();
+					//documentMaintainPart1.setContent("test.doc");
+				}else{
+				
+				}
+			}
+			public function isValid():Boolean{
+				if(documentMaintainPart1.isValid()&&documentMaintainPart2.isValid()&&documentMaintainPart3.isValid())
+					return true;
+				else return false;
 			}
 		]]>
 	</mx:Script>
@@ -55,9 +95,9 @@
 	</mx:states>
 	<mx:HBox width="100%" height="100%"  horizontalGap="0">
 		<mx:VBox width="100" height="100%" verticalAlign="top" horizontalAlign="center"  paddingBottom="10">
-			<mx:LinkButton label="起草正文" icon="@Embed(source='../WebContent/resources/oa/buttonIcon/documentMaintainPart1.png')"/>
-			<mx:LinkButton label="附件上传" icon="@Embed(source='../WebContent/resources/oa/buttonIcon/documentMaintainPart2.png')"/>
-			<mx:LinkButton label="发文稿纸" icon="@Embed(source='../WebContent/resources/oa/buttonIcon/documentMaintainPart3.png')"/>
+			<mx:LinkButton label="起草正文" icon="@Embed(source='../WebContent/resources/oa/buttonIcon/documentMaintainPart1.png')" id="documentMaintainPart1Button" enabled="true"/>
+			<mx:LinkButton label="附件上传" icon="@Embed(source='../WebContent/resources/oa/buttonIcon/documentMaintainPart2.png')" id="documentMaintainPart2Button" enabled="false"/>
+			<mx:LinkButton label="发文稿纸" icon="@Embed(source='../WebContent/resources/oa/buttonIcon/documentMaintainPart3.png')" id="documentMaintainPart3Button" enabled="false"/>
 			<mx:Box height="100%"/>
 			<mx:Button label="上一步"  click="preStep();" id="pre" enabled="false"/>
 			<mx:Button label="下一步"  click="nextStep();" id="next"/>

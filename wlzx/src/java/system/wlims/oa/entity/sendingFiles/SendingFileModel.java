@@ -2,9 +2,11 @@ package system.wlims.oa.entity.sendingFiles;
 
 import java.sql.Date;
 import java.util.Set;
+import java.util.TreeSet;
 
 
 import system.wlims.basic.entity.BaseModel;
+import system.wlims.oa.entity.notice.AttachmentModel;
 
 /**
  * 发文
@@ -32,7 +34,7 @@ public class SendingFileModel extends BaseModel {
 	private String dispatchNumber;
 	private Date dispatchDate;
 	private Integer status;
-	private Set<FileAttachmentModel> attachments;
+	private Set<AttachmentModel> attachments=new TreeSet<AttachmentModel>(); 
 	private Set<FileFlowModel> fileFlows;
 	public static enum EStatus{
 		Drafting(0, "拟稿中"),
@@ -166,11 +168,11 @@ public class SendingFileModel extends BaseModel {
 		this.dispatchDate = dispatchDate;
 	}
 
-	public Set<FileAttachmentModel> getAttachments() {
+	public Set<AttachmentModel> getAttachments() {
 		return attachments;
 	}
 
-	public void setAttachments(Set<FileAttachmentModel> attachments) {
+	public void setAttachments(Set<AttachmentModel> attachments) {
 		this.attachments = attachments;
 	}
 

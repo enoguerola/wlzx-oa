@@ -15,7 +15,8 @@
 		}
 	</mx:Style>
 	<mx:Script>
-		<![CDATA[		
+		<![CDATA[	
+			import mx.controls.Alert;
 			private function init():void
 			{
 				var serverObject:Object = new Object();
@@ -25,6 +26,14 @@
 				serverObject.removeServer = "RemoveFile?file=";
 				editor.serverObject = serverObject;
 				
+				//IME解决中文输入法的bug 
+				IME.enabled = true;
+//				editor.addEventListener(FocusEvent.FOCUS_IN, focusInHandler);
+//				function focusInHandler(e:FocusEvent):void 
+//				{
+//					//Alert.show("b");
+//					IME.enabled = true;
+//				}
 //				help.text = "";
 //				help.text += "注意事项：\n1、必须定义serverObject属性，否则无法上传图片。"; 
 //				help.text += "\n2、请注意html-template/index.template.html文件有所改动，分别为:";

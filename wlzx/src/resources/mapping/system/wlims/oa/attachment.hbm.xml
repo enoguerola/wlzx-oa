@@ -23,6 +23,9 @@
         <property name="size" type="string">
             <column name="size" />
         </property>
+        <property name="date" type="java.util.Date">
+	            <column name="upload_date" />
+	     </property>
 		<set name="notices" lazy="false" table="wlzx_oa_notice_attachment_relationship" cascade="none" inverse="false">
         	<key column="id" not-null="true" />
         	<many-to-many not-found="ignore"  column="notice_id" class="system.wlims.oa.entity.notice.NoticeModel" /> 
