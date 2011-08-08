@@ -44,7 +44,7 @@ public class ScheduleDAOImpl extends BaseDAOImpl<ScheduleModel> implements Sched
 		if(StringUtils.isNotEmpty(beginDate)){
 			criteria.add(Restrictions.sqlRestriction("begin_time>='"+beginDate+" 00:00:00'"));	
 		}
-		if(StringUtils.isNotEmpty(beginDate)){
+		if(StringUtils.isNotEmpty(endDate)){
 			criteria.add(Restrictions.sqlRestriction("end_time<='"+endDate+" 59:59:59'"));	
 		}
 		criteria.addOrder(Order.desc("beginTime"));

@@ -1,5 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%"  paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10">
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" 
+		 xmlns:hc="com.hillelcoren.components.*"
+		 xmlns:render="system.component.render.*"
+		 xmlns:mx1="library://ns.adobe.com/flex/mx"
+		 width="100%" height="100%"  paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" backgroundColor="white" creationComplete="init();">
+	
+	<mx:Script>
+		<![CDATA[		
+			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			private function init():void
+			{			
+				search_account.dataProvider=this.parentApplication.allTeacherAcccounts;
+				
+			}
+			public function empty():void{
+				title.text="";
+				auspiceDepartment.text="";
+				subject.text="";
+				mainSends.text="";
+				upSends.text="";
+				downSends.text="";
+				dispatchWord.text="";
+				dispatchYear.text="";
+				dispatchNumber.text="";
+				dispatchDate.text="";
+				attachments.text="";
+				search_account_id.text="";
+				search_account.selectedItemId=-1;
+			}
+			private function searchAccountHandleAutoCompleteChange():void
+			{
+				var color:Object = search_account.selectedItem;
+				
+				if (color != null && color.hasOwnProperty( "id" ))
+				{
+					search_account_id.text=color.id;
+				} else{
+					search_account_id.text="";
+				}               
+			}
+			public function isValid():Boolean{
+				if(search_account_id.text==''){
+					Alert.show("发文单中-拟稿人不能为空");
+					return false;
+				}
+				if(subject.text==''){
+					Alert.show("发文单中-事由不能为空");
+					return false;
+				}
+				if(title.text==''){
+					Alert.show("发文单中-主题不能为空");
+					return false;
+				}
+				return true;
+			}
+			
+		]]>
+	</mx:Script>
+	<mx:Component id="searchAccountDropDownItemRenderer">
+		<render:AdvancedItemRenderer selectedItems="{ outerDocument.search_account.selectedItems }" />
+	</mx:Component>
 	<mx:Label text="浙江省温岭中学发文稿"  letterSpacing="5"  fontSize="14"  fontWeight="bold"  width="100%"  textAlign="center" color="red" />
 	<mx:Grid width="100%" horizontalAlign="center" verticalGap="-1" horizontalGap="-1" verticalAlign="middle" autoLayout="true" >
 		<mx:GridRow>
@@ -28,11 +89,16 @@
 				<mx:VBox>
 					<mx:HBox>
 						<mx:Label text="主办单位：" width="80" color="red"/>
-						<mx:TextInput text=""  width="250"/>
+						<mx:TextInput text=""  width="250" id="auspiceDepartment"/>
 					</mx:HBox>
 					<mx:HBox>
 						<mx:Label text="拟稿人：" width="80" color="red"/>
-						<mx:TextInput text=""  width="250"/>
+						<hc:AutoComplete id="search_account"  labelField="name"  width="200"  matchType="anyPart" prompt="选择教师"  change="{ searchAccountHandleAutoCompleteChange() }" dropDownItemRenderer="{ searchAccountDropDownItemRenderer }" selectedItemStyleName="none">
+							
+						</hc:AutoComplete>
+						<mx:Label id="search_account_id" visible="false">
+							
+						</mx:Label>
 					</mx:HBox>
 					
 				</mx:VBox>
@@ -42,22 +108,22 @@
 		<mx:GridRow>
 			<mx:GridItem  borderStyle="solid" verticalAlign="middle" borderColor="red" paddingTop="10" paddingBottom="10" paddingLeft="10" paddingRight="10">
 				<mx:Label text="事由：" width="80" color="red"/>
-				<mx:TextArea  width="250">
+				<mx:TextArea  width="250" id="subject">
 					
 				</mx:TextArea>
 			</mx:GridItem>
 			<mx:GridItem  borderStyle="solid" verticalAlign="middle" borderColor="red" paddingTop="10" paddingBottom="10" paddingLeft="10" paddingRight="10">
 				<mx:Label text="附件：" width="80" color="red"/>
-				<mx:TextArea  width="250">
+				<mx1:Text width="250" id="attachments">
 					
-				</mx:TextArea>
+				</mx1:Text>
 			</mx:GridItem>
 			
 		</mx:GridRow>
 		<mx:GridRow>
 			<mx:GridItem  borderStyle="solid" verticalAlign="middle" borderColor="red" paddingTop="10" paddingBottom="10" paddingLeft="10" paddingRight="10">
 				<mx:Label text="主送机关：" width="80" color="red"/>
-				<mx:TextArea  width="250">
+				<mx:TextArea  width="250" id="mainSends">
 					
 				</mx:TextArea>
 			</mx:GridItem>
@@ -65,11 +131,11 @@
 				<mx:VBox>
 					<mx:HBox>
 						<mx:Label text="抄报：" width="80" color="red"/>
-						<mx:TextInput text=""  width="250"/>
+						<mx:TextInput text=""  width="250" id="upSends"/>
 					</mx:HBox>
 					<mx:HBox>
 						<mx:Label text="抄送：" width="80" color="red"/>
-						<mx:TextInput text=""  width="250"/>
+						<mx:TextInput text=""  width="250" id="downSends"/>
 					</mx:HBox>
 					
 				</mx:VBox>
@@ -80,13 +146,13 @@
 			<mx:GridItem  borderStyle="solid" verticalAlign="middle" borderColor="red" paddingTop="10" paddingBottom="10" paddingLeft="10" paddingRight="10" colSpan="2">
 				<mx:HBox>
 					<mx:Label text="发文"  color="red" width="80"/>
-					<mx:TextInput width="100"/>
+					<mx:TextInput width="100" id="dispatchWord"/>
 					<mx:Label text="字（" color="red"/>
-					<mx:TextInput width="100"/>
+					<mx:TextInput width="100" id="dispatchYear"/>
 					<mx:Label text="）第" color="red"/>
-					<mx:TextInput width="80"/>
+					<mx:TextInput width="80" id="dispatchNumber"/>
 					<mx:Label text="号" color="red"/>
-					<mx:DateField yearNavigationEnabled="true"  id="creationDate" width="100" formatString="YYYY-MM-DD" />
+					<mx:DateField yearNavigationEnabled="true"  width="100" formatString="YYYY-MM-DD" id="dispatchDate"/>
 					<mx:Label text="封发" color="red"/>
 				</mx:HBox>
 			</mx:GridItem>
@@ -96,7 +162,7 @@
 		<mx:GridRow>
 			<mx:GridItem  borderStyle="solid" verticalAlign="middle" borderColor="red" paddingTop="10" paddingBottom="10" paddingLeft="10" paddingRight="10" colSpan="2">
 					<mx:Label text="标题" width="80" color="red"/>
-					<mx:TextArea  width="100%">
+					<mx:TextArea  width="100%" id="title">
 						
 					</mx:TextArea>
 			</mx:GridItem>

@@ -1,6 +1,8 @@
 package system.wlims.oa.action;
 
 
+import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -32,6 +34,7 @@ public class AttachmentUploadHandler extends BaseFileUploadHandler{
 		attachment.setType(getFileType(file.getOriginalFilename()));
 		attachment.setSize(file.getSize()+"");
 		attachment.setId(null);
+		attachment.setDate(new Date());
 		try {
 			attachmentService.save(attachment);
 			response(response, attachment.getId());

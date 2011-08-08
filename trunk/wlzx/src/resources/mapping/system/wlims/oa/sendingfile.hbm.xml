@@ -54,10 +54,10 @@
         	<key column="sendingfile_id" not-null="true" />
         	<one-to-many not-found="ignore" class="system.wlims.oa.entity.sendingFiles.FileFlowModel" /> 
        </set>	
-        
-      <set name="attachments" lazy="false" cascade="delete" inverse="true" table="wlzx_oa_sendingfiles_attachment">
+     <set name="attachments" lazy="false" table="wlzx_oa_sendingfiles_attachment" cascade="all-delete-orphan" inverse="false">
         	<key column="sendingfile_id" not-null="true" />
-        	<one-to-many not-found="ignore" class="system.wlims.oa.entity.sendingFiles.FileAttachmentModel" /> 
-       </set>		
+        	<many-to-many not-found="ignore"  column="attachment_id" class="system.wlims.oa.entity.notice.AttachmentModel" /> 
+     </set> 
+    
     </class>
 </hibernate-mapping>

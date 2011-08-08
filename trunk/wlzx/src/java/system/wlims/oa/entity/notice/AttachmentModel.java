@@ -1,5 +1,6 @@
 package system.wlims.oa.entity.notice;
 
+import java.util.Date;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -16,6 +17,7 @@ public class AttachmentModel extends BaseModel {
 	private String path;
 	private String type;
 	private String size;
+	private Date date;
 	private Set<NoticeModel> notices=new TreeSet<NoticeModel>();//仅用于删除通知附件时级联删除两者关系
 	private Set<ConferenceModel> conferences1=new TreeSet<ConferenceModel>();//仅用于删除会议附件时级联删除两者关系
 	private Set<ConferenceModel> conferences2=new TreeSet<ConferenceModel>();//仅用于删除会议总结附件时级联删除两者关系
@@ -60,6 +62,12 @@ public class AttachmentModel extends BaseModel {
 	}
 	public void setConferences2(Set<ConferenceModel> conferences2) {
 		this.conferences2 = conferences2;
+	}
+	public Date getDate() {
+		return date;
+	}
+	public void setDate(Date date) {
+		this.date = date;
 	}
 
 }
