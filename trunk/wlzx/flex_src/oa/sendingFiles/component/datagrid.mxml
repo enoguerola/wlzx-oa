@@ -21,6 +21,12 @@
 				/*var sample:ArrayCollection = new ArrayCollection([{title:"", status:"2"}, {title:"o", status:"3"}]);
 				grid.initdata(sample);*/
 			}
+//			public function enterEdit(id:String):void
+//			{
+//				var parent:Object = (Object)(this.parentDocument);
+//				parent.enterEdit(id);
+//				//Alert.show(search_department.selectedItem.data);
+//			}
 		]]>
 	</fx:Script>
 	

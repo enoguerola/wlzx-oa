@@ -4,9 +4,9 @@
 		 xmlns:valueObjects="oa.entity.sendingFiles.*"
 		 width="100%" height="100%" currentState="part1">
 	<valueObjects:SendingFileModel id="sendingFile"/>
-	<mx:RemoteObject id="sendingFileServiceRO" destination="sendingFileServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+<!--	<mx:RemoteObject id="sendingFileServiceRO" destination="sendingFileServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 		<mx:method name="getById"  concurrency="last" result="getById_resultHandler(event);"/>
-	</mx:RemoteObject>
+	</mx:RemoteObject>-->
 	<mx:Script>
 		<![CDATA[		
 			import mx.controls.Alert;
@@ -14,16 +14,38 @@
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
 			import oa.entity.sendingFiles.SendingFileModel;
-			private function systemFaultHandler(event:FaultEvent):void {
-				Alert.show(event.fault.faultString, 'Error');
-			}
-			
-			private function getById_resultHandler(event:ResultEvent):void
-			{
-				if(event.result!=null){
-					sendingFile=event.result as SendingFileModel;
-				}
-			}
+			import system.utils.CommonUtils;
+			import oa.entity.AttachmentModel;
+//			private function systemFaultHandler(event:FaultEvent):void {
+//				Alert.show(event.fault.faultString, 'Error');
+//			}
+//			
+//			private function getById_resultHandler(event:ResultEvent):void
+//			{
+//				Alert.show(event.result.toString());
+//				if(event.result!=null){
+//					sendingFile=event.result as SendingFileModel;
+//					documentMaintainPart1.rte.htmlText=sendingFile.content;
+//					documentMaintainPart3.auspiceDepartment.text=sendingFile.auspiceDepartment;
+//					documentMaintainPart3.search_account_id.text=sendingFile.authorId;
+//					documentMaintainPart3.search_account.selectedItem=parentApplication.getItemByAccountId(sendingFile.authorId);
+//					documentMaintainPart3.subject.text=sendingFile.subject;
+//					documentMaintainPart3.mainSends.text=sendingFile.mainSends;
+//					documentMaintainPart3.upSends.text=sendingFile.upSends;
+//					documentMaintainPart3.downSends.text=sendingFile.downSends;
+//					documentMaintainPart3.dispatchWord.text=sendingFile.dispatchWord;
+//					documentMaintainPart3.dispatchYear.text=sendingFile.dispatchYear;
+//					documentMaintainPart3.dispatchNumber.text=sendingFile.dispatchNumber;
+//					documentMaintainPart3.dispatchDate.text=CommonUtils.formatDate(sendingFile.dispatchDate,"YYYY-MM-DD");
+//					documentMaintainPart3.title.text=sendingFile.title;
+//					var uploadList:Array=new Array();
+//					for each(var model:AttachmentModel in sendingFile.attachments){
+//						uploadList.push({label:model.name,data:parseInt(model.size)/1000+"KB",width:145,id:model.id});
+//						//	uploadListfileRef.fileList
+//					}
+//					documentMaintainPart2.upload.uploadAlready_list.dataProvider=uploadList;
+//				}
+//			}
 			public function preStep():void{
 				next.enabled=true;
 				if(this.currentState=="part1"){
@@ -82,7 +104,11 @@
 					documentMaintainPart3.empty();
 					//documentMaintainPart1.setContent("test.doc");
 				}else{
-				
+					documentMaintainPart2.empty();
+					//Alert.show(id+"bbbbbb");
+					var parent:Object = ((Object)(this.parentDocument));
+					parent.sendingFileServiceRO.getById(id);	
+
 				}
 			}
 			public function isValid():Boolean{
