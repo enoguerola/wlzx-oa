@@ -9,7 +9,6 @@ import system.utils.StringUtils;
 import system.wlims.oa.dao.notice.AttachmentDAO;
 import system.wlims.oa.dao.sendingFiles.SendingFileDAO;
 import system.wlims.oa.entity.notice.AttachmentModel;
-import system.wlims.oa.entity.sendingFiles.FileFlowModel;
 import system.wlims.oa.entity.sendingFiles.SendingFileModel;
 import system.wlims.oa.service.sendingFiles.SendingFileService;
 
@@ -28,7 +27,7 @@ public class SendingFileServiceImpl implements SendingFileService {
 	@Override
 	public SendingFileModel getById(String id) throws ServiceException {
 		// TODO Auto-generated method stub
-		return null;
+		return sendingFileDAO.get(id);
 	}
 
 	
