@@ -4,12 +4,26 @@
 		 xmlns:valueObjects="oa.entity.sendingFiles.*"
 		 width="100%" height="100%" currentState="part1">
 	<valueObjects:SendingFileModel id="sendingFile"/>
+	<mx:RemoteObject id="sendingFileServiceRO" destination="sendingFileServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+		<mx:method name="getById"  concurrency="last" result="getById_resultHandler(event);"/>
+	</mx:RemoteObject>
 	<mx:Script>
 		<![CDATA[		
 			import mx.controls.Alert;
 			import mx.events.FlexEvent;
-			
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
 			import oa.entity.sendingFiles.SendingFileModel;
+			private function systemFaultHandler(event:FaultEvent):void {
+				Alert.show(event.fault.faultString, 'Error');
+			}
+			
+			private function getById_resultHandler(event:ResultEvent):void
+			{
+				if(event.result!=null){
+					sendingFile=event.result as SendingFileModel;
+				}
+			}
 			public function preStep():void{
 				next.enabled=true;
 				if(this.currentState=="part1"){
@@ -21,7 +35,7 @@
 					documentMaintainPart3Button.enabled=false;
 					//documentMaintainPart1.dispatchEvent(new Event(FlexEvent.SHOW));
 					pre.enabled=false;
-					documentMaintainPart1.setContent(sendingFile.content);
+					//documentMaintainPart1.setContent(sendingFile.content);
 					//Alert.show(sendingFile.content);
 				}else if(this.currentState=="part3"){
 					documentMaintainPart1Button.enabled=false;
@@ -34,7 +48,7 @@
 			public function nextStep():void{
 				pre.enabled=true;
 				if(this.currentState=="part1"){
-					sendingFile.content=documentMaintainPart1.getContent();
+					//sendingFile.content=documentMaintainPart1.getContent();
 					this.currentState='part2';
 					documentMaintainPart1Button.enabled=false;
 					documentMaintainPart2Button.enabled=true;

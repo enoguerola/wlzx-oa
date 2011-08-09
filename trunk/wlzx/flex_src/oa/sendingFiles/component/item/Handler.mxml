@@ -91,8 +91,7 @@
 		]]>
 	</fx:Script>
 	<s:HGroup horizontalAlign="center" verticalAlign="middle" width="100%" height="100%" id="hgroup">
-		<mx:LinkButton click="remove()" id="remove_button" label="删除"/>
 		<mx:LinkButton click="edit(data.id)" id="edit_button" label="编辑"/>
-		<mx:LinkButton click="register()" id="register_button" label="登记" enabled="{data.status == 0}"></mx:LinkButton>
+		<mx:LinkButton click="register()" id="register_button" label="提交" enabled="{data.status == 0}"></mx:LinkButton>
 	</s:HGroup>
 </s:MXDataGridItemRenderer>

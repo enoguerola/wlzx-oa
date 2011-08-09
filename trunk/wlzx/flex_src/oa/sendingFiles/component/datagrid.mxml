@@ -29,7 +29,7 @@
 			<mx:DataGridColumn textAlign="center" headerText="发文标题" width="150" itemRenderer="oa.sendingFiles.component.item.Title"></mx:DataGridColumn>
 			<mx:DataGridColumn textAlign="center" headerText="主办单位" width="100" itemRenderer="oa.sendingFiles.component.item.Department"/>
 			<mx:DataGridColumn textAlign="center" headerText="拟稿人" width="100" itemRenderer="oa.sendingFiles.component.item.Poster"/>
-			<mx:DataGridColumn textAlign="center" headerText="最后编辑时间" width="100" dataField="inDate" labelFunction="DateUtil.datagridFormatDate"/>
+			<mx:DataGridColumn textAlign="center" headerText="创建时间" width="100" dataField="creationDate" labelFunction="DateUtil.datagridFormatDate"/>
 			<mx:DataGridColumn textAlign="center" headerText="状态" width="100" itemRenderer="oa.sendingFiles.component.item.Status"/>
 			<mx:DataGridColumn textAlign="center" headerText="操作" width="100" itemRenderer="oa.sendingFiles.component.item.Handler"/>
 		</component:mygridcolumns>

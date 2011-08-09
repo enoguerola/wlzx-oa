@@ -1,6 +1,6 @@
 package system.wlims.oa.entity.sendingFiles;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.Set;
 import java.util.TreeSet;
 

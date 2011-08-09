@@ -1,5 +1,6 @@
 package system.wlims.oa.serviceImpl.sendingFiles;
 
+import java.util.Date;
 import java.util.List;
 
 import system.DAOException;
@@ -8,6 +9,7 @@ import system.utils.StringUtils;
 import system.wlims.oa.dao.notice.AttachmentDAO;
 import system.wlims.oa.dao.sendingFiles.SendingFileDAO;
 import system.wlims.oa.entity.notice.AttachmentModel;
+import system.wlims.oa.entity.sendingFiles.FileFlowModel;
 import system.wlims.oa.entity.sendingFiles.SendingFileModel;
 import system.wlims.oa.service.sendingFiles.SendingFileService;
 
@@ -48,6 +50,15 @@ public class SendingFileServiceImpl implements SendingFileService {
 				model.getAttachments().add(attachmentModel);
 			}
 		}
+		model.setCreationDate(new Date());
+		model.setStatus(SendingFileModel.EStatus.Drafting.getValue());
+		
+//		FileFlowModel flow=new FileFlowModel();
+//		flow.setType(FileFlowModel.EType.Draft.getValue());
+//		flow.setText(FileFlowModel.EType.Draft.getText());
+//		
+//		flow.setUser(model.getAuthorId());
+//		model.getFileFlows().add(flow);
 		sendingFileDAO.saveOrUpdate(model);
 
 		return model;

@@ -23,6 +23,7 @@
 			import mx.events.FlexEvent;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
+			import mx.formatters.DateFormatter;
 			private function init():void
 			{
 				//this.addEventListener(Event.REMOVED_FROM_STAGE,function():void{documentMaintain.documentMaintainPart1.dispatchEvent(new Event(FlexEvent.HIDE));});
@@ -48,7 +49,7 @@
 				var auspiceDepartment:String = search_panel.search_title.text;
 				var beginDate:String = search_panel.search_date_begin.text;
 				var endDate:String = search_panel.search_date_end.text;
-				var states:String = "";
+				var states:String = "0";
 				sendingFileServiceRO.getByConditions( dispatchWord, dispatchYear, dispatchNumber, title, auspiceDepartment, beginDate, endDate, states);
 
 			}
@@ -63,6 +64,19 @@
 			private function saveDraft():void
 			{
 				if(documentMaintain.isValid()){
+					documentMaintain.sendingFile.content=documentMaintain.documentMaintainPart1.rte.htmlText;
+					documentMaintain.sendingFile.auspiceDepartment=documentMaintain.documentMaintainPart3.auspiceDepartment.text;
+					documentMaintain.sendingFile.authorId=documentMaintain.documentMaintainPart3.search_account_id.text;
+					documentMaintain.sendingFile.subject=documentMaintain.documentMaintainPart3.subject.text;
+					documentMaintain.sendingFile.mainSends=documentMaintain.documentMaintainPart3.mainSends.text;
+					documentMaintain.sendingFile.upSends=documentMaintain.documentMaintainPart3.upSends.text;
+					documentMaintain.sendingFile.downSends=documentMaintain.documentMaintainPart3.downSends.text;
+					documentMaintain.sendingFile.dispatchWord=documentMaintain.documentMaintainPart3.dispatchWord.text;
+					documentMaintain.sendingFile.dispatchYear=documentMaintain.documentMaintainPart3.dispatchYear.text;
+					documentMaintain.sendingFile.dispatchNumber=documentMaintain.documentMaintainPart3.dispatchNumber.text;
+					documentMaintain.sendingFile.dispatchDate=DateFormatter.parseDateString(documentMaintain.documentMaintainPart3.dispatchDate.text);
+					documentMaintain.sendingFile.title=documentMaintain.documentMaintainPart3.title.text;
+
 					if(addUpdateFlag.text == "add")
 						sendingFileServiceRO.addSendingFile(documentMaintain.sendingFile,documentMaintain.documentMaintainPart2.upload.idList);
 					else sendingFileServiceRO.updateSendingFile(documentMaintain.sendingFile,documentMaintain.documentMaintainPart2.upload.addIds,documentMaintain.documentMaintainPart2.upload.removeIds);
@@ -73,7 +87,7 @@
 			{
 				if(documentMaintain.isValid()){
 					//sendingFileServiceRO.addSendingFile(documentMaintain.sendingFile);
-					sendingFileServiceRO.changeWorkFlow(documentMaintain.sendingFile.id,"");
+					sendingFileServiceRO.changeWorkFlow(documentMaintain.sendingFile.id,"1");
 					this.currentState='list';
 				}
 			}
