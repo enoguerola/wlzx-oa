@@ -7,8 +7,11 @@
 	</s:layout>
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
-		<s:RemoteObject concurrency="last" fault="system_faultHandler(event)" destination="fileFlowServiceDest" id="fileFlowServiceRO" showBusyCursor="true">
+<!--		<s:RemoteObject concurrency="last" fault="system_faultHandler(event)" destination="fileFlowServiceDest" id="fileFlowServiceRO" showBusyCursor="true">
 			<s:method concurrency="last" name="getAllList" result="getList_resultHandle(event)"/>
+		</s:RemoteObject>-->
+		<s:RemoteObject id="sendingFileServiceRO" destination="sendingFileServiceDest" showBusyCursor="true" fault="system_faultHandler(event);">
+			<s:method name="getById"  concurrency="last" result="getById_resultHandler(event);"/>	
 		</s:RemoteObject>
 	</fx:Declarations>
 	<fx:Script>
@@ -25,7 +28,8 @@
 			private function init():void
 			{
 				var id:String = this.id;
-				fileFlowServiceRO.getAllList(id);
+//				fileFlowServiceRO.getAllList(id);
+				sendingFileServiceRO.getById(id);
 			}
 			
 			protected function system_faultHandler(event:FaultEvent):void
@@ -33,23 +37,32 @@
 				Alert.show(event.fault.faultString, "error");
 			}
 			
-			protected function getList_resultHandle(event:ResultEvent):void
+			/* protected function getList_resultHandle(event:ResultEvent):void
 			{
 				var list:ArrayCollection = event.result as ArrayCollection;
 				flowRecords.dataProvider = list;
+			} */
+			protected function getById_resultHandler(event:ResultEvent):void
+			{
+				var list:ArrayCollection = event.result.fileFlows as ArrayCollection;
+				flowRecords.dataProvider = list;
 			}
+			
 			
 			private function labelType(item:Object, column:DataGridColumn):String
 			{
 				var type:int = item.type;
 				if(type == 0)
-					return "拟办";
-				else if(type == 1)
-					return "批示";
+					return "拟稿";
 				else if(type == 2)
-					return "承办";
-				else
+					return "核稿";
+				else if(type == 4)
+					return "会签";
+				else if(type == 6)
+					return "签发";
+				else if(type == 8)
 					return "传阅";
+				return null;
 			}
 			
 			private function labelUser(item:Object, column:DataGridColumn):String

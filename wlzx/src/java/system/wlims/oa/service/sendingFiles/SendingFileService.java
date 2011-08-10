@@ -19,5 +19,5 @@ public interface SendingFileService {
   List<SendingFileModel> getByConditions(String dispatchWord,String dispatchYear,String dispatchNumber,String title,String auspiceDepartment,String beginDate,String endDate,String states)throws ServiceException;
 
   boolean changeWorkFlow(String id,String nextState)throws ServiceException;
-
+  String generateSWFById(String id)throws ServiceException;
 }

@@ -75,8 +75,8 @@
 						   if (isValidForm) {
 							   myHttp.url="j_spring_security_check?time="+new Date();
 							   myHttp.send();
-//							   myHttp.url="j_spring_security_check?time="+new Date();
-//							   myHttp.send();//临时解决初次请求不响应问题？？
+							   myHttp.url="j_spring_security_check?time="+new Date();
+							   myHttp.send();//临时解决初次请求不响应问题？？
 						   } else {
 							   var err:ValidationResultEvent;
 							   var errorMessageArray:Array = [];
