@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Module xmlns:mx="http://www.adobe.com/2006/mxml"
+		   xmlns:hc="com.hillelcoren.components.*"
+		   xmlns:render="system.component.render.*" layout="vertical" width="100%" height="100%" creationComplete="init();">
+	<mx:Script>
+		<![CDATA[		
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			private function init():void
+			{			
+				checkDraft_accounts.dataProvider=this.parentApplication.allTeacherAcccounts;
+				counterSign_accounts.dataProvider=this.parentApplication.allTeacherAcccounts;
+				issue_accounts.dataProvider=this.parentApplication.allTeacherAcccounts;
+				circulate_accounts.dataProvider=this.parentApplication.allTeacherAcccounts;
+			}
+			
+			
+			
+			private function checkDraftAccountsHandleAutoCompleteChange():void
+			{
+				var items:ArrayCollection = checkDraft_accounts.selectedItems;
+				checkDraft_accounts_id.text="";
+				for(var i:int=0;i<items.length;i++){
+					var item:Object=items.getItemAt(i);
+					if (item != null && item.hasOwnProperty( "id" ))
+					{
+						checkDraft_accounts_id.text+=item.id+";";
+					} else{
+						checkDraft_accounts_id.text+=";";
+					}             
+				}
+				        
+			}
+			private function counterSignAccountsHandleAutoCompleteChange():void
+			{
+				var items:ArrayCollection = counterSign_accounts.selectedItems;
+				counterSign_accounts_id.text="";
+				for(var i:int=0;i<items.length;i++){
+					var item:Object=items.getItemAt(i);
+					if (item != null && item.hasOwnProperty( "id" ))
+					{
+						counterSign_accounts_id.text+=item.id+";";
+					} else{
+						counterSign_accounts_id.text+=";";
+					}             
+				}
+				
+			}
+			private function issueAccountsHandleAutoCompleteChange():void
+			{
+				var items:ArrayCollection = issue_accounts.selectedItems;
+				issue_accounts_id.text="";
+				for(var i:int=0;i<items.length;i++){
+					var item:Object=items.getItemAt(i);
+					if (item != null && item.hasOwnProperty( "id" ))
+					{
+						issue_accounts_id.text+=item.id+";";
+					} else{
+						issue_accounts_id.text+=";";
+					}             
+				}
+				
+			}
+			private function circulateAccountsHandleAutoCompleteChange():void
+			{
+				var items:ArrayCollection = circulate_accounts.selectedItems;
+				circulate_accounts_id.text="";
+				for(var i:int=0;i<items.length;i++){
+					var item:Object=items.getItemAt(i);
+					if (item != null && item.hasOwnProperty( "id" ))
+					{
+						circulate_accounts_id.text+=item.id+";";
+					} else{
+						circulate_accounts_id.text+=";";
+					}             
+				}
+				
+			}
+			public function saveOptions():void{
+				if(isValid()){
+				
+				
+				}
+			}
+			public function isValid():Boolean{
+				if(sendingFilesSet.enabled==true){
+					if(checkDraftControl.selected==false&&counterSignControl.selected==false&&issueControl.selected==false&&circulateControl.selected==false){
+						Alert.show("请指定发文流转节点");
+						return false;
+					}
+					if(checkDraftControl.selected==true&&checkDraft_accounts_id.text==''){
+						Alert.show("请指定核稿节点默认责任人");
+						return false;
+					}
+					if(counterSignControl.selected==true&&counterSign_accounts_id.text==''){
+						Alert.show("请指定会签节点默认责任人");
+						return false;
+					}
+					if(issueControl.selected==true&&issue_accounts_id.text==''){
+						Alert.show("请指定签发节点默认责任人");
+						return false;
+					}
+					if(circulateControl.selected==true&&circulate_accounts_id.text==''){
+						Alert.show("请指定传阅节点默认责任人");
+						return false;
+					}
+				}
+				return true;
+			}
+			
+		]]>
+	</mx:Script>
+	<mx:Component id="checkDraftAccountsDropDownItemRenderer">
+		<render:AdvancedItemRenderer selectedItems="{ outerDocument.checkDraft_accounts.selectedItems }" />
+	</mx:Component>
+	<mx:Component id="counterSignAccountsDropDownItemRenderer">
+		<render:AdvancedItemRenderer selectedItems="{ outerDocument.counterSign_accounts.selectedItems }" />
+	</mx:Component>
+	<mx:Component id="issueAccountsDropDownItemRenderer">
+		<render:AdvancedItemRenderer selectedItems="{ outerDocument.issue_accounts.selectedItems }" />		
+	</mx:Component>
+	<mx:Component id="circulateAccountsDropDownItemRenderer">
+		<render:AdvancedItemRenderer selectedItems="{ outerDocument.circulate_accounts.selectedItems }" />
+	</mx:Component>
+	<mx:VBox borderVisible="true" width="100%" height="100%" borderStyle="solid" horizontalAlign="left" verticalAlign="top" paddingTop="20" paddingLeft="20">
+		<mx:CheckBox label="开启发文自动流程" id="sendingFilesSetControl"/>
+		<mx:VBox width="100%" id="sendingFilesSet" enabled="{sendingFilesSetControl.selected}" paddingTop="10" verticalGap="5">
+			<mx:HBox width="100%" paddingLeft="20">
+				<mx:CheckBox label="1.拟稿"  selected="{sendingFilesSetControl.selected}"  enabled="false"/>
+			</mx:HBox>
+			<mx:HBox width="100%" paddingLeft="20">
+				<mx:CheckBox label="2.核稿"  id="checkDraftControl" />
+				<hc:AutoComplete id="checkDraft_accounts" enabled="{checkDraftControl.selected}" labelField="name"  width="100%" allowMultipleSelection="true"    matchType="anyPart" prompt="指定核稿者"  change="{ checkDraftAccountsHandleAutoCompleteChange() }" dropDownItemRenderer="{ checkDraftAccountsDropDownItemRenderer }" selectedItemStyleName="none">
+					
+				</hc:AutoComplete>
+				<mx:Label id="checkDraft_accounts_id" visible="false">
+					
+				</mx:Label>
+			</mx:HBox>
+			<mx:HBox width="100%" paddingLeft="20">
+				<mx:CheckBox label="3.会签" id="counterSignControl"/>
+				<hc:AutoComplete id="counterSign_accounts"  enabled="{counterSignControl.selected}" labelField="name"  width="100%" allowMultipleSelection="true"  matchType="anyPart" prompt="指定会签者"  change="{ counterSignAccountsHandleAutoCompleteChange() }" dropDownItemRenderer="{ counterSignAccountsDropDownItemRenderer }" selectedItemStyleName="none">
+					
+				</hc:AutoComplete>
+				<mx:Label id="counterSign_accounts_id" visible="false">
+					
+				</mx:Label>
+			</mx:HBox>
+			<mx:HBox width="100%" paddingLeft="20">
+				<mx:CheckBox label="4.签发" id="issueControl"/>
+				<hc:AutoComplete id="issue_accounts"  enabled="{issueControl.selected}" labelField="name"  width="100%" allowMultipleSelection="true"  matchType="anyPart" prompt="指定签发者"  change="{ issueAccountsHandleAutoCompleteChange() }" dropDownItemRenderer="{ issueAccountsDropDownItemRenderer }" selectedItemStyleName="none">
+					
+				</hc:AutoComplete>
+				<mx:Label id="issue_accounts_id" visible="false">
+					
+				</mx:Label>
+			</mx:HBox>
+			<mx:HBox width="100%" paddingLeft="20">
+				<mx:CheckBox label="5.传阅" id="circulateControl"/>
+				<hc:AutoComplete id="circulate_accounts"  enabled="{circulateControl.selected}" labelField="name"  width="100%" allowMultipleSelection="true"  matchType="anyPart" prompt="指定传阅者"  change="{ circulateAccountsHandleAutoCompleteChange() }" dropDownItemRenderer="{ circulateAccountsDropDownItemRenderer }" selectedItemStyleName="none">
+					
+				</hc:AutoComplete>
+				<mx:Label id="circulate_accounts_id" visible="false">
+					
+				</mx:Label>
+			</mx:HBox>
+			
+		</mx:VBox>
+		<mx:HBox width="100%" horizontalAlign="right" paddingRight="10" paddingTop="30">
+			<mx:Button label="保存" click="saveOptions();" enabled="true"/>
+		</mx:HBox>
+		
+	</mx:VBox>
+</mx:Module>

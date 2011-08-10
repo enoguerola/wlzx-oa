@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2011 年 07 月 30 日 12:01
+-- 生成日期: 2011 年 08 月 10 日 09:20
 -- 服务器版本: 5.0.91
 -- PHP 版本: 5.2.13
 
@@ -120,7 +120,7 @@ INSERT INTO `wlzx_system_data_access_mode` (`id`, `name`, `symbol`, `sequence`, 
 (61, '全部数据', 'conferenceSummary_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-06 00:00:00', '2011-07-22 09:45:36', 1),
 (62, '全部数据', 'conferenceArrange_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-06 00:00:00', '2011-07-22 09:45:36', 1),
 (64, '全部数据', 'person_conferenceAttending_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-06 00:00:00', '2011-07-22 09:45:36', 1),
-(65, '全部数据', 'system_person_setting_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-06 00:00:00', '2011-07-22 09:45:36', 1),
+(65, '全部数据', 'system_oa_setting_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-07-06 00:00:00', '2011-08-09 17:08:07', 1),
 (66, '全部数据', 'postSelfDepartmentSchoolScopeNotice@noFilter@', 0, NULL, NULL, '2011-07-22 00:00:00', '2011-07-22 09:45:36', 1),
 (68, '全部数据', 'postAnyNotice@noFilter@', 0, NULL, NULL, '2011-07-22 00:00:00', '2011-07-22 09:45:36', 1),
 (70, '全部数据', 'editSelfDepartmentSchoolScopeNotice@noFilter@', 0, NULL, NULL, '2011-07-22 00:00:00', '2011-07-22 10:51:44', 1),
@@ -431,7 +431,7 @@ INSERT INTO `wlzx_system_menu` (`id`, `name`, `symbol`, `sequence`, `detail`, `m
 (74, '会议总结', 'conferenceSummary', 1, '', '', '2011-07-06 00:00:00', '2011-07-06 12:03:32'),
 (75, '会议调整', 'conferenceArrange', 2, '', '', '2011-07-06 00:00:00', '2011-07-06 12:04:16'),
 (77, '我参与的会议', 'person_conferenceAttending', 6, '', '', '2011-07-06 00:00:00', '2011-07-06 12:14:50'),
-(78, '用户设置', 'system_person_setting', 0, '', '', '2011-07-06 00:00:00', '2011-07-06 12:17:22'),
+(78, '系统设置', 'system_oa_setting', 0, '', '', '2011-07-06 00:00:00', '2011-08-09 17:06:08'),
 (79, '发文拟稿', 'documentDrafting', 0, '', '', '2011-07-22 00:00:00', '2011-07-22 16:27:26'),
 (80, '发文核稿', 'documentCheckDraft', 1, '', '', '2011-07-22 00:00:00', '2011-07-22 16:31:33'),
 (81, '发文会签', 'documentCountersign', 2, '', '', '2011-07-22 00:00:00', '2011-07-22 16:32:33'),
@@ -640,7 +640,7 @@ INSERT INTO `wlzx_system_message` (`id`, `from_id`, `to_ids`, `type`, `content`,
 (5, 708, '708;', 1, '11111', '2011-07-30 10:42:23', '1;', '2011-07-30;', '0', '0;'),
 (6, 708, '840;864;708;', 1, '12', '2011-07-30 11:47:49', '0;0;0;', 'NULL;NULL;NULL;', '0', '0;0;0;'),
 (7, 708, '708;1;', 1, '111111111', '2011-07-30 11:58:12', '0;0;', 'NULL;NULL;', '0', '0;0;'),
-(8, 708, '708;', 1, '222222222222222222222222', '2011-07-30 11:58:31', '0;', 'NULL;', '0', '0;');
+(8, 708, '708;', 1, '222222222222222222222222', '2011-07-30 11:58:31', '1;', '2011-07-30 17:51:36;', '0', '0;');
 
 -- --------------------------------------------------------
 
@@ -707,7 +707,7 @@ INSERT INTO `wlzx_system_module` (`id`, `name`, `symbol`, `sequence`, `detail`, 
 (58, '会议总结主模块', 'conferenceSummary_main', 0, '', '2011-07-06 00:00:00', '2011-07-06 12:09:24', 'oa/conference/conferenceSummary.swf', ''),
 (59, '会议调整主模块', 'conferenceArrange_main', 0, '', '2011-07-06 00:00:00', '2011-07-07 10:43:58', 'oa/conference/conferenceArrange.swf', ''),
 (61, '我参与的会议主模块', 'person_conferenceAttending_main', 0, '', '2011-07-06 00:00:00', '2011-07-06 12:15:47', 'oa/conference/conferenceSelfAttending.swf', ''),
-(62, '用户设置主模块', 'system_person_setting_main', 0, '', '2011-07-06 00:00:00', '2011-07-06 12:19:36', 'oa/system/userSetting.swf', ''),
+(62, '系统设置主模块', 'system_oa_setting_main', 0, '', '2011-07-06 00:00:00', '2011-08-09 17:40:45', 'oa/setting/oaSetting.swf', ''),
 (63, '发文拟稿主模块', 'documentDrafting_main', 0, '', '2011-07-22 00:00:00', '2011-07-22 16:40:11', 'oa/sendingFiles/documentDrafting.swf', ''),
 (64, '发文核稿主模块', 'documentCheckDraft_main', 0, '', '2011-07-22 00:00:00', '2011-07-22 16:39:43', 'oa/sendingFiles/documentCheckDraft.swf', ''),
 (65, '发文会签主模块', 'documentCountersign_main', 0, '', '2011-07-22 00:00:00', '2011-07-22 16:41:32', 'oa/sendingFiles/documentCountersign.swf', ''),
@@ -885,7 +885,7 @@ INSERT INTO `wlzx_system_operation` (`id`, `name`, `symbol`, `sequence`, `rs_typ
 (59, '页面访问', 'conferenceSummary_main@defaultVisit@', 0, 'URL', '/oa/conference/conferenceSummary.swf*', NULL, '2011-07-06 00:00:00', '2011-07-06 12:09:24'),
 (60, '页面访问', 'conferenceArrange_main@defaultVisit@', 0, 'URL', '/oa/conference/conferenceArrange.swf*', NULL, '2011-07-06 00:00:00', '2011-07-07 10:43:58'),
 (62, '页面访问', 'person_conferenceAttending_main@defaultVisit@', 0, 'URL', '/oa/conference/conferenceSelfAttending.swf*', NULL, '2011-07-06 00:00:00', '2011-07-06 12:15:47'),
-(63, '页面访问', 'system_person_setting_main@defaultVisit@', 0, 'URL', '/oa/system/userSetting.swf*', NULL, '2011-07-06 00:00:00', '2011-07-06 12:19:36'),
+(63, '页面访问', 'system_oa_setting_main@defaultVisit@', 0, 'URL', '/oa/setting/oaSetting.swf*', NULL, '2011-07-06 00:00:00', '2011-08-09 17:41:30'),
 (64, '发布本部门校级公告', 'postSelfDepartmentSchoolScopeNotice', 1, 'METHOD', 'addNotice()', '', '2011-07-22 00:00:00', '2011-07-22 10:53:14'),
 (65, '发布任意公告', 'postAnyNotice', 1, 'METHOD', 'addNotice()', '', '2011-07-22 00:00:00', '2011-07-22 10:53:14'),
 (66, '编辑删除本部门校级公告', 'editSelfDepartmentSchoolScopeNotice', 0, 'METHOD', 'updateNotice()', '', '2011-07-22 00:00:00', '2011-07-22 10:51:44'),
@@ -1084,7 +1084,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_role_dam_relationship` (
   `role_id` bigint(20) NOT NULL,
   `dam_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=362 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=382 ;
 
 --
 -- 转存表中的数据 `wlzx_system_role_dam_relationship`
@@ -1346,7 +1346,27 @@ INSERT INTO `wlzx_system_role_dam_relationship` (`id`, `role_id`, `dam_id`) VALU
 (357, 1, 8),
 (359, 1, 87),
 (360, 1, 90),
-(361, 1, 88);
+(361, 1, 88),
+(362, 1, 77),
+(363, 1, 41),
+(364, 1, 40),
+(365, 1, 83),
+(366, 1, 80),
+(367, 1, 81),
+(368, 1, 86),
+(369, 1, 84),
+(370, 1, 68),
+(371, 1, 31),
+(372, 1, 70),
+(373, 1, 71),
+(374, 1, 72),
+(375, 1, 73),
+(376, 1, 74),
+(377, 1, 75),
+(378, 1, 76),
+(379, 1, 12),
+(380, 1, 91),
+(381, 1, 89);
 
 -- --------------------------------------------------------
 
@@ -1538,8 +1558,8 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_user` (
 --
 
 INSERT INTO `wlzx_system_user` (`id`, `symbol`, `sequence`, `name`, `password`, `last_login_time`, `last_login_ip`, `account_style`, `person_id`, `person_name`, `email`, `creation_date`, `modified_date`, `active`, `main_role_id`, `main_department_id`) VALUES
-(1, 'super_root', 0, 'super_root', '134bca5421a15476a1e5ebaebdba1ede', '2011-07-30 10:27:24', '127.0.0.1', -1, NULL, NULL, NULL, '2011-05-07 11:04:22', '2011-07-05 17:33:02', 1, NULL, NULL),
-(708, '666888', 0, '666888', '75e266f182b4fa3625d4a4f4f779af54', '2011-07-30 11:20:51', '127.0.0.1', 0, NULL, NULL, '', '2011-07-05 12:57:49', '2011-07-05 12:57:51', 1, 1, 1),
+(1, 'super_root', 0, 'super_root', '134bca5421a15476a1e5ebaebdba1ede', '2011-08-09 15:10:47', '192.168.1.102', -1, NULL, NULL, NULL, '2011-05-07 11:04:22', '2011-07-05 17:33:02', 1, NULL, NULL),
+(708, '666888', 0, '666888', '75e266f182b4fa3625d4a4f4f779af54', '2011-08-09 17:42:09', '127.0.0.1', 0, NULL, NULL, '', '2011-07-05 12:57:49', '2011-07-05 12:57:51', 1, 1, 1),
 (709, '666900', 0, '666900', '2e6d1125057ec7c4402a5a2ad84f6601', '2011-07-26 11:52:55', '127.0.0.1', 0, NULL, NULL, '', '2011-07-05 12:57:51', '2011-07-05 12:57:52', 1, 20, 1),
 (710, '666988', 0, '666988', 'cb3d82f7133330c48bee639908125906', NULL, '', 0, NULL, NULL, '', '2011-07-05 12:57:52', '2011-07-05 12:57:53', 1, NULL, 1),
 (711, '666898', 0, '666898', '25eb84aab86275ed44073ce95057b9c4', NULL, '', 0, NULL, NULL, '', '2011-07-05 12:57:53', '2011-07-05 12:57:55', 1, NULL, 1),
@@ -1837,7 +1857,7 @@ INSERT INTO `wlzx_system_user` (`id`, `symbol`, `sequence`, `name`, `password`, 
 (1003, '666919', 0, '666919', '293567d725ba8399ed93e46ba0bda193', NULL, '', 0, NULL, NULL, '', '2011-07-05 13:05:05', '2011-07-05 13:05:07', 1, NULL, 11),
 (1004, '561963', 0, '561963', 'dbac5d7ccc16692c49ff7908bb3f7b70', NULL, '', 0, NULL, NULL, 'yufeng@126.com', '2011-07-21 09:27:33', '2011-07-21 09:27:33', 1, 1, 1),
 (1005, '561997', 0, '561997', '82972ecd5fa6a0c5d278e47255bdc3e4', NULL, '', 0, NULL, NULL, 'wuyuyue@126.com', '2011-07-21 09:27:33', '2011-07-21 09:27:34', 1, 15, 9),
-(1006, '669692', 0, '669692', '80bdbb25191f172108d3e65b0663c238', NULL, '', 0, NULL, NULL, '', '2011-07-23 16:44:46', '2011-07-23 16:44:47', 1, NULL, 1);
+(1006, '669692', 0, '669692', '80bdbb25191f172108d3e65b0663c238', '2011-08-09 15:10:10', '192.168.1.102', 0, NULL, NULL, '', '2011-07-23 16:44:46', '2011-07-23 16:44:47', 1, NULL, 1);
 
 -- --------------------------------------------------------
 

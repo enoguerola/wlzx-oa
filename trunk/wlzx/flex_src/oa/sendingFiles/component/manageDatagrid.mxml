@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="100%"
+		 xmlns:component="system.component.*"
+		 xmlns:item="oa.receipt.component.item.*" creationComplete="init()">
+	<s:layout>
+		<s:HorizontalLayout/>
+	</s:layout>
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import basic.utils.DateUtil;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			
+			private function init():void
+			{
+				/*var sample:ArrayCollection = new ArrayCollection([{title:"", status:"2"}, {title:"o", status:"3"}]);
+				grid.initdata(sample);*/
+			}
+			
+			//打开流转记录
+			public function open_flow_detail(id:String):void
+			{
+			
+			}
+			
+			//打开公文详细
+			public function open_file_detail(id:String):void
+			{
+			
+			}
+			
+			//办结
+			public function complete_file(id:String):void
+			{
+				var parent:Object = (Object)(this.parentDocument);
+				Alert.show("1");
+				parent.complete(id);
+			}
+			
+			//流转设置
+			public function flow_set(id:String):void
+			{
+				
+			}
+		]]>
+	</fx:Script>
+	
+	<component:WlzxPageDataGrid id="grid" width="100%" height="100%" borderVisible="false" autoLayout="true"  borderAlpha="0.2" verticalAlign="middle" pagecount="10">
+		<component:mygridcolumns>
+			<mx:DataGridColumn textAlign="center" headerText="发文标题" width="150" itemRenderer="oa.sendingFiles.component.item.Title"></mx:DataGridColumn>
+			<mx:DataGridColumn textAlign="center" headerText="主办单位" width="100" itemRenderer="oa.sendingFiles.component.item.Department"/>
+			<mx:DataGridColumn textAlign="center" headerText="发文日期" width="100" dataField="creationDate" labelFunction="DateUtil.datagridFormatDate"/>
+			<mx:DataGridColumn textAlign="center" headerText="处理状态" width="100" itemRenderer="oa.sendingFiles.component.item.Status"/>
+			<mx:DataGridColumn textAlign="center" headerText="流转记录" width="100" itemRenderer="oa.sendingFiles.component.item.FileFlowDetail"/>
+			<mx:DataGridColumn textAlign="center" headerText="详细" width="100" itemRenderer="oa.sendingFiles.component.item.FileDetail"/>
+			<mx:DataGridColumn textAlign="center" headerText="办结" width="100" itemRenderer="oa.sendingFiles.component.item.CompleteHandler"/>
+			<mx:DataGridColumn textAlign="center" headerText="流转设置" width="80" itemRenderer="oa.sendingFiles.component.item.FlowHandler"/>
+		</component:mygridcolumns>
+		
+	</component:WlzxPageDataGrid>
+</s:Group>
