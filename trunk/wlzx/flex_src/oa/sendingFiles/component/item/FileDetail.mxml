@@ -8,8 +8,11 @@
 			protected function get_file_detail(id:String):void
 			{
 				// TODO Auto-generated method stub
-				var parent:Object = ((Object)(this.parentDocument)).parentDocument;
-				parent.add(id);
+				var parentModule:Object = ((Object)(this.parentDocument)).parentDocument;
+				//parent.add(id);
+				var parent:Object=(Object)(((Object)(parentModule.owner)).owner);
+				//Alert.show("add");
+				parent.addTab("view_sendingFile" + id,"公文详细",parent.nav,"oa/sendingFiles/documentDetail.swf",null,id);
 			}
 		]]>
 	</fx:Script>

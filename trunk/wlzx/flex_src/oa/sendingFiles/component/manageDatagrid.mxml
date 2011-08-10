@@ -32,7 +32,9 @@
 			//打开公文详细
 			public function open_file_detail(id:String):void
 			{
-			
+				
+				
+				
 			}
 			
 			//办结

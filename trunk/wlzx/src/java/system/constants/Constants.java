@@ -28,6 +28,8 @@ public class Constants {
 	
 	// file output path
 	public static String TEMP_FILE_OUTPUT_PATH = "temp";
+	public static  String TEMP_SWF_OUTPUT_PATH = "swf";
+
 	
 	// prefix of classpath resource
 	public static String RESOURCE_CLASSPATH_PREFIX = "classpath:";

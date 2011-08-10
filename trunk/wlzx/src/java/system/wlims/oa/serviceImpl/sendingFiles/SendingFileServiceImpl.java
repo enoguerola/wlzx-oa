@@ -1,10 +1,26 @@
 package system.wlims.oa.serviceImpl.sendingFiles;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import com.jswiff.SWFDocument;
+import com.jswiff.SWFWriter;
+import com.jswiff.swfrecords.Matrix;
+import com.jswiff.swfrecords.RGBA;
+import com.jswiff.swfrecords.Rect;
+import com.jswiff.swfrecords.tags.DefineEditText;
+import com.jswiff.swfrecords.tags.DefineFont2;
+import com.jswiff.swfrecords.tags.PlaceObject2;
+import com.jswiff.swfrecords.tags.ShowFrame;
+
 import system.DAOException;
 import system.ServiceException;
+import system.constants.Constants;
+import system.utils.ResourcesUtils;
 import system.utils.StringUtils;
 import system.wlims.oa.dao.notice.AttachmentDAO;
 import system.wlims.oa.dao.sendingFiles.SendingFileDAO;
@@ -135,6 +151,54 @@ public class SendingFileServiceImpl implements SendingFileService {
 		this.attachmentDAO = attachmentDAO;
 	}
 
+	@Override
+	public String generateSWFById(String id) throws ServiceException {
+		  SendingFileModel model=sendingFileDAO.get(id);
+		  if(model==null)return null;
+		  String dir = ResourcesUtils.getWebRootPath() + Constants.TEMP_SWF_OUTPUT_PATH;
+		  File file = new File(dir);
+		  if (!file.exists()) {
+			file.mkdir();
+		  }
+		  String fileName = "sendingFile_"+id + ".swf";
+		  String filePath = dir + "/"+fileName;
+		  SWFDocument document = new SWFDocument();
+
+		  int fontId = document.getNewCharacterId();
+		  DefineFont2 defineFont2 = new DefineFont2(fontId, "Arial", null, null);
+		  document.addTag(defineFont2);
+		  int textId = document.getNewCharacterId();
+
+		  DefineEditText defineEditText = new DefineEditText(
+		   textId, new Rect(0, 0, 0, 0), null);
+		  defineEditText.setAutoSize(true);
+		  defineEditText.setFont(fontId, 20 * 24);
+		  defineEditText.setTextColor(new RGBA(255, 0, 0, 255));
+		  defineEditText.setReadOnly(true);
+		  defineEditText.setHtml(true);
+		  defineEditText.setMultiline(true);
+		  defineEditText.setInitialText(model.getContent());
+		  document.addTag(defineEditText);
+		  PlaceObject2 placeObject2 = new PlaceObject2(1);
+		  placeObject2.setCharacterId(textId);
+		  placeObject2.setMatrix(new Matrix(20 * 45, 20 * 10));
+		  document.addTag(placeObject2); // place text
+		  document.addTag(new ShowFrame()); // show frame
+	      try{
+		    writeDocument(document, filePath);
+		    return fileName;
+	  	  }catch (IOException e){
+		    System.out.println("An error occured while writing " + filePath + ":");
+		    e.printStackTrace();
+		    return null;
+	      }
+		 }
+	
+
+	 private static void writeDocument(SWFDocument document, String filePath)throws IOException {
+		  SWFWriter writer = new SWFWriter(document, new FileOutputStream(filePath));
+		  writer.write();
+	 }
 	
 
   
