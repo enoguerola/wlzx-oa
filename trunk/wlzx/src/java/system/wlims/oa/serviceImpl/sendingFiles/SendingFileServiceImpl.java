@@ -3,7 +3,6 @@ package system.wlims.oa.serviceImpl.sendingFiles;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -35,9 +34,9 @@ public class SendingFileServiceImpl implements SendingFileService {
 	@Override
 	public List<SendingFileModel> getByConditions(
 			String dispatchWord,String dispatchYear,String dispatchNumber, String title,
-			String auspiceDepartment, String beginDate, String endDate,String states)
+			String auspiceDepartment, String beginDate, String endDate,String states,Integer isCompleted)
 			throws ServiceException {
-		return sendingFileDAO.getByConditions(dispatchWord,dispatchYear,dispatchNumber, title, auspiceDepartment, beginDate, endDate, states);
+		return sendingFileDAO.getByConditions(dispatchWord,dispatchYear,dispatchNumber, title, auspiceDepartment, beginDate, endDate, states,isCompleted);
 	}
 
 	@Override

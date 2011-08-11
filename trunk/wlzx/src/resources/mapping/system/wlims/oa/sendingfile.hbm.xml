@@ -50,6 +50,9 @@
       <property name="status" type="int">
             <column name="status"/>
       </property>
+       <property name="isCompleted" type="int">
+            <column name="is_completed"/>
+      </property>
       <set name="fileFlows" lazy="false" cascade="delete" inverse="true" table="wlzx_oa_sendingfile_flow">
         	<key column="sendingfile_id" not-null="true" />
         	<one-to-many not-found="ignore" class="system.wlims.oa.entity.sendingFiles.FileFlowModel" /> 
