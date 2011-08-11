@@ -31,6 +31,13 @@
         <property name="completedDate" type="java.util.Date">
             <column name="completed_date" />
         </property>
+         <property name="creationDate" type="java.util.Date">
+            <column name="creation_date" />
+        </property>
+        <property name="sendingFileId" type="string">
+            <column name="sendingfile_id" />
+        </property>
+        
         
 <!--    	<many-to-one not-found="ignore" class="system.wlims.oa.entity.sendingFiles.SendingFileModel" name="sendingFile" column="sendingFile_id" lazy="false"/>-->
   

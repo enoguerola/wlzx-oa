@@ -201,6 +201,20 @@ public class SendingFileModel extends BaseModel {
 		this.isCompleted = isCompleted;
 	}
 
+	public boolean thisStateIsAllDealed(Integer type) {
+		// TODO Auto-generated method stub
+		boolean result=true;
+		if(fileFlows!=null&&fileFlows.size()>0){
+			for(FileFlowModel file:fileFlows){
+				if(file.getType().intValue()==type.intValue()){
+					if(file.getIsCompleted()==null)result=false;
+				}
+			}
+
+		}
+		return result;
+	}
+
 
 	
 }

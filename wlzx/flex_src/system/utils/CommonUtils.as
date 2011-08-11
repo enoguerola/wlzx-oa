@@ -97,5 +97,21 @@ package system.utils
 			//根据毫秒数计算间隔天数
 			return (int)(ei/(1000*60*60*24));
 		}
+		/**
+		 * 生成datagrid第一列用的序号
+		 */
+		import mx.core.mx_internal;//注意这里 
+		public static function formatIndexNumber(item:Object, colum:Object):String
+		{
+			return indexNumLabelFun(item, colum.mx_internal::owner);
+		}
+		
+		public static function indexNumLabelFun(value:Object, dataGrid:Object):String
+			
+		{
+			var arr: Array = dataGrid.dataProvider.source;
+			var indexNum: int = (arr.indexOf(value) + 1);            
+			return indexNum.toString();
+		}
 	}
 }

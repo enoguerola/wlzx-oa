@@ -94,7 +94,7 @@
 		private var file:FileReference; //这是要主要的地方
 		
 		public function download(event:MouseEvent):void {
-			downloadURL = new URLRequest(parentApplication.homeUrl+"/uploads/oa/attachment/" + event.target.id );
+			downloadURL = new URLRequest(parentApplication.homeUrl+"uploads/oa/attachment/" + event.target.id );
 			//downloadURL = new URLRequest("http://localhost:8081/wlzx/uploads/oa/attachment/gravtar_junlu_110627085752.jpg");
 			file = new FileReference();
 			configureListeners(file);

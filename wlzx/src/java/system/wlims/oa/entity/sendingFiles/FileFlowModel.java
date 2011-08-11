@@ -1,6 +1,6 @@
 package system.wlims.oa.entity.sendingFiles;
 
-import java.sql.Date;
+import java.util.Date;
 
 import system.wlims.basic.entity.BaseModel;
 
@@ -19,14 +19,15 @@ public class FileFlowModel extends BaseModel {
 	private Integer isCompleted;
 	private String text;
 	private Date completedDate;
+	private Date creationDate;
 	private String user;
-	private SendingFileModel sendingFile;	
+	private String sendingFileId;	
 	public static enum EType{
 		Draft(0, "发文拟稿"),
-		CheckDraft(1, "发文核稿"),
-		CounterSign(2, "发文会签"),
-		Issue(3, "发文签发"),
-		Circulate(4, "发文传阅");
+		CheckDraft(2, "发文核稿"),
+		CounterSign(4, "发文会签"),
+		Issue(6, "发文签发"),
+		Circulate(8, "发文传阅");
 		
 		private int value;
 		private String text;
@@ -87,12 +88,22 @@ public class FileFlowModel extends BaseModel {
 		return completedDate;
 	}
 
-	public SendingFileModel getSendingFile() {
-		return sendingFile;
+	public String getSendingFileId() {
+		return sendingFileId;
 	}
 
-	public void setSendingFile(SendingFileModel sendingFile) {
-		this.sendingFile = sendingFile;
+	public void setSendingFileId(String sendingFileId) {
+		this.sendingFileId = sendingFileId;
 	}
+
+	public Date getCreationDate() {
+		return creationDate;
+	}
+
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
+	}
+
+	
 
 }

@@ -20,10 +20,14 @@
 	<bean id="sendingFileDAO" class="system.wlims.oa.daoImpl.sendingFiles.SendingFileDAOImpl">
 		<property name="sessionFactory" ref="oaSessionFactory" />
 	</bean>
+	<bean id="sendingFileFlowDAO" class="system.wlims.oa.daoImpl.sendingFiles.FileFlowDAOImpl">
+		<property name="sessionFactory" ref="oaSessionFactory" />
+	</bean>
 	<bean id="sendingFileServiceDest" class="system.wlims.oa.serviceImpl.sendingFiles.SendingFileServiceImpl">
 		<flex:remoting-destination />
 		<property name="sendingFileDAO" ref="sendingFileDAO" />
 		<property name="attachmentDAO" ref="attachmentDAO" />
+		<property name="sendingFileFlowDAO" ref="sendingFileFlowDAO" />
 	</bean>
 
 	

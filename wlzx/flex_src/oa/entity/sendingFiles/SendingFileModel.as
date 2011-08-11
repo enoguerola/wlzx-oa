@@ -29,5 +29,13 @@ package oa.entity.sendingFiles
 		{
 			super();
 		}
+		public function getFirstDraftStepFlowId():String{
+			for(var i:int=0;i<fileFlows.length;i++){
+				if(fileFlows.getItemAt(i).type==0){
+					return fileFlows.getItemAt(i).id;
+				}
+			}
+			return null;
+		}
 	}
 }

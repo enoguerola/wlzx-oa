@@ -12,7 +12,8 @@
 			private function init():void
 			{			
 				search_account.dataProvider=this.parentApplication.allTeacherAcccounts;
-				
+				search_account.selectedItem=parentApplication.getItemByAccountId(parentApplication.currentUser.id);
+				search_account_id.text=parentApplication.currentUser.id;
 			}
 			public function empty():void{
 				title.text="";
@@ -26,8 +27,12 @@
 				dispatchNumber.text="";
 				dispatchDate.text="";
 				attachments.text="";
-				search_account_id.text="";
-				search_account.selectedItemId=-1;
+				issueArea.removeAllChildren();
+				checkDraftArea.removeAllChildren();
+				counterSignArea.removeAllChildren();
+				
+//				search_account_id.text="";
+//				search_account.selectedItemId=-1;
 			}
 			private function searchAccountHandleAutoCompleteChange():void
 			{
@@ -66,13 +71,13 @@
 		<mx:GridRow>
 			<mx:GridItem  borderStyle="solid" verticalAlign="middle" borderColor="red" paddingTop="10" paddingBottom="10" paddingLeft="10" paddingRight="10">
 				<mx:Label text="签发：" width="80" color="red" />
-				<mx:VBox width="250">
+				<mx:VBox width="250" id="issueArea" >
 					
 				</mx:VBox>
 			</mx:GridItem>
 			<mx:GridItem  borderStyle="solid" verticalAlign="middle" borderColor="red" paddingTop="10" paddingBottom="10" paddingLeft="10" paddingRight="10">
 				<mx:Label text="核稿：" width="80" color="red"/>
-				<mx:VBox  width="250">
+				<mx:VBox  width="250" id="checkDraftArea">
 					
 				</mx:VBox>
 			</mx:GridItem>
@@ -81,7 +86,7 @@
 		<mx:GridRow>
 			<mx:GridItem  borderStyle="solid" verticalAlign="middle" borderColor="red" paddingTop="10" paddingBottom="10" paddingLeft="10" paddingRight="10">
 				<mx:Label text="会签：" width="80" color="red"/>
-				<mx:VBox  width="250">
+				<mx:VBox  width="250" id="counterSignArea">
 					
 				</mx:VBox>
 			</mx:GridItem>
@@ -93,7 +98,7 @@
 					</mx:HBox>
 					<mx:HBox>
 						<mx:Label text="拟稿人：" width="80" color="red"/>
-						<hc:AutoComplete id="search_account"  labelField="name"  width="200"  matchType="anyPart" prompt="选择教师"  change="{ searchAccountHandleAutoCompleteChange() }" dropDownItemRenderer="{ searchAccountDropDownItemRenderer }" selectedItemStyleName="none">
+						<hc:AutoComplete id="search_account"  labelField="name"  width="200"  matchType="anyPart" prompt="选择教师"  change="{ searchAccountHandleAutoCompleteChange() }" dropDownItemRenderer="{ searchAccountDropDownItemRenderer }" selectedItemStyleName="none"  enabled="false">
 							
 						</hc:AutoComplete>
 						<mx:Label id="search_account_id" visible="false">

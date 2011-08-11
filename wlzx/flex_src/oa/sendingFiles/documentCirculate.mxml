@@ -1,58 +1,257 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Module xmlns:mx="http://www.adobe.com/2006/mxml"  layout="vertical" creationComplete="init();" width="100%" height="100%"
-		   xmlns:sendingFiles="oa.sendingFiles.component.*" >
+		   xmlns:sendingFiles="oa.sendingFiles.component.*"   currentState="list" backgroundColor="white">
 	<!-- 将非可视元素（例如服务、值对象）放在此处 -->
-	<!--<mx:RemoteObject id="receiptServiceRO" destination="receiptServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
-	<mx:method name="get"  concurrency="last" result="get_resultHandler(event);"/>
-	</mx:RemoteObject>-->
-
+	<mx:RemoteObject id="sendingFileServiceRO" destination="sendingFileServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+		<mx:method name="getWorkFlowsByConditions"  concurrency="last" result="getWorkFlowsByConditions_resultHandler(event);"/>
+		<mx:method name="getById"  concurrency="last" result="getById_resultHandler(event);"/>
+		<mx:method name="addSendingFile"  concurrency="last" result="save_resultHandler(event);"/>
+		<mx:method name="updateSendingFile"  concurrency="last" result="save_resultHandler(event);"/>
+		<mx:method name="finishWorkFlow"  concurrency="last" result="finishWorkFlow_resultHandler(event);"/>
+		
+	</mx:RemoteObject>
+	
+	<mx:states>
+		<mx:State name="list">           
+			<mx:RemoveChild target="{editPanel}"/>
+		</mx:State>
+		<mx:State name="add" enterState="state1_enterStateHandler(event)">           
+			<mx:RemoveChild target="{listPanel}"/>
+		</mx:State>
+		
+		
+	</mx:states>
 	<mx:Script>
 		<![CDATA[
 			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
+			import mx.controls.Text;
+			import mx.controls.TextArea;
+			import mx.events.CloseEvent;
 			import mx.events.FlexEvent;
+			import mx.formatters.DateFormatter;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
+			
+			import oa.entity.AttachmentModel;
+			import oa.entity.sendingFiles.SendingFileModel;
+			
+			import system.utils.CommonUtils;
+			private var content:Object=null;//辅助记录AS生成的组件引用
 			private function init():void
 			{
-			//	this.addEventListener(Event.REMOVED_FROM_STAGE,function():void{documentMaintain.documentMaintainPart1.dispatchEvent(new Event(FlexEvent.HIDE));});
+				//this.addEventListener(Event.REMOVED_FROM_STAGE,function():void{documentMaintain.documentMaintainPart1.dispatchEvent(new Event(FlexEvent.HIDE));});
 				search();
 			}
-			
-			public function search():void
-			{
-				//				var in_number:String = search_panel.in_number.text;
-				//				var office:String = search_panel.in_office.text;
-				//				var do_number:String = search_panel.do_number.text;
-				//				var status:String = search_panel.status.selectedItem.data;
-				//				var title:String = search_panel.title.text;
-				//				var start_date:String = search_panel.in_date_begin.text;
-				//				var end_date:String = search_panel.in_date_end.text;
-				//				
-				//				receiptServiceRO.get(in_number, office, do_number, status, title, start_date, end_date,
-				//					register_grid.grid.curpage, register_grid.grid.pagecount);
-			}
-			
-			//			private function get_resultHandler(event:ResultEvent):void
-			//			{
-			//				var result = event.result as ArrayCollection;
-			//				register_grid.grid.initdata(result);
-			//			}
-			//			
-			public function add(id:String):void
-			{
-				var parent:Object=(Object)(((Object)(this.owner)).owner);
-				parent.addTab("add_receipt" + id,"正文登记",parent.nav,"oa/receipt/registerDetail.swf",null,id);
-			}
-			//			
-			private function systemFaultHandler(event:FaultEvent):void
-			{
+			private function systemFaultHandler(event:FaultEvent):void {
 				Alert.show(event.fault.faultString, 'Error');
 			}
+			private function getById_resultHandler(event:ResultEvent):void
+			{
+				//Alert.show(event.result.toString());
+				if(event.result!=null){
+					documentMaintain.sendingFile=event.result as SendingFileModel;
+					documentMaintain.documentMaintainPart1.rte.htmlText=documentMaintain.sendingFile.content;
+					documentMaintain.documentMaintainPart3.auspiceDepartment.text=documentMaintain.sendingFile.auspiceDepartment;
+					documentMaintain.documentMaintainPart3.search_account_id.text=documentMaintain.sendingFile.authorId;
+					documentMaintain.documentMaintainPart3.search_account.selectedItem=parentApplication.getItemByAccountId(documentMaintain.sendingFile.authorId);
+					documentMaintain.documentMaintainPart3.subject.text=documentMaintain.sendingFile.subject;
+					documentMaintain.documentMaintainPart3.mainSends.text=documentMaintain.sendingFile.mainSends;
+					documentMaintain.documentMaintainPart3.upSends.text=documentMaintain.sendingFile.upSends;
+					documentMaintain.documentMaintainPart3.downSends.text=documentMaintain.sendingFile.downSends;
+					documentMaintain.documentMaintainPart3.dispatchWord.text=documentMaintain.sendingFile.dispatchWord;
+					documentMaintain.documentMaintainPart3.dispatchYear.text=documentMaintain.sendingFile.dispatchYear;
+					documentMaintain.documentMaintainPart3.dispatchNumber.text=documentMaintain.sendingFile.dispatchNumber;
+					documentMaintain.documentMaintainPart3.dispatchDate.text=CommonUtils.formatDate(documentMaintain.sendingFile.dispatchDate,"YYYY-MM-DD");
+					documentMaintain.documentMaintainPart3.title.text=documentMaintain.sendingFile.title;
+					var uploadList:Array=new Array();
+					for each(var model:AttachmentModel in documentMaintain.sendingFile.attachments){
+						uploadList.push({label:model.name,data:parseInt(model.size)/1000+"KB",width:145,id:model.id});
+						//	uploadListfileRef.fileList
+					}
+					documentMaintain.documentMaintainPart2.upload.uploadAlready_list.dataProvider=uploadList;
+					
+					//加载核稿、会签、签发记录
+					for each(var flow:Object in documentMaintain.sendingFile.fileFlows){
+						if(flow.type==2){
+							if(flow.type==documentMaintain.sendingFile.status&&flow.user==parentApplication.currentUser.id){
+								var item3:Text=new Text();
+								item3.setStyle("fontWeight","bold");
+								item3.enabled=true;
+								item3.text=(flow.isCompleted==null?"核稿意见":(flow.isCompleted==0?"通过":"退回"))+":"+(flow.text==null?"":flow.text)+"  "+parentApplication.getTeacherNameByAccountId(flow.user)+"  "+(flow.completedDate==null?"":CommonUtils.formatDate(flow.completedDate,"YYYY-MM-DD"));
+								documentMaintain.documentMaintainPart3.checkDraftArea.addChild(item3);
+								
+								var item1:TextArea=new TextArea();
+								item1.enabled=true;
+								content=item1;
+								documentMaintain.documentMaintainPart3.checkDraftArea.addChild(item1);
+							}else{
+								var item2:Text=new Text();
+								item2.enabled=false;
+								item2.text=(flow.isCompleted==null?"待核稿":(flow.isCompleted==1?"通过":"退回"))+":"+(flow.text==null?"":flow.text)+"  "+parentApplication.getTeacherNameByAccountId(flow.user)+"  "+(flow.completedDate==null?"":CommonUtils.formatDate(flow.completedDate,"YYYY-MM-DD"));
+								documentMaintain.documentMaintainPart3.checkDraftArea.addChild(item2);
+								
+							}
+						}else if(flow.type==4){
+							if(flow.type==documentMaintain.sendingFile.status&&flow.user==parentApplication.currentUser.id){
+								var item3:Text=new Text();
+								item3.setStyle("fontWeight","bold");
+								item3.enabled=true;
+								item3.text=(flow.isCompleted==null?"会签意见":(flow.isCompleted==1?"通过":"退回"))+":"+(flow.text==null?"":flow.text)+"  "+parentApplication.getTeacherNameByAccountId(flow.user)+"  "+(flow.completedDate==null?"":CommonUtils.formatDate(flow.completedDate,"YYYY-MM-DD"));
+								documentMaintain.documentMaintainPart3.counterSignArea.addChild(item3);
+								
+								var item1:TextArea=new TextArea();
+								content=item1;
+								item1.enabled=true;
+								documentMaintain.documentMaintainPart3.counterSignArea.addChild(item1);
+								
+								
+							}else{
+								var item2:Text=new Text();
+								item2.enabled=false;
+								item2.text=(flow.isCompleted==null?"待会签":(flow.isCompleted==1?"通过":"退回"))+":"+(flow.text==null?"":flow.text)+"  "+parentApplication.getTeacherNameByAccountId(flow.user)+"  "+(flow.completedDate==null?"":CommonUtils.formatDate(flow.completedDate,"YYYY-MM-DD"));
+								documentMaintain.documentMaintainPart3.counterSignArea.addChild(item2);
+								
+							}
+						}
+						else if(flow.type==6){
+							if(flow.type==documentMaintain.sendingFile.status&&flow.user==parentApplication.currentUser.id){
+								var item3:Text=new Text();
+								item3.setStyle("fontWeight","bold");
+								item3.enabled=true;
+								item3.text=(flow.isCompleted==null?"签发意见":(flow.isCompleted==1?"通过":"退回"))+":"+(flow.text==null?"":flow.text)+"  "+parentApplication.getTeacherNameByAccountId(flow.user)+"  "+(flow.completedDate==null?"":CommonUtils.formatDate(flow.completedDate,"YYYY-MM-DD"));
+								documentMaintain.documentMaintainPart3.issueArea.addChild(item3);
+								
+								var item1:TextArea=new TextArea();
+								content=item1;
+								item1.enabled=true;
+								documentMaintain.documentMaintainPart3.issueArea.addChild(item1);
+								
+								
+							}else{
+								var item2:Text=new Text();
+								item2.enabled=false;
+								item2.text=(flow.isCompleted==null?"待签发":(flow.isCompleted==1?"通过":"退回"))+":"+(flow.text==null?"":flow.text)+"  "+parentApplication.getTeacherNameByAccountId(flow.user)+"  "+(flow.completedDate==null?"":CommonUtils.formatDate(flow.completedDate,"YYYY-MM-DD"));
+								documentMaintain.documentMaintainPart3.issueArea.addChild(item2);
+								
+							}
+						}
+					}
+					
+				}
+			}
+			private function save_resultHandler(event:ResultEvent):void
+			{
+				if(event.result!=null){
+					Alert.show("保存成功");
+					search();
+				}
+			}
+			private function finishWorkFlow_resultHandler(event:ResultEvent):void
+			{
+				if(event.result==true){
+					//Alert.show("保存成功");
+					this.currentState='list';
+					search();
+				}
+			}
+			
+			private function getWorkFlowsByConditions_resultHandler(event:ResultEvent):void
+			{
+				if(event.result!=null){
+					var allList:ArrayCollection=event.result as ArrayCollection;
+					draft_grid.grid.initdata(allList);
+				}
+			}
+			public function search():void
+			{
+				var dispatchWord:String = search_panel.search_word.text;
+				var dispatchYear:String = search_panel.search_year.text;
+				var dispatchNumber:String = search_panel.search_num.text;
+				var title:String = search_panel.search_title.text;
+				var auspiceDepartment:String = search_panel.search_department.text;
+				var beginDate:String = search_panel.search_date_begin.text;
+				var endDate:String = search_panel.search_date_end.text;
+				var states:String = "8";
+				var isCompleted:int=0;
+				var userId:String=parentApplication.currentUser.id;
+				sendingFileServiceRO.getWorkFlowsByConditions( dispatchWord, dispatchYear, dispatchNumber, title, auspiceDepartment, beginDate, endDate, states,isCompleted,userId);
+				
+			}
+			
+			
+			//			public function add(id:String):void
+			//			{
+			//				var parent:Object=(Object)(((Object)(this.owner)).owner);
+			//				parent.addTab("add_receipt" + id,"正文登记",parent.nav,"oa/receipt/registerDetail.swf",null,id);
+			//			}
+			public function enterAdd():void{
+				addUpdateFlag.text = "Add";
+				this.currentState='add';
+				//documentMaintain.initStep();
+			}
+			public function enterEdit(sendingFileId:String,sendingFileFlowId:String):void
+			{
+				addUpdateFlag.text = "Update_"+sendingFileId+"_"+sendingFileFlowId;
+				this.currentState='add';
+				//Alert.show(id);
+			}
+			private function saveDraft():void
+			{
+				if(documentMaintain.isValid()){
+					documentMaintain.sendingFile.content=documentMaintain.documentMaintainPart1.rte.htmlText;
+					documentMaintain.sendingFile.auspiceDepartment=documentMaintain.documentMaintainPart3.auspiceDepartment.text;
+					documentMaintain.sendingFile.authorId=documentMaintain.documentMaintainPart3.search_account_id.text;
+					documentMaintain.sendingFile.subject=documentMaintain.documentMaintainPart3.subject.text;
+					documentMaintain.sendingFile.mainSends=documentMaintain.documentMaintainPart3.mainSends.text;
+					documentMaintain.sendingFile.upSends=documentMaintain.documentMaintainPart3.upSends.text;
+					documentMaintain.sendingFile.downSends=documentMaintain.documentMaintainPart3.downSends.text;
+					documentMaintain.sendingFile.dispatchWord=documentMaintain.documentMaintainPart3.dispatchWord.text;
+					documentMaintain.sendingFile.dispatchYear=documentMaintain.documentMaintainPart3.dispatchYear.text;
+					documentMaintain.sendingFile.dispatchNumber=documentMaintain.documentMaintainPart3.dispatchNumber.text;
+					documentMaintain.sendingFile.dispatchDate=DateFormatter.parseDateString(documentMaintain.documentMaintainPart3.dispatchDate.text);
+					documentMaintain.sendingFile.title=documentMaintain.documentMaintainPart3.title.text;
+					
+					if(addUpdateFlag.text == "Add")
+						sendingFileServiceRO.addSendingFile(documentMaintain.sendingFile,documentMaintain.documentMaintainPart2.upload.idList);
+					else sendingFileServiceRO.updateSendingFile(documentMaintain.sendingFile,documentMaintain.documentMaintainPart2.upload.addIds,documentMaintain.documentMaintainPart2.upload.removeIds);
+					
+				}
+			}
+			
+			public function finishWorkFlow(sendingFileFlowId:String,state:String):void
+			{
+				//	Alert.show(content.text);
+				if(this.currentState=='list'||documentMaintain.isValid()){
+					//sendingFileServiceRO.addSendingFile(documentMaintain.sendingFile);
+					Alert.show("你确定要结束发文当前阶段吗?", "确定" ,Alert.YES | Alert.NO,null,function(event:CloseEvent):void{
+						if(event.detail == Alert.YES)
+						{
+							sendingFileServiceRO.finishWorkFlow(sendingFileFlowId,state,content.text);
+						}
+					});
+					
+				}
+			}
+			
+			protected function state1_enterStateHandler(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				if(addUpdateFlag.text=="Add"){
+					documentMaintain.initStep();
+				}else {
+					var id:String=addUpdateFlag.text.split('_')[1];
+					var flowId:String=addUpdateFlag.text.split('_')[2];
+					documentMaintain.initStep(id,flowId);
+				}
+				
+			}
+			
 		]]>
 	</mx:Script>
 	<mx:VBox borderVisible="true" width="100%" height="100%" borderStyle="solid" horizontalAlign="center" verticalAlign="middle">
 		<mx:VBox width="100%" height="100%" id="listPanel">
+			
 			<mx:VBox width="100%" height="80"  verticalGap="0" verticalAlign="middle" horizontalAlign="center" >
 				<mx:VBox width="100%" height="100%"   horizontalGap="10" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="0" paddingBottom="0"   paddingLeft="10" paddingRight="10">
 					<sendingFiles:searchBox id="search_panel" width="100%" height="100%"/>
@@ -62,7 +261,21 @@
 				<sendingFiles:datagrid id="draft_grid"/>
 			</mx:VBox>
 		</mx:VBox>
-		
+		<mx:VBox width="100%" height="100%" id="editPanel">
+			<mx:HBox width="100%" height="25" paddingLeft="20"  horizontalGap="10" styleName="CustomHBoxStyle"   verticalAlign="middle">
+				<mx:Label text="|"/>
+				<mx:LinkButton  label="返回" icon="@Embed(source='../WebContent/resources/common/tools/button_back_icon.png')" click="this.currentState='list';"/>
+				<mx:Label id="addUpdateFlag" visible="false" text="Add" width="0"/>
+				<mx:LinkButton  label="保存" icon="@Embed(source='../WebContent/resources/common/tools/button_draftSave_icon.png')" click="saveDraft();" />
+				<mx:LinkButton  label="签发通过" icon="@Embed(source='../WebContent/resources/common/tools/button_next_icon.png')"  click="finishWorkFlow(documentMaintain.flowId,'1');"/>
+				<mx:LinkButton  label="退回重拟" icon="@Embed(source='../WebContent/resources/common/tools/button_pre_icon.png')"  click="finishWorkFlow(documentMaintain.flowId,'0');"/>
+				
+				<mx:LinkButton  label="打印" icon="@Embed(source='../WebContent/resources/common/tools/button_printer_icon.png')" />
+				
+				<mx:Label text="|"/>
+			</mx:HBox>
+			<sendingFiles:documentMaintain width="100%" height="100%" id="documentMaintain"/>
+		</mx:VBox>
 	</mx:VBox>
 </mx:Module>
 

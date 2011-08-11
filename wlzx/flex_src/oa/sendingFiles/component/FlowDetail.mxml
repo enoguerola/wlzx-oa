@@ -73,11 +73,13 @@
 			
 			private function labelCompleted(item:Object, column:DataGridColumn):String
 			{
+				if(item.isCompleted==null)return "待处理";
 				var isCompleted:int = item.isCompleted;
-				if(isCompleted)
-					return "已完成";
-				else
-					return "未完成";
+				
+				if(isCompleted==1)
+					return "通过";
+				else 
+					return "退回";
 			}
 		]]>
 	</fx:Script>
@@ -91,8 +93,8 @@
 							<mx:DataGridColumn dataField="id" headerText="序号" width="100"/>
 							<mx:DataGridColumn headerText="流转类型" width="100" labelFunction="labelType"/>
 							<mx:DataGridColumn headerText="操作人" width="100" labelFunction="labelUser"/>
-							<mx:DataGridColumn dataField="completedDate" headerText="操作时间" width="150" labelFunction="DateUtil.datagridFormatDate"/>
-							<mx:DataGridColumn headerText="是否完成" labelFunction="labelCompleted"/>
+							<mx:DataGridColumn dataField="completedDate" headerText="操作时间" width="150" labelFunction="DateUtil.datagridFormatDateTime"/>
+							<mx:DataGridColumn headerText="处理状态" labelFunction="labelCompleted"/>
 						</mx:columns>
 					</mx:DataGrid>
 				<!--</s:Panel>-->
