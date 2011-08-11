@@ -83,23 +83,26 @@
 //				return true;
 //			}
 			
-			protected function enterEdit(id:String):void
+			protected function enterEdit(sendingFileId:String,sendingFileFlowId:String):void
 			{
 				// TODO Auto-generated method stub
 				var parent:Object = ((Object)(this.parentDocument)).parentDocument;
-				parent.enterEdit(id);
+				parent.enterEdit(sendingFileId,sendingFileFlowId);
 			}
-			protected function changeWorkFlow(id:String,status:String):void
+			protected function readDetail(sendingFileId:String):void
 			{
 				// TODO Auto-generated method stub
-				var parent:Object = ((Object)(this.parentDocument)).parentDocument;
-				parent.changeWorkFlow(id,status);
+				var parentModule:Object = ((Object)(this.parentDocument)).parentDocument;
+				//parent.add(id);
+				var parent:Object=(Object)(((Object)(parentModule.owner)).owner);
+				//Alert.show("add");
+				parent.addTab("view_sendingFile" + sendingFileId,"公文详细",parent.nav,"oa/sendingFiles/documentDetail.swf",null,sendingFileId);
 			}
 
 		]]>
 	</fx:Script>
 	<s:HGroup horizontalAlign="center" verticalAlign="middle" width="100%" height="100%" id="hgroup">
-		<mx:LinkButton click="enterEdit(data.id)" id="edit_button" label="编辑" enabled="{data.status == 0||data.status == 2||data.status == 4||data.status == 6||data.status == 8}"/>
-		<mx:LinkButton click="changeWorkFlow(data.id,data.status+1)" id="register_button" label="提交" enabled="{data.status == 0||data.status == 2||data.status == 4||data.status == 6||data.status == 8}"/>
+		<mx:LinkButton click="enterEdit(data.sendingFileId,data.sendingFileFlowId)" id="edit_button" label="编辑" visible="{data.status != 8}" enabled="{data.status == 0||data.status == 2||data.status == 4||data.status == 6||data.status == 8}"/>
+		<mx:LinkButton click="readDetail(data.sendingFileId)" id="register_button" label="阅读" />
 	</s:HGroup>
 </s:MXDataGridItemRenderer>

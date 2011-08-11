@@ -13,9 +13,12 @@
 			import mx.events.FlexEvent;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
-			import oa.entity.sendingFiles.SendingFileModel;
-			import system.utils.CommonUtils;
+			
 			import oa.entity.AttachmentModel;
+			import oa.entity.sendingFiles.SendingFileModel;
+			
+			import system.utils.CommonUtils;
+			public var flowId:String=null;
 //			private function systemFaultHandler(event:FaultEvent):void {
 //				Alert.show(event.fault.faultString, 'Error');
 //			}
@@ -88,7 +91,7 @@
 					
 				}
 			}
-			public function initStep(id:String=null):void{
+			public function initStep(id:String=null,sendingFileFlowId:String=null):void{
 			//	this.currentState='part1';
 				//documentMaintainPart1.dispatchEvent(new Event(FlexEvent.SHOW));
 				pre.enabled=false;
@@ -104,10 +107,13 @@
 					documentMaintainPart3.empty();
 					//documentMaintainPart1.setContent("test.doc");
 				}else{
+					documentMaintainPart1.empty();
 					documentMaintainPart2.empty();
+					documentMaintainPart3.empty();
 					//Alert.show(id+"bbbbbb");
 					var parent:Object = ((Object)(this.parentDocument));
-					parent.sendingFileServiceRO.getById(id);	
+					parent.sendingFileServiceRO.getById(id);
+					flowId=sendingFileFlowId;
 
 				}
 			}

@@ -36,6 +36,6 @@
 		]]>
 	</fx:Script>
 	<s:HGroup horizontalAlign="center" verticalAlign="middle" width="100%" height="100%">
-		<mx:LinkButton label="办结" id="complete_button" click="{complete_detail(data.id)}" creationComplete="{complete_button_creationCompleteHandler(data.isCompleted)}"/>
+		<mx:LinkButton label="办结" id="complete_button" click="{complete_detail(data.id)}" creationComplete="{complete_button_creationCompleteHandler(data.isCompleted)}"  enabled="{data.isCompleted==0}"/>
 	</s:HGroup>
 </s:MXDataGridItemRenderer>
