@@ -34,6 +34,7 @@ public class SendingFileModel extends BaseModel {
 	private String dispatchNumber;
 	private Date dispatchDate;
 	private Integer status;
+	private Integer isCompleted;
 	private Set<AttachmentModel> attachments=new TreeSet<AttachmentModel>(); 
 	private Set<FileFlowModel> fileFlows;
 	public static enum EStatus{
@@ -190,6 +191,14 @@ public class SendingFileModel extends BaseModel {
 
 	public void setStatus(Integer status) {
 		this.status = status;
+	}
+
+	public Integer getIsCompleted() {
+		return isCompleted;
+	}
+
+	public void setIsCompleted(Integer isCompleted) {
+		this.isCompleted = isCompleted;
 	}
 
 

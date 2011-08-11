@@ -22,6 +22,7 @@ package oa.entity.sendingFiles
 		public var  dispatchNumber:String;
 		public var  dispatchDate:Date;
 		public var  status:int;
+		public var  isCompleted:int;
 		public var  fileFlows:ArrayCollection = new ArrayCollection();
 		public var  attachments:ArrayCollection = new ArrayCollection();
 		public function SendingFileModel()

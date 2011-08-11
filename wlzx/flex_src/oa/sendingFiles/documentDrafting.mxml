@@ -100,7 +100,9 @@
 				var beginDate:String = search_panel.search_date_begin.text;
 				var endDate:String = search_panel.search_date_end.text;
 				var states:String = "0";
-				sendingFileServiceRO.getByConditions( dispatchWord, dispatchYear, dispatchNumber, title, auspiceDepartment, beginDate, endDate, states);
+				var isCompleted:int=0;
+
+				sendingFileServiceRO.getByConditions( dispatchWord, dispatchYear, dispatchNumber, title, auspiceDepartment, beginDate, endDate, states,isCompleted);
 
 			}
 			

@@ -19,7 +19,7 @@ public class SendingFileDAOImpl extends BaseDAOImpl<SendingFileModel> implements
 	public List<SendingFileModel> getByConditions(
 			String dispatchWord,String dispatchYear,String dispatchNumber, String title,
 			String auspiceDepartment, String beginDate, String endDate,
-			String states) {
+			String states,Integer isCompleted) {
 		DetachedCriteria criteria = DetachedCriteria.forClass(SendingFileModel.class);
 		if(StringUtils.isNotEmpty(dispatchWord)){
 			criteria.add(Restrictions.sqlRestriction("dispatch_word='"+dispatchWord+"'"));	
@@ -46,6 +46,9 @@ public class SendingFileDAOImpl extends BaseDAOImpl<SendingFileModel> implements
 		}
 		if(StringUtils.isNotEmpty(endDate)){
 			criteria.add(Restrictions.sqlRestriction("creation_date<='"+endDate+" 59:59:59'"));	
+		}
+		if(isCompleted!=null){
+			criteria.add(Restrictions.sqlRestriction("is_completed ='"+isCompleted+"'"));	
 		}
 		criteria.addOrder(Order.desc("creationDate"));
 		List<SendingFileModel> list = getListByCriteria(criteria);

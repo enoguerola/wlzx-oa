@@ -5,6 +5,7 @@
 	<mx:RemoteObject id="sendingFileServiceRO" destination="sendingFileServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 		<mx:method name="getByConditions"  concurrency="last" result="getByConditions_resultHandler(event);"/>
 		<mx:method name="getById"  concurrency="last" result="getById_resultHandler(event);"/>
+		<mx:method name="complete"  concurrency="last" result="complete_resultHandler(event);"/>
 		<mx:method name="addSendingFile"  concurrency="last" result="save_resultHandler(event);"/>
 		<mx:method name="updateSendingFile"  concurrency="last" result="save_resultHandler(event);"/>
 		<mx:method name="changeWorkFlow"  concurrency="last" result="changeWorkFlow_resultHandler(event);"/>
@@ -100,7 +101,8 @@
 				var beginDate:String = search_panel.search_date_begin.text;
 				var endDate:String = search_panel.search_date_end.text;
 				var states:String = "1,3,5,7,9";
-				sendingFileServiceRO.getByConditions( dispatchWord, dispatchYear, dispatchNumber, title, auspiceDepartment, beginDate, endDate, states);
+				var isCompleted:int=null;
+				sendingFileServiceRO.getByConditions( dispatchWord, dispatchYear, dispatchNumber, title, auspiceDepartment, beginDate, endDate, states,isCompleted);
 				
 			}
 			
@@ -157,7 +159,15 @@
 					
 				}
 			}
-			
+			public function complete(id:String):void
+			{
+				sendingFileServiceRO.complete(id);
+			}
+			private function complete_resultHandler(event:ResultEvent):void
+			{
+				Alert.show("设置成功");
+				search();
+			}
 			protected function state1_enterStateHandler(event:FlexEvent):void
 			{
 				// TODO Auto-generated method stub
