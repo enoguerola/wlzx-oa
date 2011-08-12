@@ -5,8 +5,8 @@
 		<mx:RemoteObject id="sendingFileServiceRO" destination="sendingFileServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 			<mx:method name="getWorkFlowsByConditions"  concurrency="last" result="getWorkFlowsByConditions_resultHandler(event);"/>
 			<mx:method name="getById"  concurrency="last" result="getById_resultHandler(event);"/>
-			<mx:method name="addSendingFile"  concurrency="last" result="save_resultHandler(event);"/>
-			<mx:method name="updateSendingFile"  concurrency="last" result="save_resultHandler(event);"/>
+			<mx:method name="addSendingFile"  concurrency="last" result="addSendingFile_resultHandler(event);"/>
+			<mx:method name="updateSendingFile"  concurrency="last" result="updateSendingFile_resultHandler(event);"/>
 			<mx:method name="finishWorkFlow"  concurrency="last" result="finishWorkFlow_resultHandler(event);"/>
 			
 		</mx:RemoteObject>
@@ -132,7 +132,17 @@
 					
 				}
 			}
-			private function save_resultHandler(event:ResultEvent):void
+			private function addSendingFile_resultHandler(event:ResultEvent):void
+			{
+				if(event.result!=null){
+					documentMaintain.sendingFile=event.result as SendingFileModel;
+					//Alert.show(documentMaintain.sendingFile.fileFlows.length+"");
+					documentMaintain.flowId=documentMaintain.sendingFile.getFirstDraftStepFlowId();
+					Alert.show("添加成功");
+					search();
+				}
+			}
+			private function updateSendingFile_resultHandler(event:ResultEvent):void
 			{
 				if(event.result!=null){
 					Alert.show("保存成功");

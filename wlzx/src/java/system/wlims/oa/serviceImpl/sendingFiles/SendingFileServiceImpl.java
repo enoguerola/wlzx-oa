@@ -81,8 +81,8 @@ public class SendingFileServiceImpl implements SendingFileService {
 		flow.setSendingFileId(model.getId());
 		flow.setIsCompleted(null);
 		sendingFileFlowDAO.saveOrUpdate(flow);
-
-		return model;
+		
+		return sendingFileDAO.get(model.getId());
 	}
 
 

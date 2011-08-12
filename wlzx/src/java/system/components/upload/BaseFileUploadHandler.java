@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -33,13 +33,13 @@ public abstract class BaseFileUploadHandler implements IUpload{
 	
 	protected abstract void init();
 	
-	private String getFileName(String filename){
-		int index = filename.indexOf(".");
-		if(index > -1){
-			return filename.substring(0, index);
-		}else
-			return filename;
-	}
+//	private String getFileName(String filename){
+//		int index = filename.indexOf(".");
+//		if(index > -1){
+//			return filename.substring(0, index);
+//		}else
+//			return filename;
+//	}
 	
 	public String getFileType(String filename){
 		int index = filename.indexOf(".");
@@ -53,10 +53,11 @@ public abstract class BaseFileUploadHandler implements IUpload{
 		init();
 		
 		if (file != null && !file.isEmpty()) {
-			Calendar calendar = Calendar.getInstance();
+//			Calendar calendar = Calendar.getInstance();
 		    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMddhhmmss");
-		    filename = getFileName(file.getOriginalFilename()) + "_" + simpleDateFormat.format(calendar.getTime()) + "."
-		    				+ getFileType(file.getOriginalFilename());
+//		    filename = getFileName(file.getOriginalFilename()) + "_" + simpleDateFormat.format(calendar.getTime()) + "."
+//		    				+ getFileType(file.getOriginalFilename());
+		    filename =  "attach_"+simpleDateFormat.format(new Date()) + "."+ getFileType(file.getOriginalFilename());
 		    DataOutputStream out = new DataOutputStream(new FileOutputStream(uploadDirectory + filename));// 存放文件的绝对路径
 		    InputStream is = null;// 附件输入流
 		    try {
