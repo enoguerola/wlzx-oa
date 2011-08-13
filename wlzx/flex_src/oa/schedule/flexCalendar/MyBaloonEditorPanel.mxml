@@ -127,7 +127,7 @@
 			});
 			
 			setDayNames();
-			DrawTipMark();
+	//		DrawTipMark();
 //			callLater(initWin);
 			
 		}

@@ -407,7 +407,9 @@
 				recurString += MyItemEditorVOConverter.getInterval(model.repeatInterval);
 				
 				calendarItem.recur = new Recur(recurString);
+			//	pop.deferredContentCreated=false;
 				pop.item = converter.calendarItemToItemEditorVO(calendarItem);
+				pop.item.description=model.content;
 				pop.item.departmentShare=CommonUtils.int2Boolean(model.departmentShare);
 				pop.item.schoolShare=CommonUtils.int2Boolean(model.schoolShare);
 				pop.item.emergence=model.emergence;

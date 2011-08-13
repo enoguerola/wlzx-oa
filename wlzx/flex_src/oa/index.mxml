@@ -60,6 +60,7 @@
 //				timer.addEventListener(TimerEvent.TIMER, updateCurrentTime);				
 //				timer.start();
 //				currentTime.text=currentTime.text.concat(this.parentApplication.lastLoginTime);
+				
 			}
 			private function updateCurrentTime(event:TimerEvent):void{
 //				currentTime.text=CommonUtils.formatDate(new Date());
@@ -213,12 +214,7 @@
 				child.addEventListener( ModuleEvent.READY,function(event:ModuleEvent):void{
 					child.removeAllChildren();
 				}); 
-				child.addEventListener( ModuleEvent.ERROR,function(e:ModuleEvent):void{
-					child.removeAllChildren();
-					child.url = errorPageUrl+"?uid=" + new Date().getTime();
-				//	Alert.show("模块加载错误，这可能是用户长时间未操作导致的用户认证过期，请重新登录操作。如果仍存在问题，请检查网络或联系系统管理员","提示",Alert.YES,null,exitCallBack);
-//					Alert.show("你确定要退出系统吗?","确认",Alert.YES,null,exitCallBack);
-				}); 
+			
 				var bar:ProgressBar=new ProgressBar();
 				bar.minimum=0;
 				bar.visible=true;
@@ -236,7 +232,7 @@
 					bar.setProgress(e.bytesLoaded,e.bytesTotal);	
 					bar.validateNow();
 				});
-			
+				
 //				fade = new Fade();
 				// Rotate effect
 //				rotate = new Rotate();
@@ -313,6 +309,15 @@
 				event.target.height-=2;
 			}
 
+
+			protected function nav_changeHandler(event:IndexChangedEvent):void
+			{
+				// TODO Auto-generated method stub
+				//Alert.show(event.newIndex+"");
+				var obj:* = nav.getChildAt(event.newIndex);
+				obj.child.search();
+			}
+
 		]]>
 	</fx:Script>
 
@@ -369,7 +374,7 @@
 		
 		<!--************  右侧标签TabNavigator 面板 ****************-->
 		<flexlib:DockableToolBar x="150" y="65" toolTip="隐藏|展开左区域菜单" height="100%" paddingTop="200" dropShadowVisible="false" borderVisible="false"  doubleClickEnabled="true" doubleClick="showHideLeftbody_handler(event)" ></flexlib:DockableToolBar>
-		<flexlib:SuperTabNavigator id="nav" styleName="customTabNavStyle"  tabStyleName="customTabStyles" horizontalGap="1" paddingTop="0" paddingBottom="0" paddingLeft="0" paddingRight="0" closePolicy="SuperTab.CLOSE_ROLLOVER|SuperTab.CLOSE_ALWAYS|SuperTab.CLOSE_SELECTED|SuperTab.CLOSE_NEVER" width="100%" height="100%" allowTabSqueezing="false"  dragEnabled="false">
+		<flexlib:SuperTabNavigator id="nav" styleName="customTabNavStyle"  tabStyleName="customTabStyles" horizontalGap="1" paddingTop="0" paddingBottom="0" paddingLeft="0" paddingRight="0" closePolicy="SuperTab.CLOSE_ROLLOVER|SuperTab.CLOSE_ALWAYS|SuperTab.CLOSE_SELECTED|SuperTab.CLOSE_NEVER" width="100%" height="100%" allowTabSqueezing="false"  dragEnabled="false"    change="nav_changeHandler(event)" >
 		</flexlib:SuperTabNavigator>
 	</s:BorderContainer>
 	
