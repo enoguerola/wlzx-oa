@@ -9,6 +9,9 @@
 			<column name="id" />
 			<generator class="native" />
 		</id>
+		<property name="level" type="int">
+			<column name="level" />
+		</property>
 		<property name="symbol" type="string" unique="true">
 			<column name="symbol" />
 		</property>

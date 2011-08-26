@@ -29,6 +29,7 @@ public class DepartmentModel  extends BaseModel{
 	 * 
 	 */
 	private static final long serialVersionUID = -7972036409727505069L;
+	private int level;//部门级别
 	private String detail;
 	private String phone;
 	private Set<DepartmentModel> subordinates=new TreeSet<DepartmentModel>();//直属下级部门
@@ -154,6 +155,15 @@ public class DepartmentModel  extends BaseModel{
 	public void setMainUsers(Set<UserModel> mainUsers) {
 		this.mainUsers = mainUsers;
 	}
+
+	public int getLevel() {
+		return level;
+	}
+
+	public void setLevel(int level) {
+		this.level = level;
+	}
+
 	
 	
 

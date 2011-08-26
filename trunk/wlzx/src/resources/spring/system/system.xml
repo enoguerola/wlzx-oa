@@ -43,7 +43,7 @@
 	<bean id="messageDAO" class="system.dao.MessageDAO">
 		<property name="sessionFactory" ref="systemSessionFactory" />
 	</bean>
-	<bean id="systemServiceDest" class="system.service.SystemService">
+	<bean id="systemServiceDest" class="system.serviceImpl.SystemServiceImpl">
 		<flex:remoting-destination />
 		<property name="systemDAO" ref="systemDAO" />
 		<property name="menuDAO" ref="menuDAO" />

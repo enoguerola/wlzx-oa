@@ -71,7 +71,8 @@
 			<tx:method name="delete*" />
 		</tx:attributes>
 	</tx:advice>
-	<aop:config>
+	<aop:aspectj-autoproxy proxy-target-class="true"/> 
+	<aop:config proxy-target-class="true">
 		<aop:pointcut id="serviceOperation" expression="execution(* system.service.*.*(..))" />
 		<aop:advisor advice-ref="systemTxAdvice" pointcut-ref="serviceOperation" />
 	</aop:config>

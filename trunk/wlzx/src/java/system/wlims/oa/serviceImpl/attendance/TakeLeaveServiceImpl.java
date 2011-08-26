@@ -1,5 +1,6 @@
 package system.wlims.oa.serviceImpl.attendance;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -262,7 +263,27 @@ public class TakeLeaveServiceImpl implements TakeLeaveService {
 			String submitBeginDate, String submitEndDate,
 			String takeLeaveBeginDate, String takeLeaveEndDate) {
 		// TODO Auto-generated method stub
+		List<TakeLeaveForm> results=new ArrayList<TakeLeaveForm>();
 		List<TakeLeaveForm> list=takeLeaveDAO.getTakeLeaveAppliesByConditions(teacherId,type,status,submitBeginDate,submitEndDate,takeLeaveBeginDate,takeLeaveEndDate);
+		UserModel user=SecurityUserHolder.getCurrentUser();
+		if(user.hasDam("takeLeaveApprove_main@defaultVisit@@noFilter@"))
+			return list;
+		if(user.hasDam("takeLeaveApprove_main@defaultVisit@@notSelfManagerFilter@")){
+			for(TakeLeaveForm form:list){
+				if(user.hasSubordinateUser(form.getTeacherId())){
+					results.add(form);
+				}
+			}
+			return results;
+		}
+		else if(user.hasDam("takeLeaveApprove_main@defaultVisit@@notSelfOfficeFilter@")){
+			for(TakeLeaveForm form:list){
+				if(user.hasSubordinateUser(form.getTeacherId())){
+					results.add(form);
+				}
+			}
+			return results;
+		}
 		
 		return list;
 	}
