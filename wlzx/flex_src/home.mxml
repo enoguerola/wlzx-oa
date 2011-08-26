@@ -67,6 +67,7 @@
 			public var allRole:ArrayCollection = new ArrayCollection();
 			public var allPlace:ArrayCollection = new ArrayCollection();
 			public var currentUserDepartment:ArrayCollection=new ArrayCollection();
+			public var currentUserFirstLevelDepartment:ArrayCollection=new ArrayCollection();
 			public var homeUrl:String=null;
 			import system.component.MyToolTip;
 			private function init():void{
@@ -167,7 +168,10 @@
 					var list:ArrayCollection=currentUser.getDepartments();
 					for(var i:int=0;i<list.length;i++){
 						var department:Object=list.getItemAt(i);
-						currentUserDepartment.addItem( {data:department.id, label:department.name})
+						var leaderDepartment2FirstLevel:Object=department.getLeaderDepartment2FirstLevel();
+						if(leaderDepartment2FirstLevel!=null)
+						currentUserFirstLevelDepartment.addItem( {data:leaderDepartment2FirstLevel.id, label:leaderDepartment2FirstLevel.name});
+						currentUserDepartment.addItem( {data:department.id, label:department.name});
 					}
 				}
 //				Alert.show(event.result.name);

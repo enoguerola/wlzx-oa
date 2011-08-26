@@ -39,7 +39,7 @@
 	<bean id="userDAO" class="system.dao.UserDAO">
 		<property name="sessionFactory" ref="systemSessionFactory" />
 	</bean>
-	<bean id="initService" class="system.service.InitService">
+	<bean id="initService" class="system.serviceImpl.InitServiceImpl">
 		<property name="systemDAO" ref="systemDAO" />
 		<property name="menuDAO" ref="menuDAO" />
 		<property name="moduleDAO" ref="moduleDAO" />
@@ -49,7 +49,7 @@
 		<property name="roleDAO" ref="roleDAO" />
 		<property name="userDAO" ref="userDAO" />
 	</bean>
-	<bean id="systemService" class="system.service.SystemService">
+	<bean id="systemService" class="system.serviceImpl.SystemServiceImpl">
 		<property name="systemDAO" ref="systemDAO" />
 		<property name="menuDAO" ref="menuDAO" />
 		<property name="moduleDAO" ref="moduleDAO" />

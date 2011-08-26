@@ -1,18 +1,19 @@
 package system.wlims.oa.serviceImpl.attendance;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import system.components.SecurityUserHolder;
 import system.entity.MessageModel;
+import system.entity.UserModel;
 import system.service.SystemService;
 import system.utils.UtilDateTime;
 import system.wlims.basic.service.teacher.TeacherService;
 import system.wlims.oa.dao.attendance.OverWorkDAO;
 import system.wlims.oa.entity.workFlow.overWork.OverWorkForm;
 import system.wlims.oa.entity.workFlow.overWork.OverWorkWorkFlowLog;
-import system.wlims.oa.entity.workFlow.takeLeave.TakeLeaveForm;
 import system.wlims.oa.service.attendance.OverWorkService;
-import system.wlims.oa.vo.TaskVO;
 
 public class OverWorkServiceImpl implements OverWorkService {
 	private OverWorkDAO overWorkDAO;
@@ -140,7 +141,19 @@ public class OverWorkServiceImpl implements OverWorkService {
 			String submitBeginDate, String submitEndDate,
 			String overWorkBeginDate, String overWorkEndDate) {
 		// TODO Auto-generated method stub
+		List<OverWorkForm> results=new ArrayList<OverWorkForm>();
 		List<OverWorkForm> list=overWorkDAO.getOverWorkAppliesByConditions(teacherId,status,submitBeginDate,submitEndDate,overWorkBeginDate,overWorkEndDate);
+		UserModel user=SecurityUserHolder.getCurrentUser();
+		if(user.hasDam("overWork_approve_main@defaultVisit@@noFilter@"))
+			return list;
+		if(user.hasDam("overWork_approve_main@defaultVisit@@notSelfOfficeFilter@")){
+			for(OverWorkForm form:list){
+				if(user.hasSubordinateUser(form.getTeacherId())){
+					results.add(form);
+				}
+			}
+			return results;
+		}
 		
 		return list;
 	}

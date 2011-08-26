@@ -17,6 +17,7 @@
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
+			 classpath:net/bull/javamelody/monitoring-spring.xml,
 			 /WEB-INF/spring-system.xml,
 			classpath:spring/system/*.xml,
 			 /WEB-INF/spring-system-basic.xml,
@@ -54,6 +55,24 @@
 		<filter-name>encoding</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
+
+
+	<!-- 配置javamelody，监控系统 -->
+     <filter> 
+		<filter-name>monitoring</filter-name> 
+	    <filter-class>net.bull.javamelody.MonitoringFilter</filter-class> 
+	    <init-param>
+           <param-name>system-actions-enabled</param-name>
+           <param-value>true</param-value>
+        </init-param>
+	</filter> 
+	<filter-mapping> 
+		<filter-name>monitoring</filter-name> 
+		<url-pattern>/*</url-pattern> 
+	</filter-mapping> 
+	<listener> 
+		<listener-class>net.bull.javamelody.SessionListener</listener-class> 
+	</listener>   
 
 	<filter>
 		<filter-name>springSecurityFilterChain</filter-name>

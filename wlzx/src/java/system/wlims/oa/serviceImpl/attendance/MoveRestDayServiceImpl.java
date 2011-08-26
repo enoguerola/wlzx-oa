@@ -1,17 +1,19 @@
 package system.wlims.oa.serviceImpl.attendance;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 
+import system.components.SecurityUserHolder;
 import system.entity.MessageModel;
+import system.entity.UserModel;
 import system.service.SystemService;
 import system.utils.UtilDateTime;
 import system.wlims.basic.service.teacher.TeacherService;
 import system.wlims.oa.dao.attendance.MoveRestDayDAO;
 import system.wlims.oa.entity.workFlow.moveRestDay.MoveRestDayForm;
 import system.wlims.oa.entity.workFlow.moveRestDay.MoveRestDayWorkFlowLog;
-import system.wlims.oa.entity.workFlow.takeLeave.TakeLeaveForm;
 import system.wlims.oa.service.attendance.MoveRestDayService;
 import system.wlims.oa.vo.TaskVO;
 
@@ -70,7 +72,7 @@ public class MoveRestDayServiceImpl implements MoveRestDayService {
 				log.setOperationName("处室审批");
 				if(moveRestDay.getOfficeChiefStatus().intValue()==1){
 					log.setOperationResult("处室审批编号为"+moveRestDay.getApplyNo()+"的申请通过");
-					if(moveRestDay.getSections()/3.0<=TakeLeaveForm.Rules.FirstApprove.getValue()*1.0){
+					if(moveRestDay.getSections()/3.0<=MoveRestDayForm.Rules.FirstApprove.getValue()*1.0){
 						newMoveRestDay.setOfficeChiefStatus(moveRestDay.getOfficeChiefStatus().intValue());
 						newMoveRestDay.setStatus(MoveRestDayForm.Status.Pass.getValue());
 						String content="您申请的编号为"+moveRestDay.getApplyNo()+"的调休审批已经通过";
@@ -176,7 +178,20 @@ public class MoveRestDayServiceImpl implements MoveRestDayService {
 			String submitBeginDate, String submitEndDate,
 			String moveRestDayBeginDate, String moveRestDayEndDate) {
 		// TODO Auto-generated method stub
+		
+		List<MoveRestDayForm> results=new ArrayList<MoveRestDayForm>();
 		List<MoveRestDayForm> list=moveRestDayDAO.getMoveRestDayAppliesByConditions(teacherId,status,submitBeginDate,submitEndDate,moveRestDayBeginDate,moveRestDayEndDate);
+		UserModel user=SecurityUserHolder.getCurrentUser();
+		if(user.hasDam("moveRestDay_approve_main@defaultVisit@@noFilter@"))
+			return list;
+		if(user.hasDam("moveRestDay_approve_main@defaultVisit@@notSelfOfficeFilter@")){
+			for(MoveRestDayForm form:list){
+				if(user.hasSubordinateUser(form.getTeacherId())){
+					results.add(form);
+				}
+			}
+			return results;
+		}
 		
 		return list;
 	}

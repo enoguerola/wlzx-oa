@@ -1,6 +1,9 @@
 ﻿package system.entity
 {
 	import mx.collections.ArrayCollection;
+	
+	import oa.receipt.component.item.Department;
+
 	[Bindable]
 	[RemoteClass(alias="system.entity.DepartmentModel")] 
 	public class DepartmentModel extends BaseModel
@@ -8,6 +11,7 @@
 		
 		public var detail:String;
 		public var phone:String;
+		public var level:int;
 		public var roles:Object=new Array();//部门角色集
 		public var subordinates:Object=new Array();//直属下级部门
 		public var leaders:Object=new Array();//直属上级部门
@@ -47,6 +51,18 @@
 			}
 			
 			return null;
+		}
+		/** 
+		 * 获取上级部门至一级部门级别
+		 * @创建时间 2011-4-15 上午10:41:15
+		 */ 
+		public  function getLeaderDepartment2FirstLevel():DepartmentModel{
+			var parent:DepartmentModel=getLeaderDepartment();
+			if(parent==null) return this;
+			while(parent.level!=1&&parent.level!=0){
+				parent=parent.getLeaderDepartment();
+			}
+			return parent;
 		}
 		//获得部门及子部门所有用户集
 		public function getUsers():ArrayCollection{

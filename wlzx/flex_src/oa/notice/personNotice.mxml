@@ -48,14 +48,17 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import basic.utils.DateUtil;
+			
 			import mx.collections.ArrayCollection;
 			import mx.controls.*;
 			import mx.events.*;
 			import mx.rpc.events.*;
 			import mx.validators.Validator;
+			
 			import oa.entity.AttachmentModel;
+			
 			import system.utils.*;
-			import basic.utils.DateUtil;
 			
 			public var scopes:ArrayCollection = new ArrayCollection( 
 				[	{label:"全部", data:null},  
@@ -94,7 +97,7 @@
 				upload.urlRequest = urlRequest;
 				messagesView.selectedIndex = 0;
 				noticeScope.dataProvider=  new ArrayCollection([{label:"部门公告", data:"1"}]);
-				departmentList = this.parentApplication.currentUserDepartment;
+				departmentList = this.parentApplication.currentUserFirstLevelDepartment;
 				postdepartment.dataProvider= departmentList;
 				postdepartment.selectedIndex=0;
 				//权限控制部分
@@ -103,9 +106,9 @@
 				}
 				if(this.parentApplication.currentUser.hasDam("postAnyNotice@noFilter@")){
 					noticeScope.dataProvider= new ArrayCollection([{label:"校级公告", data:"0"},{label:"部门公告", data:"1"}]);
-					departmentList = this.parentApplication.allDepartment;
-					postdepartment.dataProvider= departmentList;
-					postdepartment.selectedIndex=0;
+//					departmentList = this.parentApplication.allDepartment;
+//					postdepartment.dataProvider= departmentList;
+//					postdepartment.selectedIndex=0;
 				}
 //				callLater(search);
 			}
@@ -401,6 +404,22 @@
 				if(window!=null)
 					PopUpManager.removePopUp(window);
 			}
+
+			protected function noticeScope_changeHandler(event:ListEvent):void
+			{
+				// TODO Auto-generated method stub
+				if(noticeScope.selectedItem.data=='1'){
+					postdepartment.dataProvider= this.parentApplication.currentUserFirstLevelDepartment;
+					postdepartment.selectedIndex=0;
+				}else if(noticeScope.selectedItem.data=='0'){
+					var list:ArrayCollection=new ArrayCollection();
+					var mainDepartment:Object=this.parentApplication.currentUser.mainRole.getBelongDepartment();
+					list.addItem({data:mainDepartment.id, label:mainDepartment.name});
+					postdepartment.dataProvider=list;
+				}
+					
+			}
+
 		]]>
 	</mx:Script>
 	
@@ -691,10 +710,10 @@
 							<mx:HBox width="100%">
 								<mx:ComboBox id="noticeType"  labelField="label"/>
 								<mx:FormItem label="公告范围">
-									<mx:ComboBox id="noticeScope"  labelField="label"/>
+									<mx:ComboBox id="noticeScope"  labelField="label" change="noticeScope_changeHandler(event)"/>
 								</mx:FormItem>
 								<mx:FormItem label="发布部门">
-									<mx:ComboBox id="postdepartment"  labelField="label" selectedIndex="-1"/>
+									<mx:ComboBox id="postdepartment"  labelField="label" selectedIndex="-1" enabled="{noticeScope.selectedItem.data=='1'}"/>
 								</mx:FormItem>
 								<mx:FormItem>
 									<mx:CheckBox label="紧急" id="emergence"/>

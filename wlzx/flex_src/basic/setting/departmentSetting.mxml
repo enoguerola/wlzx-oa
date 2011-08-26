@@ -152,6 +152,7 @@
 				creationDate.text=CommonUtils.formatDate(department.creationDate,"YYYY-MM-DD");
 				symbol.text=department.symbol;
 //				sequence.text=department.sequence+"";
+				level.text=department.level+"";
 				phone.text=department.phone;
 				detail.text=department.detail;
 				var rolesString:String="";
@@ -220,7 +221,9 @@
 							</s:HGroup>
 							
 						</mx:FormItem>
-						
+						<mx:FormItem label="部门级别">
+							<mx:Label id="level"/>		
+						</mx:FormItem>
 						<mx:FormItem label="创建日期 "  required="true">
 							<s:HGroup>
 								<mx:Label id="creationDate"/>

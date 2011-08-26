@@ -261,7 +261,19 @@ public class UserModel  extends BaseModel implements UserDetails{
 		}
 		return results;
 	}
-	
+	public Boolean hasSubordinateUser(String userId){
+		Boolean has=false;
+		Set<UserModel> subordinates=getAllSubordinates();
+		for (UserModel subordinate:subordinates){
+			//Alert.show(damList[i]);
+			if(subordinate.getId().equals(userId)){
+				has=true;
+				break;
+			}
+		}
+		return has;
+		
+	}
 	public Boolean getActive() {
 		return active;
 	}

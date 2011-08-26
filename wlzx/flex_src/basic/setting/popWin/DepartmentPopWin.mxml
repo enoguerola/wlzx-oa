@@ -11,6 +11,8 @@
 		<mx:PhoneNumberValidator id="phone_phoneNumberValidator" source="{phone}" required="false" property="text" minDigits="6" requiredFieldError="错误格式的电话"/>
 		<mx:StringValidator id="createDate_dateValidator"  source="{creationDate}" property="text" requiredFieldError="部门创建日期不能为空"/>
 		<mx:NumberValidator id="sequence_numberValidator" source="{sequence}" required="false" property="text" integerError="请输入整数值，同级部门默认排序升序" domain="int"/>
+		<mx:NumberValidator id="level_numberValidator" source="{level}" required="true" property="text"  minValue="-1"   requiredFieldError="部门 级别不能为空" integerError="请输入正整数值" domain="int"/>
+
 		<valueObjects:DepartmentModel id="department"/>
 		<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 			<mx:method name="departmentAdd"  concurrency="last"  result="departmentAddResult_resultHandler(event);" />
@@ -46,6 +48,7 @@
 				validatorArr.push(phone_phoneNumberValidator);
 				validatorArr.push(createDate_dateValidator);
 				validatorArr.push(sequence_numberValidator);
+				validatorArr.push(level_numberValidator);
 				callLater(initDepartmentWin);
 			} 
 			private function initDepartmentWin():void{
@@ -64,6 +67,7 @@
 				var validatorErrorArray:Array = Validator.validateAll(validatorArr);;
 				var isValidForm:Boolean = validatorErrorArray.length == 0;
 				if (isValidForm) {
+					department.level=parseInt(level.text);
 					department.name=dname.text;
 					department.creationDate=DateFormatter.parseDateString(creationDate.text);
 					department.detail=detail.text;
@@ -130,6 +134,7 @@
 
 				if(this.toolTip=='Update'){		
 					department=event.result as DepartmentModel;
+					level.text=department.level.toString();
 					dname.text=department.name;
 					creationDate.text=CommonUtils.formatDate(department.creationDate,"YYYY-MM-DD");
 					detail.text=department.detail;
@@ -205,6 +210,7 @@
 					symbol.text=department.symbol;
 					sequence.text=department.sequence.toString();
 					supervisorName.text=department.getSupervisorRole().name;
+					level.text=department.level.toString();
 				}else if(this.toolTip=='Add'){
 					dname.text="";
 					creationDate.text="";
@@ -212,7 +218,8 @@
 					phone.text="";
 					symbol.text="";
 					sequence.text="";
-					supervisorName.text="";			
+					supervisorName.text="";	
+					level.text="";
 					
 				}
 			} 	
@@ -225,6 +232,9 @@
 			
 			<mx:FormItem label="部门名称" required="true">
 				<mx:TextInput id="dname" width="200"/>
+			</mx:FormItem>
+			<mx:FormItem label="部门级别" required="true">
+				<mx:TextInput id="level" width="200"/>
 			</mx:FormItem>
 			<mx:FormItem label="主管岗位名称" required="true">
 				<mx:TextInput id="supervisorName" width="200"/>
@@ -246,6 +256,7 @@
 			<mx:FormItem label="唯一标识" required="true">
 				<mx:TextInput id="symbol" width="200"/>
 			</mx:FormItem>	
+			
 			<mx:FormItem label="同级排序顺序">
 				<mx:TextInput id="sequence" width="200"/>
 			</mx:FormItem>
