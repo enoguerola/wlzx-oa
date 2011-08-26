@@ -52,6 +52,7 @@
 			detail_content.text = notice.content;
 			postTime.text = formatDate(notice.postTime);
 			department.text = this.parentApplication.getDepartmentNameById(notice.postDepartmentId);
+			postStaff.text=this.parentApplication.getTeacherNameByAccountId(notice.posterId);
 			if(notice.emergence==1){
 				emergence_icon.visible=true;
 				emergence_text.visible=true;
@@ -180,6 +181,8 @@
 						<mx:Label text="" id="department"/>
 						<mx:Label text="发布时间：" visible="true"/>
 						<mx:Label text="" id="postTime"/>
+						<mx:Label text="发布人：" visible="true" textAlign="right" />
+						<mx:Label text="" id="postStaff"/>
 					</mx:HBox>
 				</mx:VBox>
 				

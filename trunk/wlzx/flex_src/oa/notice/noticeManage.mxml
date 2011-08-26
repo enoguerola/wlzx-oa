@@ -101,7 +101,7 @@
 				upload.urlRequest = urlRequest;
 				search_account.dataProvider=this.parentApplication.allTeacherAcccounts;
 				//systemServiceRO.getDepartmentBySymbol("root");
-				departmentList = this.parentApplication.allDepartment;
+				departmentList = this.parentApplication.currentUserFirstLevelDepartment;
 				
 				
 			}
@@ -325,6 +325,20 @@
 			private function unLockWin():void{
 				if(window!=null)
 					PopUpManager.removePopUp(window);
+			}
+			protected function noticeScope_changeHandler(event:ListEvent):void
+			{
+				// TODO Auto-generated method stub
+				if(noticeScope.selectedItem.data=='1'){
+					postdepartment.dataProvider= this.parentApplication.currentUserFirstLevelDepartment;
+					postdepartment.selectedIndex=0;
+				}else if(noticeScope.selectedItem.data=='0'){
+					var list:ArrayCollection=new ArrayCollection();
+					var mainDepartment:Object=this.parentApplication.currentUser.mainRole.getBelongDepartment().getLeaderDepartment2FirstLevel();
+					list.addItem({data:mainDepartment.id, label:mainDepartment.name});
+					postdepartment.dataProvider=list;
+				}
+				
 			}
 		]]> 		
 	</mx:Script> 
@@ -550,7 +564,7 @@
 							<mx:HBox width="100%">
 								<mx:ComboBox id="noticeType" dataProvider="{noticeTypeList}" selectedIndex="1" labelField="label"/>
 								<mx:FormItem label="公告范围">
-									<mx:ComboBox id="noticeScope"  selectedIndex="1" labelField="label" dataProvider="{noticeScopeList}"/>
+									<mx:ComboBox id="noticeScope"  labelField="label"  selectedIndex="1"  dataProvider="{noticeScopeList}" change="noticeScope_changeHandler(event)"/>
 								</mx:FormItem>
 								<mx:FormItem label="发布部门">
 									<mx:ComboBox id="postdepartment" dataProvider="{departmentList}" labelField="label"/>
