@@ -413,7 +413,7 @@
 					postdepartment.selectedIndex=0;
 				}else if(noticeScope.selectedItem.data=='0'){
 					var list:ArrayCollection=new ArrayCollection();
-					var mainDepartment:Object=this.parentApplication.currentUser.mainRole.getBelongDepartment();
+					var mainDepartment:Object=this.parentApplication.currentUser.mainRole.getBelongDepartment().getLeaderDepartment2FirstLevel();
 					list.addItem({data:mainDepartment.id, label:mainDepartment.name});
 					postdepartment.dataProvider=list;
 				}
@@ -713,7 +713,7 @@
 									<mx:ComboBox id="noticeScope"  labelField="label" change="noticeScope_changeHandler(event)"/>
 								</mx:FormItem>
 								<mx:FormItem label="发布部门">
-									<mx:ComboBox id="postdepartment"  labelField="label" selectedIndex="-1" enabled="{noticeScope.selectedItem.data=='1'}"/>
+									<mx:ComboBox id="postdepartment"  labelField="label" selectedIndex="-1"/>
 								</mx:FormItem>
 								<mx:FormItem>
 									<mx:CheckBox label="紧急" id="emergence"/>
