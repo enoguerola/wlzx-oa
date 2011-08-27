@@ -1,0 +1,15 @@
+/* CSS file 
+for 
+WlzxDataGrid 
+*/
+@namespace s "library://ns.adobe.com/flex/spark";
+@namespace mx "library://ns.adobe.com/flex/mx";
+
+/*
+header颜色： #FFFFFF,#6080E0
+
+*/
+
+mx|DataGrid{
+	header-colors:#FFFFFF,#6080E0;
+}

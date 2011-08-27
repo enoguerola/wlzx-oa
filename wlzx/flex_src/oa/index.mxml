@@ -203,8 +203,8 @@
 				child.name = symbol;				
 				child.icon = icon;	
 				child.url = moduleUrl+"?uid=" + new Date().getTime();
-				//child.setStyle( "backgroundColor","0xEEF0FF");
-				child.setStyle( "backgroundColor","0xFFFFFF");
+				child.setStyle( "backgroundColor","0xEEF0FF");  // 这里修改为EEFOFF的目的是与TabNavigator的背景保持一致。
+				//child.setStyle( "backgroundColor","0xFFFFFF");
 				child.owner=this;
 				child.id=parms;//传递参数用
 				//Flex 使用ModuleLoader调用多模块时出现强制类型转换错误的解决方法

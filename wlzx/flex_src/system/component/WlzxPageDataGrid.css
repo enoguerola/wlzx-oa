@@ -1,0 +1,40 @@
+/* CSS file 
+for
+ WlzxPageDataGrid */
+@namespace s "library://ns.adobe.com/flex/spark";
+@namespace mx "library://ns.adobe.com/flex/mx";
+@namespace component "system.component.*";
+
+/*    
+
+底部横栏的颜色：#C0CCF0
+
+ */
+
+/* 基本样式 */
+.BgStyle{
+	font-family:"宋体";
+	font-size:12;
+	font-weight:bold;
+    border-style:solid;
+	border-color:#888888;
+	border-thickness:1;
+	border-visible:true;
+}
+/*  表格的样式 */
+.DataGridStyle{
+	header-colors:#DDCCCC,#6080E0;
+}
+/*  底部横栏的样式 */
+.BottomBox{
+	background-color:#C0CCF0;
+	font-family:"宋体";
+	font-size:12;
+	font-weight:bold;
+}
+.PageDetailStyle{
+	font-family:"宋体";
+	font-size:12;
+	font-weight:bold;
+	vertical-align:middle;
+}

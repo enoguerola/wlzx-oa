@@ -12,6 +12,7 @@
 3. A0DDFF	鼠标滑过高亮色
 4. D0DDF0	项目选中颜色
 5. 6080E0	边框默认统一色
+6. C0CCF0	表格的背景色
 
 */
 
@@ -156,9 +157,7 @@ mx|TabNavigator{
 	
 }
 .CustomTextAreaStyle{
-	/*	skin-class:ClassReference("skin.CustomTextAreaSkin");*/
-	/*	skin-class:ClassReference("skin.CustomTextAreaSkin");*/
-	/*	skin:ClassReference("skin.NewSkin");*/
+
 	font-family:"宋体";
 	font-size:14;
 	font-weight:bold;
@@ -172,4 +171,9 @@ mx|TabNavigator{
 	show-track-highlight:false;
 	stroke-width:0;
 		
+}
+
+/****************  表格  *******************/
+.WlzxDataGridStyle{
+	header-background-skin:ClassReference("system.skins.WlzxDataGridHeaderSkin");
 }

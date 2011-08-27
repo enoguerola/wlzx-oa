@@ -5,6 +5,14 @@
 s|Application{
 	background-color:#D0DDF0;
 }
+/*******  登陆框的样式  ********/
+.LoginContainerStyle{
+	border-alpha:0.2;
+	border-style:solid;
+	border-weight:6;
+
+	
+}
 global
 {
 	roll-over-color: #A0DDFF;
