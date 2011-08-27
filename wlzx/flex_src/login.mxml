@@ -11,9 +11,8 @@
 
 		<mx:HTTPService id="myHttp" url="j_spring_security_check" showBusyCursor="true"  concurrency="last" method="POST" fault="service_faultHandler(event);" >  
 			<mx:request>  
-				<j_username>{j_username.text}</j_username>  
-				<j_password>{j_password.text}</j_password> 
-				<_spring_security_remember_me>{_spring_security_remember_me.selected}</_spring_security_remember_me>  
+				<username>{j_username.text}</username>  
+				<password>{md5Pw.text}</password> 
 			</mx:request>  
 		</mx:HTTPService>  
 	</fx:Declarations>
@@ -21,7 +20,7 @@
 			       <![CDATA[   
 					   import flash.display.Stage;
 					   import flash.display.StageDisplayState;
-					   
+					   import system.utils.MD5;
 					   import mx.controls.Alert;
 					   import mx.events.ValidationResultEvent;
 					   import mx.managers.CursorManager;
@@ -52,9 +51,9 @@
 			         } 
 					 private function service_faultHandler(event:FaultEvent):void
 					 {
-		               // Alert.show("请求异常");
-						 resultMsg.text="用户名密码错误";
-						 resultArea.visible=true;
+		                Alert.show("请求异常");
+//						 resultMsg.text="用户名密码错误";
+//						 resultArea.visible=true;
 		             }
 					  private function init():void{
 						  initKeyboard();
@@ -73,10 +72,11 @@
 						   var validatorErrorArray:Array = Validator.validateAll(validatorArr);;
 						   var isValidForm:Boolean = validatorErrorArray.length == 0;
 						   if (isValidForm) {
+							   md5Pw.text=MD5.encrypt(j_password.text);
 							   myHttp.url="j_spring_security_check?time="+new Date();
 							   myHttp.send();
-							   myHttp.url="j_spring_security_check?time="+new Date();
-							   myHttp.send();//临时解决初次请求不响应问题？？
+//							   myHttp.url="j_spring_security_check?time="+new Date();
+//							   myHttp.send();//临时解决初次请求不响应问题？？
 						   } else {
 							   var err:ValidationResultEvent;
 							   var errorMessageArray:Array = [];
@@ -141,6 +141,7 @@
 				<s:HGroup width="100%"  top="20" textAlign="center" verticalAlign="middle" gap="10">		
 					<mx:FormItem  label="密码："  paddingRight="10">
 						<s:TextInput id="j_password"  paddingLeft="10" name="j_password" width="200" displayAsPassword="true" textAlign="left"/>
+						<mx:Label id="md5Pw"  width="0"  visible="false"/>
 					</mx:FormItem>
 				</s:HGroup>
 				<s:HGroup width="100%" >
