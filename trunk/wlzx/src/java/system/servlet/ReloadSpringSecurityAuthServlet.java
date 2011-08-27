@@ -31,7 +31,7 @@ public class ReloadSpringSecurityAuthServlet extends HttpServlet{
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 		throws ServletException, IOException {
-		System.out.println("reload");
+		//System.out.println("reload");
 		 ServletContext context = this.getServletContext();  
 		 WlzxUrlInvocationSecurityMetadataSource wlzxUrlSecurityMetadataSource=(WlzxUrlInvocationSecurityMetadataSource)WebApplicationContextUtils.getRequiredWebApplicationContext(context).getBean("wlzxUrlSecurityMetadataSource");
 		 wlzxUrlSecurityMetadataSource.loadResourceDefine();
@@ -45,7 +45,7 @@ public class ReloadSpringSecurityAuthServlet extends HttpServlet{
 		this.doGet(request, response);
 	}
 	public void init() throws ServletException {
-		 System.out.println("启动");
+		// System.out.println("启动");
 	        
 	}
 
