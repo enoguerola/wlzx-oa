@@ -12,34 +12,45 @@
            http://www.springframework.org/schema/security/spring-security-3.1.xsd
            http://www.springframework.org/schema/tx
       	   http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
-   
-   <http auto-config="true">
-		<!--指定登陆页面、成功页面、失败页面-->
-		<form-login login-page="/login.html" default-target-url="/loginRusultDealServlet"  always-use-default-target="false" login-processing-url="/j_spring_security_check" authentication-failure-url="/loginFailServlet" />
-		<intercept-url pattern="/home.html" access="IS_AUTHENTICATED_FULLY"/>
+    <!-- 未登录的切入点 -->
+	<beans:bean id="authenticationProcessingFilterEntryPoint" class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
+		<beans:property name="loginFormUrl" value="/login.html"></beans:property>
+	</beans:bean>
+    <http pattern="/login.html" security="none" />   
+    <http use-expressions="false" entry-point-ref="authenticationProcessingFilterEntryPoint">
+    	<intercept-url pattern="/home.html" access="IS_AUTHENTICATED_FULLY"/>
 		<intercept-url pattern="/home.swf" access="IS_AUTHENTICATED_FULLY"/>
-<!--		<intercept-url pattern="/monitoring" access="ROLE_SUPER_ROOT"/>-->
 		<intercept-url pattern="/config.html" access="ROLE_SUPER_ROOT"/>
 		<intercept-url pattern="/config.swf" access="ROLE_SUPER_ROOT"/>
-<!--		<intercept-url pattern="/system/accessDenied.swf"  access="ROLE_ANONYMOUS" />-->
-<!--		<intercept-url pattern="/system/accessDenied.html"  access="ROLE_ANONYMOUS" />-->
-		<!--尝试访问没有权限的页面时跳转的页面 -->
-		<access-denied-handler error-page="/system/accessDenied.swf" />
-		<!--使用记住用户名、密码功能，指定数据源和加密的-->
-		<remember-me  user-service-ref="wlzxUserDetailsService"/>
-		<!--logout页面，logout后清除session -->
-		<logout invalidate-session="true" logout-success-url="/login.html" />
-		 <!--session-management是针对session的管理 
-		 	 nvalid-session-url=""配置session 失效后跳转的页面
-         	 max-sessions="1"同一账号最大登陆次数error-if-maximum-exceeded="true" 禁止同一账户2次登陆; false允许2次登陆并后登陆的账号会挤掉第一次登陆的账号  
-             session-fixation-protection="none" 防止伪造sessionid攻击. 
-          -->  
-         <session-management session-fixation-protection="newSession" invalid-session-url="/login.html">  
-            <concurrency-control max-sessions="1" error-if-maximum-exceeded="false"/>
+        <!-- 实现免登陆验证 -->
+        <remember-me />
+        <!--logout页面，logout后清除session -->
+		<logout invalidate-session="false"/>
+		
+         <session-management session-fixation-protection="migrateSession" invalid-session-url="/login.html">  
+            <concurrency-control max-sessions="1" error-if-maximum-exceeded="true"/>
          </session-management>
-          <!--增加一个filter，这点与Acegi是不一样的，不能修改默认的filter了，这个filter位于FILTER_SECURITY_INTERCEPTOR之前 -->
-        <custom-filter before="FILTER_SECURITY_INTERCEPTOR"  ref="wlzxUrlFilter" /> 
-	</http>
+       
+       	<custom-filter ref="loginFilter" position="FORM_LOGIN_FILTER"  />
+		<custom-filter ref="wlzxUrlFilter" before="FILTER_SECURITY_INTERCEPTOR"/>
+    </http>
+
+	
+	<!-- 登录验证器 -->
+    <beans:bean id="loginFilter" class="system.components.MyUsernamePasswordAuthenticationFilter">
+		<!-- 处理登录的action -->
+		<beans:property name="filterProcessesUrl" value="/j_spring_security_check"></beans:property>
+        <!-- 验证成功后的处理-->
+		<beans:property name="authenticationSuccessHandler" ref="loginSuccessHandler"></beans:property>
+        <!-- 验证失败后的处理-->
+		<beans:property name="authenticationFailureHandler" ref="loginFailureHandler"></beans:property>
+		<beans:property name="authenticationManager" ref="wlzxAuthenticationManager"></beans:property>
+		<!-- 注入userService为了查询相应的用户 -->
+		<beans:property name="userDAO" ref="userDAO"></beans:property>
+	</beans:bean>
+	<beans:bean id="loginSuccessHandler" class="system.components.MyAccessAuthenticationSuccessHandler"/> 
+	<beans:bean id="loginFailureHandler" class="system.components.MyAccessAuthenticationFailureHandler"/>
+	
     <!-- 一个自定义的UrlFilter，必须包含authenticationManager,accessDecisionManager,securityMetadataSource三个属性，我们的所有控制将在这三个类中实现，解释详见具体配置 -->
     <beans:bean id="wlzxUrlFilter" class="system.components.WlzxUrlFilterSecurityInterceptor">
         <beans:property name="authenticationManager" ref="wlzxAuthenticationManager" />
@@ -54,15 +65,12 @@
     </beans:bean>      
     <!-- 认证管理器，实现用户认证的入口，主要实现UserDetailsService接口即可 -->
     <authentication-manager alias="wlzxAuthenticationManager">
-        <authentication-provider user-service-ref="wlzxUserDetailsService">
-            <!--如果用户的密码采用加密的话，可以加点“盐”-->
-            <password-encoder hash="md5" />
-        </authentication-provider>
+        <authentication-provider user-service-ref="wlzxUserDetailsService"/>
     </authentication-manager>
     
 	<!-- 用户信息服务 -->
 	<beans:bean id="wlzxUserDetailsService" class="system.components.WlzxUserDetailsService">
-		<beans:property name="userDao" ref="userDAO"/>
+		<beans:property name="userDAO" ref="userDAO"/>
 	</beans:bean>
 	
     <!-- 访问决策器，决定某个用户具有的角色，是否有足够的权限去访问某个资源 -->

@@ -16,20 +16,18 @@ public class WlzxUserDetailsService implements UserDetailsService{
 	public static final String superUserRole = "ROLE_SUPER_ROOT";
 	private final static Logger logger = Logger.getLogger(WlzxUserDetailsService.class);
 	
-	private UserDAO userDao;
+	private UserDAO userDAO;
 
 	
 	public UserDetails loadUserByUsername(String userAccount)
 			throws UsernameNotFoundException, DataAccessException {
-	            UserModel userModel = userDao.getUserByUserAccount(userAccount);  
+	            UserModel userModel = userDAO.getUserByUserAccount(userAccount);  
 	           
 	            if (userModel ==null){  
-	                String message = "用户"+userAccount+"不存在";  
-	                logger.error(message);  
-	                throw new UsernameNotFoundException(message);  
+	            	throw new UsernameNotFoundException(userAccount);
 	            }  
-	            else if(SecurityUserHolder.isSuperRootUser(userAccount)){
-	            	 System.out.println(userModel.getName());
+	            else if(userAccount.equals(WlzxUserDetailsService.superUserName)){
+	            	// System.out.println(userModel.getName());
 	            	 userModel.setMainRole(SecurityUserHolder.getSuperRootRoleModel());
 	            	
 	            }
@@ -60,13 +58,14 @@ public class WlzxUserDetailsService implements UserDetailsService{
 		return logger;
 	}
 
-	public UserDAO getUserDao() {
-		return userDao;
+	public UserDAO getUserDAO() {
+		return userDAO;
 	}
 
-	public void setUserDao(UserDAO userDao) {
-		this.userDao = userDao;
+	public void setUserDAO(UserDAO userDAO) {
+		this.userDAO = userDAO;
 	}
+
 
 
 
