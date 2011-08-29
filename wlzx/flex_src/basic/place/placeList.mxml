@@ -5,9 +5,7 @@
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
 		<mx:NumberValidator id="area_begin_numberValidator" source="{area_begin}" required="false" property="text"   invalidCharError="请输入数值" domain="real"/>
-		<mx:NumberValidator id="area_end_numberValidator" source="{area_end}" required="false" property="text" invalidCharError="请输入数值" domain="real"/>
 		<mx:NumberValidator id="contain_begin_numberValidator" source="{contain_begin}" required="false" property="text" integerError="请输入正整数" domain="int" minValue="0"/>
-		<mx:NumberValidator id="contain_end_numberValidator" source="{contain_end}" required="false" property="text" integerError="请输入正整数" domain="int" minValue="0"/>
 
 		
 		
@@ -48,9 +46,9 @@
 			private function init():void {	
 				validatorArr = new Array();
 				validatorArr.push(area_begin_numberValidator);
-				validatorArr.push(area_end_numberValidator);
+//				validatorArr.push(area_end_numberValidator);
 				validatorArr.push(contain_begin_numberValidator);
-				validatorArr.push(contain_end_numberValidator);
+//				validatorArr.push(contain_end_numberValidator);
 //				placeServiceRO.getAllPlaces();
 				directoryServiceRO.getDirectoryItemsByType("placeType");
 				directoryServiceRO.getDirectoryItemsByType("building");
@@ -115,11 +113,11 @@
 					var areaBegin:Object=null;
 					if(area_begin.text!="")areaBegin=parseFloat(area_begin.text);
 					var areaEnd:Object=null;
-					if(area_end.text!="")areaEnd=parseFloat(area_end.text);
+//					if(area_end.text!="")areaEnd=parseFloat(area_end.text);
 					var containBegin:Object=null;
 					if(contain_begin.text!="")containBegin=parseInt(contain_begin.text);
 					var containEnd:Object=null;
-					if(contain_end.text!="")containEnd=parseInt(contain_end.text);
+//					if(contain_end.text!="")containEnd=parseInt(contain_end.text);
 					
 					placeServiceRO.getPlacesByCondition(searchName,searchType,searchBuilding,areaBegin,areaEnd,containBegin,containEnd);
 				} else {
@@ -213,14 +211,10 @@
 									<s:HGroup verticalAlign="middle">
 										<s:Label  text="面积" />
 										<s:TextInput id="area_begin" width="30"/>
-										<s:Label  text="-" />
-										<s:TextInput id="area_end" width="30"/>
 									</s:HGroup>	
 									<s:HGroup verticalAlign="middle">
 										<s:Label  text="容纳人数" />
 										<s:TextInput id="contain_begin" width="30"/>
-										<s:Label  text="-" />
-										<s:TextInput id="contain_end" width="30"/>
 									</s:HGroup>	
 									<mx:Button  label="搜索"  width="80"  click="search()"/>
 									
@@ -248,14 +242,14 @@
 										<mx:DataGridColumn textAlign="center" headerText="面积[m2]"  width="100">
 											<mx:itemRenderer>
 												<fx:Component>
-													<mx:Label  text="{data.areaBegin+'-'+data.areaEnd}" />											
+													<mx:Label  text="{data.areaBegin}" />											
 												</fx:Component>
 											</mx:itemRenderer>
 										</mx:DataGridColumn>
 										<mx:DataGridColumn textAlign="center" headerText="容纳人数[人]" width="100">
 											<mx:itemRenderer>
 												<fx:Component>
-													<mx:Label  text="{data.containBegin+'-'+data.containEnd}" />											
+													<mx:Label  text="{data.containBegin}" />											
 												</fx:Component>
 											</mx:itemRenderer>
 										</mx:DataGridColumn>
