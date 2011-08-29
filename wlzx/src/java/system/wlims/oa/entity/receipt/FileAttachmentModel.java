@@ -6,7 +6,7 @@ import system.wlims.oa.entity.notice.AttachmentModel;
 
 
 /**
- * 收文管理 附件
+ * 收文管理 附件【--移除】
  * @author Administrator
  *
  */

@@ -8,10 +8,10 @@ package oa.entity.receipt
 		public var type:int;
 		public var isCompleted:int;
 		public var text:String;
-		public var step:int;
+		//public var step:int;
 		public var completedDate:Date;
 		public var user:String;
-		public var department:String;
+		//public var department:String;
 		public var receipt:ReceiptModel;
 		
 		public function FileFlowModel()

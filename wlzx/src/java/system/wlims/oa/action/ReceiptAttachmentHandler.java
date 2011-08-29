@@ -25,8 +25,8 @@ import system.wlims.oa.service.receipt.ReceiptService;
 @Controller
 public class ReceiptAttachmentHandler extends BaseFileUploadHandler {
 	
-	private FileAttachmentService fileAttachmentService;
-	private ReceiptService receiptService;
+//	private FileAttachmentService fileAttachmentService;
+//	private ReceiptService receiptService;
 
 	@Override
 	protected void init() {
@@ -36,22 +36,22 @@ public class ReceiptAttachmentHandler extends BaseFileUploadHandler {
 
 	@Override
 	public void doSave(CommonsMultipartFile file, HttpServletResponse response, HttpServletRequest request) {
-		// TODO Auto-generated method stub
-		FileAttachmentModel attachment = new FileAttachmentModel();
-		attachment.setName(file.getOriginalFilename());
-		attachment.setPath(getFilename());
-		attachment.setType(getFileType(file.getOriginalFilename()));
-		attachment.setDate(Date.valueOf(UtilDateTime.nowDateString()));
-		String receiptid = request.getParameter("id");
-		try {
-			ReceiptModel receipt = receiptService.get(receiptid);
-			attachment.setReceipt(receipt);
-			fileAttachmentService.save(attachment);
-			response(response, attachment.getId());
-		} catch (ServiceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		// TODO Auto-generated method stub
+//		FileAttachmentModel attachment = new FileAttachmentModel();
+//		attachment.setName(file.getOriginalFilename());
+//		attachment.setPath(getFilename());
+//		attachment.setType(getFileType(file.getOriginalFilename()));
+//		attachment.setDate(Date.valueOf(UtilDateTime.nowDateString()));
+//		String receiptid = request.getParameter("id");
+//		try {
+//			ReceiptModel receipt = receiptService.get(receiptid);
+//			attachment.setReceipt(receipt);
+//			fileAttachmentService.save(attachment);
+//			response(response, attachment.getId());
+//		} catch (ServiceException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 	}
 	
 	@Override
@@ -61,21 +61,21 @@ public class ReceiptAttachmentHandler extends BaseFileUploadHandler {
 		doUpload(file, response, request);
 	}
 
-	@Autowired
-	public void setFileAttachmentService(@Qualifier("fileAttachmentService")FileAttachmentService fileAttachmentService) {
-		this.fileAttachmentService = fileAttachmentService;
-	}
-
-	public FileAttachmentService getFileAttachmentService() {
-		return fileAttachmentService;
-	}
-
-	@Autowired
-	public void setReceiptService(@Qualifier("receiptService")ReceiptService receiptService) {
-		this.receiptService = receiptService;
-	}
-
-	public ReceiptService getReceiptService() {
-		return receiptService;
-	}
+//	@Autowired
+//	public void setFileAttachmentService(@Qualifier("fileAttachmentService")FileAttachmentService fileAttachmentService) {
+//		this.fileAttachmentService = fileAttachmentService;
+//	}
+//
+//	public FileAttachmentService getFileAttachmentService() {
+//		return fileAttachmentService;
+//	}
+//
+//	@Autowired
+//	public void setReceiptService(@Qualifier("receiptService")ReceiptService receiptService) {
+//		this.receiptService = receiptService;
+//	}
+//
+//	public ReceiptService getReceiptService() {
+//		return receiptService;
+//	}
 }

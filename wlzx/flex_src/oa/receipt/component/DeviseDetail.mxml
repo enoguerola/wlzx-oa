@@ -27,16 +27,64 @@
 			
 			private var hgroup:HGroup = new HGroup();
 			
-			override protected function fileFlowServiceGetList_result(event:ResultEvent):void
+//			override protected function fileFlowServiceGetList_result(event:ResultEvent):void
+//			{
+//				super.list = event.result as ArrayCollection;
+//				hgroup.percentWidth = 100;
+//				var label:FormHeading = new FormHeading();
+//				label.label = "拟办:";
+//				label.percentWidth = 10;
+//				label.styleName = "receipt_formhead";
+//				hgroup.addElement(label);
+//				Alert.show(this.parentApplication.account + "" + list.length);
+//				for each(var fileFlow:FileFlowModel in list)
+//				{
+//					if(fileFlow.type != 0)
+//						continue;
+//					if(fileFlow.user == this.parentApplication.currentUser.id)
+//					{
+//						var text:TextArea = new TextArea();
+//						text.text = fileFlow.text;
+//						text.width = 150;
+//						text.height = 100;
+//						text.id = fileFlow.id;
+//						text.editable = true;
+//						if(fileFlow.isCompleted)
+//						{
+//							//添加名字和时间
+//							setNameAndDate(text, fileFlow);
+//							text.editable = false;
+//							save0.enabled = false;
+//							save1.enabled = false;
+//						}
+//					}else if("超级管理员" == this.parentApplication.account)
+//					{
+//						var text:TextArea = new TextArea();
+//						text.text = fileFlow.text;
+//						text.width = 150;
+//						text.height = 100;
+//						text.editable = false;
+//						if(fileFlow.isCompleted)
+//						{
+//							//添加名字和时间
+//							setNameAndDate(text, fileFlow);
+//						}
+//						
+//					}
+//					hgroup.addElement(text);
+//				}
+//				inputGroup.addElement(hgroup);
+//			}
+			override protected function receiptServiceGet_result(event:ResultEvent):void
 			{
-				super.list = event.result as ArrayCollection;
+				super.list = event.result.fileFlows as ArrayCollection;
 				hgroup.percentWidth = 100;
 				var label:FormHeading = new FormHeading();
 				label.label = "拟办:";
 				label.percentWidth = 10;
 				label.styleName = "receipt_formhead";
 				hgroup.addElement(label);
-				Alert.show(this.parentApplication.account + "" + list.length);
+			//	Alert.show(this.parentApplication.account + "" + list.length);
 				for each(var fileFlow:FileFlowModel in list)
 				{
 					if(fileFlow.type != 0)
@@ -75,18 +123,17 @@
 				}
 				inputGroup.addElement(hgroup);
 			}
-			
-			override protected function doSave(isCompleted:int):void
-			{
-				for (var i:int=1;i < hgroup.numElements;i++)
-				{
-					var t:TextArea= hgroup.getElementAt(i) as TextArea;
-					if(t.editable)
-						super.fileFlowServiceRO.save(t.id, t.text, isCompleted);
-					else
-						Alert.show("不能重复提交");
-				}
-			}
+//			override protected function doSave(isCompleted:int):void
+//			{
+//				for (var i:int=1;i < hgroup.numElements;i++)
+//				{
+//					var t:TextArea= hgroup.getElementAt(i) as TextArea;
+//					if(t.editable)
+//						super.fileFlowServiceRO.save(t.id, t.text, isCompleted);
+//					else
+//						Alert.show("不能重复提交");
+//				}
+//			}
 			
 			override protected function fileFlowServiceSave_result(event:ResultEvent):void
 			{

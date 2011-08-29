@@ -74,16 +74,16 @@
 				}*/
 			}
 			
-			protected function edit(id:String):void
+			protected function edit(receiptId:String,receiptFlowId:String):void
 			{
 				// TODO Auto-generated method stub
 				var parent:Object = ((Object)(this.parentDocument)).parentDocument;
-				parent.add(this.data.id);
+				parent.add(this.data.receiptId,this.data.receiptFlowId);
 			}
 			
 		]]>
 	</fx:Script>
 	<s:HGroup horizontalAlign="center" verticalAlign="middle" width="100%" height="100%" id="hgroup">
-		<mx:LinkButton click="edit(data.id)" id="devise_button" label="拟办"/>
+		<mx:LinkButton click="edit(data.receiptId,data.receiptFlowId)" id="devise_button" label="拟办"/>
 	</s:HGroup>
 </s:MXDataGridItemRenderer>

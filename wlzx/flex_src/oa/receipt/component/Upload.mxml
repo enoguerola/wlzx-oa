@@ -1,46 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
-		 xmlns:s="library://ns.adobe.com/flex/spark" 
-		 xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="100%"
-		 xmlns:mutiUpload="system.component.mutiUpload.*" creationComplete="init()">
-	<s:layout>
-		<s:BasicLayout/>
-	</s:layout>
-	<fx:Declarations>
-		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
-	</fx:Declarations>
-	<fx:Script>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"
+		 xmlns:mutiUpload="system.component.mutiUpload.*"  xmlns:component="system.component.panel.*" width="100%" height="100%" creationComplete="init();">
+
+
+	<mx:Script>
 		<![CDATA[
 			import mx.controls.Alert;
 			
 			import system.event.UploadEvent;
-			
+			import oa.entity.receipt.ReceiptModel;
+			import oa.entity.AttachmentModel;
 			private function init():void
 			{
+//				var parent:Object = this.parentDocument;
+//				var url:String = this.loaderInfo.url;
+//				var last:int = url.lastIndexOf("/");
+//				var urlRequest:URLRequest = new URLRequest(url.substr(0, last) + "/spring/attachmentUpload.action");
+//				var variables:URLVariables = new URLVariables();//传过去的data
+//				variables.id = parent.receipt.id;
+//				urlRequest.data = variables;
+//				upload.urlRequest = urlRequest;
 				var parent:Object = this.parentDocument;
-				var url:String = this.loaderInfo.url;
-				var last:int = url.lastIndexOf("/");
-				var urlRequest:URLRequest = new URLRequest(url.substr(0, last) + "/spring/attachmentUpload.action");
-				var variables:URLVariables = new URLVariables();//传过去的data
-				variables.id = parent.receipt.id;
-				urlRequest.data = variables;
+				var receipt:ReceiptModel = parent.receipt;
+				if(receipt.id != null && parent.receipt.id != "")
+				{
+					var uploadList:Array=new Array();
+					for each(var model:AttachmentModel in receipt.attachments){
+						uploadList.push({label:model.name,data:parseInt(model.size)/1000+"KB",width:145,id:model.id});
+						//	Alert.show(model.name+"");
+					}
+					//Alert.show(uploadList.length+"");
+					upload.uploadAlready_list.dataProvider=uploadList;
+				
+				}
+				
+				var urlRequest:URLRequest = new URLRequest(parentApplication.homeUrl+"spring/attachmentUpload.action");
 				upload.urlRequest = urlRequest;
 			}
-			
+			public function empty():void{
+				upload.empty();
+			}
 			// when attachment is deleted
 			private function remove(event:UploadEvent):void
 			{
-				var parent:Object = (Object)(this.parentDocument);
-				parent.remove(event.id);
+//				var parent:Object = (Object)(this.parentDocument);
+//				parent.remove(event.id);
 			}
 			
 			// when attachment is uploaded
 			private function uploaded(event:UploadEvent):void
 			{
-				var parent:Object = (Object)(this.parentDocument);
-				parent.add(event.id);
+//				var parent:Object = (Object)(this.parentDocument);
+//				parent.add(event.id);
 			}
 		]]>
-	</fx:Script>
-	<mutiUpload:upload width="100%" height="100%" id="upload" paddingTop="10" paddingLeft="10" paddingRight="10" deleted="remove(event)" uploaded="uploaded(event)"/>
-</s:Group>
+	</mx:Script>
+	<component:AdvancedTitleBarPanel width="100%" height="100%" id="text_panel" paddingTop="10"  paddingBottom="10">
+		<mutiUpload:upload width="100%" height="100%" id="upload" paddingTop="10" paddingLeft="10" paddingRight="10" deleted="remove(event)" uploaded="uploaded(event)"/>
+	</component:AdvancedTitleBarPanel>
+</mx:VBox>

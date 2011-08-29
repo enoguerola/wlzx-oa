@@ -31,11 +31,11 @@ public class FileFlowDAOImpl extends BaseDAOImpl<FileFlowModel> implements
 				
 		List<FileFlowModel> list = getListByCriteria(criteria);
 		
-		if(list != null && list.size() > 0){
-			for(FileFlowModel model:list){
-				model.setReceipt(null);
-			}
-		}
+//		if(list != null && list.size() > 0){
+//			for(FileFlowModel model:list){
+//				model.setReceipt(null);
+//			}
+//		}
 		return list;
 	}
 
@@ -55,11 +55,11 @@ public class FileFlowDAOImpl extends BaseDAOImpl<FileFlowModel> implements
 				
 		List<FileFlowModel> list = getListByCriteria(criteria);
 		
-		if(list != null && list.size() > 0){
-			for(FileFlowModel model:list){
-				model.setReceipt(null);
-			}
-		}
+//		if(list != null && list.size() > 0){
+//			for(FileFlowModel model:list){
+//				model.setReceipt(null);
+//			}
+//		}
 		return list;
 	}
 
@@ -79,11 +79,11 @@ public class FileFlowDAOImpl extends BaseDAOImpl<FileFlowModel> implements
 				
 		List<FileFlowModel> list = getListByCriteria(criteria);
 		
-		if(list != null && list.size() > 0){
-			for(FileFlowModel model:list){
-				model.setReceipt(null);
-			}
-		}
+//		if(list != null && list.size() > 0){
+//			for(FileFlowModel model:list){
+//				model.setReceipt(null);
+//			}
+//		}
 		return list;
 	}
 

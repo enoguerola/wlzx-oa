@@ -3,7 +3,7 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping auto-import="false">
-	<class name="system.wlims.oa.entity.receipt.FileAttachmentModel" table="wlzx_oa_receipt_attachment">
+<!--	<class name="system.wlims.oa.entity.receipt.FileAttachmentModel" table="wlzx_oa_receipt_attachment">
 	        <id name="id">
 	            <column name="id" />
 	            <generator class="native" />
@@ -27,5 +27,5 @@
 	        
 	        <many-to-one not-found="ignore" name="receipt" class="system.wlims.oa.entity.receipt.ReceiptModel" column="receipt_id" lazy="proxy"/>
 	
-	</class>
+	</class>-->
 </hibernate-mapping>

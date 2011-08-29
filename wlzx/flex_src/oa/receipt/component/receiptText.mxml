@@ -124,30 +124,36 @@
 			}
 		]]>
 	</fx:Script>
-	<component:AdvancedTitleBarPanel width="100%" height="100%" id="text_panel">
+	<component:AdvancedTitleBarPanel width="100%" height="100%" id="text_panel" paddingTop="10"  paddingBottom="10"  borderVisible="false">
 		<s:VGroup width="100%" height="100%" id="text_group">
 			<s:HGroup width="100%" height="10%">
 				<mx:FormHeading label="来文标题" width="100"/>
 				<s:TextInput id="title" width="200" change="changed()"/>
 			</s:HGroup>
-			<s:HGroup width="100%" height="10%">
+			<s:HGroup width="100%" height="100%">
 				<mx:FormHeading label="来文摘要" width="100"/>
-				<s:TextArea id="summary" width="80%" change="changed()"/>
+				<s:TextArea id="summary" width="80%" change="changed()" height="100%"/>
 			</s:HGroup>
-			<s:HGroup width="100%" paddingTop="10" height="80%">
+			<s:HGroup width="100%" paddingTop="10" height="200">
 				<mx:FormHeading label="上传列表" width="100"/>
 				<mx:DataGrid width="80%" height="100%" id="datagrid" dataProvider="{list}" textAlign="center">
 					<mx:columns>
 						<mx:DataGridColumn dataField="id" headerText="序号" width="50"/>
-						<mx:DataGridColumn dataField="name" headerText="附件名称" width="200">
+						<mx:DataGridColumn dataField="name" headerText="附件名称" width="300">
 							<mx:itemRenderer>
 								<fx:Component>
-									<mx:Button label="{data.name}" click="{this.outerDocument.download(data.id)}" width="90%"/>
+									<mx:Label text="{data.name}"  width="100%"/>
 								</fx:Component>
 							</mx:itemRenderer>
 						</mx:DataGridColumn>
 						<mx:DataGridColumn dataField="date" labelFunction="DateUtil.datagridFormatDate" headerText="上传时间" width="100"/>
-						<mx:DataGridColumn itemRenderer="oa.receipt.component.item.AttachmentDelete" headerText="删除" width="100"/>
+						<mx:DataGridColumn dataField="name" headerText="下载" width="100">
+							<mx:itemRenderer>
+								<fx:Component>
+									<mx:Label text="下载" click="{this.outerDocument.download(data.id)}" width="100%"/>
+								</fx:Component>
+							</mx:itemRenderer>
+						</mx:DataGridColumn>
 					</mx:columns>
 				</mx:DataGrid>
 			</s:HGroup>

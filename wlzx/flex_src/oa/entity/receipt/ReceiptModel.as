@@ -1,6 +1,7 @@
 package oa.entity.receipt
 {
 	import basic.entity.BaseModel;
+	
 	import mx.collections.ArrayCollection;
 	
 	[Bindable]
@@ -17,7 +18,8 @@ package oa.entity.receipt
 		public var status:int;
 		public var isCompleted:int;
 		public var registedDate:Date;
-		
+		public var receiverId:String;
+		public var fileFlows:ArrayCollection = new ArrayCollection();
 		public var attachments:ArrayCollection = new ArrayCollection();
 		public function ReceiptModel()
 		{

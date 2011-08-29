@@ -1,23 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
-		 xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="100%" creationComplete="init()">
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 xmlns:component="system.component.panel.*" width="100%" height="100%">
 	<s:layout>
 		<s:BasicLayout/>
 	</s:layout>
+	
 	<fx:Script>
 		<![CDATA[
+			import basic.utils.DateUtil;
+			
 			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
 			import mx.events.CloseEvent;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
 			
-			import spark.components.TextArea;
-			
 			import oa.entity.receipt.FileFlowModel;
 			import oa.entity.receipt.ReceiptModel;
-			import basic.utils.DateUtil;
+			
+			import spark.components.TextArea;
 			
 			protected var list:ArrayCollection;
 			
@@ -26,8 +29,10 @@
 				// TODO Auto-generated method stub
 				var parent:Object = this.parentDocument as Object;
 				var id:String = parent.id;
-				fileFlowServiceRO.getAllList(id);
 				
+//				fileFlowServiceRO.getAllList(id);
+				receiptServiceRO.get(id);
+				//Alert.show(parent.fileFlows.length+"");
 				_hao.text = parent._hao;
 				_zi.text = parent._zi;
 				in_date.text = parent.in_date;
@@ -36,7 +41,7 @@
 				in_department.text = parent.office;
 			}
 			
-			protected function fileFlowServiceGetList_result(event:ResultEvent):void
+			protected function receiptServiceGet_result(event:ResultEvent):void
 			{
 				// TODO Auto-generated method stub
 			}
@@ -52,9 +57,9 @@
 				Alert.show(event.fault.faultString, 'Error');
 			}
 			
-			private function save(isCompleted:int):void
+			private function save(isCompleted:String=null):void
 			{
-				if(isCompleted == 1){
+				if(isCompleted == "1"){
 					Alert.show("确定提交?", "确定", Alert.YES | Alert.NO, null, function(event:CloseEvent):void{
 						if(event.detail == Alert.YES)
 							doSave(isCompleted);
@@ -63,9 +68,14 @@
 					doSave(isCompleted);
 			}
 			
-			protected function doSave(isCompleted:int):void
+			protected function doSave(isCompleted:String):void
 			{
-			
+				var parent:Object = this.parentDocument as Object;
+				var receiptFlowId:String=parent.receiptFlowId;
+//				Alert.show(receiptFlowId+"aa");
+			//	Alert.show(isCompleted+"&&");
+				finishWorkFlow(receiptFlowId,isCompleted);
+				
 			}
 			
 			protected function setNameAndDate(text:TextArea, fileflow:FileFlowModel):void
@@ -73,22 +83,57 @@
 				var name:String = this.parentApplication.getTeacherNameByAccountId(fileflow.user);
 				text.text += "\n\n\t" + name + "\n\t  " + dateformatter.format(fileflow.completedDate);
 			}
+			private function finishWorkFlow_resultHandler(event:ResultEvent):void
+			{
+				if(event.result==true){
+					Alert.show("保存成功");
+//					this.currentState='list';
+//					search();
+				}
+			}
+			public function finishWorkFlow(receiptFlowId:String,state:String):void
+			{
+				//	Alert.show(content.text);
+
+//					Alert.show("你确定要结束收文当前阶段吗?", "确定" ,Alert.YES | Alert.NO,null,function(event:CloseEvent):void{
+//						if(event.detail == Alert.YES)
+//						{
+							var parent:Object = this.parentDocument as Object;
+							var content1:String=parent.content.text;
+							//Alert.show(state+"a");
+							receiptServiceRO.finishWorkFlow(receiptFlowId,state,content1);
+//						}
+//					});
+					
+			}	
+			
 		]]>
 	</fx:Script>
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
-		<s:RemoteObject concurrency="last" destination="fileFlowServiceDest" id="fileFlowServiceRO" fault="faultHandler(event)" showBusyCursor="true">
+		<!--<s:RemoteObject concurrency="last" destination="fileFlowServiceDest" id="fileFlowServiceRO" fault="faultHandler(event)" showBusyCursor="true">
 			<s:method concurrency="last" name="getAllList" result="fileFlowServiceGetList_result(event)"/>
 			<s:method concurrency="last" name="save" result="fileFlowServiceSave_result(event)"/>
+		</s:RemoteObject>-->
+		<s:RemoteObject concurrency="last" destination="receiptServiceDest" id="receiptServiceRO" fault="faultHandler(event)" showBusyCursor="true">
+			<s:method concurrency="last" name="get" result="receiptServiceGet_result(event)"/>
+			<s:method name="finishWorkFlow"  concurrency="last" result="finishWorkFlow_resultHandler(event);"/>
 		</s:RemoteObject>
 		<mx:DateFormatter formatString="YYYY-MM-DD" id="dateformatter"/>
 	</fx:Declarations>
-	<s:VGroup width="100%" height="100%" horizontalAlign="center">
+
+	<s:VGroup width="100%" height="100%" horizontalAlign="center" verticalAlign="top">
 		<s:VGroup width="100%" height="5%">
-			<s:HGroup>
+			<!--<s:HGroup>
 				<s:Button label="提交" color="#000000" click="save(1)" id="save1"/>
 				<s:Button label="保存" color="#000000" click="save(0)" id="save0"/>
-			</s:HGroup>
+			</s:HGroup>-->
+			<mx:HBox width="100%" height="25" paddingLeft="20"  horizontalGap="10" styleName="CustomHBoxStyle"   verticalAlign="middle">
+				<mx:Label text="|"/>
+				<mx:LinkButton  label="提交" icon="@Embed(source='../WebContent/resources/common/tools/button_draftSave_icon.png')" click="save('1')" id="save1" />
+				<mx:LinkButton  label="保存" icon="@Embed(source='../WebContent/resources/common/tools/button_save_icon.png')"  click="save()" id="save0"/>
+				<mx:Label text="|"/>
+			</mx:HBox>
 		</s:VGroup>
 		<s:VGroup width="100%" height="95%" id="content" verticalAlign="middle" horizontalAlign="left" paddingBottom="10" paddingLeft="10" paddingRight="10">
 			<s:VGroup width="100%" horizontalAlign="center" height="10%" verticalAlign="middle">
@@ -128,6 +173,36 @@
 					</s:VGroup>
 				</s:HGroup>
 			</s:VGroup>	
+			<mx:HBox width="100%" minHeight="100">
+					<mx:FormHeading label="拟办: " color="#ff0000" width="100"/>
+					<mx:HBox width="100%" id="deviseArea" height="100%" >
+						
+					</mx:HBox>
+			</mx:HBox>
+			
+			<s:Line width="100%" depth="1">
+				<s:stroke>
+					<s:SolidColorStroke color="0xff0000" weight="1" caps="square"/>
+				</s:stroke>
+			</s:Line>
+			<mx:HBox width="100%" minHeight="100">
+					<mx:FormHeading label="承办: " color="#ff0000" width="100"/>
+					<mx:HBox  width="100%" id="undertakeArea" height="100%" >
+						
+					</mx:HBox>
+				
+			</mx:HBox>
+			<s:Line width="100%" depth="1">
+				<s:stroke>
+					<s:SolidColorStroke color="0xff0000" weight="1" caps="square"/>
+				</s:stroke>
+			</s:Line>
+			<mx:HBox width="100%" minHeight="100">
+				<mx:FormHeading label="批示: " color="#ff0000" width="100"/>
+				<mx:HBox  width="100%" id="ratifyArea" height="100%" >
+					
+				</mx:HBox>
+			</mx:HBox>
 		</s:VGroup>
 		
 	</s:VGroup>

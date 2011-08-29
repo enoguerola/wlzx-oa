@@ -14,9 +14,9 @@
        http://www.springframework.org/schema/tx
        http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
 
-	<!-- 注入配置 -->
+	<!-- 注入配置-->
 	
-	<bean id="fileAttachmentDAO" class="system.wlims.oa.daoImpl.receipt.FileAttachmentDAOImpl">
+	<!--<bean id="fileAttachmentDAO" class="system.wlims.oa.daoImpl.receipt.FileAttachmentDAOImpl">
 		<property name="sessionFactory" ref="oaSessionFactory" />
 	</bean>
 	<bean id="fileAttachmentServiceDest" class="system.wlims.oa.serviceImpl.receipt.FileAttachmentServiceImpl">
@@ -25,12 +25,12 @@
 	</bean>
 	<bean id="fileAttachmentService" class="system.wlims.oa.serviceImpl.receipt.FileAttachmentServiceImpl">
 		<property name="fileAttachmentDAO" ref="fileAttachmentDAO" />
-	</bean>
+	</bean> -->
 	
 	<bean id="fileFlowDAO" class="system.wlims.oa.daoImpl.receipt.FileFlowDAOImpl">
 		<property name="sessionFactory" ref="oaSessionFactory" />
 	</bean>
-	<bean id="fileFlowServiceDest" class="system.wlims.oa.serviceImpl.receipt.FileFlowServiceImpl">
+<!--	<bean id="fileFlowServiceDest" class="system.wlims.oa.serviceImpl.receipt.FileFlowServiceImpl">
 		<flex:remoting-destination />
 		<property name="fileFlowDAO" ref="fileFlowDAO" />
 		<property name="receiptDAO" ref="receiptDAO" />
@@ -43,18 +43,19 @@
 		<property name="userDAO" ref="userDAO" />
 		<property name="teacherDAO" ref="teacherDAO" />
 	</bean>
-
+ -->
 	<bean id="receiptDAO" class="system.wlims.oa.daoImpl.receipt.ReceiptDAOImpl">
 		<property name="sessionFactory" ref="oaSessionFactory" />
 	</bean>
 	<bean id="receiptServiceDest" class="system.wlims.oa.serviceImpl.receipt.ReceiptServiceImpl">
 		<flex:remoting-destination />
+		<property name="attachmentDAO" ref="attachmentDAO" />
 		<property name="receiptDAO" ref="receiptDAO" />
 		<property name="fileFlowDAO" ref="fileFlowDAO" />
 	</bean>
-	<bean id="receiptService" class="system.wlims.oa.serviceImpl.receipt.ReceiptServiceImpl">
+	<!--<bean id="receiptService" class="system.wlims.oa.serviceImpl.receipt.ReceiptServiceImpl">
 		<property name="receiptDAO" ref="receiptDAO" />
 		<property name="fileFlowDAO" ref="fileFlowDAO" />
-	</bean>
+	</bean> -->
 	
 </beans>
