@@ -9,9 +9,7 @@
 		<mx:StringValidator id="positionBuilding_stringValidator" source="{position_building}"  required="true" property="text"  requiredFieldError="场所所在教学楼不能为空"/>
 		<mx:StringValidator id="positionDetail_stringValidator" source="{position_detail}" property="text"  requiredFieldError="场所所在教学楼具体位置不能为空"/>
 		<mx:NumberValidator id="area_begin_numberValidator" source="{area_begin}" required="false" property="text"   invalidCharError="请输入数值" domain="real"/>
-		<mx:NumberValidator id="area_end_numberValidator" source="{area_end}" required="false" property="text" invalidCharError="请输入数值" domain="real"/>
 		<mx:NumberValidator id="contain_begin_numberValidator" source="{contain_begin}" required="false" property="text" integerError="请输入正整数" domain="int" minValue="0"/>
-		<mx:NumberValidator id="contain_end_numberValidator" source="{contain_end}" required="false" property="text" integerError="请输入正整数" domain="int" minValue="0"/>
 		
 		<valueObjects:PlaceModel id="place"/>
 		
@@ -58,9 +56,9 @@
 
 				
 				validatorArr.push(area_begin_numberValidator);
-				validatorArr.push(area_end_numberValidator);
+//				validatorArr.push(area_end_numberValidator);
 				validatorArr.push(contain_begin_numberValidator);
-				validatorArr.push(contain_end_numberValidator);
+//				validatorArr.push(contain_end_numberValidator);
 				validatorArr.push(positionBuilding_stringValidator);
 				validatorArr.push(positionDetail_stringValidator);
 				checkBoxRepeater.dataProvider=allFunctions;
@@ -115,9 +113,9 @@
 				place=event.result as PlaceModel;
 				pname.text=place.name;
 				contain_begin.text=place.containBegin+"";
-				contain_end.text=place.containEnd+"";
+//				contain_end.text=place.containEnd+"";
 				area_begin.text=place.areaBegin+"";
-				area_end.text=place.areaEnd+"";
+//				area_end.text=place.areaEnd+"";
 	
 				var  functions_str:String=place.functions;
 				var function_attr:Array=functions_str.split(";");
@@ -163,11 +161,11 @@
 					var areaBegin:Object=null;
 					if(area_begin.text!="")areaBegin=parseFloat(area_begin.text);
 					var areaEnd:Object=null;
-					if(area_end.text!="")areaEnd=parseFloat(area_end.text);
+		//			if(area_end.text!="")areaEnd=parseFloat(area_end.text);
 					var containBegin:Object=null;
 					if(contain_begin.text!="")containBegin=parseInt(contain_begin.text);
 					var containEnd:Object=null;
-					if(contain_end.text!="")containEnd=parseInt(contain_end.text);
+		//			if(contain_end.text!="")containEnd=parseInt(contain_end.text);
 					place.containBegin=containBegin as int;
 					place.containEnd=containEnd as int;
 					place.areaBegin=areaBegin as Number;
@@ -208,9 +206,9 @@
 				if(this.toolTip=='Update'){		
 					pname.text=place.name;
 					contain_begin.text=place.containBegin+"";
-					contain_end.text=place.containEnd+"";
+//					contain_end.text=place.containEnd+"";
 					area_begin.text=place.areaBegin+"";
-					area_end.text=place.areaEnd+"";
+//					area_end.text=place.areaEnd+"";
 					
 					var  functions_str:String=place.functions;
 					var function_attr:Array=functions_str.split(";");
@@ -240,9 +238,9 @@
 					functions_other.text="";
 					checkBox.selected=false;
 					area_begin.text="";
-					area_end.text="";
+//					area_end.text="";
 					contain_begin.text="";
-					contain_end.text="";
+//					contain_end.text="";
 					remarks.text="";
 					for(var idx:int = 0; idx < allFunction.length; idx++) {
 						var checkbox:CheckBox=checkBox[idx] as CheckBox;
@@ -289,8 +287,6 @@
 			<mx:FormItem label="面积">
 				<mx:HBox verticalAlign="middle">
 					<s:TextInput id="area_begin" width="30"/>
-					<s:Label  text="-" verticalAlign="middle"/>
-					<s:TextInput id="area_end" width="30"/>
 					<mx:HBox horizontalGap="0">
 						<s:Label  text="m" verticalAlign="middle" textAlign="right"/>
 						<s:Label  text="2" verticalAlign="top"  textAlign="left" fontSize="8"/>
@@ -299,8 +295,6 @@
 					<mx:FormItem label="容纳人数 ">
 						<mx:HBox verticalAlign="middle">
 							<s:TextInput id="contain_begin" width="30"/>
-							<s:Label  text="-" verticalAlign="middle" />
-							<s:TextInput id="contain_end" width="30"/>
 							<s:Label  text="人" verticalAlign="middle"/>
 						</mx:HBox>
 					</mx:FormItem>
