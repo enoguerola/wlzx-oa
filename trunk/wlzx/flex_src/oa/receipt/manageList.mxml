@@ -8,7 +8,7 @@
 		<mx:RemoteObject id="receiptServiceRO" destination="receiptServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 			<mx:method name="get" concurrency="last" result="get_resultHandler(event);"/>
 			<mx:method name="complete" concurrency="last" result="complete_resultHandler(event);"/>
-		</mx:RemoteObject>
+		</mx:RemoteObject> 
 	</fx:Declarations>
 	<fx:Script>
 		<![CDATA[
@@ -46,7 +46,7 @@
 			public function add(id:String):void
 			{
 				var parent:Object=(Object)(((Object)(this.owner)).owner);
-				Alert.show("add");
+				//Alert.show("add");
 				parent.addTab("view_receipt" + id,"公文详细",parent.nav,"oa/receipt/manageDetail.swf",null,id);
 			}
 			

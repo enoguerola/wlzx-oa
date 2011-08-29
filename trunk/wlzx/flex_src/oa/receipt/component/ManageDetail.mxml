@@ -26,75 +26,75 @@
 			private var hgroup1:HGroup = new HGroup();
 			private var fileflowid:String;
 			
-			override protected function fileFlowServiceGetList_result(event:ResultEvent):void
-			{
-				super.list = event.result as ArrayCollection;
-				var first:Boolean = true;
-				
-				hgroup0.percentWidth = 100;
-				
-				Alert.show(this.parentApplication.account + "" + list.length);
-				var index:int = 0;
-				var length:int = list.length;
-				var file:FileFlowModel;
-				for(index; index < length; index ++)
-				{
-					file = list.getItemAt(index) as FileFlowModel;
-					if(file.type != 0)
-						continue;
-					if(first)
-					{
-						var label:FormHeading = new FormHeading();
-						label.label = " 拟办:";
-						label.percentWidth = 10;
-						label.styleName = "receipt_formhead";
-						hgroup0.addElement(label);
-						first = false;
-					}
-					var text:TextArea = new TextArea();
-					if(file.text == null)
-						text.text = "";
-					else
-						text.text = file.text;
-					text.editable = false;
-					text.width = 150;
-					text.height = 100;
-					setNameAndDate(text, file);
-					hgroup0.addElement(text);
-				}
-				first = true;
-				
-				hgroup1.percentWidth = 100;
-				
-				for(index = 0; index < length; index ++)
-				{
-					file = list.getItemAt(index) as FileFlowModel;
-					if(file.type != 1)
-						continue;
-					if(first)
-					{
-						var p_label:FormHeading = new FormHeading();
-						p_label.label = " 批示:";
-						p_label.percentWidth = 10;
-						p_label.styleName = "receipt_formhead";
-						hgroup1.addElement(p_label);
-						first = false;
-					}
-					var text:TextArea = new TextArea();
-					if(file == null)
-						text.text = "";
-					else
-						text.text = file.text;
-					text.editable = false;
-					text.width = 150;
-					text.height = 100;
-					setNameAndDate(text, file);
-					hgroup1.addElement(text);
-				}
-				inputGroup.addElement(hgroup0);
-				inputGroup.addElement(hgroup1);
-				//inputGroup.addElement(hgroup2);
-			}
+//			override protected function fileFlowServiceGetList_result(event:ResultEvent):void
+//			{
+//				super.list = event.result as ArrayCollection;
+//				var first:Boolean = true;
+//				
+//				hgroup0.percentWidth = 100;
+//				
+//				Alert.show(this.parentApplication.account + "" + list.length);
+//				var index:int = 0;
+//				var length:int = list.length;
+//				var file:FileFlowModel;
+//				for(index; index < length; index ++)
+//				{
+//					file = list.getItemAt(index) as FileFlowModel;
+//					if(file.type != 0)
+//						continue;
+//					if(first)
+//					{
+//						var label:FormHeading = new FormHeading();
+//						label.label = " 拟办:";
+//						label.percentWidth = 10;
+//						label.styleName = "receipt_formhead";
+//						hgroup0.addElement(label);
+//						first = false;
+//					}
+//					var text:TextArea = new TextArea();
+//					if(file.text == null)
+//						text.text = "";
+//					else
+//						text.text = file.text;
+//					text.editable = false;
+//					text.width = 150;
+//					text.height = 100;
+//					setNameAndDate(text, file);
+//					hgroup0.addElement(text);
+//				}
+//				first = true;
+//				
+//				hgroup1.percentWidth = 100;
+//				
+//				for(index = 0; index < length; index ++)
+//				{
+//					file = list.getItemAt(index) as FileFlowModel;
+//					if(file.type != 1)
+//						continue;
+//					if(first)
+//					{
+//						var p_label:FormHeading = new FormHeading();
+//						p_label.label = " 批示:";
+//						p_label.percentWidth = 10;
+//						p_label.styleName = "receipt_formhead";
+//						hgroup1.addElement(p_label);
+//						first = false;
+//					}
+//					var text:TextArea = new TextArea();
+//					if(file == null)
+//						text.text = "";
+//					else
+//						text.text = file.text;
+//					text.editable = false;
+//					text.width = 150;
+//					text.height = 100;
+//					setNameAndDate(text, file);
+//					hgroup1.addElement(text);
+//				}
+//				inputGroup.addElement(hgroup0);
+//				inputGroup.addElement(hgroup1);
+//				//inputGroup.addElement(hgroup2);
+//			}
 			
 			override protected function init():void
 			{

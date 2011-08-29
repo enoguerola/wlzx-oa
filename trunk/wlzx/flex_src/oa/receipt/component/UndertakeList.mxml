@@ -12,10 +12,10 @@
 		<![CDATA[
 			import mx.controls.Alert;
 			
-			override public function add(id:String):void
+			override public function add(receiptId:String,receiptFlowId:String):void
 			{
 				var parent:Object=(Object)(((Object)(this.owner)).parentDocument);
-				parent.addTab("undertake_receipt" + id,"承办详细",parent.nav,"oa/receipt/undertakeDetail.swf",null,id);
+				parent.addTab("undertake_receipt" + receiptId,"承办详细",parent.nav,"oa/receipt/undertakeDetail.swf",null,receiptId+";"+receiptFlowId);
 			}
 			
 			override protected function init():void

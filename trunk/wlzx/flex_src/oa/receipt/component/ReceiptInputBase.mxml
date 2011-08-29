@@ -72,8 +72,8 @@
 			{
 				var parent:Object = this.parentDocument as Object;
 				var receiptFlowId:String=parent.receiptFlowId;
-//				Alert.show(receiptFlowId+"aa");
-			//	Alert.show(isCompleted+"&&");
+				Alert.show(receiptFlowId+"aa");
+				Alert.show(isCompleted+"&&");
 				finishWorkFlow(receiptFlowId,isCompleted);
 				
 			}
@@ -99,7 +99,7 @@
 //						if(event.detail == Alert.YES)
 //						{
 							var parent:Object = this.parentDocument as Object;
-							var content1:String=parent.content.text;
+							var content1:String=parent.content==null?null:parent.content.text;
 							//Alert.show(state+"a");
 							receiptServiceRO.finishWorkFlow(receiptFlowId,state,content1);
 //						}
@@ -128,7 +128,7 @@
 				<s:Button label="提交" color="#000000" click="save(1)" id="save1"/>
 				<s:Button label="保存" color="#000000" click="save(0)" id="save0"/>
 			</s:HGroup>-->
-			<mx:HBox width="100%" height="25" paddingLeft="20"  horizontalGap="10" styleName="CustomHBoxStyle"   verticalAlign="middle">
+			<mx:HBox width="100%" height="25" paddingLeft="20"  horizontalGap="10" styleName="CustomHBoxStyle"   verticalAlign="middle" id="bar">
 				<mx:Label text="|"/>
 				<mx:LinkButton  label="提交" icon="@Embed(source='../WebContent/resources/common/tools/button_draftSave_icon.png')" click="save('1')" id="save1" />
 				<mx:LinkButton  label="保存" icon="@Embed(source='../WebContent/resources/common/tools/button_save_icon.png')"  click="save()" id="save0"/>
