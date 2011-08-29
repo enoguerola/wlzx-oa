@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Module xmlns:fx="http://ns.adobe.com/mxml/2009" 
-		   xmlns:s="library://ns.adobe.com/flex/spark" 
-		   xmlns:mx="library://ns.adobe.com/flex/mx" layout="vertical" width="100%" height="100%"
-		   xmlns:content="oa.receipt.component.*" creationComplete="init()">
-	<fx:Script>
+<mx:Module xmlns:mx="http://www.adobe.com/2006/mxml" layout="vertical" width="100%" height="100%"
+		   xmlns:valueObjects="oa.entity.receipt.*"
+		   xmlns:content="oa.receipt.component.*" creationComplete="init()" currentState="part1">
+	<valueObjects:ReceiptModel id="receipt"/>
+	<mx:Script>
 		<![CDATA[
+			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
-			import mx.collections.ArrayCollection;
 			
 			import oa.entity.receipt.ReceiptModel;
 			
-			public var receipt:ReceiptModel = new ReceiptModel();
+//			public var receipt:ReceiptModel;
 			public var _hao:String;
 			public var _zi:String;
 			public var in_date:String;
@@ -20,14 +20,21 @@
 			public var subject:String;
 			public var office:String;
 			public var status:int;
-			
+			public var receiptId:String;
+			public var receiptFlowId:String;
 			private function init():void
 			{
 				var parms:String=((Object)(this.owner)).id;
-				Alert.show("devise detail :" + parms);
-				receiptServiceRO.get(parms);
+				//Alert.show("devise detail :" + parms);
+				receiptId=parms.split(";")[0];
+				receiptFlowId=parms.split(";")[1];
+				receiptServiceRO.get(receiptId);
 			}
-			
+			import mx.controls.Text;
+			import mx.controls.TextArea;
+			import oa.entity.receipt.FileFlowModel;
+			import system.utils.CommonUtils;
+			public var content:Object=null;//辅助记录AS生成的组件引用
 			protected function receiptServiceGet_result(event:ResultEvent):void
 			{
 				// TODO Auto-generated method stub
@@ -39,18 +46,120 @@
 				receipt_text.summary.enabled = false;
 				receipt_text.title_string_validate.triggerEvent = "";
 				receipt_text.summary_string_validate.triggerEvent = "";
-				var number:Array = receipt.doNumber.split("+");
-				_hao = number.pop();
-				_zi = number.pop();
-				if(receipt.inDate != null)
-					in_date = dateformate.format(receipt.inDate);
-				inNumber = receipt.inNumber;
-				subject = receipt.subject;
-				office = receipt.office;
+//				var number:Array = receipt.doNumber.split("+");
+//				_hao = number.pop();
+//				_zi = number.pop();
+//				if(receipt.inDate != null)
+//					in_date = dateformate.format(receipt.inDate);
+//				inNumber = receipt.inNumber;
+//				subject = receipt.subject;
+//				office = receipt.office;
 				status = receipt.status;
+				var number:Array = receipt.doNumber.split("+");
+				receipt_file._hao.text = number.pop();
+				receipt_file._zi.text = number.pop();
+				if(receipt.inDate != null)
+					receipt_file.in_date.text = dateformate.format(receipt.inDate);
+				receipt_file.in_number.text = receipt.inNumber;
+				receipt_file.zhutici.text = receipt.subject;
+				receipt_file.in_department.text = receipt.office;
+//				receipt_file.status.text = receipt.status;
 				//for attments
 				var list:ArrayCollection = receipt.attachments as ArrayCollection;
 				receipt_text.list = list;
+				//-加载核稿、会签、签发记录
+				
+				for each(var flow:Object in receipt.fileFlows){
+					if(flow.type==2){
+						//Alert.show(receipt.fileFlows.length+"aaaa");
+						if(flow.type==receipt.status&&flow.user==parentApplication.currentUser.id){
+							//Alert.show(flow.isCompleted);
+							var vbox:VBox=new VBox();
+							
+							
+							var item1:TextArea=new TextArea();
+							item1.enabled=true;
+							item1.text=flow.text;
+							content=item1;
+							vbox.addChild(item1);
+							
+//							var item3:Text=new Text();
+//							item3.setStyle("fontWeight","bold");
+//							item3.enabled=true;
+//							item3.text=/* (flow.isCompleted==null?"拟办意见":(flow.isCompleted==0?"通过":"退回"))+":"+(flow.text==null?"":flow.text)+"  "+ */parentApplication.getTeacherNameByAccountId(flow.user)+"  "+(flow.completedDate==null?"":CommonUtils.formatDate(flow.completedDate,"YYYY-MM-DD"));
+//							vbox.addChild(item3);
+							
+							receipt_file.deviseArea.addChild(vbox);
+						}else{
+							var vbox:VBox=new VBox();
+							var item2:Text=new Text();
+							item2.text=flow.text;
+							item2.enabled=false;
+							item2.text=/* (flow.isCompleted==null?"拟办意见":(flow.isCompleted==0?"通过":"退回"))+":"+(flow.text==null?"":flow.text)+"  "+ */parentApplication.getTeacherNameByAccountId(flow.user)+"  "+(flow.completedDate==null?"":CommonUtils.formatDate(flow.completedDate,"YYYY-MM-DD"));
+							vbox.addChild(item2);
+							receipt_file.deviseArea.addChild(vbox);
+							
+						}
+					}else if(flow.type==4){
+						if(flow.type==receipt.status&&flow.user==parentApplication.currentUser.id){
+							var vbox:VBox=new VBox();
+							
+							
+							var item1:TextArea=new TextArea();
+							item1.text=flow.text;
+							content=item1;
+							item1.enabled=true;
+							vbox.addChild(item1);
+							
+//							var item3:Text=new Text();
+//							item3.setStyle("fontWeight","bold");
+//							item3.enabled=true;
+//							item3.text=/* (flow.isCompleted==null?"批示意见":(flow.isCompleted==1?"通过":"退回"))+":"+(flow.text==null?"":flow.text)+"  "+ */parentApplication.getTeacherNameByAccountId(flow.user)+"  "+(flow.completedDate==null?"":CommonUtils.formatDate(flow.completedDate,"YYYY-MM-DD"));
+//							vbox.addChild(item3);
+							receipt_file.ratifyArea.addChild(vbox);
+							
+							
+						}else{
+							var vbox:VBox=new VBox();
+							var item2:Text=new Text();
+							item2.text=flow.text;
+							item2.enabled=false;
+							item2.text=/* (flow.isCompleted==null?"待批示":(flow.isCompleted==1?"通过":"退回"))+":"+(flow.text==null?"":flow.text)+"  "+ */parentApplication.getTeacherNameByAccountId(flow.user)+"  "+(flow.completedDate==null?"":CommonUtils.formatDate(flow.completedDate,"YYYY-MM-DD"));
+							vbox.addChild(item2);
+							receipt_file.ratifyArea.addChild(vbox);
+							
+						}
+					}
+					else if(flow.type==6){
+						if(flow.type==receipt.status&&flow.user==parentApplication.currentUser.id){
+							var vbox:VBox=new VBox();
+							
+							
+							var item1:TextArea=new TextArea();
+							item1.text=flow.text;
+							content=item1;
+							item1.enabled=true;
+							vbox.addChild(item1);
+//							var item3:Text=new Text();
+//							item3.setStyle("fontWeight","bold");
+//							item3.enabled=true;
+//							item3.text=/* (flow.isCompleted==null?"承办意见":(flow.isCompleted==1?"通过":"退回"))+":"+(flow.text==null?"":flow.text)+"  "+ */parentApplication.getTeacherNameByAccountId(flow.user)+"  "+(flow.completedDate==null?"":CommonUtils.formatDate(flow.completedDate,"YYYY-MM-DD"));
+//							vbox.addChild(item3);
+							receipt_file.undertakeArea.addChild(vbox);
+							
+							
+						}else{
+							var vbox:VBox=new VBox();
+							var item2:Text=new Text();
+							item2.text=flow.text;
+							item2.enabled=false;
+							item2.text=/* (flow.isCompleted==null?"待承办":(flow.isCompleted==1?"通过":"退回"))+":"+(flow.text==null?"":flow.text)+"  "+ */parentApplication.getTeacherNameByAccountId(flow.user)+"  "+(flow.completedDate==null?"":CommonUtils.formatDate(flow.completedDate,"YYYY-MM-DD"));
+							vbox.addChild(item2);
+							receipt_file.undertakeArea.addChild(vbox);
+							
+						}
+					}
+				}
 			}
 			
 			protected function faultHandler(event:FaultEvent):void
@@ -59,20 +168,39 @@
 				Alert.show(event.fault.faultString, 'Error');
 			}
 		]]>
-	</fx:Script>
-	<fx:Declarations>
+	</mx:Script>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
-		<s:RemoteObject concurrency="last" destination="receiptServiceDest" id="receiptServiceRO" fault="faultHandler(event)" showBusyCursor="true">
-			<s:method concurrency="last" name="get" result="receiptServiceGet_result(event)"/>
-		</s:RemoteObject>
+		<mx:RemoteObject concurrency="last" destination="receiptServiceDest" id="receiptServiceRO" fault="faultHandler(event)" showBusyCursor="true">
+			<mx:method concurrency="last" name="get" result="receiptServiceGet_result(event)"/>
+		</mx:RemoteObject>
 		<mx:DateFormatter formatString="YYYY-MM-DD" id="dateformate"/>
-	</fx:Declarations>
-	<mx:TabNavigator width="100%" height="100%">
+	<mx:states>
+		<mx:State name="part1">           
+			<mx:RemoveChild target="{receipt_file}"/>
+		</mx:State>
+		<mx:State name="part2">           
+			<mx:RemoveChild target="{receipt_text}"/>
+		</mx:State>
+		
+	</mx:states>
+	<mx:VBox width="100%" height="100%" verticalGap="0">
+		<mx:HBox  width="100%" height="30">
+			<mx:LinkButton label="来文正文" icon="@Embed(source='../WebContent/resources/oa/buttonIcon/documentMaintainPart1.png')"  click="this.currentState='part1'"/>
+			<mx:LinkButton label="来文登记单" icon="@Embed(source='../WebContent/resources/oa/buttonIcon/documentMaintainPart2.png')" click="this.currentState='part2'"/>
+		</mx:HBox>
+		<mx:VBox  width="100%" height="100%">
+			<content:receiptText width="100%" id="receipt_text"   height="100%" />
+			<content:DeviseDetail width="100%" id="receipt_file"  height="100%"/>
+
+		</mx:VBox>
+		
+	</mx:VBox>
+	<!--<mx:TabNavigator width="100%" height="100%">
 		<s:NavigatorContent label="来文正文" width="100%" height="100%">
 			<content:receiptText width="100%" id="receipt_text"/>
 		</s:NavigatorContent>
 		<s:NavigatorContent label="来文登记单" width="100%" height="100%">
 			<content:DeviseDetail width="100%" id="receipt_file"/>
 		</s:NavigatorContent>
-	</mx:TabNavigator>
+	</mx:TabNavigator>-->
 </mx:Module>

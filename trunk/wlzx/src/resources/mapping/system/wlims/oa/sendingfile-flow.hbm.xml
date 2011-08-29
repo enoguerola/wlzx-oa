@@ -13,7 +13,7 @@
             <column name="type" />
         </property>
         
-        <property name="isCompleted" type="int">
+        <property name="isCompleted" type="java.lang.Integer">
             <column name="is_completed" />
         </property>
         

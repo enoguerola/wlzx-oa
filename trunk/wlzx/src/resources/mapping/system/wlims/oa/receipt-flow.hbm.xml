@@ -4,7 +4,7 @@
 
 <hibernate-mapping auto-import="false">
 <class name="system.wlims.oa.entity.receipt.FileFlowModel" table="wlzx_oa_receipt_flow">
-        <id name="id">
+      <!--  <id name="id">
             <column name="id" />
             <generator class="native" />
         </id>
@@ -38,6 +38,39 @@
         </property>
         
     	<many-to-one not-found="ignore" class="system.wlims.oa.entity.receipt.ReceiptModel" name="receipt" column="receipt_id" lazy="false"/>
-  
+  -->
+  		<id name="id">
+            <column name="id" />
+            <generator class="native" />
+        </id>
+        
+        <property name="type" type="int">
+            <column name="type" />
+        </property>
+        
+        <property name="isCompleted" type="java.lang.Integer">
+            <column name="is_completed" />
+        </property>
+        
+         <property name="text" type="string">
+            <column name="text" />
+        </property>
+        
+      
+        <property name="user" type="string">
+            <column name="user_id" />
+        </property>
+        
+    
+        
+        <property name="completedDate" type="java.util.Date">
+            <column name="completed_date" />
+        </property>
+         <property name="creationDate" type="java.util.Date">
+            <column name="creation_date" />
+        </property>
+        <property name="receiptId" type="string">
+            <column name="receipt_id" />
+        </property>
     </class>
 </hibernate-mapping>

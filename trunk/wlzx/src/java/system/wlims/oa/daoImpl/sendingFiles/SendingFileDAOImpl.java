@@ -34,7 +34,7 @@ public class SendingFileDAOImpl extends BaseDAOImpl<SendingFileModel> implements
 			
 		}	
 		if(StringUtils.isNotEmpty(states)){
-			criteria.add(Restrictions.sqlRestriction("status in("+states+")"));	
+			criteria.add(Restrictions.sqlRestriction("status in('"+states+"')"));	
 		}
 		if(StringUtils.isNotEmpty(title))
 			criteria.add(Restrictions.like("title", title));

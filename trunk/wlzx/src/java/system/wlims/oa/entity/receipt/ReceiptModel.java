@@ -5,6 +5,8 @@ import java.util.Set;
 
 
 import system.wlims.basic.entity.BaseModel;
+import system.wlims.oa.entity.notice.AttachmentModel;
+import system.wlims.oa.entity.receipt.FileFlowModel;
 
 /**
  * 收文
@@ -24,9 +26,9 @@ public class ReceiptModel extends BaseModel {
 	private Integer status;
 	private Integer isCompleted;
 	private Date registedDate;
-	
-	private Set<FileAttachmentModel> attachments;
-	
+	private String receiverId;
+	private Set<AttachmentModel> attachments;
+	private Set<FileFlowModel> fileFlows;
 	public static enum EStatus{
 		Draft(0, "草稿"),
 		Register(1, "已登记"),
@@ -121,13 +123,7 @@ public class ReceiptModel extends BaseModel {
 		this.isCompleted = isCompleted;
 	}
 
-	public Set<FileAttachmentModel> getAttachments() {
-		return attachments;
-	}
-
-	public void setAttachments(Set<FileAttachmentModel> attachments) {
-		this.attachments = attachments;
-	}
+	
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
@@ -147,6 +143,43 @@ public class ReceiptModel extends BaseModel {
 
 	public Date getRegistedDate() {
 		return registedDate;
+	}
+
+	public Set<AttachmentModel> getAttachments() {
+		return attachments;
+	}
+
+	public void setAttachments(Set<AttachmentModel> attachments) {
+		this.attachments = attachments;
+	}
+
+	public String getReceiverId() {
+		return receiverId;
+	}
+
+	public void setReceiverId(String receiverId) {
+		this.receiverId = receiverId;
+	}
+
+	public Set<FileFlowModel> getFileFlows() {
+		return fileFlows;
+	}
+
+	public void setFileFlows(Set<FileFlowModel> fileFlows) {
+		this.fileFlows = fileFlows;
+	}
+
+	public boolean thisStateIsAllDealed(Integer type) {
+		boolean result=true;
+		if(fileFlows!=null&&fileFlows.size()>0){
+			for(FileFlowModel file:fileFlows){
+				if(file.getType().intValue()==type.intValue()){
+					if(file.getIsCompleted()==null)result=false;
+				}
+			}
+
+		}
+		return result;
 	}
 	
 	

@@ -9,7 +9,8 @@
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
 		<mx:RemoteObject id="receiptServiceRO" destination="receiptServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
-			<mx:method name="get"  concurrency="last" result="get_resultHandler(event);"/>
+<!--			<mx:method name="get"  concurrency="last" result="get_resultHandler(event);"/>
+-->			<mx:method name="getWorkFlowsByConditions"  concurrency="last" result="getWorkFlowsByConditions_resultHandler(event);"/>
 		</mx:RemoteObject>
 	</fx:Declarations>
 	<fx:Script>
@@ -30,7 +31,7 @@
 			}
 			
 			//addTab for Detail
-			public function add(id:String):void
+			public function add(receiptId:String,receiptFlowId:String):void
 			{
 				
 			}
@@ -44,17 +45,32 @@
 				var title:String = search_panel.title.text;
 				var start_date:String = search_panel.in_date_begin.text;
 				var end_date:String = search_panel.in_date_end.text;
+				var isCompleted:int=0;
 				
-				receiptServiceRO.get(in_number, office, do_number, status, title, start_date, end_date,
-					list.grid.curpage, list.grid.pagecount);
+			
+//				receiptServiceRO.get(in_number, office, do_number, status, title, start_date, end_date,
+//					list.grid.curpage, list.grid.pagecount);
+				
+				var userId:String=parentApplication.currentUser.id;
+				var summary:String=null;
+				var subject:String=null;
+				
+				receiptServiceRO.getWorkFlowsByConditions(in_number, office, do_number, title, subject,summary,start_date, end_date,status,isCompleted,userId);
+
 			}
 			
-			private function get_resultHandler(event:ResultEvent):void
+//			private function get_resultHandler(event:ResultEvent):void
+//			{
+//				var result:ArrayCollection = event.result as ArrayCollection;
+//				list.grid.initdata(result);
+//			}
+			private function getWorkFlowsByConditions_resultHandler(event:ResultEvent):void
 			{
-				var result:ArrayCollection = event.result as ArrayCollection;
-				list.grid.initdata(result);
+				if(event.result!=null){
+					var allList:ArrayCollection=event.result as ArrayCollection;
+					list.grid.initdata(allList);
+				}
 			}
-			
 			private function systemFaultHandler(event:FaultEvent):void
 			{
 				Alert.show(event.fault.faultString, 'Error');

@@ -6,16 +6,17 @@
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
 		<mx:RemoteObject id="receiptServiceRO" destination="receiptServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
-			<mx:method name="get"  concurrency="last" result="get_resultHandler(event);"/>
-		</mx:RemoteObject>
+			<mx:method name="get"  concurrency="last" result="get_resultHandler(event);"/> 
+<!--			<mx:method name="getWorkFlowsByConditions"  concurrency="last" result="getWorkFlowsByConditions_resultHandler(event);"/>
+-->		</mx:RemoteObject>
 	</fx:Declarations>
 	
 	<fx:Script>
 		<![CDATA[
 			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
-			import mx.controls.Alert;
 			
 			private function init():void
 			{
@@ -27,27 +28,42 @@
 				var in_number:String = search_panel.in_number.text;
 				var office:String = search_panel.in_office.text;
 				var do_number:String = search_panel.do_number.text;
-				var status:String = search_panel.status.selectedItem.data;
 				var title:String = search_panel.title.text;
 				var start_date:String = search_panel.in_date_begin.text;
 				var end_date:String = search_panel.in_date_end.text;
-				
+				var status:String = search_panel.status.selectedItem.data;
+//				var isCompleted:int=0;
+//				var userId:String=parentApplication.currentUser.id;
+//				var summary:String=null;
+//				var subject:String=null;
 				receiptServiceRO.get(in_number, office, do_number, status, title, start_date, end_date,
 					register_grid.grid.curpage, register_grid.grid.pagecount);
-			}
+/* 				receiptServiceRO.getWorkFlowsByConditions(in_number, office, do_number, title, subject,summary,start_date, end_date,status,isCompleted,userId);
+ */			}
 			
 			private function get_resultHandler(event:ResultEvent):void
 			{
 				var result = event.result as ArrayCollection;
 				register_grid.grid.initdata(result);
 			}
-			
+//			private function getWorkFlowsByConditions_resultHandler(event:ResultEvent):void
+//			{
+//				if(event.result!=null){
+//					var allList:ArrayCollection=event.result as ArrayCollection;
+//					register_grid.grid.initdata(allList);
+//				}
+//			}
 			public function add(id:String):void
 			{
 				var parent:Object=(Object)(((Object)(this.owner)).owner);
-				parent.addTab("add_receipt" + id,"正文登记",parent.nav,"oa/receipt/registerDetail.swf",null,id);
+				parent.addTab("add_receipt" + id,"收文登记",parent.nav,"oa/receipt/registerDetail.swf",null,id);
 			}
-			
+//			public function enterEdit(receiptId:String,receiptFlowId:String):void
+//			{
+//				var parent:Object=(Object)(((Object)(this.owner)).owner);
+//				parent.addTab("update_receipt" + id,"收文处理",parent.nav,"oa/receipt/registerDetail.swf",null,receiptId+";"+receiptFlowId);
+//
+//			}
 			private function systemFaultHandler(event:FaultEvent):void
 			{
 				Alert.show(event.fault.faultString, 'Error');
@@ -55,8 +71,8 @@
 		]]>
 	</fx:Script>
 	
-	<mx:Panel width="100%" height="100%"  styleName="customPanel" title="收文登记"  borderVisible="false" dropShadowVisible="false">
-		<mx:VBox width="100%" height="100%" id="listPanel">
+<!--	<mx:Panel width="100%" height="100%"  styleName="customPanel" title="收文登记"  borderVisible="false" dropShadowVisible="false">
+-->		<mx:VBox width="100%" height="100%" id="listPanel">
 			<mx:HBox verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12" >
 				<mx:HBox width="100%" height="25" paddingLeft="20"  horizontalGap="10" styleName="CustomHBoxStyle"   verticalAlign="middle">
 					<mx:Label text="|"/>
@@ -73,5 +89,5 @@
 				<receipt:datagrid id="register_grid"/>
 			</mx:VBox>
 		</mx:VBox>
-	</mx:Panel>
-</mx:Module>
+<!--	</mx:Panel>
+--></mx:Module>

@@ -1,6 +1,7 @@
 package system.components.upload;
 
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -58,6 +59,10 @@ public abstract class BaseFileUploadHandler implements IUpload{
 //		    filename = getFileName(file.getOriginalFilename()) + "_" + simpleDateFormat.format(calendar.getTime()) + "."
 //		    				+ getFileType(file.getOriginalFilename());
 		    filename =  "attach_"+simpleDateFormat.format(new Date()) + "."+ getFileType(file.getOriginalFilename());
+		    File directory=new File(uploadDirectory);
+		    if(!directory.exists()){
+		    	directory.mkdir();
+		    }
 		    DataOutputStream out = new DataOutputStream(new FileOutputStream(uploadDirectory + filename));// 存放文件的绝对路径
 		    InputStream is = null;// 附件输入流
 		    try {

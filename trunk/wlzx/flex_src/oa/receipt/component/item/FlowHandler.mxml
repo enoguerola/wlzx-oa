@@ -22,7 +22,7 @@
 				popWin.id = id;//参数传递使用
 				popWin.name = "";//参数传递使用
 				popWin.toolTip = status + "";
-				Alert.show(popWin.toolTip);
+				//Alert.show(popWin.toolTip);
 				PopUpManager.centerPopUp(popWin);
 				popWin.x = FlexGlobals.topLevelApplication.stage.stageWidth/2 - popWin.width/2;
 				popWin.y = FlexGlobals.topLevelApplication.stage.stageHeight/2 - popWin.height/2;
@@ -31,6 +31,6 @@
 		]]>
 	</fx:Script>
 	<s:HGroup horizontalAlign="center" verticalAlign="middle" width="100%" height="100%">
-		<mx:LinkButton label="流转设置" id="flow_button" click="{flow_set(data.id, data.status)}"/>
+		<mx:LinkButton label="流转设置" id="flow_button" click="{flow_set(data.id, data.status)}" enabled="{data.isCompleted==0}"/>
 	</s:HGroup>
 </s:MXDataGridItemRenderer>

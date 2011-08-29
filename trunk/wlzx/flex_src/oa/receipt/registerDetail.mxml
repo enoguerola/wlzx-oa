@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Module xmlns:fx="http://ns.adobe.com/mxml/2009" 
-		   xmlns:s="library://ns.adobe.com/flex/spark" 
-		   xmlns:mx="library://ns.adobe.com/flex/mx" layout="absolute" width="100%" height="100%" creationComplete="init()"
+<mx:Module xmlns:mx="http://www.adobe.com/2006/mxml"
+		   layout="absolute" width="100%" height="100%" creationComplete="init()"
 		   xmlns:content="oa.receipt.component.*"
-		   xmlns:valueObjects="oa.entity.receipt.*">
-	<fx:Script>
+		   xmlns:valueObjects="oa.entity.receipt.*" currentState="text_body">
+	<mx:Script>
 		<![CDATA[
 			import mx.collections.ArrayCollection;
 			import mx.containers.FormItem;
@@ -14,14 +13,14 @@
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
 			import mx.validators.Validator;
-			
-			import oa.entity.receipt.FileAttachmentModel;
+			import oa.entity.AttachmentModel;
+			//import oa.entity.receipt.FileAttachmentModel;
 			
 			private var validatorArr:Array = new Array();
 			
 			private var isMove:Boolean = false;
 			private var isChanged:Boolean = false;
-
+			
 			private function init():void
 			{
 				this.currentState = "text_body";
@@ -38,80 +37,114 @@
 			//保存
 			/*private function save(event:MouseEvent):void
 			{
-				receipt.title = receipt_text.title.text;
-				receipt.doNumber = receipt_file._zi.text + "+" + receipt_file._hao.text;
-				receipt.inDate = DateFormatter.parseDateString(receipt_file.in_date.text);
-				receipt.inNumber = receipt_file.in_number.text;
-				receipt.subject = receipt_file.zhutici.text;
-				receipt.summary = receipt_text.summary.text;
-				receipt.title = receipt_text.title.text;
-				receipt.office = receipt_file.in_department.text;
-				if(event.target == button_save)
-				{
-					Alert.show('receipt save begin');
-					receipt.status = 0;
-					if(validateSave())
-					{
-						receiptServiceRO.save(receipt);
-					}
-				}else
-				{
-					receipt.status = 1;
-					Alert.show("register");
-					if(validateRegister())
-					{
-						receiptServiceRO.save(receipt);
-					}
-				}
-				
+			receipt.title = receipt_text.title.text;
+			receipt.doNumber = receipt_file._zi.text + "+" + receipt_file._hao.text;
+			receipt.inDate = DateFormatter.parseDateString(receipt_file.in_date.text);
+			receipt.inNumber = receipt_file.in_number.text;
+			receipt.subject = receipt_file.zhutici.text;
+			receipt.summary = receipt_text.summary.text;
+			receipt.title = receipt_text.title.text;
+			receipt.office = receipt_file.in_department.text;
+			if(event.target == button_save)
+			{
+			Alert.show('receipt save begin');
+			receipt.status = 0;
+			if(validateSave())
+			{
+			receiptServiceRO.save(receipt);
+			}
+			}else
+			{
+			receipt.status = 1;
+			Alert.show("register");
+			if(validateRegister())
+			{
+			receiptServiceRO.save(receipt);
+			}
+			}
+			
 			}*/
 			
 			public function save(type:int):void
 			{
+				
+				
 				receipt.title = receipt_text.title.text;
 				receipt.summary = receipt_text.summary.text;
-
-				if(isMove)
-				{
-					receipt.doNumber = receipt_file._zi.text + "+" + receipt_file._hao.text;
-					receipt.inNumber = receipt_file.in_number.text;
-					receipt.subject = receipt_file.zhutici.text;
-					receipt.inDate = DateFormatter.parseDateString(receipt_file.in_date.text);
-					receipt.office = receipt_file.in_department.text;
-				}
-				if(type == 2 || type == 1 || isChanged)
-				{
-					if(type == 0 || type == 1)
-					{
-						Alert.show('receipt save begin');
-						receipt.status = 0;
-						if(this.currentState == "register_file")
-						{
-							if(validateRegister())
-							{
-								receiptServiceRO.save(receipt);
-							}
-						}else
-						{
-							if(validateSave())
-							{
-								receiptServiceRO.save(receipt);
-							}
-						}
-					}else
-					{
-						receipt.status = 1;
-						Alert.show("register");
-						if(validateRegister())
-						{
-							receiptServiceRO.save(receipt);
-						}
+				
+				//				if(isMove)
+				//				{
+				//Alert.show(receipt_file._zi.text+"ddddd");
+				receipt.doNumber = receipt_file._zi.text + "+" + receipt_file._hao.text;
+				receipt.inNumber = receipt_file.in_number.text;
+				receipt.subject = receipt_file.zhutici.text;
+				//Alert.show(type+"ccc");
+				
+				receipt.inDate = DateFormatter.parseDateString(receipt_file.in_date.text);
+				receipt.office = receipt_file.in_department.text;
+				//				}
+				//				if(type == 2 || type == 1 || isChanged)
+				//				{
+				//					if(type == 0 || type == 1)
+				//					{
+				//						//Alert.show('receipt save begin');
+				//						receipt.status = 0;
+				//						if(this.currentState == "register_file")
+				//						{
+				//							if(validateRegister())
+				//							{
+				//								//receiptServiceRO.save(receipt);
+				//								receiptServiceRO.addReceipt(receipt,receipt_upload.upload.idList);
+				//
+				//							}
+				//						}else
+				//						{
+				//							if(validateSave())
+				//							{
+				//								//receiptServiceRO.save(receipt);
+				//								receiptServiceRO.addReceipt(receipt,receipt_upload.upload.idList);
+				////								Alert.show(receipt_upload.upload.addIds+"a");
+				////								Alert.show(receipt_upload.upload.removeIds+"b");
+				////								receiptServiceRO.updateReceipt(receipt,receipt_upload.upload.addIds,receipt_upload.upload.removeIds);
+				//							}
+				//						}
+				//					}else
+				//					{
+				//						receipt.status = 1;
+				//						//Alert.show("register");
+				//						if(validateRegister())
+				//						{
+				//							Alert.show(receipt_upload.upload.addIds+"ggg");
+				//							Alert.show(receipt_upload.upload.removeIds+"hhh");
+				//							//receiptServiceRO.save(receipt);
+				//							receiptServiceRO.updateReceipt(receipt,receipt_upload.upload.addIds,receipt_upload.upload.removeIds);
+				//
+				//						}
+				//					}
+				//				}
+				//Alert.show(receipt.id+"a");
+				if(validateRegister()){
+					//Alert.show(receipt.id);
+					var parms:String=((Object)(this.owner)).id;
+					if(parms != null && parms!="" && parms!= "null"){
+						//编辑
+						//							Alert.show(receipt_upload.upload.addIds+"cccccc");
+						//							Alert.show(receipt_upload.upload.removeIds+"dddddd");
+						receiptServiceRO.updateReceipt(receipt,receipt_upload.upload.addIds,receipt_upload.upload.removeIds);
+						
+					}else{
+						//新增
+						receiptServiceRO.addReceipt(receipt,receipt_upload.upload.idList);
+						
 					}
+					
 				}
+				
 			}
 			
 			private function validateSave():Boolean
 			{
+				validatorArr = new Array();
 				validatorArr.push(receipt_text.title_string_validate);
 				validatorArr.push(receipt_text.summary_string_validate);
 				return doValidate();
@@ -119,6 +152,8 @@
 			
 			private function validateRegister():Boolean
 			{
+				return true;
+				validatorArr = new Array();
 				validatorArr.push(receipt_text.title_string_validate);
 				validatorArr.push(receipt_text.summary_string_validate);
 				validatorArr.push(receipt_file.zi_string_validate);
@@ -137,13 +172,13 @@
 				if (isValidForm) {
 					return true;
 				} else {
-					var err:ValidationResultEvent;
-					var errorMessageArray:Array = [];
-					for each (err in validatorErrorArray) {
-						var errField:String = FormItem(err.currentTarget.source.parent).label
-						errorMessageArray.push(errField + ": " + err.message);
-					}
-					Alert.show(errorMessageArray.join("\n\n"), "请按照以下错误提示信息重新填写", Alert.OK);
+					//					var err:ValidationResultEvent;
+					//					var errorMessageArray:Array = [];
+					//					for each (err in validatorErrorArray) {
+					//						var errField:String = FormItem(err.currentTarget.source.parent).label
+					//						errorMessageArray.push(errField + ": " + err.message);
+					//					}
+					//					Alert.show(errorMessageArray.join("\n\n"), "请按照以下错误提示信息重新填写", Alert.OK);
 					return false;
 				}
 			}
@@ -164,7 +199,7 @@
 						this.currentState = "upload";
 					}
 				}
-					
+				
 			}
 			
 			private function pre():void
@@ -175,12 +210,12 @@
 					this.currentState = "registe_file";
 			}
 			
-			protected function receiptServiceSave_result(event:ResultEvent):void
-			{
-				// TODO Auto-generated method stub
-				receipt = event.result as ReceiptModel;
-				Alert.show("保存成功!");
-			}
+			//			protected function receiptServiceSave_result(event:ResultEvent):void
+			//			{
+			//				// TODO Auto-generated method stub
+			//				receipt = event.result as ReceiptModel;
+			//				Alert.show("保存成功!");
+			//			}
 			
 			protected function receiptServiceGet_result(event:ResultEvent):void
 			{
@@ -189,67 +224,85 @@
 				receipt = event.result as ReceiptModel;
 				receipt_text.title.text = receipt.title;
 				receipt_text.summary.text = receipt.summary;
-				receipt_text.title.text = receipt.title;
-				//attachments here
-				var list:ArrayCollection = receipt.attachments as ArrayCollection;
-				receipt_text.list = list;
+				var number:Array = receipt.doNumber.split("+");
+				var letter:String = number.pop();
+				receipt_file._hao.text = letter;
+				receipt_file._zi.text = number.pop();
+				if(receipt.inDate != null)
+					receipt_file.in_date.text = dateformate.format(receipt.inDate);//.fullYear + "-" + receipt.inDate.month + '-' + receipt.inDate.day;
+				receipt_file.in_number.text = receipt.inNumber;
+				receipt_file.zhutici.text = receipt.subject;
+				receipt_file.in_department.text = receipt.office;
+
+				var uploadList:Array=new Array();
+				for each(var model:AttachmentModel in receipt.attachments){
+					uploadList.push({label:model.name,data:parseInt(model.size)/1000+"KB",width:145,id:model.id});
+					//	Alert.show(model.name+"");
+				}
+				//Alert.show(uploadList.length+"");
+				receipt_upload.upload.uploadAlready_list.dataProvider=uploadList;
+				//	receipt_text.title.text = receipt.title;
+				//				//attachments here
+				//				var list:ArrayCollection = receipt.attachments as ArrayCollection;
+				//				receipt_text.list = list;
 				if(receipt.status == 1)
 				{
 					button_save.enabled = false;
 					button_register.enabled = false;
 				}
+				
 			}
-
+			
 			protected function faultHandler(event:FaultEvent):void
 			{
 				// TODO Auto-generated method stub
 				Alert.show(event.fault.faultString, 'Error');
 			}
 			
-			public function remove(id:String):void
-			{
-				fileAttachmentServiceRO.remove(id);
-			}
-			
-			public function add(id:String):void
-			{
-				fileAttachmentServiceRO.get(id);
-			}
-			
-			protected function fileAttachmentServiceRemove_result(event:ResultEvent):void
-			{
-				var id:String = event.result as String;
-				var list:ArrayCollection = receipt_text.datagrid.dataProvider as ArrayCollection;
-				var index:int = -1;
-				var fileAttachment:FileAttachmentModel;
-				if(list != null && list.length > 0)
-				{
-					for(var i=0; i<list.length; i++)
-					{
-						fileAttachment = list.getItemAt(i) as FileAttachmentModel;
-						if(fileAttachment.id == id)
-						{
-							index = i;
-							break;
-						}
-					}
-				}
-				if(index != -1)
-					list.removeItemAt(index);
-			}
-			
-			protected function fileAttachmentServiceGet_result(event:ResultEvent):void
-			{
-				var attachment:FileAttachmentModel = event.result as FileAttachmentModel;
-				var list:ArrayCollection = receipt_text.datagrid.dataProvider as ArrayCollection;
-				list.addItem(attachment);
-			}
+			//			public function remove(id:String):void
+			//			{
+			//				fileAttachmentServiceRO.remove(id);
+			//			}
+			//			
+			//			public function add(id:String):void
+			//			{
+			//				fileAttachmentServiceRO.get(id);
+			//			}
+			//			
+			//			protected function fileAttachmentServiceRemove_result(event:ResultEvent):void
+			//			{
+			//				var id:String = event.result as String;
+			//				var list:ArrayCollection = receipt_text.datagrid.dataProvider as ArrayCollection;
+			//				var index:int = -1;
+			//				var fileAttachment:FileAttachmentModel;
+			//				if(list != null && list.length > 0)
+			//				{
+			//					for(var i=0; i<list.length; i++)
+			//					{
+			//						fileAttachment = list.getItemAt(i) as FileAttachmentModel;
+			//						if(fileAttachment.id == id)
+			//						{
+			//							index = i;
+			//							break;
+			//						}
+			//					}
+			//				}
+			//				if(index != -1)
+			//					list.removeItemAt(index);
+			//			}
+			//			
+			//			protected function fileAttachmentServiceGet_result(event:ResultEvent):void
+			//			{
+			//				var attachment:FileAttachmentModel = event.result as FileAttachmentModel;
+			//				var list:ArrayCollection = receipt_text.datagrid.dataProvider as ArrayCollection;
+			//				list.addItem(attachment);
+			//			}
 			
 			private function saveReceiptBeforeUpload():void
 			{
 				this.button_pre.enabled = true;
 				this.button_next.enabled = true;
-				save(0);
+				//save(0);
 			}
 			
 			private function back():void
@@ -257,25 +310,56 @@
 				var parent:Object=(Object)(((Object)(this.owner)).owner);
 				parent.addTab("receipt_register_menu","收文登记",parent.nav,"oa/receipt/registerList.swf",null,"");
 			}
-
+			
+			private function addReceipt_resultHandler(event:ResultEvent):void
+			{
+				if(event.result!=null){
+					//					documentMaintain.sendingFile=event.result as SendingFileModel;
+					//					//Alert.show(documentMaintain.sendingFile.fileFlows.length+"");
+					//					documentMaintain.flowId=documentMaintain.sendingFile.getFirstDraftStepFlowId();
+					Alert.show("添加成功");
+					//search();
+				}
+			}
+			private function updateReceipt_resultHandler(event:ResultEvent):void
+			{
+				if(event.result!=null){
+					Alert.show("保存成功");
+					//search();
+				}
+			}
+			
 		]]>
-	</fx:Script>
-	<fx:Declarations>
+	</mx:Script>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+		<mx:RemoteObject concurrency="last" destination="receiptServiceDest" id="receiptServiceRO" fault="faultHandler(event)" showBusyCursor="true">
+			<mx:method concurrency="last" name="get" result="receiptServiceGet_result(event)"/>
+			<!--<s:method concurrency="last" name="save" result="receiptServiceSave_result(event)"/>-->
+			<mx:method name="addReceipt"  concurrency="last" result="addReceipt_resultHandler(event);"/>
+			<mx:method name="updateReceipt"  concurrency="last" result="updateReceipt_resultHandler(event);"/>
+		</mx:RemoteObject>
+		<!--<s:RemoteObject concurrency="last" destination="fileAttachmentServiceDest" id="fileAttachmentServiceRO" fault="faultHandler(event)" showBusyCursor="true">
+		<s:method concurrency="last" name="remove" result="fileAttachmentServiceRemove_result(event)"/>
+		<s:method concurrency="last" name="get" result="fileAttachmentServiceGet_result(event)"/>
+		</s:RemoteObject>-->
+		<mx:DateFormatter formatString="YYYY-MM-DD" id="dateformate"/>
 		<valueObjects:ReceiptModel id="receipt"/>
-		<s:RemoteObject concurrency="last" destination="receiptServiceDest" id="receiptServiceRO" fault="faultHandler(event)" showBusyCursor="true">
-			<s:method concurrency="last" name="get" result="receiptServiceGet_result(event)"/>
-			<s:method concurrency="last" name="save" result="receiptServiceSave_result(event)"/>
-		</s:RemoteObject>
-		<s:RemoteObject concurrency="last" destination="fileAttachmentServiceDest" id="fileAttachmentServiceRO" fault="faultHandler(event)" showBusyCursor="true">
-			<s:method concurrency="last" name="remove" result="fileAttachmentServiceRemove_result(event)"/>
-			<s:method concurrency="last" name="get" result="fileAttachmentServiceGet_result(event)"/>
-		</s:RemoteObject>
-	</fx:Declarations>
+
+	
 	<mx:states>
-		<mx:State name="text_body" enterState="{this.button_pre.enabled=false;}"/>
-		<mx:State name="registe_file" enterState="saveReceiptBeforeUpload();isMove=true;"/>
-		<mx:State name="upload" enterState="{this.button_next.enabled=false;save(0);}"/>
+		<mx:State name="text_body"  enterState="{this.button_pre.enabled=false;}">           
+			<mx:RemoveChild target="{register_box}"/>
+			<mx:RemoveChild target="{upload_box}"/>
+		</mx:State>
+		<mx:State name="registe_file" enterState=" saveReceiptBeforeUpload(); isMove=true;">           
+			<mx:RemoveChild target="{text_box}"/>
+			<mx:RemoveChild target="{upload_box}"/>
+		</mx:State>
+		<mx:State name="upload" enterState="{this.button_next.enabled=false;/* save(0); */}">           
+			<mx:RemoveChild target="{register_box}"/>
+			<mx:RemoveChild target="{text_box}"/>
+		</mx:State>
+		
 	</mx:states>
 	<mx:transitions>
 		<mx:Transition id="text_right" fromState="text_body" toState="*" >
@@ -301,22 +385,36 @@
 			</mx:Parallel>
 		</mx:Transition>
 	</mx:transitions>
-	<s:VGroup width="100%" height="100%">
-		<s:HGroup height="6%">
-			<s:Button label="保存" click="save(1)" id="button_save"/>
-			<s:Button label="登记" click="save(2)" id="button_register"/>
-			<s:Button label="返回" click="back()"/>
-			<s:Button label="下一步" click="next()" id="button_next"/>
-			<s:Button label="上一步" click="pre()" id="button_pre"/>
-		</s:HGroup>
-		<mx:VBox label="来文正文" width="100%" height="94%" includeIn="text_body" id="text_box">
-			<content:receiptText width="100%" id="receipt_text"/>
+	<mx:VBox width="100%" height="100%"   verticalGap="0" verticalAlign="middle">
+		<mx:HBox width="100%" height="25" paddingLeft="20"  horizontalGap="10" styleName="CustomHBoxStyle"   verticalAlign="middle">
+			<mx:Label text="|"/>
+			<mx:LinkButton  id="button_save" label="保存" icon="@Embed(source='../WebContent/resources/common/tools/button_draftSave_icon.png')" click="save(1)"/>
+			<mx:Label text="|"/>
+			<mx:LinkButton id="button_register" label="登记" icon="@Embed(source='../WebContent/resources/common/tools/button_save_icon.png')" click="save(2)"/>
+			<mx:Label text="|"/>
+			<mx:LinkButton  label="返回" icon="@Embed(source='../WebContent/resources/common/tools/button_back_icon.png')" click="back()"/>
+			<mx:Label text="|"/>
+			<mx:LinkButton  id="button_pre" label="上一步" icon="@Embed(source='../WebContent/resources/common/tools/button_pre_icon.png')" click="pre()"/>
+			<mx:Label text="|"/>
+			<mx:LinkButton  id="button_next" label="下一步" icon="@Embed(source='../WebContent/resources/common/tools/button_next_icon.png')" click="next()"/>
+			<mx:Label text="|"/>
+			
+		</mx:HBox>
+		<!--<s:HGroup height="6%">
+		<s:Button label="保存" click="save(1)" id="button_save"/>
+		<s:Button label="登记" click="save(2)" id="button_register"/>
+		<s:Button label="返回" click="back()"/>
+		<s:Button label="下一步" click="next()" id="button_next"/>
+		<s:Button label="上一步" click="pre()" id="button_pre"/>
+		</s:HGroup> -->
+		<mx:VBox label="来文正文" width="100%" height="100%" id="text_box">
+			<content:receiptText width="100%" id="receipt_text" height="100%"/>
 		</mx:VBox>
-		<mx:VBox label="来文登记单" direction="vertical" width="100%" height="94%" includeIn="registe_file" id="register_box">
-			<content:receiptFileInput width="100%" id="receipt_file"/>
+		<mx:VBox label="来文登记单" direction="vertical" width="100%" height="100%"  id="register_box">
+			<content:receiptFileInput width="100%" id="receipt_file" height="100%"/>
 		</mx:VBox>
-		<mx:VBox label="附件上传" width="100%" height="94%" includeIn="upload" id="upload_box">
-			<content:Upload width="100%" id="receipt_upload"/>
+		<mx:VBox label="附件上传" width="100%" height="100%"  id="upload_box">
+			<content:Upload width="100%" id="receipt_upload" height="100%"/>
 		</mx:VBox>
-	</s:VGroup>
+	</mx:VBox>
 </mx:Module>

@@ -10,9 +10,12 @@
 
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
-		<s:RemoteObject concurrency="last" fault="system_faultHandler(event)" destination="fileFlowServiceDest" id="fileFlowServiceRO" showBusyCursor="true">
+	<!--	<s:RemoteObject concurrency="last" fault="system_faultHandler(event)" destination="fileFlowServiceDest" id="fileFlowServiceRO" showBusyCursor="true">
 			<s:method concurrency="last" name="save" result="save_resultHandle(event)"/>
 			<s:method concurrency="last" name="getTeacher" result="getList_resultHandle(event)"/>
+		</s:RemoteObject>-->
+		<s:RemoteObject id="receiptServiceRO" destination="receiptServiceDest" showBusyCursor="true" fault="system_faultHandler(event);">
+			<s:method name="addNextWorkFlows"  concurrency="last" result="addNextWorkFlows_resultHandler(event);"/>
 		</s:RemoteObject>
 	</fx:Declarations>
 	<fx:Script>
@@ -28,20 +31,26 @@
 			import system.utils.ComboxUtils;
 			
 			private var flowArray:ArrayCollection = new ArrayCollection([
-				{"data":null, "label":"请选择"},{"data":"0", "label":"收文拟办"},{"data":"1", "label":"收文批示"},
-				{"data":"2", "label":"收文承办"},{"data":"3", "label":"收文传阅"}]);
+				{"data":null, "label":"请选择"},{"data":"0", "label":"收文登记"},{"data":"2", "label":"收文拟办"},{"data":"4", "label":"收文批示"},
+				{"data":"6", "label":"收文承办"},{"data":"8", "label":"收文传阅"}]);
 			
 			private var teacherArray:Array = new Array();
 			private var update:Boolean = false;
 			
 			private function init():void
 			{
+//				var status:int = parseInt(this.toolTip);
+//				if(status%2 == 0){
+//					step_label.label = " 本环节";
+//					//Alert.show("begining");
+//					fileFlowServiceRO.getTeacher(this.id);
+//				}
 				var status:int = parseInt(this.toolTip);
-				if(status%2 == 0){
-					step_label.label = " 本环节";
-					Alert.show("begining");
-					fileFlowServiceRO.getTeacher(this.id);
-				}
+				if(status==1)state.text="登记完毕";
+				else if(status==3)state.text="拟办完毕";
+				else if(status==5)state.text="批示完毕";
+				else if(status==7)state.text="承办完毕";
+				else if(status==9)state.text="传阅完毕";
 			}
 			
 			private function save():void
@@ -63,9 +72,12 @@
 					Alert.show("请选择参与人员", "请选择");
 				else
 				{
+//					var id_list:String = teacherArray.join();
+//					var type:String = flow_combo.selectedItem.data;
+//					fileFlowServiceRO.save(this.id, id_list, update, type);
 					var id_list:String = teacherArray.join();
 					var type:String = flow_combo.selectedItem.data;
-					fileFlowServiceRO.save(this.id, id_list, update, type);
+					receiptServiceRO.addNextWorkFlows(this.id, type, id_list);
 				}
 			}
 			
@@ -95,29 +107,36 @@
 				Alert.show(event.fault.faultString, "error");
 			}
 			
-			protected function save_resultHandle(event:ResultEvent):void
+//			protected function save_resultHandle(event:ResultEvent):void
+//			{
+//				//var parent:Object = (Object)(this.parentDocument);
+//				//parent.search();
+//				PopUpManager.removePopUp(this);
+//				//this.parentApplication.popWin=null;
+//			}
+			protected function addNextWorkFlows_resultHandler(event:ResultEvent):void
 			{
-				//var parent:Object = (Object)(this.parentDocument);
-				//parent.search();
+				var parent:Object = (Object)(this.parentDocument);
+				parent.search();
 				PopUpManager.removePopUp(this);
 				//this.parentApplication.popWin=null;
 			}
 			
-			protected function getList_resultHandle(event:ResultEvent):void
-			{
-				var result:ArrayCollection = event.result as ArrayCollection;
-				if(result == null)
-					Alert.show("null");
-				else
-					Alert.show(" not null");
-				involvedTeachers.dataProvider = result;
-				update = true;
-				for each(var vo in result)
-				{
-					teacherArray.push(vo.userID);
-				}
-				flow_combo.selectedIndex = ComboxUtils.findIndex(flowArray, result[0].email);
-			}
+//			protected function getList_resultHandle(event:ResultEvent):void
+//			{
+//				var result:ArrayCollection = event.result as ArrayCollection;
+//				if(result == null)
+//					Alert.show("null");
+//				else
+//					Alert.show(" not null");
+//				involvedTeachers.dataProvider = result;
+//				update = true;
+//				for each(var vo in result)
+//				{
+//					teacherArray.push(vo.userID);
+//				}
+//				flow_combo.selectedIndex = ComboxUtils.findIndex(flowArray, result[0].email);
+//			}
 			
 			private function remove():void
 			{
@@ -143,6 +162,9 @@
 					<s:HGroup width="100%" height="15%">
 						<mx:FormHeading label="下一环节" id="step_label"/>
 						<s:ComboBox dataProvider="{flowArray}" selectedIndex="0" id="flow_combo"/>
+						<s:Label text="当前状态：【"/>
+						<s:Label id="state"  fontWeight="bold"/>
+						<s:Label text="】"/>
 					</s:HGroup>
 					<s:HGroup width="100%" height="85%">
 						<mx:FormHeading label="参与人员" />

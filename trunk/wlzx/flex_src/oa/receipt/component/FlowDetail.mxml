@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+<s:HGroup xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
-		 xmlns:mx="library://ns.adobe.com/flex/mx" width="600" height="400" creationComplete="init()">
-	<s:layout>
-		<s:VerticalLayout/>
-	</s:layout>
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="600" height="400" creationComplete="init()" horizontalAlign="center">
+	
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
-		<s:RemoteObject concurrency="last" fault="system_faultHandler(event)" destination="fileFlowServiceDest" id="fileFlowServiceRO" showBusyCursor="true">
+<!--		<s:RemoteObject concurrency="last" fault="system_faultHandler(event)" destination="fileFlowServiceDest" id="fileFlowServiceRO" showBusyCursor="true">
 			<s:method concurrency="last" name="getAllList" result="getList_resultHandle(event)"/>
+		</s:RemoteObject>-->
+		<s:RemoteObject id="receiptServiceRO" destination="receiptServiceDest" showBusyCursor="true" fault="system_faultHandler(event);">
+			<s:method name="get"  concurrency="last" result="get_resultHandler(event);"/>	
 		</s:RemoteObject>
 	</fx:Declarations>
 	<fx:Script>
@@ -25,7 +26,7 @@
 			private function init():void
 			{
 				var id:String = this.id;
-				fileFlowServiceRO.getAllList(id);
+				receiptServiceRO.get(id);
 			}
 			
 			protected function system_faultHandler(event:FaultEvent):void
@@ -33,23 +34,30 @@
 				Alert.show(event.fault.faultString, "error");
 			}
 			
-			protected function getList_resultHandle(event:ResultEvent):void
+			/* protected function getList_resultHandle(event:ResultEvent):void
 			{
 				var list:ArrayCollection = event.result as ArrayCollection;
 				flowRecords.dataProvider = list;
+			} */
+			protected function get_resultHandler(event:ResultEvent):void
+			{
+				var list:ArrayCollection = event.result.fileFlows as ArrayCollection;
+				flowRecords.dataProvider = list;
 			}
-			
 			private function labelType(item:Object, column:DataGridColumn):String
 			{
 				var type:int = item.type;
 				if(type == 0)
-					return "拟办";
-				else if(type == 1)
-					return "批示";
+					return "收文";
 				else if(type == 2)
+					return "拟办";
+				else if(type == 4)
+					return "批示";
+				else if(type == 6)
 					return "承办";
-				else
+				else if(type == 8)
 					return "传阅";
+				else return null;
 			}
 			
 			private function labelUser(item:Object, column:DataGridColumn):String
@@ -60,22 +68,22 @@
 			
 			private function labelCompleted(item:Object, column:DataGridColumn):String
 			{
+				if(item.isCompleted==null)return "待处理";
 				var isCompleted:int = item.isCompleted;
-				if(isCompleted)
-					return "已完成";
-				else
-					return "未完成";
+				
+				if(isCompleted==1)
+					return "通过";
+				else 
+					return "退回";
 			}
 		]]>
 	</fx:Script>
-	<s:TitleWindow id="flowDetailWin" width="100%" height="100%" close="{PopUpManager.removePopUp(this);}">
-		<s:BorderContainer borderVisible="true" width="100%" height="100%"> 
-			<s:layout>
-				<s:VerticalLayout/>
-			</s:layout>
-			<s:VGroup width="100%" height="100%">
-				<s:Panel title="流 转 记 录" width="100%" height="100%">
-					<mx:DataGrid id="flowRecords" dropEnabled="true" dragMoveEnabled="true" height="95%" width="95%" paddingBottom="10" paddingLeft="10"
+	<s:TitleWindow id="flowDetailWin" width="100%" height="100%" close="{PopUpManager.removePopUp(this);}" title="流 转 记 录">
+<!--		<s:BorderContainer borderVisible="true" width="100%" height="100%"> 
+-->			
+			<s:VGroup width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+<!--				<s:Panel title="流 转 记 录" width="100%" height="100%">
+-->					<mx:DataGrid id="flowRecords" dropEnabled="true" dragMoveEnabled="true" height="95%" width="95%" paddingBottom="10" paddingLeft="10"
 								  paddingRight="10" paddingTop="10" verticalAlign="middle" horizontalCenter="0" verticalScrollPolicy="auto" y="10">
 						<mx:columns>
 							<mx:DataGridColumn dataField="id" headerText="序号" width="100"/>
@@ -85,8 +93,8 @@
 							<mx:DataGridColumn headerText="是否完成" labelFunction="labelCompleted"/>
 						</mx:columns>
 					</mx:DataGrid>
-				</s:Panel>
-			</s:VGroup>
-		</s:BorderContainer>
-	</s:TitleWindow>
-</s:Group>
+<!--				</s:Panel>
+-->			</s:VGroup>
+<!--		</s:BorderContainer>
+-->	</s:TitleWindow>
+</s:HGroup>

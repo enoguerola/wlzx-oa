@@ -49,9 +49,21 @@
             <column name="registed_date" />
         </property>
         
-      	<set name="attachments" lazy="false" cascade="delete" inverse="true">
+         <property name="receiverId" type="string">
+            <column name="receiver_id" />
+        </property>
+        
+<!--      	<set name="attachments" lazy="false" cascade="delete" inverse="true">
         	<key column="receipt_id" not-null="true" />
         	<one-to-many not-found="ignore" class="system.wlims.oa.entity.receipt.FileAttachmentModel" /> 
-        </set>		
+        </set>	-->
+       <set name="fileFlows" lazy="false" cascade="delete" inverse="true" table="wlzx_oa_receipt_flow" order-by="creation_date">
+        	<key column="receipt_id" not-null="true" />
+        	<one-to-many not-found="ignore" class="system.wlims.oa.entity.receipt.FileFlowModel" /> 
+       </set>	
+        <set name="attachments" lazy="false" table="wlzx_oa_receipt_attachment" cascade="all-delete-orphan" inverse="false">
+        	<key column="receipt_id" not-null="true" />
+        	<many-to-many not-found="ignore"  column="attachment_id" class="system.wlims.oa.entity.notice.AttachmentModel" /> 
+    	 </set> 
     </class>
 </hibernate-mapping>
