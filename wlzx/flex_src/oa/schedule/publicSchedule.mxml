@@ -303,7 +303,7 @@
 					scheduelDepartmentId=scheduleScope;
 					scheduelType="1";
 				}
-				Alert.show("aaaaaaaaa");
+				//Alert.show("aaaaaaaaa");
 				scheduleServiceRO.getSchedulesByConditions(null,scheduelType,scheduleState,scheduelDepartmentShare,scheduelDepartmentId,scheduelSchoolShare,scheduelEmergence,scheduelTitle,scheduleBeginDate,scheduleEndDate);
 			}
 			private var window:WlzxLockWin=null;
