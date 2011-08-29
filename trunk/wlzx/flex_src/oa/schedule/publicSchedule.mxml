@@ -105,11 +105,12 @@
 				
 //				var _init1:Object = {data:null,label:'全部'};
 //				scheduleScope.addItemAt(_init1,0);
-				scheduleScope=new ArrayCollection();
+				scheduleScope=ArrayCollection(parentApplication.currentUserDepartment);
 				//var _init2:Object = ;
 				if(parentApplication.currentUser.hasDam('public_schedule_main@defaultVisit@@notSchoolFilter@')){
 					if(!scheduleScope.contains({data:'0',label:'学校日程'}))
 						scheduleScope.addItemAt({data:'0',label:'学校日程'},0);	
+					//Alert.show(scheduleScope.length+"a");
 				}
 				if(parentApplication.currentUser.hasDam('public_schedule_main@defaultVisit@@notselfDepartmentFilter@')){
 					scheduleScope=ArrayCollection(parentApplication.currentUserDepartment);
@@ -117,7 +118,7 @@
 //						scheduleScope.addItemAt(_init1,0);
 //					if(!scheduleScope.contains(_init2))
 //						scheduleScope.addItemAt(_init2,1);	
-					
+					//Alert.show(scheduleScope.length+"b");
 				}
 				if(parentApplication.currentUser.hasDam('public_schedule_main@defaultVisit@@noFilter@')){
 					scheduleScope=ArrayCollection(parentApplication.allDepartment);
@@ -125,7 +126,7 @@
 //						scheduleScope.addItemAt(_init1,0);
 					if(!scheduleScope.contains({data:'0',label:'学校日程'}))
 						scheduleScope.addItemAt({data:'0',label:'学校日程'},0);	
-					
+					//Alert.show(scheduleScope.length+"c");
 				}
 //				var dataString:String="";
 //				for(var i:int=0;i<scheduleScope.length-1;i++){
@@ -302,7 +303,7 @@
 					scheduelDepartmentId=scheduleScope;
 					scheduelType="1";
 				}
-				//Alert.show("aaaaaaaaa");
+				Alert.show("aaaaaaaaa");
 				scheduleServiceRO.getSchedulesByConditions(null,scheduelType,scheduleState,scheduelDepartmentShare,scheduelDepartmentId,scheduelSchoolShare,scheduelEmergence,scheduelTitle,scheduleBeginDate,scheduleEndDate);
 			}
 			private var window:WlzxLockWin=null;
