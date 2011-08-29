@@ -173,6 +173,7 @@
 						currentUserFirstLevelDepartment.addItem( {data:leaderDepartment2FirstLevel.id, label:leaderDepartment2FirstLevel.name});
 						currentUserDepartment.addItem( {data:department.id, label:department.name});
 					}
+					//Alert.show(currentUserDepartment.length+"ab");
 				}
 //				Alert.show(event.result.name);
 				callLater(function():void{
