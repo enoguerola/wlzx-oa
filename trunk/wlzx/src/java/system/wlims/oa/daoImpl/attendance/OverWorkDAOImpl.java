@@ -88,7 +88,8 @@ public class OverWorkDAOImpl  extends BaseDAOImpl<OverWorkForm> implements OverW
 				}
 				if(flag==true){
 					result.add(form);
-					break;
+					//break;
+					continue;
 				}
 			}
 			return result;
