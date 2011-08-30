@@ -142,7 +142,7 @@
 	
 	
 	<welcome-file-list>
-		<welcome-file>login.html</welcome-file>
+		<welcome-file>home.html</welcome-file>
 	</welcome-file-list>
 	<error-page> 
 		<error-code>404</error-code> 

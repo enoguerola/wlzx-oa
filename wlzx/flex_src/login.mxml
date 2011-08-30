@@ -34,10 +34,10 @@
 			         { 
 //						Alert.show(e.toString());
 						 var result:String=event.result as String;
-						// Alert.show(result);
+						 //Alert.show(result+"");
 						 if(result=="success")
 							 ExternalInterface.call("function() {" +
-								 "window.location.href='home.html?time="+new Date()+"';" +
+								 "window.location.href='home.html';" +
 	//							 "window.open('home.html','FullWnd','fullscreen,scrollbars=no');" +
 	//							 "this.parent.opener=null;" +
 	//							 "this.parent.close();" +

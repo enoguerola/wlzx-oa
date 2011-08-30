@@ -49,6 +49,7 @@ public class UserModel  extends BaseModel implements UserDetails{
 	private Boolean active;
 	private RoleModel mainRole=new RoleModel();//主要角色
 	private DepartmentModel mainDepartment=new DepartmentModel();//主要部门
+	private Set<DataAccessModeModel> authorizations=new TreeSet<DataAccessModeModel>();//辅助
 	public String getPwd() {
 		return pwd;
 	}
@@ -303,6 +304,12 @@ public class UserModel  extends BaseModel implements UserDetails{
 		if(getMainRole()!=null)
 			this.mainDepartment=getMainRole().getBelongDepartment();
 		else this.mainDepartment = mainDepartment;
+	}
+	public Set<DataAccessModeModel> getAuthorizations() {
+		return authorizations;
+	}
+	public void setAuthorizations(Set<DataAccessModeModel> authorizations) {
+		this.authorizations = authorizations;
 	}
 	
 

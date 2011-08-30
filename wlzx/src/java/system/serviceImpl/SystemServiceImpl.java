@@ -125,7 +125,7 @@ public class SystemServiceImpl implements SystemService{
 				}
 			}
 		}
-		
+		user.setAuthorizations(dams);
 		return  dams;
 	}
 	//获得当前登录用户某系统权限集
@@ -546,6 +546,7 @@ public class SystemServiceImpl implements SystemService{
 		newDepartment.setDetail(department.getDetail());
 		newDepartment.setName(department.getName());
 		newDepartment.setSequence(department.getSequence());
+		newDepartment.setLevel(department.getLevel());
 		departmentDAO.saveOrUpdate(newDepartment);
 		//更新部门主管信息
 		RoleModel role=newDepartment.getSupervisorRole();

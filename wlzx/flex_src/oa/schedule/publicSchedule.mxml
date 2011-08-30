@@ -92,7 +92,7 @@
 				visibleDateRange = new DateRange(startRange, endRange);
 				fromDateChooser.text=CommonUtils.formatDate(startRange,"YYYY-MM-DD");
 				toDateChooser.text=CommonUtils.formatDate(endRange,"YYYY-MM-DD");
-			//	systemServiceRO.getDepartmentBySymbol("root");//初始化部门数据字典
+			//	systemServiceRO.getDepartmentBySymbol("root");///初始化部门数据字典
 
 				fromDateChooser.addEventListener(CalendarLayoutChangeEvent.CHANGE, updateRange);
 				toDateChooser.addEventListener(CalendarLayoutChangeEvent.CHANGE, updateRange);
@@ -107,7 +107,9 @@
 //				scheduleScope.addItemAt(_init1,0);
 				scheduleScope=ArrayCollection(parentApplication.currentUserDepartment);
 				//var _init2:Object = ;
+				//Alert.show(parentApplication.currentUser.hasDam('public_schedule_main@defaultVisit@@notSchoolFilter@'));
 				if(parentApplication.currentUser.hasDam('public_schedule_main@defaultVisit@@notSchoolFilter@')){
+					//Alert.show(scheduleScope.length+"b");
 					if(!scheduleScope.contains({data:'0',label:'学校日程'}))
 						scheduleScope.addItemAt({data:'0',label:'学校日程'},0);	
 					//Alert.show(scheduleScope.length+"a");

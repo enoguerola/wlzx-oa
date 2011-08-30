@@ -34,7 +34,7 @@
 				noticeScope.text="部门公告";
 				if(parentApplication.currentUser.hasDam("department_notice_read_main@defaultVisit@@departmentFilter@")){
 					//Alert.show("aaaaa");
-					var temp:ArrayCollection=ArrayCollection(parentApplication.currentUserDepartment);
+					var temp:ArrayCollection=ArrayCollection(parentApplication.currentUserFirstLevelDepartment);
 					var dataString:String="";
 					for(var i:int=0;i<temp.length-1;i++){
 						dataString+=temp.getItemAt(i).data+",";
@@ -44,7 +44,7 @@
 					departments.dataProvider=temp;
 				}
 				if(parentApplication.currentUser.hasDam("department_notice_read_main@defaultVisit@@noFilter@")){
-					var temp:ArrayCollection=ArrayCollection(parentApplication.allDepartment);
+					var temp:ArrayCollection=ArrayCollection(parentApplication.allFirstLevelDepartment);
 					temp.addItemAt({data:null, label:"全部"},0);
 					departments.dataProvider=temp;
 				}

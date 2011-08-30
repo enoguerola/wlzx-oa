@@ -40,7 +40,7 @@
 		<set name="subordinates" lazy="false"  table="wlzx_system_role_leadship" cascade="all">
 			<cache usage="read-write" />
 			<key column="leader_id" not-null="true" />
-			<many-to-many not-found="ignore"  column="subordinate_id"  class="system.entity.RoleModel" /> 
+			<many-to-many not-found="ignore"  column="subordinate_id"  class="system.entity.RoleModel" order-by="sequence asc"/> 
 		</set>
 		<set name="leaders" lazy="false"  table="wlzx_system_role_leadship">
 			<cache usage="read-write" />
