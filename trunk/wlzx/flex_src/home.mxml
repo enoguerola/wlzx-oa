@@ -63,6 +63,7 @@
 			public var lastLoginTime:String;
 			public var currentUser:UserModel;
 			public var allTeacherAcccounts:ArrayCollection = new ArrayCollection();
+			public var allFirstLevelDepartment:ArrayCollection = new ArrayCollection();
 			public var allDepartment:ArrayCollection = new ArrayCollection();
 			public var allRole:ArrayCollection = new ArrayCollection();
 			public var allPlace:ArrayCollection = new ArrayCollection();
@@ -211,6 +212,12 @@
 			private function getDepartmentBySymbolResult(event:ResultEvent):void {
 				var _department:DepartmentModel = event.result as DepartmentModel;
 				buildSubDepartments(_department,allDepartment,0);
+				var list:ArrayCollection = ArrayCollection(_department.subordinates);	
+				for (var i:int = 0; i < list.length; i++){
+					var _de:DepartmentModel = list.getItemAt(i) as DepartmentModel;	
+					if(_de.level==1)
+					allFirstLevelDepartment.addItem( {data:_de.id, label:_de.name});
+				}
 			}
 			
 			private function buildSubDepartments(department:DepartmentModel,resultList:ArrayCollection,depth:int):void{

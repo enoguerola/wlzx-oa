@@ -23,6 +23,7 @@ package system.entity
 		public var departments:Object=new Array();//所属部门集
 		public var mainRole:RoleModel;//角色集
 		public var mainDepartment:DepartmentModel;//角色集
+		public var authorizations:Object=new Array();////辅助
 		public function UserModel()
 		{
 			super();
@@ -66,15 +67,22 @@ package system.entity
 		}
 		public function getAllDams():Array
 		{	
+//			var damList:Array = new Array();
+//			var roleList:ArrayCollection = ArrayCollection(roles);
+//			if(mainRole!=null)roleList.addItem(mainRole);
+//			for (var i:int = 0; i < roleList.length; i++){
+//				var _role:Object = roleList.getItemAt(i);	
+//				for (var j:int = 0; j < _role.dataAccessModes.length; j++){
+//					var _dam:Object = _role.dataAccessModes.getItemAt(j);	
+//					damList.push(_dam.symbol);
+//				}
+//			}
+//			return damList;
 			var damList:Array = new Array();
-			var roleList:ArrayCollection = ArrayCollection(roles);
-			if(mainRole!=null)roleList.addItem(mainRole);
-			for (var i:int = 0; i < roleList.length; i++){
-				var _role:Object = roleList.getItemAt(i);	
-				for (var j:int = 0; j < _role.dataAccessModes.length; j++){
-					var _dam:Object = _role.dataAccessModes.getItemAt(j);	
-					damList.push(_dam.symbol);
-				}
+			var auths:ArrayCollection = ArrayCollection(authorizations);
+			for (var j:int = 0; j < auths.length; j++){
+				var _dam:Object = auths.getItemAt(j);	
+				damList.push(_dam.symbol);
 			}
 			return damList;
 		}
