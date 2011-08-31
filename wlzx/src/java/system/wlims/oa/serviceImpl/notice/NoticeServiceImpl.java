@@ -218,7 +218,7 @@ public class NoticeServiceImpl implements NoticeService {
 		criteria.add(Restrictions.eq("scope", NoticeModel.EScope.Department.getValue()));
 		criteria.add(Restrictions.eq("status", NoticeModel.EStatus.Published.getValue()));
 		if(StringUtils.isNotEmpty(departments))
-			criteria.add(Restrictions.sqlRestriction("post_department_id in("+departments+")"));
+			criteria.add(Restrictions.sqlRestriction("post_department_id in('"+departments+"')"));
 		criteria.addOrder(Order.desc("postTime"));
 
 //		if(!SecurityUserHolder.isSuperRootUser()){

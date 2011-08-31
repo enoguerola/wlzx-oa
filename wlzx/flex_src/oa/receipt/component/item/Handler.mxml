@@ -81,18 +81,18 @@
 				return true;
 			}
 			
-			protected function edit(id:String):void
+			protected function edit(receiptId:String,receiptFlowId:String):void
 			{
 				// TODO Auto-generated method stub
-				var parent:Object = ((Object)(this.parentDocument)).parentDocument;
-				parent.add(this.data.id);
+				var parent:Object = ((Object)(this.parentDocument)).parentDocument.parentDocument;
+				parent.add(receiptId,receiptFlowId);
 			}
 
 		]]>
 	</fx:Script>
 	<s:HGroup horizontalAlign="center" verticalAlign="middle" width="100%" height="100%" id="hgroup">
 		<!--<mx:LinkButton click="remove()" id="remove_button" label="删除"/>-->
-		<mx:LinkButton click="edit(data.id)" id="edit_button" label="编辑" enabled="{data.status == 0}"/>
+		<mx:LinkButton click="edit(data.receiptId,data.receiptFlowId)" id="edit_button" label="编辑" enabled="{data.status == 0}"/>
 		<mx:LinkButton click="register()" id="register_button" label="登记" enabled="{data.status == 0}"></mx:LinkButton>
 	</s:HGroup>
 </s:MXDataGridItemRenderer>

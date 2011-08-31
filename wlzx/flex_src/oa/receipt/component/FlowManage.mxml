@@ -116,8 +116,9 @@
 //			}
 			protected function addNextWorkFlows_resultHandler(event:ResultEvent):void
 			{
-				var parent:Object = (Object)(this.parentDocument);
-				parent.search();
+//				var parent:Object = (Object)(this.owner);
+//				Alert.show(parent+"aaaaaaaaa");
+//				parent.search();
 				PopUpManager.removePopUp(this);
 				//this.parentApplication.popWin=null;
 			}

@@ -33,7 +33,7 @@
 			//addTab for Detail
 			public function add(receiptId:String,receiptFlowId:String):void
 			{
-				
+				Alert.show(receiptId+"---");
 			}
 			
 			public function search():void

@@ -14,8 +14,10 @@
 			import mx.rpc.events.ResultEvent;
 			import mx.validators.Validator;
 			import oa.entity.AttachmentModel;
+			import mx.events.CloseEvent;
 			//import oa.entity.receipt.FileAttachmentModel;
-			
+			public var flowId:String=null;
+			public var receiptId:String=null;
 			private var validatorArr:Array = new Array();
 			
 			private var isMove:Boolean = false;
@@ -25,9 +27,13 @@
 			{
 				this.currentState = "text_body";
 				var parms:String=((Object)(this.owner)).id;
-				if(parms != null && parms!="" && parms!= "null"){
+				//Alert.show(parms);
+				if(parms != null && parms!="" && parms!= "null;null"){
 					//编辑
-					receiptServiceRO.get(parms);
+					receiptId=parms.split(";")[0];
+					flowId=parms.split(";")[1];
+					button_register.enabled=true;
+					receiptServiceRO.get(receiptId);
 				}else{
 					//新增
 					receipt = new ReceiptModel();
@@ -65,6 +71,31 @@
 			
 			}*/
 			
+			public function register():void{
+				Alert.show("收文登记完毕确认?", "确定" ,Alert.YES | Alert.NO,null,function(event:CloseEvent):void{
+					//						if(event.detail == Alert.YES)
+					//						{
+//					var parent:Object = this.parentDocument as Object;
+//					var content1:String=parent.content==null?null:parent.content.text;
+					//Alert.show(state+"a");
+					[binary]
+					var id:String=flowId;
+					//Alert.show(id+"bbb");
+
+					receiptServiceRO.finishWorkFlow(id,"1","登记收文");
+					//						}
+				});
+			
+			
+			}
+			private function finishWorkFlow_resultHandler(event:ResultEvent):void
+			{
+				if(event.result==true){
+					Alert.show("登记成功");
+					//					this.currentState='list';
+					//					search();
+				}
+			}
 			public function save(type:int):void
 			{
 				
@@ -125,8 +156,7 @@
 				//Alert.show(receipt.id+"a");
 				if(validateRegister()){
 					//Alert.show(receipt.id);
-					var parms:String=((Object)(this.owner)).id;
-					if(parms != null && parms!="" && parms!= "null"){
+					if(receiptId!=null){
 						//编辑
 						//							Alert.show(receipt_upload.upload.addIds+"cccccc");
 						//							Alert.show(receipt_upload.upload.removeIds+"dddddd");
@@ -317,6 +347,13 @@
 					//					documentMaintain.sendingFile=event.result as SendingFileModel;
 					//					//Alert.show(documentMaintain.sendingFile.fileFlows.length+"");
 					//					documentMaintain.flowId=documentMaintain.sendingFile.getFirstDraftStepFlowId();
+					receipt=event.result as ReceiptModel;
+					//Alert.show(documentMaintain.sendingFile.fileFlows.length+"");
+					this.flowId=receipt.getFirstDraftStepFlowId();
+					this.receiptId=receipt.id;
+					//Alert.show("添加成功");
+					button_register.enabled=true;
+				//	search();
 					Alert.show("添加成功");
 					//search();
 				}
@@ -390,7 +427,7 @@
 			<mx:Label text="|"/>
 			<mx:LinkButton  id="button_save" label="保存" icon="@Embed(source='../WebContent/resources/common/tools/button_draftSave_icon.png')" click="save(1)"/>
 			<mx:Label text="|"/>
-			<mx:LinkButton id="button_register" label="登记" icon="@Embed(source='../WebContent/resources/common/tools/button_save_icon.png')" click="save(2)"/>
+			<mx:LinkButton id="button_register" label="登记" icon="@Embed(source='../WebContent/resources/common/tools/button_save_icon.png')"  click="register();"  enabled="false"/>
 			<mx:Label text="|"/>
 			<mx:LinkButton  label="返回" icon="@Embed(source='../WebContent/resources/common/tools/button_back_icon.png')" click="back()"/>
 			<mx:Label text="|"/>
