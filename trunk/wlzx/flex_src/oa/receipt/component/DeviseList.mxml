@@ -14,7 +14,9 @@
 			
 			override public function add(receiptId:String,receiptFlowId:String):void
 			{
+				//Alert.show(receiptId+"--");
 				var parent:Object=(Object)(((Object)(this.owner)).parentDocument);
+				//Alert.show(parent+"--");
 				parent.addTab("devise_receipt" + receiptId,"拟办详细",parent.nav,"oa/receipt/deviseDetail.swf",null,receiptId+";"+receiptFlowId);
 			}
 			

@@ -72,8 +72,8 @@
 			{
 				var parent:Object = this.parentDocument as Object;
 				var receiptFlowId:String=parent.receiptFlowId;
-				Alert.show(receiptFlowId+"aa");
-				Alert.show(isCompleted+"&&");
+//				Alert.show(receiptFlowId+"aa");
+//				Alert.show(isCompleted+"&&");
 				finishWorkFlow(receiptFlowId,isCompleted);
 				
 			}

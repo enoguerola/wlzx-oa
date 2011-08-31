@@ -74,9 +74,7 @@
 						//Alert.show(receipt.fileFlows.length+"aaaa");
 						if(flow.type==receipt.status&&flow.user==parentApplication.currentUser.id){
 							//Alert.show(flow.isCompleted);
-							var vbox:VBox=new VBox();
-							
-							
+							var vbox:VBox=new VBox();vbox.setStyle("backgroundColor","white");							
 							var item1:TextArea=new TextArea();
 							item1.enabled=true;
 							item1.text=flow.text;
@@ -91,7 +89,7 @@
 							
 							receipt_file.deviseArea.addChild(vbox);
 						}else{
-							var vbox:VBox=new VBox();
+							var vbox:VBox=new VBox();vbox.setStyle("backgroundColor","white");
 							var item2:Text=new Text();
 							item2.text=flow.text;
 							item2.enabled=false;
@@ -102,7 +100,7 @@
 						}
 					}else if(flow.type==4){
 						if(flow.type==receipt.status&&flow.user==parentApplication.currentUser.id){
-							var vbox:VBox=new VBox();
+							var vbox:VBox=new VBox();vbox.setStyle("backgroundColor","white");
 							
 							
 							var item1:TextArea=new TextArea();
@@ -120,7 +118,7 @@
 							
 							
 						}else{
-							var vbox:VBox=new VBox();
+							var vbox:VBox=new VBox();vbox.setStyle("backgroundColor","white");
 							var item2:Text=new Text();
 							item2.text=flow.text;
 							item2.enabled=false;
@@ -132,7 +130,7 @@
 					}
 					else if(flow.type==6){
 						if(flow.type==receipt.status&&flow.user==parentApplication.currentUser.id){
-							var vbox:VBox=new VBox();
+							var vbox:VBox=new VBox();vbox.setStyle("backgroundColor","white");
 							
 							
 							var item1:TextArea=new TextArea();
@@ -149,7 +147,7 @@
 							
 							
 						}else{
-							var vbox:VBox=new VBox();
+							var vbox:VBox=new VBox();vbox.setStyle("backgroundColor","white");
 							var item2:Text=new Text();
 							item2.text=flow.text;
 							item2.enabled=false;
