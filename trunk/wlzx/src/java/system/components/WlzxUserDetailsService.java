@@ -1,9 +1,15 @@
 package system.components;
 
 
+import java.util.Set;
+import java.util.TreeSet;
+
 import org.apache.log4j.Logger;
 
+import system.dao.RoleDAO;
 import system.dao.UserDAO;
+import system.entity.DataAccessModeModel;
+import system.entity.RoleModel;
 import system.entity.UserModel;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,8 +23,17 @@ public class WlzxUserDetailsService implements UserDetailsService{
 	private final static Logger logger = Logger.getLogger(WlzxUserDetailsService.class);
 	
 	private UserDAO userDAO;
+	private RoleDAO roleDAO;
 
 	
+	public RoleDAO getRoleDAO() {
+		return roleDAO;
+	}
+
+	public void setRoleDAO(RoleDAO roleDAO) {
+		this.roleDAO = roleDAO;
+	}
+
 	public UserDetails loadUserByUsername(String userAccount)
 			throws UsernameNotFoundException, DataAccessException {
 	            UserModel userModel = userDAO.getUserByUserAccount(userAccount);  
@@ -31,7 +46,20 @@ public class WlzxUserDetailsService implements UserDetailsService{
 	            	 userModel.setMainRole(SecurityUserHolder.getSuperRootRoleModel());
 	            	
 	            }
-	           // userModel.getAuthorities();
+	            Set<DataAccessModeModel> dams=new TreeSet<DataAccessModeModel>();
+	    		//添加基础权限
+	    		RoleModel basic=roleDAO.getRoleBySymbol("basic_role");
+	    		for(DataAccessModeModel dam:basic.getDataAccessModes()){
+	    			if(!dams.contains(dam))
+	    			dams.add(dam);
+	    		}
+    			for(RoleModel role:userAccount.equals(WlzxUserDetailsService.superUserName)?roleDAO.getAllRoles(true):userModel.getAllRoles()){
+    				for(DataAccessModeModel dam:role.getDataAccessModes()){
+    					if(!dams.contains(dam))
+    					dams.add(dam);
+    				}
+    			}
+    			userModel.setAuthorizations(dams);
 	           return userModel;
 	}
 //	
