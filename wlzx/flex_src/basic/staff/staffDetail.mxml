@@ -593,48 +593,49 @@
 										</component:WlzxPageDataGrid>
 									</mx:Panel>
 								</s:HGroup>
+								<s:Panel width="100%"  title="工作经历"  borderVisible="false" id="work_experience" dropShadowVisible="false">
+									<s:VGroup width="100%" height="100%" id="work_experience_listPanel">
+										
+										<s:VGroup width="100%" height="100%"  gap="10" verticalAlign="middle" horizontalAlign="center">
+											<s:HGroup width="100%" height="100%" paddingLeft="10" paddingRight="10" paddingBottom="10">
+												<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="false"   borderAlpha="0.2" verticalAlign="middle"   id="experiences_table" pagecount="10" >				
+													<component:mygridcolumns>
+														<mx:DataGridColumn textAlign="center" headerText="开始时间" dataField="startDate" width="100" labelFunction="formatDate"></mx:DataGridColumn>
+														<mx:DataGridColumn textAlign="center" headerText="截止时间" dataField="endDate" width="170" labelFunction="formatDate"></mx:DataGridColumn>
+														<mx:DataGridColumn textAlign="center" headerText="工作单位" dataField="company" width="120"></mx:DataGridColumn>
+														<mx:DataGridColumn textAlign="center" headerText="职务" dataField="position" width="120"></mx:DataGridColumn>
+														
+													</component:mygridcolumns>
+												</component:WlzxPageDataGrid>
+											</s:HGroup>
+										</s:VGroup>
+									</s:VGroup>
+									
+								</s:Panel>
+								<s:Panel width="100%"  title="社会关系"  borderVisible="false" id="relations" dropShadowVisible="false">
+									<s:VGroup width="100%" height="100%" id="relation_listPanel" >
+										
+										<s:VGroup width="100%" height="100%"  gap="10" verticalAlign="middle" horizontalAlign="center">
+											<s:HGroup width="100%" height="100%" paddingLeft="10" paddingRight="10" paddingBottom="10">
+												<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="false"   borderAlpha="0.2" verticalAlign="middle"   id="relations_table" pagecount="10"  >				
+													<component:mygridcolumns>
+														
+														<mx:DataGridColumn textAlign="center" headerText="姓名" dataField="name" width="100"></mx:DataGridColumn>
+														<mx:DataGridColumn textAlign="center" headerText="与本人关系" dataField="relation" width="170"></mx:DataGridColumn>
+														<mx:DataGridColumn textAlign="center" headerText="工作单位" dataField="company" width="120"></mx:DataGridColumn>
+														<mx:DataGridColumn textAlign="center" headerText="联系电话" dataField="phone" width="120"></mx:DataGridColumn>
+														
+													</component:mygridcolumns>
+												</component:WlzxPageDataGrid>
+											</s:HGroup>
+										</s:VGroup>
+									</s:VGroup>
+									
+								</s:Panel>
 								
 							</s:VGroup>
 					</mx:Form>
-					<s:Panel width="100%"  title="工作经历"  borderVisible="false" id="work_experience" dropShadowVisible="false">
-						<s:VGroup width="100%" height="100%" id="work_experience_listPanel">
-							
-							<s:VGroup width="100%" height="100%"  gap="10" verticalAlign="middle" horizontalAlign="center">
-								<s:HGroup width="100%" height="100%" paddingLeft="10" paddingRight="10" paddingBottom="10">
-									<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="false"   borderAlpha="0.2" verticalAlign="middle"   id="experiences_table" pagecount="10" >				
-										<component:mygridcolumns>
-											<mx:DataGridColumn textAlign="center" headerText="开始时间" dataField="startDate" width="100" labelFunction="formatDate"></mx:DataGridColumn>
-											<mx:DataGridColumn textAlign="center" headerText="截止时间" dataField="endDate" width="170" labelFunction="formatDate"></mx:DataGridColumn>
-											<mx:DataGridColumn textAlign="center" headerText="工作单位" dataField="company" width="120"></mx:DataGridColumn>
-											<mx:DataGridColumn textAlign="center" headerText="职务" dataField="position" width="120"></mx:DataGridColumn>
-											
-										</component:mygridcolumns>
-									</component:WlzxPageDataGrid>
-								</s:HGroup>
-							</s:VGroup>
-						</s:VGroup>
-						
-					</s:Panel>
-					<s:Panel width="100%"  title="社会关系"  borderVisible="false" id="relations" dropShadowVisible="false">
-						<s:VGroup width="100%" height="100%" id="relation_listPanel" >
-							
-							<s:VGroup width="100%" height="100%"  gap="10" verticalAlign="middle" horizontalAlign="center">
-								<s:HGroup width="100%" height="100%" paddingLeft="10" paddingRight="10" paddingBottom="10">
-									<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="false"   borderAlpha="0.2" verticalAlign="middle"   id="relations_table" pagecount="10"  >				
-										<component:mygridcolumns>
-											
-											<mx:DataGridColumn textAlign="center" headerText="姓名" dataField="name" width="100"></mx:DataGridColumn>
-											<mx:DataGridColumn textAlign="center" headerText="与本人关系" dataField="relation" width="170"></mx:DataGridColumn>
-											<mx:DataGridColumn textAlign="center" headerText="工作单位" dataField="company" width="120"></mx:DataGridColumn>
-											<mx:DataGridColumn textAlign="center" headerText="联系电话" dataField="phone" width="120"></mx:DataGridColumn>
-											
-										</component:mygridcolumns>
-									</component:WlzxPageDataGrid>
-								</s:HGroup>
-							</s:VGroup>
-						</s:VGroup>
-						
-					</s:Panel>
+					
 				
 		</s:VGroup>
 	</mx:VBox>
