@@ -1,31 +1,18 @@
--- phpMyAdmin SQL Dump
--- version 3.3.3
--- http://www.phpmyadmin.net
---
--- 主机: localhost
--- 生成日期: 2011 年 08 月 29 日 23:43
--- 服务器版本: 5.0.91
--- PHP 版本: 5.2.13
+/*
+MySQL Data Transfer
+Source Host: localhost
+Source Database: wlzx_oa
+Target Host: localhost
+Target Database: wlzx_oa
+Date: 2011-8-31 1:21:07
+*/
 
-SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
-
---
--- 数据库: `wlzx_oa`
---
-
--- --------------------------------------------------------
-
---
--- 表的结构 `wlzx_oa_attachment`
---
-
-CREATE TABLE IF NOT EXISTS `wlzx_oa_attachment` (
+SET FOREIGN_KEY_CHECKS=0;
+-- ----------------------------
+-- Table structure for wlzx_oa_attachment
+-- ----------------------------
+DROP TABLE IF EXISTS `wlzx_oa_attachment`;
+CREATE TABLE `wlzx_oa_attachment` (
   `id` bigint(20) NOT NULL auto_increment,
   `name` varchar(100) NOT NULL,
   `path` varchar(100) NOT NULL,
@@ -33,51 +20,13 @@ CREATE TABLE IF NOT EXISTS `wlzx_oa_attachment` (
   `size` bigint(20) NOT NULL,
   `upload_date` datetime default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=31 ;
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8;
 
---
--- 转存表中的数据 `wlzx_oa_attachment`
---
-
-INSERT INTO `wlzx_oa_attachment` (`id`, `name`, `path`, `type`, `size`, `upload_date`) VALUES
-(1, 'task-2011-0725.doc', '110812095154.doc', 'doc', 37376, '2011-08-12 09:51:54'),
-(2, '学鼎需求用例.doc', '110812095154.doc', 'doc', 360448, '2011-08-12 09:51:54'),
-(3, '温岭行政结构_权限配置_通知方案.doc', 'attach_110812100228.doc', 'doc', 101376, '2011-08-12 10:02:28'),
-(4, '温岭行政结构_权限配置-首页.doc', 'attach_110812100228.doc', 'doc', 146432, '2011-08-12 10:02:28'),
-(5, '项目规划.doc', 'attach_110812100228.doc', 'doc', 21504, '2011-08-12 10:02:28'),
-(6, '杭州池墨科技有限公司_股份制度.pdf', 'attach_110812115546.pdf', 'pdf', 136560, '2011-08-12 11:55:46'),
-(7, '环境信息系统设计方案-20110615.pdf', 'attach_110812115546.pdf', 'pdf', 832565, '2011-08-12 11:55:46'),
-(8, '火车票预订系统需求分析及设计_V1.3.doc', 'attach_110812115546.3.doc', '3.doc', 940544, '2011-08-12 11:55:46'),
-(9, '上海动量软件技术有限公司介绍.pdf', 'attach_110812115546.pdf', 'pdf', 1810266, '2011-08-12 11:55:46'),
-(10, '通达OA教育管理解决方案.pdf', 'attach_110812115547.pdf', 'pdf', 1280730, '2011-08-12 11:55:47'),
-(11, '温岭OA系统BUG管理表.xls', 'attach_110812115548.xls', 'xls', 4714496, '2011-08-12 11:55:48'),
-(12, '温岭行政结构_权限配置_0803.doc', 'attach_110812115548.doc', 'doc', 147968, '2011-08-12 11:55:48'),
-(13, '温岭行政结构_权限配置_通知方案.doc', 'attach_110812115548.doc', 'doc', 101376, '2011-08-12 11:55:48'),
-(14, '温岭行政结构_权限配置-首页.doc', 'attach_110812115549.doc', 'doc', 146432, '2011-08-12 11:55:49'),
-(15, '项目规划.doc', 'attach_110812115549.doc', 'doc', 21504, '2011-08-12 11:55:49'),
-(16, '项目章程.doc', 'attach_110812115550.doc', 'doc', 23552, '2011-08-12 11:55:50'),
-(17, '需求用例模板.doc', 'attach_110812115550.doc', 'doc', 50176, '2011-08-12 11:55:50'),
-(18, 'slogan_bg.jpg', 'attach_110827100357.jpg', 'jpg', 92643, '2011-08-27 22:03:57'),
-(19, 'slogan_bg.png', 'attach_110827100357.png', 'png', 196571, '2011-08-27 22:03:57'),
-(20, 'structure .png', 'attach_110827100357.png', 'png', 132249, '2011-08-27 22:03:57'),
-(21, '2.jpg', 'attach_110827104931.jpg', 'jpg', 44379, '2011-08-27 22:49:31'),
-(22, 'slogan_bg.jpg', 'attach_110827115947.jpg', 'jpg', 92643, '2011-08-27 23:59:47'),
-(23, 'slogan_bg.png', 'attach_110827115948.png', 'png', 196571, '2011-08-27 23:59:48'),
-(24, 'structure .png', 'attach_110827115948.png', 'png', 132249, '2011-08-27 23:59:48'),
-(25, 'slogan_bg.jpg', 'attach_110828122306.jpg', 'jpg', 92643, '2011-08-28 00:23:06'),
-(26, 'slogan_bg.png', 'attach_110828122307.png', 'png', 196571, '2011-08-28 00:23:07'),
-(27, 'structure .png', 'attach_110828122307.png', 'png', 132249, '2011-08-28 00:23:07'),
-(28, '2.jpg', 'attach_110828122914.jpg', 'jpg', 44379, '2011-08-28 00:29:14'),
-(29, 'slogan_bg.png', 'attach_110829091421.png', 'png', 196571, '2011-08-29 09:14:21'),
-(30, 'structure .png', 'attach_110829091422.png', 'png', 132249, '2011-08-29 09:14:22');
-
--- --------------------------------------------------------
-
---
--- 表的结构 `wlzx_oa_conference`
---
-
-CREATE TABLE IF NOT EXISTS `wlzx_oa_conference` (
+-- ----------------------------
+-- Table structure for wlzx_oa_conference
+-- ----------------------------
+DROP TABLE IF EXISTS `wlzx_oa_conference`;
+CREATE TABLE `wlzx_oa_conference` (
   `id` bigint(20) NOT NULL auto_increment,
   `name` varchar(200) NOT NULL,
   `date` date NOT NULL,
@@ -95,56 +44,35 @@ CREATE TABLE IF NOT EXISTS `wlzx_oa_conference` (
   `apply_time` datetime NOT NULL,
   `apply_status` smallint(6) default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- 转存表中的数据 `wlzx_oa_conference`
---
-
-
--- --------------------------------------------------------
-
---
--- 表的结构 `wlzx_oa_conference_attachment_relationship`
---
-
-CREATE TABLE IF NOT EXISTS `wlzx_oa_conference_attachment_relationship` (
+-- ----------------------------
+-- Table structure for wlzx_oa_conference_attachment_relationship
+-- ----------------------------
+DROP TABLE IF EXISTS `wlzx_oa_conference_attachment_relationship`;
+CREATE TABLE `wlzx_oa_conference_attachment_relationship` (
   `id` bigint(20) NOT NULL auto_increment,
   `conference_id` bigint(20) NOT NULL,
   `attachment_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- 转存表中的数据 `wlzx_oa_conference_attachment_relationship`
---
-
-
--- --------------------------------------------------------
-
---
--- 表的结构 `wlzx_oa_conference_summary_attachment_relationship`
---
-
-CREATE TABLE IF NOT EXISTS `wlzx_oa_conference_summary_attachment_relationship` (
+-- ----------------------------
+-- Table structure for wlzx_oa_conference_summary_attachment_relationship
+-- ----------------------------
+DROP TABLE IF EXISTS `wlzx_oa_conference_summary_attachment_relationship`;
+CREATE TABLE `wlzx_oa_conference_summary_attachment_relationship` (
   `id` bigint(20) NOT NULL auto_increment,
   `conference_id` bigint(20) NOT NULL,
   `attachment_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- 转存表中的数据 `wlzx_oa_conference_summary_attachment_relationship`
---
-
-
--- --------------------------------------------------------
-
---
--- 表的结构 `wlzx_oa_course_adjust_apply`
---
-
-CREATE TABLE IF NOT EXISTS `wlzx_oa_course_adjust_apply` (
+-- ----------------------------
+-- Table structure for wlzx_oa_course_adjust_apply
+-- ----------------------------
+DROP TABLE IF EXISTS `wlzx_oa_course_adjust_apply`;
+CREATE TABLE `wlzx_oa_course_adjust_apply` (
   `id` bigint(20) NOT NULL auto_increment,
   `apply_no` varchar(200) NOT NULL,
   `apply_type` int(11) NOT NULL default '0',
@@ -156,20 +84,13 @@ CREATE TABLE IF NOT EXISTS `wlzx_oa_course_adjust_apply` (
   `approve_date` datetime default NULL,
   `apply_creation_date` datetime NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- 转存表中的数据 `wlzx_oa_course_adjust_apply`
---
-
-
--- --------------------------------------------------------
-
---
--- 表的结构 `wlzx_oa_course_adjust_apply_item`
---
-
-CREATE TABLE IF NOT EXISTS `wlzx_oa_course_adjust_apply_item` (
+-- ----------------------------
+-- Table structure for wlzx_oa_course_adjust_apply_item
+-- ----------------------------
+DROP TABLE IF EXISTS `wlzx_oa_course_adjust_apply_item`;
+CREATE TABLE `wlzx_oa_course_adjust_apply_item` (
   `id` bigint(20) NOT NULL auto_increment,
   `apply_id` bigint(20) NOT NULL,
   `apply_class` varchar(200) NOT NULL,
@@ -182,20 +103,13 @@ CREATE TABLE IF NOT EXISTS `wlzx_oa_course_adjust_apply_item` (
   `adjust_actual_time` varchar(200) default NULL,
   `adjust_actual_teacher_id` bigint(20) default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- 转存表中的数据 `wlzx_oa_course_adjust_apply_item`
---
-
-
--- --------------------------------------------------------
-
---
--- 表的结构 `wlzx_oa_moverestday_apply`
---
-
-CREATE TABLE IF NOT EXISTS `wlzx_oa_moverestday_apply` (
+-- ----------------------------
+-- Table structure for wlzx_oa_moverestday_apply
+-- ----------------------------
+DROP TABLE IF EXISTS `wlzx_oa_moverestday_apply`;
+CREATE TABLE `wlzx_oa_moverestday_apply` (
   `id` bigint(20) NOT NULL auto_increment,
   `moveRestDay_applyNo` varchar(200) NOT NULL,
   `moveRestDay_teacher_id` bigint(20) NOT NULL,
@@ -210,20 +124,13 @@ CREATE TABLE IF NOT EXISTS `wlzx_oa_moverestday_apply` (
   `moveRestDay_vicePrincipal_status` tinyint(1) default NULL,
   `moveRestDay_status` int(11) NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- 转存表中的数据 `wlzx_oa_moverestday_apply`
---
-
-
--- --------------------------------------------------------
-
---
--- 表的结构 `wlzx_oa_notice`
---
-
-CREATE TABLE IF NOT EXISTS `wlzx_oa_notice` (
+-- ----------------------------
+-- Table structure for wlzx_oa_notice
+-- ----------------------------
+DROP TABLE IF EXISTS `wlzx_oa_notice`;
+CREATE TABLE `wlzx_oa_notice` (
   `id` bigint(20) NOT NULL auto_increment,
   `scope` smallint(6) NOT NULL,
   `type` varchar(200) NOT NULL,
@@ -237,43 +144,24 @@ CREATE TABLE IF NOT EXISTS `wlzx_oa_notice` (
   `last_editor_id` bigint(20) default NULL,
   `status` smallint(6) NOT NULL COMMENT '是否发布',
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
---
--- 转存表中的数据 `wlzx_oa_notice`
---
-
-INSERT INTO `wlzx_oa_notice` (`id`, `scope`, `type`, `post_department_id`, `poster_id`, `emergence_flag`, `title`, `content`, `postTime`, `last_edit_time`, `last_editor_id`, `status`) VALUES
-(1, 1, '其他', 3, 708, 0, ' 1', ' 2', '2011-08-12 10:02:54', '2011-08-12 09:51:56', 708, 1);
-
--- --------------------------------------------------------
-
---
--- 表的结构 `wlzx_oa_notice_attachment_relationship`
---
-
-CREATE TABLE IF NOT EXISTS `wlzx_oa_notice_attachment_relationship` (
+-- ----------------------------
+-- Table structure for wlzx_oa_notice_attachment_relationship
+-- ----------------------------
+DROP TABLE IF EXISTS `wlzx_oa_notice_attachment_relationship`;
+CREATE TABLE `wlzx_oa_notice_attachment_relationship` (
   `id` bigint(20) NOT NULL auto_increment,
   `notice_id` bigint(20) NOT NULL,
   `attachment_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=21 ;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
 
---
--- 转存表中的数据 `wlzx_oa_notice_attachment_relationship`
---
-
-INSERT INTO `wlzx_oa_notice_attachment_relationship` (`id`, `notice_id`, `attachment_id`) VALUES
-(19, 2, 12),
-(20, 2, 11);
-
--- --------------------------------------------------------
-
---
--- 表的结构 `wlzx_oa_option`
---
-
-CREATE TABLE IF NOT EXISTS `wlzx_oa_option` (
+-- ----------------------------
+-- Table structure for wlzx_oa_option
+-- ----------------------------
+DROP TABLE IF EXISTS `wlzx_oa_option`;
+CREATE TABLE `wlzx_oa_option` (
   `option_id` bigint(20) NOT NULL auto_increment COMMENT '系统自增编号',
   `option_name` varchar(50) character set utf8 NOT NULL COMMENT '字典名称',
   `option_value` varchar(120) character set utf8 NOT NULL COMMENT '字典值',
@@ -282,20 +170,13 @@ CREATE TABLE IF NOT EXISTS `wlzx_oa_option` (
   `option_extra_value` varchar(30) character set utf8 default NULL COMMENT '字典额外值',
   PRIMARY KEY  (`option_id`),
   KEY `option_slug` (`option_slug`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='数据字典表' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='数据字典表';
 
---
--- 转存表中的数据 `wlzx_oa_option`
---
-
-
--- --------------------------------------------------------
-
---
--- 表的结构 `wlzx_oa_overwork_apply`
---
-
-CREATE TABLE IF NOT EXISTS `wlzx_oa_overwork_apply` (
+-- ----------------------------
+-- Table structure for wlzx_oa_overwork_apply
+-- ----------------------------
+DROP TABLE IF EXISTS `wlzx_oa_overwork_apply`;
+CREATE TABLE `wlzx_oa_overwork_apply` (
   `id` bigint(20) NOT NULL auto_increment,
   `overWork_applyNo` varchar(200) NOT NULL,
   `overWork_teacher_id` bigint(20) NOT NULL,
@@ -307,20 +188,13 @@ CREATE TABLE IF NOT EXISTS `wlzx_oa_overwork_apply` (
   `overWork_officeChief_status` smallint(6) default NULL,
   `overWork_status` int(11) NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- 转存表中的数据 `wlzx_oa_overwork_apply`
---
-
-
--- --------------------------------------------------------
-
---
--- 表的结构 `wlzx_oa_receipt`
---
-
-CREATE TABLE IF NOT EXISTS `wlzx_oa_receipt` (
+-- ----------------------------
+-- Table structure for wlzx_oa_receipt
+-- ----------------------------
+DROP TABLE IF EXISTS `wlzx_oa_receipt`;
+CREATE TABLE `wlzx_oa_receipt` (
   `id` bigint(20) NOT NULL auto_increment,
   `do_number` varchar(20) default NULL,
   `office` varchar(100) default NULL,
@@ -334,46 +208,25 @@ CREATE TABLE IF NOT EXISTS `wlzx_oa_receipt` (
   `registed_date` datetime default NULL,
   `receiver_id` bigint(20) default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
---
--- 转存表中的数据 `wlzx_oa_receipt`
---
-
-INSERT INTO `wlzx_oa_receipt` (`id`, `do_number`, `office`, `in_number`, `in_date`, `subject`, `title`, `summary`, `status`, `is_completed`, `registed_date`, `receiver_id`) VALUES
-(1, '1+1', '1', '1', '2011-08-16', '1', '我12', '222222222222', 0, 0, NULL, NULL),
-(2, '1+1', '2', '2', '2011-08-28', '222', '12', '222222', 3, 0, NULL, 708),
-(3, '2+w', 'w', 'w', '2011-08-16', 'w', 'q', 'wq', 0, 0, NULL, 708);
-
--- --------------------------------------------------------
-
---
--- 表的结构 `wlzx_oa_receipt_attachment`
---
-
-CREATE TABLE IF NOT EXISTS `wlzx_oa_receipt_attachment` (
+-- ----------------------------
+-- Table structure for wlzx_oa_receipt_attachment
+-- ----------------------------
+DROP TABLE IF EXISTS `wlzx_oa_receipt_attachment`;
+CREATE TABLE `wlzx_oa_receipt_attachment` (
   `id` bigint(20) NOT NULL auto_increment,
   `receipt_id` bigint(20) NOT NULL,
   `attachment_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `receipt_id` (`receipt_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=78 ;
+) ENGINE=InnoDB AUTO_INCREMENT=78 DEFAULT CHARSET=utf8;
 
---
--- 转存表中的数据 `wlzx_oa_receipt_attachment`
---
-
-INSERT INTO `wlzx_oa_receipt_attachment` (`id`, `receipt_id`, `attachment_id`) VALUES
-(74, 2, 29),
-(77, 1, 28);
-
--- --------------------------------------------------------
-
---
--- 表的结构 `wlzx_oa_receipt_flow`
---
-
-CREATE TABLE IF NOT EXISTS `wlzx_oa_receipt_flow` (
+-- ----------------------------
+-- Table structure for wlzx_oa_receipt_flow
+-- ----------------------------
+DROP TABLE IF EXISTS `wlzx_oa_receipt_flow`;
+CREATE TABLE `wlzx_oa_receipt_flow` (
   `id` bigint(20) NOT NULL auto_increment,
   `type` smallint(6) NOT NULL,
   `is_completed` smallint(6) default NULL,
@@ -383,23 +236,13 @@ CREATE TABLE IF NOT EXISTS `wlzx_oa_receipt_flow` (
   `completed_date` datetime default NULL,
   `creation_date` datetime NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
---
--- 转存表中的数据 `wlzx_oa_receipt_flow`
---
-
-INSERT INTO `wlzx_oa_receipt_flow` (`id`, `type`, `is_completed`, `text`, `user_id`, `receipt_id`, `completed_date`, `creation_date`) VALUES
-(1, 0, 1, '收文登记 ', 708, 2, '2011-08-29 17:16:04', '2011-08-28 01:55:15'),
-(2, 2, 1, 'bbcccccc', 708, 2, '2011-08-29 23:41:30', '2011-08-29 11:03:15');
-
--- --------------------------------------------------------
-
---
--- 表的结构 `wlzx_oa_schedule`
---
-
-CREATE TABLE IF NOT EXISTS `wlzx_oa_schedule` (
+-- ----------------------------
+-- Table structure for wlzx_oa_schedule
+-- ----------------------------
+DROP TABLE IF EXISTS `wlzx_oa_schedule`;
+CREATE TABLE `wlzx_oa_schedule` (
   `id` bigint(20) NOT NULL auto_increment,
   `title` text NOT NULL,
   `content` text,
@@ -419,22 +262,29 @@ CREATE TABLE IF NOT EXISTS `wlzx_oa_schedule` (
   `repeat_on_days` varchar(200) default NULL,
   `repeat_end_time` varchar(200) default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
---
--- 转存表中的数据 `wlzx_oa_schedule`
---
+-- ----------------------------
+-- Table structure for wlzx_oa_sendingfile_flow
+-- ----------------------------
+DROP TABLE IF EXISTS `wlzx_oa_sendingfile_flow`;
+CREATE TABLE `wlzx_oa_sendingfile_flow` (
+  `id` bigint(20) NOT NULL auto_increment,
+  `type` smallint(4) NOT NULL,
+  `is_completed` smallint(4) default NULL,
+  `text` text,
+  `user_id` bigint(20) NOT NULL,
+  `sendingfile_id` bigint(20) NOT NULL,
+  `completed_date` datetime default NULL,
+  `creation_date` datetime NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 
-INSERT INTO `wlzx_oa_schedule` (`id`, `title`, `content`, `begin_time`, `end_time`, `poster_id`, `type`, `department_share`, `school_share`, `department_id`, `emergence`, `finish_status`, `submit_status`, `repeat_status`, `repeat_type`, `repeat_interval`, `repeat_on_days`, `repeat_end_time`) VALUES
-(1, '新日程1', '333333333', '2011-08-13 11:00:27', '2011-08-13 12:00:27', 708, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, '0;0;0;0;0;0;0', NULL);
-
--- --------------------------------------------------------
-
---
--- 表的结构 `wlzx_oa_sendingfiles`
---
-
-CREATE TABLE IF NOT EXISTS `wlzx_oa_sendingfiles` (
+-- ----------------------------
+-- Table structure for wlzx_oa_sendingfiles
+-- ----------------------------
+DROP TABLE IF EXISTS `wlzx_oa_sendingfiles`;
+CREATE TABLE `wlzx_oa_sendingfiles` (
   `id` bigint(20) NOT NULL auto_increment,
   `title` varchar(500) character set utf8 default NULL COMMENT '标题',
   `content` text character set utf8 NOT NULL COMMENT '内容',
@@ -452,86 +302,24 @@ CREATE TABLE IF NOT EXISTS `wlzx_oa_sendingfiles` (
   `status` smallint(6) NOT NULL default '0',
   `is_completed` smallint(6) NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
---
--- 转存表中的数据 `wlzx_oa_sendingfiles`
---
-
-INSERT INTO `wlzx_oa_sendingfiles` (`id`, `title`, `content`, `author_id`, `creation_date`, `auspice_department`, `subject`, `main_sends`, `up_sends`, `down_sends`, `dispatch_word`, `dispatch_year`, `dispatch_number`, `dispatch_date`, `status`, `is_completed`) VALUES
-(1, '4', '<TEXTFORMAT LEADING="2"><P ALIGN="LEFT"><FONT FACE="宋体" SIZE="12" COLOR="#000000" LETTERSPACING="0" KERNING="0">1</FONT></P></TEXTFORMAT>', 708, '2011-08-12 11:06:46', '2', '3', '', '', '', '', '', '', NULL, 2, 0),
-(2, '4', '<TEXTFORMAT LEADING="2"><P ALIGN="LEFT"><FONT FACE="宋体" SIZE="12" COLOR="#000000" LETTERSPACING="0" KERNING="0">1</FONT></P></TEXTFORMAT>', 708, '2011-08-12 11:56:54', '2', '3', '', '', '', '', '', '', NULL, 0, 0),
-(3, '3', '<TEXTFORMAT LEADING="2"><P ALIGN="LEFT"><FONT FACE="宋体" SIZE="12" COLOR="#000000" LETTERSPACING="0" KERNING="0">1</FONT></P></TEXTFORMAT>', 708, '2011-08-12 12:10:07', '2', '2', '', '', '', '', '', '', NULL, 0, 0),
-(4, '4', '<TEXTFORMAT LEADING="2"><P ALIGN="LEFT"><FONT FACE="宋体" SIZE="12" COLOR="#000000" LETTERSPACING="0" KERNING="0">1</FONT></P></TEXTFORMAT>', 708, '2011-08-12 12:28:22', '2', '3', '', '', '', '', '', '', NULL, 0, 0);
-
--- --------------------------------------------------------
-
---
--- 表的结构 `wlzx_oa_sendingfiles_attachment`
---
-
-CREATE TABLE IF NOT EXISTS `wlzx_oa_sendingfiles_attachment` (
+-- ----------------------------
+-- Table structure for wlzx_oa_sendingfiles_attachment
+-- ----------------------------
+DROP TABLE IF EXISTS `wlzx_oa_sendingfiles_attachment`;
+CREATE TABLE `wlzx_oa_sendingfiles_attachment` (
   `id` bigint(20) NOT NULL auto_increment,
   `sendingfile_id` bigint(20) NOT NULL,
   `attachment_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=13 ;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
 
---
--- 转存表中的数据 `wlzx_oa_sendingfiles_attachment`
---
-
-INSERT INTO `wlzx_oa_sendingfiles_attachment` (`id`, `sendingfile_id`, `attachment_id`) VALUES
-(1, 1, 13),
-(2, 1, 12),
-(3, 1, 9),
-(4, 1, 8),
-(5, 1, 15),
-(6, 1, 11),
-(7, 1, 6),
-(8, 1, 7),
-(9, 1, 17),
-(10, 1, 10),
-(11, 1, 14),
-(12, 1, 16);
-
--- --------------------------------------------------------
-
---
--- 表的结构 `wlzx_oa_sendingfile_flow`
---
-
-CREATE TABLE IF NOT EXISTS `wlzx_oa_sendingfile_flow` (
-  `id` bigint(20) NOT NULL auto_increment,
-  `type` smallint(4) NOT NULL,
-  `is_completed` smallint(4) default NULL,
-  `text` text,
-  `user_id` bigint(20) NOT NULL,
-  `sendingfile_id` bigint(20) NOT NULL,
-  `completed_date` datetime default NULL,
-  `creation_date` datetime NOT NULL,
-  PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
-
---
--- 转存表中的数据 `wlzx_oa_sendingfile_flow`
---
-
-INSERT INTO `wlzx_oa_sendingfile_flow` (`id`, `type`, `is_completed`, `text`, `user_id`, `sendingfile_id`, `completed_date`, `creation_date`) VALUES
-(1, 0, 1, NULL, 708, 1, '2011-08-29 20:32:13', '2011-08-12 11:06:46'),
-(2, 0, NULL, '发文拟稿', 708, 2, NULL, '2011-08-12 11:56:54'),
-(3, 0, NULL, '发文拟稿', 708, 3, NULL, '2011-08-12 12:10:07'),
-(4, 0, 1, NULL, 708, 4, '2011-08-12 12:28:28', '2011-08-12 12:28:22'),
-(5, 0, NULL, '发文拟稿', 708, 4, NULL, '2011-08-29 20:30:36'),
-(6, 2, NULL, NULL, 708, 1, NULL, '2011-08-29 20:32:49');
-
--- --------------------------------------------------------
-
---
--- 表的结构 `wlzx_oa_takeleave_apply`
---
-
-CREATE TABLE IF NOT EXISTS `wlzx_oa_takeleave_apply` (
+-- ----------------------------
+-- Table structure for wlzx_oa_takeleave_apply
+-- ----------------------------
+DROP TABLE IF EXISTS `wlzx_oa_takeleave_apply`;
+CREATE TABLE `wlzx_oa_takeleave_apply` (
   `id` bigint(20) NOT NULL auto_increment,
   `takeLeave_applyNo` varchar(200) NOT NULL,
   `takeLeave_type` int(11) NOT NULL default '0',
@@ -560,20 +348,13 @@ CREATE TABLE IF NOT EXISTS `wlzx_oa_takeleave_apply` (
   `takeLeave_remark` text,
   `takeLeave_status` int(11) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- 转存表中的数据 `wlzx_oa_takeleave_apply`
---
-
-
--- --------------------------------------------------------
-
---
--- 表的结构 `wlzx_oa_takeleave_terminate`
---
-
-CREATE TABLE IF NOT EXISTS `wlzx_oa_takeleave_terminate` (
+-- ----------------------------
+-- Table structure for wlzx_oa_takeleave_terminate
+-- ----------------------------
+DROP TABLE IF EXISTS `wlzx_oa_takeleave_terminate`;
+CREATE TABLE `wlzx_oa_takeleave_terminate` (
   `id` bigint(20) NOT NULL auto_increment,
   `terminate_dateTime` varchar(200) NOT NULL,
   `terminate_reason` text,
@@ -584,20 +365,13 @@ CREATE TABLE IF NOT EXISTS `wlzx_oa_takeleave_terminate` (
   `terminate_status` smallint(11) NOT NULL default '0',
   `takeLeave_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- 转存表中的数据 `wlzx_oa_takeleave_terminate`
---
-
-
--- --------------------------------------------------------
-
---
--- 表的结构 `wlzx_oa_task`
---
-
-CREATE TABLE IF NOT EXISTS `wlzx_oa_task` (
+-- ----------------------------
+-- Table structure for wlzx_oa_task
+-- ----------------------------
+DROP TABLE IF EXISTS `wlzx_oa_task`;
+CREATE TABLE `wlzx_oa_task` (
   `id` bigint(20) NOT NULL auto_increment,
   `title` varchar(200) NOT NULL,
   `content` text NOT NULL,
@@ -609,20 +383,13 @@ CREATE TABLE IF NOT EXISTS `wlzx_oa_task` (
   `worker_status` text NOT NULL,
   `status` smallint(6) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- 转存表中的数据 `wlzx_oa_task`
---
-
-
--- --------------------------------------------------------
-
---
--- 表的结构 `wlzx_oa_workflow_log`
---
-
-CREATE TABLE IF NOT EXISTS `wlzx_oa_workflow_log` (
+-- ----------------------------
+-- Table structure for wlzx_oa_workflow_log
+-- ----------------------------
+DROP TABLE IF EXISTS `wlzx_oa_workflow_log`;
+CREATE TABLE `wlzx_oa_workflow_log` (
   `id` bigint(20) NOT NULL auto_increment,
   `operation_object_type` varchar(200) NOT NULL,
   `operation_object_id` bigint(20) NOT NULL,
@@ -631,9 +398,76 @@ CREATE TABLE IF NOT EXISTS `wlzx_oa_workflow_log` (
   `operation_name` varchar(200) NOT NULL,
   `operation_result` text,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- 转存表中的数据 `wlzx_oa_workflow_log`
---
-
+-- ----------------------------
+-- Records 
+-- ----------------------------
+INSERT INTO `wlzx_oa_attachment` VALUES ('1', 'task-2011-0725.doc', '110812095154.doc', 'doc', '37376', '2011-08-12 09:51:54');
+INSERT INTO `wlzx_oa_attachment` VALUES ('2', '学鼎需求用例.doc', '110812095154.doc', 'doc', '360448', '2011-08-12 09:51:54');
+INSERT INTO `wlzx_oa_attachment` VALUES ('3', '温岭行政结构_权限配置_通知方案.doc', 'attach_110812100228.doc', 'doc', '101376', '2011-08-12 10:02:28');
+INSERT INTO `wlzx_oa_attachment` VALUES ('4', '温岭行政结构_权限配置-首页.doc', 'attach_110812100228.doc', 'doc', '146432', '2011-08-12 10:02:28');
+INSERT INTO `wlzx_oa_attachment` VALUES ('5', '项目规划.doc', 'attach_110812100228.doc', 'doc', '21504', '2011-08-12 10:02:28');
+INSERT INTO `wlzx_oa_attachment` VALUES ('6', '杭州池墨科技有限公司_股份制度.pdf', 'attach_110812115546.pdf', 'pdf', '136560', '2011-08-12 11:55:46');
+INSERT INTO `wlzx_oa_attachment` VALUES ('7', '环境信息系统设计方案-20110615.pdf', 'attach_110812115546.pdf', 'pdf', '832565', '2011-08-12 11:55:46');
+INSERT INTO `wlzx_oa_attachment` VALUES ('8', '火车票预订系统需求分析及设计_V1.3.doc', 'attach_110812115546.3.doc', '3.doc', '940544', '2011-08-12 11:55:46');
+INSERT INTO `wlzx_oa_attachment` VALUES ('9', '上海动量软件技术有限公司介绍.pdf', 'attach_110812115546.pdf', 'pdf', '1810266', '2011-08-12 11:55:46');
+INSERT INTO `wlzx_oa_attachment` VALUES ('10', '通达OA教育管理解决方案.pdf', 'attach_110812115547.pdf', 'pdf', '1280730', '2011-08-12 11:55:47');
+INSERT INTO `wlzx_oa_attachment` VALUES ('11', '温岭OA系统BUG管理表.xls', 'attach_110812115548.xls', 'xls', '4714496', '2011-08-12 11:55:48');
+INSERT INTO `wlzx_oa_attachment` VALUES ('12', '温岭行政结构_权限配置_0803.doc', 'attach_110812115548.doc', 'doc', '147968', '2011-08-12 11:55:48');
+INSERT INTO `wlzx_oa_attachment` VALUES ('13', '温岭行政结构_权限配置_通知方案.doc', 'attach_110812115548.doc', 'doc', '101376', '2011-08-12 11:55:48');
+INSERT INTO `wlzx_oa_attachment` VALUES ('14', '温岭行政结构_权限配置-首页.doc', 'attach_110812115549.doc', 'doc', '146432', '2011-08-12 11:55:49');
+INSERT INTO `wlzx_oa_attachment` VALUES ('15', '项目规划.doc', 'attach_110812115549.doc', 'doc', '21504', '2011-08-12 11:55:49');
+INSERT INTO `wlzx_oa_attachment` VALUES ('16', '项目章程.doc', 'attach_110812115550.doc', 'doc', '23552', '2011-08-12 11:55:50');
+INSERT INTO `wlzx_oa_attachment` VALUES ('17', '需求用例模板.doc', 'attach_110812115550.doc', 'doc', '50176', '2011-08-12 11:55:50');
+INSERT INTO `wlzx_oa_attachment` VALUES ('18', 'slogan_bg.jpg', 'attach_110827100357.jpg', 'jpg', '92643', '2011-08-27 22:03:57');
+INSERT INTO `wlzx_oa_attachment` VALUES ('19', 'slogan_bg.png', 'attach_110827100357.png', 'png', '196571', '2011-08-27 22:03:57');
+INSERT INTO `wlzx_oa_attachment` VALUES ('20', 'structure .png', 'attach_110827100357.png', 'png', '132249', '2011-08-27 22:03:57');
+INSERT INTO `wlzx_oa_attachment` VALUES ('21', '2.jpg', 'attach_110827104931.jpg', 'jpg', '44379', '2011-08-27 22:49:31');
+INSERT INTO `wlzx_oa_attachment` VALUES ('22', 'slogan_bg.jpg', 'attach_110827115947.jpg', 'jpg', '92643', '2011-08-27 23:59:47');
+INSERT INTO `wlzx_oa_attachment` VALUES ('23', 'slogan_bg.png', 'attach_110827115948.png', 'png', '196571', '2011-08-27 23:59:48');
+INSERT INTO `wlzx_oa_attachment` VALUES ('24', 'structure .png', 'attach_110827115948.png', 'png', '132249', '2011-08-27 23:59:48');
+INSERT INTO `wlzx_oa_attachment` VALUES ('25', 'slogan_bg.jpg', 'attach_110828122306.jpg', 'jpg', '92643', '2011-08-28 00:23:06');
+INSERT INTO `wlzx_oa_attachment` VALUES ('26', 'slogan_bg.png', 'attach_110828122307.png', 'png', '196571', '2011-08-28 00:23:07');
+INSERT INTO `wlzx_oa_attachment` VALUES ('27', 'structure .png', 'attach_110828122307.png', 'png', '132249', '2011-08-28 00:23:07');
+INSERT INTO `wlzx_oa_attachment` VALUES ('28', '2.jpg', 'attach_110828122914.jpg', 'jpg', '44379', '2011-08-28 00:29:14');
+INSERT INTO `wlzx_oa_attachment` VALUES ('29', 'slogan_bg.png', 'attach_110829091421.png', 'png', '196571', '2011-08-29 09:14:21');
+INSERT INTO `wlzx_oa_attachment` VALUES ('30', 'structure .png', 'attach_110829091422.png', 'png', '132249', '2011-08-29 09:14:22');
+INSERT INTO `wlzx_oa_notice` VALUES ('1', '1', '其他', '3', '708', '0', ' 1', ' 2', '2011-08-12 10:02:54', '2011-08-12 09:51:56', '708', '1');
+INSERT INTO `wlzx_oa_notice_attachment_relationship` VALUES ('19', '2', '12');
+INSERT INTO `wlzx_oa_notice_attachment_relationship` VALUES ('20', '2', '11');
+INSERT INTO `wlzx_oa_receipt` VALUES ('1', '1+1', '1', '1', '2011-08-16', '1', '我12', '222222222222', '0', '0', null, null);
+INSERT INTO `wlzx_oa_receipt` VALUES ('2', '1+1', '2', '2', '2011-08-28', '222', '12', '222222', '3', '0', null, '708');
+INSERT INTO `wlzx_oa_receipt` VALUES ('3', '2+w', 'w', 'w', '2011-08-16', 'w', 'q', 'wq', '0', '0', null, '708');
+INSERT INTO `wlzx_oa_receipt_attachment` VALUES ('74', '2', '29');
+INSERT INTO `wlzx_oa_receipt_attachment` VALUES ('77', '1', '28');
+INSERT INTO `wlzx_oa_receipt_flow` VALUES ('1', '0', '1', '收文登记 ', '708', '2', '2011-08-29 17:16:04', '2011-08-28 01:55:15');
+INSERT INTO `wlzx_oa_receipt_flow` VALUES ('2', '2', '1', 'bbcccccc', '708', '2', '2011-08-29 23:41:30', '2011-08-29 11:03:15');
+INSERT INTO `wlzx_oa_schedule` VALUES ('1', '新日程1', '333333333', '2011-08-13 11:00:27', '2011-08-13 12:00:27', '708', '0', '0', '0', '1', '0', '0', '0', '0', '0', '1', '0;0;0;0;0;0;0', null);
+INSERT INTO `wlzx_oa_schedule` VALUES ('2', '安排职评人员上交评审量化评分表', '安排职评人员上交评审量化评分表', '2011-09-01 09:25:00', '2011-09-01 17:25:00', '718', '1', '0', '0', '24', '0', '0', '0', '0', '0', '1', '0;0;0;0;0;0;0', null);
+INSERT INTO `wlzx_oa_schedule` VALUES ('3', '考核表打分', null, '2011-09-01 09:31:00', '2011-09-01 10:31:00', '718', '1', '0', '0', '24', '0', '0', '0', '0', '0', '1', '0;0;0;0;0;0;0', null);
+INSERT INTO `wlzx_oa_schedule` VALUES ('5', '新日程', null, '2011-08-31 00:56:51', '2011-08-31 01:56:51', '984', '1', '0', '0', '11', '0', '0', '0', '0', '0', '1', '0;0;0;0;0;0;0', null);
+INSERT INTO `wlzx_oa_schedule` VALUES ('6', '新日程', null, '2011-08-31 01:00:04', '2011-08-31 02:00:04', '709', '0', '0', '0', '1', '0', '0', '0', '0', '0', '1', '0;0;0;0;0;0;0', null);
+INSERT INTO `wlzx_oa_schedule` VALUES ('7', '新日程', null, '2011-08-31 01:00:20', '2011-08-31 02:00:20', '709', '1', '1', '1', '1', '0', '0', '0', '0', '0', '1', '0;0;0;0;0;0;0', null);
+INSERT INTO `wlzx_oa_sendingfile_flow` VALUES ('1', '0', '1', null, '708', '1', '2011-08-29 20:32:13', '2011-08-12 11:06:46');
+INSERT INTO `wlzx_oa_sendingfile_flow` VALUES ('2', '0', null, '发文拟稿', '708', '2', null, '2011-08-12 11:56:54');
+INSERT INTO `wlzx_oa_sendingfile_flow` VALUES ('3', '0', null, '发文拟稿', '708', '3', null, '2011-08-12 12:10:07');
+INSERT INTO `wlzx_oa_sendingfile_flow` VALUES ('4', '0', '1', null, '708', '4', '2011-08-12 12:28:28', '2011-08-12 12:28:22');
+INSERT INTO `wlzx_oa_sendingfile_flow` VALUES ('5', '0', null, '发文拟稿', '708', '4', null, '2011-08-29 20:30:36');
+INSERT INTO `wlzx_oa_sendingfile_flow` VALUES ('6', '2', null, null, '708', '1', null, '2011-08-29 20:32:49');
+INSERT INTO `wlzx_oa_sendingfiles` VALUES ('1', '4', '<TEXTFORMAT LEADING=\"2\"><P ALIGN=\"LEFT\"><FONT FACE=\"宋体\" SIZE=\"12\" COLOR=\"#000000\" LETTERSPACING=\"0\" KERNING=\"0\">1</FONT></P></TEXTFORMAT>', '708', '2011-08-12 11:06:46', '2', '3', '', '', '', '', '', '', null, '2', '0');
+INSERT INTO `wlzx_oa_sendingfiles` VALUES ('2', '4', '<TEXTFORMAT LEADING=\"2\"><P ALIGN=\"LEFT\"><FONT FACE=\"宋体\" SIZE=\"12\" COLOR=\"#000000\" LETTERSPACING=\"0\" KERNING=\"0\">1</FONT></P></TEXTFORMAT>', '708', '2011-08-12 11:56:54', '2', '3', '', '', '', '', '', '', null, '0', '0');
+INSERT INTO `wlzx_oa_sendingfiles` VALUES ('3', '3', '<TEXTFORMAT LEADING=\"2\"><P ALIGN=\"LEFT\"><FONT FACE=\"宋体\" SIZE=\"12\" COLOR=\"#000000\" LETTERSPACING=\"0\" KERNING=\"0\">1</FONT></P></TEXTFORMAT>', '708', '2011-08-12 12:10:07', '2', '2', '', '', '', '', '', '', null, '0', '0');
+INSERT INTO `wlzx_oa_sendingfiles` VALUES ('4', '4', '<TEXTFORMAT LEADING=\"2\"><P ALIGN=\"LEFT\"><FONT FACE=\"宋体\" SIZE=\"12\" COLOR=\"#000000\" LETTERSPACING=\"0\" KERNING=\"0\">1</FONT></P></TEXTFORMAT>', '708', '2011-08-12 12:28:22', '2', '3', '', '', '', '', '', '', null, '0', '0');
+INSERT INTO `wlzx_oa_sendingfiles_attachment` VALUES ('1', '1', '13');
+INSERT INTO `wlzx_oa_sendingfiles_attachment` VALUES ('2', '1', '12');
+INSERT INTO `wlzx_oa_sendingfiles_attachment` VALUES ('3', '1', '9');
+INSERT INTO `wlzx_oa_sendingfiles_attachment` VALUES ('4', '1', '8');
+INSERT INTO `wlzx_oa_sendingfiles_attachment` VALUES ('5', '1', '15');
+INSERT INTO `wlzx_oa_sendingfiles_attachment` VALUES ('6', '1', '11');
+INSERT INTO `wlzx_oa_sendingfiles_attachment` VALUES ('7', '1', '6');
+INSERT INTO `wlzx_oa_sendingfiles_attachment` VALUES ('8', '1', '7');
+INSERT INTO `wlzx_oa_sendingfiles_attachment` VALUES ('9', '1', '17');
+INSERT INTO `wlzx_oa_sendingfiles_attachment` VALUES ('10', '1', '10');
+INSERT INTO `wlzx_oa_sendingfiles_attachment` VALUES ('11', '1', '14');
+INSERT INTO `wlzx_oa_sendingfiles_attachment` VALUES ('12', '1', '16');
