@@ -49,7 +49,7 @@ public class NoticeServiceImpl implements NoticeService {
 		}
 		if(list != null && list.size() > 0){
 			for(Object id : list){
-				System.out.println(id);
+				 //	System.out.println(id);
 				AttachmentModel attachmentModel = attachmentDAO.get((String)id);
 				notice.getAttachments().add(attachmentModel);
 			}
@@ -88,7 +88,7 @@ public class NoticeServiceImpl implements NoticeService {
 		if(StringUtils.isNotEmpty(emergence))
 			criteria.add(Restrictions.eq("emergence", Integer.parseInt(emergence)));
 		
-		System.out.println(deparmentId);
+		 //System.out.println(deparmentId);
 		if(StringUtils.isNotEmpty(deparmentId)){
 			// get all department under id
 			Set<DepartmentModel> departmentSet = new HashSet<DepartmentModel>();

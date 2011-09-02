@@ -150,7 +150,7 @@ public class TeacherService {
 			if(model.getTeacherAttendDate() != null)
 				criteria.add(Restrictions.eq("teacherAttendDate", model.getTeacherAttendDate()));
 			
-			System.out.println(model.getTeacherStatus());
+			 //System.out.println(model.getTeacherStatus());
 			
 			if(model.getTeacherStatus() != null && model.getTeacherStatus() > -1)
 				criteria.add(Restrictions.eq("teacherStatus", model.getTeacherStatus()));

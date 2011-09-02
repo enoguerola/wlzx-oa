@@ -118,7 +118,7 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 //					}
 //				}	
 //				//请假出差本处室审批
-//				if(user.hasDam("takeLeaveOfficeApprove@noFilter@")&&SecurityUserHolder.getCurrentUser()!=null&&SecurityUserHolder.getCurrentUser().getSubordinates()!=null&&SecurityUserHolder.getCurrentUser().getSubordinates().contains(user)){
+//				if(user.hasDam("takeLeaveOfficeApprove@noFilter@")&&SecurityUserHolder.getCurrentUser()!=null&&SecurityUserHolder.getCurrentUser().getAllSubordinates()!=null&&SecurityUserHolder.getCurrentUser().getAllSubordinates().contains(user)){
 //					if(takeLeaveForm.getArrangeTechDealAlready()==true&&takeLeaveForm.getOfficeChiefStatus()==null&&takeLeaveForm.getStatus().intValue()!=TakeLeaveForm.Status.Cancle.getValue().intValue()){
 //						TaskVO taskVO1=new TaskVO();
 //						taskVO1.setStatus(TaskVO.EStatus.ToBeDeal.getText());
@@ -148,7 +148,7 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 //					}
 //				}
 //				//请假出差分管副校长审批
-//				if(user.hasDam("takeLeaveVicePrincipalApprove@noFilter@")&&SecurityUserHolder.getCurrentUser()!=null&&SecurityUserHolder.getCurrentUser().getSubordinates()!=null&&SecurityUserHolder.getCurrentUser().getSubordinates().contains(user)){
+//				if(user.hasDam("takeLeaveVicePrincipalApprove@noFilter@")&&SecurityUserHolder.getCurrentUser()!=null&&SecurityUserHolder.getCurrentUser().getAllSubordinates()!=null&&SecurityUserHolder.getCurrentUser().getAllSubordinates().contains(user)){
 //					if(takeLeaveForm.getOfficeChiefStatus()!=null&&takeLeaveForm.getOfficeChiefStatus().intValue()==1&&takeLeaveForm.getVicePrincipalStatus()==null&&takeLeaveForm.getStatus().intValue()!=TakeLeaveForm.Status.Cancle.getValue().intValue()){
 //						TaskVO taskVO2=new TaskVO();
 //						taskVO2.setStatus(TaskVO.EStatus.ToBeDeal.getText());
@@ -434,7 +434,7 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 					list.add(taskVO);
 				}
 				//请假出差本处室审批
-				if(user.hasDam("takeLeaveOfficeApprove@noFilter@")&&SecurityUserHolder.getCurrentUser()!=null&&SecurityUserHolder.getCurrentUser().getSubordinates()!=null&&SecurityUserHolder.getCurrentUser().getSubordinates().contains(user)){
+				if(user.hasDam("takeLeaveOfficeApprove@noFilter@")&&SecurityUserHolder.getCurrentUser()!=null&&SecurityUserHolder.getCurrentUser().getAllSubordinates()!=null&&SecurityUserHolder.getCurrentUser().getAllSubordinates().contains(userDAO.get(takeLeaveForm.getTeacherId()))){
 					if(takeLeaveForm.getArrangeTechDealAlready()==true){
 						TaskVO taskVO1=new TaskVO();
 						taskVO1.setStatus(TaskVO.EStatus.ToBeDeal.getText());
@@ -471,7 +471,7 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 					}
 				}
 				//请假出差分管副校长审批
-				if(user.hasDam("takeLeaveVicePrincipalApprove@noFilter@")&&SecurityUserHolder.getCurrentUser()!=null&&SecurityUserHolder.getCurrentUser().getSubordinates()!=null&&SecurityUserHolder.getCurrentUser().getSubordinates().contains(user)){
+				if(user.hasDam("takeLeaveVicePrincipalApprove@noFilter@")&&SecurityUserHolder.getCurrentUser()!=null&&SecurityUserHolder.getCurrentUser().getAllSubordinates()!=null&&SecurityUserHolder.getCurrentUser().getAllSubordinates().contains(userDAO.get(takeLeaveForm.getTeacherId()))){
 					if(takeLeaveForm.getOfficeChiefStatus()!=null&&takeLeaveForm.getOfficeChiefStatus().intValue()==1){
 						TaskVO taskVO2=new TaskVO();
 						taskVO2.setStatus(TaskVO.EStatus.ToBeDeal.getText());

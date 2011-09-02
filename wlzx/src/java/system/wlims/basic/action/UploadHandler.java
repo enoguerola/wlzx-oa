@@ -225,27 +225,27 @@ public class UploadHandler extends HttpServlet {
          */
         catch (TransformerConfigurationException tcException) {
             out.println(tcException.getMessage());
-            System.out.println(tcException.getMessage());
+            // System.out.println(tcException.getMessage());
         }
         catch (FileUploadException fileUploadException) {
             out.println(fileUploadException.getMessage());
-            System.out.println(fileUploadException.getMessage());
+            //  System.out.println(fileUploadException.getMessage());
         }
         catch (IOException ioException) {
             out.println(ioException.getMessage());
-            System.out.println(ioException.getMessage());
+            // System.out.println(ioException.getMessage());
         }
         catch (SAXException saxException) {
             out.println(saxException.getMessage());
-            System.out.println(saxException.getMessage());
+            //  System.out.println(saxException.getMessage());
         }
         catch (NullPointerException exception) {
             out.println(exception.getMessage());
-            System.out.println(exception.getMessage());
+            //System.out.println(exception.getMessage());
         }
         catch (Exception e){
             out.println(e.getMessage());
-            System.out.println(e.getMessage());
+            // System.out.println(e.getMessage());
         }
     }
 

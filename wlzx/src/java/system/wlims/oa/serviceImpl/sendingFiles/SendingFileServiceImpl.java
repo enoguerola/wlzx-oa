@@ -64,7 +64,7 @@ public class SendingFileServiceImpl implements SendingFileService {
 		// TODO Auto-generated method stub
 		if(list != null && list.size() > 0){
 			for(Object id : list){
-				System.out.println(id);
+				 //System.out.println(id);
 				AttachmentModel attachmentModel = attachmentDAO.get((String)id);
 				model.getAttachments().add(attachmentModel);
 			}
@@ -215,7 +215,7 @@ public class SendingFileServiceImpl implements SendingFileService {
 		    writeDocument(document, filePath);
 		    return fileName;
 	  	  }catch (IOException e){
-		    System.out.println("An error occured while writing " + filePath + ":");
+	  		 //  System.out.println("An error occured while writing " + filePath + ":");
 		    e.printStackTrace();
 		    return null;
 	      }

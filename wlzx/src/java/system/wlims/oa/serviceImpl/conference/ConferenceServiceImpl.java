@@ -49,7 +49,7 @@ public class ConferenceServiceImpl implements ConferenceService {
 		conference.setApplyStatus(ConferenceModel.EStatus.Booking.getValue());
 		if(list != null && list.size() > 0){
 			for(Object id : list){
-				System.out.println(id);
+				 //	System.out.println(id);
 				AttachmentModel attachmentModel = attachmentDAO.get((String)id);
 				conference.getAttachments().add(attachmentModel);
 			}
@@ -230,10 +230,10 @@ public class ConferenceServiceImpl implements ConferenceService {
 		Map<String, Map<String,Map<String,List<ConferenceModel>>>> data = new LinkedHashMap<String, Map<String,Map<String,List<ConferenceModel>>>>();
 		List<Date> dates=UtilDateTime.getDatesDateRange(java.sql.Date.valueOf(beginTime), java.sql.Date.valueOf(endTime));
 		for(Date wdate : dates){
-			System.out.println(UtilDateTime.toDateString(wdate));
+			 //System.out.println(UtilDateTime.toDateString(wdate));
 			data.put(UtilDateTime.toDateString(wdate), new LinkedHashMap<String, Map<String,List<ConferenceModel>>>());
 		}
-		System.out.println(dates.size()+"------"+data.size());
+		 //System.out.println(dates.size()+"------"+data.size());
 		List<ConferenceModel> conferences = conferenceDAO.getConferencesByConditions(null, null, null, null, beginTime, endTime, null, null);
 		List<PlaceModel> places = placeDao.getPlacesByCondition(null, null, null, null, null, null, null);
 		
@@ -270,7 +270,7 @@ public class ConferenceServiceImpl implements ConferenceService {
 				}
 			}
 			
-		System.out.println(data.size());
+				 //System.out.println(data.size());
 		return data;
 	}
 

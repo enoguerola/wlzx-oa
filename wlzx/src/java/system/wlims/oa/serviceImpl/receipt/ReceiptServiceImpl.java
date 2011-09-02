@@ -222,7 +222,7 @@ public class ReceiptServiceImpl implements ReceiptService {
 		// TODO Auto-generated method stub
 		if(list != null && list.size() > 0){
 			for(Object id : list){
-				System.out.println(id);
+				 //System.out.println(id);
 				AttachmentModel attachmentModel = attachmentDAO.get((String)id);
 				model.getAttachments().add(attachmentModel);
 			}
@@ -256,8 +256,8 @@ public class ReceiptServiceImpl implements ReceiptService {
 //					notice.getAttachments().add(attachmentModel);
 //				}
 //			}
-			System.out.println(adds+"aaaaaaa");
-			System.out.println(removes+"bbbbbbbbb");
+			 //System.out.println(adds+"aaaaaaa");
+			 //System.out.println(removes+"bbbbbbbbb");
 			if(StringUtils.isNotEmpty(adds)){
 				String[] adds_attr=adds.split(";");
 				for(int i=0;i<adds_attr.length;i++){
