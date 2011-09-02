@@ -191,8 +191,8 @@
 					var obj:* = navigator.getChildAt(i);
 					if(obj.name == symbol){
 						navigator.selectedIndex = i;
-						obj.child.search();
-						obj.child.dispatchEvent(new BaseEvent(BaseEvent.Reload));
+					//	obj.child.search();
+					//	obj.child.dispatchEvent(new BaseEvent(BaseEvent.Reload));
 						//Alert.show(obj.child);
 						
 						if(symbol == "noticeDetial"){
