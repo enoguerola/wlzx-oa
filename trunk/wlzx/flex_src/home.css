@@ -4,6 +4,7 @@
 @namespace mx "http://www.adobe.com/2006/mxml";
 @namespace supertabs "flexlib.controls.tabBarClasses.*"; 
 @namespace mx1 "library://ns.adobe.com/flex/mx";
+@namespace component "system.component.*";
 
 /*  色彩说明
 
@@ -144,6 +145,14 @@ mx|TabNavigator{
 	color: black;
 	text-Roll-Over-Color: #4b5f0c;
 }
+
+/************  在 searchBox 中的按钮  ***************/
+.BtnSearch{
+	font-family:"宋体";
+	font-size:16;
+	font-weight:bold;
+}
+
 .customButtonBar {
 	skin: ClassReference("system.skins.WlzxButtonBarSkin");
 }
@@ -183,4 +192,10 @@ mx|Panel{
 /****************  表格  *******************/
 .WlzxDataGridStyle{
 	header-background-skin:ClassReference("system.skins.WlzxDataGridHeaderSkin");
+}
+/****************  FieldSet  *******************/
+component|Fieldset{
+	font-family:"宋体";
+	font-size:14;
+	color:#000000;
 }

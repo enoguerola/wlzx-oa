@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
-		 xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="100%">
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="100%" xmlns:component="system.component.*">
 	<s:layout>
-		<s:VerticalLayout/>
+		<s:VerticalLayout horizontalAlign="left"/>
 	</s:layout>
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
@@ -51,27 +51,68 @@
 		
 		]]>
 	</fx:Script>
-	<mx:FormHeading label="条件查询"></mx:FormHeading>
-	<s:HGroup verticalAlign="middle" width="500">
-		<s:Label text="来文字号" width="100" textAlign="right"/>
-		<s:TextInput id="in_number" width="200"/>
-		<s:Label text="来文机关" width="125" textAlign="right"/>
-		<s:TextInput id="in_office" width="200"/>
-		<s:Label text="收文办号" width="100" textAlign="right"/>
-		<s:TextInput id="do_number" width="200"/>
-	</s:HGroup>
-	<s:HGroup verticalAlign="middle" width="500">
-		<s:Label text="来文日期" width="100" textAlign="right"/>
-		<mx:DateField id="in_date_begin" width="100" formatString="YYYY-MM-DD"></mx:DateField>
-		<s:Label  text="--"  width="15" textAlign="center"/>
-		<mx:DateField id="in_date_end" width="100" formatString="YYYY-MM-DD"></mx:DateField>
-		<s:Label text="处理状态" width="100" textAlign="right"/>
-		<s:DropDownList dataProvider="{status_list}" id="status" width="200" selectedIndex="0" requireSelection="true"/>
-	</s:HGroup>
-	<s:HGroup verticalAlign="middle" width="500">
-		<s:Label text="来文摘要(标题)" width="100" textAlign="right"/>
-		<s:TextInput id="title" width="300"/>
-		<s:Label width="270"/>
-		<mx:Button label="搜索" width="70" click="search();"/>
-	</s:HGroup>
+	
+	<!--*****************  条件查询框    ************************-->
+
+	<component:Fieldset title="条件查询" paddingTop="20" width="100%" height="90%"  >
+		<mx:Grid verticalGap="10" horizontalGap="2" verticalAlign="middle" >
+			
+			<!--************ 第一行  *************-->
+			<mx:GridRow  horizontalAlign="right" verticalAlign="middle" paddingTop="5" >
+				<mx:GridItem >
+					<mx:HBox verticalAlign="middle">
+						<s:Label text="来文字号" width="100" textAlign="right" />
+						<s:TextInput id="in_number" width="200"/>
+					</mx:HBox>
+				</mx:GridItem>
+				<mx:GridItem >
+					<mx:HBox verticalAlign="middle">
+						<s:Label text="来文机关" width="75" textAlign="right" />
+						<s:TextInput id="in_office" width="230"/>
+					</mx:HBox>
+				</mx:GridItem>
+				<mx:GridItem >
+					<mx:HBox verticalAlign="middle">
+						<s:Label text="收文办号" width="75" textAlign="right"/>
+						<s:TextInput id="do_number" width="200"/>
+					</mx:HBox>
+				</mx:GridItem>
+			</mx:GridRow>
+			
+			<!--************ 第二行  *************-->
+			<mx:GridRow  horizontalAlign="right" verticalAlign="middle" >
+				<mx:GridItem >
+					<mx:HBox verticalAlign="middle">
+						<s:Label text="来文摘要(标题)" width="100" textAlign="right"/>
+						<s:TextInput id="title" width="200"/>
+					</mx:HBox>
+				</mx:GridItem>
+				<mx:GridItem horizontalAlign="right">
+					<mx:HBox horizontalAlign="right" verticalAlign="middle" >
+						<s:Label text="来文日期" width="75" textAlign="right"/>
+						<mx:DateField id="in_date_begin" width="100" formatString="YYYY-MM-DD"></mx:DateField>
+						<s:Label  text="--"  width="15" textAlign="right"/>
+						<mx:DateField id="in_date_end" width="100" formatString="YYYY-MM-DD" ></mx:DateField>
+					</mx:HBox>
+				</mx:GridItem>
+				<mx:GridItem  horizontalAlign="right">
+					<mx:HBox verticalAlign="middle">
+						<s:Label text="处理状态" width="75" textAlign="right"/>
+						<s:DropDownList dataProvider="{status_list}" id="status" width="200" selectedIndex="0" requireSelection="true"/>
+					</mx:HBox>
+				</mx:GridItem>
+			</mx:GridRow>
+			
+			<!--************ 第三行  *************-->
+			<mx:GridRow horizontalAlign="right" verticalAlign="middle" >
+				<mx:GridItem/>
+				<mx:GridItem/>
+				<mx:GridItem horizontalAlign="right" >
+						<mx:Button label="搜  索" width="200" height="25" styleName="BtnSearch" click="search();"/>
+				</mx:GridItem>
+			</mx:GridRow>
+			
+		</mx:Grid>
+	</component:Fieldset>
+	
 </s:Group>

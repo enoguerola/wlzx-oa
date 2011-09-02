@@ -2,7 +2,7 @@
 <s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
 		 xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="100%" creationComplete="init()"
-		 xmlns:receipt="oa.receipt.component.*">
+		 xmlns:receipt="oa.receipt.component.*" xmlns:component="system.component.*">
 	<s:layout>
 		<s:BasicLayout/>
 	</s:layout>
@@ -77,15 +77,17 @@
 			}
 		]]>
 	</fx:Script>
-	<mx:Panel width="100%" height="100%"  styleName="customPanel" title="{title}"  borderVisible="false" dropShadowVisible="false">
+	<mx:Panel width="100%" height="100%"  styleName="customPanel" title="{title}"  borderVisible="true" dropShadowVisible="false" paddingTop="10" >
 		<mx:VBox width="100%" height="100%" id="listPanel">
-			<mx:VBox width="100%" height="25%"  verticalGap="10" verticalAlign="middle" horizontalAlign="center" >
-				<mx:VBox width="100%" height="100%"   horizontalGap="10" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="0" paddingBottom="0"   paddingLeft="10" paddingRight="10">
-					<receipt:searchBox id="search_panel"/>
+			<mx:VBox width="100%" height="25%" verticalGap="10"   verticalAlign="middle" horizontalAlign="left" fontSize="12" >
+				<mx:VBox width="100%" height="100%"  horizontalGap="10" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="5" paddingBottom="0"   paddingLeft="10">
+					<receipt:searchBox id="search_panel" width="95%"/>
 				</mx:VBox>
 			</mx:VBox>
-			<mx:VBox width="100%" height="75%"  verticalAlign="middle" horizontalAlign="center" paddingTop="20">
-				<receipt:DRUCgrid id="list"/>
+			<mx:VBox width="100%" height="95%"  verticalAlign="top" horizontalAlign="left" paddingTop="3"  paddingLeft="10">
+				<component:Fieldset title="收文列表" width="95%" height="95%">
+					<receipt:DRUCgrid id="list"/>
+				</component:Fieldset>
 			</mx:VBox>
 		</mx:VBox>
 	</mx:Panel>
