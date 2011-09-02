@@ -172,6 +172,13 @@ mx|TabNavigator{
 	stroke-width:0;
 		
 }
+/****************  面板  *******************/
+mx|Panel{
+	background-color:#EEF0FF;
+	border-style:solid;
+	border-color:#6080E0;
+	title-background-skin:ClassReference("system.skins.WlzxPanelHeaderSkin");
+}
 
 /****************  表格  *******************/
 .WlzxDataGridStyle{

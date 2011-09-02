@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:SparkSkin name="WlzxPanelHeaderSkin"
+			 xmlns:fx="http://ns.adobe.com/mxml/2009"
+			 xmlns:s="library://ns.adobe.com/flex/spark"
+			 minWidth="21" minHeight="21"
+			 alpha.disabled="0.5">
+	<!-- states -->
+	<s:states>
+		<s:State name="up" />
+		<s:State name="over" />
+		<s:State name="down" />
+		<s:State name="disabled" />
+		<s:State name="selectedUp" />
+		<s:State name="selectedOver" />
+		<s:State name="selectedDown" />
+		<s:State name="selectedDisabled" />
+	</s:states>
+	
+	
+	<!-- layer 1: border -->
+	<s:Rect left="0" right="0" top="0" bottom="0">
+		<s:stroke>
+			<s:SolidColorStroke color="0x6080E0" alpha="1" weight="1"  />
+		</s:stroke>
+	</s:Rect>
+	
+	<!-- layer 2: 填充颜色 -->
+	<s:Rect left="1" right="1" top="1" bottom="1" width="100%" height="20">
+		<s:fill>
+			<s:LinearGradient rotation="90">
+				<s:GradientEntry color="white"/>
+				<s:GradientEntry color="0xA0C0F0"/>
+			</s:LinearGradient>
+		</s:fill>
+	</s:Rect>
+	
+	
+</s:SparkSkin>
