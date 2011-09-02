@@ -13,6 +13,12 @@ s|Application{
 
 	
 }
+.FontLogin{
+	font-family:"宋体";
+	font-size:48;
+	font-weight:bold;
+	color:#6080F0;
+}
 global
 {
 	roll-over-color: #A0DDFF;

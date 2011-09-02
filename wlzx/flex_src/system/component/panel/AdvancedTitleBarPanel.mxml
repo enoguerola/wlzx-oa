@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml" fontFamily="宋体" fontSize="12" layout="horizontal">
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml" 
+		  fontFamily="宋体" fontSize="12" layout="horizontal" >
 	<mx:Script>
 		<![CDATA[
 			/*
@@ -104,4 +105,5 @@
 			}
 		]]>
 	</mx:Script>
+	
 </mx:Panel>

@@ -1,0 +1,13 @@
+/* CSS file */
+@namespace s "library://ns.adobe.com/flex/spark";
+@namespace mx "library://ns.adobe.com/flex/mx";
+
+mx|Panel{
+	border-visible:true;
+	border-style:solid;
+	background-color:#EEF0FF;
+	title-style-name:"PanelTitle";
+}
+.PanelTitle{
+	background-color:#00AA00;
+}
