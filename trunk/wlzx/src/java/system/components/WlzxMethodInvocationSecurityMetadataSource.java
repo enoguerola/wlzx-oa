@@ -42,7 +42,7 @@ public class WlzxMethodInvocationSecurityMetadataSource
 	        	   
 	           		if(super_resource.getBelongOperation().getRsType().equals("METHOD")){
 	           			String key=super_resource.getBelongOperation().getRsValue();
-		                System.out.println("角色：["+superRole.getSymbol()+"]拥有的Method资源有："+key); 
+	           		 // System.out.println("角色：["+superRole.getSymbol()+"]拥有的Method资源有："+key); 
 		                if(!resourceMap.containsKey(key)){
 		                	Collection<ConfigAttribute> atts = new ArrayList<ConfigAttribute>();
 		                	ConfigAttribute super_ca = new SecurityConfig(superRole.getSymbol());  
@@ -57,7 +57,7 @@ public class WlzxMethodInvocationSecurityMetadataSource
 	                for(DataAccessModeModel resource:role.getDataAccessModes()){ 
 	                	if(resource.getBelongOperation().getRsType().equals("METHOD")){
 	                		 String key=resource.getBelongOperation().getRsValue();
-		                	System.out.println("角色：["+role.getSymbol()+"]拥有的Method资源有："+key); 
+	                		 //	System.out.println("角色：["+role.getSymbol()+"]拥有的Method资源有："+key); 
 		                	ConfigAttribute ca = new SecurityConfig(role.getSymbol());  
 		                	resourceMap.get(key).add(ca);
 	                    }
@@ -70,7 +70,7 @@ public class WlzxMethodInvocationSecurityMetadataSource
 	public Collection<ConfigAttribute> getAttributes(Method method, Class<?> targetClass) {
 		// TODO Auto-generated method stub
 		String class_method = targetClass.getName() + "." + method.getName();
-		System.out.println("调用method:=" + class_method);
+		 //System.out.println("调用method:=" + class_method);
 		 Iterator<String> ite = resourceMap.keySet().iterator();
 	        while (ite.hasNext()) {
 	            String resMethod = ite.next();

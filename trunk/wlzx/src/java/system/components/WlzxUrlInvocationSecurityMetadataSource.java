@@ -42,7 +42,7 @@ public class WlzxUrlInvocationSecurityMetadataSource
 	        	   
 	           		if(super_resource.getBelongOperation().getRsType().equals("URL")){
 	           			String key=super_resource.getBelongOperation().getRsValue();
-		                System.out.println("角色：["+superRole.getSymbol()+"]拥有的URL资源有："+key); 
+	           		 // System.out.println("角色：["+superRole.getSymbol()+"]拥有的URL资源有："+key); 
 		                if(!resourceMap.containsKey(key)){
 		                	Collection<ConfigAttribute> atts = new ArrayList<ConfigAttribute>();
 		                	ConfigAttribute super_ca = new SecurityConfig(superRole.getSymbol());  
@@ -57,7 +57,7 @@ public class WlzxUrlInvocationSecurityMetadataSource
 	                for(DataAccessModeModel resource:role.getDataAccessModes()){ 
 	                	if(resource.getBelongOperation().getRsType().equals("URL")){
 	                		 String key=resource.getBelongOperation().getRsValue();
-		                	System.out.println("角色：["+role.getSymbol()+"]拥有的URL资源有："+key); 
+	                		 //System.out.println("角色：["+role.getSymbol()+"]拥有的URL资源有："+key); 
 		                	ConfigAttribute ca = new SecurityConfig(role.getSymbol());  
 		                	resourceMap.get(key).add(ca);
 	                    }
@@ -72,7 +72,7 @@ public class WlzxUrlInvocationSecurityMetadataSource
     public Collection<ConfigAttribute> getAttributes(Object object)
             throws IllegalArgumentException {
         String url = ((FilterInvocation)object).getRequestUrl();
-        System.out.println("访问URL:=" + url);
+        // System.out.println("访问URL:=" + url);
         Iterator<String> ite = resourceMap.keySet().iterator();
         while (ite.hasNext()) {
             String resURL = ite.next();
@@ -110,7 +110,7 @@ public class WlzxUrlInvocationSecurityMetadataSource
 		String url1="/basic/authorization/departmentAuthorization.swf?uid=1304486667468";
 		String url2="/basic/authorization/departmentAuthorization.swf*";
 		PathMatcher urlMatcher = new AntPathMatcher();
-		System.out.println(urlMatcher.match(url2,url1));
+		 //System.out.println(urlMatcher.match(url2,url1));
 		 
 	}
 

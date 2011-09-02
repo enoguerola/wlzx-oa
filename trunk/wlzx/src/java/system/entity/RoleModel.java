@@ -76,7 +76,22 @@ public class RoleModel extends BaseModel {
 		}
 		return sets;
 	}
-
+	public Set<RoleModel> getAllSubordinates() {
+		Set<RoleModel> sets=new HashSet<RoleModel>();
+		for(RoleModel role:getSubordinates()){
+			addSubordinates(sets,role);
+		}
+		
+		return sets;
+	}
+	private void addSubordinates(Set<RoleModel> sets,RoleModel role){
+		if(role==null)return;
+		sets.add(role);
+		for(RoleModel subRole:role.getSubordinates()){
+			addSubordinates(sets,subRole);
+		}
+		
+	}
 	public void setUsers(Set<UserModel> users) {
 		this.users = users;
 	}

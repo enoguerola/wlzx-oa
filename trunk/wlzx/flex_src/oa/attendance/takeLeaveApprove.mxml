@@ -112,7 +112,7 @@
 						enterEdit(attr[0]);
 					else enterTerminateLeave(attr[0]);
 				}
-				
+
 				callLater(search);
 			}
 			protected function systemFaultHandler(event:FaultEvent):void {
@@ -195,7 +195,6 @@
 					arrange_manage.enabled=true;
 					arrange_service.enabled=true;
 				}
-				
 				
 				if(this.parentApplication.currentUser.hasDam("takeLeavePrincipalApprove@noFilter@")){
 //					officeChief_approver_name.enabled=true;
@@ -528,7 +527,7 @@
 						form.vicePrincipalApproverId=vicePrincipal_approver_id.text;
 						if(vicePrincipal_approve_status.selectedValue!=null)
 						form.vicePrincipalStatus=parseInt(vicePrincipal_approve_status.selectedValue.toString());
-						form.principalApproveOption=principal_approve_option.text;
+					
 						if(principal_approve_time.text!="")
 						form.principalApproveTime=DateFormatter.parseDateString(principal_approve_time.text);
 //						principal_approve_time.text=CommonUtils.formatDate(form.principalApproveTime,"YYYY-MM-DD");
@@ -537,6 +536,9 @@
 						if(principal_approve_status.selectedValue!=null)
 						form.principalStatus=parseInt(principal_approve_status.selectedValue.toString());
 						form.remark=remark.text;
+						form.arrangeManage=arrange_manage.text;
+						form.arrangeService=arrange_service.text;
+						form.arrangeTech=arrange_tech.text;
 //						Alert.show(addUpdateFlag.text+"aaa");
 						takeLeaveServiceRO.approveTakeLeave(form);
 						
@@ -550,10 +552,27 @@
 				validatorArr.push(beginDate_stringValidator);
 				validatorArr.push(endDate_stringValidator);
 				validatorArr.push(reason_stringValidator);
-				officeChiefApproveTime_stringValidator.source=officeChief_approve_time;
-				officeChiefApproverName_stringValidator.source=officeChief_approver_name;
-				validatorArr.push(officeChiefApproveTime_stringValidator);
-				validatorArr.push(officeChiefApproverName_stringValidator);
+//				if(this.parentApplication.currentUser.hasDam("takeLeaveWorkDeal@noFilter@")){
+//					
+//				}
+//				
+//				
+//				if(this.parentApplication.currentUser.hasDam("takeLeavePrincipalApprove@noFilter@")){
+//				
+//				}
+//				else if(this.parentApplication.currentUser.hasDam("takeLeaveVicePrincipalApprove@noFilter@")&&parentApplication.currentUser.hasSubordinateUser(form.teacherId)){
+//				
+//				}
+//				else if(this.parentApplication.currentUser.hasDam("takeLeaveOfficeApprove@noFilter@")&&parentApplication.currentUser.hasSubordinateUser(form.teacherId)){
+//				
+//				}
+				if(officeChief_approve_status.selection!=null){
+					officeChiefApproveTime_stringValidator.source=officeChief_approve_time;
+					officeChiefApproverName_stringValidator.source=officeChief_approver_name;
+					validatorArr.push(officeChiefApproveTime_stringValidator);
+					validatorArr.push(officeChiefApproverName_stringValidator);
+				
+				}
 				
 				if(vicePrincipal_approve_status.selection!=null){
 					vicePrincipalApproveTime_stringValidator.source=vicePrincipal_approve_time;

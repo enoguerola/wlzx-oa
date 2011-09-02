@@ -618,7 +618,7 @@ public class SystemServiceImpl implements SystemService{
 	}
 	/*获得部门各系统权限集*/
 	public String getDepartmentSystemAuthorization(String departmentId,String systemId){
-		System.out.println(departmentId+"--"+systemId);
+		 //System.out.println(departmentId+"--"+systemId);
 		StringBuilder sb=new StringBuilder();
 		SystemModel system=systemDAO.get(systemId);
 		DepartmentModel department=departmentDAO.get(departmentId);
@@ -729,8 +729,8 @@ public class SystemServiceImpl implements SystemService{
 	
 	/*保存部门系统权限集*/
 	public boolean saveDepartmentSystemAuthorization(String departmentId,String systemId,String adds,String removes){
-		System.out.println(adds);
-		System.out.println(removes);
+		 //System.out.println(adds);
+		 //System.out.println(removes);
 		DepartmentModel department=departmentDAO.get(departmentId);
 		Set<DataAccessModeModel> dams=department.getDataAccessModes();
 		for(String add:adds.split(";")){
@@ -753,7 +753,7 @@ public class SystemServiceImpl implements SystemService{
 	}
 	/*获得角色（岗位）各系统权限集*/
 	public String getRoleSystemAuthorization(String roleId,String systemId){
-		System.out.println(roleId+"--"+systemId);
+		 //System.out.println(roleId+"--"+systemId);
 		StringBuilder sb=new StringBuilder();
 		SystemModel system=systemDAO.get(systemId);
 		RoleModel role=roleDAO.get(roleId);
@@ -781,8 +781,8 @@ public class SystemServiceImpl implements SystemService{
 	
 	/*保存角色系统权限集*/
 	public boolean saveRoleSystemAuthorization(String roleId,String systemId,String adds,String removes){
-		System.out.println(adds);
-		System.out.println(removes);
+		 //System.out.println(adds);
+		 //	System.out.println(removes);
 		RoleModel role=roleDAO.get(roleId);
 		Set<DataAccessModeModel> dams=role.getDataAccessModes();
 		for(String add:adds.split(";")){
@@ -948,7 +948,7 @@ public class SystemServiceImpl implements SystemService{
 	public static void main(String[] args) {
 		 ApplicationContext applicationContext = new ClassPathXmlApplicationContext(new String[]{"system/service/system.xml","system/service/spring-system.xml"});	 
 		 SystemServiceImpl systemService=(SystemServiceImpl)applicationContext.getBean("systemService");
-		 System.out.println(systemService.getAuthorizationMenusBySystem("oa"));
+		 // System.out.println(systemService.getAuthorizationMenusBySystem("oa"));
 //		 System.out.println(systemService.getDepartmentSystemAuthorization("3","2"));
 //		 systemService.saveDepartmentSystemAuthorization("1","3",";14;",";3;");
 //		Set<DataAccessModeModel> dams= systemService.getDepartmentById("1").getDataAccessModes();

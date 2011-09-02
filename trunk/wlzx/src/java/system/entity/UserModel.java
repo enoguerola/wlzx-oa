@@ -239,8 +239,8 @@ public class UserModel  extends BaseModel implements UserDetails{
 		Set<UserModel> results=new HashSet<UserModel>();
 		Set<RoleModel> roles=getAllRoles();
 		for(RoleModel role:roles){
-			if(role.getSubordinates()!=null&&role.getSubordinates().size()>0){
-				for(RoleModel subRole:role.getSubordinates()){
+			if(role.getAllSubordinates()!=null&&role.getAllSubordinates().size()>0){
+				for(RoleModel subRole:role.getAllSubordinates()){
 					if(subRole.getAllUsers()!=null&&subRole.getAllUsers().size()>0){
 						for(UserModel user:subRole.getAllUsers()){
 							results.add(user);
@@ -254,6 +254,14 @@ public class UserModel  extends BaseModel implements UserDetails{
 			DepartmentModel department=mainRole.getBelongDepartment();
 			if(department!=null&&department.getUsers()!=null&&department.getUsers().size()>0){
 				for(UserModel user:department.getUsers()){
+									results.add(user);
+								
+				}
+			}
+			Set<DepartmentModel> departments=mainRole.getDepartments();
+			for(DepartmentModel dep:departments)
+			if(dep!=null&&dep.getUsers()!=null&&dep.getUsers().size()>0){
+				for(UserModel user:dep.getUsers()){
 									results.add(user);
 								
 				}

@@ -35,7 +35,7 @@ public class TeacherExcelImportController{
 	private TeacherService teacherService;
 	
 	public TeacherExcelImportController(){
-		System.out.println("cccasas");
+		 //System.out.println("cccasas");
 	}
 
     @RequestMapping("/basic/staff/spring/excelUpload.action") 
@@ -46,7 +46,7 @@ public class TeacherExcelImportController{
     	workbook = Workbook.getWorkbook(file.getInputStream());
     	Sheet sheet = workbook.getSheet(0);
     	
-    	System.out.println(sheet.getColumns());
+    	 //	System.out.println(sheet.getColumns());
     	
 		PrintWriter out = null;
 		out = response.getWriter();
