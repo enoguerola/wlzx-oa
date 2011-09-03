@@ -146,10 +146,14 @@ mx|TabNavigator{
 	text-Roll-Over-Color: #4b5f0c;
 }
 
+/************  工具栏(新增、删除按钮等摆放的栏)  ***************/
+.ToolBar{
+	background-color:#D0DDF0;
+}
 /************  在 searchBox 中的按钮  ***************/
 .BtnSearch{
 	font-family:"宋体";
-	font-size:16;
+	font-size:14;
 	font-weight:bold;
 }
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%" creationComplete="init();">
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%" creationComplete="init();" xmlns:component="system.component.*">
 	
 	<mx:Script>
 		<![CDATA[
@@ -34,26 +34,59 @@
 		
 		]]>
 	</mx:Script>
-	<mx:FormHeading label="条件查询"></mx:FormHeading>
-	<mx:HBox verticalAlign="middle" width="100%" horizontalGap="10" paddingLeft="10"  paddingRight="10" horizontalAlign="left">
-		<mx:Label text="发文字号" width="100" textAlign="right"/>
-		<mx:TextInput id="search_word" width="60"/>
-		<mx:Label text="-" width="10"/>
-		<mx:TextInput id="search_year" width="50"/>
-		<mx:Label text="-" width="10"/>
-		<mx:TextInput id="search_num" width="30"/>
-		<mx:Label text="[字-年份-编号]" width="100" textAlign="right"/>
-		<mx:Label text="主办单位" width="100" textAlign="right"/>
-		<mx:TextInput id="search_department" width="130"/>
-		<mx:Label text="发文时间" width="100" textAlign="right"/>
-		<mx:DateField id="search_date_begin" yearNavigationEnabled="true" width="100" formatString="YYYY-MM-DD"></mx:DateField>
-		<mx:Label  text="--"  width="20" textAlign="center"/>
-		<mx:DateField id="search_date_end" yearNavigationEnabled="true" width="100" formatString="YYYY-MM-DD"></mx:DateField>
-	</mx:HBox>
 	
-	<mx:HBox verticalAlign="middle" width="100%" horizontalGap="10" paddingLeft="10"  paddingRight="10" horizontalAlign="left">
-		<mx:Label text="发文标题" width="100" textAlign="right"/>
-		<mx:TextInput id="search_title" width="450"/>
-		<mx:Button label="搜索" width="70" click="search();"/>
-	</mx:HBox>
+	<!--*****************  条件查询框    ************************-->
+	
+	<component:Fieldset title="条件查询" paddingTop="10" width="100%" height="90%"  >
+		<mx:Grid verticalGap="10" horizontalGap="2" verticalAlign="middle" >
+			
+			<!--************ 第一行  *************-->
+			<mx:GridRow  horizontalAlign="right" verticalAlign="middle" paddingTop="5" >
+				<mx:GridItem >
+					<mx:HBox verticalAlign="middle"  >
+						<mx:Label text="发文字号" width="70" textAlign="right"/>
+						<mx:TextInput id="search_word" width="60"/>
+						<mx:Label text="-" width="10"/>
+						<mx:TextInput id="search_year" width="50"/>
+						<mx:Label text="-" width="10"/>
+						<mx:TextInput id="search_num" width="30"/>
+						<mx:Label text="[字-年份-编号]" width="130" textAlign="left"/>
+					</mx:HBox>
+				</mx:GridItem>
+				<mx:GridItem >
+					<mx:HBox verticalAlign="middle">
+						<mx:Label text="主办单位" width="70" textAlign="right"/>
+						<mx:TextInput id="search_department" width="280"/>
+					</mx:HBox>
+				</mx:GridItem>
+			</mx:GridRow>
+			
+			<!--************ 第二行  *************-->
+			<mx:GridRow horizontalAlign="right" verticalAlign="middle" >
+				<mx:GridItem>
+					<mx:HBox verticalAlign="middle">
+						<mx:Label text="发文时间" width="70" textAlign="right"/>
+						<mx:DateField id="search_date_begin" yearNavigationEnabled="true" width="100" formatString="YYYY-MM-DD"></mx:DateField>
+						<mx:Label  text="--"  width="20" textAlign="center"/>
+						<mx:DateField id="search_date_end" yearNavigationEnabled="true" width="100" formatString="YYYY-MM-DD"></mx:DateField>
+					</mx:HBox>
+				</mx:GridItem>
+				<mx:GridItem>
+					<mx:HBox verticalAlign="middle" >
+						<mx:Label text="发文标题" width="70" textAlign="right"/>
+						<mx:TextInput id="search_title" width="280"/>
+					</mx:HBox>
+				</mx:GridItem>
+			</mx:GridRow>
+			
+			<!--************ 第三行  *************-->
+			<mx:GridRow horizontalAlign="right" verticalAlign="middle" >
+				<mx:GridItem/>
+				<mx:GridItem horizontalAlign="right" verticalAlign="middle" >
+					<mx:Button label="搜   索" width="150"  height="20" styleName="BtnSearch" click="search();"/>
+				</mx:GridItem>
+			</mx:GridRow>
+		</mx:Grid>
+		</component:Fieldset>
+	
 </mx:VBox>

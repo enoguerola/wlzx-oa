@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Module xmlns:mx="http://www.adobe.com/2006/mxml"  layout="vertical" creationComplete="init();" width="100%" height="100%"
-		   xmlns:sendingFiles="oa.sendingFiles.component.*"   currentState="list" backgroundColor="white">
+		   xmlns:sendingFiles="oa.sendingFiles.component.*" xmlns:component="system.component.*"   currentState="list" backgroundColor="white">
 	<!-- 将非可视元素（例如服务、值对象）放在此处 -->
 	<mx:RemoteObject id="sendingFileServiceRO" destination="sendingFileServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 		<mx:method name="getWorkFlowsByConditions"  concurrency="last" result="getWorkFlowsByConditions_resultHandler(event);"/>
@@ -250,17 +250,22 @@
 		]]>
 	</mx:Script>
 	<mx:VBox borderVisible="true" width="100%" height="100%" styleName="PanelStyle" borderStyle="solid" horizontalAlign="center" verticalAlign="middle">
+		
+		<!-- **************  列表界面 **********************-->
 		<mx:VBox width="100%" height="100%" id="listPanel">
-			
-			<mx:VBox width="100%" height="80"  verticalGap="0" verticalAlign="middle" horizontalAlign="center" >
-				<mx:VBox width="100%" height="100%"   horizontalGap="10" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="0" paddingBottom="0"   paddingLeft="10" paddingRight="10">
-					<sendingFiles:searchBox id="search_panel" width="100%" height="100%"/>
+			<mx:VBox width="100%" height="140"  verticalGap="0" verticalAlign="middle" horizontalAlign="left" >
+				<mx:VBox width="100%" height="100%"   horizontalGap="10" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="10" paddingBottom="0"   paddingLeft="10">
+					<sendingFiles:searchBox id="search_panel" width="95%" />
 				</mx:VBox>
 			</mx:VBox>
-			<mx:VBox width="100%" height="100%"  verticalAlign="middle" horizontalAlign="center" paddingLeft="10" paddingRight="10" paddingBottom="10" paddingTop="10">
-				<sendingFiles:datagrid id="draft_grid"/>
+			<mx:VBox width="100%" height="100%"  verticalAlign="middle" horizontalAlign="left" paddingLeft="10"  paddingBottom="10" paddingTop="0">
+				<component:Fieldset title="列表清单" width="95%" height="95%">
+					<sendingFiles:manageDatagrid id="draft_grid"/>
+				</component:Fieldset>
 			</mx:VBox>
 		</mx:VBox>
+		
+		<!-- **************  编辑面板 **********************-->
 		<mx:VBox width="100%" height="100%" id="editPanel">
 			<mx:HBox width="100%" height="25" paddingLeft="20"  horizontalGap="10" styleName="CustomHBoxStyle"   verticalAlign="middle">
 				<mx:Label text="|"/>
