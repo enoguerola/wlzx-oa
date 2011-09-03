@@ -8,7 +8,7 @@
 		</mx:VBox>
 		<mx:HBox  borderVisible="true" width="100%" height="60%"  verticalAlign="top"  horizontalAlign="center">
 			<mx:HBox width="30%"  horizontalAlign="right">
-				<mx:Image source="@Embed(source='../WebContent/resources/404.jpg')"/>
+				<mx:Image source="@Embed(source='../WebContent/resources/404.png')"/>
 			</mx:HBox>
 			<mx:VBox width="70%" horizontalAlign="left" verticalGap="10" paddingLeft="50">
 				<mx:Label text="访问异常，这可能是以下原因引起的:"  fontWeight="bold"/>		
