@@ -353,39 +353,40 @@
 					<!--<mx:FormHeading label="条件查询"></mx:FormHeading>-->
 					<s:TextArea  text="条件查询" x="10"  styleName="CustomTextAreaStyle" height="25" width="100"  >
 					</s:TextArea >
-					<mx:HBox>
+					<mx:HBox horizontalAlign="right">
 						<mx:HBox verticalAlign="middle">
-							<mx:Label  text="发布人"  width="100"  textAlign="right"/>
+							<mx:Label  text="发布人"  width="70"  textAlign="right"/>
 							<hc:AutoComplete id="search_account"  labelField="name"  width="150"  matchType="anyPart" prompt="选择"  change="{ searchAccountHandleAutoCompleteChange() }" dropDownItemRenderer="{ searchAccountDropDownItemRenderer }" selectedItemStyleName="none">
 							</hc:AutoComplete>
 							<mx:Label id="search_account_id" visible="false">
 							</mx:Label>
 						</mx:HBox>	
 						<mx:HBox>
-							<mx:Label  text="公告类型"  width="100"  textAlign="right"/>
-							<mx:ComboBox id="search_type"    editable="false" width="80"/>
+							<mx:Label  text="公告类型"  width="60"  textAlign="right"/>
+							<mx:ComboBox id="search_type"    editable="false" width="100"/>
 						</mx:HBox>
 						<mx:HBox verticalAlign="middle">
-							<mx:Label  text="公告范围"  width="100"  textAlign="right"/>
-							<mx:ComboBox id="search_scope"  dataProvider="{scopes}" selectedIndex="0"  editable="false"  width="80"/>
+							<mx:Label  text="公告范围"  width="70"  textAlign="right"/>
+							<mx:ComboBox id="search_scope"  dataProvider="{scopes}" selectedIndex="0"  editable="false"  width="100"/>
 						</mx:HBox>
 						<mx:HBox verticalAlign="middle">
-							<mx:Label  text="优先级 "  width="100"  textAlign="right"/>
-							<mx:ComboBox  id="_emergence" dataProvider="{noticeEmergenceList}"  selectedIndex="0"  editable="false"/>
+							<mx:Label  text="优先级 "  width="70"  textAlign="right"/>
+							<mx:ComboBox  id="_emergence" dataProvider="{noticeEmergenceList}"  selectedIndex="0"  editable="false" width="100"/>
 						</mx:HBox>
 					</mx:HBox>
-					<mx:HBox>
+					<mx:HBox horizontalAlign="right">
 						<mx:HBox>
-							<mx:Label  text="发布部门"  width="100"  textAlign="right"/>
+							<mx:Label  text="发布部门"  width="70"  textAlign="right"/>
 							<mx:ComboBox id="search_department"  selectedIndex="0" dataProvider="{departmentList}" editable="false" width="150"/>
 						</mx:HBox>
-						<mx:HBox verticalAlign="middle">
-							<mx:Label  text="发布日期"  width="100"  textAlign="right"/>
+						<mx:HBox verticalAlign="middle" horizontalAlign="right">
+							<mx:Label  text="发布日期"  width="70"  textAlign="right"/>
 							<mx:DateField yearNavigationEnabled="true" id="search_date_begin"   formatString="YYYY-MM-DD"  editable="false" width="120"/>
 							<mx:Label  text="--"  width="20" textAlign="center"/>
 							<mx:DateField yearNavigationEnabled="true" id="search_date_end"  formatString="YYYY-MM-DD" editable="false" width="120"/>
 						</mx:HBox>	
-						<mx:Button  label="搜索"  width="70"   click="search()"/>
+						<mx:Spacer width="100" />
+						<mx:Button  label="搜索"  width="100"   click="search()"/>
 					</mx:HBox>
 		
 				</mx:VBox>
