@@ -239,7 +239,7 @@
 			}
 		]]>
 	</mx:Script>
-	<mx:Panel width="100%" height="100%" title="其他单位"  borderVisible="false" id="departments" dropShadowVisible="false">
+	<mx:Panel width="100%" height="100%" title="其他单位"  borderVisible="true" id="departments" dropShadowVisible="false">
 		
 		<mx:VBox width="100%" height="100%" id="department_listPanel" >
 			<mx:HBox verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12" height="30" paddingLeft="20">

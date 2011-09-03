@@ -1066,7 +1066,7 @@
 										</mx:FormItem>
 									</s:HGroup>
 									<s:HGroup width="100%">
-										<mx:FormItem label="紧要联络电话" width="25%">
+										<mx:FormItem label="电话" width="25%">
 											<mx:TextInput id='contactPhone' width="100%"/>
 										</mx:FormItem>
 										<mx:FormItem label="何时工作" width="30%">
