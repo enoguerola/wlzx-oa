@@ -74,7 +74,7 @@
 				<mx:GridItem >
 					<mx:HBox verticalAlign="middle">
 						<s:Label text="收文办号" width="75" textAlign="right"/>
-						<s:TextInput id="do_number" width="200"/>
+						<s:TextInput id="do_number" width="120"/>
 					</mx:HBox>
 				</mx:GridItem>
 			</mx:GridRow>
@@ -98,7 +98,7 @@
 				<mx:GridItem  horizontalAlign="right">
 					<mx:HBox verticalAlign="middle">
 						<s:Label text="处理状态" width="75" textAlign="right"/>
-						<s:DropDownList dataProvider="{status_list}" id="status" width="200" selectedIndex="0" requireSelection="true"/>
+						<s:DropDownList dataProvider="{status_list}" id="status" width="120" selectedIndex="0" requireSelection="true"/>
 					</mx:HBox>
 				</mx:GridItem>
 			</mx:GridRow>
@@ -108,7 +108,7 @@
 				<mx:GridItem/>
 				<mx:GridItem/>
 				<mx:GridItem horizontalAlign="right" >
-						<mx:Button label="搜  索" width="200" height="25" styleName="BtnSearch" click="search();"/>
+						<mx:Button label="搜  索" width="120" height="20" styleName="BtnSearch" click="search();"/>
 				</mx:GridItem>
 			</mx:GridRow>
 			
