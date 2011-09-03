@@ -229,27 +229,34 @@
 			}
 		]]> 		
 	</fx:Script> 
-	<mx:VBox borderVisible="true" width="100%" height="100%" borderStyle="solid">
+	<mx:VBox borderVisible="true" width="100%" height="100%" borderStyle="solid" verticalGap="10">
 		<mx:VBox width="100%"  height="100%"   verticalGap="0" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
-			<mx:VBox width="100%" horizontalAlign="center" verticalGap="0" height="60">
+			<mx:VBox width="100%" horizontalAlign="center" verticalGap="5">
 				<mx:HBox width="100%" horizontalAlign="center">
 					<mx:Label  text=""    width="100%"  letterSpacing="5" textAlign="center" fontSize="14"  fontWeight="bold" height="30"  id="search_account_name"/>
 					<mx:Label id="search_account_id" visible="false" width="0"/>
 				</mx:HBox>
-				<mx:HBox width="100%" horizontalAlign="right">
-					<!--<mx:HBox width="100%">
-						<mx:Label  text="状态"  width="100"  textAlign="right"/>
-						<mx:ComboBox id="search_state"  dataProvider="{taskStateList}" selectedIndex="0"  editable="false" width="80"/>
-					</mx:HBox>-->
-					<mx:Label  text="时间区间"  width="100"  textAlign="right"/>
-					<mx:DateField yearNavigationEnabled="true" id="search_date_begin"   formatString="YYYY-MM-DD"  editable="false" width="120"/>
-					<mx:Label  text="--"  width="20" textAlign="center"/>
-					<mx:DateField yearNavigationEnabled="true" id="search_date_end"  formatString="YYYY-MM-DD" editable="false" width="120"/>
-					<mx:Button  label="搜索"  width="60"   click="search()"/>
-				</mx:HBox>
 				
+				<!--************  搜索面板 ************-->
+				<mx:VBox height="60" width="100%" >
+					<component:Fieldset title="搜索条件" width="95%" height="95%" >
+						<mx:HBox width="100%" horizontalAlign="left" horizontalGap="10">
+							<mx:Label  text="时间区间"  width="100"  textAlign="right"/>
+							<mx:DateField yearNavigationEnabled="true" id="search_date_begin"   formatString="YYYY-MM-DD"  editable="false" width="120"/>
+							<mx:Label  text="--"  width="20" textAlign="center"/>
+							<mx:DateField yearNavigationEnabled="true" id="search_date_end"  formatString="YYYY-MM-DD" editable="false" width="120"/>
+							<mx:Button  label="搜索"  width="100"   click="search()"/>
+						</mx:HBox>
+					</component:Fieldset>
+				</mx:VBox>
+		
 			</mx:VBox>
-			<mx:Panel width="100%"   styleName="customPanel" title="待办工作"  cornerRadius="5" borderVisible="false" dropShadowVisible="false" verticalScrollPolicy="auto" height="50%">
+
+		<mx:Spacer height="10"/>
+			<!-- ************ 待办工作面板 **************-->
+		<component:Fieldset title="待办工作列表" width="95%" height="50%" >
+			
+			<mx:Panel width="100%" height="100%"  styleName="customPanel" title="待办工作"  cornerRadius="5" borderVisible="false" dropShadowVisible="false" verticalScrollPolicy="auto" >
 
 			<component:WlzxPageDataGrid width="100%" height="100%"   autoLayout="true"  borderAlpha="0.2" verticalAlign="middle"   id="taskTable" pagecount="10"  >				
 				<component:mygridcolumns>				
@@ -311,7 +318,14 @@
 				</component:mygridcolumns>
 			</component:WlzxPageDataGrid>
 			</mx:Panel>	
-			<mx:Panel width="100%"   styleName="customPanel" title="历史工作"  cornerRadius="5" borderVisible="false" dropShadowVisible="false" verticalScrollPolicy="auto" height="50%">
+			
+		</component:Fieldset>
+			
+			<mx:Spacer height="10"/>
+			<!-- ************ 历史工作面板 **************-->
+		<component:Fieldset title="历史工作列表" width="95%" height="50%" >
+			
+			<mx:Panel width="100%"  height="100%"  styleName="customPanel" title="历史工作"  cornerRadius="5" borderVisible="false" dropShadowVisible="false" verticalScrollPolicy="auto">
 				
 				<component:WlzxPageDataGrid width="100%" height="100%"    autoLayout="true"  borderAlpha="0.2" verticalAlign="middle"   id="historyTaskTable" pagecount="5"  >				
 					<component:mygridcolumns>						
@@ -354,9 +368,9 @@
 				</component:WlzxPageDataGrid>
 				
 			</mx:Panel>	
-			
+		</component:Fieldset >
+
 		</mx:VBox>
-		
 		
 	</mx:VBox>
 </mx:Module>
