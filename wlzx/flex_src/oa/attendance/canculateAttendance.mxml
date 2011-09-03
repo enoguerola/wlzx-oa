@@ -114,48 +114,46 @@
 		<mx:VBox borderVisible="true" width="100%" height="100%" borderStyle="solid">	
 		<s:VGroup width="100%" height="100%">
 			<s:HGroup verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12">
-				<mx:HBox width="100%" height="25" paddingLeft="20"  horizontalGap="10" styleName="CustomHBoxStyle"   verticalAlign="middle">
+				<mx:HBox width="100%" height="25" paddingLeft="20"  horizontalGap="10" styleName="ToolBar"   verticalAlign="middle">
 					<mx:Label text="|"/>
 					<mx:LinkButton  label="导出" icon="@Embed(source='../WebContent/resources/common/tools/button_printer_icon.png')"  click="export()"/>
 					<mx:Label text="|"/>
 				</mx:HBox>
 			</s:HGroup>
-			<s:VGroup width="100%" height="100%" gap="0" verticalAlign="middle" horizontalAlign="center" >
-				<mx:FormHeading label="统计条件" width="100%" textAlign="left" height="20">
-					
-				</mx:FormHeading>
+			<mx:VBox width="100%" height="100%" verticalGap="10" verticalAlign="middle" horizontalAlign="left" paddingLeft="10" paddingBottom="10" >
 				
-				<mx:HBox width="100%" height="50"   horizontalGap="10" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
-					
-					<s:HGroup verticalAlign="middle">
-						<s:Label  text="部门" />
-						<s:DropDownList  width="200" id="departments" labelField="headerText" />
-
-					
-					</s:HGroup>	
-					<s:HGroup verticalAlign="middle">
-						<s:Label  text="教师" />
-						<hc:AutoComplete id="search_account"  labelField="name"  width="200"  matchType="anyPart" prompt="选择教师"  change="{ searchAccountHandleAutoCompleteChange() }" dropDownItemRenderer="{ searchAccountDropDownItemRenderer }" selectedItemStyleName="none">
+				<!--************  搜索面板 ************-->
+				<mx:VBox height="60" width="100%" >
+					<component:Fieldset title="统计条件" width="95%" height="95%"  >
+						<mx:HBox width="100%"  horizontalGap="5" verticalAlign="bottom" horizontalAlign="left" >
 							
-						</hc:AutoComplete>
-						<mx:Label id="search_account_id" visible="false">
-							
-						</mx:Label>
-					</s:HGroup>
-					<mx:HBox verticalAlign="middle">
-						<mx:Label  text="时间区间"  width="100"  textAlign="right"/>
-						<mx:DateField yearNavigationEnabled="true" id="search_date_begin"   formatString="YYYY-MM-DD"  editable="false" width="120"/>
-						<mx:Label  text="--"  width="20" textAlign="center"/>
-						<mx:DateField yearNavigationEnabled="true" id="search_date_end"  formatString="YYYY-MM-DD" editable="false" width="120"/>
-					</mx:HBox>	
-					<mx:Button  label="搜索"  width="80"   click="search()"/>
-					
-					
-				</mx:HBox>
-				<mx:HBox width="100%" height="100%" paddingLeft="10" paddingRight="10" paddingBottom="10">
-					<s:Panel width="100%" height="100%"  styleName="customPanel" title="统计列表"  cornerRadius="5" borderVisible="false" dropShadowVisible="false">
+							<mx:HBox verticalAlign="middle">
+								<s:Label  text="部门" />
+								<s:DropDownList  width="200" id="departments" labelField="headerText" />
+							</mx:HBox>	
+							<mx:HBox verticalAlign="middle">
+								<s:Label  text="教师" />
+								<hc:AutoComplete id="search_account"  labelField="name"  width="100"  matchType="anyPart" prompt="选择教师"  change="{ searchAccountHandleAutoCompleteChange() }" dropDownItemRenderer="{ searchAccountDropDownItemRenderer }" selectedItemStyleName="none">
+								</hc:AutoComplete>
+								<mx:Label id="search_account_id" visible="false">
+								</mx:Label>
+							</mx:HBox>
+							<mx:HBox verticalAlign="middle">
+								<mx:Label  text="时间区间"  width="60"  textAlign="right"/>
+								<mx:DateField yearNavigationEnabled="true" id="search_date_begin"   formatString="YYYY-MM-DD"  editable="false" width="120"/>
+								<mx:Label  text="--"  width="20" textAlign="center"/>
+								<mx:DateField yearNavigationEnabled="true" id="search_date_end"  formatString="YYYY-MM-DD" editable="false" width="120"/>
+							</mx:HBox>	
+							<mx:Button  label="搜索"  width="80"   click="search()"/>
+						</mx:HBox>
+					</component:Fieldset>
+				</mx:VBox>
+				
+				<!--**************** 列表区域 ****************-->
+				<component:Fieldset title="列表清单" width="95%" height="100%" >
+					<s:Panel width="100%" height="100%"  styleName="customPanel" title="统计列表"  cornerRadius="5" borderVisible="true" dropShadowVisible="false">
 						
-						<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="false"   borderAlpha="0.2" verticalAlign="middle"   id="accountTable" pagecount="10"  >				
+						<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="true"   borderAlpha="1" verticalAlign="middle"   id="accountTable" pagecount="10"  >				
 							<component:mygridcolumns>
 								
 								<mx:DataGridColumn textAlign="center" headerText="帐号" width="60">
@@ -249,9 +247,9 @@
 							</component:mygridcolumns>
 						</component:WlzxPageDataGrid>
 					</s:Panel>
-				</mx:HBox>
+				</component:Fieldset>
 				
-			</s:VGroup>
+			</mx:VBox>
 		</s:VGroup>
 		
 		
