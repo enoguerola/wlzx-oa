@@ -62,7 +62,7 @@ in accordance with the terms of the license agreement accompanying it.
 		<!--- @private -->
 		<s:Rect id="border" left="0" right="0" top="0" bottom="0" >
 			<s:fill>
-				<s:SolidColor alpha="0.1"/>
+				<s:SolidColor alpha="1.0" color="#6080E0"/>
 			</s:fill>
 		</s:Rect>
 		<!-- layer 2: background fill -->
