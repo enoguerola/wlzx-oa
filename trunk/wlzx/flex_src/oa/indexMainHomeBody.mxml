@@ -380,10 +380,10 @@
 							<mx:DataGridColumn textAlign="center" headerText="主题" width="150">
 								<mx:itemRenderer>
 									<mx:Component>
-										<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+										<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off" verticalScrollPolicy="off">
 											
-											<mx:Label text="{data.title}" width="80%"/>
-											
+											<!--<mx:Label text="{data.title}" width="80%"/>-->
+											<mx1:Text text="{data.title}" width="140"/>
 										</mx:HBox>																			
 									</mx:Component>						
 								</mx:itemRenderer>
