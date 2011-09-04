@@ -15,6 +15,8 @@
 	<fx:Style source="home.css"/>
 	<fx:Script>
 		<![CDATA[
+			import com.benstucki.utilities.IconUtility;
+			
 			import flashx.textLayout.formats.BackgroundColor;
 			
 			import flexlib.controls.IconLoader;
@@ -40,7 +42,7 @@
 			import mx.rpc.events.*;
 			
 			import spark.components.*;
-			import com.benstucki.utilities.IconUtility;  
+			
 			import system.component.WlzxLockWin;
 			import system.entity.*;
 			import system.event.BaseEvent;
@@ -136,6 +138,8 @@
 						tree.labelField="@label";
 						tree.setStyle("textAlign","left");
 						tree.setStyle("paddingLeft","10");
+						tree.doubleClickEnabled=true;
+						tree.addEventListener(ListEvent.ITEM_DOUBLE_CLICK ,dbClickMenuItem);
 						tree.dataProvider=menuData;
 						tree.addEventListener(ListEvent.ITEM_CLICK,clickLeafMenuItem);
 						vbox.addElement(tree);
@@ -144,10 +148,31 @@
 				}
 								
 			}
+			public function dbClickMenuItem(event:Event):void{ 
+				var tree:Tree=Tree(event.target);
+				var selectedNode:XML=tree.selectedItem as XML; 
+				if(selectedNode.children().length()!=0){
+					if(tree.openItems.indexOf(tree.selectedItem)!=-1){
+						tree.expandChildrenOf(tree.selectedItem,false);
+					}else{
+						tree.expandChildrenOf(tree.selectedItem,true);
+					}
+					
+
+				}
+				//	addTab(selectedNode.@symbol,selectedNode.@label,nav,selectedNode.@url,null,selectedNode.@parms);
+				//else {
+					//Alert.show("a");
+				//}
+				//Alert.show(selectedNode.@label);
+			} 
 			public function clickLeafMenuItem(event:Event):void{ 
 				var selectedNode:XML=Tree(event.target).selectedItem as XML; 
 				if(selectedNode.children().length()==0)
 					addTab(selectedNode.@symbol,selectedNode.@label,nav,selectedNode.@url,null,selectedNode.@parms);
+//				else {
+//					Alert.show("a");
+//				}
 				//Alert.show(selectedNode.@label);
 			} 
 			private function buildSubMenus(menu:MenuModel):String{
