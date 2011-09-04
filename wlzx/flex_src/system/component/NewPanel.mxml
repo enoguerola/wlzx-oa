@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml" >
+	<mx:Script>
+		<![CDATA[
+			
+			import mx.controls.LinkButton;
+			import flash.events.MouseEvent;
+			
+			// “更多”按钮
+			private var btnMore:LinkButton;
+			
+			//下面的两个重载过的函数会在视图生成的时候自动执行
+			
+			override protected function createChildren():void
+			{
+				super.createChildren();
+				
+				btnMore = new LinkButton;
+				btnMore.label = "[>> 更多]";
+				btnMore.addEventListener(MouseEvent.CLICK, toMaxHandler);
+				titleBar.addChild(btnMore);
+				
+			}
+			
+			override protected function updateDisplayList (unscaledWidth:Number, unscaledHeight:Number):void
+			{
+				super.updateDisplayList(unscaledWidth, unscaledHeight);
+				
+				btnMore.setActualSize( btnMore.getExplicitOrMeasuredWidth(),
+					btnMore.getExplicitOrMeasuredHeight() );
+				
+				var y:int = 4;
+				var x:int = this.width - btnMore.width - 12;
+				btnMore.move(x, y);
+				
+			} 
+			
+			//点击linkbutton后的触发函数
+			private function toMaxHandler(event:MouseEvent):void
+			{
+					dispatchEvent(new Event("EvtMoreClicked"));
+			}
+			
+		]]>
+	</mx:Script>
+	
+	<!--定义事件，便于此Panel触发后，被其父容器捕获-->
+	
+	<mx:Metadata>
+		[Event(name = "EvtMoreClicked")]
+	</mx:Metadata>
+	
+</mx:Panel>
