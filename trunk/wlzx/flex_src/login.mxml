@@ -3,7 +3,7 @@
 <!--当 Application 完成构建后立即触发 init() 方法，以实现对 Server 端 Java 的调用-->
 <s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
 			   xmlns:s="library://ns.adobe.com/flex/spark" 
-			   xmlns:mx="library://ns.adobe.com/flex/mx"   width="100%" pageTitle="登陆页面"   creationComplete="init();" height="100%"  xmlns:flexlib="http://code.google.com/p/flexlib/"  xmlns:viewers="flexlib.scheduling.scheduleClasses.viewers.*" xmlns:sliderClasses="flexlib.controls.sliderClasses.*" xmlns:baseClasses="flexlib.baseClasses.*">
+			   xmlns:mx="library://ns.adobe.com/flex/mx" preloader="system.component.Preloader"  width="100%" pageTitle="登陆页面"   creationComplete="init();" height="100%"  xmlns:flexlib="http://code.google.com/p/flexlib/"  xmlns:viewers="flexlib.scheduling.scheduleClasses.viewers.*" xmlns:sliderClasses="flexlib.controls.sliderClasses.*" xmlns:baseClasses="flexlib.baseClasses.*">
 	<fx:Style source="login.css"/>
 	<fx:Declarations>
 		<mx:StringValidator id="name_stringValidator" source="{j_username}" property="text"  requiredFieldError="登陆账号不能为空"/>
@@ -33,6 +33,7 @@
 			         private function onExecuteSuccess(event:ResultEvent):void  
 			         { 
 //						Alert.show(e.toString());
+						 unLockWin();
 						 var result:String=event.result as String;
 						 //Alert.show(result+"");
 						 if(result=="success")
@@ -51,6 +52,7 @@
 			         } 
 					 private function service_faultHandler(event:FaultEvent):void
 					 {
+						 unLockWin();
 		                Alert.show("请求异常");
 //						 resultMsg.text="用户名密码错误";
 //						 resultArea.visible=true;
@@ -74,6 +76,7 @@
 						   if (isValidForm) {
 							   md5Pw.text=MD5.encrypt(j_password.text);
 							   myHttp.url="j_spring_security_check?time="+new Date();
+							   lockWin();
 							   myHttp.send();
 //							   myHttp.url="j_spring_security_check?time="+new Date();
 //							   myHttp.send();//临时解决初次请求不响应问题？？
@@ -118,7 +121,25 @@
 							   validateForm();
 						   }
 					   }
-					  
+					   import system.component.WlzxLockWin;
+					   import mx.managers.PopUpManager;
+					   private var window:WlzxLockWin=null;
+					   private function lockWin():void{
+						   if(window==null){
+							   window=WlzxLockWin(PopUpManager.createPopUp(this,WlzxLockWin,true)); 
+							   window.tip.text="身份验证中";
+							   PopUpManager.centerPopUp(window);
+							   window.percentHeight=100;
+							   window.percentWidth=100;
+						   }		
+						   
+					   }
+					   private function unLockWin():void{
+						   if(window!=null){
+							   PopUpManager.removePopUp(window);
+						   	   window=null;
+						   }
+					   }
 			         ]]>    
 		 </fx:Script> 
 	
