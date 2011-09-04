@@ -64,7 +64,7 @@
 			public var lastLoginTime:String;
 			public var currentUser:UserModel;
 			public var allTeacherAcccounts:ArrayCollection = new ArrayCollection();
-			public var allFirstLevelDepartment:ArrayCollection = new ArrayCollection();
+			public var allFirstLevelAboveDepartment:ArrayCollection = new ArrayCollection();
 			public var allDepartment:ArrayCollection = new ArrayCollection();
 			public var allRole:ArrayCollection = new ArrayCollection();
 			public var allPlace:ArrayCollection = new ArrayCollection();
@@ -169,11 +169,18 @@
 				}else{
 					var list:ArrayCollection=currentUser.getDepartments();
 					for(var i:int=0;i<list.length;i++){
-						var department:Object=list.getItemAt(i);
-						var leaderDepartment2FirstLevel:Object=department.getLeaderDepartment2FirstLevel();
-						if(leaderDepartment2FirstLevel!=null)
-						currentUserFirstLevelDepartment.addItem( {data:leaderDepartment2FirstLevel.id, label:leaderDepartment2FirstLevel.name});
+						var department:Object=list.getItemAt(i) as Object;
+						if(department.level=='0'||department.level=='1'){
+							currentUserFirstLevelDepartment.addItem( {data:department.id, label:department.name});
+						}else{
+							var leaderDepartment2FirstLevel:Object=department.getLeaderDepartment2FirstLevel();
+							if(leaderDepartment2FirstLevel!=null)
+							currentUserFirstLevelDepartment.addItem( {data:leaderDepartment2FirstLevel.id, label:leaderDepartment2FirstLevel.name});
+
+						}
 						currentUserDepartment.addItem( {data:department.id, label:department.name});
+						
+						
 					}
 					//Alert.show(currentUserDepartment.length+"ab");
 				}
@@ -217,7 +224,7 @@
 				for (var i:int = 0; i < list.length; i++){
 					var _de:DepartmentModel = list.getItemAt(i) as DepartmentModel;	
 					if(_de.level==1)
-					allFirstLevelDepartment.addItem( {data:_de.id, label:_de.name});
+					allFirstLevelAboveDepartment.addItem( {data:_de.id, label:_de.name});
 				}
 			}
 			

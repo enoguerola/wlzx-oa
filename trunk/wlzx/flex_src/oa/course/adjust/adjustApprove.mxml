@@ -606,10 +606,10 @@
 												<mx1:Text text="调课课程" width="60" textAlign="center"/>
 											</mx:GridItem>
 											<mx:GridItem  borderStyle="solid" verticalAlign="middle">
-												<mx1:Text  text="原上课时间" width="150" textAlign="center"/>
+												<mx1:Text  text="原上课时间" width="75" textAlign="center"/>
 											</mx:GridItem>
 											<mx:GridItem  borderStyle="solid" verticalAlign="middle">
-												<mx1:Text  text="意向时间" width="60" textAlign="center"/>
+												<mx1:Text  text="意向时间" width="75" textAlign="center"/>
 											</mx:GridItem>
 											<mx:GridItem  borderStyle="solid" verticalAlign="middle">
 												<mx1:Text  text="意向教师" width="60" textAlign="center"/>
@@ -631,10 +631,10 @@
 													<mx1:Text text="{detailApplyItemsRepeater.currentItem.applyCourse}" width="60" textAlign="center"/>
 												</mx:GridItem>
 												<mx:GridItem  borderStyle="solid" verticalAlign="middle">
-													<mx1:Text   textAlign="center" width="150" text="{formatDate((detailApplyItemsRepeater.currentItem.applyCourseDate) as Date,'YYYY-MM-DD')+detailApplyItemsRepeater.currentItem.applyCourseTime}"   />
+													<mx1:Text   textAlign="center" width="75" text="{formatDate((detailApplyItemsRepeater.currentItem.applyCourseDate) as Date,'YYYY-MM-DD')+'\n'+detailApplyItemsRepeater.currentItem.applyCourseTime}"   />
 												</mx:GridItem>
 												<mx:GridItem  borderStyle="solid" verticalAlign="middle">
-													<mx1:Text  textAlign="center"  text="{formatDate((detailApplyItemsRepeater.currentItem.adjustMeanDate) as Date,'YYYY-MM-DD')+detailApplyItemsRepeater.currentItem.adjustMeanTime}"  />
+													<mx1:Text  textAlign="center" width="75" text="{formatDate((detailApplyItemsRepeater.currentItem.adjustMeanDate) as Date,'YYYY-MM-DD')+'\n'+detailApplyItemsRepeater.currentItem.adjustMeanTime}"  />
 												</mx:GridItem>
 												<mx:GridItem  borderStyle="solid" verticalAlign="middle">
 													<mx1:Text width="60" textAlign="center" text="{parentApplication.getTeacherNameByAccountId(detailApplyItemsRepeater.currentItem.adjustMeanTeacherId)}" />

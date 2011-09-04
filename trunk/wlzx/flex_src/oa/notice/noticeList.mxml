@@ -44,7 +44,7 @@
 					departments.dataProvider=temp;
 				}
 				if(parentApplication.currentUser.hasDam("department_notice_read_main@defaultVisit@@noFilter@")){
-					var temp:ArrayCollection=ArrayCollection(parentApplication.allFirstLevelDepartment);
+					var temp:ArrayCollection=ArrayCollection(parentApplication.allFirstLevelAboveDepartment);
 					temp.addItemAt({data:null, label:"全部"},0);
 					departments.dataProvider=temp;
 				}

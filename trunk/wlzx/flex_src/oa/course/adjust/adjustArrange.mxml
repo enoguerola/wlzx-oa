@@ -652,10 +652,10 @@
 													<mx1:Text text="{detailApplyItemsRepeater.currentItem.applyCourse}" width="60" textAlign="center"/>
 												</mx:GridItem>
 												<mx:GridItem  borderStyle="solid" verticalAlign="middle">
-													<mx1:Text   textAlign="center" width="150" text="{formatDate((detailApplyItemsRepeater.currentItem.applyCourseDate) as Date,'YYYY-MM-DD')+detailApplyItemsRepeater.currentItem.applyCourseTime}"   />
+													<mx1:Text   textAlign="center" width="150" text="{formatDate((detailApplyItemsRepeater.currentItem.applyCourseDate) as Date,'YYYY-MM-DD')+'\n'+detailApplyItemsRepeater.currentItem.applyCourseTime}"   />
 												</mx:GridItem>
 												<mx:GridItem  borderStyle="solid" verticalAlign="middle">
-													<mx1:Text  textAlign="center"  text="{formatDate((detailApplyItemsRepeater.currentItem.adjustMeanDate) as Date,'YYYY-MM-DD')+detailApplyItemsRepeater.currentItem.adjustMeanTime}"  />
+													<mx1:Text  textAlign="center"  text="{formatDate((detailApplyItemsRepeater.currentItem.adjustMeanDate) as Date,'YYYY-MM-DD')+'\n'+detailApplyItemsRepeater.currentItem.adjustMeanTime}"  />
 												</mx:GridItem>
 												<mx:GridItem  borderStyle="solid" verticalAlign="middle">
 													<mx1:Text width="60" textAlign="center" text="{parentApplication.getTeacherNameByAccountId(detailApplyItemsRepeater.currentItem.adjustMeanTeacherId)}" />
