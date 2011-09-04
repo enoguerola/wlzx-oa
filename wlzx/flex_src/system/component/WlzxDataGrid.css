@@ -13,3 +13,7 @@ header颜色： #FFFFFF,#6080E0
 mx|DataGrid{
 	header-colors:#FFFFFF,#6080E0;
 }
+.DGHeader{
+	text-align:center;
+	font-size:14;
+}
