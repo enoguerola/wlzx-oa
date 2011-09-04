@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
 			   xmlns:s="library://ns.adobe.com/flex/spark" 
-			   xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" preloader="system.component.Preloader" height="100%"   creationComplete="init();">
+			   xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" preloader="system.component.Preloader" height="100%"  pageTitle="浙江省温岭中学"  preinitialize="init();" >
 	<s:layout>
 		<s:BasicLayout/>
 	</s:layout>
@@ -46,6 +46,7 @@
 			
 			import mx.collections.ArrayCollection;
 			import mx.controls.*;
+			import mx.events.FlexEvent;
 			import mx.events.ModuleEvent;
 			import mx.modules.*;
 			import mx.rpc.events.FaultEvent;
@@ -177,11 +178,11 @@
 					//Alert.show(currentUserDepartment.length+"ab");
 				}
 //				Alert.show(event.result.name);
-				callLater(function():void{
+				//callLater(function():void{
 					loadModule(default_url);
 					//启动权限控制
-					SecurityControler.start(null,'enabled');
-				});
+					//SecurityControler.start(null,'enabled');
+				//});
 			} 
 			private function securityUserHolder_fault_handler(event:FaultEvent):void
 			{
@@ -270,6 +271,7 @@
 			
 			
 
+			
 		]]>    
 	</fx:Script> 
 	<fx:Style source="home.css"/>

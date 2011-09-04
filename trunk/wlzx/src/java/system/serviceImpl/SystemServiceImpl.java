@@ -900,11 +900,12 @@ public class SystemServiceImpl implements SystemService{
 		StringBuilder result=new StringBuilder() ;
 		List<UserModel> users=userDAO.getAllUsers();
 		
-			if(type.intValue()==TaskVO.EType.AskForLeave_BusinessTrip_TechArrange.getValue().intValue()){
-				for(UserModel user:users)
-				if(user.hasDam("takeLeaveWorkDeal@noFilter@"))
-					result.append(user.getId()+";");
-			}else if(type.intValue()==TaskVO.EType.AskForLeave_BusinessTrip_OfficalApprove.getValue().intValue()){
+//			if(type.intValue()==TaskVO.EType.AskForLeave_BusinessTrip_TechArrange.getValue().intValue()){
+//				for(UserModel user:users)
+//				if(user.hasDam("takeLeaveWorkDeal@noFilter@"))
+//					result.append(user.getId()+";");
+//			}else
+			if(type.intValue()==TaskVO.EType.AskForLeave_BusinessTrip_OfficalApprove.getValue().intValue()){
 				for(UserModel user:users)
 				if(user.hasDam("takeLeaveOfficeApprove@noFilter@"))
 					result.append(user.getId()+";");

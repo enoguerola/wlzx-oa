@@ -187,14 +187,14 @@
 				remark.text=form.remark;
 				
 				//权限控制部分
-				if(this.parentApplication.currentUser.hasDam("takeLeaveWorkDeal@noFilter@")){
+			/* 	if(this.parentApplication.currentUser.hasDam("takeLeaveWorkDeal@noFilter@")){
 					arrange_tech_already.enabled=true;
 					arrange_manage_already.enabled=true;
 					arrange_service_already.enabled=true;
 					arrange_tech.enabled=true;
 					arrange_manage.enabled=true;
 					arrange_service.enabled=true;
-				}
+				} */
 				
 				if(this.parentApplication.currentUser.hasDam("takeLeavePrincipalApprove@noFilter@")){
 //					officeChief_approver_name.enabled=true;

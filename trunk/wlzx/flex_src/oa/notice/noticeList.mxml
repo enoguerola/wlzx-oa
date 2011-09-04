@@ -52,6 +52,7 @@
 			else if(parms=='school') {
 				noticeScope.text="学校公告";
 				departments.visible=false;
+				departmentsLabel.visible=false;
 
 			}
 			search();
@@ -95,7 +96,7 @@
 				<mx:Label  text=""    width="100%"  letterSpacing="5" textAlign="center" fontSize="14"  fontWeight="bold" height="30"  id="noticeScope"/>
 			</mx:HBox>
 			<mx:HBox width="100%" horizontalAlign="right"  horizontalGap="0">
-				<mx:Label  text="部门选择："  width="80"  textAlign="right"/>
+				<mx:Label  text="部门选择："  width="80"  textAlign="right" id="departmentsLabel"/>
 				<mx:ComboBox  width="100" id="departments"    labelField="label"  textAlign="left" />
 				<mx:Label  text="时间区间："  width="80"  textAlign="right"/>
 				<mx:DateField yearNavigationEnabled="true" id="search_date_begin"   formatString="YYYY-MM-DD"  editable="false" width="100"/>

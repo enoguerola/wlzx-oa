@@ -35,7 +35,7 @@
 <div>长时间未操作，用户认证过期。请重新登录</div>
 <div id="showDiv"></div>
 <script language="javascript">
-	load(base_path+'login.html');
+	load('login.html');
 </script>
 </body>
 </html> 

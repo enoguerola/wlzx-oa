@@ -33,6 +33,9 @@
 				<prop key="jdbc.fetch_size">50</prop>
 				<prop key="jdbc.batch_size">25</prop>
 				<prop key="hibernate.query.substitutions">true 1,false 0</prop>
+				<prop key="connection.autoReconnect">true</prop>  
+		        <prop key="connection.autoReconnectForPools">true</prop>     
+		        <prop key="connection.is-connection-validation-required">true</prop> 
 			</props>
 		</property>
 	</bean>

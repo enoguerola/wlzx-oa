@@ -13,10 +13,13 @@ package oa.entity.course.adjust
 		public var applyCourseDate:Date ;	
 		public var applyCourseTime:String ;
 		public var adjustMeanDate:Date;
+		public var adjustMeanTime:String ;
 		public var adjustMeanTeacherId:String ;
 		public var adjustActualDate:Date ;
 		public var adjustActualTime:String;	
 		public var adjustActualTeacherId:String;
+		public var adjustArrangeDate:Date ;
+		public var adjustArrangeAlready:int ;
 		public var apply:ApplyModel;
 	
 		public function ApplyItemModel()
