@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Module xmlns:mx="http://www.adobe.com/2006/mxml" 
-		   xmlns:mx1="library://ns.adobe.com/flex/mx" layout="vertical" width="100%" height="100%" creationComplete="init();">
+		   xmlns:mx1="library://ns.adobe.com/flex/mx" layout="vertical" width="100%" height="100%" creationComplete="init();" xmlns:component="system.component.*">
 		<mx:RemoteObject id="noticeServiceRO" destination="noticeServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 			<mx:method name="getTop5DepartmentNotice"  concurrency="last"  result="getTop5DepartmentNotice_resultHandler(event);" />
 			<mx:method name="getTop5SchoolNotice"  concurrency="last"  result="getTop5SchoolNotice_resultHandler(event);" />
@@ -35,7 +35,23 @@
 			import system.utils.*;
 			
 			private function init():void{
+				
 				search();
+				
+				// 事件初始化
+				SchoolNoticePanel.addEventListener("EvtMoreClicked",SchoolNoticeMore_Handler );
+				DepartmentNoticePanel.addEventListener("EvtMoreClicked",DepartmentNoticeMore_Handler);
+			}
+			
+			// 响应 校园公告 “更多”按钮的事件
+			protected function SchoolNoticeMore_Handler(evt:Event)
+			{
+				openSchoolNoticeList();
+			}
+			// 响应 部门公告 “更多”按钮的事件
+			protected function DepartmentNoticeMore_Handler(evt:Event)
+			{
+				openDepartmentNoticeList();
 			}
 			
 			public function search():void
@@ -124,7 +140,10 @@
 		<mx:HBox width="100%" height="100%">
 			<mx:VBox width="60%" height="100%">
 				<mx:VBox width="100%"  height="50%" verticalGap="0">
-					<mx:Panel width="100%" height="100%"  styleName="customPanel" title="校级公告 [>>更多]"  cornerRadius="5" borderVisible="true" borderStyle="solid" dropShadowVisible="false" click="openSchoolNoticeList();">
+					<component:NewPanel id="SchoolNoticePanel" width="100%" height="100%"  styleName="customPanel" title="校级公告"  
+										cornerRadius="5" borderVisible="true" borderStyle="solid" dropShadowVisible="false" >
+										
+										<!--click="openSchoolNoticeList();">-->
 					<!--<mx:HBox width="100%" height="25"  paddingLeft="20"    horizontalGap="10" styleName="CustomHBoxStyle"   verticalAlign="middle">
 						<mx:Label text="校级公告" width="90%"  fontWeight="bold"/>
 						<mx:LinkButton  label="更多>>" width="10%" fontWeight="bold" fontStyle="italic" click="openSchoolNoticeList();">											
@@ -200,7 +219,7 @@
 						</mx:DataGridColumn>
 						</mx:columns>
 					</mx:DataGrid>
-					</mx:Panel>
+					</component:NewPanel>
 				</mx:VBox>
 				<mx:VBox width="100%"  height="50%" verticalGap="0">
 					
@@ -209,8 +228,10 @@
 						<mx:LinkButton  label="更多>>" width="10%" fontWeight="bold" fontStyle="italic" click="openDepartmentNoticeList();"/>											
 
 					</mx:HBox>-->
-					<mx:Panel width="100%" height="100%"  styleName="customPanel" title="部门公告 [>>更多]"  cornerRadius="5" borderVisible="true" borderStyle="solid" dropShadowVisible="false" click="openDepartmentNoticeList();">
-					
+					<component:NewPanel id="DepartmentNoticePanel" width="100%" height="100%"  styleName="customPanel" title="部门公告"  
+							  cornerRadius="5" borderVisible="true" borderStyle="solid" dropShadowVisible="false" >
+								
+						<!--click="openDepartmentNoticeList();"-->
 					<mx:DataGrid width="100%" height="100%" id="departmentNotices">
 						<mx:columns>
 							
@@ -283,7 +304,7 @@
 						</mx:DataGridColumn>
 						</mx:columns>
 					</mx:DataGrid>
-					</mx:Panel>
+					</component:NewPanel>
 				</mx:VBox>
 				
 			</mx:VBox>
