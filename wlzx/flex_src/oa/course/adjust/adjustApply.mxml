@@ -299,6 +299,7 @@
 				itemCount++;
 				var row1:GridRow=new GridRow();
 				row1.id="1row"+itemIndex;
+				 row1.setStyle("horizontalAlign","left"); 
 				hashTable[row1.id]=row1;
 				var rowItem_class:GridItem=new GridItem();
 				var aClass:Label=new Label();
@@ -316,23 +317,30 @@
 				rowItem_classInput.addElement(aClassInut);
 				row1.addElement(rowItem_classInput);
 				
+				/* ****************  科目GridItem**************** */
 				var rowItem_course:GridItem=new GridItem();
 				var course:Label=new Label();
+				var kemuBox:HBox = new HBox(); // 容纳 label 和 combox
 				course.text="科目";
 				course.width=60;
 				course.setStyle("textAlign","right");
-				rowItem_course.addElement(course);
-				row1.addElement(rowItem_course);
+				kemuBox.addElement(course);
+			/* 	rowItem_course.addElement(course); */
+				/* row1.addElement(rowItem_course); */
 				var rowItem_courseCombo:GridItem=new GridItem();
 				var courseComb:ComboBox=new ComboBox();
 				courseComb.dataProvider=courseTypes;
 				courseComb.width=120;
 				courseComb.name="aCourse";
 				courseComb.id="aCourse"+itemIndex;
-
 				hashTable[courseComb.id]=courseComb;
-				rowItem_courseCombo.addElement(courseComb);
-				row1.addElement(rowItem_courseCombo);
+				kemuBox.addElement(courseComb);
+				
+				rowItem_course.addElement(kemuBox);
+				/* rowItem_courseCombo.addElement(courseComb); */
+				row1.addElement(rowItem_course);
+				
+				/* ****************  科目GridItem**************** */
 				
 				var rowItem_preClassTime:GridItem=new GridItem();
 				var preClassTime:Label=new Label();
@@ -478,8 +486,6 @@
 					adjustTeacherInput.selectedItem=this.parentApplication.getItemByAccountId(applyItem.adjustMeanTeacherId);
 					adjustTeacherId.text=applyItem.adjustMeanTeacherId;
 				}
-				
-
 				
 				
 			}
