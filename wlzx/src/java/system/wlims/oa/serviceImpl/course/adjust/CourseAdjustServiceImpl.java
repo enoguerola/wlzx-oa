@@ -159,19 +159,21 @@ public class CourseAdjustServiceImpl implements CourseAdjustService{
 			//系统通知
 			String adjustTeachers="";
 			String adjustClasses="";
+			String adjustPreTimes="";
 			String adjustTimes="";
 			for(ApplyItemModel item:apply.getApplyItems()){
 				String name=teacherService.getTeacherNameByUserId(item.getAdjustActualTeacherId());
 				if(name!=null){
 					adjustTeachers+=name+"/";
 					adjustClasses+=item.getApplyClass()+"/";
-					adjustTimes+=item.getAdjustActualTime()+"/";
-					String content2=teacherService.getTeacherNameByUserId(apply.getApplyTeacherId())+"老师申请与您调课已经审批通过，所带班级为"+item.getApplyClass()+"，科目是"+item.getApplyCourse()+"，上课时间为"+item.getApplyCourseTime()+"，请准时上课";
+					adjustPreTimes+=UtilDateTime.dateString(item.getApplyCourseDate())+"  "+item.getApplyCourseTime()+"/";
+					adjustTimes+=UtilDateTime.dateString(item.getAdjustActualDate())+"  "+item.getAdjustActualTime()+"/";
+					String content2=teacherService.getTeacherNameByUserId(apply.getApplyTeacherId())+"老师申请与您调课已经审批通过，上课班级为"+item.getApplyClass()+"，课时"+UtilDateTime.dateString(item.getApplyCourseDate())+"  "+item.getApplyCourseTime()+",调整为课时"+UtilDateTime.dateString(item.getAdjustActualDate())+"  "+item.getAdjustActualTime()+"，请准时上课";
 					systemService.sendMessage(MessageModel.DefaultFromId, item.getAdjustActualTeacherId(), MessageModel.MessageType.SYSTEM.getValue(), content2);
 
 				}
 			}
-			String content="您申请的调课审批已经通过，调课教师为"+adjustTeachers+"，调课班级为"+adjustClasses+"，调课时间为"+adjustTimes+"";
+			String content="您申请的调课审批已经通过，调课教师为"+adjustTeachers+"，上课班级为"+adjustClasses+"，原课时间为"+adjustPreTimes+"，调整为"+adjustTimes+"，请准时上课";
 			systemService.sendMessage(MessageModel.DefaultFromId, apply.getApplyTeacherId(), MessageModel.MessageType.SYSTEM.getValue(), content);
 
 		}

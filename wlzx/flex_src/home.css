@@ -204,3 +204,96 @@ component|Fieldset{
 	font-size:14;
 	color:#000000;
 }
+
+
+@namespace supertabs "flexlib.controls.tabBarClasses.*"; 
+supertabs|SuperTab
+{
+	tabCloseButtonStyleName: "closeButton";
+}
+.closeButton 
+{ 
+	defaultSkin:Embed(source="../WebContent/resources/common/ui/tabClose.swf", symbol="firefox_close_up"); 
+	upSkin:Embed(source="../WebContent/resources/common/ui/tabClose.swf", symbol="firefox_close_up");
+	downSkin:Embed(source="../WebContent/resources/common/ui/tabClose.swf", symbol="firefox_close_down");
+	overSkin:Embed(source="../WebContent/resources/common/ui/tabClose.swf", symbol="firefox_close_over");
+	disabledSkin:Embed(source="../WebContent/resources/common/ui/tabClose.swf", symbol="firefox_close_disabled");
+	selectedUpSkin:Embed(source="../WebContent/resources/common/ui/tabClose.swf", symbol="firefox_close_up");
+	selectedDownSkin:Embed(source="../WebContent/resources/common/ui/tabClose.swf", symbol="firefox_close_down");
+	selectedOverSkin:Embed(source="../WebContent/resources/common/ui/tabClose.swf", symbol="firefox_close_over");
+	selectedDisabledSkin:Embed(source="../WebContent/resources/common/ui/tabClose.swf", symbol="firefox_close_disabled");
+} 
+@namespace flexlib "http://code.google.com/p/flexlib/";
+
+.tabStyle
+{
+	font-size: 12;
+	font-family: 微软雅黑;
+	text-Align:"center";
+	tabCloseButtonStyleName:"tabCloseButton";
+	/*	skin:Embed("../WebContent/resources/common/ui/tabClose.swf",
+	scaleGridLeft="0",
+	scaleGridRight="120",
+	scaleGridTop="0",
+	scaleGridBottom="1");
+	selected-up-skin:Embed("../WebContent/resources/common/ui/tabClose.swf",
+	scaleGridLeft="0",
+	scaleGridRight="120",
+	scaleGridTop="0",
+	scaleGridBottom="1");
+	selected-over-skin:Embed("../WebContent/resources/common/ui/tabClose.swf",
+	scaleGridLeft="0",
+	scaleGridRight="120",
+	scaleGridTop="0",
+	scaleGridBottom="1");
+	over-skin:Embed("../WebContent/resources/common/ui/tabClose.swf",
+	scaleGridLeft="0",
+	scaleGridRight="120",
+	scaleGridTop="0",
+	scaleGridBottom="1");*/
+	indicatorClass: Embed(source="../WebContent/resources/common/ui/tabClose.swf", symbol="indicator");  
+}
+
+.firefoxLikeTabs {
+	highlightAlphas: 0.52, 0.4;
+	fillAlphas: 1, 1;
+	fillColors: #eceadb, #eceadb;
+	backgroundColor: #ffffff;
+	borderColor: #999999;
+	color: #000000;
+	textRollOverColor: #000000;     
+	textAlign: "center";
+	indicatorClass: Embed("../WebContent/resources/common/ui/tabClose.swf#indicator");        
+	closeButtonStyleName: "closeButton";
+	tabCloseButtonStyleName:"tabCloseButton";
+}
+
+.tabCloseButton
+{
+	
+	/*	skin: Embed("../WebContent/resources/common/ui/tabClose.swf");
+	up-skin: Embed("../WebContent/resources/common/ui/tabClose.swf");
+	over-skin: Embed("../WebContent/resources/common/ui/tabClose.swf");
+	down-skin: Embed("../WebContent/resources/common/ui/tabClose.swf");*/
+	upSkin:Embed(source="../WebContent/resources/common/ui/tabClose.swf", symbol="firefox_close_up");
+	downSkin:Embed(source="../WebContent/resources/common/ui/tabClose.swf", symbol="firefox_close_down");
+	overSkin:Embed(source="../WebContent/resources/common/ui/tabClose.swf", symbol="firefox_close_over");
+	disabledSkin:Embed(source="../WebContent/resources/common/ui/tabClose.swf", symbol="firefox_close_disabled");
+	selectedUpSkin:Embed(source="../WebContent/resources/common/ui/tabClose.swf", symbol="firefox_close_up");
+	selectedDownSkin:Embed(source="../WebContent/resources/common/ui/tabClose.swf", symbol="firefox_close_down");
+	selectedOverSkin:Embed(source="../WebContent/resources/common/ui/tabClose.swf", symbol="firefox_close_over");
+	selectedDisabledSkin:Embed(source="../WebContent/resources/common/ui/tabClose.swf", symbol="firefox_close_disabled");        
+}
+
+
+.leftButton {
+	icon:Embed(source="../WebContent/resources/common/ui/tabClose.swf", symbol="left_arrow");
+	fillAlphas: 1, 1, 1, 1;
+	cornerRadius:0;
+}
+
+.rightButton {
+	icon: Embed(source="../WebContent/resources/common/ui/tabClose.swf", symbol="right_arrow");
+	fillAlphas: 1, 1, 1, 1;
+	cornerRadius:0;
+}

@@ -57,11 +57,10 @@
 		 * @创建时间 2011-4-15 上午10:41:15
 		 */ 
 		public  function getLeaderDepartment2FirstLevel():DepartmentModel{
-			var parent:DepartmentModel=getLeaderDepartment();
-			if(parent==null) return this;
-			while(parent.level!=1&&parent.level!=0){
+			var parent:DepartmentModel=this;
+			do{
 				parent=parent.getLeaderDepartment();
-			}
+			}while(parent.level!=1&&parent.level!=0)
 			return parent;
 		}
 		//获得部门及子部门所有用户集
