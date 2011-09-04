@@ -191,6 +191,55 @@ public class CourseAdjustServiceImpl implements CourseAdjustService{
 		return true;
 	}
 
+	@Override
+	public boolean saveArrange(ApplyModel apply) {
+		// TODO Auto-generated method stub
+		ApplyModel newApply=courseAdjustDAO.get(apply.getId());
+		newApply.setApplyItems(apply.getApplyItems());
+		newApply.setApproveDate(apply.getApproveDate());
+		newApply.setApproveRemark(apply.getApproveRemark());
+		newApply.setApproveTeacherId(apply.getApproveTeacherId());
+		
+		ApplyWorkFlowLog log=new ApplyWorkFlowLog();
+		log.setOperationName("课程员安排");
+		log.setOperationResult("课程员安排编号为"+apply.getApplyNo()+"的调课申请");
+//		if(apply.getApplyStatus()==ApplyModel.ApplyStatus.PASS.getStatus()){
+//			log.setOperationResult("课程员安排编号为"+apply.getApplyNo()+"的申请");
+//			newApply.setApplyStatus(ApplyModel.ApplyStatus.PASS.getStatus());
+//			//系统通知
+//			String adjustTeachers="";
+//			String adjustClasses="";
+//			String adjustTimes="";
+//			for(ApplyItemModel item:apply.getApplyItems()){
+//				String name=teacherService.getTeacherNameByUserId(item.getAdjustActualTeacherId());
+//				if(name!=null){
+//					adjustTeachers+=name+"/";
+//					adjustClasses+=item.getApplyClass()+"/";
+//					adjustTimes+=item.getAdjustActualTime()+"/";
+//					String content2=teacherService.getTeacherNameByUserId(apply.getApplyTeacherId())+"老师申请与您调课已经审批通过，所带班级为"+item.getApplyClass()+"，科目是"+item.getApplyCourse()+"，上课时间为"+item.getApplyCourseTime()+"，请准时上课";
+//					systemService.sendMessage(MessageModel.DefaultFromId, item.getAdjustActualTeacherId(), MessageModel.MessageType.SYSTEM.getValue(), content2);
+//
+//				}
+//			}
+//			String content="您申请的调课审批已经通过，调课教师为"+adjustTeachers+"，调课班级为"+adjustClasses+"，调课时间为"+adjustTimes+"";
+//			systemService.sendMessage(MessageModel.DefaultFromId, apply.getApplyTeacherId(), MessageModel.MessageType.SYSTEM.getValue(), content);
+//
+//		}
+//		else if(apply.getApplyStatus()==ApplyModel.ApplyStatus.DENY.getStatus()){
+//			log.setOperationResult("课程处审批编号为"+apply.getApplyNo()+"的申请不通过");
+//			newApply.setApplyStatus(ApplyModel.ApplyStatus.DENY.getStatus());
+//			
+//			String content="您申请的调课审批未通过，具体情况请查看调课申请记录详细";
+//			systemService.sendMessage(MessageModel.DefaultFromId, apply.getApplyTeacherId(), MessageModel.MessageType.SYSTEM.getValue(), content);
+//
+//		}
+		log.setOperationTime(new Date());
+		log.setOperationTeacherId(SecurityUserHolder.getCurrentUser().getId());
+		newApply.getLogs().add(log);
+
+		courseAdjustDAO.saveOrUpdate(newApply);
+		return true;
+	}
 
 
 	public SystemService getSystemService() {

@@ -44,6 +44,9 @@
 				<prop key="hibernate.cache.use_query_cache">${hibernate.cache.use_query_cache}</prop>
 				<prop key="hibernate.cache.provider_class">${hibernate.cache.provider_class}</prop>
 				<prop key="hibernate.query.substitutions">true 1,false 0</prop>
+				<prop key="connection.autoReconnect">true</prop>  
+		        <prop key="connection.autoReconnectForPools">true</prop>     
+		        <prop key="connection.is-connection-validation-required">true</prop> 
 			</props>
 		</property>
 	</bean>

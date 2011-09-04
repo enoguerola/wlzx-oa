@@ -65,6 +65,9 @@
 		<property name="adjustMeanDate" type="java.util.Date">
 			<column name="adjust_mean_date" />
 		</property>
+		<property name="adjustMeanTime" type="string">
+			<column name="adjust_mean_time" />
+		</property>
 		<property name="adjustMeanTeacherId" type="string">
 			<column name="adjust_mean_teacher_id" />
 		</property>
@@ -77,7 +80,12 @@
 		<property name="adjustActualTeacherId" type="string">
 			<column name="adjust_actual_teacher_id" />
 		</property>
-		
+		<property name="adjustArrangeDate" type="java.util.Date">
+			<column name="adjust_arrange_date" />
+		</property>
+		<property name="adjustArrangeAlready" type="int">
+			<column name="adjust_arrange_already" />
+		</property>
 		<many-to-one not-found="ignore" class="system.wlims.oa.entity.course.adjust.ApplyModel" 
 			name="apply" 
 			column="apply_id"/>	

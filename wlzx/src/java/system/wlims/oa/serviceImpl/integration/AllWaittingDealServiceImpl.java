@@ -397,42 +397,42 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 		if(takeLeaveList!=null&&takeLeaveList.size()>0)
 			for(TakeLeaveForm takeLeaveForm:takeLeaveList){
 				//请假出差期间工作落实
-				if(user.hasDam("takeLeaveWorkDeal@noFilter@")){
-
-					TaskVO taskVO=new TaskVO();
-					taskVO.setStatus(TaskVO.EStatus.ToBeDeal.getText());
-					if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.BusinessTrip.getValue().intValue()){
-						taskVO.setType(TaskVO.EType.AskForLeave_BusinessTrip_TechArrange.getText());
-						taskVO.setTypeId(TaskVO.EType.AskForLeave_BusinessTrip_TechArrange.getValue().intValue());
-					}
-					else if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.Leave.getValue().intValue()){
-						taskVO.setType(TaskVO.EType.AskForLeave_Leave_TechArrange.getText());
-						taskVO.setTypeId(TaskVO.EType.AskForLeave_Leave_TechArrange.getValue().intValue());
-					}
-					taskVO.setAssignerId(TaskVO.EAssigner.Default.getValue().intValue()+"");
-					taskVO.setId(takeLeaveForm.getId());
-					try {
-						Date postDate = new SimpleDateFormat("yyyyMMddHHmmss").parse(takeLeaveForm.getApplyNo());
-						taskVO.setPostTime(UtilDateTime.toDateString(postDate,"yyyy-MM-dd HH:mm:ss"));
-					} catch (ParseException e) {
-						e.printStackTrace();
-					}
-					if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.BusinessTrip.getValue().intValue()){
-						taskVO.setTitle(TaskVO.ETitle.AskForLeave_BusinessTrip_TechArrange.getText());}
-					else if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.Leave.getValue().intValue())
-						taskVO.setTitle(TaskVO.ETitle.AskForLeave_Leave_TechArrange.getText());
-					taskVO.setWorkersIds(getWorkersIds(TaskVO.EType.AskForLeave_BusinessTrip_TechArrange.getValue()));
-					if(takeLeaveForm.getArrangeTechDealAlready()==true){
-						taskVO.setStatus(TaskVO.EStatus.Finished.getText());
-						
-					}else {
-						if(takeLeaveForm.getStatus()!=null&&takeLeaveForm.getStatus().intValue()==TakeLeaveForm.Status.Cancle.getValue().intValue())
-						taskVO.setStatus(TaskVO.EStatus.Cancled.getText());
-						else taskVO.setStatus(TaskVO.EStatus.ToBeDeal.getText());
-					}
-					
-					list.add(taskVO);
-				}
+//				if(user.hasDam("takeLeaveWorkDeal@noFilter@")){
+//
+//					TaskVO taskVO=new TaskVO();
+//					taskVO.setStatus(TaskVO.EStatus.ToBeDeal.getText());
+//					if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.BusinessTrip.getValue().intValue()){
+//						taskVO.setType(TaskVO.EType.AskForLeave_BusinessTrip_TechArrange.getText());
+//						taskVO.setTypeId(TaskVO.EType.AskForLeave_BusinessTrip_TechArrange.getValue().intValue());
+//					}
+//					else if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.Leave.getValue().intValue()){
+//						taskVO.setType(TaskVO.EType.AskForLeave_Leave_TechArrange.getText());
+//						taskVO.setTypeId(TaskVO.EType.AskForLeave_Leave_TechArrange.getValue().intValue());
+//					}
+//					taskVO.setAssignerId(TaskVO.EAssigner.Default.getValue().intValue()+"");
+//					taskVO.setId(takeLeaveForm.getId());
+//					try {
+//						Date postDate = new SimpleDateFormat("yyyyMMddHHmmss").parse(takeLeaveForm.getApplyNo());
+//						taskVO.setPostTime(UtilDateTime.toDateString(postDate,"yyyy-MM-dd HH:mm:ss"));
+//					} catch (ParseException e) {
+//						e.printStackTrace();
+//					}
+//					if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.BusinessTrip.getValue().intValue()){
+//						taskVO.setTitle(TaskVO.ETitle.AskForLeave_BusinessTrip_TechArrange.getText());}
+//					else if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.Leave.getValue().intValue())
+//						taskVO.setTitle(TaskVO.ETitle.AskForLeave_Leave_TechArrange.getText());
+//					taskVO.setWorkersIds(getWorkersIds(TaskVO.EType.AskForLeave_BusinessTrip_TechArrange.getValue()));
+//					if(takeLeaveForm.getArrangeTechDealAlready()==true){
+//						taskVO.setStatus(TaskVO.EStatus.Finished.getText());
+//						
+//					}else {
+//						if(takeLeaveForm.getStatus()!=null&&takeLeaveForm.getStatus().intValue()==TakeLeaveForm.Status.Cancle.getValue().intValue())
+//						taskVO.setStatus(TaskVO.EStatus.Cancled.getText());
+//						else taskVO.setStatus(TaskVO.EStatus.ToBeDeal.getText());
+//					}
+//					
+//					list.add(taskVO);
+//				}
 				//请假出差本处室审批
 				if(user.hasDam("takeLeaveOfficeApprove@noFilter@")&&SecurityUserHolder.getCurrentUser()!=null&&SecurityUserHolder.getCurrentUser().getAllSubordinates()!=null&&SecurityUserHolder.getCurrentUser().getAllSubordinates().contains(userDAO.get(takeLeaveForm.getTeacherId()))){
 					if(takeLeaveForm.getArrangeTechDealAlready()==true){

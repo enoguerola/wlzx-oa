@@ -18,10 +18,13 @@ public class ApplyItemModel extends BaseModel {
 	private Date applyCourseDate;
 	private String applyCourseTime;
 	private Date adjustMeanDate;
+	private String adjustMeanTime;
 	private String adjustMeanTeacherId;
 	private Date adjustActualDate;
 	private String adjustActualTime;
 	private String adjustActualTeacherId;
+	private Integer adjustArrangeAlready;
+	private Date adjustArrangeDate;
 	private ApplyModel apply;
 	public String getApplyClass() {
 		return applyClass;
@@ -82,6 +85,24 @@ public class ApplyItemModel extends BaseModel {
 	}
 	public void setApply(ApplyModel apply) {
 		this.apply = apply;
+	}
+	public String getAdjustMeanTime() {
+		return adjustMeanTime;
+	}
+	public void setAdjustMeanTime(String adjustMeanTime) {
+		this.adjustMeanTime = adjustMeanTime;
+	}
+	public Integer getAdjustArrangeAlready() {
+		return adjustArrangeAlready;
+	}
+	public void setAdjustArrangeAlready(Integer adjustArrangeAlready) {
+		this.adjustArrangeAlready = adjustArrangeAlready;
+	}
+	public Date getAdjustArrangeDate() {
+		return adjustArrangeDate;
+	}
+	public void setAdjustArrangeDate(Date adjustArrangeDate) {
+		this.adjustArrangeDate = adjustArrangeDate;
 	}
 	
 

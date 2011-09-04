@@ -287,6 +287,7 @@
 				hashTable["aCourse"+target.id]=null;
 				hashTable["aCourseDate"+target.id]=null;
 				hashTable["aCourseSection"+target.id]=null;
+				hashTable["aCourseMeanSection"+target.id]=null;
 				hashTable["adjustDate"+target.id]=null;
 				hashTable["adjustTeacher"+target.id]=null;
 				hashTable["adjustTeacher"+target.id+"-id"]=null;
@@ -400,10 +401,23 @@
 				adjustTimeDate.width=120;
 				adjustTimeDate.name="adjustDate";
 				adjustTimeDate.id="adjustDate"+itemIndex;
-
+				
 				hashTable[adjustTimeDate.id]=adjustTimeDate;
 				rowItem_adjustTimeDate.addElement(adjustTimeDate);
 				row2.addElement(rowItem_adjustTimeDate);
+				
+				var rowItem_adjustTimeDateMutiCombobox:GridItem=new GridItem();
+				var adjustTimeDateMutiCombobox:MyDropList=new MyDropList();
+				adjustTimeDateMutiCombobox.width=200;
+				adjustTimeDateMutiCombobox.name="aCourseMeanSection";
+				adjustTimeDateMutiCombobox.id="aCourseMeanSection"+itemIndex;
+				
+				hashTable[adjustTimeDateMutiCombobox.id]=adjustTimeDateMutiCombobox;
+				adjustTimeDateMutiCombobox.dataProvider=new ArrayCollection(CommonUtils.clone(courseSections.toArray()));
+				rowItem_adjustTimeDateMutiCombobox.addElement(adjustTimeDateMutiCombobox);
+				row2.addElement(rowItem_adjustTimeDateMutiCombobox);
+				
+				
 				
 				var rowItem_adjustTeacher:GridItem=new GridItem();
 				var adjustTeacher:Label=new Label();
@@ -460,6 +474,7 @@
 					preClassDate.text=CommonUtils.formatDate(applyItem.applyCourseDate,"YYYY-MM-DD");
 					preClassDateMutiCombobox.myText.text=applyItem.applyCourseTime;
 					adjustTimeDate.text=CommonUtils.formatDate(applyItem.adjustMeanDate,"YYYY-MM-DD");
+					adjustTimeDateMutiCombobox.myText.text=applyItem.adjustMeanTime;
 					adjustTeacherInput.selectedItem=this.parentApplication.getItemByAccountId(applyItem.adjustMeanTeacherId);
 					adjustTeacherId.text=applyItem.adjustMeanTeacherId;
 				}
@@ -497,6 +512,7 @@
 			
 			protected function save_clickHandler(event:MouseEvent):void
 			{
+			//	Alert.show(validateInput()+"a");
 				if(validateInput()){
 					if(addUpdateFlag.text=="add"){
 						apply=new ApplyModel();
@@ -512,6 +528,7 @@
 								applyItem.applyCourseDate=DateFormatter.parseDateString(hashTable["aCourseDate" + i].text);
 								applyItem.applyCourseTime=hashTable["aCourseSection" + i].myText.text;
 								applyItem.adjustMeanDate=DateFormatter.parseDateString(hashTable["adjustDate" + i].text);
+								applyItem.adjustMeanTime=hashTable["aCourseMeanSection" + i].myText.text;
 								applyItem.adjustMeanTeacherId=hashTable["adjustTeacher" + i+"-id"].text;
 								applyItem.apply=apply;
 								apply.applyItems.push(applyItem);
@@ -532,6 +549,7 @@
 								item.applyCourseDate=DateFormatter.parseDateString(hashTable["aCourseDate" + j].text);
 								item.applyCourseTime=hashTable["aCourseSection" + j].myText.text;
 								item.adjustMeanDate=DateFormatter.parseDateString(hashTable["adjustDate" + j].text);
+								item.adjustMeanTime=hashTable["aCourseMeanSection" + j].myText.text;
 								item.adjustMeanTeacherId=hashTable["adjustTeacher" + j+"-id"].text;
 								item.apply=apply;
 								applyItems.push(item);
@@ -989,7 +1007,7 @@
 													<mx1:Text   textAlign="center" width="200" text="{formatDate((detailApplyItemsRepeater.currentItem.applyCourseDate) as Date)+detailApplyItemsRepeater.currentItem.applyCourseTime}"   />
 												</mx:GridItem>
 												<mx:GridItem  borderStyle="solid" verticalAlign="middle">
-													<mx1:Text  textAlign="center"  text="{formatDate((detailApplyItemsRepeater.currentItem.adjustMeanDate) as Date)}"  />
+													<mx1:Text  textAlign="center"  text="{formatDate((detailApplyItemsRepeater.currentItem.adjustMeanDate) as Date)+detailApplyItemsRepeater.currentItem.adjustMeanTime}"  />
 												</mx:GridItem>
 												<mx:GridItem  borderStyle="solid" verticalAlign="middle">
 													<mx1:Text width="60" textAlign="center" text="{this.outDocument.getUserName(detailApplyItemsRepeater.currentItem.adjustMeanTeacherId)}" />

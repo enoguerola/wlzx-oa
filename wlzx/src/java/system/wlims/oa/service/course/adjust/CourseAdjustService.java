@@ -17,4 +17,6 @@ public interface CourseAdjustService{
 	boolean applyUpdate(ApplyModel apply,Set<ApplyItemModel> applyItems);
 	List<ApplyModel> getAppliesByCondition(String accountId,Integer state,Integer type, String beginDate,String endDate);
 	boolean saveApprove(ApplyModel apply);
+	boolean saveArrange(ApplyModel apply);
+	
 }
