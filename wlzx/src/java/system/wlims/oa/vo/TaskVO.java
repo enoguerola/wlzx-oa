@@ -15,7 +15,7 @@ public class TaskVO {
 		AskForLeave_Leave_TechArrange(3, "请假工作安排"),
 		AskForLeave_Leave_OfficalApprove(4, "请假处室审批"),
 		AskForLeave_Leave_VicePrincipalApprove(5, "请假副校长审批"),
-		AskForLeave_Leave_PrincipalApprove(6, "请假副校长审批"),
+		AskForLeave_Leave_PrincipalApprove(6, "请假校长审批"),
 		AskForLeave_BusinessTrip_TechArrange(7, "出差工作安排"),
 		AskForLeave_BusinessTrip_OfficalApprove(8, "出差审批"),
 		AskForLeave_BusinessTrip_VicePrincipalApprove(9, "出差审批"),
