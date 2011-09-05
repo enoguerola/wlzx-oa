@@ -15,7 +15,7 @@
 	<mx:RemoteObject id="directoryServiceRO" destination="directoryServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 		<mx:method name="getDirectoryItemsByType"  concurrency="multiple"  result="getDirectoryItemsByType_resultHandler(event);" />
 	</mx:RemoteObject>
-<!--	<mx:Style>
+<!--<mx:Style>
 		.customTabStyles {
 		skin: ClassReference("system.skins.WlzxSubTabSkin");
 		border:1px;
@@ -97,7 +97,7 @@
 				upload.urlRequest = urlRequest;
 				messagesView.selectedIndex = 0;
 				noticeScope.dataProvider=  new ArrayCollection([{label:"部门公告", data:"1"}]);
-				departmentList = this.parentApplication.currentUserFirstLevelDepartment;
+				departmentList = this.parentApplication.currentUserDepartment;
 				postdepartment.dataProvider= departmentList;
 				postdepartment.selectedIndex=0;
 				//权限控制部分
@@ -318,7 +318,7 @@
 				if(validateInput()){
 					if(addUpdateFlag.text=="add"){
 						form = new NoticeModel();
-						Alert.show("ok");
+						//Alert.show("ok");
 						form.content = rte.text;
 						if(emergence.selected)
 							form.emergence = 1;
@@ -409,13 +409,14 @@
 			{
 				// TODO Auto-generated method stub
 				if(noticeScope.selectedItem.data=='1'){
-					postdepartment.dataProvider= this.parentApplication.currentUserFirstLevelDepartment;
+					postdepartment.dataProvider= this.parentApplication.currentUserDepartment;
 					postdepartment.selectedIndex=0;
 				}else if(noticeScope.selectedItem.data=='0'){
-					var list:ArrayCollection=new ArrayCollection();
-					var mainDepartment:Object=this.parentApplication.currentUser.mainRole.getBelongDepartment().getLeaderDepartment2FirstLevel();
-					list.addItem({data:mainDepartment.id, label:mainDepartment.name});
-					postdepartment.dataProvider=list;
+//					var list:ArrayCollection=new ArrayCollection();
+////					var mainDepartment:Object=this.parentApplication.currentUser.mainRole.getBelongDepartment().getLeaderDepartment2FirstLevel();
+//					var mainDepartment:Object=this.parentApplication.currentUserFirstLevelDepartment;
+//					list.addItem({data:mainDepartment.id, label:mainDepartment.name});
+					postdepartment.dataProvider=this.parentApplication.currentUserFirstLevelDepartment;
 				}
 					
 			}

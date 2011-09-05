@@ -233,7 +233,7 @@
 						principal_approver_name.selectedItem=parentApplication.getItemByAccountId(parentApplication.currentUser.id);
 					}
 				}
-				else if(this.parentApplication.currentUser.hasDam("takeLeaveVicePrincipalApprove@noFilter@")&&parentApplication.currentUser.hasSubordinateUser(form.teacherId)){
+				else if(this.parentApplication.currentUser.hasDam("takeLeaveVicePrincipalApprove@noFilter@")/* &&parentApplication.currentUser.hasSubordinateUser(form.teacherId) */){
 //					officeChief_approver_name.enabled=true;
 //					officeChief_approver_id.enabled=true;
 					officeChief_approve_time.enabled=true;
@@ -258,7 +258,7 @@
 						vicePrincipal_approver_name.selectedItem=parentApplication.getItemByAccountId(parentApplication.currentUser.id);
 					}
 				}
-				else if(this.parentApplication.currentUser.hasDam("takeLeaveOfficeApprove@noFilter@")&&parentApplication.currentUser.hasSubordinateUser(form.teacherId)){
+				else if(this.parentApplication.currentUser.hasDam("takeLeaveOfficeApprove@noFilter@")/* &&parentApplication.currentUser.hasSubordinateUser(form.teacherId) */){
 //					officeChief_approver_name.enabled=true;
 //					officeChief_approver_id.enabled=true;
 					officeChief_approve_time.enabled=true;

@@ -51,7 +51,7 @@
 			import mx.modules.*;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
-			
+			import system.utils.CommonUtils;
 			import system.entity.*;
 			import system.event.BaseEvent;
 			import system.implement.BaseImpl;
@@ -171,10 +171,12 @@
 					for(var i:int=0;i<list.length;i++){
 						var department:Object=list.getItemAt(i) as Object;
 						if(department.level=='0'||department.level=='1'){
+							if(!CommonUtils.contains(currentUserFirstLevelDepartment,department.id))
 							currentUserFirstLevelDepartment.addItem( {data:department.id, label:department.name});
 						}else{
 							var leaderDepartment2FirstLevel:Object=department.getLeaderDepartment2FirstLevel();
 							if(leaderDepartment2FirstLevel!=null)
+								if(!CommonUtils.contains(currentUserFirstLevelDepartment,leaderDepartment2FirstLevel.id))
 							currentUserFirstLevelDepartment.addItem( {data:leaderDepartment2FirstLevel.id, label:leaderDepartment2FirstLevel.name});
 
 						}

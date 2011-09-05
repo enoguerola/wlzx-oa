@@ -81,6 +81,11 @@ public class RoleModel extends BaseModel {
 		for(RoleModel role:getSubordinates()){
 			addSubordinates(sets,role);
 		}
+		for(DepartmentModel dp:getLeadingDepartments()){
+			for(RoleModel role:dp.getAllRoles()){
+				addSubordinates(sets,role);
+			}
+		}
 		
 		return sets;
 	}

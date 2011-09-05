@@ -32,9 +32,9 @@ package oa.entity
 		public var principalApproveOption:String; 
 		public var remark:String;
 		public var status:int;
-		public var officeChiefStatus:int;
-		public var vicePrincipalStatus:int;
-		public var principalStatus:int;
+		public var officeChiefStatus:Object=null;
+		public var vicePrincipalStatus:Object=null;
+		public var principalStatus:Object=null;
 		public var logs:Object=new Array();
 		public var terminateForms:Object=new Array();
 		//public var takeLeaveTerminateForm:Object=null;

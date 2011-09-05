@@ -5,8 +5,8 @@ package system.utils
 	import mx.collections.ArrayCollection;
 	import mx.collections.Sort;
 	import mx.collections.SortField;
-	import mx.formatters.*;
 	import mx.controls.Alert;
+	import mx.formatters.*;
 	public class CommonUtils
 	{
 		public static const DAYS:Array = ["周日", "周一", "周二", "周三", "周四","周五", "周六"];
@@ -24,6 +24,15 @@ package system.utils
 			sort.fields=[new SortField(condition)];  
 			list.sort=sort;
 			list.refresh();//更新  
+			
+		}
+		public static function contains(list:ArrayCollection,data:String):Boolean{
+			var contain:Boolean=false;
+			for(var i:int=0;i<list.length;i++){
+				var item:Object=list.getItemAt(i) as Object;
+				if(item.data==data){contain=true;break;}
+			} 
+			return contain;
 			
 		}
 		public static function formatDate(date:Date,patten:String=null):String{
