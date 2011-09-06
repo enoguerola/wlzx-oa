@@ -40,9 +40,11 @@
 
 			private function init():void {
 				//accounts.addItem("");
-				search_account.dataProvider=parentApplication.allTeacherAcccounts;
-//				departments.dataProvider=parentApplication.allDepartment;
-//				roles.dataProvider=parentApplication.allRole;	
+				search_account.dataProvider=this.parentApplication.allTeacherAcccounts;
+				departments.dataProvider=this.parentApplication.allDepartment;
+				departments.selectedIndex=0;
+				roles.dataProvider=parentApplication.allRole;
+				roles.selectedIndex=0;
 //				Alert.show(parentApplication.allRole.length+"");
 				teacherAccountBridgeServiceRO.getUsersByCondition(null,null,null);
 				callLater(initWin);
@@ -227,6 +229,7 @@
 //					departments.dataProvider=parentApplication.allDepartment;
 //					departments.selectedIndex=0;
 					callLater(function():void{
+						[binary]
 						var item:Object=departments.selectedItem;
 						teacherAccountBridgeServiceRO.getUsersByCondition(null,item.data,null);
 					
@@ -236,6 +239,7 @@
 //					roles.dataProvider=parentApplication.allRole;	
 //					roles.selectedIndex=0;
 					callLater(function():void{
+						[binary]
 						var item:Object=roles.selectedItem;
 						teacherAccountBridgeServiceRO.getUsersByCondition(null,null,item.data);
 						
@@ -462,7 +466,7 @@
 						</mx:Label>
 						<mx:LinkButton icon="@Embed(source='../WebContent/resources/common/tools/button_search_icon.png')"  click="search();"/>
 					</mx:HBox>
-					<mx:Accordion id="view"    headerStyleName="customAccordionHeadStyles" width="100%"  top="15" height="100%"  selectedIndex="0"  change="switchViews(event);" dropShadowVisible="false" backgroundAlpha="0.0" headerHeight="25" fontSize="15" textAlign="center">
+					<mx:Accordion id="view"    creatingContentPane="true" headerStyleName="customAccordionHeadStyles" width="100%"  top="15" height="100%"  selectedIndex="0" creationPolicy="all" change="switchViews(event);" dropShadowVisible="false" backgroundAlpha="0.0" headerHeight="25" fontSize="15" textAlign="center">
 						<mx:Box label="所有人员列表" fontSize="20" width="100%" height="100%">
 							
 							<mx:Tree id="allListTree" iconField="@icon"   width="100%" height="100%" labelField="@label"   textAlign="left"  paddingLeft="10" showRoot="false" />    

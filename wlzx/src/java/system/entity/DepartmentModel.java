@@ -133,12 +133,31 @@ public class DepartmentModel  extends BaseModel{
 	//获得部门及子部门所有岗位
 	public List<RoleModel> getAllRoles(){
 		List<RoleModel> result=new ArrayList<RoleModel>();
+		for(DepartmentModel department:this.getAllSubordinates()){
+			for(RoleModel role:department.getAllRoles()){
+				result.add(role);
+			}
+		}
 		for(RoleModel role:this.getRoles()){
 			result.add(role);
 			addSubRoles(role,result);
 		}
 		return result;
 	}
+//	//获得部门及子部门所有用户
+//	public Set<UserModel> getAllUsers(){
+//		Set<UserModel> result=new HashSet<UserModel>();
+//		for(DepartmentModel department:this.getAllSubordinates()){
+//			for(RoleModel role:department.getAllRoles()){
+//				for(UserModel user:role.getAllUsers()){
+//					if(!result.contains(user)){
+//						result.add(user);
+//					}
+//				}
+//			}
+//		}
+//		return result;
+//	}
 	public void addSubRoles(RoleModel role,List<RoleModel> result){
 		if(role==null)return ;
 		for(RoleModel _role:role.getSubordinates()){

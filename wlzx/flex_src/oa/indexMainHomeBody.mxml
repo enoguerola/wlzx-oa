@@ -58,18 +58,17 @@
 			{
 				var departmentIds:String="";
 				//Alert.show(departmentIds+"");
-				if(parentApplication.currentUser.hasDam("department_notice_read_main@defaultVisit@@departmentFilter@")){
+				//if(parentApplication.currentUser.hasDam("department_notice_read_main@defaultVisit@@departmentFilter@")){
 					var temp:ArrayCollection=ArrayCollection(parentApplication.currentUserDepartment);
 					var departmentIds:String="";
-					for(var i:int=0;i<temp.length-1;i++){
+					for(var i:int=0;i<temp.length;i++){
 						departmentIds+=temp.getItemAt(i).data+",";
 					}
 
-				}
-				if(parentApplication.currentUser.hasDam("department_notice_read_main@defaultVisit@@noFilter@")){
+				//}
+				/* if(parentApplication.currentUser.hasDam("department_notice_read_main@defaultVisit@@noFilter@")){
 					departmentIds=null;
-				}
-				//Alert.show(departmentIds+"");
+				} */
 					noticeServiceRO.getTop5DepartmentNotice(departmentIds);			
 					noticeServiceRO.getTop5SchoolNotice();
 					var today:String=CommonUtils.formatDate(new Date(),"YYYY-MM-DD");
@@ -250,7 +249,7 @@
 							<mx:itemRenderer>
 								<mx:Component>
 									<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" >
-										<mx:Image source="@Embed(source='../WebContent/resources/common/ui/emergence2.png')"  visible="{checkEmergence(data)}" toolTip="紧急公告"/>
+										<mx:Image source="@Embed(source='../WebContent/resources/common/ui/emergence2.png')"  width="{checkEmergence(data)}" toolTip="紧急公告"/>
 										<mx1:Text text="{data.title}" width="100">
 										</mx1:Text>
 										<mx:Script>
@@ -261,16 +260,16 @@
 												
 												import mx.controls.Alert;
 												import mx.core.UIComponent;
-												private function checkEmergence(data:Object):Boolean{
+												private function checkEmergence(data:Object):int{
 													
 													if(data!=null){	
 														if(data.emergence==1){
-															return true;
+															return 20;
 														}else
-															return false;
+															return 0;
 														
 													}else{
-														return false;
+														return 0;
 													}
 												}
 											]]>

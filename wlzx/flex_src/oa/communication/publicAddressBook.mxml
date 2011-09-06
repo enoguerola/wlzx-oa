@@ -172,6 +172,8 @@
 							
 							<mx:DataGridColumn textAlign="center" headerText="姓名" dataField="userName" width="100">
 							</mx:DataGridColumn>
+							<mx:DataGridColumn textAlign="center" headerText="短号" dataField="userAccount" width="100">
+							</mx:DataGridColumn>
 							<mx:DataGridColumn textAlign="center" headerText="主部门" dataField="mainDepartmentName" width="100">
 							</mx:DataGridColumn>
 							<mx:DataGridColumn textAlign="center" headerText="职务" dataField="mainRoleName" width="100">
