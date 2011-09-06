@@ -62,7 +62,6 @@ package system.entity
 					results.addItem(_role.getBelongDepartment());
 				}
 			}
-			//Alert.show(list.length+"aaaa");
 			return results;
 		}
 		public function getAllDams():Array

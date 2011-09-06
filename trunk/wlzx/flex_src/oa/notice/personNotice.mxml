@@ -97,7 +97,7 @@
 				upload.urlRequest = urlRequest;
 				messagesView.selectedIndex = 0;
 				noticeScope.dataProvider=  new ArrayCollection([{label:"部门公告", data:"1"}]);
-				departmentList = this.parentApplication.currentUserDepartment;
+				departmentList = this.parentApplication.currentUserFirstLevelDepartment;
 				postdepartment.dataProvider= departmentList;
 				postdepartment.selectedIndex=0;
 				//权限控制部分
@@ -409,14 +409,15 @@
 			{
 				// TODO Auto-generated method stub
 				if(noticeScope.selectedItem.data=='1'){
-					postdepartment.dataProvider= this.parentApplication.currentUserDepartment;
+					postdepartment.dataProvider= this.parentApplication.currentUserFirstLevelDepartment;
 					postdepartment.selectedIndex=0;
 				}else if(noticeScope.selectedItem.data=='0'){
 //					var list:ArrayCollection=new ArrayCollection();
 ////					var mainDepartment:Object=this.parentApplication.currentUser.mainRole.getBelongDepartment().getLeaderDepartment2FirstLevel();
 //					var mainDepartment:Object=this.parentApplication.currentUserFirstLevelDepartment;
 //					list.addItem({data:mainDepartment.id, label:mainDepartment.name});
-					postdepartment.dataProvider=this.parentApplication.currentUserFirstLevelDepartment;
+					postdepartment.dataProvider=this.parentApplication.currentUserTrueFirstLevelDepartment;
+					postdepartment.selectedIndex=0;
 				}
 					
 			}

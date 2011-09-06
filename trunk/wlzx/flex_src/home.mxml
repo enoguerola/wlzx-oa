@@ -51,12 +51,13 @@
 			import mx.modules.*;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
-			import system.utils.CommonUtils;
+			
 			import system.entity.*;
 			import system.event.BaseEvent;
 			import system.implement.BaseImpl;
 			import system.utils.*;
 			import system.utils.CommonUtils;
+
 			public var default_url:String="oa/index.swf";
 			public var account:String;
 			public var roles:String;
@@ -70,6 +71,7 @@
 			public var allPlace:ArrayCollection = new ArrayCollection();
 			public var currentUserDepartment:ArrayCollection=new ArrayCollection();
 			public var currentUserFirstLevelDepartment:ArrayCollection=new ArrayCollection();
+			public var currentUserTrueFirstLevelDepartment:ArrayCollection=new ArrayCollection();
 			public var homeUrl:String=null;
 			import system.component.MyToolTip;
 			private function init():void{
@@ -91,10 +93,10 @@
 			}
 			private function readyModule( event:ModuleEvent ) : void
 			{ 
-				var ml:ModuleLoader = event.target as ModuleLoader;				
-				var ichild:BaseImpl = ml.child as BaseImpl;
-				ichild.addEventListener(BaseEvent.RETURN, returnHomeModule);
-				ichild.addEventListener(BaseEvent.Enter, EnterNewModule);
+//				var ml:ModuleLoader = event.target as ModuleLoader;				
+//				var ichild:BaseImpl = ml.child as BaseImpl;
+			//	ichild.addEventListener(BaseEvent.RETURN, returnHomeModule);
+//				ichild.addEventListener(BaseEvent.Enter, EnterNewModule);
 				
 			}
 			public function returnHomeModule(event:BaseEvent):void
@@ -169,15 +171,28 @@
 				}else{
 					var list:ArrayCollection=currentUser.getDepartments();
 					for(var i:int=0;i<list.length;i++){
-						var department:Object=list.getItemAt(i) as Object;
-						if(department.level=='0'||department.level=='1'){
+						var department:DepartmentModel=list.getItemAt(i) as DepartmentModel;
+						if(department.level==0||department.level==1){
+							
 							if(!CommonUtils.contains(currentUserFirstLevelDepartment,department.id))
 							currentUserFirstLevelDepartment.addItem( {data:department.id, label:department.name});
+							//Alert.show(department.getLeaderDepartment()!=null?department.getLeaderDepartment().name:null);
+						 	if(department.getLeaderDepartment()==null||department.getLeaderDepartment().level<=0){
+								if(!CommonUtils.contains(currentUserTrueFirstLevelDepartment,department.id))
+									currentUserTrueFirstLevelDepartment.addItem( {data:department.id, label:department.name});
+							} 
 						}else{
 							var leaderDepartment2FirstLevel:Object=department.getLeaderDepartment2FirstLevel();
-							if(leaderDepartment2FirstLevel!=null)
+							if(leaderDepartment2FirstLevel!=null){
 								if(!CommonUtils.contains(currentUserFirstLevelDepartment,leaderDepartment2FirstLevel.id))
-							currentUserFirstLevelDepartment.addItem( {data:leaderDepartment2FirstLevel.id, label:leaderDepartment2FirstLevel.name});
+									currentUserFirstLevelDepartment.addItem( {data:leaderDepartment2FirstLevel.id, label:leaderDepartment2FirstLevel.name});
+							
+								/* if(leaderDepartment2FirstLevel.getLeaderDepartment()!=null&&leaderDepartment2FirstLevel.getLeaderDepartment().level<='0'){
+									
+									if(!CommonUtils.contains(currentUserTrueFirstLevelDepartment,leaderDepartment2FirstLevel.id))
+										currentUserTrueFirstLevelDepartment.addItem( {data:leaderDepartment2FirstLevel.id, label:leaderDepartment2FirstLevel.name});
+								} */
+							}
 
 						}
 						currentUserDepartment.addItem( {data:department.id, label:department.name});
@@ -186,7 +201,18 @@
 					}
 					//Alert.show(currentUserDepartment.length+"ab");
 				}
-//				Alert.show(event.result.name);
+				/* for(var i:int=0;i<currentUserFirstLevelDepartment.length;i++){
+					var d:DepartmentModel=currentUserFirstLevelDepartment.getItemAt(i) as DepartmentModel;
+					if(d.getLeaderDepartment()!=null&&d.getLeaderDepartment().level<=0){
+						if(!CommonUtils.contains(currentUserTrueFirstLevelDepartment,d.id))
+							currentUserTrueFirstLevelDepartment.addItem( {data:d.id, label:d.name});
+						
+					}
+					
+				} */
+//					
+//				Alert.show(currentUserFirstLevelDepartment.length+"c");
+//				Alert.show(currentUserTrueFirstLevelDepartment.length+"d");
 				//callLater(function():void{
 					loadModule(default_url);
 					//启动权限控制
