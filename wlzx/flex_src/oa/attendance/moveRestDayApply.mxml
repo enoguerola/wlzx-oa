@@ -620,7 +620,7 @@
 										<mx:TextInput width="120"   alpha="0.5" id="officeChief_approver_name" enabled="false"/>
 										<mx:Label  text=""   id="officeChief_approver_id" visible="false"/>
 										<mx:Label text="日期："/>
-										<mx:DateField yearNavigationEnabled="true" width="120" id="officeChief_approve_time" enabled="false" formatString="YYYY-MM-DD"/>
+										<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" width="120" id="officeChief_approve_time" enabled="false" formatString="YYYY-MM-DD"/>
 									</mx:HBox>
 								</mx:VBox>
 								
@@ -644,7 +644,7 @@
 										<mx:TextInput width="120"   alpha="0.5" id="vicePrincipal_approver_name" enabled="false"/>
 										<mx:Label  text=""   id="vicePrincipal_approver_id"  visible="false"/>
 										<mx:Label text="日期："/>
-										<mx:DateField yearNavigationEnabled="true" width="120"  id="vicePrincipal_approve_time" enabled="false" formatString="YYYY-MM-DD"/>
+										<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" width="120"  id="vicePrincipal_approve_time" enabled="false" formatString="YYYY-MM-DD"/>
 									</mx:HBox>
 									
 								</mx:VBox>
@@ -735,7 +735,7 @@
 										<mx:TextInput width="120"   alpha="0.5" id="detail_officeChief_approver_name" enabled="false"/>
 										<mx:Label  text=""   id="detail_officeChief_approver_id" visible="false"/>
 										<mx:Label text="日期："/>
-										<mx:DateField yearNavigationEnabled="true"   width="120" id="detail_officeChief_approve_time" enabled="false" formatString="YYYY-MM-DD"/>
+										<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true"   width="120" id="detail_officeChief_approve_time" enabled="false" formatString="YYYY-MM-DD"/>
 									</mx:HBox>
 								</mx:VBox>
 								
@@ -759,7 +759,7 @@
 										<mx:TextInput width="120"   alpha="0.5" id="detail_vicePrincipal_approver_name" enabled="false"/>
 										<mx:Label  text=""   id="detail_vicePrincipal_approver_id"  visible="false"/>
 										<mx:Label text="日期："/>
-										<mx:DateField yearNavigationEnabled="true"   width="120" id="detail_vicePrincipal_approve_time" enabled="false" formatString="YYYY-MM-DD"/>
+										<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true"   width="120" id="detail_vicePrincipal_approve_time" enabled="false" formatString="YYYY-MM-DD"/>
 									</mx:HBox>
 									
 								</mx:VBox>

@@ -144,6 +144,17 @@ public class DepartmentModel  extends BaseModel{
 		}
 		return result;
 	}
+	//获得本部门所有用户集
+	public Set<UserModel> getSelfUsers() {
+		Set<UserModel> users=new HashSet<UserModel>(mainUsers);
+		for(RoleModel role:this.getRoles()){
+			for(UserModel user:role.getAllUsers())
+			users.add(user);
+		}
+		for(UserModel user:this.getMainUsers())
+			users.add(user);
+		return users;
+	}
 //	//获得部门及子部门所有用户
 //	public Set<UserModel> getAllUsers(){
 //		Set<UserModel> result=new HashSet<UserModel>();

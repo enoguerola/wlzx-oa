@@ -478,7 +478,7 @@
 									<s:VGroup width="30%">
 										<s:HGroup width="100%">
 											<mx:FormItem label="出生年月" width="100%">
-												<mx:DateField yearNavigationEnabled="true" id="birthday" width="100%"  formatString="YYYY-MM-DD"/>
+												<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" id="birthday" width="100%"  formatString="YYYY-MM-DD"/>
 											</mx:FormItem>
 										</s:HGroup>
 										<mx:FormItem label="政治面貌" width="100%">
@@ -532,7 +532,7 @@
 											<mx:TextInput id='school' width="90%"/>
 										</mx:FormItem>
 										<mx:FormItem label="技能鉴定时间" width="100%" labelWidth="100">
-											<mx:DateField yearNavigationEnabled="true" id="skillLevelDate" width="90%" formatString="YYYY-MM-DD" />
+											<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" id="skillLevelDate" width="90%" formatString="YYYY-MM-DD" />
 										</mx:FormItem>
 									</s:VGroup>
 								</s:HGroup>
@@ -563,7 +563,7 @@
 												<mx:TextInput id='contactPhone' width="100%"/>
 											</mx:FormItem>
 											<mx:FormItem label="何时工作" width="30%">
-												<mx:DateField yearNavigationEnabled="true" id='workDate' width="100%"  formatString="YYYY-MM-DD" change="workDate_changeHandler(event)"/>
+												<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" id='workDate' width="100%"  formatString="YYYY-MM-DD" change="workDate_changeHandler(event)"/>
 											</mx:FormItem>
 											<mx:FormItem label="工龄" width="45%" labelWidth="100">
 												<mx:TextInput id='workPeriod' width="90%" editable="false"/>
@@ -571,7 +571,7 @@
 										</s:HGroup>
 										<s:HGroup width="100%">
 											<mx:FormItem label="入校时间" width="25%">
-												<mx:DateField yearNavigationEnabled="true" id="attendDate" width="100%"  formatString="YYYY-MM-DD" change="attendDate_changeHandler(event)"/>
+												<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" id="attendDate" width="100%"  formatString="YYYY-MM-DD" change="attendDate_changeHandler(event)"/>
 											</mx:FormItem>
 											<mx:FormItem label="校龄" width="30%">
 												<mx:TextInput id='attendPeriod' width="100%" editable="false"/>

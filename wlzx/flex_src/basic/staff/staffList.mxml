@@ -360,7 +360,7 @@
 						</s:HGroup>
 						<s:HGroup verticalAlign="middle">
 							<s:Label  text="入校时间" />
-							<mx:DateField yearNavigationEnabled="true" formatString="YYYY-MM-DD" width="100%" id="attendDate" />
+							<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" formatString="YYYY-MM-DD" width="100%" id="attendDate" />
 						</s:HGroup>
 										
 						

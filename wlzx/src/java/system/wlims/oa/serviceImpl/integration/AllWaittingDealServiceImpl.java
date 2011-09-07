@@ -675,7 +675,7 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 			}	
 				//审批
 				if(user.hasDam("adjust_class_apply_approve_main@defaultVisit@@noFilter@")){
-					if(applyModel.alreadyArranged()==false){
+					if(applyModel.alreadyArranged()==true){
 						TaskVO taskVO1=new TaskVO();
 						taskVO1.setType(TaskVO.EType.CourseAdjust_Approve.getText());
 						taskVO1.setTypeId(TaskVO.EType.CourseAdjust_Approve.getValue().intValue());
