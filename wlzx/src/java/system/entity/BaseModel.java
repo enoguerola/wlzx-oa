@@ -81,7 +81,7 @@ public  class BaseModel implements Comparable<BaseModel>,Serializable{
     @Override  
     public int hashCode() {  
         // TODO Auto-generated method stub  
-        return this.getId().hashCode();  
+        return   Integer.parseInt(getId()) ;
     } 
 	/* (non-Javadoc)
 	 * @see java.lang.Comparable#compareTo(java.lang.Object)

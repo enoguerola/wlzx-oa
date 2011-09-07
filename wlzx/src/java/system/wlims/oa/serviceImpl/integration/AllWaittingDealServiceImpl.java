@@ -118,7 +118,7 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 //					}
 //				}	
 //				//请假出差本处室审批
-//				if(user.hasDam("takeLeaveOfficeApprove@noFilter@")&&SecurityUserHolder.getCurrentUser()!=null&&SecurityUserHolder.getCurrentUser().getAllSubordinates()!=null&&SecurityUserHolder.getCurrentUser().getAllSubordinates().contains(user)){
+//				if(user.hasDam("takeLeaveOfficeApprove@noFilter@")&&SecurityUserHolder.getCurrentUser()!=null&&SecurityUserHolder.getCurrentUser().hasSubordinateUser(user)){
 //					if(takeLeaveForm.getArrangeTechDealAlready()==true&&takeLeaveForm.getOfficeChiefStatus()==null&&takeLeaveForm.getStatus().intValue()!=TakeLeaveForm.Status.Cancle.getValue().intValue()){
 //						TaskVO taskVO1=new TaskVO();
 //						taskVO1.setStatus(TaskVO.EStatus.ToBeDeal.getText());
@@ -148,7 +148,7 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 //					}
 //				}
 //				//请假出差分管副校长审批
-//				if(user.hasDam("takeLeaveVicePrincipalApprove@noFilter@")&&SecurityUserHolder.getCurrentUser()!=null&&SecurityUserHolder.getCurrentUser().getAllSubordinates()!=null&&SecurityUserHolder.getCurrentUser().getAllSubordinates().contains(user)){
+//				if(user.hasDam("takeLeaveVicePrincipalApprove@noFilter@")&&SecurityUserHolder.getCurrentUser()!=null&&SecurityUserHolder.getCurrentUser().hasSubordinateUser(user)){
 //					if(takeLeaveForm.getOfficeChiefStatus()!=null&&takeLeaveForm.getOfficeChiefStatus().intValue()==1&&takeLeaveForm.getVicePrincipalStatus()==null&&takeLeaveForm.getStatus().intValue()!=TakeLeaveForm.Status.Cancle.getValue().intValue()){
 //						TaskVO taskVO2=new TaskVO();
 //						taskVO2.setStatus(TaskVO.EStatus.ToBeDeal.getText());
@@ -434,7 +434,7 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 //					list.add(taskVO);
 //				}
 				//请假出差本处室审批
-				if(user.hasDam("takeLeaveOfficeApprove@noFilter@")&&SecurityUserHolder.getCurrentUser()!=null&&SecurityUserHolder.getCurrentUser().getAllSubordinates()!=null&&SecurityUserHolder.getCurrentUser().getAllSubordinates().contains(userDAO.get(takeLeaveForm.getTeacherId()))){
+				if(user.hasDam("takeLeaveOfficeApprove@noFilter@")&&SecurityUserHolder.getCurrentUser()!=null&&SecurityUserHolder.getCurrentUser().hasSubordinateUser(takeLeaveForm.getTeacherId())){
 					//if(takeLeaveForm.getArrangeTechDealAlready()==true){
 						TaskVO taskVO1=new TaskVO();
 						taskVO1.setStatus(TaskVO.EStatus.ToBeDeal.getText());
@@ -465,13 +465,13 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 							else taskVO1.setStatus(TaskVO.EStatus.ToBeDeal.getText());
 						}
 						else taskVO1.setStatus(TaskVO.EStatus.Finished.getText());
-						taskVO1.setWorkersIds(getWorkersIds(TaskVO.EType.AskForLeave_BusinessTrip_OfficalApprove.getValue()));
+						taskVO1.setWorkersIds(getWorkersIds(TaskVO.EType.AskForLeave_BusinessTrip_OfficalApprove.getValue(),takeLeaveForm.getTeacherId()));
 						//taskVO1.setWorkersIds(takeLeaveForm.getTeacherId());
 						list.add(taskVO1);
 					//}
 				}
 				//请假出差分管副校长审批
-				if(user.hasDam("takeLeaveVicePrincipalApprove@noFilter@")&&SecurityUserHolder.getCurrentUser()!=null&&SecurityUserHolder.getCurrentUser().getAllSubordinates()!=null&&SecurityUserHolder.getCurrentUser().getAllSubordinates().contains(userDAO.get(takeLeaveForm.getTeacherId()))){
+				if(user.hasDam("takeLeaveVicePrincipalApprove@noFilter@")&&SecurityUserHolder.getCurrentUser()!=null&&SecurityUserHolder.getCurrentUser().hasSubordinateUser(takeLeaveForm.getTeacherId())){
 					if(takeLeaveForm.getOfficeChiefStatus()!=null&&takeLeaveForm.getOfficeChiefStatus().intValue()==1){
 						TaskVO taskVO2=new TaskVO();
 						taskVO2.setStatus(TaskVO.EStatus.ToBeDeal.getText());
@@ -501,7 +501,7 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 							else taskVO2.setStatus(TaskVO.EStatus.ToBeDeal.getText());
 						}
 						else taskVO2.setStatus(TaskVO.EStatus.Finished.getText());
-						taskVO2.setWorkersIds(getWorkersIds(TaskVO.EType.AskForLeave_BusinessTrip_VicePrincipalApprove.getValue()));
+						taskVO2.setWorkersIds(getWorkersIds(TaskVO.EType.AskForLeave_BusinessTrip_VicePrincipalApprove.getValue(),takeLeaveForm.getTeacherId()));
 						//taskVO2.setWorkersIds(takeLeaveForm.getTeacherId());
 						list.add(taskVO2);
 					}
@@ -538,7 +538,7 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 							
 						}
 						else taskVO3.setStatus(TaskVO.EStatus.Finished.getText());
-						taskVO3.setWorkersIds(getWorkersIds(TaskVO.EType.AskForLeave_BusinessTrip_PrincipalApprove.getValue()));
+						taskVO3.setWorkersIds(getWorkersIds(TaskVO.EType.AskForLeave_BusinessTrip_PrincipalApprove.getValue(),takeLeaveForm.getTeacherId()));
 						//taskVO3.setWorkersIds(takeLeaveForm.getTeacherId());
 						list.add(taskVO3);
 					}
@@ -557,7 +557,7 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 						if(takeLeaveForm.getTakeLeaveTerminateForm().getStatus().intValue()==TakeLeaveTerminateForm.Status.Waiting.getValue().intValue()){
 							taskVO3.setStatus(TaskVO.EStatus.ToBeDeal.getText());
 						}	else taskVO3.setStatus(TaskVO.EStatus.Finished.getText());
-						taskVO3.setWorkersIds(getWorkersIds(TaskVO.EType.AskForLeave_Cancle.getValue()));
+						taskVO3.setWorkersIds(getWorkersIds(TaskVO.EType.AskForLeave_Cancle.getValue(),takeLeaveForm.getTeacherId()));
 						//taskVO3.setWorkersIds(takeLeaveForm.getTeacherId());
 						list.add(taskVO3);
 					}
@@ -586,7 +586,7 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 							else taskVO1.setStatus(TaskVO.EStatus.ToBeDeal.getText());
 						}
 						else taskVO1.setStatus(TaskVO.EStatus.Finished.getText());
-						taskVO1.setWorkersIds(getWorkersIds(TaskVO.EType.OverWork_OfficalApprove.getValue()));
+						taskVO1.setWorkersIds(getWorkersIds(TaskVO.EType.OverWork_OfficalApprove.getValue(),overWorkForm.getTeacherId()));
 						list.add(taskVO1);
 				}
 					
@@ -615,7 +615,7 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 							else taskVO1.setStatus(TaskVO.EStatus.ToBeDeal.getText());
 						}
 						else taskVO1.setStatus(TaskVO.EStatus.Finished.getText());
-						taskVO1.setWorkersIds(getWorkersIds(TaskVO.EType.MoveRestDay_OfficalApprove.getValue()));
+						taskVO1.setWorkersIds(getWorkersIds(TaskVO.EType.MoveRestDay_OfficalApprove.getValue(),moveRestDayForm.getTeacherId()));
 						list.add(taskVO1);
 				}	
 				//副校长审批
@@ -639,7 +639,7 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 								else taskVO2.setStatus(TaskVO.EStatus.ToBeDeal.getText());
 							}
 							else taskVO2.setStatus(TaskVO.EStatus.Finished.getText());
-							taskVO2.setWorkersIds(getWorkersIds(TaskVO.EType.MoveRestDay_VicePrincipalApprove.getValue()));
+							taskVO2.setWorkersIds(getWorkersIds(TaskVO.EType.MoveRestDay_VicePrincipalApprove.getValue(),moveRestDayForm.getTeacherId()));
 							list.add(taskVO2);
 						}
 				}
@@ -648,8 +648,34 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 		List<ApplyModel> applyList=courseAdjustDAO.getAppliesByCondition(null, null, null, beginTime, endTime);
 		if(applyList!=null&&applyList.size()>0)
 			for(ApplyModel applyModel:applyList){
+				//课务安排
+				if(user.hasDam("adjust_class_apply_arrange_main@defaultVisit@@noFilter@")){
+					
+					TaskVO taskVO1=new TaskVO();
+					taskVO1.setType(TaskVO.EType.CourseAdjust_Arrange.getText());
+					taskVO1.setTypeId(TaskVO.EType.CourseAdjust_Arrange.getValue().intValue());
+					taskVO1.setAssignerId(TaskVO.EAssigner.Default.getValue().intValue()+"");
+					taskVO1.setId(applyModel.getId());
+					try {
+						Date postDate = new SimpleDateFormat("yyyyMMddHHmmss").parse(applyModel.getApplyNo());
+						taskVO1.setPostTime(UtilDateTime.toDateString(postDate,"yyyy-MM-dd HH:mm:ss"));
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
+					taskVO1.setTitle(TaskVO.ETitle.CourseAdjust_Arrange.getText());
+					if(applyModel.getApplyStatus()==ApplyModel.ApplyStatus.CANCLE.getStatus()){
+							taskVO1.setStatus(TaskVO.EStatus.Cancled.getText());
+					}else if(applyModel.alreadyArranged()==false){
+							taskVO1.setStatus(TaskVO.EStatus.ToBeDeal.getText());
+					}
+					else taskVO1.setStatus(TaskVO.EStatus.Finished.getText());
+					//taskVO1.setWorkersIds(applyModel.getApplyTeacherId());
+					taskVO1.setWorkersIds(getWorkersIds(TaskVO.EType.CourseAdjust_Arrange.getValue(),null));
+					list.add(taskVO1);
+			}	
+				//审批
 				if(user.hasDam("adjust_class_apply_approve_main@defaultVisit@@noFilter@")){
-				
+					if(applyModel.alreadyArranged()==false){
 						TaskVO taskVO1=new TaskVO();
 						taskVO1.setType(TaskVO.EType.CourseAdjust_Approve.getText());
 						taskVO1.setTypeId(TaskVO.EType.CourseAdjust_Approve.getValue().intValue());
@@ -669,8 +695,11 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 						}
 						else taskVO1.setStatus(TaskVO.EStatus.Finished.getText());
 						//taskVO1.setWorkersIds(applyModel.getApplyTeacherId());
-						taskVO1.setWorkersIds(getWorkersIds(TaskVO.EType.CourseAdjust_Approve.getValue()));
+						taskVO1.setWorkersIds(getWorkersIds(TaskVO.EType.CourseAdjust_Approve.getValue(),null));
 						list.add(taskVO1);
+						
+					}
+						
 				}		
 					
 				}
@@ -694,7 +723,7 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 								taskVO1.setStatus(TaskVO.EStatus.ToBeDeal.getText());
 						}
 						else taskVO1.setStatus(TaskVO.EStatus.Finished.getText());
-						taskVO1.setWorkersIds(getWorkersIds(TaskVO.EType.Conference_Approve.getValue()));
+						taskVO1.setWorkersIds(getWorkersIds(TaskVO.EType.Conference_Approve.getValue(),null));
 						//taskVO1.setWorkersIds(conferenceModel.getApplyUserId());
 						list.add(taskVO1);
 						
@@ -703,7 +732,7 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 			}
 		return list;
 	}
-	public String getWorkersIds(Integer type){
+//	public String getWorkersIds(Integer type){
 //		StringBuilder result=new StringBuilder() ;
 //		List<UserModel> users=userDAO.getAllUsers();
 //		
@@ -750,7 +779,25 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 //			}
 //		
 //		return result.toString();		
-		return systemService.getWorkersIds(type);
+//		return systemService.getWorkersIds(type);
+//	}
+	//childId非空则取得的workerIds必须是childId的领导
+	public String getWorkersIds(Integer type,String childId){
+		if(StringUtils.isEmpty(childId)){
+			return systemService.getWorkersIds(type);
+		}
+		String ids= systemService.getWorkersIds(type);
+		if(StringUtils.isNotEmpty(ids)){
+			StringBuilder result=new StringBuilder() ;
+			String[] idAttrs=ids.split(";");
+			for(String id:idAttrs){
+				if(userDAO.get(id).hasSubordinateUser(childId))
+					result.append(id+";");
+				
+			}
+			return result.toString();
+			
+		}else return null;
 	}
 	public TaskDAO getTaskDAO() {
 		return taskDAO;

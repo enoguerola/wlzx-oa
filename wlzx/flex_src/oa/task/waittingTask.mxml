@@ -207,6 +207,8 @@
 					});
 				}else if(typeId=="2"){
 					parent.addTab("adjustApprove-detail"+"_"+id,"调课处理",parent.nav,"oa/course/adjust/adjustApprove.swf",null,id);
+				}else if(typeId=="16"){
+					parent.addTab("adjustApprove-detail"+"_"+id,"调课安排",parent.nav,"oa/course/adjust/adjustApprove.swf",null,id);
 				}else if(typeId>="3"&&typeId<="6"){
 					parent.addTab("takeLeaveApprove-leave-detail"+"_"+id,"请假处理",parent.nav,"oa/attendance/takeLeaveApprove.swf",null,id+";"+"Leave");
 					

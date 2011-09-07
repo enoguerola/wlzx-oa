@@ -243,6 +243,7 @@ public class UserModel  extends BaseModel implements UserDetails{
 				for(RoleModel subRole:role.getAllSubordinates()){
 					if(subRole.getAllUsers()!=null&&subRole.getAllUsers().size()>0){
 						for(UserModel user:subRole.getAllUsers()){
+							if(!results.contains(user))
 							results.add(user);
 						}
 					}
@@ -254,6 +255,7 @@ public class UserModel  extends BaseModel implements UserDetails{
 			DepartmentModel department=mainRole.getBelongDepartment();
 			if(department!=null&&department.getUsers()!=null&&department.getUsers().size()>0){
 				for(UserModel user:department.getUsers()){
+					if(!results.contains(user))
 									results.add(user);
 								
 				}
@@ -262,6 +264,7 @@ public class UserModel  extends BaseModel implements UserDetails{
 			for(DepartmentModel dep:departments)
 			if(dep!=null&&dep.getUsers()!=null&&dep.getUsers().size()>0){
 				for(UserModel user:dep.getUsers()){
+					if(!results.contains(user))
 									results.add(user);
 								
 				}
