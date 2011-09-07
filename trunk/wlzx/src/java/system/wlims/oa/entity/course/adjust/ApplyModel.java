@@ -152,5 +152,15 @@ public class ApplyModel  extends BaseModel  {
 	public void setId(String id) {
 		this.id = id;
 	}
+	public boolean alreadyArranged(){
+		boolean already=true;
+		for(ApplyItemModel item:applyItems){
+			if(item.getAdjustArrangeAlready()==null||item.getAdjustArrangeAlready()==0){
+				already=false;
+				break;
+			}
+		}
+		return already;
+	}
 
 }

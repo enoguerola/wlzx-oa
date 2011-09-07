@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<actionScriptProperties analytics="false" mainApplicationPath="home.mxml" projectUUID="9fc83513-18b1-42a2-bfca-e35ea75215de" version="6">
-  <compiler additionalCompilerArguments="-services &quot;../WebContent/WEB-INF/flex/services-config.xml&quot;  -locale zh_CN -source-path=../locale/{locale}" autoRSLOrdering="true" copyDependentFiles="true" fteInMXComponents="false" generateAccessible="false" htmlExpressInstall="true" htmlGenerate="true" htmlHistoryManagement="true" htmlPlayerVersionCheck="true" includeNetmonSwc="false" outputFolderPath="bin-debug" rootURL="http://localhost:8080/wlzx" sourceFolderPath="flex_src" strict="true" targetPlayerVersion="0.0.0" useApolloConfig="false" useDebugRSLSwfs="true" verifyDigests="true" warn="true">
+<actionScriptProperties analytics="false" mainApplicationPath="home.mxml" projectUUID="9fc83513-18b1-42a2-bfca-e35ea75215de" version="10">
+  <compiler additionalCompilerArguments="-services &quot;../WebContent/WEB-INF/flex/services-config.xml&quot;  -locale zh_CN -source-path=../locale/{locale}" autoRSLOrdering="true" copyDependentFiles="true" flexSDK="Flex 4.0" fteInMXComponents="false" generateAccessible="false" htmlExpressInstall="true" htmlGenerate="true" htmlHistoryManagement="true" htmlPlayerVersionCheck="true" includeNetmonSwc="false" outputFolderPath="bin-debug" removeUnusedRSL="true" rootURL="http://localhost:8080/wlzx" sourceFolderPath="flex_src" strict="true" targetPlayerVersion="0.0.0" useApolloConfig="false" useDebugRSLSwfs="true" verifyDigests="true" warn="true">
     <compilerSourcePath/>
     <libraryPath defaultLinkType="0">
       <libraryPathEntry kind="4" path="">
@@ -90,6 +90,9 @@
     <module application="flex_src/home.mxml" destPath="basic/staff/staffDetail.swf" optimize="false" sourcePath="flex_src/basic/staff/staffDetail.mxml"/>
     <module application="flex_src/home.mxml" destPath="oa/conference/conferenceMaintain.swf" optimize="false" sourcePath="flex_src/oa/conference/conferenceMaintain.mxml"/>
     <module application="flex_src/home.mxml" destPath="oa/sendingFiles/documentDetail.swf" optimize="false" sourcePath="flex_src/oa/sendingFiles/documentDetail.mxml"/>
+    <module application="flex_src/home.mxml" destPath="oa/course/adjust/adjustArrange.swf" optimize="false" sourcePath="flex_src/oa/course/adjust/adjustArrange.mxml"/>
+    <module application="flex_src/home.mxml" destPath="oa/setting/oaSetting.swf" optimize="false" sourcePath="flex_src/oa/setting/oaSetting.mxml"/>
   </modules>
   <buildCSSFiles/>
+  <flashCatalyst validateFlashCatalystCompatibility="false"/>
 </actionScriptProperties>

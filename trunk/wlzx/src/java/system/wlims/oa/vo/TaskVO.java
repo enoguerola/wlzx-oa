@@ -12,6 +12,7 @@ public class TaskVO {
 	public static enum EType{
 		Task(1, "领导指派"),
 		CourseAdjust_Approve(2, "调课审批"),
+		CourseAdjust_Arrange(16, "调课审批"),
 		AskForLeave_Leave_TechArrange(3, "请假工作安排"),
 		AskForLeave_Leave_OfficalApprove(4, "请假处室审批"),
 		AskForLeave_Leave_VicePrincipalApprove(5, "请假副校长审批"),
@@ -45,6 +46,7 @@ public class TaskVO {
 	public static enum ETitle{
 		Task(1, "领导指派"),
 		CourseAdjust_Approve(2, "您有一项调课申请需要进行审批"),
+		CourseAdjust_Arrange(16, "您有一项调课课务需要进行安排"),
 		AskForLeave_Leave_TechArrange(3, "您有一件请假的教学工作需要安排"),
 		AskForLeave_Leave_OfficalApprove(4, "您有一件请假申请事务需要处理"),
 		AskForLeave_Leave_VicePrincipalApprove(5, "您有一件请假申请事务需要处理"),

@@ -78,11 +78,11 @@
 			import system.utils.*;
 			[Bindable] 
 			public var status:ArrayCollection = new ArrayCollection( 
-				[/*  {label:"全部", data:null}, */  
+				[{label:"全部", data:null},  
 					{label:"待审批", data:0},  
-/* 					{label:"审批通过", data:1},
- */					{label:"审批未通过", data:2}/* ,
-					{label:"取消", data:3} */]); 
+ 					{label:"审批通过", data:1},
+					{label:"审批未通过", data:2},
+					{label:"取消", data:3} ]); 
 			public var approveStatus:ArrayCollection = new ArrayCollection( 
 				[ 	
 					{label:"审批通过", data:1},
@@ -363,7 +363,7 @@
 						</mx:HBox>
 						<mx:HBox verticalAlign="middle">
 							<mx:Label  text="申请状态"  width="100"  textAlign="right"/>
-							<mx:ComboBox id="search_state"  dataProvider="{status}" selectedIndex="0"  editable="false"  width="80"/>
+							<mx:ComboBox id="search_state"  dataProvider="{status}"  editable="false"  width="80" selectedIndex="1"/>
 						</mx:HBox>
 					</mx:HBox>
 					<mx:HBox>

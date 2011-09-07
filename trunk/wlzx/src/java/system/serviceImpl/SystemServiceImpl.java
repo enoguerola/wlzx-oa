@@ -937,6 +937,10 @@ public class SystemServiceImpl implements SystemService{
 				for(UserModel user:users)
 					if(user.hasDam("adjust_class_apply_approve_main@defaultVisit@@noFilter@"))
 						result.append(user.getId()+";");
+			}else if(type.intValue()==TaskVO.EType.CourseAdjust_Arrange.getValue().intValue()){
+				for(UserModel user:users)
+					if(user.hasDam("adjust_class_apply_arrange_main@defaultVisit@@noFilter@"))
+						result.append(user.getId()+";");
 			}else if(type.intValue()==TaskVO.EType.Conference_Approve.getValue().intValue()){
 				for(UserModel user:users)
 					if(user.hasDam("conferenceArrange_main@defaultVisit@@noFilter@"))
