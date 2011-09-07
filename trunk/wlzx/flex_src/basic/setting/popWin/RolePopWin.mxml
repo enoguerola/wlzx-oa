@@ -196,7 +196,7 @@
 				<mx:TextInput id="level" width="200"/>
 			</mx:FormItem>
 			<mx:FormItem label="创建日期 " required="true">
-				<mx:DateField yearNavigationEnabled="true"  id="creationDate" width="200" formatString="YYYY-MM-DD" />
+				<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true"  id="creationDate" width="200" formatString="YYYY-MM-DD" />
 			</mx:FormItem>
 			
 			<mx:FormItem label="唯一标识" required="true">

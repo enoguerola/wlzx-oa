@@ -370,11 +370,11 @@
 						
 						<mx:HBox verticalAlign="middle">
 							<mx:Label  text="起始日期"  width="100"  textAlign="right"/>
-							<mx:DateField yearNavigationEnabled="true" id="search_date_begin"   formatString="YYYY-MM-DD"  editable="false" width="120"/>
+							<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" id="search_date_begin"   formatString="YYYY-MM-DD"  editable="false" width="120"/>
 						</mx:HBox>	
 						<mx:HBox>
 							<mx:Label  text="截止日期"  width="100"  textAlign="right"/>
-							<mx:DateField yearNavigationEnabled="true" id="search_date_end"  formatString="YYYY-MM-DD" editable="false" width="120"/>
+							<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" id="search_date_end"  formatString="YYYY-MM-DD" editable="false" width="120"/>
 							
 						</mx:HBox>
 						<mx:Button  label="搜索"  width="70"   click="search()"/>
@@ -673,7 +673,7 @@
 												</mx:GridItem>
 												<mx:GridItem  borderStyle="solid" verticalAlign="middle" width="300" horizontalAlign="center">
 													<mx:HBox>
-														<mx:DateField yearNavigationEnabled="true" id="detail_adjustActualDate"   formatString="YYYY-MM-DD"  width="100" />
+														<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" id="detail_adjustActualDate"   formatString="YYYY-MM-DD"  width="100" />
 														<mutiComboBox:MyDropList id="detail_adjustActualTime"  dataProvider="{new ArrayCollection(CommonUtils.clone(courseSections.toArray()))}"  width="180" >
 															
 														</mutiComboBox:MyDropList>

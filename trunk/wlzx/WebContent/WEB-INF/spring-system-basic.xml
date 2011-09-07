@@ -31,10 +31,15 @@
         <property name="maxIdle" value="3"/> 
         <!--  最小空闲值.当空闲的连接数少于阀值时，连接池就会预申请去一些连接，以免洪峰来时来不及申请 --> 
         <property name="minIdle" value="2"/> 
-		 <property name="removeAbandoned" value="true"/> 
+        <!--  removeAbandoned true,false,是否清理removeAbandonedTimeout秒没有使用的活动连接,清理后并没有放回连接池 --> 
+		 <property name="removeAbandoned" value="true"/>
+		<!--  removeAbandonedTimeout 活动连接的最大空闲时间 --> 
+		 <property name="removeAbandonedTimeout" value="3600000"/>
+		 <!-- logAbandoned true,false,连接池收回空闲的活动连接时是否打印消息  -->
         <property name="logAbandoned" value="true"/> 
-          <property name="timeBetweenEvictionRunsMillis" value="1000"/> 
-         <property name="minEvictableIdleTimeMillis" value="1000"/> 
+        <!-- 每timeBetweenEvictionRunsMillis毫秒秒检查一次连接池中空闲的连接,把空闲时间超过minEvictableIdleTimeMillis毫秒的连接断开,直到连接池中的连接数到minIdle为止； -->
+         <property name="timeBetweenEvictionRunsMillis" value="60000"/> 
+         <property name="minEvictableIdleTimeMillis" value="60000"/> 
 	</bean>
 
 	<bean id="basicHibernateProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">

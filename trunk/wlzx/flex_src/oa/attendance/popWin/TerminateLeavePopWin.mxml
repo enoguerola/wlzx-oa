@@ -204,10 +204,10 @@
 						<mx:Label  text="请假时间"  textAlign="center" id="detail_time_label"/>
 					</mx:GridItem>
 					<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5"    verticalAlign="middle" horizontalAlign="left"  width="100%">
-						<mx:DateField yearNavigationEnabled="true" width="120" id="detail_beginDate" formatString="YYYY-MM-DD" enabled="false"/>
+						<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" width="120" id="detail_beginDate" formatString="YYYY-MM-DD" enabled="false"/>
 						<mx:ComboBox width="60" id="detail_beginDate_section" dataProvider="{sections}" enabled="false"/>
 						<mx:Label width="40"   text="----"/>
-						<mx:DateField yearNavigationEnabled="true" width="120" id="detail_endDate" formatString="YYYY-MM-DD" enabled="false"/>
+						<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" width="120" id="detail_endDate" formatString="YYYY-MM-DD" enabled="false"/>
 						<mx:ComboBox width="60" id="detail_endDate_section" dataProvider="{sections}" enabled="false"/>
 					</mx:GridItem>
 					
@@ -228,10 +228,10 @@
 						<mx:Label  text="销假时间"  textAlign="center" />
 					</mx:GridItem>
 					<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5"  paddingLeft="5" paddingRight="5"  verticalAlign="middle" horizontalAlign="left"  width="100%">
-						<mx:DateField yearNavigationEnabled="true" width="120" id="terminate_date" formatString="YYYY-MM-DD" enabled="true"/>
+						<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" width="120" id="terminate_date" formatString="YYYY-MM-DD" enabled="true"/>
 						<mx:ComboBox width="60" id="terminate_date_section" dataProvider="{sections}" enabled="true"/>
 						<!--<mx:Label width="40"   text=""/>
-						<mx:DateField yearNavigationEnabled="true" width="120" id="terminate_endDate" formatString="YYYY-MM-DD" enabled="true"/>
+						<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" width="120" id="terminate_endDate" formatString="YYYY-MM-DD" enabled="true"/>
 						<mx:ComboBox width="60" id="terminate_endDate_section" dataProvider="{sections}" enabled="true"/>-->
 					</mx:GridItem>
 				
@@ -270,7 +270,7 @@
 				<mx:TextInput width="120"   alpha="0.5" id="officeChief_approver_name" enabled="false"/>
 				<mx:Label  text=""   id="officeChief_approver_id" visible="false"/>
 				<mx:Label text="日期："/>
-				<mx:DateField yearNavigationEnabled="true" width="120" id="officeChief_approveDate" enabled="true" formatString="YYYY-MM-DD"/>
+				<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" width="120" id="officeChief_approveDate" enabled="true" formatString="YYYY-MM-DD"/>
 			</mx:HBox>
 			<mx:HBox horizontalAlign="right" width="100%" height="60" verticalAlign="middle">
 				<mx:Button label="申请" id="saveButton" click="save_clickHandler(event)"/>
