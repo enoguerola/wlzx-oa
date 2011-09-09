@@ -352,8 +352,11 @@
 			{
 				// TODO Auto-generated method stub
 				//Alert.show(event.newIndex+"");
-				var obj:* = nav.getChildAt(event.newIndex);
-				obj.child.search();
+				var container:* = nav.getChildAt(event.newIndex);
+				var m:Object=container.child as Object;
+				if(m!=null&&"search" in m){
+					m.search();
+				}
 			}
 
 		]]>
