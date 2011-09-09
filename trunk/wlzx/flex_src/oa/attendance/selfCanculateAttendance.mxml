@@ -209,7 +209,7 @@
 			
 			<!--***************  记录列表框 ****************-->
 			<component:Fieldset title="记录列表" paddingLeft="50" width="85%" paddingTop="30" >
-				<mx:Panel styleName="customPanel" title="考勤记录"  cornerRadius="5" borderVisible="true" dropShadowVisible="false" verticalScrollPolicy="auto">
+				<mx:Panel styleName="customPanel" title="考勤记录"  cornerRadius="5" borderVisible="true" dropShadowVisible="false" verticalScrollPolicy="auto" width="100%">
 					<mx:Grid width="100%" height="100%" horizontalAlign="center" verticalAlign="middle"  horizontalGap="-1" verticalGap="-1" >
 						
 						<mx:GridRow   horizontalAlign="center" verticalAlign="middle" width="100%" >
