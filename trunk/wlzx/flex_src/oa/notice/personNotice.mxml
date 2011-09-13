@@ -409,6 +409,7 @@
 			{
 				// TODO Auto-generated method stub
 				if(noticeScope.selectedItem.data=='1'){
+					//Alert.show("bb");
 					postdepartment.dataProvider= this.parentApplication.currentUserFirstLevelDepartment;
 					postdepartment.selectedIndex=0;
 				}else if(noticeScope.selectedItem.data=='0'){
@@ -416,6 +417,7 @@
 ////					var mainDepartment:Object=this.parentApplication.currentUser.mainRole.getBelongDepartment().getLeaderDepartment2FirstLevel();
 //					var mainDepartment:Object=this.parentApplication.currentUserFirstLevelDepartment;
 //					list.addItem({data:mainDepartment.id, label:mainDepartment.name});
+				//	Alert.show("aa");
 					postdepartment.dataProvider=this.parentApplication.currentUserTrueFirstLevelDepartment;
 					postdepartment.selectedIndex=0;
 				}

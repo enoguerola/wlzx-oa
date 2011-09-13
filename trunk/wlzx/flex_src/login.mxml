@@ -110,7 +110,7 @@
 					   /* 初始化监听键盘事件 */
 					   public function initKeyboard():void
 					   {
-						   loginButton.addEventListener(KeyboardEvent.KEY_DOWN,sendMessageUseEnterKey);  
+						   this.addEventListener(KeyboardEvent.KEY_DOWN,sendMessageUseEnterKey);  
 					   } 
 					   
 					   /*监听回车键 */
