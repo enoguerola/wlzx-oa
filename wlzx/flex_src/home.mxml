@@ -187,11 +187,10 @@
 								if(!CommonUtils.contains(currentUserFirstLevelDepartment,leaderDepartment2FirstLevel.id))
 									currentUserFirstLevelDepartment.addItem( {data:leaderDepartment2FirstLevel.id, label:leaderDepartment2FirstLevel.name});
 							
-								/* if(leaderDepartment2FirstLevel.getLeaderDepartment()!=null&&leaderDepartment2FirstLevel.getLeaderDepartment().level<='0'){
-									
+								if(leaderDepartment2FirstLevel.getLeaderDepartment()==null||leaderDepartment2FirstLevel.getLeaderDepartment().level<=0){
 									if(!CommonUtils.contains(currentUserTrueFirstLevelDepartment,leaderDepartment2FirstLevel.id))
 										currentUserTrueFirstLevelDepartment.addItem( {data:leaderDepartment2FirstLevel.id, label:leaderDepartment2FirstLevel.name});
-								} */
+								} 
 							}
 
 						}
