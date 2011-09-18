@@ -72,8 +72,8 @@ public class TakeLeaveServiceImpl implements TakeLeaveService {
 		if(newTakeLeave.getStatus().intValue()==TakeLeaveForm.Status.Cancle.getValue().intValue()||newTakeLeave.getStatus().intValue()==TakeLeaveForm.Status.Deny.getValue().intValue())return false;
 		else{
 			newTakeLeave.setArrangeTech(takeLeave.getArrangeTech());
-			newTakeLeave.setArrangeManage(takeLeave.getArrangeTech());
-			newTakeLeave.setArrangeService(takeLeave.getArrangeTech());
+			newTakeLeave.setArrangeManage(takeLeave.getArrangeManage());
+			newTakeLeave.setArrangeService(takeLeave.getArrangeService());
 			newTakeLeave.setOfficeChiefApproveOption(takeLeave.getOfficeChiefApproveOption());
 			newTakeLeave.setOfficeChiefApproverId(takeLeave.getOfficeChiefApproverId());
 			newTakeLeave.setOfficeChiefApproveTime(takeLeave.getOfficeChiefApproveTime());
@@ -83,7 +83,7 @@ public class TakeLeaveServiceImpl implements TakeLeaveService {
 			newTakeLeave.setPrincipalApproveOption(takeLeave.getPrincipalApproveOption());
 			newTakeLeave.setPrincipalApproverId(takeLeave.getPrincipalApproverId());
 			newTakeLeave.setPrincipalApproveTime(takeLeave.getPrincipalApproveTime());
-			
+			newTakeLeave.setRemark(takeLeave.getRemark());
 			
 			
 			
@@ -118,7 +118,7 @@ public class TakeLeaveServiceImpl implements TakeLeaveService {
 //				log.setOperationTeacherId(user.getId());
 //				newTakeLeave.getLogs().add(log);
 //			}
-			if(takeLeave.getOfficeChiefStatus()!=null&&newTakeLeave.getOfficeChiefStatus()!=null&&newTakeLeave.getOfficeChiefStatus().intValue()!=takeLeave.getOfficeChiefStatus().intValue()){
+			if(newTakeLeave.getOfficeChiefStatus()==null){
 				TakeLeaveWorkFlowLog log=new TakeLeaveWorkFlowLog();
 				log.setOperationName("处室审批");
 				if(takeLeave.getOfficeChiefStatus()==1){
@@ -150,7 +150,7 @@ public class TakeLeaveServiceImpl implements TakeLeaveService {
 				log.setOperationTeacherId(takeLeave.getOfficeChiefApproverId());
 				newTakeLeave.getLogs().add(log);
 			}
-			if(takeLeave.getVicePrincipalStatus()!=null&&newTakeLeave.getVicePrincipalStatus()!=null&&newTakeLeave.getVicePrincipalStatus().intValue()!=takeLeave.getVicePrincipalStatus().intValue()){
+			if(newTakeLeave.getVicePrincipalStatus()==null){
 				TakeLeaveWorkFlowLog log=new TakeLeaveWorkFlowLog();
 				log.setOperationName("分管副校长审批");
 				if(takeLeave.getVicePrincipalStatus().intValue()==1){
@@ -182,7 +182,7 @@ public class TakeLeaveServiceImpl implements TakeLeaveService {
 				log.setOperationTeacherId(takeLeave.getVicePrincipalApproverId());
 				newTakeLeave.getLogs().add(log);
 			}
-			if(takeLeave.getPrincipalStatus()!=null&&newTakeLeave.getPrincipalStatus()!=null&&newTakeLeave.getPrincipalStatus().intValue()!=takeLeave.getPrincipalStatus().intValue()){
+			if(newTakeLeave.getPrincipalStatus()==null){
 				TakeLeaveWorkFlowLog log=new TakeLeaveWorkFlowLog();
 				log.setOperationName("校长审批");
 				if(takeLeave.getPrincipalStatus().intValue()==1){
