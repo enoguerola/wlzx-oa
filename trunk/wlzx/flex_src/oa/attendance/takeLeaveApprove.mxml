@@ -187,14 +187,14 @@
 				remark.text=form.remark;
 				
 				//权限控制部分
-			/* 	if(this.parentApplication.currentUser.hasDam("takeLeaveWorkDeal@noFilter@")){
+			 	if(this.parentApplication.currentUser.hasDam("takeLeaveWorkDeal@noFilter@")){
 					arrange_tech_already.enabled=true;
 					arrange_manage_already.enabled=true;
 					arrange_service_already.enabled=true;
 					arrange_tech.enabled=true;
 					arrange_manage.enabled=true;
 					arrange_service.enabled=true;
-				} */
+				} 
 				
 				if(this.parentApplication.currentUser.hasDam("takeLeavePrincipalApprove@noFilter@")){
 //					officeChief_approver_name.enabled=true;
@@ -505,11 +505,11 @@
 //						form.arrangeManage=arrange_manage.text;
 //						form.arrangeService=arrange_service.text;
 //						form.teacherId=teacher_id.text;
-//						form.arrangeTech=arrange_tech.text;
+						form.arrangeTech=arrange_tech.text;
 						form.arrangeTechDealAlready=arrange_tech_already.selected;
-//						form.arrangeService=arrange_service.text;
+						form.arrangeService=arrange_service.text;
 						form.arrangeServiceDealAlready=arrange_service_already.selected;
-//						form.arrangeManage=arrange_manage.text;
+						form.arrangeManage=arrange_manage.text;
 						form.arrangeManageDealAlready=arrange_manage_already.selected;
 						form.officeChiefApproveOption=officeChief_approve_option.text;
 						if(officeChief_approve_time.text!="")
