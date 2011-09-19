@@ -253,23 +253,23 @@
 					//	Alert.show("模块加载错误，这可能是用户长时间未操作导致的用户认证过期，请重新登录操作。如果仍存在问题，请检查网络或联系系统管理员","提示",Alert.YES,null,exitCallBack);
 					//					Alert.show("你确定要退出系统吗?","确认",Alert.YES,null,exitCallBack);
 				}); 
-				var bar:ProgressBar=new ProgressBar();
-				bar.minimum=0;
-				bar.visible=true;
-				bar.maximum=100;
-				bar.percentWidth=100;
-				bar.direction=ProgressBarDirection.RIGHT;
-				
-				bar.labelPlacement="bottom"
-				child.addEventListener( ModuleEvent.PROGRESS,function(e:ModuleEvent):void{
-					if(!child.contains(bar))child.addChild(bar);
-					bar.mode=ProgressBarMode.POLLED;
-					
-					bar.label = "当前模块加载进度："+Math.round(e.bytesLoaded * 100 / e.bytesTotal) + "%";
-//					Alert.show(bar.label);
-					bar.setProgress(e.bytesLoaded,e.bytesTotal);	
-					bar.validateNow();
-				});
+//				var bar:ProgressBar=new ProgressBar();
+//				bar.minimum=0;
+//				bar.visible=true;
+//				bar.maximum=100;
+//				bar.percentWidth=100;
+//				bar.direction=ProgressBarDirection.RIGHT;
+//				
+//				bar.labelPlacement="bottom"
+//				child.addEventListener( ModuleEvent.PROGRESS,function(e:ModuleEvent):void{
+//					if(!child.contains(bar))child.addChild(bar);
+//					bar.mode=ProgressBarMode.POLLED;
+//					
+//					bar.label = "当前模块加载进度："+Math.round(e.bytesLoaded * 100 / e.bytesTotal) + "%";
+////					Alert.show(bar.label);
+//					bar.setProgress(e.bytesLoaded,e.bytesTotal);	
+//					bar.validateNow();
+//				});
 				
 //				fade = new Fade();
 				// Rotate effect
