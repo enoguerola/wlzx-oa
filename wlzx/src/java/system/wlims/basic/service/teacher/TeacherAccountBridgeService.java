@@ -8,9 +8,11 @@ import java.util.Set;
 
 import system.DAOException;
 import system.ServiceException;
+import system.dao.DRDAO;
 import system.dao.DepartmentDAO;
 import system.dao.RoleDAO;
 import system.dao.UserDAO;
+import system.entity.DRModel;
 import system.entity.DepartmentModel;
 import system.entity.RoleModel;
 import system.entity.UserModel;
@@ -28,17 +30,26 @@ public class TeacherAccountBridgeService {
 	private UserDAO userDAO;
 	private RoleDAO roleDAO;
 	private DepartmentDAO departmentDAO;
-	public Boolean save(String  positionId, String teacherId,String prePositionId)throws ServiceException{
+	private DRDAO drDAO;
+	public Boolean save(String departmentId,String  positionId, String teacherId,String preDepartmentId,String prePositionId)throws ServiceException{
 		try {
 			TeacherModel teacher = teacherDAO.get(teacherId);
 			UserModel user=userDAO.get(teacher.getUserID());
-			RoleModel role=roleDAO.get(positionId);	
-			user.getRoles().add(role);
-			if(StringUtils.isNotEmpty(prePositionId)){
-				RoleModel preRole=roleDAO.get(prePositionId);	
-				user.getRoles().remove(preRole);
+//			RoleModel role=roleDAO.get(positionId);	
+			DRModel dr=drDAO.getDRByDepartmentIdAndRoleId(departmentId, positionId);
+			if(dr==null){
+				dr=new DRModel();
+				dr.setDepartmentId(departmentId);
+				dr.setRoleId(positionId);
+				drDAO.saveOrUpdate(dr);
 			}
-			userDAO.saveOrUpdate(user);
+			user.getDrs().add(dr);
+			if(StringUtils.isNotEmpty(prePositionId)&&StringUtils.isNotEmpty(preDepartmentId)){
+				DRModel preDr=drDAO.getDRByDepartmentIdAndRoleId(preDepartmentId, prePositionId);	
+				if(preDr!=null)
+				user.getDrs().remove(preDr);
+			}
+			userDAO.merge(user);
 			return true;
 		} catch (DAOException e) {
 			// TODO Auto-generated catch block
@@ -59,25 +70,30 @@ public class TeacherAccountBridgeService {
 		TeacherModel teacher = teacherDAO.get(teacherId);
 		UserModel user=userDAO.get(teacher.getUserID());
 		List<TeacherDepartment> list =new ArrayList<TeacherDepartment>();
-		for(RoleModel role:user.getRoles()){
+		for(DRModel dr:user.getDrs()){
 			TeacherDepartment td=new TeacherDepartment();
-			td.setDepartmentName(role.getBelongDepartment().getName());
-			td.setPositionId(role.getId());
+			//td.setDepartmentName(role.getBelongDepartment().getName());
+			td.setPositionId(dr.getRoleId());
+			RoleModel role=roleDAO.get(dr.getRoleId());
 			td.setPositionName(role.getName());
 			td.setTeacherId(teacher.getId());
-			td.setDepartmentId(role.getBelongDepartment().getId());
+			DepartmentModel department=departmentDAO.get(dr.getDepartmentId());
+			td.setDepartmentId(dr.getDepartmentId());
+			td.setDepartmentName(department.getName());
 			list.add(td);
 		}
 		return list;
 	}
 	
-	public void remove(String teacherId,String positionId )throws ServiceException{
+	public void remove(String teacherId,String departmentId,String positionId )throws ServiceException{
 //		teacherDepartmentDAO.remove(id);
 		TeacherModel teacher = teacherDAO.get(teacherId);
 		UserModel user=userDAO.get(teacher.getUserID());
-		RoleModel role=roleDAO.get(positionId);	
-		user.getRoles().remove(role);
-		userDAO.saveOrUpdate(user);
+		DRModel dr=drDAO.getDRByDepartmentIdAndRoleId(departmentId, positionId);
+		//RoleModel role=roleDAO.get(positionId);	
+		if(dr!=null)
+		user.getDrs().remove(dr);
+		userDAO.merge(user);
 	}
 	public List<TripleObject<String, String,String>> teacherAccountGetAll(){
 		List<TripleObject<String, String,String>> triples = new ArrayList<TripleObject<String, String,String>>();
@@ -107,7 +123,7 @@ public class TeacherAccountBridgeService {
 		}else if(StringUtils.isNotEmpty(departmentId)){
 			DepartmentModel department=departmentDAO.get(departmentId);
 			
-			Set<UserModel> users=department.getLevel()==0?department.getSelfUsers():department.getUsers();
+			Set<UserModel> users=department.getLevel()==0?department.getSelfUsers():department.getAllUsers();
 //			List<UserModel> mainUsers=userDAO.getUsersByMainDepartment(departmentId);
 //			if(mainUsers!=null&&mainUsers.size()>0){
 //				for(UserModel user:mainUsers)
@@ -130,7 +146,7 @@ public class TeacherAccountBridgeService {
 		List<TripleObject<String, String,String>> triples = new ArrayList<TripleObject<String, String,String>>();
 		List<UserModel> allUsers=userDAO.getAllUsers();
 		for(UserModel user:allUsers){
-			if(user.getAllRoles()==null||user.getAllRoles().size()==0){
+			if(user.getAllDRs()==null||user.getAllDRs().size()==0){
 				triples.add(new TripleObject<String, String,String>(null,user.getName(),user.getId()));
 			}
 		}
@@ -142,7 +158,7 @@ public class TeacherAccountBridgeService {
 		if(StringUtils.isNotEmpty(departmentId)){
 			DepartmentModel department=departmentDAO.get(departmentId);
 			if(department!=null){
-				Set<UserModel> users=department.getUsers();
+				Set<UserModel> users=department.getAllUsers();
 				List<UserModel> mainUsers=userDAO.getUsersByMainDepartment(departmentId);
 				if(mainUsers!=null&&mainUsers.size()>0){
 					for(UserModel user:mainUsers)
@@ -153,14 +169,14 @@ public class TeacherAccountBridgeService {
 						UserAddressVo vo=new UserAddressVo();
 						vo.setUserID(user.getId());
 						vo.setUserAccount(user.getName());
-						if(user.getMainRole()!=null){
-							vo.setMainRoleName(user.getMainRole().getName());
+						if(user.getMainDR()!=null){
+							vo.setMainRoleName(user.getMainDR().getRoleId());
 							
 						}else{
 							vo.setMainRoleName("未指定");
 						}
-						if(user.getMainDepartment()!=null){
-								vo.setMainDepartmentName(user.getMainDepartment().getName());
+						if(user.getMainDR()!=null){
+								vo.setMainDepartmentName(user.getMainDR().getDepartmentId());
 						}else {
 							vo.setMainDepartmentName("未指定");
 						}
@@ -181,14 +197,14 @@ public class TeacherAccountBridgeService {
 			UserAddressVo vo=new UserAddressVo();
 			vo.setUserID(user.getId());
 			vo.setUserAccount(user.getName());
-			if(user.getMainRole()!=null){
-				vo.setMainRoleName(user.getMainRole().getName());
+			if(user.getMainDR()!=null){
+				vo.setMainRoleName(user.getMainDR().getRoleId());
 				
 			}else{
 				vo.setMainRoleName("未指定");
 			}
-			if(user.getMainDepartment()!=null){
-					vo.setMainDepartmentName(user.getMainDepartment().getName());
+			if(user.getMainDR()!=null){
+					vo.setMainDepartmentName(user.getMainDR().getDepartmentId());
 			}else {
 				vo.setMainDepartmentName("未指定");
 			}
@@ -208,14 +224,14 @@ public class TeacherAccountBridgeService {
 					UserAddressVo vo=new UserAddressVo();
 					vo.setUserID(user.getId());
 					vo.setUserAccount(user.getName());
-					if(user.getMainRole()!=null){
-						vo.setMainRoleName(user.getMainRole().getName());
+					if(user.getMainDR()!=null){
+						vo.setMainRoleName(user.getMainDR().getRoleId());
 						
 					}else{
 						vo.setMainRoleName("未指定");
 					}
-					if(user.getMainDepartment()!=null){
-							vo.setMainDepartmentName(user.getMainDepartment().getName());
+					if(user.getMainDR()!=null){
+							vo.setMainDepartmentName(user.getMainDR().getDepartmentId());
 					}else {
 						vo.setMainDepartmentName("未指定");
 					}
@@ -263,6 +279,14 @@ public class TeacherAccountBridgeService {
 
 	public void setDepartmentDAO(DepartmentDAO departmentDAO) {
 		this.departmentDAO = departmentDAO;
+	}
+
+	public DRDAO getDrDAO() {
+		return drDAO;
+	}
+
+	public void setDrDAO(DRDAO drDAO) {
+		this.drDAO = drDAO;
 	}
 
 	

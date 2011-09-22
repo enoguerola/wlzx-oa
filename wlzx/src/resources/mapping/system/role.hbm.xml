@@ -4,7 +4,6 @@
 
 <hibernate-mapping>
 	<class name="system.entity.RoleModel" table="wlzx_system_role">
-		<cache usage="read-write"/>
 		<id name="id">
 			<column name="id" />
 			<generator class="native" />
@@ -36,21 +35,39 @@
 		</property> 
 		<property name="basicFlag" type="boolean">
 			<column name="basic_flag" />
-		</property> 	
+		</property> 
+		
+		<set name="relativeDRs" lazy="false"  table="wlzx_system_dr"  cascade="none" inverse="true">
+			<key column="role_id" not-null="true" />
+			<one-to-many not-found="ignore" class="system.entity.DRModel" /> 
+		</set>	
+	<!--
 		<set name="subordinates" lazy="false"  table="wlzx_system_role_leadship" cascade="all">
 			<cache usage="read-write" />
 			<key column="leader_id" not-null="true" />
 			<many-to-many not-found="ignore"  column="subordinate_id"  class="system.entity.RoleModel" order-by="sequence asc"/> 
 		</set>
+
 		<set name="leaders" lazy="false"  table="wlzx_system_role_leadship">
 			<cache usage="read-write" />
 			<key column="subordinate_id" not-null="true" />
 			<many-to-many not-found="ignore"  column="leader_id"  class="system.entity.RoleModel" /> 
 		</set>
+
 		<set name="users" lazy="false"  table="wlzx_system_role_user_relationship">
 			<cache usage="read-write" />
 			<key column="role_id" not-null="true" />
 			<many-to-many not-found="ignore"  column="user_id" class="system.entity.UserModel" /> 
+		</set>
+		<set name="leaderUsers" lazy="false"  table="wlzx_system_role_leader_users">
+			<cache usage="read-write" />
+			<key column="role_id" not-null="true" />
+			<many-to-many not-found="ignore"  column="leader_user_id" class="system.entity.UserModel" /> 
+		</set>
+		<set name="masterUsers" lazy="false"  table="wlzx_system_role_master_users">
+			<cache usage="read-write" />
+			<key column="role_id" not-null="true" />
+			<many-to-many not-found="ignore"  column="master_user_id" class="system.entity.UserModel" /> 
 		</set>
 		<set name="mainUsers" lazy="false"  table="wlzx_system_user" inverse="true" cascade="none">
 			<cache usage="read-write" />
@@ -61,7 +78,8 @@
 			<cache usage="read-write" />
 			<key column="role_id" not-null="true" />
 			<many-to-many not-found="ignore" column="dam_id" class="system.entity.DataAccessModeModel" /> 
-		</set>
+		</set>	-->	
+	<!-- 
 		<set name="departments" lazy="false"  table="wlzx_system_department_role_relationship">
 			<cache usage="read-write" />
 			<key column="role_id" not-null="true" />
@@ -72,6 +90,6 @@
 			<key column="role_id" not-null="true" />
 			<many-to-many not-found="ignore" column="department_id" class="system.entity.DepartmentModel" /> 
 		</set>
-		
+	 -->	
 	</class>
 </hibernate-mapping>

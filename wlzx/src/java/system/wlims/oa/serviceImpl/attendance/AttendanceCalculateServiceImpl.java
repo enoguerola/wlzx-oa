@@ -171,7 +171,7 @@ public class AttendanceCalculateServiceImpl implements AttendanceCalculateServic
 			users.add(userDAO.get(userId));
 		}else if(StringUtils.isNotEmpty(departmentId)){
 			DepartmentModel department=departmentDAO.get(departmentId);
-			users=new ArrayList<UserModel>(department.getUsers());
+			users=new ArrayList<UserModel>(department.getAllUsers());
 		}else {
 			users=userDAO.getAllUsers();
 		}
@@ -179,8 +179,8 @@ public class AttendanceCalculateServiceImpl implements AttendanceCalculateServic
 			AttendanceCalculateVO vo=new AttendanceCalculateVO();
 			vo.setUserID(user.getId());
 			vo.setUserAccount(user.getName());
-			if(user.getMainDepartment()!=null)
-			vo.setDepartmentName(user.getMainDepartment().getName());
+			if(user.getMainDR()!=null)
+			vo.setDepartmentName(user.getMainDR().getDepartmentId());
 			else 	vo.setDepartmentName("未指定");
 			vo.setTakeLeave_leaveDaySections(getSectionsOfValidTakeLeave(user.getId(),beginTime,endTime,TakeLeaveForm.Types.Leave.getValue().toString()));
 			vo.setTakeLeave_leaveTimes(getTimesOfValidTakeLeave(user.getId(),beginTime,endTime,TakeLeaveForm.Types.Leave.getValue().toString()));

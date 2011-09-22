@@ -42,22 +42,24 @@
 		<property name="active" type="boolean">
 			<column name="active" />
 		</property>
-		<set name="subordinates" lazy="false"  table="wlzx_system_user_leadship">
-			<cache usage="nonstrict-read-write" />
-			<key column="leader_id" not-null="true" />
-			<many-to-many not-found="ignore"  column="subordinate_id"  class="system.entity.UserModel" /> 
+
+		
+		<set name="masterDepartments" lazy="false"  table="wlzx_system_department_master_users">
+			<key column="master_user_id" not-null="true" />
+			<many-to-many not-found="ignore"  column="department_id" class="system.entity.DepartmentModel" /> 
 		</set>
-		<set name="leaders" lazy="false"  table="wlzx_system_user_leadship">
-			<cache usage="nonstrict-read-write" />
-			<key column="subordinate_id" not-null="true" />
-			<many-to-many not-found="ignore"  column="leader_id"  class="system.entity.UserModel" /> 
+		<set name="leaderDepartments" lazy="false"  table="wlzx_system_department_leader_users">
+			<key column="leader_user_id" not-null="true" />
+			<many-to-many not-found="ignore"  column="department_id" class="system.entity.DepartmentModel" /> 
 		</set>
-		<set name="roles" lazy="false"  table="wlzx_system_role_user_relationship">
-			<cache usage="nonstrict-read-write" />
+		
+		
+		<many-to-one not-found="ignore" name="mainDR"  column="main_dr_id" class="system.entity.DRModel"  lazy="false" />
+		
+		<set name="drs" lazy="false"  table="wlzx_system_user_dr_relationship">
 			<key column="user_id" not-null="true" />
-			<many-to-many not-found="ignore"  column="role_id" class="system.entity.RoleModel" /> 
+			<many-to-many not-found="ignore"  column="dr_id" class="system.entity.DRModel" /> 
 		</set>
-		<many-to-one not-found="ignore" name="mainRole"  column="main_role_id" class="system.entity.RoleModel"  lazy="false" />
-		<many-to-one not-found="ignore" name="mainDepartment"  column="main_department_id" class="system.entity.DepartmentModel"  lazy="false" />
+		
 	</class>
 </hibernate-mapping>

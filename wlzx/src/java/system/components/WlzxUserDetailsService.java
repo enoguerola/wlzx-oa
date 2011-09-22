@@ -6,10 +6,11 @@ import java.util.TreeSet;
 
 import org.apache.log4j.Logger;
 
-import system.dao.RoleDAO;
+import system.dao.DRDAO;
+import system.dao.DataAccessModeDAO;
 import system.dao.UserDAO;
+import system.entity.DRModel;
 import system.entity.DataAccessModeModel;
-import system.entity.RoleModel;
 import system.entity.UserModel;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,16 +24,16 @@ public class WlzxUserDetailsService implements UserDetailsService{
 	private final static Logger logger = Logger.getLogger(WlzxUserDetailsService.class);
 	
 	private UserDAO userDAO;
-	private RoleDAO roleDAO;
-
-	
-	public RoleDAO getRoleDAO() {
-		return roleDAO;
-	}
-
-	public void setRoleDAO(RoleDAO roleDAO) {
-		this.roleDAO = roleDAO;
-	}
+//	private RoleDAO roleDAO;
+	private DRDAO drDAO;
+	private DataAccessModeDAO resourcesDao;  
+//	public RoleDAO getRoleDAO() {
+//		return roleDAO;
+//	}
+//
+//	public void setRoleDAO(RoleDAO roleDAO) {
+//		this.roleDAO = roleDAO;
+//	}
 
 	public UserDetails loadUserByUsername(String userAccount)
 			throws UsernameNotFoundException, DataAccessException {
@@ -43,30 +44,36 @@ public class WlzxUserDetailsService implements UserDetailsService{
 	            }  
 	            else if(userAccount.equals(WlzxUserDetailsService.superUserName)){
 	            	// System.out.println(userModel.getName());
-	            	 userModel.setMainRole(SecurityUserHolder.getSuperRootRoleModel());
+	            	
+//	            	 userModel.setMainDR(mainDR)(SecurityUserHolder.getSuperRootRoleModel());
+	            	
+	            	userModel.setAuthorizations(new TreeSet<DataAccessModeModel>(resourcesDao.getAllResources()));
+	            	
+	            }else{
+	            	 Set<DataAccessModeModel> dams=new TreeSet<DataAccessModeModel>();
+	 	    		//添加基础权限
+	 	    		DRModel basic=drDAO.getBasicDR();
+	 	    		for(DataAccessModeModel dam:basic.getDataAccessModes()){
+	 	    			if(!dams.contains(dam))
+	 	    			dams.add(dam);
+	 	    		}
+	     			for(DRModel dr:userModel.getAllDRs()){
+	     				for(DataAccessModeModel dam:dr.getDataAccessModes()){
+	     					if(!dams.contains(dam))
+	     					dams.add(dam);
+	     				}
+	     			}
+	     			userModel.setAuthorizations(dams);
 	            	
 	            }
-	            Set<DataAccessModeModel> dams=new TreeSet<DataAccessModeModel>();
-	    		//添加基础权限
-	    		RoleModel basic=roleDAO.getRoleBySymbol("basic_role");
-	    		for(DataAccessModeModel dam:basic.getDataAccessModes()){
-	    			if(!dams.contains(dam))
-	    			dams.add(dam);
-	    		}
-    			for(RoleModel role:userAccount.equals(WlzxUserDetailsService.superUserName)?roleDAO.getAllRoles(true):userModel.getAllRoles()){
-    				for(DataAccessModeModel dam:role.getDataAccessModes()){
-    					if(!dams.contains(dam))
-    					dams.add(dam);
-    				}
-    			}
-    			userModel.setAuthorizations(dams);
+	           
 	           return userModel;
 	}
 //	
 //	    //取得用户的权限  
 //	    @SuppressWarnings("unused")
 //		private Set<GrantedAuthority> obtionGrantedAuthorities(UserModel user) {  
-//	        Set<GrantedAuthority> authSet = new HashSet<GrantedAuthority>();  
+//	        Set<GrantedAuthority> authSet = new TreeSet<GrantedAuthority>();  
 //	        List<DataAccessModeModel> resources = new ArrayList<DataAccessModeModel>();  
 //	        Set<RoleModel> roles = user.getRoles();  
 //	          
@@ -92,6 +99,22 @@ public class WlzxUserDetailsService implements UserDetailsService{
 
 	public void setUserDAO(UserDAO userDAO) {
 		this.userDAO = userDAO;
+	}
+
+	public DRDAO getDrDAO() {
+		return drDAO;
+	}
+
+	public void setDrDAO(DRDAO drDAO) {
+		this.drDAO = drDAO;
+	}
+
+	public DataAccessModeDAO getResourcesDao() {
+		return resourcesDao;
+	}
+
+	public void setResourcesDao(DataAccessModeDAO resourcesDao) {
+		this.resourcesDao = resourcesDao;
 	}
 
 

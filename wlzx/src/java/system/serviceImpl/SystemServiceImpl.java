@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 
 
 import org.springframework.context.ApplicationContext;
@@ -52,6 +51,7 @@ public class SystemServiceImpl implements SystemService{
 	private RoleDAO roleDAO;
 	private UserDAO userDAO;
 	private MessageDAO messageDAO;
+	private DRDAO drDAO;
 	public SystemDAO getSystemDAO() {
 		return systemDAO;
 	}
@@ -108,25 +108,26 @@ public class SystemServiceImpl implements SystemService{
 	}
 	//获得当前登录用户所有权限集
 	public Set<DataAccessModeModel> getAuthorizations(){
-		Set<DataAccessModeModel> dams=new TreeSet<DataAccessModeModel>();
-		//添加基础权限
-		RoleModel basic=roleDAO.getRoleBySymbol("basic_role");
-		for(DataAccessModeModel dam:basic.getDataAccessModes()){
-			if(!dams.contains(dam))
-			dams.add(dam);
-		}
-//		UserModel user=userDAO.get("2");
+//		Set<DataAccessModeModel> dams=new TreeSet<DataAccessModeModel>();
+//		//添加基础权限
+//		RoleModel basic=roleDAO.getRoleBySymbol("basic_role");
+//		for(DataAccessModeModel dam:basic.getDataAccessModes()){
+//			if(!dams.contains(dam))
+//			dams.add(dam);
+//		}
+////		UserModel user=userDAO.get("2");
+//		UserModel user=SecurityUserHolder.getCurrentUser();
+//		if(user!=null){
+//			for(DRModel dr:user.getAllDRs()){
+//				for(DataAccessModeModel dam:dr.getDataAccessModes()){
+//					if(!dams.contains(dam))
+//					dams.add(dam);
+//				}
+//			}
+//		}
+//		user.setAuthorizations(dams);
 		UserModel user=SecurityUserHolder.getCurrentUser();
-		if(user!=null){
-			for(RoleModel role:user.getAllRoles()){
-				for(DataAccessModeModel dam:role.getDataAccessModes()){
-					if(!dams.contains(dam))
-					dams.add(dam);
-				}
-			}
-		}
-		user.setAuthorizations(dams);
-		return  dams;
+		return  user.getAuthorizations();
 	}
 	//获得当前登录用户某系统权限集
 	public SystemModel getAuthorizationMenusBySystem(String systemSymbol){
@@ -235,22 +236,25 @@ public class SystemServiceImpl implements SystemService{
 	public List<RoleModel> getAllRoles(){		
 		return roleDAO.getAllRoles(true);
 	}
-	//获得某角色（岗位）用户
-	public Set<UserModel> getRoleUsers(String roleId){	
-		RoleModel role=roleDAO.get(roleId);
-		return role.getAllUsers();
+	public Set<UserModel> getRoleUsers(String roleId){
+		return null;
+	}
+	//获得某部门角色（岗位）用户
+	public Set<UserModel> getDRUsers(String departmentId,String roleId){	
+		DRModel dr=drDAO.getDRByDepartmentIdAndRoleId(departmentId, roleId);
+		return dr.getAllUsers();
 	}
 	//获得某部门用户
 	public Set<UserModel> getDepartmentUsers(String departmentId){	
 		DepartmentModel department=departmentDAO.get(departmentId);
-		return department.getUsers();
+		return department.getAllUsers();
 	}
 	//获得未授权用户
 	public List<UserModel> getUnAuthUsers(){	
 		List<UserModel> unAuthUsers=new ArrayList<UserModel>();
 		List<UserModel> allUsers=userDAO.getAllUsers();
 		for(UserModel user:allUsers){
-			if(user.getAllRoles()==null||user.getAllRoles().size()==0){
+			if(user.getAllDRs()==null||user.getAllDRs().size()==0){
 				unAuthUsers.add(user);
 			}
 		}
@@ -499,26 +503,42 @@ public class SystemServiceImpl implements SystemService{
 		return dataAccessModeDAO.getDataAccessModeBySymbol(symbol);
 	}
 	//新增部门
-	public DepartmentModel departmentAdd(DepartmentModel department,String parentDepartmentId,String supervisorName,String leaderRoleIds){
+	public DepartmentModel departmentAdd(DepartmentModel department,String parentDepartmentId,String masterUserIds,String leaderUserIds){
+//
+//			//新部门主管岗位初始化并保存
+//			RoleModel supervisorRole=new RoleModel();
+//			supervisorRole.setSymbol(department.getSymbol()+"_supervisor");
+//			supervisorRole.setCreationDate(department.getCreationDate());
+//			supervisorRole.setName(supervisorName);
+//			supervisorRole.setModifiedDate(new Date());
+//			supervisorRole.setSupervisorFlag(true);
+//			roleDAO.saveOrUpdate(supervisorRole);
+//			
+//			department.getRoles().add(supervisorRole);
+		//新部门直属领导保存
+			String[] masterIds=masterUserIds.split(";");
+			for(String id:masterIds){
+				UserModel user=userDAO.get(id);
+				if(user!=null&&!department.getMasterUsers().contains(user))
+				department.getMasterUsers().add(user);
 
-			//新部门主管岗位初始化并保存
-			RoleModel supervisorRole=new RoleModel();
-			supervisorRole.setSymbol(department.getSymbol()+"_supervisor");
-			supervisorRole.setCreationDate(department.getCreationDate());
-			supervisorRole.setName(supervisorName);
-			supervisorRole.setModifiedDate(new Date());
-			supervisorRole.setSupervisorFlag(true);
-			roleDAO.saveOrUpdate(supervisorRole);
-			
-			department.getRoles().add(supervisorRole);
-			departmentDAO.saveOrUpdate(department);
-			//新部门直属领导保存
-			String[] ids=leaderRoleIds.split(";");
-			for(String leaderRoleId:ids){
-				RoleModel leaderRole=roleDAO.get(leaderRoleId);
-				leaderRole.getLeadingDepartments().add(department);
-				roleDAO.saveOrUpdate(leaderRole);
 			}
+			String[] leaderIds=leaderUserIds.split(";");
+			for(String id:leaderIds){
+				UserModel user=userDAO.get(id);
+				if(user!=null&&!department.getLeaderUsers().contains(user))
+				department.getLeaderUsers().add(user);
+
+			}
+//			String[] ids=userIds.split(";");
+//			for(String id:ids){
+//				UserModel user=userDAO.get(id);
+//				if(user!=null&&!department.getCommonUsers().contains(user))
+//				department.getCommonUsers().add(user);
+//
+//			}
+			departmentDAO.saveOrUpdate(department);
+//		
 			//父亲部门与新部门的关系保存
 			DepartmentModel parentDepartment=departmentDAO.get(parentDepartmentId);
 			parentDepartment.getSubordinates().add(department);	
@@ -528,16 +548,35 @@ public class SystemServiceImpl implements SystemService{
 			return department;
 		
 	}
-	//获得部门岗位
-	public List<RoleModel> getDepartmentRoles(String departmentId){
-		DepartmentModel department=departmentDAO.get(departmentId);
-		return department.getAllRoles();
-	}
+//	//获得部门岗位
+//	public List<RoleModel> getDepartmentRoles(String departmentId){
+//		DepartmentModel department=departmentDAO.get(departmentId);
+//		return department.getAllDRs();
+//	}
 	
 	
 	
 	//更新部门
-	public DepartmentModel departmentUpdate(DepartmentModel department,String supervisorName,String leaderRoleIds){
+	public DepartmentModel departmentUpdate(DepartmentModel department,String masterUserIds,String leaderUserIds){
+		
+		Set<UserModel> masterUsers=department.getMasterUsers();
+		for(UserModel user:masterUsers){
+			user.getMasterDepartments().remove(department);
+			userDAO.saveOrUpdate(user);
+		}
+		Set<UserModel> leaderUsers=department.getLeaderUsers();
+		for(UserModel user:leaderUsers){
+			user.getLeaderDepartments().remove(department);
+			userDAO.saveOrUpdate(user);
+		}
+//		Set<UserModel> commonrUsers=department.getCommonUsers();
+//		for(UserModel user:commonrUsers){
+//			user.getDepartments().remove(department);
+//			userDAO.saveOrUpdate(user);
+//		}
+		
+		
+		
 		//更新部门信息
 		DepartmentModel newDepartment=departmentDAO.get(department.getId());
 		newDepartment.setSymbol(department.getSymbol());
@@ -547,24 +586,46 @@ public class SystemServiceImpl implements SystemService{
 		newDepartment.setName(department.getName());
 		newDepartment.setSequence(department.getSequence());
 		newDepartment.setLevel(department.getLevel());
+		String[] masterIds=masterUserIds.split(";");
+		for(String id:masterIds){
+			UserModel user=userDAO.get(id);
+			if(user!=null&&!newDepartment.getMasterUsers().contains(user))
+				newDepartment.getMasterUsers().add(user);
+
+		}
+		
+		String[] leaderIds=leaderUserIds.split(";");
+		for(String id:leaderIds){
+			UserModel user=userDAO.get(id);
+			if(user!=null&&!newDepartment.getLeaderUsers().contains(user))
+				newDepartment.getLeaderUsers().add(user);
+
+		}
+//		String[] ids=userIds.split(";");
+//		for(String id:ids){
+//			UserModel user=userDAO.get(id);
+//			if(user!=null&&!department.getCommonUsers().contains(user))
+//			department.getCommonUsers().add(user);
+//
+//		}
 		departmentDAO.saveOrUpdate(newDepartment);
-		//更新部门主管信息
-		RoleModel role=newDepartment.getSupervisorRole();
-		role.setSymbol(department.getSymbol()+"_supervisor");
-		role.setName(supervisorName);
-		role.setModifiedDate(new Date());
-		roleDAO.saveOrUpdate(role);
-		//更新部门直属领导
-		for(RoleModel preLeaderRole:newDepartment.getLeaderRoles()){
-			preLeaderRole.getLeadingDepartments().remove(newDepartment);
-			roleDAO.saveOrUpdate(preLeaderRole);
-		}
-		String[] ids=leaderRoleIds.split(";");	
-		for(String leaderRoleId:ids){
-			RoleModel leaderRole=roleDAO.get(leaderRoleId);
-			leaderRole.getLeadingDepartments().add(newDepartment);
-			roleDAO.saveOrUpdate(leaderRole);
-		}
+//		//更新部门主管信息
+//		RoleModel role=newDepartment.getSupervisorRole();
+//		role.setSymbol(department.getSymbol()+"_supervisor");
+//		role.setName(supervisorName);
+//		role.setModifiedDate(new Date());
+//		roleDAO.saveOrUpdate(role);
+//		//更新部门直属领导
+//		for(RoleModel preLeaderRole:newDepartment.getLeaderRoles()){
+//			preLeaderRole.getLeadingDepartments().remove(newDepartment);
+//			roleDAO.saveOrUpdate(preLeaderRole);
+//		}
+//		String[] ids=leaderRoleIds.split(";");	
+//		for(String leaderRoleId:ids){
+//			RoleModel leaderRole=roleDAO.get(leaderRoleId);
+//			leaderRole.getLeadingDepartments().add(newDepartment);
+//			roleDAO.saveOrUpdate(leaderRole);
+//		}
 	
 		return newDepartment;
 	}
@@ -574,23 +635,60 @@ public class SystemServiceImpl implements SystemService{
 		return true;		
 	}
 	//新增岗位
-	public RoleModel roleAdd(RoleModel role,String parentId,String userIds){
-			roleDAO.saveOrUpdate(role);
-			RoleModel parentRole=roleDAO.get(parentId);
-			parentRole.getSubordinates().add(role);	
-			roleDAO.saveOrUpdate(parentRole);
-			if(!StringUtils.isEmpty(userIds))
-				for(String userId:userIds.split(";")){
-					UserModel user=userDAO.get(userId);
-					role.getUsers().add(user);
-					
-				}
+	public RoleModel roleAdd(RoleModel role){
+//			roleDAO.saveOrUpdate(role);
+//			RoleModel parentRole=roleDAO.get(parentId);
+//			parentRole.getSubordinates().add(role);	
+//			roleDAO.saveOrUpdate(parentRole);
+//			if(!StringUtils.isEmpty(userIds))
+//				for(String userId:userIds.split(";")){
+//					UserModel user=userDAO.get(userId);
+//					role.getUsers().add(user);
+//					
+//				}
+//			String[] masterIds=masterUserIds.split(";");
+//			for(String id:masterIds){
+//				UserModel user=userDAO.get(id);
+//				if(user!=null&&!role.getMasterUsers().contains(user))
+//					role.getMasterUsers().add(user);
+//	
+//			}
+//			String[] leaderIds=leaderUserIds.split(";");
+//			for(String id:leaderIds){
+//				UserModel user=userDAO.get(id);
+//				if(user!=null&&!role.getLeaderUsers().contains(user))
+//					role.getLeaderUsers().add(user);
+//	
+//			}
+//			String[] ids=userIds.split(";");
+//			for(String id:ids){
+//				UserModel user=userDAO.get(id);
+//				if(user!=null&&!role.getUsers().contains(user))
+//					role.getUsers().add(user);
+//	
+//			}
 			roleDAO.saveOrUpdate(role);
 			return role;
 		
 	}
 	//更新岗位
-	public RoleModel roleUpdate(RoleModel role,String userIds){
+	public RoleModel roleUpdate(RoleModel role){
+//		Set<UserModel> masterUsers=role.getMasterUsers();
+//		for(UserModel user:masterUsers){
+//			user.getMasterRoles().remove(role);
+//			userDAO.saveOrUpdate(user);
+//		}
+//		Set<UserModel> leaderUsers=role.getLeaderUsers();
+//		for(UserModel user:leaderUsers){
+//			user.getLeaderRoles().remove(role);
+//			userDAO.saveOrUpdate(user);
+//		}
+//		Set<UserModel> commonrUsers=role.getUsers();
+//		for(UserModel user:commonrUsers){
+//			user.getRoles().remove(role);
+//			userDAO.saveOrUpdate(user);
+//		}
+		
 		RoleModel newRole=roleDAO.get(role.getId());
 		newRole.setSymbol(role.getSymbol());
 		newRole.setCreationDate(role.getCreationDate());
@@ -599,15 +697,37 @@ public class SystemServiceImpl implements SystemService{
 		newRole.setDetail(role.getDetail());
 		newRole.setName(role.getName());
 		newRole.setSequence(role.getSequence());
-		for(UserModel preUser:role.getUsers()){
-			newRole.getUsers().remove(preUser);
-		}
-		if(!StringUtils.isEmpty(userIds))
-		for(String userId:userIds.split(";")){
-			UserModel user=userDAO.get(userId);
-			newRole.getUsers().add(user);
-			
-		}
+//		for(UserModel preUser:role.getUsers()){
+//			newRole.getUsers().remove(preUser);
+//		}
+//		if(!StringUtils.isEmpty(userIds))
+//		for(String userId:userIds.split(";")){
+//			UserModel user=userDAO.get(userId);
+//			newRole.getUsers().add(user);
+//			
+//		}
+//		String[] masterIds=masterUserIds.split(";");
+//		for(String id:masterIds){
+//			UserModel user=userDAO.get(id);
+//			if(user!=null&&!newRole.getMasterUsers().contains(user))
+//				newRole.getMasterUsers().add(user);
+//
+//		}
+//		
+//		String[] leaderIds=leaderUserIds.split(";");
+//		for(String id:leaderIds){
+//			UserModel user=userDAO.get(id);
+//			if(user!=null&&!newRole.getLeaderUsers().contains(user))
+//				newRole.getLeaderUsers().add(user);
+//
+//		}
+//		String[] ids=userIds.split(";");
+//		for(String id:ids){
+//			UserModel user=userDAO.get(id);
+//			if(user!=null&&!newRole.getUsers().contains(user))
+//				newRole.getUsers().add(user);
+//
+//		}
 		roleDAO.saveOrUpdate(newRole);
 		return newRole;
 	}
@@ -616,33 +736,33 @@ public class SystemServiceImpl implements SystemService{
 		roleDAO.remove(roleDAO.get(id));
 		return true;		
 	}
-	/*获得部门各系统权限集*/
-	public String getDepartmentSystemAuthorization(String departmentId,String systemId){
-		 //System.out.println(departmentId+"--"+systemId);
-		StringBuilder sb=new StringBuilder();
-		SystemModel system=systemDAO.get(systemId);
-		DepartmentModel department=departmentDAO.get(departmentId);
-		Set<DataAccessModeModel> dams=department.getDataAccessModes();
-		int state=0;
-		if(system.getDams().size()>0){
-			if(dams.containsAll(system.getDams()))state=1;
-			else {
-				for(DataAccessModeModel dam:system.getDams()){
-					if(dams.contains(dam)){
-						state=2;break;
-					}
-				}
-			}
-		}
-		
-		sb.append("<node state='"+state+"' type='system' label='"+system.getName()+"'>");
-		if(system.getMenus()!=null)
-			for(MenuModel menu:system.getMenus()){
-				buildMenu(menu,sb,dams);
-			}
-		sb.append("</node>");
-		return sb.toString();	
-	}
+//	/*获得部门各系统权限集*/
+//	public String getDepartmentSystemAuthorization(String departmentId,String systemId){
+//		 //System.out.println(departmentId+"--"+systemId);
+//		StringBuilder sb=new StringBuilder();
+//		SystemModel system=systemDAO.get(systemId);
+//		DepartmentModel department=departmentDAO.get(departmentId);
+//		Set<DataAccessModeModel> dams=department.getDataAccessModes();
+//		int state=0;
+//		if(system.getDams().size()>0){
+//			if(dams.containsAll(system.getDams()))state=1;
+//			else {
+//				for(DataAccessModeModel dam:system.getDams()){
+//					if(dams.contains(dam)){
+//						state=2;break;
+//					}
+//				}
+//			}
+//		}
+//		
+//		sb.append("<node state='"+state+"' type='system' label='"+system.getName()+"'>");
+//		if(system.getMenus()!=null)
+//			for(MenuModel menu:system.getMenus()){
+//				buildMenu(menu,sb,dams);
+//			}
+//		sb.append("</node>");
+//		return sb.toString();	
+//	}
 	private void buildMenu(MenuModel menu,StringBuilder sb,Set<DataAccessModeModel> dams){
 		if(menu!=null){
 			int state=0;
@@ -728,36 +848,39 @@ public class SystemServiceImpl implements SystemService{
 	/*获得部门各系统权限集*/
 	
 	/*保存部门系统权限集*/
-	public boolean saveDepartmentSystemAuthorization(String departmentId,String systemId,String adds,String removes){
-		 //System.out.println(adds);
-		 //System.out.println(removes);
-		DepartmentModel department=departmentDAO.get(departmentId);
-		Set<DataAccessModeModel> dams=department.getDataAccessModes();
-		for(String add:adds.split(";")){
-			if(add!=null&&!add.equals("")){
-				DataAccessModeModel dam=dataAccessModeDAO.get(add);
-				if(!dams.contains(dam))
-					dams.add(dam);
-			}
-			
-		}
-		for(String remove:removes.split(";")){
-			if(remove!=null&&!remove.equals("")){
-				DataAccessModeModel dam=dataAccessModeDAO.get(remove);
-				if(dams.contains(dam))
-					dams.remove(dam);
-			}
-		}
-		departmentDAO.merge(department);
-		return true;
-	}
+//	public boolean saveDepartmentSystemAuthorization(String departmentId,String systemId,String adds,String removes){
+//		 //System.out.println(adds);
+//		 //System.out.println(removes);
+//		DepartmentModel department=departmentDAO.get(departmentId);
+//		Set<DataAccessModeModel> dams=department.getDataAccessModes();
+//		for(String add:adds.split(";")){
+//			if(add!=null&&!add.equals("")){
+//				DataAccessModeModel dam=dataAccessModeDAO.get(add);
+//				if(!dams.contains(dam))
+//					dams.add(dam);
+//			}
+//			
+//		}
+//		for(String remove:removes.split(";")){
+//			if(remove!=null&&!remove.equals("")){
+//				DataAccessModeModel dam=dataAccessModeDAO.get(remove);
+//				if(dams.contains(dam))
+//					dams.remove(dam);
+//			}
+//		}
+//		departmentDAO.merge(department);
+//		return true;
+//	}
 	/*获得角色（岗位）各系统权限集*/
-	public String getRoleSystemAuthorization(String roleId,String systemId){
+	public String getRoleSystemAuthorization(String departmentId,String roleId,String systemId){
 		 //System.out.println(roleId+"--"+systemId);
 		StringBuilder sb=new StringBuilder();
 		SystemModel system=systemDAO.get(systemId);
-		RoleModel role=roleDAO.get(roleId);
-		Set<DataAccessModeModel> dams=role.getDataAccessModes();
+		DRModel dr=drDAO.getDRByDepartmentIdAndRoleId(departmentId,roleId);
+		if(dr==null){
+			dr=new DRModel();
+		}
+		Set<DataAccessModeModel> dams=dr.getDataAccessModes();
 		int state=0;
 		if(system.getDams().size()>0){
 			if(dams.containsAll(system.getDams()))state=1;
@@ -780,11 +903,18 @@ public class SystemServiceImpl implements SystemService{
 	}
 	
 	/*保存角色系统权限集*/
-	public boolean saveRoleSystemAuthorization(String roleId,String systemId,String adds,String removes){
+	public boolean saveRoleSystemAuthorization(String departmentId,String roleId,String systemId,String adds,String removes){
 		 //System.out.println(adds);
 		 //	System.out.println(removes);
-		RoleModel role=roleDAO.get(roleId);
-		Set<DataAccessModeModel> dams=role.getDataAccessModes();
+//		RoleModel role=roleDAO.get(roleId);
+		DRModel dr=drDAO.getDRByDepartmentIdAndRoleId(departmentId,roleId);
+		if(dr==null){
+			dr=new DRModel();
+			dr.setDepartmentId(departmentId);
+			dr.setRoleId(roleId);
+			dr.setBasicFlag(false);
+		}
+		Set<DataAccessModeModel> dams=dr.getDataAccessModes();
 		for(String add:adds.split(";")){
 			if(add!=null&&!add.equals("")){
 				DataAccessModeModel dam=dataAccessModeDAO.get(add);
@@ -800,7 +930,9 @@ public class SystemServiceImpl implements SystemService{
 					dams.remove(dam);
 			}
 		}
-		roleDAO.merge(role);
+		if(StringUtils.isEmpty(dr.getId())){
+			drDAO.saveOrUpdate(dr);
+		}else	drDAO.merge(dr);
 		
 
 		return true;
@@ -1011,5 +1143,12 @@ public class SystemServiceImpl implements SystemService{
 	//		 systemService.getOperationDAO().merge(operation);
 		 }
 	}
+	public DRDAO getDrDAO() {
+		return drDAO;
+	}
+	public void setDrDAO(DRDAO drDAO) {
+		this.drDAO = drDAO;
+	}
+
 	
 }

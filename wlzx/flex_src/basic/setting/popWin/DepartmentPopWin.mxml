@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:VGroup xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:hc="com.hillelcoren.components.*"
+		 xmlns:render="system.component.render.*"
 		 xmlns:mx="library://ns.adobe.com/flex/mx"  xmlns:valueObjects="system.entity.*" xmlns:flexlib="http://code.google.com/p/flexlib/"   creationComplete="init();" width="800" height="500">
 	
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
 		<mx:StringValidator id="name_stringValidator" source="{dname}" property="text"  requiredFieldError="部门名称不能为空"/>
-		<mx:StringValidator id="supervisorName_stringValidator" source="{supervisorName}" property="text"  requiredFieldError="主管头衔不能为空"/>
 		<mx:StringValidator id="symbol_stringValidator" source="{symbol}" property="text"  requiredFieldError="部门唯一标识不能为空"/>
 		<mx:PhoneNumberValidator id="phone_phoneNumberValidator" source="{phone}" required="false" property="text" minDigits="6" requiredFieldError="错误格式的电话"/>
 		<mx:StringValidator id="createDate_dateValidator"  source="{creationDate}" property="text" requiredFieldError="部门创建日期不能为空"/>
@@ -19,6 +20,12 @@
 			<mx:method name="getDepartmentById"  concurrency="last"  result="getDepartmentById_resultHandler(event);" />
 			<mx:method name="departmentUpdate"  concurrency="last"  result="departmentUpdate_resultHandler(event);" />
 		</mx:RemoteObject>
+		<fx:Component id="searchMasterAccountsDropDownItemRenderer">
+			<render:AdvancedItemRenderer selectedItems="{ outerDocument.search_master_accounts.selectedItems }" />
+		</fx:Component>
+		<fx:Component id="searchLeaderAccountsDropDownItemRenderer">
+			<render:AdvancedItemRenderer selectedItems="{ outerDocument.search_leader_accounts.selectedItems }" />
+		</fx:Component>
 	</fx:Declarations>
 	
 	<fx:Script> 
@@ -41,9 +48,10 @@
 			[Bindable] private var leaderDepartmentRoles:ArrayCollection = new ArrayCollection();
 			private function init():void
 			{
+				search_master_accounts.dataProvider=this.parentApplication.allTeacherAcccounts;
+				search_leader_accounts.dataProvider=this.parentApplication.allTeacherAcccounts;
 				validatorArr = new Array();
 				validatorArr.push(name_stringValidator);
-				validatorArr.push(supervisorName_stringValidator);
 				validatorArr.push(symbol_stringValidator);
 				validatorArr.push(phone_phoneNumberValidator);
 				validatorArr.push(createDate_dateValidator);
@@ -74,30 +82,30 @@
 					department.phone=phone.text;
 					department.symbol=symbol.text;
 					department.sequence=parseInt(sequence.text);
-					var supervisor:String =supervisorName.text;
-					var  selectedLeaderRolesArray:Array = [];
-					var len:int = leaderDepartmentRoles.length;					
-					for(var idx:int = 0; idx < len; idx++) {
-						var checkbox:CheckBox=checkBox[idx] as CheckBox;
-						if(checkbox.selected) {
-							selectedLeaderRolesArray.push(checkbox.data);
-						}
-					}
-					if(selectedLeaderRolesArray.length==0){
-						Alert.show("请指定部门上级领导岗位\n\n", "请按照以下错误提示信息重新填写", Alert.OK);
-						return;
-					}
-						
-					var selectedLeaderRoles:String = selectedLeaderRolesArray.join(";");
+				//	var supervisor:String =supervisorName.text;
+//					var  selectedLeaderRolesArray:Array = [];
+//					var len:int = leaderDepartmentRoles.length;					
+//					for(var idx:int = 0; idx < len; idx++) {
+//						var checkbox:CheckBox=checkBox[idx] as CheckBox;
+//						if(checkbox.selected) {
+//							selectedLeaderRolesArray.push(checkbox.data);
+//						}
+//					}
+//					if(selectedLeaderRolesArray.length==0){
+//						Alert.show("请指定部门上级领导岗位\n\n", "请按照以下错误提示信息重新填写", Alert.OK);
+//						return;
+//					}
+//						
+//					var selectedLeaderRoles:String = selectedLeaderRolesArray.join(";");
 //					Alert.show(selectedLeaderRoles);
 //					var selectedItem:Object=leaders.selectedItem;
 ////					Alert.show(selectedItem.dataField);return;
 //					var leaderRoleId:String=selectedItem.dataField;
 					if(this.toolTip=='Update'){
-						systemServiceRO.departmentUpdate(department,supervisor,selectedLeaderRoles);
+						systemServiceRO.departmentUpdate(department,search_master_accounts_ids.text,search_leader_accounts_ids.text);
 					}else if(this.toolTip=='Add'){
 						var parentId:String=this.id;//弹出窗口时设定的中转参数
-						systemServiceRO.departmentAdd(department,parentId,supervisor,selectedLeaderRoles);
+						systemServiceRO.departmentAdd(department,parentId,search_master_accounts_ids.text,search_leader_accounts_ids.text);
 						
 					}
 				} else {
@@ -141,51 +149,73 @@
 					phone.text=department.phone;
 					symbol.text=department.symbol;
 					sequence.text=department.sequence.toString();
-					supervisorName.text=department.getSupervisorRole().name;
-					var parentDepartment:DepartmentModel=department.getLeaderDepartment() as DepartmentModel;
-					buildSubRoles(parentDepartment.getSupervisorRole() as RoleModel);				
+					
+					var leaderUsers:ArrayCollection=ArrayCollection(department.leaderUsers);
+					var leadersSelectedItems:ArrayCollection=new ArrayCollection();
+					var leadersIds:String="";
+					for (var i:int = 0; i < leaderUsers.length; i++){
+						var user:UserModel = leaderUsers.getItemAt(i) as UserModel;	
+						leadersSelectedItems.addItem(this.parentApplication.getItemByAccountId(user.id));
+						leadersIds+=user.id+";";
+					}
+					search_leader_accounts_ids.text=leadersIds;
+					search_leader_accounts.selectedItems=leadersSelectedItems;
+					
+					var masterUsers:ArrayCollection=ArrayCollection(department.masterUsers);
+					var mastersSelectedItems:ArrayCollection=new ArrayCollection();
+					var mastersIds:String="";
+					for (var i:int = 0; i < masterUsers.length; i++){
+						var user:UserModel = masterUsers.getItemAt(i) as UserModel;	
+						mastersSelectedItems.addItem(this.parentApplication.getItemByAccountId(user.id));
+						mastersIds+=user.id+";";
+					}
+					search_master_accounts.selectedItems=mastersSelectedItems;
+					search_master_accounts_ids.text=mastersIds;
+//					supervisorName.text=department.getSupervisorRole().name;
+//					var parentDepartment:DepartmentModel=department.getLeaderDepartment() as DepartmentModel;
+//					buildSubRoles(parentDepartment.getSupervisorRole() as RoleModel);				
 //					this.leaders.dataProvider=resultList;
 //					this.leaders.selectedIndex=0;
 				}else if(this.toolTip=='Add'){
 					var department:DepartmentModel=event.result as DepartmentModel;
-					buildSubRoles(department.getSupervisorRole() as RoleModel);				
+//					buildSubRoles(department.getSupervisorRole() as RoleModel);				
 //					this.leaders.dataProvider=resultList;
 //					this.leaders.selectedIndex=0;
 				}
 				
 				
 			}
-			private function buildSubRoles(role:RoleModel):void{
-//				var leader:CheckBox=new CheckBox();
-//				leader.label=role.name;
-//				leader.name="leaders";
-//				leadersContainer.addChild(leader);
-				if(this.toolTip=='Update'){	
-					var leaderRoles:ArrayCollection = ArrayCollection(department.leaderRoles);
-					var contain:Boolean=false;
-					for (var j:int = 0; j < leaderRoles.length; j++){
-						var leaderRole:RoleModel = leaderRoles.getItemAt(j) as RoleModel;
-						if(leaderRole.id==role.id){
-							leaderDepartmentRoles.addItem( {dataField:role.id, headerText:role.name,selected:true});
-							contain=true;
-							break;
-						}
-					}
-					if(contain==false)
-						leaderDepartmentRoles.addItem( {dataField:role.id, headerText:role.name});
-					
-				}else if(this.toolTip=='Add'){
-					leaderDepartmentRoles.addItem( {dataField:role.id, headerText:role.name});
-				}
-				var list:ArrayCollection = ArrayCollection(role.subordinates);			
-				if(list.length>0){
-					for (var i:int = 0; i < list.length; i++){
-						var _role:RoleModel = list.getItemAt(i) as RoleModel;	
-						buildSubRoles(_role);
-					}
-				}		
-				
-			}
+//			private function buildSubRoles(role:RoleModel):void{
+////				var leader:CheckBox=new CheckBox();
+////				leader.label=role.name;
+////				leader.name="leaders";
+////				leadersContainer.addChild(leader);
+//				if(this.toolTip=='Update'){	
+//					var leaderRoles:ArrayCollection = ArrayCollection(department.leaderRoles);
+//					var contain:Boolean=false;
+//					for (var j:int = 0; j < leaderRoles.length; j++){
+//						var leaderRole:RoleModel = leaderRoles.getItemAt(j) as RoleModel;
+//						if(leaderRole.id==role.id){
+//							leaderDepartmentRoles.addItem( {dataField:role.id, headerText:role.name,selected:true});
+//							contain=true;
+//							break;
+//						}
+//					}
+//					if(contain==false)
+//						leaderDepartmentRoles.addItem( {dataField:role.id, headerText:role.name});
+//					
+//				}else if(this.toolTip=='Add'){
+//					leaderDepartmentRoles.addItem( {dataField:role.id, headerText:role.name});
+//				}
+//				var list:ArrayCollection = ArrayCollection(role.subordinates);			
+//				if(list.length>0){
+//					for (var i:int = 0; i < list.length; i++){
+//						var _role:RoleModel = list.getItemAt(i) as RoleModel;	
+//						buildSubRoles(_role);
+//					}
+//				}		
+//				
+//			}
 			protected function departmentUpdate_resultHandler(event:ResultEvent):void
 			{
 				var department:DepartmentModel=event.result as DepartmentModel;
@@ -209,7 +239,7 @@
 					phone.text=department.detail;
 					symbol.text=department.symbol;
 					sequence.text=department.sequence.toString();
-					supervisorName.text=department.getSupervisorRole().name;
+//					supervisorName.text=department.getSupervisorRole().name;
 					level.text=department.level.toString();
 				}else if(this.toolTip=='Add'){
 					dname.text="";
@@ -218,14 +248,47 @@
 					phone.text="";
 					symbol.text="";
 					sequence.text="";
-					supervisorName.text="";	
+//					supervisorName.text="";	
 					level.text="";
 					
 				}
 			} 	
+			private function searchMasterAccountsHandleAutoCompleteChange():void
+			{
+				var items:ArrayCollection = search_master_accounts.selectedItems;
+				search_master_accounts_ids.text="";
+				for(var i:int=0;i<items.length;i++){
+					var item:Object=items.getItemAt(i);
+					if (item != null && item.hasOwnProperty( "id" ))
+					{
+						search_master_accounts_ids.text+=item.id+";";
+					} else{
+						search_master_accounts_ids.text+=";";
+					}             
+				}
+				
+				
+			}
+			private function searchLeaderAccountsHandleAutoCompleteChange():void
+			{
+				var items:ArrayCollection = search_leader_accounts.selectedItems;
+				search_leader_accounts_ids.text="";
+				for(var i:int=0;i<items.length;i++){
+					var item:Object=items.getItemAt(i);
+					if (item != null && item.hasOwnProperty( "id" ))
+					{
+						search_leader_accounts_ids.text+=item.id+";";
+					} else{
+						search_leader_accounts_ids.text+=";";
+					}             
+				}
+				
+				
+			}
 		]]> 
 		
 	</fx:Script> 
+	
 	<s:TitleWindow  id="departmentWin" width="100%" height="100%"  close="PopUpManager.removePopUp(this);" skinClass="system.skins.WlzxTitleWindowSkin">
 		<mx:Form width="100%" height="100%" id="dform">
 			<mx:FormHeading label="部门信息" fontSize="15" width="100%" textAlign="center"/>
@@ -236,18 +299,30 @@
 			<mx:FormItem label="部门级别" required="true">
 				<mx:TextInput id="level" width="200"/>
 			</mx:FormItem>
-			<mx:FormItem label="主管岗位名称" required="true">
-				<mx:TextInput id="supervisorName" width="200"/>
+			<mx:FormItem label="部门主管" required="true">
+				<!--<mx:TextInput id="supervisorName" width="200"/>-->
+				<mx:HBox>
+					<hc:AutoComplete id="search_master_accounts"  labelField="name"  width="200" allowMultipleSelection="true"   matchType="anyPart" prompt="选择"  change="{ searchMasterAccountsHandleAutoCompleteChange() }" dropDownItemRenderer="{ searchMasterAccountsDropDownItemRenderer }" selectedItemStyleName="none">
+					</hc:AutoComplete>
+					<mx:Label id="search_master_accounts_ids" visible="false">
+					</mx:Label>
+				</mx:HBox>
+				
 			</mx:FormItem>
-			<mx:FormItem label="上级直属领导" required="true" width="100%" >
-				<s:HGroup width="100%" height="100%" horizontalAlign="left">
+			<mx:FormItem label="部门领导" required="true" width="100%" >
+				<!--<s:HGroup width="100%" height="100%" horizontalAlign="left">
 					<mx:Tile width="600" horizontalGap="10" verticalGap="5" id="leadersContainer" >
 						<mx:Repeater id="checkBoxRepeater" dataProvider="{leaderDepartmentRoles}">
 							<mx:CheckBox id="checkBox"   selected="{checkBoxRepeater.currentItem.selected}" label="{checkBoxRepeater.currentItem.headerText}" data="{checkBoxRepeater.currentItem.dataField}"/>
 						</mx:Repeater>
 					</mx:Tile>	
-				</s:HGroup>
-					
+				</s:HGroup>-->
+				<mx:HBox>
+					<hc:AutoComplete id="search_leader_accounts"  labelField="name"  width="200" allowMultipleSelection="true"   matchType="anyPart" prompt="选择"  change="{ searchLeaderAccountsHandleAutoCompleteChange() }" dropDownItemRenderer="{ searchLeaderAccountsDropDownItemRenderer }" selectedItemStyleName="none">
+					</hc:AutoComplete>
+					<mx:Label id="search_leader_accounts_ids" visible="false">
+					</mx:Label>
+				</mx:HBox>	
 			</mx:FormItem>
 			<mx:FormItem label="创建日期 " required="true">
 				<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true"  id="creationDate" width="200" formatString="YYYY-MM-DD"  />

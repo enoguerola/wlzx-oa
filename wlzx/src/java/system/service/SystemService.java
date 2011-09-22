@@ -56,6 +56,8 @@ public interface SystemService{
 	public Set<UserModel> getRoleUsers(String roleId);
 	//获得某部门用户
 	public Set<UserModel> getDepartmentUsers(String departmentId);
+	//获得某部门角色（岗位）用户
+	public Set<UserModel> getDRUsers(String departmentId,String roleId);
 	//获得未授权用户
 	public List<UserModel> getUnAuthUsers();
 	//获得某用户
@@ -101,33 +103,33 @@ public interface SystemService{
 	//获得数据访问方式
 	public DataAccessModeModel getDataAccessModeBySymbol(String symbol);
 	//新增部门
-	public DepartmentModel departmentAdd(DepartmentModel department,String parentDepartmentId,String supervisorName,String leaderRoleIds);
+	public DepartmentModel departmentAdd(DepartmentModel department,String parentDepartmentId,String masterUserIds,String leaderUserIds);
 	//获得部门岗位
-	public List<RoleModel> getDepartmentRoles(String departmentId);
+	//public List<RoleModel> getDepartmentRoles(String departmentId);
 	
 	
 	
 	//更新部门
-	public DepartmentModel departmentUpdate(DepartmentModel department,String supervisorName,String leaderRoleIds);
+	public DepartmentModel departmentUpdate(DepartmentModel department,String masterUserIds,String leaderUserIds);
 	//删除部门
 	public boolean departmentRemove(String id);
 	//新增岗位
-	public RoleModel roleAdd(RoleModel role,String parentId,String userIds);
+	public RoleModel roleAdd(RoleModel role);
 	//更新岗位
-	public RoleModel roleUpdate(RoleModel role,String userIds);
+	public RoleModel roleUpdate(RoleModel role);
 	//删除岗位
 	public boolean roleRemove(String id);
 	/*获得部门各系统权限集*/
-	public String getDepartmentSystemAuthorization(String departmentId,String systemId);
+	//public String getDepartmentSystemAuthorization(String departmentId,String systemId);
 	
 	/*获得部门各系统权限集*/
 	
 	/*保存部门系统权限集*/
-	public boolean saveDepartmentSystemAuthorization(String departmentId,String systemId,String adds,String removes);
-	/*获得角色（岗位）各系统权限集*/
-	public String getRoleSystemAuthorization(String roleId,String systemId);
-	/*保存角色系统权限集*/
-	public boolean saveRoleSystemAuthorization(String roleId,String systemId,String adds,String removes);
+	//public boolean saveDepartmentSystemAuthorization(String departmentId,String systemId,String adds,String removes);
+	/*获得部门角色（岗位）各系统权限集*/
+	public String getRoleSystemAuthorization(String departmentId,String roleId,String systemId);
+	/*保存部门角色系统权限集*/
+	public boolean saveRoleSystemAuthorization(String departmentId,String roleId,String systemId,String adds,String removes);
 	//获得自身接受未读消息
 	public List<MessageVO> getSelfReceivedNotReadMessages(String beginDate,String endDate);
 	

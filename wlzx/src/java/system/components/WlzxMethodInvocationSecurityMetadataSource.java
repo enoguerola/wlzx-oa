@@ -13,8 +13,9 @@ import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.access.method.MethodSecurityMetadataSource;
 
 
+import system.dao.DRDAO;
 import system.dao.DataAccessModeDAO;
-import system.dao.RoleDAO;
+import system.entity.DRModel;
 import system.entity.DataAccessModeModel;
 import system.entity.RoleModel;
 /**
@@ -27,7 +28,9 @@ import system.entity.RoleModel;
 public class WlzxMethodInvocationSecurityMetadataSource
         implements MethodSecurityMetadataSource {
 	private DataAccessModeDAO resourcesDao;  
-	private RoleDAO roleDao;  
+	private DRDAO drDAO; 
+
+//	private RoleDAO roleDao;  
 //    private PathMatcher urlMatcher = new AntPathMatcher();
     private static Map<String, Collection<ConfigAttribute>> resourceMap = null;
 
@@ -53,12 +56,12 @@ public class WlzxMethodInvocationSecurityMetadataSource
 	               }
 	           } 
 	           //加载用户资源
-	            for (RoleModel role:roleDao.getAllRoles(false)){
-	                for(DataAccessModeModel resource:role.getDataAccessModes()){ 
+	           for (DRModel dr:drDAO.getAllDRs(false)){
+	                for(DataAccessModeModel resource:dr.getDataAccessModes()){ 
 	                	if(resource.getBelongOperation().getRsType().equals("METHOD")){
 	                		 String key=resource.getBelongOperation().getRsValue();
 	                		 //	System.out.println("角色：["+role.getSymbol()+"]拥有的Method资源有："+key); 
-		                	ConfigAttribute ca = new SecurityConfig(role.getSymbol());  
+		                	ConfigAttribute ca = new SecurityConfig(dr.getBasicFlag()==false?dr.getId():"basic_dr");  
 		                	resourceMap.get(key).add(ca);
 	                    }
 	                }  
@@ -111,12 +114,13 @@ public class WlzxMethodInvocationSecurityMetadataSource
 		this.resourcesDao = resourcesDao;
 	}
 
-	public RoleDAO getRoleDao() {
-		return roleDao;
+
+	public DRDAO getDrDAO() {
+		return drDAO;
 	}
 
-	public void setRoleDao(RoleDAO roleDao) {
-		this.roleDao = roleDao;
+	public void setDrDAO(DRDAO drDAO) {
+		this.drDAO = drDAO;
 	}
 
 }

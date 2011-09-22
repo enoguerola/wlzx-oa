@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="system.entity.DRModel" table="wlzx_system_dr">
+		<id name="id">
+			<column name="id" />
+			<generator class="native" />
+		</id>
+		
+		<property name="departmentId" type="string">
+			<column name="department_id" />
+		</property>
+		<property name="roleId" type="string">
+			<column name="role_id" />
+		</property>
+		<property name="basicFlag" type="boolean">
+			<column name="basic_flag" />
+		</property>
+		<set name="dataAccessModes" lazy="false"  table="wlzx_system_dr_dam_relationship">
+			<key column="dr_id" not-null="true" />
+			<many-to-many not-found="ignore" column="dam_id" class="system.entity.DataAccessModeModel" /> 
+		</set>
+		<set name="users" lazy="false"  table="wlzx_system_user_dr_relationship " cascade="all"    inverse="true">
+			<key column="dr_id" not-null="true" />
+			<many-to-many not-found="ignore" column="user_id" class="system.entity.UserModel" /> 
+		</set>
+		<set name="mainUsers" lazy="false"  table="wlzx_system_user"  cascade="none"    inverse="true">
+			<key column="main_dr_id" not-null="true" />
+			<one-to-many not-found="ignore" class="system.entity.UserModel"  /> 
+		</set>
+		
+	</class>
+</hibernate-mapping>

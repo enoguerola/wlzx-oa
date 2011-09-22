@@ -175,7 +175,7 @@
 		
 	</mx:Script> 
 	
-	<mx:TitleWindow  id="messageWin" width="100%" height="100%"  close="PopUpManager.removePopUp(this);">
+	<mx:TitleWindow  id="messageWin" width="100%" height="100%"  close="PopUpManager.removePopUp(this);" showCloseButton="true">
 		<mx:Form width="100%" height="100%" id="dform">
 			<mx:FormHeading label="短信息" fontSize="15" width="100%" textAlign="center"/>
 			

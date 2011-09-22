@@ -59,7 +59,7 @@
 				var departmentData:XML=new XML(resultXML);
 				departments.dataProvider=departmentData;
 				departments.selectedItem=departmentData[0];
-				departments.validateNow();departments.expandChildrenOf(departmentData[0],true);
+				departments.validateNow();departments.expandChildrenOf(departmentData[0],false);
 				loadDepartmentDetail(department);
 				selectedNode=departments.selectedItem as XML;
 			}
@@ -156,37 +156,52 @@
 				phone.text=department.phone;
 				detail.text=department.detail;
 				var rolesString:String="";
-				
-				if(department.getSupervisorRole()!=null){
-					var _role:RoleModel = department.getSupervisorRole() as RoleModel;	
-					rolesString=rolesString.concat(_role.name+"");
-					rolesStructure.text=buildRolesStructre(_role,1);
-					roles.text=rolesString;
-//					leader.text=_role.getLeaderRole().name;
-				}
+				var leaderUsers:ArrayCollection=ArrayCollection(department.leaderUsers);
 				var leadersString:String="";
-				var list:ArrayCollection = ArrayCollection(department.leaderRoles);
-				for (var i:int = 0; i < list.length; i++){
-					var role:RoleModel = list.getItemAt(i) as RoleModel;	
-					leadersString=leadersString.concat(role.name+"\n\n");
+				for (var i:int = 0; i < leaderUsers.length; i++){
+					var user:UserModel = leaderUsers.getItemAt(i) as UserModel;	
+					leadersString=leadersString.concat(parentApplication.getTeacherNameByAccountId(user.id)+" | ");
 				}
 				leader.text=leadersString;
-			}
-			public function buildRolesStructre(role:Object,depth:int):String{
-				var result:String="";
-				for(var j:int = 0;j<depth;j++)
-					result=result.concat("--");
-				result=result.concat(role.name+"\n\n");
-				var list:ArrayCollection = ArrayCollection(role.subordinates);			
-				if(list.length>0){
-					for (var i:int = 0; i < list.length; i++){
-						var _role:Object = list.getItemAt(i);	
-						result=result.concat(buildRolesStructre(_role,depth+1));
-					}
+				
+				var masterUsers:ArrayCollection=ArrayCollection(department.masterUsers);
+				var mastersString:String="";
+				for (var i:int = 0; i < masterUsers.length; i++){
+					var user:UserModel = masterUsers.getItemAt(i) as UserModel;	
+					mastersString=mastersString.concat(parentApplication.getTeacherNameByAccountId(user.id)+" | ");
 				}
-				return result;
-			
+				masters.text=mastersString;
+				
+//				if(department.getSupervisorRole()!=null){
+//					var _role:RoleModel = department.getSupervisorRole() as RoleModel;	
+//					rolesString=rolesString.concat(_role.name+"");
+//					rolesStructure.text=buildRolesStructre(_role,1);
+//					roles.text=rolesString;
+////					leader.text=_role.getLeaderRole().name;
+//				}
+//				var leadersString:String="";
+//				var list:ArrayCollection = ArrayCollection(department.leaderRoles);
+//				for (var i:int = 0; i < list.length; i++){
+//					var role:RoleModel = list.getItemAt(i) as RoleModel;	
+//					leadersString=leadersString.concat(role.name+"\n\n");
+//				}
+//				leader.text=leadersString;
 			}
+//			public function buildRolesStructre(role:Object,depth:int):String{
+//				var result:String="";
+//				for(var j:int = 0;j<depth;j++)
+//					result=result.concat("--");
+//				result=result.concat(role.name+"\n\n");
+//				var list:ArrayCollection = ArrayCollection(role.subordinates);			
+//				if(list.length>0){
+//					for (var i:int = 0; i < list.length; i++){
+//						var _role:Object = list.getItemAt(i);	
+//						result=result.concat(buildRolesStructre(_role,depth+1));
+//					}
+//				}
+//				return result;
+//			
+//			}
 			
 		]]>
 	</fx:Script>
@@ -227,9 +242,9 @@
 						<mx:FormItem label="创建日期 "  required="true">
 							<s:HGroup>
 								<mx:Label id="creationDate"/>
-								<mx:FormItem label="主管" required="true">
-									<mx:Label id="roles"/>		
-								</mx:FormItem>
+								<!--<mx:FormItem label="主管" required="true">
+									<mx:Label id="masters"/>		
+								</mx:FormItem>-->
 							</s:HGroup>
 						</mx:FormItem>
 
@@ -246,10 +261,13 @@
 						
 					<s:VGroup width="100%" height="100%"  gap="5" verticalAlign="top" horizontalAlign="center"  paddingLeft="10">
 						<s:Label text="部门直属领导" fontSize="14" width="100%" textAlign="center" height="30"/>
-						<s:Label id="leader"  width="100%"/>	
-						<s:Label text="部门内部行政结构图"  fontSize="14" width="100%" textAlign="center" height="30"/>
+						<s:Label id="masters"  width="100%"/>	
 						
-						<s:Label id="rolesStructure"  width="100%"/>		
+						<s:Label text="部门主管" fontSize="14" width="100%" textAlign="center" height="30"/>
+						<s:Label id="leader"  width="100%"/>	
+						<!--<s:Label text="部门内部行政结构图"  fontSize="14" width="100%" textAlign="center" height="30"/>
+						
+						<s:Label id="rolesStructure"  width="100%"/>	-->	
 					</s:VGroup>
 									
 				</mx:VBox>

@@ -96,9 +96,9 @@
 				]                
 			);
 
-			public var departmentList:ArrayCollection = new ArrayCollection();
+		/* 	public var departmentList:ArrayCollection = new ArrayCollection();
 			
-			public var roleList:ArrayCollection = new ArrayCollection();
+			public var roleList:ArrayCollection = new ArrayCollection(); */
 			
 			private var file:FileReference;
 			private var path:String;
@@ -107,7 +107,7 @@
 			
 			private function init():void
 			{
-				systemServiceRO.getDepartmentBySymbol("root");//初始化部门数据字典
+			//	systemServiceRO.getDepartmentBySymbol("root");//初始化部门数据字典
 				
 				showFirst = true;
 				
@@ -142,7 +142,9 @@
 				// Instantiate a new FileFilter.
 				imageTypes = new FileFilter("Images (*.jpg, *.jpeg, *.png, *.gif)", "*.jpg; *.jpeg; *.png; *.gif;");
 				
+				department.dataProvider=this.parentApplication.allDepartment;
 				
+				position.dataProvider=this.parentApplication.allRole;
 				
 				callLater(initStaffWin);
 				
@@ -211,8 +213,9 @@
 				attendDate.text = DateUtil.formatDate(teacher.teacherAttendDate as Date, "YYYY-MM-DD");
 				teacherAddress.text = teacher.address;
 				
-				department.selectedIndex = ComboxUtils.findIndex(departmentList, teacher.teacherDepartment) ;
-				systemServiceRO.getDepartmentRoles(teacher.teacherDepartment);
+				department.selectedIndex = ComboxUtils.findIndex(this.parentApplication.allDepartment, teacher.teacherDepartment) ;
+				position.selectedIndex = ComboxUtils.findIndex(this.parentApplication.allRole, teacher.teacherPosition) ;
+		//		systemServiceRO.getDepartmentRoles(teacher.teacherDepartment);
 				staffInputDepartmentPosition.getDepartment();
 
 //				for(var i:int=0;i<2000;i++){
@@ -760,63 +763,63 @@
 				
 			}
 			
-			private function getDepartmentBySymbolResult(event:ResultEvent):void {
-				var _department:DepartmentModel=event.result as DepartmentModel;
-				
-				buildSubDepartments(_department,departmentList,0);
-				//Alert.show(_department.name);
-				systemServiceRO.getDepartmentRoles(_department.id);
-				callLater(function():void{
-//					department.dataProvider=departmentList;
-//					var temp:Object=departmentList.getItemAt(0);
-//					//Alert.show(temp.id+"");
-				
-				});
-				
-			}
-			private function getDepartmentRolesResult(event:ResultEvent):void {
-				roleList.removeAll();
-				var allList:ArrayCollection=event.result as ArrayCollection;
-				if(allList.length>0){
-					for (var i:int = 0; i < allList.length; i++){
-						var _role:RoleModel = allList.getItemAt(i) as RoleModel;
-						var headText:String="";
-						for(var j:int = 0;j<_role.level;j++)
-							headText=headText.concat("--");
-						headText=headText.concat(_role.name);
-						roleList.addItem( {data:_role.id, label:headText})
-					}
-				}	
-				if(teacher!=null&&teacher.id!=null&&teacher.id!="")
-					position.selectedIndex = ComboxUtils.findIndex(roleList,  teacher.teacherPosition);
-				else position.selectedIndex =0;
-				//Alert.show(position.selectedIndex +"a");
-
-			}
-			private function buildSubDepartments(department:DepartmentModel,resultList:ArrayCollection,depth:int):void{
-				var headText:String="";
-				for(var j:int = 0;j<depth;j++)
-					headText = headText.concat("--");
-				headText = headText.concat(department.name);
-				resultList.addItem( {data:department.id, label:headText})
-				var list:ArrayCollection = ArrayCollection(department.subordinates);			
-				if(list.length>0){
-					for (var i:int = 0; i < list.length; i++){
-						var _department:DepartmentModel = list.getItemAt(i) as DepartmentModel;	
-						buildSubDepartments(_department,resultList,depth+1);
-					}
-					//					CommonUtils.sortBySequence(resultList);
-				}		
-				
-			}
-			private function departmentSelectionChangedHandlerMain(event:Event):void{
-				var target:mx.controls.ComboBox=event.target as mx.controls.ComboBox
-				systemServiceRO.getDepartmentRoles(target.selectedItem.data);
-				callLater(function():void{
-					position.dataProvider=roleList;
-					position.selectedIndex=0;
-				});
-			}
+//			private function getDepartmentBySymbolResult(event:ResultEvent):void {
+//				var _department:DepartmentModel=event.result as DepartmentModel;
+//				
+//				buildSubDepartments(_department,departmentList,0);
+//				//Alert.show(_department.name);
+//				systemServiceRO.getDepartmentRoles(_department.id);
+//				callLater(function():void{
+////					department.dataProvider=departmentList;
+////					var temp:Object=departmentList.getItemAt(0);
+////					//Alert.show(temp.id+"");
+//				
+//				});
+//				
+//			}
+//			private function getDepartmentRolesResult(event:ResultEvent):void {
+//				roleList.removeAll();
+//				var allList:ArrayCollection=event.result as ArrayCollection;
+//				if(allList.length>0){
+//					for (var i:int = 0; i < allList.length; i++){
+//						var _role:RoleModel = allList.getItemAt(i) as RoleModel;
+//						var headText:String="";
+//						for(var j:int = 0;j<_role.level;j++)
+//							headText=headText.concat("--");
+//						headText=headText.concat(_role.name);
+//						roleList.addItem( {data:_role.id, label:headText})
+//					}
+//				}	
+//				if(teacher!=null&&teacher.id!=null&&teacher.id!="")
+//					position.selectedIndex = ComboxUtils.findIndex(roleList,  teacher.teacherPosition);
+//				else position.selectedIndex =0;
+//				//Alert.show(position.selectedIndex +"a");
+//
+//			}
+//			private function buildSubDepartments(department:DepartmentModel,resultList:ArrayCollection,depth:int):void{
+//				var headText:String="";
+//				for(var j:int = 0;j<depth;j++)
+//					headText = headText.concat("--");
+//				headText = headText.concat(department.name);
+//				resultList.addItem( {data:department.id, label:headText})
+//				var list:ArrayCollection = ArrayCollection(department.subordinates);			
+//				if(list.length>0){
+//					for (var i:int = 0; i < list.length; i++){
+//						var _department:DepartmentModel = list.getItemAt(i) as DepartmentModel;	
+//						buildSubDepartments(_department,resultList,depth+1);
+//					}
+//					//					CommonUtils.sortBySequence(resultList);
+//				}		
+//				
+//			}
+//			private function departmentSelectionChangedHandlerMain(event:Event):void{
+//				var target:mx.controls.ComboBox=event.target as mx.controls.ComboBox
+//				systemServiceRO.getDepartmentRoles(target.selectedItem.data);
+//				callLater(function():void{
+//					position.dataProvider=roleList;
+//					position.selectedIndex=0;
+//				});
+//			}
 //			private function departmentSelectionChangedHandler(event:Event):void{
 //				var target:mx.controls.ComboBox=event.target as mx.controls.ComboBox
 //				systemServiceRO.getDepartmentRoles(target.selectedItem.data);
@@ -927,10 +930,10 @@
 			<mx:method name="get"  concurrency="last"  result="teacherRelationGetResult_resultHandler(event);" />
 			<mx:method name="remove"  concurrency="last"  result="teacherRelationRemoveResult_resultHandler(event);" />
 		</mx:RemoteObject>
-		<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+		<!--<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 			<mx:method name="getDepartmentBySymbol"  concurrency="last"  result="getDepartmentBySymbolResult(event);" />
 			<mx:method name="getDepartmentRoles"  concurrency="multiple"  result="getDepartmentRolesResult(event);" />
-		</mx:RemoteObject>
+		</mx:RemoteObject>-->
 	</fx:Declarations>
 	<s:Panel width="100%" height="100%" title="教师信息编辑"  styleName="customPanel"   borderVisible="true" dropShadowVisible="false">
 
@@ -1053,12 +1056,12 @@
 									<s:HGroup width="100%">
 										<mx:FormItem label="部门" width="20%">
 											<mx:ComboBox  id="department" 
-														  width="100%" labelField="label" dataProvider="{departmentList}"
-														  change="departmentSelectionChangedHandlerMain(event);"/>
+														  width="100%" labelField="label" 
+														 />
 											
 										</mx:FormItem>
 										<mx:FormItem label="职务" width="35%">
-											<mx:ComboBox  width="90%" id="position"  dataProvider="{roleList}" fontSize="12" labelField="label"  textAlign="left" />
+											<mx:ComboBox  width="90%" id="position"  fontSize="12" labelField="label"  textAlign="left" />
 
 										</mx:FormItem>
 										<mx:FormItem label="办公电话" width="45%">

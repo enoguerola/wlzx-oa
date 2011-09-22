@@ -1,7 +1,7 @@
 package system.wlims.oa.serviceImpl.notice;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.TreeSet;
 import java.util.List;
 import java.util.Set;
 
@@ -91,11 +91,11 @@ public class NoticeServiceImpl implements NoticeService {
 		 //System.out.println(deparmentId);
 		if(StringUtils.isNotEmpty(deparmentId)){
 			// get all department under id
-			Set<DepartmentModel> departmentSet = new HashSet<DepartmentModel>();
+			Set<DepartmentModel> departmentSet = new TreeSet<DepartmentModel>();
 			DepartmentModel departmentModel = departmentDAO.get(deparmentId);
 			departmentSet.add(departmentModel);
 			departmentSet.addAll(departmentDAO.getAllSubordinates(departmentModel));
-			Set<String> stringSet = new HashSet<String>();
+			Set<String> stringSet = new TreeSet<String>();
 			for(DepartmentModel model: departmentSet){
 				stringSet.add(model.getId());
 			}
@@ -225,7 +225,7 @@ public class NoticeServiceImpl implements NoticeService {
 //			UserModel userModel = SecurityUserHolder.getCurrentUser();
 //			Set<DepartmentModel> set = userModel.getAllDepartments();
 //			
-//			Set<String> stringSet = new HashSet<String>();
+//			Set<String> stringSet = new TreeSet<String>();
 //			if(set!=null&&set.size()>0){
 //				for(DepartmentModel model: set){
 //					stringSet.add(model.getId());

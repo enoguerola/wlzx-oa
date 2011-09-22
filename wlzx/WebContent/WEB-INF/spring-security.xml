@@ -71,7 +71,9 @@
 	<!-- 用户信息服务 -->
 	<beans:bean id="wlzxUserDetailsService" class="system.components.WlzxUserDetailsService">
 		<beans:property name="userDAO" ref="userDAO"/>
-		<beans:property name="roleDAO" ref="roleDAO" />
+<!-- 		<beans:property name="roleDAO" ref="roleDAO" /> -->
+		<beans:property name="resourcesDao" ref="dataAccessModeDAO" />
+		<beans:property name="drDAO" ref="drDAO" />
 	</beans:bean>
 	
     <!-- 访问决策器，决定某个用户具有的角色，是否有足够的权限去访问某个资源 -->
@@ -81,12 +83,12 @@
     <!-- Url资源源数据定义，即定义某一资源可以被哪些角色访问 -->
     <beans:bean id="wlzxUrlSecurityMetadataSource"  class="system.components.WlzxUrlInvocationSecurityMetadataSource"  init-method="loadResourceDefine">
      	<beans:property name="resourcesDao" ref="dataAccessModeDAO" />
-     	<beans:property name="roleDao" ref="roleDAO" />
+     	<beans:property name="drDAO" ref="drDAO" />
     </beans:bean>
      <!-- Method资源源数据定义，即定义某一资源可以被哪些角色访问 -->
     <beans:bean id="wlzxMethodSecurityMetadataSource"  class="system.components.WlzxMethodInvocationSecurityMetadataSource" init-method="loadResourceDefine">
      	<beans:property name="resourcesDao" ref="dataAccessModeDAO" />
-     	<beans:property name="roleDao" ref="roleDAO" />
+     	<beans:property name="drDAO" ref="drDAO" />
     </beans:bean>
  	<!--  通过AOP方式将方法需要的权限进行获取 --> 
 	 <aop:config>

@@ -159,47 +159,63 @@
 			{  
 				currentUser=event.result as UserModel;
 				account=currentUser.person.name;
-				roles=currentUser.getAllRoles();
-			//Alert.show(roles);
-				if(currentUser.mainRole!=null)
-				mainRole=currentUser.mainRole.name;
+//				var rolesIds:String=currentUser.getAllRoleIds();
+//				if(rolesIds!=null&&rolesIds!=""){
+//					var rolesIds_attr:Array=rolesIds.split(";");
+//					for(var i:int=0;i<rolesIds_attr.length;i++){
+//						roles+=getRoleNameById(rolesIds_attr[i])+" | ";
+//					}
+//				
+//				}
+//				Alert.show(currentUser.mainDR.roleId);
+//
+//				if(currentUser.mainDR!=null){
+//					var mainRoleId:String=currentUser.mainDR.roleId;
+//					mainRole=getRoleNameById(currentUser.mainDR.roleId);
+//				}
+//				
+//				Alert.show(mainRole+"a");
 				if(currentUser.lastLoginTime!=null)
 				lastLoginTime=CommonUtils.formatDate(currentUser.lastLoginTime);
+//				
 				
-				if(currentUser.name=="super_root"){
-					currentUserDepartment=allDepartment;
-				}else{
-					var list:ArrayCollection=currentUser.getDepartments();
-					for(var i:int=0;i<list.length;i++){
-						var department:DepartmentModel=list.getItemAt(i) as DepartmentModel;
-						if(department.level==0||department.level==1){
-							
-							if(!CommonUtils.contains(currentUserFirstLevelDepartment,department.id))
-							currentUserFirstLevelDepartment.addItem( {data:department.id, label:department.name});
-							//Alert.show(department.getLeaderDepartment()!=null?department.getLeaderDepartment().name:null);
-						 	if(department.getLeaderDepartment()==null||department.getLeaderDepartment().level<=0){
-								if(!CommonUtils.contains(currentUserTrueFirstLevelDepartment,department.id))
-									currentUserTrueFirstLevelDepartment.addItem( {data:department.id, label:department.name});
-							} 
-						}else{
-							var leaderDepartment2FirstLevel:Object=department.getLeaderDepartment2FirstLevel();
-							if(leaderDepartment2FirstLevel!=null){
-								if(!CommonUtils.contains(currentUserFirstLevelDepartment,leaderDepartment2FirstLevel.id))
-									currentUserFirstLevelDepartment.addItem( {data:leaderDepartment2FirstLevel.id, label:leaderDepartment2FirstLevel.name});
-							
-								if(leaderDepartment2FirstLevel.getLeaderDepartment()==null||leaderDepartment2FirstLevel.getLeaderDepartment().level<=0){
-									if(!CommonUtils.contains(currentUserTrueFirstLevelDepartment,leaderDepartment2FirstLevel.id))
-										currentUserTrueFirstLevelDepartment.addItem( {data:leaderDepartment2FirstLevel.id, label:leaderDepartment2FirstLevel.name});
-								} 
-							}
-
-						}
-						currentUserDepartment.addItem( {data:department.id, label:department.name});
-						
-						
-					}
-					//Alert.show(currentUserDepartment.length+"ab");
-				}
+//				if(currentUser.name=="super_root"){
+//					currentUserDepartment=allDepartment;
+//					currentUserFirstLevelDepartment=allDepartment;
+//					currentUserTrueFirstLevelDepartment=allDepartment;
+//				}else{
+//					var list:ArrayCollection=currentUser.getAllDepartments();
+//					for(var i:int=0;i<list.length;i++){
+//						var department:DepartmentModel=list.getItemAt(i) as DepartmentModel;
+//						if(department.level==0||department.level==1){
+//							
+//							if(!CommonUtils.contains(currentUserFirstLevelDepartment,department.id))
+//							currentUserFirstLevelDepartment.addItem( {data:department.id, label:department.name});
+//							//Alert.show(department.getLeaderDepartment()!=null?department.getLeaderDepartment().name:null);
+//						 	if(department.getLeaderDepartment()==null||department.getLeaderDepartment().level<=0){
+//								if(!CommonUtils.contains(currentUserTrueFirstLevelDepartment,department.id))
+//									currentUserTrueFirstLevelDepartment.addItem( {data:department.id, label:department.name});
+//							} 
+//						}else{
+//							var leaderDepartment2FirstLevel:DepartmentModel=department.getLeaderDepartment2FirstLevel() as DepartmentModel;
+//							if(leaderDepartment2FirstLevel!=null){
+//								if(!CommonUtils.contains(currentUserFirstLevelDepartment,leaderDepartment2FirstLevel.id))
+//									currentUserFirstLevelDepartment.addItem( {data:leaderDepartment2FirstLevel.id, label:leaderDepartment2FirstLevel.name});
+//							
+//								if(leaderDepartment2FirstLevel.getLeaderDepartment()==null||leaderDepartment2FirstLevel.getLeaderDepartment().level<=0){
+//									if(!CommonUtils.contains(currentUserTrueFirstLevelDepartment,leaderDepartment2FirstLevel.id))
+//										currentUserTrueFirstLevelDepartment.addItem( {data:leaderDepartment2FirstLevel.id, label:leaderDepartment2FirstLevel.name});
+//								} 
+//							}
+//
+//						}
+//						currentUserDepartment.addItem( {data:department.id, label:department.name});
+//						
+//						
+//					}
+//					//Alert.show(currentUserDepartment.length+"ab");
+//				}
+//				Alert.show(currentUserDepartment.length+"ab");
 				/* for(var i:int=0;i<currentUserFirstLevelDepartment.length;i++){
 					var d:DepartmentModel=currentUserFirstLevelDepartment.getItemAt(i) as DepartmentModel;
 					if(d.getLeaderDepartment()!=null&&d.getLeaderDepartment().level<=0){
@@ -247,12 +263,13 @@
 			private function getDepartmentBySymbolResult(event:ResultEvent):void {
 				var _department:DepartmentModel = event.result as DepartmentModel;
 				buildSubDepartments(_department,allDepartment,0);
-				var list:ArrayCollection = ArrayCollection(_department.subordinates);	
-				for (var i:int = 0; i < list.length; i++){
-					var _de:DepartmentModel = list.getItemAt(i) as DepartmentModel;	
-					if(_de.level==1)
-					allFirstLevelAboveDepartment.addItem( {data:_de.id, label:_de.name});
-				}
+//				var list:ArrayCollection = ArrayCollection(_department.subordinates);	
+//				for (var i:int = 0; i < list.length; i++){
+//					var _de:DepartmentModel = list.getItemAt(i) as DepartmentModel;	
+//					if(_de.level==1)
+//					allFirstLevelAboveDepartment.addItem( {data:_de.id, label:_de.name});
+//				}
+//				Alert.show(allDepartment.length+"cd");
 			}
 			
 			private function buildSubDepartments(department:DepartmentModel,resultList:ArrayCollection,depth:int):void{
@@ -260,7 +277,9 @@
 				for(var j:int = 0;j<depth;j++)
 					headText=headText.concat("--");
 				headText=headText.concat(department.name);
-				resultList.addItem( {data:department.id, label:headText})
+				resultList.addItem( {data:department.id, label:headText});
+				if(department.level==1)
+					allFirstLevelAboveDepartment.addItem( {data:department.id, label:department.name});
 				var list:ArrayCollection = ArrayCollection(department.subordinates);			
 				if(list.length>0){
 					for (var i:int = 0; i < list.length; i++){

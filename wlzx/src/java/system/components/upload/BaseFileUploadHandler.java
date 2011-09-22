@@ -43,7 +43,7 @@ public abstract class BaseFileUploadHandler implements IUpload{
 //	}
 	
 	public String getFileType(String filename){
-		int index = filename.indexOf(".");
+		int index = filename.lastIndexOf(".");
 		if(index > -1){
 			return filename.substring(index + 1, filename.length());
 		}else
