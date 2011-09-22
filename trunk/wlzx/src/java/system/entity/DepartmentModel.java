@@ -3,9 +3,7 @@
  */
 package system.entity;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
+import java.util.TreeSet;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -34,10 +32,12 @@ public class DepartmentModel  extends BaseModel{
 	private String phone;
 	private Set<DepartmentModel> subordinates=new TreeSet<DepartmentModel>();//直属下级部门
 	private Set<DepartmentModel> leaders=new TreeSet<DepartmentModel>();//直属上级部门
-	private Set<RoleModel> roles=new TreeSet<RoleModel>();//部门角色集
-	private Set<RoleModel> leaderRoles=new TreeSet<RoleModel>();//部门上级领导角色集
-	private Set<DataAccessModeModel> dataAccessModes=new TreeSet<DataAccessModeModel>();//部门数据访问权限
-	private Set<UserModel> mainUsers=new TreeSet<UserModel>();//主部门用户集
+	private Set<UserModel> leaderUsers=new TreeSet<UserModel>();//直属领导用户集
+	private Set<UserModel> masterUsers=new TreeSet<UserModel>();//部门主管用户集
+	
+	private Set<DRModel> relativeDRs=new TreeSet<DRModel>();
+	
+	
 	public String getDetail() {
 		return detail;
 	}
@@ -62,17 +62,7 @@ public class DepartmentModel  extends BaseModel{
 		this.leaders = leaders;
 	}
 
-	public Set<RoleModel> getRoles() {
-		return roles;
-	}
 
-	public void setRoles(Set<RoleModel> roles) {
-		this.roles = roles;
-	}
-
-	public Set<DataAccessModeModel> getDataAccessModes() {
-		return dataAccessModes;
-	}
 	public String getPhone() {
 		return phone;
 	}
@@ -80,32 +70,32 @@ public class DepartmentModel  extends BaseModel{
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
-	public void setDataAccessModes(Set<DataAccessModeModel> dataAccessModes) {
-		this.dataAccessModes = dataAccessModes;
-	}
-	/** 
-     * 获取部门主管角色
-     * @创建时间 2011-4-15 上午10:41:15
-     */ 
-	public RoleModel getSupervisorRole() {
-		for(RoleModel role:getRoles()){
-			if(role.getSupervisorFlag()==true){
-				return role;
-			}
-		}
-		return null;
+	public int getLevel() {
+		return level;
 	}
 
-	public Set<RoleModel> getLeaderRoles() {
-		return leaderRoles;
+	public void setLevel(int level) {
+		this.level = level;
 	}
 
-	public void setLeaderRoles(Set<RoleModel> leaderRoles) {
-		this.leaderRoles = leaderRoles;
+	public Set<UserModel> getLeaderUsers() {
+		return leaderUsers;
+	}
+
+	public void setLeaderUsers(Set<UserModel> leaderUsers) {
+		this.leaderUsers = leaderUsers;
+	}
+
+	public Set<UserModel> getMasterUsers() {
+		return masterUsers;
+	}
+
+	public void setMasterUsers(Set<UserModel> masterUsers) {
+		this.masterUsers = masterUsers;
 	}
 	//获得所有子部门
 	public Set<DepartmentModel> getAllSubordinates() {
-		Set<DepartmentModel> results=new HashSet<DepartmentModel>();
+		Set<DepartmentModel> results=new TreeSet<DepartmentModel>();
 		addSubordinates(this,results);
 		return results;
 	}
@@ -117,83 +107,45 @@ public class DepartmentModel  extends BaseModel{
 			}
 		}
 	}
-	//获得部门及子部门所有用户集
-	public Set<UserModel> getUsers() {
-		Set<UserModel> users=new HashSet<UserModel>(mainUsers);
-		for(RoleModel role:this.getAllRoles()){
-			for(UserModel user:role.getAllUsers())
-			users.add(user);
-		}
-		for(DepartmentModel department:this.getAllSubordinates()){
-			for(UserModel user:department.getMainUsers())
-			users.add(user);
-		}
-		return users;
+
+	public Set<DRModel> getRelativeDRs() {
+		return relativeDRs;
 	}
-	//获得部门及子部门所有岗位
-	public List<RoleModel> getAllRoles(){
-		List<RoleModel> result=new ArrayList<RoleModel>();
-		for(DepartmentModel department:this.getAllSubordinates()){
-			for(RoleModel role:department.getAllRoles()){
-				result.add(role);
+
+	public void setRelativeDRs(Set<DRModel> relativeDRs) {
+		this.relativeDRs = relativeDRs;
+	}
+	public Set<UserModel> getSelfUsers(){
+		Set<UserModel> results=new TreeSet<UserModel>();
+		
+		for(DRModel dr:getRelativeDRs()){
+			for(UserModel user:dr.getAllUsers()){
+				if(!results.contains(user))
+					results.add(user);
 			}
 		}
-		for(RoleModel role:this.getRoles()){
-			result.add(role);
-			addSubRoles(role,result);
-		}
-		return result;
+		return results;
+		
 	}
-	//获得本部门所有用户集
-	public Set<UserModel> getSelfUsers() {
-		Set<UserModel> users=new HashSet<UserModel>(mainUsers);
-		for(RoleModel role:this.getRoles()){
-			for(UserModel user:role.getAllUsers())
-			users.add(user);
-		}
-		for(UserModel user:this.getMainUsers())
-			users.add(user);
-		return users;
-	}
-//	//获得部门及子部门所有用户
-//	public Set<UserModel> getAllUsers(){
-//		Set<UserModel> result=new HashSet<UserModel>();
-//		for(DepartmentModel department:this.getAllSubordinates()){
-//			for(RoleModel role:department.getAllRoles()){
-//				for(UserModel user:role.getAllUsers()){
-//					if(!result.contains(user)){
-//						result.add(user);
-//					}
-//				}
-//			}
-//		}
-//		return result;
-//	}
-	public void addSubRoles(RoleModel role,List<RoleModel> result){
-		if(role==null)return ;
-		for(RoleModel _role:role.getSubordinates()){
-			result.add(_role);
-			addSubRoles(_role,result);
-		}
+	
+	public Set<UserModel> getAllUsers(){
+		
+		Set<UserModel> results=new TreeSet<UserModel>();
+		 Set<DepartmentModel> allSubDepartments=getAllSubordinates();
+		 for(DepartmentModel department:allSubDepartments)
+			for(DRModel dr:department.getRelativeDRs()){
+				for(UserModel user:dr.getAllUsers()){
+					if(!results.contains(user))
+						results.add(user);
+				}
+			}
+		return results;
 		
 	}
 
-	public Set<UserModel> getMainUsers() {
-		return mainUsers;
-	}
 
-	public void setMainUsers(Set<UserModel> mainUsers) {
-		this.mainUsers = mainUsers;
-	}
 
-	public int getLevel() {
-		return level;
-	}
-
-	public void setLevel(int level) {
-		this.level = level;
-	}
-
+	
 	
 	
 

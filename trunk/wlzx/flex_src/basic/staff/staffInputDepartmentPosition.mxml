@@ -19,10 +19,10 @@
 			<mx:method name="get"  concurrency="last"  result="teacherDepartmentGetResult_resultHandler(event);" />
 			<mx:method name="remove"  concurrency="last"  result="teacherDepartmentRemoveResult_resultHandler(event);" />
 		</mx:RemoteObject>
-		<mx:RemoteObject id="systemServiceRO2" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+		<!--<mx:RemoteObject id="systemServiceRO2" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 			<mx:method name="getDepartmentBySymbol"  concurrency="last"  result="getDepartmentBySymbolResult(event);" />
 			<mx:method name="getDepartmentRoles"  concurrency="last"  result="getDepartmentRolesResult(event);" />
-		</mx:RemoteObject>
+		</mx:RemoteObject>-->
 		<mx:StringValidator id="department_department_stringValidator" source="{departmentName}" property="text"  requiredFieldError="不能为空"/>
 		<mx:StringValidator id="department_position_stringValidator" source="{departmentPosition}" property="text"  requiredFieldError="不能为空"/>
 
@@ -59,17 +59,19 @@
 			private var validatorArr:Array;
 			private function init():void{
 				
-				systemServiceRO2.getDepartmentBySymbol("root");//初始化部门数据字典
+				//systemServiceRO2.getDepartmentBySymbol("root");//初始化部门数据字典
 				//getDepartment();
+				departmentName.dataProvider=this.parentApplication.allDepartment;
+				departmentPosition.dataProvider=this.parentApplication.allRole;
 			}
 			protected function systemFaultHandler(event:FaultEvent):void {
 				Alert.show(event.fault.faultString, 'Error');
 			}
-			public function department_cancleApply(teacherId:String,positionId:String):void
+			public function department_cancleApply(teacherId:String,departmentId:String,positionId:String):void
 			{
 				Alert.show("你确定要删除该项吗?","确认删除",Alert.NO|Alert.YES,null,function(event:CloseEvent):void{
 					if(event.detail == Alert.YES)
-						teacherAccountBridgeServiceRO2.remove(teacherId,positionId);
+						teacherAccountBridgeServiceRO2.remove(teacherId,departmentId,positionId);
 				},null,Alert.NO);
 			}
 			
@@ -88,27 +90,31 @@
 			public function department_enterEdit(data:Object):void
 			{
 				this.currentState='department_add';
-				for(var i=0;i<departmentList2.length;i++){
-					var item1:Object=departmentList2.getItemAt(i);
-					if(item1.dataField==data.departmentId){
-						departmentName.selectedItem=item1;
-						break;
-					}
-				}
-				callLater(function():void{
-					for(var j=0;j<roleList2.length;j++){
-						var item2:Object=departmentList2.getItemAt(j);
-						if(item2.dataField==data.positionId){
-							departmentName.selectedItem=item2;
-							break;
-						}
-					}
-					
-				});
+//				for(var i=0;i<departmentList2.length;i++){
+//					var item1:Object=departmentList2.getItemAt(i);
+//					if(item1.dataField==data.departmentId){
+//						departmentName.selectedItem=item1;
+//						break;
+//					}
+//				}
+//				callLater(function():void{
+//					for(var j=0;j<roleList2.length;j++){
+//						var item2:Object=departmentList2.getItemAt(j);
+//						if(item2.dataField==data.positionId){
+//							departmentName.selectedItem=item2;
+//							break;
+//						}
+//					}
+//					
+//				});
 				
 				//				departmentName.text = data.departmentName;
 				//				departmentPosition.text = data.positionName;
-				departmentId.text = data.positionId;
+				
+				departmentName.selectedIndex=ComboxUtils.findIndex(parentApplication.allDepartment,data.departmentId);
+				departmentPosition.selectedIndex=ComboxUtils.findIndex(parentApplication.allRole,data.positionId);
+				preDepartmentId.text = data.departmentId;
+				preRoleId.text = data.positionId;
 			}
 			
 			public function getDepartment():void
@@ -126,11 +132,15 @@
 					//					department.id = departmentId.text;
 					var item:Object=departmentPosition.selectedItem;
 					var positionId = item.data;
+					
+					var department:Object=departmentName.selectedItem;
+					var departmentId = department.data;
+					
 //					Alert.show("teacherId"+teacherId);
 //					Alert.show(positionId);
 //					Alert.show(departmentId.text+"pre");
 					//					teacherAccountBridgeServiceRO.save(department, teacherId);
-					teacherAccountBridgeServiceRO2.save(positionId, teacherId,departmentId.text);
+					teacherAccountBridgeServiceRO2.save(departmentId,positionId, teacherId,preDepartmentId.text,preRoleId.text);
 					
 				}
 			}
@@ -169,7 +179,7 @@
 					return false;
 				}
 			}
-			private function getDepartmentBySymbolResult(event:ResultEvent):void {
+			/* private function getDepartmentBySymbolResult(event:ResultEvent):void {
 				var _department:DepartmentModel=event.result as DepartmentModel;
 				
 				buildSubDepartments(_department,departmentList2,0);
@@ -219,7 +229,7 @@
 									departmentPosition.dataProvider=roleList2;
 									departmentPosition.selectedIndex=0;
 								});
-			}
+			} */
 			import system.component.WlzxLockWin;
 			import mx.core.FlexGlobals;
 			import mx.managers.PopUpManager;
@@ -244,7 +254,7 @@
 		<mx:VBox width="100%" height="100%" id="department_listPanel" >
 			<mx:HBox verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12" height="30" paddingLeft="20">
 				<mx:Label text="|"/>
-				<mx:LinkButton  label="添加" icon="@Embed(source='../WebContent/resources/common/tools/button_add_icon.png')" click=" this.currentState='department_add';departmentId.text='';" />
+				<mx:LinkButton  label="添加" icon="@Embed(source='../WebContent/resources/common/tools/button_add_icon.png')" click=" this.currentState='department_add';preDepartmentId.text='';preRoleId.text='';" />
 				<mx:Label text="|"/>
 			</mx:HBox>
 			<mx:VBox width="100%" height="100%"   verticalGap="10" verticalAlign="middle" horizontalAlign="center">
@@ -266,7 +276,7 @@
 								<mx:DataGridColumn textAlign="center" headerText="删除"  width="60">
 									<mx:itemRenderer>
 										<mx:Component>
-											<mx:LinkButton  label="[删除]"   click="{this.outerDocument.department_cancleApply(data.teacherId,data.positionId);}">											
+											<mx:LinkButton  label="[删除]"   click="{this.outerDocument.department_cancleApply(data.teacherId,data.departmentId,data.positionId);}">											
 											</mx:LinkButton>										
 										</mx:Component>
 									</mx:itemRenderer>
@@ -294,18 +304,19 @@
 								<mx:Label  text="部门" width="150"  textAlign="right" />
 							</mx:GridItem>
 							<mx:GridItem  verticalAlign="middle" horizontalAlign="center">
-								<mx:ComboBox  width="120" id="departmentName" labelField="label" dataProvider="{departmentList2}"
-											  change="departmentSelectionChangedHandler(event);"/>
+								<mx:ComboBox  width="120" id="departmentName" labelField="label" 
+											  />
 							</mx:GridItem>
 							<mx:GridItem    verticalAlign="middle" horizontalAlign="right">
 								<mx:Label  text="职务" width="200"  textAlign="right" />
 							</mx:GridItem>
 							<mx:GridItem  verticalAlign="middle" horizontalAlign="center">
-								<mx:ComboBox width="120" id="departmentPosition"   fontSize="12" labelField="label"  textAlign="left" dataProvider="{roleList2}" />
+								<mx:ComboBox width="120" id="departmentPosition"   fontSize="12" labelField="label"  textAlign="left"  />
 								
 							</mx:GridItem>
 							<mx:GridItem  verticalAlign="middle" horizontalAlign="center">
-								<mx:TextInput id="departmentId" visible="false"/>
+								<mx:TextInput id="preDepartmentId" visible="false"/>
+								<mx:TextInput id="preRoleId" visible="false"/>
 								<mx:Button label="保存" width="60" click="department_save_clickHandler(event)"/>
 							</mx:GridItem>
 						</mx:GridRow>

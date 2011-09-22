@@ -6,10 +6,11 @@
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
 		<!--定义 RemoteObject 组件-->
 		<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
-			<mx:method name="getDepartmentById"  concurrency="last"  result="getDepartmentByIdResult(event);" />
-<!--			<mx:method name="getDepartmentBySymbol"  concurrency="last"  result="getDepartmentBySymbolResult(event);" />
+<!--			<mx:method name="getDepartmentById"  concurrency="last"  result="getDepartmentByIdResult(event);" />
+--><!--			<mx:method name="getDepartmentBySymbol"  concurrency="last"  result="getDepartmentBySymbolResult(event);" />
 -->			<mx:method name="getRoleById"  concurrency="last"  result="getRoleByIdResult(event);" />
 			<mx:method name="roleRemove"  concurrency="last"   result="roleRemove_resultHandler(event);" />
+			<mx:method name="getAllRoles"  concurrency="last"   result="getAllRoles_resultHandler(event);" />
 		</mx:RemoteObject>
 
 	</fx:Declarations>
@@ -40,16 +41,42 @@
 			private function init():void {
 //				systemServiceRO.getRoleBySymbol("root_supervisor");
 				//systemServiceRO.getDepartmentBySymbol("root");
-				departments.dataProvider=parentApplication.allDepartment;
-				departments.selectedIndex=0;
-				systemServiceRO.getDepartmentById(departments.selectedItem.data);
+//				departments.dataProvider=parentApplication.allDepartment;
+//				departments.selectedIndex=0;
+//				systemServiceRO.getDepartmentById(departments.selectedItem.data);
+				search();
+			}
+			<!-- ***获取岗位数据*** -->	
+			private function getAllRoles_resultHandler(event:ResultEvent):void {
+				if(event.result!=null){
+					var roleData:String="<roles>";
+					if(event.result!=null){
+						var roleList:ArrayCollection=ArrayCollection(event.result);
+						CommonUtils.sortByLevel(roleList);
+						for (var i:int = 0; i < roleList.length; i++){
+							var _role:RoleModel = roleList.getItemAt(i) as RoleModel;
+							var levelFlag:String="";
+							if(_role.basicFlag!=1)
+								for (var j:int = 0; j < _role.level; j++){
+									levelFlag+="--";
+								}else{
+									levelFlag+="*";
+								}
+							roleData+="<role name='"+levelFlag+_role.name+"' id='"+_role.id+"'  level='"+_role.level+"'></role>";
+						}
+					}
+					roleData+="</roles>";
+					var xml:XML=new XML(roleData);
+					roles.dataProvider=xml;
+				}
 			}
 			private function systemFaultHandler(event:FaultEvent):void {
 				Alert.show(event.fault.faultString, 'Error');
 			}
 			protected function roleRemove_resultHandler(event:ResultEvent):void{
 				if(event.result==true){
-					delete selectedNode.parent().node[selectedNode.childIndex()];
+					search();
+					//delete selectedNode.parent().node[selectedNode.childIndex()];
 					//					disabled();
 				}else{
 					Alert.show("删除岗位失败");
@@ -61,16 +88,16 @@
 				loadRoleDetail(role);
 			}
 			
-			private function getDepartmentByIdResult(event:ResultEvent):void {
-				var department:DepartmentModel=event.result as DepartmentModel;
-				var role:Object=department.getSupervisorRole();
-				var resultXML:String=buildSubRoles(role);
-				var roleData:XML=new XML(resultXML);
-				roles.dataProvider=roleData;
-				var roleId:String=roleData[0].@id;
-				callLater(function():void{roles.selectedItem=roleData[0];systemServiceRO.getRoleById(roleId);roles.validateNow();roles.expandChildrenOf(roleData[0],true);});
-
-			}
+//			private function getDepartmentByIdResult(event:ResultEvent):void {
+//				var department:DepartmentModel=event.result as DepartmentModel;
+//				var role:Object=department.getSupervisorRole();
+//				var resultXML:String=buildSubRoles(role);
+//				var roleData:XML=new XML(resultXML);
+//				roles.dataProvider=roleData;
+//				var roleId:String=roleData[0].@id;
+//				callLater(function():void{roles.selectedItem=roleData[0];systemServiceRO.getRoleById(roleId);roles.validateNow();roles.expandChildrenOf(roleData[0],true);});
+//
+//			}
 //			private function getDepartmentBySymbolResult(event:ResultEvent):void {
 //				var department:Object=event.result;
 //				var resultList:ArrayCollection = new ArrayCollection();
@@ -97,24 +124,24 @@
 //				}		
 //				
 //			}
-			private function buildSubRoles(role:Object):String{
-				var resultXML:String="";
-				var list:ArrayCollection = ArrayCollection(role.subordinates);
-				if(list.length>0){
-					resultXML=resultXML.concat("<node label='"+role.name+"' id='"+role.id+"'>");
-					for (var i:int = 0; i < list.length; i++){
-						var _role:Object = list.getItemAt(i);	
-						resultXML=resultXML.concat(buildSubRoles(_role));
-					}
-					resultXML=resultXML.concat("</node>");
-				}		
-				else resultXML=resultXML.concat("<node label='"+role.name+"' id='"+role.id+"'/>");				
-				
-				return resultXML;
-			}
+//			private function buildSubRoles(role:Object):String{
+//				var resultXML:String="";
+//				var list:ArrayCollection = ArrayCollection(role.subordinates);
+//				if(list.length>0){
+//					resultXML=resultXML.concat("<node label='"+role.name+"' id='"+role.id+"'>");
+//					for (var i:int = 0; i < list.length; i++){
+//						var _role:Object = list.getItemAt(i);	
+//						resultXML=resultXML.concat(buildSubRoles(_role));
+//					}
+//					resultXML=resultXML.concat("</node>");
+//				}		
+//				else resultXML=resultXML.concat("<node label='"+role.name+"' id='"+role.id+"'/>");				
+//				
+//				return resultXML;
+//			}
 			private function addRole():void{
-				var selectId:String=treeSelectedItemId();
-				if(selectId!=null){
+//				var selectId:String=treeSelectedItemId();
+//				if(selectId!=null){
 					if(pop!=null)PopUpManager.removePopUp(pop);
 					pop=RolePopWin(PopUpManager.createPopUp(this,RolePopWin,true)); 
 					pop.owner=this;
@@ -123,9 +150,9 @@
 					pop.percentWidth=100;
 					pop.x=FlexGlobals.topLevelApplication.stage.stageWidth/2-pop.width/2;
 					pop.y=FlexGlobals.topLevelApplication.stage.stageHeight/2-pop.height/2;
-					pop.id=selectId;//参数传递使用
+//					pop.id=selectId;//参数传递使用
 					pop.toolTip="Add";
-				}	
+//				}	
 			}
 			private function editRole():void{
 				var selectId:String=treeSelectedItemId();
@@ -171,19 +198,19 @@
 					return null;
 				} 
 			}
-			private function selectionChangedHandler(event:Event):void{
-				
-//				Alert.show(departments.selectedItem.dataField);
-				systemServiceRO.getDepartmentById(departments.selectedItem.data);
-				
-			}
+//			private function selectionChangedHandler(event:Event):void{
+//				
+////				Alert.show(departments.selectedItem.dataField);
+//				systemServiceRO.getDepartmentById(departments.selectedItem.data);
+//				
+//			}
 			public function loadRoleDetail(role:Object):void{
 				rname.text=role.name;
 				creationDate.text=CommonUtils.formatDate(role.creationDate,"YYYY-MM-DD");
 				symbol.text=role.symbol;
 				level.text=role.level+"";
 				detail.text=role.detail;
-				var usersString:String="";
+				/* var usersString:String="";
 				if(role.users!=null){
 					var list:ArrayCollection = ArrayCollection(role.getAllUsers());
 					for (var i:int = 0; i < list.length; i++){
@@ -191,13 +218,17 @@
 						usersString=usersString.concat(_user.name+"  ");
 					}
 				}
-				users.text=usersString;
+				users.text=usersString; */
 			}
 			private function tree_itemClick(evt:Event):void {
 				selectedNode=roles.selectedItem as XML;
 				var id:String=selectedNode.@id;
 				systemServiceRO.getRoleById(id);
 				
+			}
+			public function search():void{
+				systemServiceRO.getAllRoles(); 
+			
 			}
 		]]>
 	</fx:Script>
@@ -212,15 +243,15 @@
 				<mx:Label text="|"/>
 				<mx:LinkButton  label="删除" icon="@Embed(source='../WebContent/resources/common/tools/button_delete_icon.png')"  click="deleteRole();"/>
 				<mx:Label text="|"/>
-				<mx:Label  text="部门选择" textAlign="center" />
-				<mx:ComboBox  width="200" id="departments" labelField="label" change="selectionChangedHandler(event);" />
+				<!--<mx:Label  text="部门选择" textAlign="center" />
+				<mx:ComboBox  width="200" id="departments" labelField="label" change="selectionChangedHandler(event);" />-->
 			</mx:HBox>
 			<mx:HBox  width="100%" height="100%" verticalAlign="middle" paddingTop="10" paddingBottom="10"  paddingLeft="10" paddingRight="10">
-				<mx:Tree id="roles"  labelField="@label"  borderVisible="false" width="60%" height="100%" change="tree_itemClick(event);" >
+				<mx:Tree id="roles"  labelField="@name"  borderVisible="false" width="40%" height="100%" change="tree_itemClick(event);" showRoot="false" >
 				</mx:Tree>
 				<mx:VRule height="95%"/>
 				
-				<mx:VBox  width="40%" height="100%" borderVisible="true">
+				<mx:VBox  width="60%" height="100%" borderVisible="true">
 					<mx:Form width="100%" height="100%" id="dform" textAlign="center">
 						<mx:FormHeading label="岗位详细信息" fontSize="15" width="100%" textAlign="left"/>
 						
@@ -241,9 +272,9 @@
 						<mx:FormItem label="岗位描述">
 							<mx:Label id="detail"/>		
 						</mx:FormItem>
-						<mx:FormItem label="岗位员工">
+						<!--<mx:FormItem label="岗位员工">
 							<mx:Label id="users"/>		
-						</mx:FormItem>
+						</mx:FormItem>-->
 					</mx:Form>
 				</mx:VBox>
 			</mx:HBox>

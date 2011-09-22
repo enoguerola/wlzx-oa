@@ -13,8 +13,9 @@ import org.springframework.security.web.FilterInvocation;
 import org.springframework.util.PathMatcher;
 import org.springframework.util.AntPathMatcher;
 
+import system.dao.DRDAO;
 import system.dao.DataAccessModeDAO;
-import system.dao.RoleDAO;
+import system.entity.DRModel;
 import system.entity.DataAccessModeModel;
 import system.entity.RoleModel;
 
@@ -28,7 +29,8 @@ import system.entity.RoleModel;
 public class WlzxUrlInvocationSecurityMetadataSource
         implements SecurityMetadataSource{
 	private DataAccessModeDAO resourcesDao;  
-	private RoleDAO roleDao;  
+//	private RoleDAO roleDao;  
+	private DRDAO drDAO; 
     private PathMatcher urlMatcher = new AntPathMatcher();
     private static Map<String, Collection<ConfigAttribute>> resourceMap = null;
 
@@ -53,12 +55,12 @@ public class WlzxUrlInvocationSecurityMetadataSource
 	               }
 	           } 
 	           //加载用户资源
-	            for (RoleModel role:roleDao.getAllRoles(false)){
-	                for(DataAccessModeModel resource:role.getDataAccessModes()){ 
+	            for (DRModel dr:drDAO.getAllDRs(false)){
+	                for(DataAccessModeModel resource:dr.getDataAccessModes()){ 
 	                	if(resource.getBelongOperation().getRsType().equals("URL")){
 	                		 String key=resource.getBelongOperation().getRsValue();
 	                		 //System.out.println("角色：["+role.getSymbol()+"]拥有的URL资源有："+key); 
-		                	ConfigAttribute ca = new SecurityConfig(role.getSymbol());  
+			                ConfigAttribute ca = new SecurityConfig(dr.getBasicFlag()==false?dr.getId():"basic_dr");  
 		                	resourceMap.get(key).add(ca);
 	                    }
 	                }  
@@ -99,19 +101,27 @@ public class WlzxUrlInvocationSecurityMetadataSource
 		this.resourcesDao = resourcesDao;
 	}
 
-	public RoleDAO getRoleDao() {
-		return roleDao;
-	}
-
-	public void setRoleDao(RoleDAO roleDao) {
-		this.roleDao = roleDao;
-	}
+//	public RoleDAO getRoleDao() {
+//		return roleDao;
+//	}
+//
+//	public void setRoleDao(RoleDAO roleDao) {
+//		this.roleDao = roleDao;
+//	}
 	public static void main(String[] args){
 		String url1="/basic/authorization/departmentAuthorization.swf?uid=1304486667468";
 		String url2="/basic/authorization/departmentAuthorization.swf*";
 		PathMatcher urlMatcher = new AntPathMatcher();
 		 //System.out.println(urlMatcher.match(url2,url1));
 		 
+	}
+
+	public DRDAO getDrDAO() {
+		return drDAO;
+	}
+
+	public void setDrDAO(DRDAO drDAO) {
+		this.drDAO = drDAO;
 	}
 
 }

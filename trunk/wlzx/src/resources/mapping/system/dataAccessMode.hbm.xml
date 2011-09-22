@@ -37,6 +37,7 @@
 			<key column="dam_id" not-null="true" />
 			<many-to-many not-found="ignore" column="operation_id" class="system.entity.OperationModel" /> 
 		</set>
+		<!-- 
 		<set name="departments" lazy="false"  table="wlzx_system_department_dam_relationship">
 			<cache usage="read-write" />
 			<key column="dam_id" not-null="true" />
@@ -46,6 +47,6 @@
 			<cache usage="read-write" />
 			<key column="dam_id" not-null="true" />
 			<many-to-many not-found="ignore" column="role_id" class="system.entity.RoleModel" /> 
-		</set>
+		</set> -->
 	</class>
 </hibernate-mapping>

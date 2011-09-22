@@ -182,25 +182,25 @@ public class InitServiceImpl  implements InitService{
 	}
 	public void initDepartment(){
 		//初始化根部门
-		DepartmentModel root=departmentDAO.getDepartmentBySymbol("root");
-		if(root==null){
-			root=new DepartmentModel();
-			root.setSymbol("root");
-			root.setCreationDate(new Date());
-			root.setName("温岭中学");
-			root.setModifiedDate(new Date());
-			RoleModel rootRole=new RoleModel();
-			rootRole.setSymbol("root_supervisor");
-			rootRole.setCreationDate(new Date());
-			rootRole.setName("温岭中学校长");
-			rootRole.setModifiedDate(new Date());
-			rootRole.setSupervisorFlag(true);
-			root.getRoles().add(rootRole);
-		}else{
-			
-			
-		}
-		departmentDAO.saveOrUpdate(root);
+//		DepartmentModel root=departmentDAO.getDepartmentBySymbol("root");
+//		if(root==null){
+//			root=new DepartmentModel();
+//			root.setSymbol("root");
+//			root.setCreationDate(new Date());
+//			root.setName("温岭中学");
+//			root.setModifiedDate(new Date());
+//			RoleModel rootRole=new RoleModel();
+//			rootRole.setSymbol("root_supervisor");
+//			rootRole.setCreationDate(new Date());
+//			rootRole.setName("温岭中学校长");
+//			rootRole.setModifiedDate(new Date());
+//			rootRole.setSupervisorFlag(true);
+//			root.getRoles().add(rootRole);
+//		}else{
+//			
+//			
+//		}
+//		departmentDAO.saveOrUpdate(root);
 	}
 	public void printDepartmentStructure(){
 		System.out.println("***部门结构图begin***");
@@ -210,42 +210,42 @@ public class InitServiceImpl  implements InitService{
 	}
 
 	private void printDepartment(DepartmentModel department, String tab) {
-		if(department!=null){
-			System.out.println(tab+"->"+department.getName()+"(部门)");
-			if(department.getSubordinates()!=null)
-			for(DepartmentModel subDepartment:department.getSubordinates()){
-				printDepartment(subDepartment,tab+"  ");
-				if(subDepartment.getRoles()!=null)
-				for(RoleModel role:subDepartment.getRoles()){
-					printRole(role,tab+"  "+"  ");
-				}
-			}
-		}
+//		if(department!=null){
+//			System.out.println(tab+"->"+department.getName()+"(部门)");
+//			if(department.getSubordinates()!=null)
+//			for(DepartmentModel subDepartment:department.getSubordinates()){
+//				printDepartment(subDepartment,tab+"  ");
+//				if(subDepartment.getRoles()!=null)
+//				for(RoleModel role:subDepartment.getRoles()){
+//					printRole(role,tab+"  "+"  ");
+//				}
+//			}
+//		}
 		
 	}
 	private void printRole(RoleModel role, String tab) {
-		if(role!=null){
-			System.out.println(tab+"->"+role.getName()+"(角色)");
-			if(role.getSubordinates()!=null)
-			for(RoleModel subRole:role.getSubordinates()){
-				printRole(subRole,tab+"  ");
-				if(subRole.getUsers()!=null)
-				for(UserModel user:subRole.getUsers()){
-					printUser(user,tab+"  "+"  ");
-				}
-			}
-		}
+//		if(role!=null){
+//			System.out.println(tab+"->"+role.getName()+"(角色)");
+//			if(role.getSubordinates()!=null)
+//			for(RoleModel subRole:role.getSubordinates()){
+//				printRole(subRole,tab+"  ");
+//				if(subRole.getUsers()!=null)
+//				for(UserModel user:subRole.getUsers()){
+//					printUser(user,tab+"  "+"  ");
+//				}
+//			}
+//		}
 		
 	}
 	private void printUser(UserModel user, String tab) {
-		if(user!=null){
-			System.out.println(tab+"->"+user.getName()+"(用户)");
-			if(user.getSubordinates()!=null)
-			for(UserModel subUser:user.getSubordinates()){
-				printUser(subUser,tab+"  ");
-				
-			}
-		}
+//		if(user!=null){
+//			System.out.println(tab+"->"+user.getName()+"(用户)");
+//			if(user.getSubordinates()!=null)
+//			for(UserModel subUser:user.getSubordinates()){
+//				printUser(subUser,tab+"  ");
+//				
+//			}
+//		}
 		
 	}
 	public static void main(String[] args) {

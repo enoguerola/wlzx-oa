@@ -50,21 +50,53 @@
 			private var fade:Fade;
 			private var rotate:Rotate;
 			private var _moduleInfo:IModuleInfo;
-			
+			private var delayTimer:Timer;
 			private function init():void {
 			//	lockWin();
 				systemServiceRO.getAuthorizationMenusBySystem("oa");
 				initHomeTab();
 //				Alert.show(this.parentApplication.account);
 				account.text=account.text.concat(this.parentApplication.account);
-				roles.text=roles.text.concat(this.parentApplication.roles);
-				mainRole.text=mainRole.text.concat(this.parentApplication.mainRole);
+//				roles.text=roles.text.concat(this.parentApplication.roles);
+//				mainRole.text=mainRole.text.concat(this.parentApplication.mainRole);
+				delayTimer=new Timer(3000);//延迟三秒读取application中用户信息
+				delayTimer.addEventListener(TimerEvent.TIMER, loadApplicationUserInfo);
+				delayTimer.start();
+				
+				
+				
 //				Alert.show("aa");
 //				lastLoginTime.text=lastLoginTime.text.concat(this.parentApplication.lastLoginTime);
 //				var timer:Timer = new Timer(1000);			
 //				timer.addEventListener(TimerEvent.TIMER, updateCurrentTime);				
 //				timer.start();
 //				currentTime.text=currentTime.text.concat(this.parentApplication.lastLoginTime);
+				
+			}
+			private function loadApplicationUserInfo(event:TimerEvent):void{
+				var rolesIds:String=parentApplication.currentUser.getAllRoleIds();
+				var roleDesc:String="";
+				if(rolesIds!=null&&rolesIds!=""){
+					var rolesIds_attr:Array=rolesIds.split(";");
+					for(var i:int=0;i<rolesIds_attr.length;i++){
+ 						if(rolesIds_attr[i]!=null&&rolesIds_attr[i]!='')
+ 						roleDesc+=(this.parentApplication.getRoleNameById(rolesIds_attr[i])+" | ");
+					}
+					
+				}
+				roles.text=roles.text.concat(roleDesc);
+				var mainRoleDesc:String="";
+				if(parentApplication.currentUser.mainDR!=null){
+					var mainRoleId:String=parentApplication.currentUser.mainDR.roleId;
+					mainRoleDesc=parentApplication.getRoleNameById(mainRoleId);
+				}
+				mainRole.text=mainRole.text.concat(mainRoleDesc);
+				if(parentApplication.currentUser.name=="super_root"){
+					
+					mainRole.text=mainRole.text.concat("超级管理员角色");
+					roles.text=roles.text.concat("超级管理员角色");
+				}
+				delayTimer.stop();
 				
 			}
 			private function updateCurrentTime(event:TimerEvent):void{

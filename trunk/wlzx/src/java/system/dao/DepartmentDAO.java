@@ -3,7 +3,7 @@
  */
 package system.dao;
 
-import java.util.HashSet;
+import java.util.TreeSet;
 import java.util.List;
 import java.util.Set;
 
@@ -65,7 +65,7 @@ public class DepartmentDAO extends BaseDAOImpl<DepartmentModel> {
      * @创建时间 2011-4-15 上午10:41:15
      */ 
 	public Set<DepartmentModel> getAllLeaders(DepartmentModel department){
-		Set<DepartmentModel> set = new HashSet<DepartmentModel>();
+		Set<DepartmentModel> set = new TreeSet<DepartmentModel>();
 		if(department.getLeaders() != null && department.getLeaders().size() > 0){
 			for(DepartmentModel model : department.getLeaders()){
 				Set<DepartmentModel> tmpSet = getAllLeaders(model);
@@ -82,7 +82,7 @@ public class DepartmentDAO extends BaseDAOImpl<DepartmentModel> {
      * @创建时间 2011-4-15 上午10:41:15
      */
 	public Set<DepartmentModel> getAllSubordinates(DepartmentModel department){
-		Set<DepartmentModel> set = new HashSet<DepartmentModel>();
+		Set<DepartmentModel> set = new TreeSet<DepartmentModel>();
 		if(department.getSubordinates() != null && department.getSubordinates().size() > 0){
 			for(DepartmentModel model : department.getSubordinates()){
 				Set<DepartmentModel> tmpSet = getAllSubordinates(model);

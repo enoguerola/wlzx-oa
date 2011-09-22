@@ -19,8 +19,8 @@ public class ScheduleServiceImpl implements ScheduleService {
 		if(user.getAccountStyle()==PersonModel.PersonStyle.SuperRoot.getStyle()){
 			schedule.setDepartmentId(null);
 		}else{
-			if(user.getMainDepartment()!=null)
-			schedule.setDepartmentId(user.getMainDepartment().getId());
+			if(user.getMainDR()!=null)
+			schedule.setDepartmentId(user.getMainDR().getDepartmentId());
 		}
 		scheduleDAO.saveOrUpdate(schedule);
 	}

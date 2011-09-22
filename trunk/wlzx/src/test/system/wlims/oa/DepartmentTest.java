@@ -6,7 +6,6 @@ import system.BaseTest;
 import system.dao.DepartmentDAO;
 import system.dao.UserDAO;
 import system.entity.DepartmentModel;
-import system.entity.UserModel;
 
 public class DepartmentTest extends BaseTest {
 
@@ -27,20 +26,20 @@ public class DepartmentTest extends BaseTest {
 		}
 	}
 	
-	public void getAllLeader(){
-		UserModel userModel = userDAO.get("2");
-		Set<DepartmentModel> departments = userModel.getDepartments();		
-		Set<DepartmentModel> set = userDAO.getAllLeaders(userModel);
-		
-		if(set != null && set.size() > 0){
-			System.out.println("leader department in user2");
-			for(DepartmentModel model: set){
-				System.out.print(model.getId() + " ");
-			}
-		}
-		departments.addAll(set);
-		
-	}
+//	public void getAllLeader(){
+//		UserModel userModel = userDAO.get("2");
+//		Set<DepartmentModel> departments = userModel.getDepartments();		
+//		Set<DepartmentModel> set = userDAO.getAllLeaders(userModel);
+//		
+//		if(set != null && set.size() > 0){
+//			System.out.println("leader department in user2");
+//			for(DepartmentModel model: set){
+//				System.out.print(model.getId() + " ");
+//			}
+//		}
+//		departments.addAll(set);
+//		
+//	}
 	
 	public static void main(String[] args){
 		DepartmentTest test = new DepartmentTest();

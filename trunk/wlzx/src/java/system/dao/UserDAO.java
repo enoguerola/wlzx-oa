@@ -4,15 +4,12 @@
 package system.dao;
 
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 
 import system.BaseDAOImpl;
-import system.entity.DepartmentModel;
 import system.entity.UserModel;
 import system.utils.StringUtils;
 
@@ -51,16 +48,16 @@ public class UserDAO extends BaseDAOImpl<UserModel>{
 	 * 获取用户所有上属部门
 	 * 
 	 */
-	public Set<DepartmentModel> getAllLeaders(UserModel user){
-		Set<DepartmentModel> departments = user.getDepartments();
-		Set<DepartmentModel> set = new HashSet<DepartmentModel>();
-		if(departments != null && departments.size() > 0){
-			for(DepartmentModel model : departments){
-				set.addAll(departmentDAO.getAllLeaders(model));
-			}
-		}
-		return set;
-	}
+//	public Set<DepartmentModel> getAllLeaders(UserModel user){
+//		Set<DepartmentModel> departments = user.getDepartments();
+//		Set<DepartmentModel> set = new TreeSet<DepartmentModel>();
+//		if(departments != null && departments.size() > 0){
+//			for(DepartmentModel model : departments){
+//				set.addAll(departmentDAO.getAllLeaders(model));
+//			}
+//		}
+//		return set;
+//	}
 	
 //	/** 
 //     * 获取用户领导的直属下属用户集

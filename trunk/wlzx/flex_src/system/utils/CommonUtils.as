@@ -18,6 +18,14 @@ package system.utils
 			list.refresh();//更新  
 			
 		}
+		public static function sortByLevel(list:ArrayCollection):void{
+			var sort:Sort=new Sort();  
+			//按照sequence升序排序  
+			sort.fields=[new SortField("level")];  
+			list.sort=sort;
+			list.refresh();//更新  
+			
+		}
 		public static function sortByCondition(list:ArrayCollection,condition:String):void{
 			var sort:Sort=new Sort();  
 			//按照condition升序排序  

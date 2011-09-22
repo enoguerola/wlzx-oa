@@ -1,7 +1,7 @@
 package system.wlims.basic.entity.teacher;
 
 import java.sql.Date;
-import java.util.HashSet;
+import java.util.TreeSet;
 import java.util.Set;
 
 
@@ -40,9 +40,9 @@ public class TeacherModel extends PersonModel{
 	private Date teacherAttendDate;
 	//private String teacherAttendPeriod;
 	
-	private Set<TeacherDepartment> otherDepartments = new HashSet<TeacherDepartment>();
-	private Set<TeacherRelation> relations = new HashSet<TeacherRelation>();
-	private Set<TeacherExperience> experiences = new HashSet<TeacherExperience>();
+	private Set<TeacherDepartment> otherDepartments = new TreeSet<TeacherDepartment>();
+	private Set<TeacherRelation> relations = new TreeSet<TeacherRelation>();
+	private Set<TeacherExperience> experiences = new TreeSet<TeacherExperience>();
 	
 	//for excel info
 	private String teacherMarriedText;

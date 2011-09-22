@@ -8,6 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import system.dao.DataAccessModeDAO;
 import system.dao.UserDAO;
+import system.entity.DRModel;
 import system.entity.DataAccessModeModel;
 import system.entity.PersonModel;
 import system.entity.RoleModel;
@@ -33,7 +34,9 @@ public class SecurityUserHolder {
 			if( SecurityContextHolder.getContext().getAuthentication()!=null)
 			 user= (UserModel) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 			if(user.getAccountStyle()==PersonModel.PersonStyle.SuperRoot.getStyle()){
-				user.getMainRole().setDataAccessModes(new TreeSet<DataAccessModeModel>(dataAccessModeDAO.getAllResources()));
+				DRModel mainDR=new DRModel();
+				mainDR.setDataAccessModes(new TreeSet<DataAccessModeModel>(dataAccessModeDAO.getAllResources()));
+				user.setMainDR(mainDR);
 
 				TeacherModel teacher=new TeacherModel();
 				teacher.setId("-1");
@@ -94,7 +97,7 @@ public class SecurityUserHolder {
 		superModel.setId("-1");
 		superModel.setName(WlzxUserDetailsService.superUserName);
 		superModel.setPwd(WlzxUserDetailsService.superUserPwd);
-		superModel.setMainRole(getSuperRootRoleModel());
+//		superModel.setMainDR((getSuperRootRoleModel());
 		return superModel;
 	}
 	public static RoleModel getSuperRootRoleModel(){

@@ -7,8 +7,8 @@
 		<!--定义 RemoteObject 组件-->
 		<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 			<mx:method name="getSystemBySymbol"  concurrency="last"  result="getSystemBySymbolResult(event);" />
-			<mx:method name="getAllRoles"  concurrency="last"  result="getAllRolesResult(event);" />
-			<mx:method name="getRoleBySymbol"  concurrency="last"  result="getRoleBySymbolResult(event);" />
+<!--			<mx:method name="getAllRoles"  concurrency="last"  result="getAllRolesResult(event);" />
+			<mx:method name="getRoleBySymbol"  concurrency="last"  result="getRoleBySymbolResult(event);" />-->
 			<mx:method name="getRoleSystemAuthorization"  concurrency="last"  result="getRoleSystemAuthorizationResult(event);" />
 			<mx:method name="saveRoleSystemAuthorization"  concurrency="last"  result="saveRoleSystemAuthorizationResult(event);" />
 
@@ -53,12 +53,18 @@
 			[Bindable]
 			private var operationTree:CheckTree=new CheckTree();
 			private var operationRoleId:String=null;
+			private var operationDepartmentId:String=null;
 			private var operationSystemId:String=null;
 			private function init():void {
-				lockWin();
+//				lockWin();
 				systemServiceRO.getSystemBySymbol("root");
-				systemServiceRO.getRoleBySymbol("basic_role")
-				systemServiceRO.getAllRoles();
+				//systemServiceRO.getRoleBySymbol("basic_role")
+				//systemServiceRO.getAllRoles();
+				
+				departments.dataProvider=this.parentApplication.allDepartment;
+				
+				roles.dataProvider=this.parentApplication.allRole;
+				
 				operationTree.percentHeight=100;
 				operationTree.percentWidth=100;
 				operationTree.checkBoxStateField="@state";
@@ -70,14 +76,14 @@
 				operationTree.itemDClickSelect=true;
 				operationTree.checkBoxBgColor=0x009900;
 				//				operationTree.showRoot=false;
-				
+				switchRoleAuthorization();
 			}
 		
 			private function systemFaultHandler(event:FaultEvent):void {
 				unLockWin();
 				Alert.show(event.fault.faultString, 'Error');
 			}
-			public var roleList:ArrayCollection=new ArrayCollection();
+			/* public var roleList:ArrayCollection=new ArrayCollection();
 			private function getAllRolesResult(event:ResultEvent):void {
 //				var resultList:ArrayCollection = new ArrayCollection();
 //				Alert.show(resultList.length+"");
@@ -95,8 +101,8 @@
 				this.roles.dataProvider=roleList;				
 				switchRoleAuthorization();
 				
-			}
-			private function getRoleBySymbolResult(event:ResultEvent):void {
+			} */
+		/* 	private function getRoleBySymbolResult(event:ResultEvent):void {
 				
 				var _role:RoleModel = event.result as RoleModel;
 				var headText:String="";
@@ -106,7 +112,7 @@
 					
 				
 			}
-		
+		 */
 			private function getSystemBySymbolResult(event:ResultEvent):void {
 				var rootSystem:SystemModel =event.result as SystemModel ;
 				var systemList:ArrayCollection = ArrayCollection(rootSystem.children);
@@ -150,21 +156,23 @@
 			}
 			private function switchRoleAuthorization():void{
 				
-				operationRoleId=roles.selectedItem.dataField;
-				
-				if(operationRoleId!=null&&operationSystemId!=null){
+				operationRoleId=roles.selectedItem.data;
+				operationDepartmentId=departments.selectedItem.data;
+				if(operationRoleId!=null&&operationSystemId!=null&&operationDepartmentId!=null){
 					lockWin();
-					systemServiceRO.getRoleSystemAuthorization(operationRoleId,operationSystemId);
+					systemServiceRO.getRoleSystemAuthorization(operationDepartmentId,operationRoleId,operationSystemId);
 				}
 				
 			}
 			private function switchSystemAuthorization():void{
-				
+				operationRoleId=roles.selectedItem.data;
+				operationDepartmentId=departments.selectedItem.data;
 				operationSystemId=systems.selectedChild.name;
-				if(operationRoleId!=null&&operationSystemId!=null){
+				
+				if(operationRoleId!=null&&operationSystemId!=null&&operationDepartmentId!=null){
 					var box:HBox=systems.selectedChild as HBox;
 					lockWin();
-					systemServiceRO.getRoleSystemAuthorization(operationRoleId,operationSystemId);
+					systemServiceRO.getRoleSystemAuthorization(operationDepartmentId,operationRoleId,operationSystemId);
 					
 				}
 			}
@@ -186,7 +194,10 @@
 					}
 				} 
 				lockWin();
-				systemServiceRO.saveRoleSystemAuthorization(operationRoleId,operationSystemId,adds,removes);
+				operationRoleId=roles.selectedItem.data;
+				operationDepartmentId=departments.selectedItem.data;
+				operationSystemId=systems.selectedChild.name;
+				systemServiceRO.saveRoleSystemAuthorization(operationDepartmentId,operationRoleId,operationSystemId,adds,removes);
 			}
 			private var window:WlzxLockWin=null;
 			
@@ -211,8 +222,10 @@
 	<mx:VBox borderVisible="true" width="100%" height="100%" borderStyle="solid">
 			<mx:HBox width="100%" height="35" paddingLeft="20"  horizontalGap="10" styleName="CustomHBoxStyle"   verticalAlign="middle" >
 				<mx:Label text="|"/>
+				<mx:Label text="部门选择" textAlign="center"  />
+				<mx:ComboBox width="200" id="departments" labelField="label"  selectedIndex="0" change="switchRoleAuthorization();" />
 				<mx:Label text="岗位选择" textAlign="center"  />
-				<mx:ComboBox width="200" id="roles" labelField="headerText"  selectedIndex="0" change="switchRoleAuthorization();" />
+				<mx:ComboBox width="200" id="roles" labelField="label"  selectedIndex="0" change="switchRoleAuthorization();" />
 				<mx:LinkButton  label="保存"  id="roleSave" icon="@Embed(source='../WebContent/resources/common/tools/button_save_icon.png')" click="saveRoleAuthorization();"/>
 				<mx:Label text="|"/>				
 			</mx:HBox>
