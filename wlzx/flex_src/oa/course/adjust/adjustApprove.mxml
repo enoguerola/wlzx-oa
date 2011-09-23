@@ -389,7 +389,7 @@
 								<mx:DataGridColumn textAlign="center" headerText="申请编号" dataField="applyNo" width="100">
 									<mx:itemRenderer>
 										<mx:Component>
-											<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+											<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
 												<mx:Label text="{data.applyNo}"/>
 											</mx:VBox>																			
 										</mx:Component>						
@@ -398,7 +398,7 @@
 								<mx:DataGridColumn textAlign="center" headerText="申请人" dataField="approveTeacherId" width="60">
 									<mx:itemRenderer>
 										<mx:Component>
-											<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+											<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
 												<mx:Label text="{this.parentApplication.getTeacherNameByAccountId(data.applyTeacherId)}"/>
 											</mx:VBox>
 										</mx:Component>
@@ -407,7 +407,7 @@
 								<mx:DataGridColumn textAlign="center" headerText="提交日期" dataField="applyNo" width="120">
 									<mx:itemRenderer>
 										<mx:Component>
-											<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+											<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
 												<mx:Label text="{this.outerDocument.formatDate(data.applyCreationDate as Date,null)}"/>
 											</mx:VBox>																			
 										</mx:Component>						
@@ -416,7 +416,7 @@
 								<mx:DataGridColumn textAlign="center" headerText="申请类型" dataField="applyType" width="60">
 									<mx:itemRenderer>
 										<mx:Component>
-											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
 												<mx:Label text="{applyTypeTip(data)}">
 													<mx:Script>
 														<![CDATA[
@@ -443,7 +443,7 @@
 								<mx:DataGridColumn textAlign="center" headerText="调课事由" dataField="applyReason" width="300">
 									<mx:itemRenderer>
 										<mx:Component>
-											<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+											<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
 												<mx:Label text="{data.applyReason}"/>
 											</mx:VBox>																			
 										</mx:Component>						
@@ -452,7 +452,7 @@
 								<mx:DataGridColumn textAlign="center" headerText="申请状态" dataField="applyStatus" width="60">
 									<mx:itemRenderer>
 										<mx:Component>
-											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
 												<mx:Label text="{applyStatusTip(data)}">
 													<mx:Script>
 														<![CDATA[
@@ -485,8 +485,8 @@
 								<mx:DataGridColumn textAlign="center" headerText="操作" width="100">
 									<mx:itemRenderer>
 										<mx:Component>
-											<mx:HBox>
-												<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0">
+											<mx:HBox horizontalScrollPolicy="off">
+												<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0" horizontalScrollPolicy="off">
 													<mx:LinkButton  label="[审批]"   click="{this.outerDocument.enterApprove(data.id);}"   enabled="{checkAuth(data)}">											
 													</mx:LinkButton>
 													
@@ -513,7 +513,7 @@
 														]]>
 													</mx:Script>
 												</mx:HBox>
-												<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0">
+												<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0" horizontalScrollPolicy="off">
 													<mx:LinkButton  label="[删除]"   click="{this.outerDocument.deleteApply(data.id);}">											
 													</mx:LinkButton>
 												</mx:HBox>
@@ -527,7 +527,7 @@
 								<mx:DataGridColumn textAlign="center" headerText="详细"  width="50">
 									<mx:itemRenderer>
 										<mx:Component>
-											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0">
+											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0" horizontalScrollPolicy="off">
 												<mx:LinkButton  label="[详细]"   click="{this.outerDocument.detailApply(data.id);}">											
 												</mx:LinkButton>
 											</mx:HBox>

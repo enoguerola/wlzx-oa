@@ -154,7 +154,7 @@
 						<mx:DataGridColumn textAlign="center" headerText="公告类型"  width="60">
 							<mx:itemRenderer>
 								<mx:Component>
-									<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+									<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
 										<mx:Label text="{data.type}">
 										</mx:Label>
 									</mx:HBox>																		
@@ -164,7 +164,7 @@
 						<mx:DataGridColumn textAlign="center" headerText="公告标题" width="100" >
 							<mx:itemRenderer>
 								<mx:Component>
-									<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" >
+									<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off" >
 										<mx:Image source="@Embed(source='../WebContent/resources/common/ui/emergence2.png')"  visible="{checkEmergence(data)}" toolTip="紧急公告"/>
 										<mx1:Text text="{data.title}" width="100">
 										</mx1:Text>
@@ -199,7 +199,7 @@
 						<mx:DataGridColumn textAlign="center" headerText="发布人" width="100" >
 							<mx:itemRenderer>
 								<mx:Component>
-									<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" >
+									<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle"  horizontalScrollPolicy="off">
 										<mx1:Text text="{this.parentApplication.getTeacherNameByAccountId(data.posterId)}" width="100">
 										</mx1:Text>
 									</mx:HBox>
@@ -209,7 +209,7 @@
 						<mx:DataGridColumn textAlign="center" headerText="详细" width="60">
 							<mx:itemRenderer>
 								<mx:Component>
-									<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0">
+									<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0" horizontalScrollPolicy="off">
 										<mx:LinkButton  label="[详细]"  click="{this.outerDocument.detailNotice(data.id);}">											
 										</mx:LinkButton>
 									</mx:HBox>
@@ -220,7 +220,7 @@
 					</mx:DataGrid>
 					</component:NewPanel>
 				</mx:VBox>
-				<mx:VBox width="100%"  height="50%" verticalGap="0">
+				<mx:VBox width="100%"  height="50%" verticalGap="0" horizontalScrollPolicy="off">
 					
 					<!--<mx:HBox width="100%" height="25" paddingLeft="20"  horizontalGap="10" styleName="CustomHBoxStyle"  verticalAlign="middle">
 						<mx:Label text="部门公告" width="90%" fontWeight="bold"/>
@@ -238,7 +238,7 @@
 						<mx:DataGridColumn textAlign="center" headerText="公告类型"  width="60">
 							<mx:itemRenderer>
 								<mx:Component>
-									<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+									<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
 										<mx:Label text="{data.type}">
 										</mx:Label>
 									</mx:HBox>																		
@@ -248,7 +248,7 @@
 						<mx:DataGridColumn textAlign="center" headerText="公告标题" width="100" >
 							<mx:itemRenderer>
 								<mx:Component>
-									<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" >
+									<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle"  horizontalScrollPolicy="off">
 										<mx:Image source="@Embed(source='../WebContent/resources/common/ui/emergence2.png')"  width="{checkEmergence(data)}" toolTip="紧急公告"/>
 										<mx1:Text text="{data.title}" width="100">
 										</mx1:Text>
@@ -283,7 +283,7 @@
 						<mx:DataGridColumn textAlign="center" headerText="发布部门"  width="100" >
 							<mx:itemRenderer>
 								<mx:Component>
-									<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" >
+									<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle"  horizontalScrollPolicy="off">
 										<mx1:Text text="{this.parentApplication.getDepartmentNameById(data.postDepartmentId)}" width="100">
 										</mx1:Text>
 									</mx:HBox>
@@ -294,7 +294,7 @@
 						<mx:DataGridColumn textAlign="center" headerText="详细" width="60">
 							<mx:itemRenderer>
 								<mx:Component>
-									<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0">
+									<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0" horizontalScrollPolicy="off">
 										<mx:LinkButton  label="[详细]"  click="{this.outerDocument.detailNotice(data.id);}">											
 										</mx:LinkButton>
 									</mx:HBox>
@@ -308,7 +308,7 @@
 				
 			</mx:VBox>
 			<mx:VBox width="40%" height="100%">
-				<mx:VBox width="100%"  height="100%" verticalGap="0">
+				<mx:VBox width="100%"  height="100%" verticalGap="0" horizontalScrollPolicy="off">
 					<!--<mx:HBox width="100%" height="25" paddingLeft="20"   horizontalGap="10" styleName="CustomHBoxStyle"   verticalAlign="middle">
 						<mx:Label text="今日日程" width="70%" fontWeight="bold"/>
 					</mx:HBox>-->
@@ -321,7 +321,7 @@
 							<mx:DataGridColumn textAlign="center" headerText="时间" width="300">
 								<mx:itemRenderer>
 									<mx:Component>
-										<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle"  horizontalGap="0">
+										<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle"  horizontalGap="0" horizontalScrollPolicy="off">
 											<mx:Image source="@Embed(source='../WebContent/resources/common/ui/circle.png')"  width="{checkCircle(data)}"/>
 											<mx:Image source="@Embed(source='../WebContent/resources/common/ui/emergence1.png')"   width="{checkEmergence1(data.emergence)}" toolTip="重要紧急"/>
 											<mx:Image source="@Embed(source='../WebContent/resources/common/ui/emergence2.png')"  width="{checkEmergence2(data.emergence)}" toolTip="紧急非重要"/>
@@ -388,26 +388,26 @@
 								</mx:itemRenderer>
 							</mx:DataGridColumn>
 							
-
+    
 							
 						</mx:columns>
 					</mx:DataGrid>
 					</mx:Panel>
 				</mx:VBox>
-				<mx:VBox width="100%"  height="100" verticalGap="0">
+				<mx:VBox width="100%"  height="100" verticalGap="0" horizontalScrollPolicy="off">
 					<!--<mx:HBox width="100%" height="25"  paddingLeft="20"   horizontalGap="10" styleName="CustomHBoxStyle"   verticalAlign="middle">
 						<mx:Label text="提醒区" width="70%" fontWeight="bold"/>
 					</mx:HBox>-->
 					<mx:Panel width="100%" height="100%"  styleName="customPanel" title="提醒区"  cornerRadius="5" borderVisible="true" borderStyle="solid" dropShadowVisible="false">
 
 					<mx:VBox width="100%" height="100%" borderStyle="solid" horizontalAlign="center" verticalAlign="middle">
-						<mx:HBox width="100%" horizontalAlign="center" verticalAlign="middle">
+						<mx:HBox width="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
 							<mx:Label text="本月待办工作数：" fontWeight="bold"/>
 							<mx:Label text="" id="waittingNum"  fontWeight="bold" fontStyle="italic"/>
 							<mx:LinkButton  label="【查看】"  fontWeight="bold"  click="openWaittingTask();">											
 							</mx:LinkButton>
-						</mx:HBox>
-						<mx:HBox width="100%" horizontalAlign="center" verticalAlign="middle">
+						</mx:HBox> 
+						<mx:HBox width="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
 							<mx:Label text="本月未读消息数：" fontWeight="bold"/>
 							<mx:Label text="" id="notReadNum"  fontWeight="bold" fontStyle="italic" />
 							<mx:LinkButton  label="【查看】"  fontWeight="bold"  click="openNotReadMessage();">											

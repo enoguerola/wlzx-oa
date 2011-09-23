@@ -731,7 +731,7 @@
 								<mx:DataGridColumn textAlign="center" headerText="申请编号" dataField="applyNo" width="120">
 									<mx:itemRenderer>
 										<mx:Component>
-											<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+											<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
 												<mx:Label text="{data.applyNo}"/>
 											</mx:VBox>																			
 										</mx:Component>						
@@ -740,7 +740,7 @@
 								<mx:DataGridColumn textAlign="center" headerText="类型"  width="60">
 									<mx:itemRenderer>
 										<mx:Component>
-											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
 												<mx:Label text="{applyTypeTip(data)}">
 													<mx:Script>
 														<![CDATA[
@@ -766,7 +766,7 @@
 								<mx:DataGridColumn textAlign="center" headerText="申请人" width="100" >
 									<mx:itemRenderer>
 										<mx:Component>
-											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" >
+											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle"  horizontalScrollPolicy="off">
 												<mx1:Text text="{this.parentApplication.getTeacherNameByAccountId(data.teacherId)}" width="100">
 													
 												</mx1:Text>
@@ -777,7 +777,7 @@
 								<mx:DataGridColumn textAlign="center" headerText="请假/出差开始时间"  width="100" >
 									<mx:itemRenderer>
 										<mx:Component>
-											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
 												<mx:Label text="{beginTimeTip(data)}">
 													<mx:Script>
 														<![CDATA[
@@ -807,7 +807,7 @@
 								<mx:DataGridColumn textAlign="center" headerText="请假/出差结束时间"  width="100">
 									<mx:itemRenderer>
 										<mx:Component>
-											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
 												<mx:Label text="{endTime(data)}">
 													<mx:Script>
 														<![CDATA[
@@ -838,7 +838,7 @@
 								<mx:DataGridColumn textAlign="center" headerText="状态"  width="60" dataField="status">
 									<mx:itemRenderer>
 										<mx:Component>
-											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
 												<mx:Label text="{applyStatusTip(data)}">
 													<mx:Script>
 														<![CDATA[
@@ -880,7 +880,7 @@
 								<mx:DataGridColumn textAlign="center" headerText="操作" width="100">
 									<mx:itemRenderer>
 										<mx:Component>
-											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0">
+											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0" horizontalScrollPolicy="off">
 												<mx:LinkButton  label="[审批]"   click="{this.outerDocument.enterEdit(data.id);}" enabled="{checkAuth(data)}">											
 												</mx:LinkButton>
 												<mx:LinkButton  label="[删除]"   click="{this.outerDocument.deleteApply(data.id);}" enabled="{checkAuth(data)}">											
@@ -917,7 +917,7 @@
 								<mx:DataGridColumn textAlign="center" headerText="销假审批" width="60">
 									<mx:itemRenderer>
 										<mx:Component>
-											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0">
+											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0" horizontalScrollPolicy="off">
 												<mx:LinkButton  label="[销假]"   click="{this.outerDocument.enterTerminateLeave(data.id);}" enabled="{checkTerminateAuth(data)}">											
 												</mx:LinkButton>
 												
@@ -953,7 +953,7 @@
 								<mx:DataGridColumn textAlign="center" headerText="查看" width="60">
 									<mx:itemRenderer>
 										<mx:Component>
-											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0">
+											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0" horizontalScrollPolicy="off">
 												
 												<mx:LinkButton  label="[流程]"  click="{this.outerDocument.detailApply(data.id);}">											
 												</mx:LinkButton>
@@ -1344,7 +1344,7 @@
 								<mx:DataGridColumn textAlign="center" headerText="操作时间"  width="100">
 									<mx:itemRenderer>
 										<mx:Component>
-											<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+											<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
 												<mx:Label text="{this.outerDocument.formatDate(data.operationTime)}"/>
 											</mx:VBox>																			
 										</mx:Component>						
@@ -1353,7 +1353,7 @@
 								<mx:DataGridColumn textAlign="center" headerText="操作人"  width="60">
 									<mx:itemRenderer>
 									<mx:Component>
-										<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+										<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
 											<mx1:Text text="{this.parentApplication.getTeacherNameByAccountId(data.operationTeacherId)}" >
 												
 											</mx1:Text>
@@ -1364,7 +1364,7 @@
 								<mx:DataGridColumn textAlign="center" headerText="操作名称"  width="100" >
 									<mx:itemRenderer>
 									<mx:Component>
-										<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+										<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
 											<mx:Label text="{data.operationName}"/>
 										</mx:VBox>																			
 									</mx:Component>
@@ -1373,7 +1373,7 @@
 								<mx:DataGridColumn textAlign="center" headerText="操作结果"  width="200" >
 									<mx:itemRenderer>
 									<mx:Component>
-										<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+										<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
 											<mx:Label text="{data.operationResult}"/>
 										</mx:VBox>																			
 									</mx:Component>
