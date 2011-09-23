@@ -1149,6 +1149,11 @@ public class SystemServiceImpl implements SystemService{
 	public void setDrDAO(DRDAO drDAO) {
 		this.drDAO = drDAO;
 	}
+	@Override
+	public List<DepartmentModel> getAllDepartments() {
+		// TODO Auto-generated method stub
+		return departmentDAO.getAllDepartments();
+	}
 
 	
 }

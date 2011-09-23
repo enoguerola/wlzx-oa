@@ -18,6 +18,7 @@
 		<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 			<mx:method name="getDepartmentBySymbol"  concurrency="last"  result="getDepartmentBySymbolResult(event);" />
 			<mx:method name="getAllRoles"  concurrency="last"  result="getAllRolesResult(event);" />
+			<mx:method name="getAllDepartments"  concurrency="last"  result="getAllDepartmentsResult(event);" />
 		</mx:RemoteObject>
 		<mx:RemoteObject id="placeServiceRO" destination="placeServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 			<mx:method name="getPlacesByCondition"  concurrency="last"  result="getPlacesByCondition_resultHandler(event);" />
@@ -67,6 +68,7 @@
 			public var allTeacherAcccounts:ArrayCollection = new ArrayCollection();
 			public var allFirstLevelAboveDepartment:ArrayCollection = new ArrayCollection();
 			public var allDepartment:ArrayCollection = new ArrayCollection();
+			public var allDepartmentObjects:ArrayCollection = new ArrayCollection();
 			public var allRole:ArrayCollection = new ArrayCollection();
 			public var allPlace:ArrayCollection = new ArrayCollection();
 			public var currentUserDepartment:ArrayCollection=new ArrayCollection();
@@ -81,6 +83,7 @@
 				teacherAccountBridgeServiceRO.teacherAccountGetAll();
 				systemServiceRO.getDepartmentBySymbol("root");
 				systemServiceRO.getAllRoles();
+				systemServiceRO.getAllDepartments();
 				placeServiceRO.getPlacesByCondition(null,null,null,null,null,null,null);
 				var swfUrl:String = this.parent.loaderInfo.url; //获取swf加载路径
 				var endIndex:int = swfUrl.indexOf("home.swf"); //搜索swf目录的路径位置
@@ -159,6 +162,9 @@
 			{  
 				currentUser=event.result as UserModel;
 				account=currentUser.person.name;
+				
+				if(currentUser.lastLoginTime!=null)
+					lastLoginTime=CommonUtils.formatDate(currentUser.lastLoginTime);
 //				var rolesIds:String=currentUser.getAllRoleIds();
 //				if(rolesIds!=null&&rolesIds!=""){
 //					var rolesIds_attr:Array=rolesIds.split(";");
@@ -175,59 +181,7 @@
 //				}
 //				
 //				Alert.show(mainRole+"a");
-				if(currentUser.lastLoginTime!=null)
-				lastLoginTime=CommonUtils.formatDate(currentUser.lastLoginTime);
-//				
 				
-//				if(currentUser.name=="super_root"){
-//					currentUserDepartment=allDepartment;
-//					currentUserFirstLevelDepartment=allDepartment;
-//					currentUserTrueFirstLevelDepartment=allDepartment;
-//				}else{
-//					var list:ArrayCollection=currentUser.getAllDepartments();
-//					for(var i:int=0;i<list.length;i++){
-//						var department:DepartmentModel=list.getItemAt(i) as DepartmentModel;
-//						if(department.level==0||department.level==1){
-//							
-//							if(!CommonUtils.contains(currentUserFirstLevelDepartment,department.id))
-//							currentUserFirstLevelDepartment.addItem( {data:department.id, label:department.name});
-//							//Alert.show(department.getLeaderDepartment()!=null?department.getLeaderDepartment().name:null);
-//						 	if(department.getLeaderDepartment()==null||department.getLeaderDepartment().level<=0){
-//								if(!CommonUtils.contains(currentUserTrueFirstLevelDepartment,department.id))
-//									currentUserTrueFirstLevelDepartment.addItem( {data:department.id, label:department.name});
-//							} 
-//						}else{
-//							var leaderDepartment2FirstLevel:DepartmentModel=department.getLeaderDepartment2FirstLevel() as DepartmentModel;
-//							if(leaderDepartment2FirstLevel!=null){
-//								if(!CommonUtils.contains(currentUserFirstLevelDepartment,leaderDepartment2FirstLevel.id))
-//									currentUserFirstLevelDepartment.addItem( {data:leaderDepartment2FirstLevel.id, label:leaderDepartment2FirstLevel.name});
-//							
-//								if(leaderDepartment2FirstLevel.getLeaderDepartment()==null||leaderDepartment2FirstLevel.getLeaderDepartment().level<=0){
-//									if(!CommonUtils.contains(currentUserTrueFirstLevelDepartment,leaderDepartment2FirstLevel.id))
-//										currentUserTrueFirstLevelDepartment.addItem( {data:leaderDepartment2FirstLevel.id, label:leaderDepartment2FirstLevel.name});
-//								} 
-//							}
-//
-//						}
-//						currentUserDepartment.addItem( {data:department.id, label:department.name});
-//						
-//						
-//					}
-//					//Alert.show(currentUserDepartment.length+"ab");
-//				}
-//				Alert.show(currentUserDepartment.length+"ab");
-				/* for(var i:int=0;i<currentUserFirstLevelDepartment.length;i++){
-					var d:DepartmentModel=currentUserFirstLevelDepartment.getItemAt(i) as DepartmentModel;
-					if(d.getLeaderDepartment()!=null&&d.getLeaderDepartment().level<=0){
-						if(!CommonUtils.contains(currentUserTrueFirstLevelDepartment,d.id))
-							currentUserTrueFirstLevelDepartment.addItem( {data:d.id, label:d.name});
-						
-					}
-					
-				} */
-//					
-//				Alert.show(currentUserFirstLevelDepartment.length+"c");
-//				Alert.show(currentUserTrueFirstLevelDepartment.length+"d");
 				//callLater(function():void{
 					loadModule(default_url);
 					//启动权限控制
@@ -250,6 +204,67 @@
 					var role:RoleModel=allList.getItemAt(i) as RoleModel;
 					allRole.addItem({data:role.id, label:role.name});
 				}
+			}
+			private function getAllDepartmentsResult(event:ResultEvent):void {
+				var allList:ArrayCollection=event.result as ArrayCollection;
+				allDepartmentObjects=allList;
+				 var departmentList:ArrayCollection=new ArrayCollection();
+				 
+				 if(currentUser.getAllDRs()!=null&&currentUser.getAllDRs().length>0){
+				 	for(var i:int=0;i<currentUser.getAllDRs().length;i++){
+						var item:Object=currentUser.getAllDRs().getItemAt(i);
+						departmentList.addItem(getDepartmentObjectById(item.departmentId));
+					}
+					currentUser.setAllDepartments(departmentList);
+				 }
+				
+				
+				if(currentUser.name=="super_root"){
+					currentUserDepartment=allDepartment;
+					currentUserFirstLevelDepartment=allDepartment;
+					currentUserTrueFirstLevelDepartment=allDepartment;
+				}else{
+					var list:ArrayCollection=currentUser.getAllDepartments();
+					for(var i:int=0;i<list.length;i++){
+						var department:DepartmentModel=list.getItemAt(i) as DepartmentModel;
+						if(department.level==0||department.level==1){
+							
+							if(!CommonUtils.contains(currentUserFirstLevelDepartment,department.id))
+								currentUserFirstLevelDepartment.addItem( {data:department.id, label:department.name});
+							//Alert.show(department.getLeaderDepartment()!=null?department.getLeaderDepartment().name:null);
+							if(department.getLeaderDepartment()==null||department.getLeaderDepartment().level<=0){
+								if(!CommonUtils.contains(currentUserTrueFirstLevelDepartment,department.id))
+									currentUserTrueFirstLevelDepartment.addItem( {data:department.id, label:department.name});
+							} 
+						}else{
+							var leaderDepartment2FirstLevel:DepartmentModel=department.getLeaderDepartment2FirstLevel() as DepartmentModel;
+							if(leaderDepartment2FirstLevel!=null){
+								if(!CommonUtils.contains(currentUserFirstLevelDepartment,leaderDepartment2FirstLevel.id))
+									currentUserFirstLevelDepartment.addItem( {data:leaderDepartment2FirstLevel.id, label:leaderDepartment2FirstLevel.name});
+								
+								if(leaderDepartment2FirstLevel.getLeaderDepartment()==null||leaderDepartment2FirstLevel.getLeaderDepartment().level<=0){
+									if(!CommonUtils.contains(currentUserTrueFirstLevelDepartment,leaderDepartment2FirstLevel.id))
+										currentUserTrueFirstLevelDepartment.addItem( {data:leaderDepartment2FirstLevel.id, label:leaderDepartment2FirstLevel.name});
+								} 
+							}
+							
+						}
+						currentUserDepartment.addItem( {data:department.id, label:department.name});
+						
+						
+					}
+				}
+				
+				
+			}
+			public function getDepartmentObjectById(id:String):DepartmentModel{
+				for(var i:int=0;i<allDepartmentObjects.length;i++){
+					var item:DepartmentModel=allDepartmentObjects.getItemAt(i) as DepartmentModel;
+					if(item.id == id){
+						return item;
+					}
+				}
+				return null;
 			}
 			private function getPlacesByCondition_resultHandler(event:ResultEvent):void{
 				var allList:ArrayCollection=event.result as ArrayCollection;
