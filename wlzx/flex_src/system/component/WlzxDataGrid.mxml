@@ -3,7 +3,9 @@
 			 xmlns:s="library://ns.adobe.com/flex/spark" 
 			 xmlns:mx="library://ns.adobe.com/flex/mx"    
 			 horizontalGridLineColor="#cccccc" verticalGridLineColor="#cccccc" variableRowHeight="true"
-			 headerHeight="28" headerStyleName="DGHeader"  >
+			 headerHeight="28" headerStyleName="DGHeader" 
+			 horizontalScrollPolicy="off" 
+			 >
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
 	</fx:Declarations>
@@ -16,7 +18,7 @@
 				if(rowIndex%2==0)color=0xf5f5f5;
 				super.drawRowBackground(s,rowIndex,y,height,color,dataIndex);
 			} 
-			
+			   
 		]]>
 	</fx:Script>
 	<fx:Style source="WlzxDataGrid.css" />
