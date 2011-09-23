@@ -119,5 +119,11 @@ public class DepartmentDAO extends BaseDAOImpl<DepartmentModel> {
 		}
 		return null;
 	}
+	@SuppressWarnings("unchecked")
+	public List<DepartmentModel> getAllDepartments(){
+			DetachedCriteria criteria = DetachedCriteria.forClass(DepartmentModel.class);
+			List<DepartmentModel> result = this.getListByCriteria(criteria);
+			return result;
+	}
 
 }

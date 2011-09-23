@@ -43,30 +43,30 @@
 //			
 //			return null;
 //		}
-//		/** 
-//		 * 获取上级部门
-//		 * @创建时间 2011-4-15 上午10:41:15
-//		 */ 
-//		public  function getLeaderDepartment():DepartmentModel{
-//			var list:ArrayCollection = ArrayCollection(leaders);
-//			if(list!=null&&list.length>0){
-//					var _department:DepartmentModel = list.getItemAt(0) as DepartmentModel;	
-//					return _department;
-//			}
-//			
-//			return null;
-//		}
-//		/** 
-//		 * 获取上级部门至一级部门级别
-//		 * @创建时间 2011-4-15 上午10:41:15
-//		 */ 
-//		public  function getLeaderDepartment2FirstLevel():DepartmentModel{
-//			var parent:DepartmentModel=this;
-//			do{
-//				parent=parent.getLeaderDepartment();
-//			}while(parent.level!=1&&parent.level!=0)
-//			return parent;
-//		}
+		/** 
+		 * 获取上级部门
+		 * @创建时间 2011-4-15 上午10:41:15
+		 */ 
+		public  function getLeaderDepartment():DepartmentModel{
+			var list:ArrayCollection = ArrayCollection(leaders);
+			if(list!=null&&list.length>0){
+					var _department:DepartmentModel = list.getItemAt(0) as DepartmentModel;	
+					return _department;
+			}
+			
+			return null;
+		}
+		/** 
+		 * 获取上级部门至一级部门级别
+		 * @创建时间 2011-4-15 上午10:41:15
+		 */ 
+		public  function getLeaderDepartment2FirstLevel():DepartmentModel{
+			var parent:DepartmentModel=this;
+			do{
+				parent=parent.getLeaderDepartment();
+			}while(parent.level!=1&&parent.level!=0)
+			return parent;
+		}
 ////		//获得部门及子部门所有用户集
 ////		public function getUsers():ArrayCollection{
 ////			var results:ArrayCollection=ArrayCollection(mainUsers);
@@ -98,48 +98,60 @@
 ////			}
 ////			
 ////		}
-//		//获得所有子部门
-//		public function getAllSubordinates():ArrayCollection{
-//			var results:ArrayCollection=new ArrayCollection();
-//			addSubordinates(this,results);
-//			return results;
-//		}
-//		public function addSubordinates(department:DepartmentModel,results:ArrayCollection):void{
-//			if(department.subordinates!=null&&department.subordinates.length>0){
-//				var list:ArrayCollection=ArrayCollection(this.getAllSubordinates());
-//				for (var i:int = 0; i < list.length; i++){
-//					var sub:DepartmentModel=list.getItemAt(i) as DepartmentModel;
-//					results.addItem(sub);
-//					addSubordinates(sub,results);
-//				}
-//			}
-//		}
-//		//获得部门及子部门所有用户集
-//		
-//		public  function getAllUsers():ArrayCollection{
-//			var results:ArrayCollection=new ArrayCollection();
-//			var list:ArrayCollection=ArrayCollection(this.getAllSubordinates());
-//
-//			for (var i:int = 0; i < list.length; i++){
-//				var department:DepartmentModel=list.getItemAt(i) as DepartmentModel;
-//				var users:ArrayCollection= department.getSelfUsers();
-//				for (var j:int = 0; j <users.length; j++){
-//					results.addItem(users.getItemAt(j));
-//				}
-//			}
-//				
-//			
-//			return results;
-//		}
-//		//获得本部门所有用户集
-//		public  function getSelfUsers():ArrayCollection{
-//			var results:ArrayCollection=ArrayCollection(mainUsers);
-//			var list:ArrayCollection = ArrayCollection(commonUsers);
-//			for (var i:int = 0; i < list.length; i++){
-//				results.addItem(list.getItemAt(i));
-//			}
-//		
-//			return results;
-//		}
+		//获得所有子部门
+		public function getAllSubordinates():ArrayCollection{
+			var results:ArrayCollection=new ArrayCollection();
+			addSubordinates(this,results);
+			return results;
+		}
+		public function addSubordinates(department:DepartmentModel,results:ArrayCollection):void{
+			if(department.subordinates!=null&&department.subordinates.length>0){
+				var list:ArrayCollection=ArrayCollection(this.getAllSubordinates());
+				for (var i:int = 0; i < list.length; i++){
+					var sub:DepartmentModel=list.getItemAt(i) as DepartmentModel;
+					results.addItem(sub);
+					addSubordinates(sub,results);
+				}
+			}
+		}
+		//获得部门及子部门所有用户集
+		
+		public  function getAllUsers():ArrayCollection{
+			var results:ArrayCollection=new ArrayCollection();
+			var list:ArrayCollection=ArrayCollection(this.getAllSubordinates());
+
+			for (var i:int = 0; i < list.length; i++){
+				var department:DepartmentModel=list.getItemAt(i) as DepartmentModel;
+				var drs:ArrayCollection= ArrayCollection(department.relativeDRs);
+				for (var j:int = 0; j < drs.length; j++){
+					var dr:DRModel=drs.getItemAt(i) as DRModel;
+					var users:ArrayCollection=dr.getAllUsers();
+					for(var k:int=0;k<users.length;k++){
+						results.addItem(users.getItemAt(k));
+						
+					}
+				}
+				
+			}
+				
+			
+			return results;
+		}
+		
+		//获得本部门所有用户集
+		public  function getSelfUsers():ArrayCollection{
+			var results:ArrayCollection=new ArrayCollection();
+			var list:ArrayCollection = ArrayCollection(relativeDRs);
+			for (var i:int = 0; i < list.length; i++){
+				var dr:DRModel=list.getItemAt(i) as DRModel;
+				var users:ArrayCollection=dr.getAllUsers();
+				for(var j:int=0;j<users.length;j++){
+					results.addItem(users.getItemAt(j));
+
+				}
+			}
+		
+			return results;
+		}
 	}
 }

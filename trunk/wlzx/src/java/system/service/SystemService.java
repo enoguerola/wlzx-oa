@@ -54,6 +54,8 @@ public interface SystemService{
 	public List<RoleModel> getAllRoles();
 	//获得某角色（岗位）用户
 	public Set<UserModel> getRoleUsers(String roleId);
+	//获得所有部门
+	public List<DepartmentModel> getAllDepartments();
 	//获得某部门用户
 	public Set<UserModel> getDepartmentUsers(String departmentId);
 	//获得某部门角色（岗位）用户
