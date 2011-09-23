@@ -44,10 +44,9 @@
 			import mx.managers.PopUpManager;
 			import mx.rpc.events.*;
 			
-			import system.component.WlzxLockWin;
-			
 			import spark.components.*;
 			
+			import system.component.WlzxLockWin;
 			import system.component.checkTree.*;
 			import system.entity.*;
 			[Bindable]
@@ -217,6 +216,24 @@
 			
 			
 			
+			protected function configDefault_changeHandler(event:Event):void
+			{
+				// TODO Auto-generated method stub
+				var defaultArraycolletion:ArrayCollection=new ArrayCollection();
+				defaultArraycolletion.addItem({label:'默认',data:'-1'});
+				if(configDefault.selected){
+					departments.dataProvider=defaultArraycolletion;
+					roles.dataProvider=defaultArraycolletion;
+				}else{
+					departments.dataProvider=this.parentApplication.allDepartment;
+					
+					roles.dataProvider=this.parentApplication.allRole;
+					
+				}
+				switchRoleAuthorization();
+
+			}
+			
 		]]>
 	</fx:Script>
 	<mx:VBox borderVisible="true" width="100%" height="100%" borderStyle="solid">
@@ -226,6 +243,8 @@
 				<mx:ComboBox width="200" id="departments" labelField="label"  selectedIndex="0" change="switchRoleAuthorization();" />
 				<mx:Label text="岗位选择" textAlign="center"  />
 				<mx:ComboBox width="200" id="roles" labelField="label"  selectedIndex="0" change="switchRoleAuthorization();" />
+				<mx:CheckBox id="configDefault" change="configDefault_changeHandler(event)"/>
+				<mx:Label  text="配置默认权限"/>
 				<mx:LinkButton  label="保存"  id="roleSave" icon="@Embed(source='../WebContent/resources/common/tools/button_save_icon.png')" click="saveRoleAuthorization();"/>
 				<mx:Label text="|"/>				
 			</mx:HBox>
