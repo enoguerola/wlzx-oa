@@ -450,7 +450,7 @@
 		<flexlib:SuperTabNavigator id="nav" tabStyleName="tabStyle"
 								   leftButtonStyleName="leftButton" 
 								   rightButtonStyleName="rightButton"  
-								   popupButtonStyleName="tabPopupButton" styleName="customTabNavStyle"   horizontalGap="1" paddingTop="0" paddingBottom="0" paddingLeft="0" paddingRight="0" closePolicy="SuperTab.CLOSE_ROLLOVER|SuperTab.CLOSE_ALWAYS|SuperTab.CLOSE_SELECTED|SuperTab.CLOSE_NEVER" width="100%" height="100%" allowTabSqueezing="false"  dragEnabled="false"    change="nav_changeHandler(event)" >
+								   styleName="customTabNavStyle"   horizontalGap="1" paddingTop="0" paddingBottom="0" paddingLeft="0" paddingRight="0" closePolicy="SuperTab.CLOSE_ROLLOVER|SuperTab.CLOSE_ALWAYS|SuperTab.CLOSE_SELECTED|SuperTab.CLOSE_NEVER" width="100%" height="100%" allowTabSqueezing="false"  dragEnabled="false"    change="nav_changeHandler(event)" >
 		</flexlib:SuperTabNavigator>
 	</s:BorderContainer>
 	

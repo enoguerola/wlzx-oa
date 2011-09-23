@@ -271,7 +271,7 @@
 							<mx:DataGridColumn textAlign="center" headerText="会议时间"  width="100">
 								<mx:itemRenderer>
 									<mx:Component>
-										<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+										<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
 											<mx1:Text text="{getMeetingTime(data)}" width="100">
 												<mx:Script>
 													<![CDATA[
@@ -292,7 +292,7 @@
 							<mx:DataGridColumn textAlign="center" headerText="会议名称" width="200" >
 								<mx:itemRenderer>
 									<mx:Component>
-										<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" >
+										<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle"  horizontalScrollPolicy="off">
 											<mx1:Text text="{data.name}" width="200">
 											</mx1:Text>
 										</mx:HBox>
@@ -303,7 +303,7 @@
 							<mx:DataGridColumn textAlign="center" headerText="使用部门"  width="60" >
 								<mx:itemRenderer>
 									<mx:Component>
-										<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" >
+										<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle"  horizontalScrollPolicy="off">
 											<mx1:Text text="{data.departmentId==-1?'校外':parentApplication.getDepartmentNameById(data.departmentId)}" width="60">
 											</mx1:Text>
 										</mx:HBox>
@@ -313,7 +313,7 @@
 							<mx:DataGridColumn textAlign="center" headerText="参会人数" width="60" >
 								<mx:itemRenderer>
 									<mx:Component>
-										<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" >
+										<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off" >
 											<mx1:Text text="{data.attendNum}" width="60">
 											</mx1:Text>
 										</mx:HBox>
@@ -323,7 +323,7 @@
 							<mx:DataGridColumn textAlign="center" headerText="会议地点" width="140" >
 								<mx:itemRenderer>
 									<mx:Component>
-										<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" >
+										<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off" >
 											<mx1:Text text="{data.placeId==null?'待定':parentApplication.getPlaceNameById(data.placeId)}" width="140">
 											</mx1:Text>
 											
@@ -334,7 +334,7 @@
 							<mx:DataGridColumn textAlign="center" headerText="联系人" width="60" >
 								<mx:itemRenderer>
 									<mx:Component>
-										<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" >
+										<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off" >
 											<mx1:Text text="{parentApplication.getTeacherNameByAccountId(data.contactUserId)}" width="60">
 											</mx1:Text>
 										</mx:HBox>
@@ -344,7 +344,7 @@
 							<mx:DataGridColumn textAlign="center" headerText="状态" width="60" >
 								<mx:itemRenderer>
 									<mx:Component>
-										<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" >
+										<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off" >
 											<mx1:Text text="{getStatus(data)}" width="60">
 												<mx:Script>
 													<![CDATA[
@@ -368,7 +368,7 @@
 							<mx:DataGridColumn textAlign="center" headerText="操作" width="180">
 								<mx:itemRenderer>
 									<mx:Component>
-										<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0">
+										<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0" horizontalScrollPolicy="off">
 											<mx:LinkButton  label="[总结]"   click="{this.outerDocument.enterSummaryConference(data.id);}" enabled="{checkSummaryAuth(data)}">											
 											</mx:LinkButton>
 											
@@ -395,7 +395,7 @@
 							<mx:DataGridColumn textAlign="center" headerText="详细" width="50">
 								<mx:itemRenderer>
 									<mx:Component>
-										<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0">
+										<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0" horizontalScrollPolicy="off">
 											<mx:LinkButton  label="[详细]"  click="{this.outerDocument.detailConference(data.id);}">											
 											</mx:LinkButton>
 										</mx:HBox>
@@ -410,8 +410,8 @@
 		</mx:VBox>
 		
 		<mx:VBox width="100%" height="100%" id="addPanel">
-			<mx:HBox verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12" id="returnArea">
-				<mx:HBox width="100%" height="25" paddingLeft="20"  horizontalGap="10" styleName="CustomHBoxStyle"  verticalAlign="middle">
+			<mx:HBox verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12" id="returnArea" horizontalScrollPolicy="off">
+				<mx:HBox width="100%" height="25" paddingLeft="20"  horizontalGap="10" styleName="CustomHBoxStyle"  verticalAlign="middle" horizontalScrollPolicy="off">
 					<mx:Label text="|"/>
 					<mx:LinkButton  label="返回" icon="@Embed(source='../WebContent/resources/common/tools/button_back_icon.png')" click="this.currentState='list';" />
 					<mx:Label text="|"/>

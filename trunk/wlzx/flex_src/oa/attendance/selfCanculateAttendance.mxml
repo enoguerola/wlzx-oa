@@ -222,20 +222,20 @@
 							<mx:GridItem  borderStyle="solid" verticalAlign="middle">
 								<mx:DataGrid width="100%" height="100%"   borderVisible="false"    borderAlpha="0.2" verticalAlign="middle"   id="takeLeave_leaveTable"  >				
 								<mx:columns>
-									<mx:DataGridColumn textAlign="center" headerText="申请编号" dataField="applyNo" width="140">
+									<mx:DataGridColumn textAlign="center" headerText="申请编号" dataField="applyNo">
 										<mx:itemRenderer>
 											<fx:Component>
-												<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+												<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
 													<mx:Label text="{data.applyNo}"/>
 												</mx:VBox>																			
 											</fx:Component>						
 										</mx:itemRenderer>
 									</mx:DataGridColumn>
 									
-									<mx:DataGridColumn textAlign="center" headerText="请假开始时间"  width="100" >
+									<mx:DataGridColumn textAlign="center" headerText="请假开始时间"   >
 										<mx:itemRenderer>
 											<fx:Component>
-												<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+												<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
 													<mx:Label text="{beginTimeTip(data)}">
 														<fx:Script>
 															<![CDATA[
@@ -254,7 +254,7 @@
 															return result;
 															}
 															return null;
-															}
+															} 
 															]]>
 														</fx:Script>
 													</mx:Label>
@@ -262,10 +262,10 @@
 											</fx:Component>
 										</mx:itemRenderer>
 									</mx:DataGridColumn>
-									<mx:DataGridColumn textAlign="center" headerText="请假结束时间"  width="100">
+									<mx:DataGridColumn textAlign="center" headerText="请假结束时间" >
 										<mx:itemRenderer>
 											<fx:Component>
-												<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+												<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
 													<mx:Label text="{endTime(data)}">
 														<fx:Script>
 															<![CDATA[
@@ -292,10 +292,10 @@
 											</fx:Component>
 										</mx:itemRenderer>
 									</mx:DataGridColumn>
-									<mx:DataGridColumn textAlign="center" headerText="详细" width="60">
+									<mx:DataGridColumn textAlign="center" headerText="详细" >
 										<mx:itemRenderer>
 											<fx:Component>
-												<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0">
+												<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0" horizontalScrollPolicy="off">
 													
 													<mx:LinkButton  label="[详细]"  click="{this.outerDocument.detailApply(data.id,'TakeLeaveForm_Leave');}">											
 													</mx:LinkButton>
@@ -312,9 +312,9 @@
 							</mx:GridItem>
 							
 						</mx:GridRow>
-						<mx:GridRow   horizontalAlign="center" verticalAlign="middle" width="100%" >
+						<mx:GridRow   horizontalAlign="center" verticalAlign="middle" width="100%" horizontalScrollPolicy="off" >
 							<mx:GridItem  borderStyle="solid" verticalAlign="middle">
-								<mx:VBox horizontalAlign="center">
+								<mx:VBox horizontalAlign="center" horizontalScrollPolicy="off">
 									<mx1:Text text="出差次数|天数(*1/3)：" width="150" textAlign="center" />
 									<mx1:Text id="takeLeave_businessTrip" textAlign="center" />
 								</mx:VBox>
@@ -323,20 +323,20 @@
 							<mx:GridItem  borderStyle="solid" verticalAlign="middle">
 								<mx:DataGrid width="100%" height="100%"   borderVisible="false"    borderAlpha="0.2" verticalAlign="middle"   id="takeLeave_businessTripTable"  >				
 								<mx:columns>
-									<mx:DataGridColumn textAlign="center" headerText="申请编号" dataField="applyNo" width="140">
+									<mx:DataGridColumn textAlign="center" headerText="申请编号" dataField="applyNo" >
 										<mx:itemRenderer>
 											<fx:Component>
-												<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+												<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
 													<mx:Label text="{data.applyNo}"/>
 												</mx:VBox>																			
 											</fx:Component>						
 										</mx:itemRenderer>
 									</mx:DataGridColumn>
 									
-									<mx:DataGridColumn textAlign="center" headerText="出差开始时间"  width="100" >
+									<mx:DataGridColumn textAlign="center" headerText="出差开始时间"  >
 										<mx:itemRenderer>
 											<fx:Component>
-												<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+												<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
 													<mx:Label text="{beginTimeTip(data)}">
 														<fx:Script>
 															<![CDATA[
@@ -363,10 +363,10 @@
 											</fx:Component>
 										</mx:itemRenderer>
 									</mx:DataGridColumn>
-									<mx:DataGridColumn textAlign="center" headerText="出差结束时间"  width="100">
+									<mx:DataGridColumn textAlign="center" headerText="出差结束时间" >
 										<mx:itemRenderer>
 											<fx:Component>
-												<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+												<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
 													<mx:Label text="{endTime(data)}">
 														<fx:Script>
 															<![CDATA[
@@ -393,10 +393,10 @@
 											</fx:Component>
 										</mx:itemRenderer>
 									</mx:DataGridColumn>
-									<mx:DataGridColumn textAlign="center" headerText="详细" width="60">
+									<mx:DataGridColumn textAlign="center" headerText="详细">
 										<mx:itemRenderer>
 											<fx:Component>
-												<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0">
+												<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0" horizontalScrollPolicy="off">
 													
 													<mx:LinkButton  label="[详细]"  click="{this.outerDocument.detailApply(data.id,'TakeLeaveForm_BusinessTrip');}">											
 													</mx:LinkButton>
@@ -415,7 +415,7 @@
 						</mx:GridRow>
 						<mx:GridRow   horizontalAlign="center" verticalAlign="middle" width="100%" >
 							<mx:GridItem  borderStyle="solid" verticalAlign="middle">
-								<mx:VBox horizontalAlign="center">
+								<mx:VBox horizontalAlign="center" horizontalScrollPolicy="off">
 									<mx1:Text text="加班次数|天数(*1/3)：" width="150" textAlign="center" />
 									<mx1:Text id="overWork" textAlign="center" />
 								</mx:VBox>
@@ -423,20 +423,20 @@
 							<mx:GridItem  borderStyle="solid" verticalAlign="middle">
 								<mx:DataGrid width="100%" height="100%"   borderVisible="false"    borderAlpha="0.2" verticalAlign="middle"   id="overWorkTable"  >				
 									<mx:columns>
-										<mx:DataGridColumn textAlign="center" headerText="申请编号" dataField="applyNo" width="140">
+										<mx:DataGridColumn textAlign="center" headerText="申请编号" dataField="applyNo" >
 											<mx:itemRenderer>
 												<fx:Component>
-													<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+													<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
 														<mx:Label text="{data.applyNo}"/>
 													</mx:VBox>																			
 												</fx:Component>						
 											</mx:itemRenderer>
 										</mx:DataGridColumn>
 										
-										<mx:DataGridColumn textAlign="center" headerText="加班时间段"  width="200" >
+										<mx:DataGridColumn textAlign="center" headerText="加班时间段"  >
 											<mx:itemRenderer>
 												<fx:Component>
-													<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" >
+													<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off" >
 														<mx1:Text text="{this.outerDocument.timeTip(data.times)}" width="180">
 															
 														</mx1:Text>
@@ -445,11 +445,11 @@
 											</mx:itemRenderer>
 										</mx:DataGridColumn>
 										
-										<mx:DataGridColumn textAlign="center" headerText="加班原因"  width="300" >
+										<mx:DataGridColumn textAlign="center" headerText="加班原因"   >
 											<mx:itemRenderer>
 												<fx:Component>
-													<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" >
-														<mx1:Text text="{data.reason}" width="180">
+													<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle"  horizontalScrollPolicy="off">
+														<mx1:Text text="{data.reason}" >
 															
 														</mx1:Text>
 													</mx:HBox>
@@ -457,10 +457,10 @@
 											</mx:itemRenderer>
 										</mx:DataGridColumn>
 										
-										<mx:DataGridColumn textAlign="center" headerText="详细" width="100">
+										<mx:DataGridColumn textAlign="center" headerText="详细" >
 											<mx:itemRenderer>
 												<fx:Component>
-													<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0">
+													<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0" horizontalScrollPolicy="off">
 														
 														<mx:LinkButton  label="[详细]"  click="{this.outerDocument.detailApply(data.id,'OverWorkForm');}">											
 														</mx:LinkButton>
@@ -479,7 +479,7 @@
 						</mx:GridRow>
 						<mx:GridRow   horizontalAlign="center" verticalAlign="middle" width="100%" >
 							<mx:GridItem  borderStyle="solid" verticalAlign="middle">
-								<mx:VBox horizontalAlign="center">
+								<mx:VBox horizontalAlign="center" horizontalScrollPolicy="off">
 									<mx1:Text text="调休次数|天数(*1/3)：" width="150" textAlign="center" />
 									<mx1:Text id="moveRestDay" textAlign="center" />
 								</mx:VBox>
@@ -487,10 +487,10 @@
 							<mx:GridItem  borderStyle="solid" verticalAlign="middle">
 								<mx:DataGrid width="100%" height="100%"   borderVisible="false"    borderAlpha="0.2" verticalAlign="middle"   id="moveRestDayTable"   >				
 									<mx:columns>
-										<mx:DataGridColumn textAlign="center" headerText="申请编号" width="140">
+										<mx:DataGridColumn textAlign="center" headerText="申请编号">
 											<mx:itemRenderer>
 												<fx:Component>
-													<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+													<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
 														<mx:Label text="{data.applyNo}"/>
 													</mx:VBox>																			
 												</fx:Component>						
@@ -500,8 +500,8 @@
 										<mx:DataGridColumn textAlign="center" headerText="调休时间" >
 											<mx:itemRenderer>
 												<fx:Component>
-													<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" >
-														<mx1:Text text="{this.outerDocument.timeTip(data.times)}" width="180">
+													<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle"  horizontalScrollPolicy="off">
+														<mx1:Text text="{this.outerDocument.timeTip(data.times)}">
 															
 														</mx1:Text>
 													</mx:HBox>
@@ -509,12 +509,12 @@
 											</mx:itemRenderer>
 										</mx:DataGridColumn>
 										
+										 
 										
-										
-										<mx:DataGridColumn textAlign="center" headerText="详细" width="60">
+										<mx:DataGridColumn textAlign="center" headerText="详细" >
 											<mx:itemRenderer>
 												<fx:Component>
-													<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0">
+													<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0" horizontalScrollPolicy="off">
 														
 														<mx:LinkButton  label="[详细]"  click="{this.outerDocument.detailApply(data.id,'MoveRestDayForm');}">											
 														</mx:LinkButton>
