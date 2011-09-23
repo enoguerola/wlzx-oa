@@ -90,9 +90,9 @@
 				<mx:GridItem horizontalAlign="right">
 					<mx:HBox horizontalAlign="right" verticalAlign="middle" >
 						<s:Label text="来文日期" width="75" textAlign="right"/>
-						<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' id="in_date_begin" width="100" formatString="YYYY-MM-DD"></mx:DateField>
+						<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' id="in_date_begin" width="110" formatString="YYYY-MM-DD"></mx:DateField>
 						<s:Label  text="--"  width="15" textAlign="right"/>
-						<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' id="in_date_end" width="100" formatString="YYYY-MM-DD" ></mx:DateField>
+						<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' id="in_date_end" width="110" formatString="YYYY-MM-DD" ></mx:DateField>
 					</mx:HBox>
 				</mx:GridItem>
 				<mx:GridItem  horizontalAlign="right">
