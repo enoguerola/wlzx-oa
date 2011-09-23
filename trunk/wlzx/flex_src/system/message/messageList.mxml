@@ -333,7 +333,7 @@
 								<mx:DataGridColumn textAlign="center" headerText="选择"  width="50">
 									<mx:itemRenderer>
 										<fx:Component>
-											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0">
+											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0" horizontalScrollPolicy="off">
 												<mx:CheckBox selected="{data.checked}" change="{data.checked=!data.checked;}"/>
 											</mx:HBox>
 										</fx:Component>
@@ -377,7 +377,7 @@
 								<mx:DataGridColumn textAlign="center" headerText="操作"  width="150">
 									<mx:itemRenderer>
 										<fx:Component>
-										<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0">
+										<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0" horizontalScrollPolicy="off">
 											<mx:LinkButton  label="[阅读]"  click="{this.outerDocument.enterDetailMessage(data.id);this.outerDocument.readMessage(data.id);}">											
 											</mx:LinkButton>
 											<mx:LinkButton  label="[删除]"  click="{this.outerDocument.deleteReceiveMessage(data.id);}">											
@@ -396,7 +396,7 @@
 								<mx:DataGridColumn textAlign="center" headerText="选择"  width="50">
 									<mx:itemRenderer>
 										<fx:Component>
-											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0">
+											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0" horizontalScrollPolicy="off">
 												<mx:CheckBox selected="{data.checked}" change="{data.checked=!data.checked;}"/>
 											</mx:HBox>
 										</fx:Component>
@@ -440,7 +440,7 @@
 								<mx:DataGridColumn textAlign="center" headerText="操作"  width="150">
 									<mx:itemRenderer>
 										<fx:Component>
-											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0">
+											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0" horizontalScrollPolicy="off">
 												<mx:LinkButton  label="[详细]"  click="{this.outerDocument.enterDetailMessage(data.id);}">											
 												</mx:LinkButton>
 												<mx:LinkButton  label="[删除]"  click="{this.outerDocument.deleteReceiveMessage(data.id);}">											
@@ -459,7 +459,7 @@
 								<mx:DataGridColumn textAlign="center" headerText="选择"  width="50">
 									<mx:itemRenderer>
 										<fx:Component>
-											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0">
+											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0" horizontalScrollPolicy="off">
 												<mx:CheckBox selected="{data.checked}" change="{data.checked=!data.checked;}"/>
 											</mx:HBox>
 										</fx:Component>
@@ -499,7 +499,7 @@
 								<mx:DataGridColumn textAlign="center" headerText="操作"  width="150">
 									<mx:itemRenderer>
 										<fx:Component>
-											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0">
+											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0" horizontalScrollPolicy="off">
 												<mx:LinkButton  label="[转发]"  click="{this.outerDocument.transpondMessage(data.toIds,data.content);}">											
 												</mx:LinkButton>
 												<mx:LinkButton  label="[删除]"  click="{this.outerDocument.deletePostMessage(data.id);}">											
