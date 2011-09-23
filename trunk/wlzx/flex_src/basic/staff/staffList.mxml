@@ -402,7 +402,7 @@
 							<mx:DataGridColumn textAlign="center" headerText="状态"  width="60">
 								<mx:itemRenderer>
 									<fx:Component>
-										<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+										<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
 											<mx:Label  text="{getStatus(data)}" >
 												<fx:Script>
 													<![CDATA[
@@ -436,7 +436,7 @@
 							<mx:DataGridColumn textAlign="center" headerText="操作"  width="320">
 								<mx:itemRenderer>
 									<fx:Component>
-										<mx:HBox width="100%" horizontalGap="0">
+										<mx:HBox width="100%" horizontalGap="0" horizontalScrollPolicy="off">
 											<mx:LinkButton  label="[离职]" click="{this.outerDocument.changestatus(data.id, 2);}" enabled="{parentApplication.currentUser.hasDam('staff_input_main@defaultVisit@@noFilter@')}"></mx:LinkButton>										
 											<mx:LinkButton  label="[退休]" click="{this.outerDocument.changestatus(data.id, 3);}" enabled="{parentApplication.currentUser.hasDam('staff_input_main@defaultVisit@@noFilter@')}">											
 											</mx:LinkButton>	
