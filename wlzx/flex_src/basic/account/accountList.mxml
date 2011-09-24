@@ -228,7 +228,7 @@
 								<mx:DataGridColumn textAlign="center" headerText="状态" dataField="active" width="60">
 									<mx:itemRenderer>
 										<fx:Component>
-											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
 												<mx:Image source="{activeSource(data)}"  toolTip="{activeSourceTip(data)}" width="20" height="20">
 													<fx:Script>
 														<![CDATA[
@@ -241,7 +241,7 @@
 																	else {
 																		return "resources/common/ui/cha.png";
 																	}
-																}
+																} 
 																return null;
 																
 															}
