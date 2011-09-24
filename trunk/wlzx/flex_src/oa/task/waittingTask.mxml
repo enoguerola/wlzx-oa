@@ -260,7 +260,7 @@
 			
 			<mx:Panel width="100%" height="100%"  styleName="customPanel" title="待办工作"  cornerRadius="5" borderVisible="false" dropShadowVisible="false" verticalScrollPolicy="auto" >
 
-			<component:WlzxPageDataGrid width="100%" height="100%"   autoLayout="true"  borderAlpha="0.2" verticalAlign="middle"   id="taskTable" pagecount="10"  >				
+			<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="true"  autoLayout="true"  borderAlpha="0.2" verticalAlign="middle"   id="taskTable" pagecount="10"  >				
 				<component:mygridcolumns>				
 					<mx:DataGridColumn textAlign="center" headerText="任务类型" width="70">
 						<mx:itemRenderer>
@@ -329,7 +329,7 @@
 			
 			<mx:Panel width="100%"  height="100%"  styleName="customPanel" title="历史工作"  cornerRadius="5" borderVisible="false" dropShadowVisible="false" verticalScrollPolicy="auto">
 				
-				<component:WlzxPageDataGrid width="100%" height="100%"    autoLayout="true"  borderAlpha="0.2" verticalAlign="middle"   id="historyTaskTable" pagecount="5"  >				
+				<component:WlzxPageDataGrid width="100%" height="100%"  borderVisible="true"  autoLayout="true"  borderAlpha="0.2" verticalAlign="middle"   id="historyTaskTable" pagecount="5"  >				
 					<component:mygridcolumns>						
 						<mx:DataGridColumn textAlign="center" headerText="任务类型" width="80">
 							<mx:itemRenderer>

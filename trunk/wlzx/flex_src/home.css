@@ -232,6 +232,7 @@ supertabs|SuperTab
 	font-family: 微软雅黑;
 	text-Align:"center";
 	tabCloseButtonStyleName:"tabCloseButton";
+	skin: ClassReference("system.skins.WlzxTabSkin");
 	/*	skin:Embed("../WebContent/resources/common/ui/tabClose.swf",
 	scaleGridLeft="0",
 	scaleGridRight="120",

@@ -370,7 +370,7 @@
 				</mx:HBox>
 					
 				<s:VGroup  width="100%" height="100%" gap="0" >
-					<component:WlzxPageDataGrid width="100%" height="100%" paddingLeft="10" paddingRight="10" borderVisible="false"   borderAlpha="0.2" verticalAlign="middle"   id="teacherDG" pagecount="13">				
+					<component:WlzxPageDataGrid width="100%" height="100%" paddingLeft="10" paddingRight="10" borderVisible="true"   borderAlpha="0.2" verticalAlign="middle"   id="teacherDG" pagecount="13">				
 						<component:mygridcolumns>
 							
 							<mx:DataGridColumn textAlign="center" headerText="姓名" dataField="name" width="80"></mx:DataGridColumn>

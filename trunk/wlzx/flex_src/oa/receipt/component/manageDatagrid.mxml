@@ -51,7 +51,7 @@
 		]]>
 	</fx:Script>
 	
-	<component:WlzxPageDataGrid id="grid" width="100%" height="100%" borderVisible="false" autoLayout="true"  borderAlpha="0.2" verticalAlign="middle" pagecount="10">
+	<component:WlzxPageDataGrid id="grid" width="100%" height="100%" borderVisible="true" autoLayout="true"  borderAlpha="0.2" verticalAlign="middle" pagecount="10">
 		<component:mygridcolumns>
 			<mx:DataGridColumn textAlign="center" headerText="收文标题" width="150" itemRenderer="oa.receipt.component.item.Title"></mx:DataGridColumn>
 			<mx:DataGridColumn textAlign="center" headerText="处理状态" width="100" itemRenderer="oa.receipt.component.item.Status"/>

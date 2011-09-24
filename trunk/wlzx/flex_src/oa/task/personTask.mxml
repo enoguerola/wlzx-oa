@@ -217,7 +217,7 @@
 			
 			<mx:Panel width="100%"   styleName="customPanel" title="任务"  cornerRadius="5" borderVisible="false" dropShadowVisible="false" verticalScrollPolicy="auto">
 				
-				<component:WlzxPageDataGrid width="100%" height="100%"    autoLayout="true"  borderAlpha="0.2" verticalAlign="middle"   id="taskTable" pagecount="5"  >				
+				<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="true"    autoLayout="true"  borderAlpha="0.2" verticalAlign="middle"   id="taskTable" pagecount="5"  >				
 					<component:mygridcolumns>						
 					<mx:DataGridColumn textAlign="center" headerText="任务类型" width="80">
 						<mx:itemRenderer>
@@ -264,7 +264,7 @@
 			<!--*************** 日程面板 ****************-->
 		<component:Fieldset title="日程列表" width="95%" height="50%" >
 			<mx:Panel width="100%"   styleName="customPanel" title="日程"  cornerRadius="5" dropShadowVisible="false" verticalScrollPolicy="auto">
-				<component:WlzxPageDataGrid width="100%" height="100%"   borderVisible="false"  autoLayout="true"  borderAlpha="0.2" verticalAlign="middle"   id="scheduleTable" pagecount="5"  >				
+				<component:WlzxPageDataGrid width="100%" height="100%"   borderVisible="true"  autoLayout="true"  borderAlpha="0.2" verticalAlign="middle"   id="scheduleTable" pagecount="5"  >				
 					<component:mygridcolumns>						
 						<mx:DataGridColumn textAlign="center" headerText="标记" dataField="loginaccount" width="100">
 							<mx:itemRenderer>
