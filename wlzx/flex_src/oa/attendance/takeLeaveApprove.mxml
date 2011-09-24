@@ -726,7 +726,7 @@
 				<mx:HBox width="100%" height="100%" paddingLeft="10" paddingRight="10" paddingBottom="10">
 					<mx:Panel width="100%" height="100%"  styleName="customPanel" title="查询结果"  cornerRadius="5" borderVisible="false" dropShadowVisible="false">
 						
-						<component:WlzxPageDataGrid width="100%" height="100%"   borderVisible="false"  autoLayout="true"  borderAlpha="0.2" verticalAlign="middle"   id="applyTable" pagecount="10"  >				
+						<component:WlzxPageDataGrid width="100%" height="100%"   borderVisible="true"  autoLayout="true"  borderAlpha="0.2" verticalAlign="middle"   id="applyTable" pagecount="10"  >				
 							<component:mygridcolumns>
 								<mx:DataGridColumn textAlign="center" headerText="申请编号" dataField="applyNo" width="120">
 									<mx:itemRenderer>
@@ -1339,7 +1339,7 @@
 					</mx:Grid>
 					<mx:Panel width="100%"   styleName="customPanel" title="流程日志"  cornerRadius="5" borderVisible="false" dropShadowVisible="false">
 						
-						<component:WlzxPageDataGrid width="100%" height="100%"   borderVisible="false"  autoLayout="true"  borderAlpha="0.2" verticalAlign="middle"   id="logTable" pagecount="10"  >				
+						<component:WlzxPageDataGrid width="100%" height="100%"   borderVisible="true"  autoLayout="true"  borderAlpha="0.2" verticalAlign="middle"   id="logTable" pagecount="10"  >				
 							<component:mygridcolumns>
 								<mx:DataGridColumn textAlign="center" headerText="操作时间"  width="100">
 									<mx:itemRenderer>

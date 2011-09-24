@@ -466,7 +466,7 @@
 			<mx:VBox width="100%" height="100%"  verticalAlign="middle" horizontalAlign="center" paddingLeft="10" paddingRight="10" >
 				<mx:TabNavigator id="messagesView"  width="100%" height="100%" tabStyleName="customTabStyles"  horizontalGap="1" borderVisible="false"  tabWidth="120" paddingTop="0"  change="search();">
 					<mx:HBox label="草稿箱" width="100%" height="100%">
-						<component:WlzxPageDataGrid width="100%" height="100%"   borderVisible="false"  autoLayout="true"  borderAlpha="0.2" verticalAlign="middle"   id="draftTable" pagecount="13"  >				
+						<component:WlzxPageDataGrid width="100%" height="100%"   borderVisible="true"  autoLayout="true"  borderAlpha="0.2" verticalAlign="middle"   id="draftTable" pagecount="13"  >				
 							<component:mygridcolumns>
 								<mx:DataGridColumn textAlign="center" headerText="范围"  width="60">
 									<mx:itemRenderer>
@@ -588,7 +588,7 @@
 					</mx:HBox>
 					
 					<mx:HBox label="已发布" width="100%" height="100%">
-						<component:WlzxPageDataGrid width="100%" height="100%"   borderVisible="false"  autoLayout="true"  borderAlpha="0.2" verticalAlign="middle"   id="noticeTable" pagecount="10"  >				
+						<component:WlzxPageDataGrid width="100%" height="100%"   borderVisible="true"  autoLayout="true"  borderAlpha="0.2" verticalAlign="middle"   id="noticeTable" pagecount="10"  >				
 							<component:mygridcolumns>
 								<mx:DataGridColumn textAlign="center" headerText="范围"  width="60">
 									<mx:itemRenderer>

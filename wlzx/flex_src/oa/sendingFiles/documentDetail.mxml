@@ -128,7 +128,7 @@
 				<mx:HBox width="100%"  verticalAlign="middle" horizontalAlign="center"  paddingBottom="10" height="20">
 					<mx:Label text="发文附件"  fontSize="14" fontWeight="bold"/>
 				</mx:HBox>
-				<component:WlzxPageDataGrid width="100%" height="100%"   borderVisible="false"  autoLayout="true"  borderAlpha="0.2" verticalAlign="middle"  paddingTop="0"  id="table" pagecount="10"  >				
+				<component:WlzxPageDataGrid width="100%" height="100%"   borderVisible="true"  autoLayout="true"  borderAlpha="0.2" verticalAlign="middle"  paddingTop="0"  id="table" pagecount="10"  >				
 					<component:mygridcolumns>
 
 						<mx:DataGridColumn textAlign="center" headerText="附件名称"  width="150">

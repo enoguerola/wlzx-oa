@@ -127,7 +127,7 @@
 					   private function lockWin():void{
 						   if(window==null){
 							   window=WlzxLockWin(PopUpManager.createPopUp(this,WlzxLockWin,true)); 
-							   window.tip.text="身份验证中";
+							   window.tip.text="    身份验证中";
 							   PopUpManager.centerPopUp(window);
 							   window.percentHeight=100;
 							   window.percentWidth=100;

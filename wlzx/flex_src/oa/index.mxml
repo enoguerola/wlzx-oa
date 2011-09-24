@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Module xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		   xmlns:s="library://ns.adobe.com/flex/spark" 
-		   xmlns:mx="library://ns.adobe.com/flex/mx" layout="vertical"  verticalGap="0" creationComplete="init();" width="100%" pageTitle="办公自动化系统主页" height="100%"   xmlns:flexlib="http://code.google.com/p/flexlib/"  xmlns:viewers="flexlib.scheduling.scheduleClasses.viewers.*" xmlns:sliderClasses="flexlib.controls.sliderClasses.*" xmlns:baseClasses="flexlib.baseClasses.*">
+		   xmlns:mx="library://ns.adobe.com/flex/mx" 
+		   layout="vertical"  verticalGap="0" creationComplete="init();" width="100%" pageTitle="办公自动化系统主页" height="100%"
+		   xmlns:flexlib="http://code.google.com/p/flexlib/"  xmlns:viewers="flexlib.scheduling.scheduleClasses.viewers.*" 
+		   xmlns:sliderClasses="flexlib.controls.sliderClasses.*" xmlns:baseClasses="flexlib.baseClasses.*">
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
 		<!--定义 RemoteObject 组件-->
