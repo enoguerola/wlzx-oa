@@ -30,9 +30,11 @@ package system.component
 			this.addChild(img);
 			//加入进度文字
 			progressText = new TextField();
-			progressText.x = 40;
+			progressText.x = 120;
 			progressText.y = 90;
+			
 			this.addChild(progressText);
+			
 			//进度条计时器初始化，我们实现进度条的原理就是不停的刷新进图条图片
 			//因为每次进度条的长度不同，所以就有进度条在走的效果
 			_timer = new Timer(1);

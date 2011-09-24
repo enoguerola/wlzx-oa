@@ -64,7 +64,7 @@
 			 }
 			 selectedRowId=null;
 		 }
-		 
+		  
 	      public function setPager(value:int):void{
 	            if(value<0 || value>totalpage-1) return;
 	             curpage = value;
