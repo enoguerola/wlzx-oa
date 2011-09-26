@@ -464,7 +464,7 @@
 											<s:text>基本信息</s:text>
 										</s:Label>
 									</s:VGroup>
-									<s:VGroup width="40%" height="100%">
+									<s:VGroup width="50%" height="100%">
 										<s:HGroup width="100%">
 											<mx:FormItem label="姓名" width="50%"><s:TextInput id="teacherName" width="100%"/></mx:FormItem>
 											<mx:FormItem label="性别" width="50%">
@@ -503,7 +503,7 @@
 										</mx:FormItem>
 										<mx:FormItem label="手机" width="100%"><mx:TextInput id="cellPhone" width="100%"/></mx:FormItem>
 									</s:VGroup>
-									<s:VGroup width="20%">
+									<s:VGroup width="10%">
 										<mx:FormItem label="照片" width="100%" height="200%">
 											<mx:Image id="imgPhoto" visible="true" autoLoad="true" width="100" height="100" source="{imageSrc}" />
 											
@@ -550,22 +550,22 @@
 										</s:Label>
 									</s:VGroup>								
 									<s:VGroup width="100%">
-										<s:HGroup width="100%">
-											<mx:FormItem label="部门" width="20%">
+										<s:HGroup width="100%" horizontalAlign="right">
+											<mx:FormItem label="部门" width="25%">
 												<mx:ComboBox  id="department" 
 															  width="100%" labelField="label" dataProvider="{departmentList}"
 															 />
 												
 											</mx:FormItem>
-											<mx:FormItem label="职务" width="35%">
+											<mx:FormItem label="职务" width="30%">
 												<mx:ComboBox  width="90%" id="position"  dataProvider="{roleList}" fontSize="12" labelField="label"  textAlign="left" />
 												
 											</mx:FormItem>
-											<mx:FormItem label="办公电话" width="45%">
+											<mx:FormItem label="办公电话" width="45%" horizontalAlign="right" labelWidth="100">
 												<mx:TextInput id='officePhone' width="90%"/>
 											</mx:FormItem>
 										</s:HGroup>
-										<s:HGroup width="100%">
+										<s:HGroup width="100%" horizontalAlign="right">
 											<mx:FormItem label="电话" width="25%">
 												<mx:TextInput id='contactPhone' width="100%"/>
 											</mx:FormItem>
@@ -576,14 +576,14 @@
 												<mx:TextInput id='workPeriod' width="90%" editable="false"/>
 											</mx:FormItem>
 										</s:HGroup>
-										<s:HGroup width="100%">
+										<s:HGroup width="100%" horizontalAlign="right">
 											<mx:FormItem label="入校时间" width="25%">
 												<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" id="attendDate" width="100%"  formatString="YYYY-MM-DD" change="attendDate_changeHandler(event)"/>
 											</mx:FormItem>
 											<mx:FormItem label="校龄" width="30%">
 												<mx:TextInput id='attendPeriod' width="100%" editable="false"/>
 											</mx:FormItem>
-											<mx:FormItem label="状态" width="25%" labelWidth="100">
+											<mx:FormItem label="状态" width="45%" labelWidth="100">
 												<s:DropDownList id='status' width="100%" 
 																dataProvider="{statusArr}" 
 																labelField="label" selectedIndex="0"/>
@@ -627,7 +627,9 @@
 										
 										<s:VGroup width="100%" height="100%"  gap="10" verticalAlign="middle" horizontalAlign="center">
 											<s:HGroup width="100%" height="100%" paddingLeft="10" paddingRight="10" paddingBottom="10">
-												<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="true"   borderAlpha="0.2" verticalAlign="middle"   id="relations_table" pagecount="10"  >				
+												<component:WlzxPageDataGrid width="100%" height="100%"
+																			borderVisible="true"   borderAlpha="0.2" verticalAlign="middle"  
+																			id="relations_table" pagecount="10"  >				
 													<component:mygridcolumns>
 														
 														<mx:DataGridColumn textAlign="center" headerText="姓名" dataField="name" width="100"></mx:DataGridColumn>

@@ -955,7 +955,7 @@
 										
 									</s:Label>
 								</s:VGroup>
-								<s:VGroup width="40%" height="100%">
+								<s:VGroup width="60%" height="100%">
 									<s:HGroup width="100%">
 										<mx:FormItem label="姓名" width="50%"><s:TextInput id="teacherName" width="100%"/></mx:FormItem>
 										<mx:FormItem label="性别" width="50%">
@@ -994,7 +994,7 @@
 									</mx:FormItem>
 									<mx:FormItem label="手机" width="100%"><mx:TextInput id="cellPhone" width="100%"/></mx:FormItem>
 								</s:VGroup>
-								<s:VGroup width="20%">
+								<s:VGroup width="10%">
 									<mx:FormItem label="照片" width="100%" height="200%">
 										<mx:Image id="imgPhoto" visible="true" autoLoad="true" width="100" height="100" source="{imageSrc}" ioError="imageIOErrorHandler(event)"/>
 										<mx:VBox>
@@ -1002,7 +1002,7 @@
 												<mx:Button id="btnBrowse" label="浏览" click="browseHandler(event)" />
 												<mx:Button id="btnUpload" label="上传" click="uploadHandler(event)" visible="false"  />
 											</mx:HBox>
-											<mx:ProgressBar id="pbrUploadProgress" indeterminate="false" mode="manual"
+											<mx:ProgressBar id="pbrUploadProgress" indeterminate="false" mode="manual" width="20"
 															fontWeight="bold" color="red" labelPlacement="bottom" trackHeight="9" visible="false" />
 										</mx:VBox>
 									</mx:FormItem>
@@ -1052,49 +1052,83 @@
 									<s:Label>
 									</s:Label>
 								</s:VGroup>								
-								<s:VGroup width="100%">
-									<s:HGroup width="100%">
-										<mx:FormItem label="部门" width="20%">
-											<mx:ComboBox  id="department" 
-														  width="100%" labelField="label" 
-														 />
-											
-										</mx:FormItem>
-										<mx:FormItem label="职务" width="35%">
-											<mx:ComboBox  width="90%" id="position"  fontSize="12" labelField="label"  textAlign="left" />
-
-										</mx:FormItem>
-										<mx:FormItem label="办公电话" width="45%">
-											<mx:TextInput id='officePhone' width="90%"/>
-										</mx:FormItem>
+								
+									<mx:Grid width="100%">
+									
+										<mx:GridRow horizontalAlign="right">
+											<mx:GridItem horizontalAlign="right" >
+												<mx:FormItem label="部门" width="100%">
+													<mx:ComboBox  id="department" 
+																  width="190" labelField="label" 
+																  />
+												</mx:FormItem>
+											</mx:GridItem>
+											<mx:GridItem horizontalAlign="right" >
+												<mx:FormItem label="职务" width="100%">
+													<mx:ComboBox  width="90%" id="position"  fontSize="12" labelField="label"  textAlign="left" />
+													
+												</mx:FormItem>
+											</mx:GridItem>
+											<mx:GridItem  horizontalAlign="right">
+												<mx:FormItem label="办公电话" width="100%" labelWidth="100">
+													<mx:TextInput id='officePhone' width="100"/>
+												</mx:FormItem>
+											</mx:GridItem>
+										</mx:GridRow>
+										<mx:GridRow horizontalAlign="right" >
+											<mx:GridItem  horizontalAlign="right">
+												<mx:FormItem label="电话" width="100%">
+													<mx:TextInput id='contactPhone' width="190"/>
+												</mx:FormItem>
+											</mx:GridItem>
+											<mx:GridItem  horizontalAlign="right">
+												<mx:FormItem label="何时工作" width="100%">
+													<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" id='workDate' width="100%"  formatString="YYYY-MM-DD" change="workDate_changeHandler(event)"/>
+												</mx:FormItem>
+											</mx:GridItem>
+											<mx:GridItem  horizontalAlign="right">
+												<mx:FormItem label="工龄" width="100%" labelWidth="100">
+													<mx:TextInput id='workPeriod' width="100" editable="false"/>
+												</mx:FormItem>
+											</mx:GridItem>
+										</mx:GridRow>
+										<mx:GridRow>
+											<mx:GridItem horizontalAlign="right">
+												<mx:FormItem label="入校时间" width="100%">
+													<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'
+																  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]'
+																  yearNavigationEnabled="true" id="attendDate" width="190"  formatString="YYYY-MM-DD"
+																  change="attendDate_changeHandler(event)"/>
+												</mx:FormItem>
+											</mx:GridItem>
+											<mx:GridItem horizontalAlign="right">
+												<mx:FormItem label="校龄" width="100%">
+													<mx:TextInput id='attendPeriod' width="100%" editable="false"/>
+												</mx:FormItem>
+											</mx:GridItem>
+											<mx:GridItem horizontalAlign="right">
+												<mx:FormItem label="状态" width="100%" labelWidth="100">
+													<s:DropDownList id='status' width="100" 
+																	dataProvider="{statusArr}" 
+																	labelField="label" selectedIndex="0"/>
+												</mx:FormItem>
+											</mx:GridItem>
+										</mx:GridRow>
+										<mx:GridRow >
+											<mx:GridItem>
+											</mx:GridItem>
+											<mx:GridItem>
+											</mx:GridItem>
+											<mx:GridItem horizontalAlign="right">
+												<s:Button click="validateForm(event)" label="保存" width="100"  />
+											</mx:GridItem>
+										</mx:GridRow>
+									
+								</mx:Grid >
+							
+									
+										
 									</s:HGroup>
-									<s:HGroup width="100%">
-										<mx:FormItem label="电话" width="25%">
-											<mx:TextInput id='contactPhone' width="100%"/>
-										</mx:FormItem>
-										<mx:FormItem label="何时工作" width="30%">
-											<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" id='workDate' width="100%"  formatString="YYYY-MM-DD" change="workDate_changeHandler(event)"/>
-										</mx:FormItem>
-										<mx:FormItem label="工龄" width="45%" labelWidth="100">
-											<mx:TextInput id='workPeriod' width="90%" editable="false"/>
-										</mx:FormItem>
-									</s:HGroup>
-									<s:HGroup width="100%">
-										<mx:FormItem label="入校时间" width="25%">
-											<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" id="attendDate" width="100%"  formatString="YYYY-MM-DD" change="attendDate_changeHandler(event)"/>
-										</mx:FormItem>
-										<mx:FormItem label="校龄" width="30%">
-											<mx:TextInput id='attendPeriod' width="100%" editable="false"/>
-										</mx:FormItem>
-										<mx:FormItem label="状态" width="25%" labelWidth="100">
-											<s:DropDownList id='status' width="100%" 
-															dataProvider="{statusArr}" 
-															labelField="label" selectedIndex="0"/>
-										</mx:FormItem>
-										<s:Button click="validateForm(event)" label="保存"  />
-									</s:HGroup>
-								</s:VGroup>
-							</s:HGroup>
 									<mx:Spacer height="10" />
 								</component:Fieldset>
 								
