@@ -264,13 +264,12 @@
 			</mx:HBox>
 			<mx:VBox width="100%" height="100"  verticalGap="10" verticalAlign="middle" horizontalAlign="center" >
 				<mx:VBox width="100%" height="100%"   horizontalGap="10" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="0" paddingBottom="0"   paddingLeft="10" paddingRight="10">
-					<mx:FormHeading label="条件查询">
-					</mx:FormHeading>
+				<component:Fieldset title="条件查询" >
 					
 					<mx:HBox>
 						<mx:HBox verticalAlign="middle">
 							<mx:Label  text="发起人"  width="100"  textAlign="right"/>
-							<hc:AutoComplete id="search_account"  labelField="name"  width="100"  matchType="anyPart" prompt="选择"  change="{ searchAccountHandleAutoCompleteChange() }" dropDownItemRenderer="{ searchAccountDropDownItemRenderer }" selectedItemStyleName="none">
+							<hc:AutoComplete id="search_account"  labelField="name"  width="94"  matchType="anyPart" prompt="选择"  change="{ searchAccountHandleAutoCompleteChange() }" dropDownItemRenderer="{ searchAccountDropDownItemRenderer }" selectedItemStyleName="none">
 								
 							</hc:AutoComplete>
 							<mx:Label id="search_account_id" visible="false">
@@ -285,13 +284,15 @@
 						</mx:HBox>
 						<mx:HBox>
 							<mx:Label  text="会议状态"  width="100"  textAlign="right"/>
-							<mx:ComboBox id="search_status"  dataProvider="{conferenceStatusList}" selectedIndex="0"  editable="false" width="80"/>
+							<mx:ComboBox id="search_status"  dataProvider="{conferenceStatusList}" selectedIndex="0"  editable="false" width="100"/>
 						</mx:HBox>
 					</mx:HBox>
 					<mx:HBox>
 						<mx:HBox verticalAlign="middle">
 							<mx:Label  text="开会日期"  width="100"  textAlign="right"/>
-							<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" id="search_date_begin"   formatString="YYYY-MM-DD"  editable="false" width="120"/>
+							<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  
+										  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' 
+										  yearNavigationEnabled="true" id="search_date_begin"   formatString="YYYY-MM-DD"  editable="false" width="120"/>
 							<mx:Label  text="--"  width="20" textAlign="center"/>
 							<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" id="search_date_end"  formatString="YYYY-MM-DD" editable="false" width="120"/>
 							<mx:Label  text="发布日期"  width="100"  textAlign="right"/>
@@ -301,8 +302,10 @@
 						</mx:HBox>	
 						
 						
-						<mx:Button  label="搜索"  width="70"   click="search();"/>
+						<mx:Button  label="搜索"  width="78"   click="search();"/>
 					</mx:HBox>
+				
+				</component:Fieldset>
 				</mx:VBox>
 			</mx:VBox>
 			<mx:VBox width="100%" height="100%"  verticalAlign="middle" horizontalAlign="center" >					

@@ -538,7 +538,7 @@
 		</mx:VBox>
 	</mx:VBox>
 	
-	<mx:HBox horizontalAlign="right" width="100%" height="30">
+	<mx:HBox horizontalAlign="right" width="100%" height="30" paddingRight="18">
 		<mx:Label id="addUpdateFlag" visible="false" text="add"/>
 		<!--	<mx:Button label="保存草稿" id="draftSaveButton" click="save_clickHandler(event)"/>-->
 		<mx:Button label="保存" id="saveButton" click="add_clickHandler(event)"/>
