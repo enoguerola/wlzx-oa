@@ -49,11 +49,10 @@
 		public var types:ArrayCollection=new ArrayCollection(
 			[ {label:"私人日程", data:0},
 				{label:"工作日程", data:1}]);
-
 		public var emergences:ArrayCollection=new ArrayCollection(
-			[ {label:"重要紧急", data:0},
-				{label:"重要非紧急", data:1},
-				{label:"紧急非重要", data:2}]);
+			[ {label:"一般", data:3},{label:"重要紧急", data:0},
+				{label:"重要", data:1},
+				{label:"紧急", data:2}]);
 		protected var _tip:Canvas;
 
 		private function get neededHeight():Number
@@ -125,7 +124,7 @@
 				this.w7.selected=item.SU;
 			
 			});
-			
+		//	emergence.selectedIndex=3;
 			setDayNames();
 	//		DrawTipMark();
 //			callLater(initWin);

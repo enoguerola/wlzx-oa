@@ -28,7 +28,7 @@ public class ReceiptDAOImpl extends BaseDAOImpl<ReceiptModel> implements Receipt
 				criteria.add(Restrictions.ilike("doNumber", doNumber, MatchMode.ANYWHERE));
 			
 			if(StringUtils.isNotEmpty(states))
-				criteria.add(Restrictions.sqlRestriction("status in('"+states+"')"));	
+				criteria.add(Restrictions.sqlRestriction("status in("+states+")"));	
 			if(StringUtils.isNotEmpty(title))
 				criteria.add(Restrictions.like("title", title, MatchMode.ANYWHERE));
 			if(StringUtils.isNotEmpty(subject))

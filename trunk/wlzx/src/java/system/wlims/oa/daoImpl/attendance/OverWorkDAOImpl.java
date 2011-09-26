@@ -38,7 +38,7 @@ public class OverWorkDAOImpl  extends BaseDAOImpl<OverWorkForm> implements OverW
 			criteria.add(Restrictions.sqlRestriction("overWork_teacher_id='"+teacherId+"'"));	
 		}
 		if(StringUtils.isNotEmpty(status)){
-			criteria.add(Restrictions.sqlRestriction("overWork_status in('"+status+"')"));	
+			criteria.add(Restrictions.sqlRestriction("overWork_status in("+status+")"));	
 		}
 		
 		if(StringUtils.isNotEmpty(submitBeginDate)){

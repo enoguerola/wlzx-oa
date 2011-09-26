@@ -37,7 +37,7 @@ public class TakeLeaveDAOImpl  extends BaseDAOImpl<TakeLeaveForm> implements Tak
 			criteria.add(Restrictions.sqlRestriction("takeLeave_teacher_id='"+teacherId+"'"));	
 		}
 		if(StringUtils.isNotEmpty(status)){
-			criteria.add(Restrictions.sqlRestriction("takeLeave_status in('"+status+"')"));	
+			criteria.add(Restrictions.sqlRestriction("takeLeave_status in("+status+")"));	
 		}
 		if(StringUtils.isNotEmpty(type)){
 			criteria.add(Restrictions.sqlRestriction("takeLeave_type ='"+type+"'"));	
