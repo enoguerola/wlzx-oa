@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Module xmlns:mx="http://www.adobe.com/2006/mxml" 
 		   xmlns:mx1="library://ns.adobe.com/flex/mx" layout="vertical" width="100%" height="100%" creationComplete="init();" xmlns:component="system.component.*">
-		<mx:RemoteObject id="noticeServiceRO" destination="noticeServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
-			<mx:method name="getTop5DepartmentNotice"  concurrency="last"  result="getTop5DepartmentNotice_resultHandler(event);" />
-			<mx:method name="getTop5SchoolNotice"  concurrency="last"  result="getTop5SchoolNotice_resultHandler(event);" />
-		</mx:RemoteObject>
+	<mx:RemoteObject id="noticeServiceRO" destination="noticeServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+		<mx:method name="getTop5DepartmentNotice"  concurrency="last"  result="getTop5DepartmentNotice_resultHandler(event);" />
+		<mx:method name="getTop5SchoolNotice"  concurrency="last"  result="getTop5SchoolNotice_resultHandler(event);" />
+	</mx:RemoteObject>
 	<mx:RemoteObject id="scheduleServiceRO" destination="scheduleServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 		<mx:method name="getPublicSchedulesByConditions"  concurrency="last"  result="getPublicSchedulesByConditions_resultHandler(event);" />
 		<mx:method name="getPersonSchedulesByConditions"  concurrency="last"  result="getPersonSchedulesByConditions_resultHandler(event);" />
@@ -15,7 +15,6 @@
 	<mx:RemoteObject id="allWaittingDealServiceRO" destination="allWaittingDealServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 		<mx:method name="getAllWaittingDealTasksByCondition"  concurrency="last"  result="getAllWaittingDealTasksByCondition_result(event);" />
 	</mx:RemoteObject>
-	<mx:Style source="home.css"/>
 	<mx:Script> 
 		<![CDATA[
 			import basic.utils.DateUtil;
@@ -61,28 +60,28 @@
 				var departmentIds:String="";
 				//Alert.show(departmentIds+"");
 				//if(parentApplication.currentUser.hasDam("department_notice_read_main@defaultVisit@@departmentFilter@")){
-					var temp:ArrayCollection=ArrayCollection(parentApplication.currentUserDepartment);
-					var departmentIds:String="";
-					for(var i:int=0;i<temp.length;i++){
-						departmentIds+=temp.getItemAt(i).data+",";
-					}
-
+				var temp:ArrayCollection=ArrayCollection(parentApplication.currentUserDepartment);
+				var departmentIds:String="";
+				for(var i:int=0;i<temp.length;i++){
+					departmentIds+=temp.getItemAt(i).data+",";
+				}
+				
 				//}
 				/* if(parentApplication.currentUser.hasDam("department_notice_read_main@defaultVisit@@noFilter@")){
-					departmentIds=null;
+				departmentIds=null;
 				} */
-					noticeServiceRO.getTop5DepartmentNotice(departmentIds);			
-					noticeServiceRO.getTop5SchoolNotice();
-					var today:String=CommonUtils.formatDate(new Date(),"YYYY-MM-DD");
-					
-					scheduleServiceRO.getPublicSchedulesByConditions(this.parentApplication.currentUser.id,null,null,null,null,null,today,today);
-					scheduleServiceRO.getPersonSchedulesByConditions(this.parentApplication.currentUser.id,null,null,null,null,null,today,today);
-					var beginTime:String=CommonUtils.formatDate(CommonUtils.currentMonthBeginDate(),"YYYY-MM-DD");
-					var endTime:String=CommonUtils.formatDate(CommonUtils.currentMonthEndDate(),"YYYY-MM-DD");
-					systemServiceRO.getSelfReceivedNotReadMessages(beginTime,endTime);
-					allWaittingDealServiceRO.getAllWaittingDealTasksByCondition(this.parentApplication.currentUser.id,beginTime,endTime);
-
-			}
+				noticeServiceRO.getTop5DepartmentNotice(departmentIds);			
+				noticeServiceRO.getTop5SchoolNotice();
+				var today:String=CommonUtils.formatDate(new Date(),"YYYY-MM-DD");
+				
+				scheduleServiceRO.getPublicSchedulesByConditions(this.parentApplication.currentUser.id,null,null,null,null,null,today,today);
+				scheduleServiceRO.getPersonSchedulesByConditions(this.parentApplication.currentUser.id,null,null,null,null,null,today,today);
+				var beginTime:String=CommonUtils.formatDate(CommonUtils.currentMonthBeginDate(),"YYYY-MM-DD");
+				var endTime:String=CommonUtils.formatDate(CommonUtils.currentMonthEndDate(),"YYYY-MM-DD");
+				systemServiceRO.getSelfReceivedNotReadMessages(beginTime,endTime);
+				allWaittingDealServiceRO.getAllWaittingDealTasksByCondition(this.parentApplication.currentUser.id,beginTime,endTime);
+				
+			} 
 			
 			private function systemFaultHandler(event:FaultEvent):void {
 				Alert.show(event.fault.faultString, 'Error');
@@ -152,168 +151,168 @@
 				<mx:VBox width="100%"  height="50%" verticalGap="0">
 					<component:NewPanel id="SchoolNoticePanel" width="100%" height="100%"  styleName="customPanel" title="校级公告"  
 										cornerRadius="5" borderVisible="true" borderStyle="solid" dropShadowVisible="false" >
-										
-										<!--click="openSchoolNoticeList();">-->
-					<!--<mx:HBox width="100%" height="25"  paddingLeft="20"    horizontalGap="10" styleName="CustomHBoxStyle"   verticalAlign="middle">
+						
+						<!--click="openSchoolNoticeList();">-->
+						<!--<mx:HBox width="100%" height="25"  paddingLeft="20"    horizontalGap="10" styleName="CustomHBoxStyle"   verticalAlign="middle">
 						<mx:Label text="校级公告" width="90%"  fontWeight="bold"/>
 						<mx:LinkButton  label="更多>>" width="10%" fontWeight="bold" fontStyle="italic" click="openSchoolNoticeList();">											
 						</mx:LinkButton>
-					</mx:HBox>-->
-					<mx:DataGrid width="100%" height="100%" id="schoolNotices" styleName="DataGridStyle">
-						<mx:columns>
-
-						<mx:DataGridColumn textAlign="center" headerText="公告类型"  width="60">
-							<mx:itemRenderer>
-								<mx:Component>
-									<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
-										<mx:Label text="{data.type}">
-										</mx:Label>
-									</mx:HBox>																		
-								</mx:Component>						
-							</mx:itemRenderer>
-						</mx:DataGridColumn>
-						<mx:DataGridColumn textAlign="center" headerText="公告标题" width="100" >
-							<mx:itemRenderer>
-								<mx:Component>
-									<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off" >
-										<mx:Image source="@Embed(source='../WebContent/resources/common/ui/emergence2.png')"  visible="{checkEmergence(data)}" toolTip="紧急公告"/>
-										<mx1:Text text="{data.title}" width="100">
-										</mx1:Text>
-										<mx:Script>
-											<![CDATA[
-												
-												//提示信息
-												import cn.org.rapid_framework.flex_security.SecurityControler;
-												
-												import mx.controls.Alert;
-												import mx.core.UIComponent;
-												private function checkEmergence(data:Object):Boolean{
-													
-													if(data!=null){	
-														if(data.emergence==1){
-															return true;
-														}else
-															return false;
+						</mx:HBox>-->
+						<mx:DataGrid width="100%" height="100%" id="schoolNotices">
+							<mx:columns>
+								
+								<mx:DataGridColumn textAlign="center" headerText="公告类型"  width="60">
+									<mx:itemRenderer>
+										<mx:Component>
+											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
+												<mx:Label text="{data.type}">
+												</mx:Label>
+											</mx:HBox>																		
+										</mx:Component>						
+									</mx:itemRenderer>
+								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="公告标题" width="100" >
+									<mx:itemRenderer>
+										<mx:Component>
+											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off" >
+												<mx:Image source="@Embed(source='../WebContent/resources/common/ui/emergence2.png')"  visible="{checkEmergence(data)}" toolTip="紧急公告"/>
+												<mx1:Text text="{data.title}" width="100">
+												</mx1:Text>
+												<mx:Script>
+													<![CDATA[
 														
-													}else{
-														return false;
-													}
-												}
-											]]>
-										</mx:Script>
-									</mx:HBox>
-								</mx:Component>
-							</mx:itemRenderer>
-						</mx:DataGridColumn>
-						<mx:DataGridColumn textAlign="center" headerText="发布时间" width="100" dataField="postTime" labelFunction="DateUtil.datagridFormatDate">
-						</mx:DataGridColumn>
-						<mx:DataGridColumn textAlign="center" headerText="发布部门" width="100" >
-							<mx:itemRenderer>
-								<mx:Component>
-									<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle"  horizontalScrollPolicy="off">
-										<mx1:Text text="{this.parentApplication.getDepartmentNameById(data.	postDepartmentId)}" width="100">
-										</mx1:Text>
-									</mx:HBox>
-								</mx:Component>
-							</mx:itemRenderer>
-						</mx:DataGridColumn>
-						<mx:DataGridColumn textAlign="center" headerText="详细" width="60">
-							<mx:itemRenderer>
-								<mx:Component>
-									<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0" horizontalScrollPolicy="off">
-										<mx:LinkButton  label="[详细]"  click="{this.outerDocument.detailNotice(data.id);}">											
-										</mx:LinkButton>
-									</mx:HBox>
-								</mx:Component>
-							</mx:itemRenderer>
-						</mx:DataGridColumn>
-						</mx:columns>
-					</mx:DataGrid>
+														//提示信息
+														import cn.org.rapid_framework.flex_security.SecurityControler;
+														
+														import mx.controls.Alert;
+														import mx.core.UIComponent;
+														private function checkEmergence(data:Object):Boolean{
+															
+															if(data!=null){	
+																if(data.emergence==1){
+																	return true;
+																}else
+																	return false;
+																
+															}else{
+																return false;
+															}
+														}
+													]]>
+												</mx:Script>
+											</mx:HBox>
+										</mx:Component>
+									</mx:itemRenderer>
+								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="发布时间" width="100" dataField="postTime" labelFunction="DateUtil.datagridFormatDate">
+								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="发布部门" width="100" >
+									<mx:itemRenderer>
+										<mx:Component>
+											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle"  horizontalScrollPolicy="off">
+												<mx1:Text text="{this.parentApplication.getDepartmentNameById(data.	postDepartmentId)}" width="100">
+												</mx1:Text>
+											</mx:HBox>
+										</mx:Component>
+									</mx:itemRenderer>
+								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="详细" width="60">
+									<mx:itemRenderer>
+										<mx:Component>
+											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0" horizontalScrollPolicy="off">
+												<mx:LinkButton  label="[详细]"  click="{this.outerDocument.detailNotice(data.id);}">											
+												</mx:LinkButton>
+											</mx:HBox>
+										</mx:Component>
+									</mx:itemRenderer>
+								</mx:DataGridColumn>
+							</mx:columns>
+						</mx:DataGrid>
 					</component:NewPanel>
 				</mx:VBox>
 				<mx:VBox width="100%"  height="50%" verticalGap="0" horizontalScrollPolicy="off">
 					
 					<!--<mx:HBox width="100%" height="25" paddingLeft="20"  horizontalGap="10" styleName="CustomHBoxStyle"  verticalAlign="middle">
-						<mx:Label text="部门公告" width="90%" fontWeight="bold"/>
-						<mx:LinkButton  label="更多>>" width="10%" fontWeight="bold" fontStyle="italic" click="openDepartmentNoticeList();"/>											
-
+					<mx:Label text="部门公告" width="90%" fontWeight="bold"/>
+					<mx:LinkButton  label="更多>>" width="10%" fontWeight="bold" fontStyle="italic" click="openDepartmentNoticeList();"/>											
+					
 					</mx:HBox>-->
 					<component:NewPanel id="DepartmentNoticePanel" width="100%" height="100%"  styleName="customPanel" title="部门公告"  
-							  cornerRadius="5" borderVisible="true" borderStyle="solid" dropShadowVisible="false" >
-								
+										cornerRadius="5" borderVisible="true" borderStyle="solid" dropShadowVisible="false" >
+						
 						<!--click="openDepartmentNoticeList();"-->
-					<mx:DataGrid width="100%" height="100%" id="departmentNotices">
-						<mx:columns>
-							
-						
-						<mx:DataGridColumn textAlign="center" headerText="公告类型"  width="60">
-							<mx:itemRenderer>
-								<mx:Component>
-									<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
-										<mx:Label text="{data.type}">
-										</mx:Label>
-									</mx:HBox>																		
-								</mx:Component>						
-							</mx:itemRenderer>
-						</mx:DataGridColumn>
-						<mx:DataGridColumn textAlign="center" headerText="公告标题" width="100" >
-							<mx:itemRenderer>
-								<mx:Component>
-									<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle"  horizontalScrollPolicy="off">
-										<mx:Image source="@Embed(source='../WebContent/resources/common/ui/emergence2.png')"  width="{checkEmergence(data)}" toolTip="紧急公告"/>
-										<mx1:Text text="{data.title}" width="100">
-										</mx1:Text>
-										<mx:Script>
-											<![CDATA[
-												
-												//提示信息
-												import cn.org.rapid_framework.flex_security.SecurityControler;
-												
-												import mx.controls.Alert;
-												import mx.core.UIComponent;
-												private function checkEmergence(data:Object):int{
-													
-													if(data!=null){	
-														if(data.emergence==1){
-															return 20;
-														}else
-															return 0;
+						<mx:DataGrid width="100%" height="100%" id="departmentNotices">
+							<mx:columns>
+								
+								
+								<mx:DataGridColumn textAlign="center" headerText="公告类型"  width="60">
+									<mx:itemRenderer>
+										<mx:Component>
+											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
+												<mx:Label text="{data.type}">
+												</mx:Label>
+											</mx:HBox>																		
+										</mx:Component>						
+									</mx:itemRenderer>
+								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="公告标题" width="100" >
+									<mx:itemRenderer>
+										<mx:Component>
+											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle"  horizontalScrollPolicy="off">
+												<mx:Image source="@Embed(source='../WebContent/resources/common/ui/emergence2.png')"  width="{checkEmergence(data)}" toolTip="紧急公告"/>
+												<mx1:Text text="{data.title}" width="100">
+												</mx1:Text>
+												<mx:Script>
+													<![CDATA[
 														
-													}else{
-														return 0;
-													}
-												}
-											]]>
-										</mx:Script>
-									</mx:HBox>
-								</mx:Component>
-							</mx:itemRenderer>
-						</mx:DataGridColumn>
-						<mx:DataGridColumn textAlign="center" headerText="发布时间" width="100" dataField="postTime" labelFunction="DateUtil.datagridFormatDate">
-						</mx:DataGridColumn>
-						<mx:DataGridColumn textAlign="center" headerText="发布人"  width="100" >
-							<mx:itemRenderer>
-								<mx:Component>
-									<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle"  horizontalScrollPolicy="off">
-										<mx1:Text text="{this.parentApplication.getTeacherNameByAccountId(data.posterId)}" width="100">
-										</mx1:Text>
-									</mx:HBox>
-								</mx:Component>
-							</mx:itemRenderer>
-						</mx:DataGridColumn>
-						
-						<mx:DataGridColumn textAlign="center" headerText="详细" width="60">
-							<mx:itemRenderer>
-								<mx:Component>
-									<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0" horizontalScrollPolicy="off">
-										<mx:LinkButton  label="[详细]"  click="{this.outerDocument.detailNotice(data.id);}">											
-										</mx:LinkButton>
-									</mx:HBox>
-								</mx:Component>
-							</mx:itemRenderer>
-						</mx:DataGridColumn>
-						</mx:columns>
-					</mx:DataGrid>
+														//提示信息
+														import cn.org.rapid_framework.flex_security.SecurityControler;
+														
+														import mx.controls.Alert;
+														import mx.core.UIComponent;
+														private function checkEmergence(data:Object):int{
+															
+															if(data!=null){	
+																if(data.emergence==1){
+																	return 20;
+																}else
+																	return 0;
+																
+															}else{
+																return 0;
+															}
+														}
+													]]>
+												</mx:Script>
+											</mx:HBox>
+										</mx:Component>
+									</mx:itemRenderer>
+								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="发布时间" width="100" dataField="postTime" labelFunction="DateUtil.datagridFormatDate">
+								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="发布人"  width="100" >
+									<mx:itemRenderer>
+										<mx:Component>
+											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle"  horizontalScrollPolicy="off">
+												<mx1:Text text="{this.parentApplication.getTeacherNameByAccountId(data.posterId)}" width="100">
+												</mx1:Text>
+											</mx:HBox>
+										</mx:Component>
+									</mx:itemRenderer>
+								</mx:DataGridColumn>
+								
+								<mx:DataGridColumn textAlign="center" headerText="详细" width="60">
+									<mx:itemRenderer>
+										<mx:Component>
+											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0" horizontalScrollPolicy="off">
+												<mx:LinkButton  label="[详细]"  click="{this.outerDocument.detailNotice(data.id);}">											
+												</mx:LinkButton>
+											</mx:HBox>
+										</mx:Component>
+									</mx:itemRenderer>
+								</mx:DataGridColumn>
+							</mx:columns>
+						</mx:DataGrid>
 					</component:NewPanel>
 				</mx:VBox>
 				
@@ -321,88 +320,88 @@
 			<mx:VBox width="40%" height="100%">
 				<mx:VBox width="100%"  height="100%" verticalGap="0" horizontalScrollPolicy="off">
 					<!--<mx:HBox width="100%" height="25" paddingLeft="20"   horizontalGap="10" styleName="CustomHBoxStyle"   verticalAlign="middle">
-						<mx:Label text="今日日程" width="70%" fontWeight="bold"/>
+					<mx:Label text="今日日程" width="70%" fontWeight="bold"/>
 					</mx:HBox>-->
 					<mx:Panel width="100%" height="50%"  styleName="customPanel" title="今日公共日程"  cornerRadius="5" borderVisible="true" borderStyle="solid" dropShadowVisible="false">
-
-					<mx:DataGrid width="100%" height="100%" id="publicScheduleList">
-						<mx:columns>
-							
-							
-							<mx:DataGridColumn textAlign="center" headerText="时间" width="300">
-								<mx:itemRenderer>
-									<mx:Component>
-										<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle"  horizontalGap="0" horizontalScrollPolicy="off">
-											<mx:Image source="@Embed(source='../WebContent/resources/common/ui/circle.png')"  width="{checkCircle(data)}"/>
-											<mx:Image source="@Embed(source='../WebContent/resources/common/ui/emergence1.png')"   width="{checkEmergence1(data.emergence)}" toolTip="重要紧急"/>
-											<mx:Image source="@Embed(source='../WebContent/resources/common/ui/emergence2.png')"  width="{checkEmergence2(data.emergence)}" toolTip="紧急"/>
-											<mx:Image source="@Embed(source='../WebContent/resources/common/ui/emergence3.png')"  width="{checkEmergence3(data.emergence)}" toolTip="重要"/>
-											
-											<mx1:Text text="{data.beginTime+'-'+data.endTime}"/>
-											<mx:Script>
-												<![CDATA[
-													
-													//提示信息
-													import cn.org.rapid_framework.flex_security.SecurityControler;
-													
-													import mx.controls.Alert;
-													import mx.core.UIComponent;
-													private function checkCircle(data:Object):int{
+						
+						<mx:DataGrid width="100%" height="100%" id="publicScheduleList">
+							<mx:columns>
+								
+								
+								<mx:DataGridColumn textAlign="center" headerText="时间" width="300">
+									<mx:itemRenderer>
+										<mx:Component>
+											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle"  horizontalGap="0" horizontalScrollPolicy="off">
+												<mx:Image source="@Embed(source='../WebContent/resources/common/ui/circle.png')"  width="{checkCircle(data)}"/>
+												<mx:Image source="@Embed(source='../WebContent/resources/common/ui/emergence1.png')"   width="{checkEmergence1(data.emergence)}" toolTip="重要紧急"/>
+												<mx:Image source="@Embed(source='../WebContent/resources/common/ui/emergence2.png')"  width="{checkEmergence2(data.emergence)}" toolTip="紧急"/>
+												<mx:Image source="@Embed(source='../WebContent/resources/common/ui/emergence3.png')"  width="{checkEmergence3(data.emergence)}" toolTip="重要"/>
+												
+												<mx1:Text text="{data.beginTime+'-'+data.endTime}"/>
+												<mx:Script>
+													<![CDATA[
 														
-														if(data!=null){	
-															if(data.repeatStatus==1){
-																return 20;
-															}else
-																return 0;
+														//提示信息
+														import cn.org.rapid_framework.flex_security.SecurityControler;
+														
+														import mx.controls.Alert;
+														import mx.core.UIComponent;
+														private function checkCircle(data:Object):int{
 															
-														}else{
-															return 0;
+															if(data!=null){	
+																if(data.repeatStatus==1){
+																	return 20;
+																}else
+																	return 0;
+																
+															}else{
+																return 0;
+															}
 														}
-													}
-													private function checkEmergence1(emergence:int):int{
-														
-														if(emergence==0){
-															return 20;
-														}else return 0;
-														
-													}
-													private function checkEmergence2(emergence:int):int{
-														
-														if(emergence==2){
-															return 20;
-														}else return 0;
-														
-													}
-													private function checkEmergence3(emergence:int):int{
-														
-														if(emergence==1){
-															return 20;
-														}else return 0;
-														
-													}
-												]]>
+														private function checkEmergence1(emergence:int):int{
+															
+															if(emergence==0){
+																return 20;
+															}else return 0;
+															
+														}
+														private function checkEmergence2(emergence:int):int{
+															
+															if(emergence==2){
+																return 20;
+															}else return 0;
+															
+														}
+														private function checkEmergence3(emergence:int):int{
+															
+															if(emergence==1){
+																return 20;
+															}else return 0;
+															
+														}
+													]]>
 												</mx:Script>
-										</mx:HBox>																			
-									</mx:Component>						
-								</mx:itemRenderer>
-							</mx:DataGridColumn>
-							
-							<mx:DataGridColumn textAlign="center" headerText="主题" width="150">
-								<mx:itemRenderer>
-									<mx:Component>
-										<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off" verticalScrollPolicy="off">
-											
-											<!--<mx:Label text="{data.title}" width="80%"/>-->
-											<mx1:Text text="{data.title}" width="140"/>
-										</mx:HBox>																			
-									</mx:Component>						
-								</mx:itemRenderer>
-							</mx:DataGridColumn>
-							
-    
-							
-						</mx:columns>
-					</mx:DataGrid>
+											</mx:HBox>																			
+										</mx:Component>						
+									</mx:itemRenderer>
+								</mx:DataGridColumn>
+								
+								<mx:DataGridColumn textAlign="center" headerText="主题" width="150">
+									<mx:itemRenderer>
+										<mx:Component>
+											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off" verticalScrollPolicy="off">
+												
+												<!--<mx:Label text="{data.title}" width="80%"/>-->
+												<mx1:Text text="{data.title}" width="140"/>
+											</mx:HBox>																			
+										</mx:Component>						
+									</mx:itemRenderer>
+								</mx:DataGridColumn>
+								
+								
+								
+							</mx:columns>
+						</mx:DataGrid>
 					</mx:Panel>
 					<mx:Panel width="100%" height="50%"  styleName="customPanel" title="今日个人日程"  cornerRadius="5" borderVisible="true" borderStyle="solid" dropShadowVisible="false">
 						
@@ -488,24 +487,24 @@
 				</mx:VBox>
 				<mx:VBox width="100%"  height="100" verticalGap="0" horizontalScrollPolicy="off">
 					<!--<mx:HBox width="100%" height="25"  paddingLeft="20"   horizontalGap="10" styleName="CustomHBoxStyle"   verticalAlign="middle">
-						<mx:Label text="提醒区" width="70%" fontWeight="bold"/>
+					<mx:Label text="提醒区" width="70%" fontWeight="bold"/>
 					</mx:HBox>-->
 					<mx:Panel width="100%" height="100%"  styleName="customPanel" title="提醒区"  cornerRadius="5" borderVisible="true" borderStyle="solid" dropShadowVisible="false">
-
-					<mx:VBox width="100%" height="100%" borderStyle="solid" horizontalAlign="center" verticalAlign="middle">
-						<mx:HBox width="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
-							<mx:Label text="本月待办工作数：" fontWeight="bold"/>
-							<mx:Label text="" id="waittingNum"  fontWeight="bold" fontStyle="italic"/>
-							<mx:LinkButton  label="【查看】"  fontWeight="bold"  click="openWaittingTask();">											
-							</mx:LinkButton>
-						</mx:HBox> 
-						<mx:HBox width="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
-							<mx:Label text="本月未读消息数：" fontWeight="bold"/>
-							<mx:Label text="" id="notReadNum"  fontWeight="bold" fontStyle="italic" />
-							<mx:LinkButton  label="【查看】"  fontWeight="bold"  click="openNotReadMessage();">											
-							</mx:LinkButton>
-						</mx:HBox>
-					</mx:VBox>
+						
+						<mx:VBox width="100%" height="100%" borderStyle="solid" horizontalAlign="center" verticalAlign="middle">
+							<mx:HBox width="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
+								<mx:Label text="本月待办工作数：" fontWeight="bold"/>
+								<mx:Label text="" id="waittingNum"  fontWeight="bold" fontStyle="italic"/>
+								<mx:LinkButton  label="【查看】"  fontWeight="bold"  click="openWaittingTask();">											
+								</mx:LinkButton>
+							</mx:HBox> 
+							<mx:HBox width="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
+								<mx:Label text="本月未读消息数：" fontWeight="bold"/>
+								<mx:Label text="" id="notReadNum"  fontWeight="bold" fontStyle="italic" />
+								<mx:LinkButton  label="【查看】"  fontWeight="bold"  click="openNotReadMessage();">											
+								</mx:LinkButton>
+							</mx:HBox>
+						</mx:VBox>
 					</mx:Panel>
 				</mx:VBox>
 				
