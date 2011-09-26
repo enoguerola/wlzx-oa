@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:editor="com.flexcalendar.components.calendar.editor.*"
 		   minHeight="{basicHeight}"
-		   backgroundAlpha="1.0" backgroundColor="#FFFFFF" borderColor="{bColor}" cornerRadius="25"
+		   backgroundAlpha="1.0" backgroundColor="#E0EEF0" borderColor="{bColor}" cornerRadius="5" 
 		   borderStyle="solid" creationComplete="onCreationComplete()">
 	<mx:Script>
     <![CDATA[
