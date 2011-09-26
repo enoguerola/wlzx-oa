@@ -80,6 +80,7 @@ s|BorderContainer{
 
 }
 
+
 .CustomHBoxStyle{
 	background-color:#EEF0FF; 
 }
@@ -198,6 +199,13 @@ mx|Panel{
 /****************  表格  *******************/
 .WlzxDataGridStyle{
 	header-background-skin:ClassReference("system.skins.WlzxDataGridHeaderSkin");
+}
+mx|DataGrid{
+
+	vertical-grid-line-color:#888888;
+	horizontal-grid-line-color:#888888;
+	
+	
 }
 /****************  FieldSet  *******************/
 component|Fieldset{

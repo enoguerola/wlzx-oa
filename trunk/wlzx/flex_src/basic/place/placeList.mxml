@@ -193,33 +193,32 @@
 						
 						
 							<mx:VBox width="100%" height="60" verticalAlign="middle" horizontalAlign="left"   verticalGap="0" borderVisible="true"    paddingLeft="10" paddingRight="10">
-								<s:Label text="条件查询"  height="30" width="100%" textAlign="left" fontWeight="bold"/>
-								<mx:HBox width="100%" height="30"   horizontalGap="10" >
-									<s:HGroup verticalAlign="middle">
-										<s:Label  text="名称" />
-										<s:TextInput id="search_name"/>
-										
-									</s:HGroup>	
-									<s:HGroup verticalAlign="middle">
-										<s:Label  text="类型" />
-										<mx:ComboBox  id="search_type" labelField="label"  width="120" selectedIndex="0"/>						
-									</s:HGroup>
-									<s:HGroup verticalAlign="middle">
-										<s:Label  text="位置" />
-										<mx:ComboBox  id="search_building" labelField="label"  width="120" selectedIndex="0"/>	
-									</s:HGroup>
-									<s:HGroup verticalAlign="middle">
-										<s:Label  text="面积" />
-										<s:TextInput id="area_begin" width="30"/>
-									</s:HGroup>	
-									<s:HGroup verticalAlign="middle">
-										<s:Label  text="容纳人数" />
-										<s:TextInput id="contain_begin" width="30"/>
-									</s:HGroup>	
-									<mx:Button  label="搜索"  width="80"  click="search()"/>
-									
-									
-								</mx:HBox>
+								<component:Fieldset title="条件查询" >
+									<mx:HBox width="100%" height="30"   horizontalGap="10" >
+										<s:HGroup verticalAlign="middle">
+											<s:Label  text="名称" />
+											<s:TextInput id="search_name"/>
+											
+										</s:HGroup>	
+										<s:HGroup verticalAlign="middle">
+											<s:Label  text="类型" />
+											<mx:ComboBox  id="search_type" labelField="label"  width="120" selectedIndex="0"/>						
+										</s:HGroup>
+										<s:HGroup verticalAlign="middle">
+											<s:Label  text="位置" />
+											<mx:ComboBox  id="search_building" labelField="label"  width="120" selectedIndex="0"/>	
+										</s:HGroup>
+										<s:HGroup verticalAlign="middle">
+											<s:Label  text="面积" />
+											<s:TextInput id="area_begin" width="30"/>
+										</s:HGroup>	
+										<s:HGroup verticalAlign="middle">
+											<s:Label  text="容纳人数" />
+											<s:TextInput id="contain_begin" width="30"/>
+										</s:HGroup>	
+										<mx:Button  label="搜索"  width="80"  click="search()"/>
+									</mx:HBox>
+								</component:Fieldset>
 							</mx:VBox>
 							
 							

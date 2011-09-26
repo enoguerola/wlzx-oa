@@ -16,7 +16,7 @@
 			<mx:method name="roleUpdate"  concurrency="last"  result="roleUpdate_resultHandler(event);" />
 		</mx:RemoteObject>
 		<valueObjects:RoleModel id="role"/>
-
+<mx:Style source="home.css"/>
 	<mx:Script> 
 		
 		<![CDATA[  
@@ -166,7 +166,7 @@
 					detail.text="";
 					symbol.text="";
 					sequence.text="";
-					level.text="";
+					level.text=""; 
 					
 				}
 			} 
@@ -187,7 +187,7 @@
 		]]> 
 		
 	</mx:Script> 
-	<mx:TitleWindow  id="roleWin" width="100%" height="100%"  close="PopUpManager.removePopUp(this);"  showCloseButton="true">
+	<mx:TitleWindow  id="roleWin" width="100%" height="100%"  styleName="PanelStyle" close="PopUpManager.removePopUp(this);"  showCloseButton="true">
 		<mx:Form width="100%" height="100%" id="dform">
 			<mx:FormHeading label="岗位信息" fontSize="15" width="100%" textAlign="center"/>
 			
