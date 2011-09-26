@@ -253,7 +253,7 @@
 		]]> 
 		
 	</fx:Script> 
-	<s:TitleWindow  id="placeWin" width="100%" height="100%"  close="PopUpManager.removePopUp(this);" skinClass="system.skins.WlzxTitleWindowSkin">
+	<s:TitleWindow  id="placeWin" width="100%" height="100%" styleName="PanelStyle"  close="PopUpManager.removePopUp(this);" skinClass="system.skins.WlzxTitleWindowSkin">
 		<mx:Form width="100%" height="100%" id="dform">
 			<mx:FormHeading label="场所信息" fontSize="15" width="100%" textAlign="center"/>
 			
@@ -292,7 +292,7 @@
 						<s:Label  text="2" verticalAlign="top"  textAlign="left" fontSize="8"/>
 					</mx:HBox>
 					
-					<mx:FormItem label="容纳人数 ">
+					<mx:FormItem label="容纳人数 " >
 						<mx:HBox verticalAlign="middle">
 							<s:TextInput id="contain_begin" width="30"/>
 							<s:Label  text="人" verticalAlign="middle"/>
