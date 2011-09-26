@@ -31,7 +31,7 @@ public class TeacherDAO extends BaseDAOImpl<TeacherModel>{
 		// TODO Auto-generated method stub
 		DetachedCriteria criteria = DetachedCriteria.forClass(TeacherModel.class);
 		if (StringUtils.isNotEmpty(states)) {
-			criteria.add(Restrictions.sqlRestriction("teacher_status  in('"+states+"')"));
+			criteria.add(Restrictions.sqlRestriction("teacher_status  in("+states+")"));
 		}
 		List<TeacherModel> result = this.getListByCriteria(criteria);
 		return result;

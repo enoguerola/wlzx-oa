@@ -530,8 +530,8 @@
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
 												<mx:Image source="@Embed(source='../WebContent/resources/common/ui/circle.png')"  visible="{checkCircle(data)}"/>
 												<mx:Image source="@Embed(source='../WebContent/resources/common/ui/emergence1.png')"  visible="{checkEmergence1(data.emergence)}" toolTip="重要紧急"/>
-												<mx:Image source="@Embed(source='../WebContent/resources/common/ui/emergence2.png')"  visible="{checkEmergence2(data.emergence)}" toolTip="紧急非重要"/>
-												<mx:Image source="@Embed(source='../WebContent/resources/common/ui/emergence3.png')"  visible="{checkEmergence3(data.emergence)}" toolTip="重要非紧急"/>
+												<mx:Image source="@Embed(source='../WebContent/resources/common/ui/emergence2.png')"  visible="{checkEmergence2(data.emergence)}" toolTip="紧急"/>
+												<mx:Image source="@Embed(source='../WebContent/resources/common/ui/emergence3.png')"  visible="{checkEmergence3(data.emergence)}" toolTip="重要"/>
 
 												<mx:Script>
 													<![CDATA[
@@ -694,10 +694,10 @@
 															if(emergence==0){
 																return "重要紧急";
 															}else if(emergence==1){
-																return "重要非紧急";
+																return "重要";
 															}else if(emergence==2){
-																return "紧急非重要";
-															}else return null;
+																return "紧急";
+															}else return "一般";
 															
 														}
 													]]>

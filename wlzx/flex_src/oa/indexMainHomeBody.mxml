@@ -6,7 +6,8 @@
 			<mx:method name="getTop5SchoolNotice"  concurrency="last"  result="getTop5SchoolNotice_resultHandler(event);" />
 		</mx:RemoteObject>
 	<mx:RemoteObject id="scheduleServiceRO" destination="scheduleServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
-		<mx:method name="getSchedulesByConditions"  concurrency="last"  result="getSchedulesByConditions_resultHandler(event);" />
+		<mx:method name="getPublicSchedulesByConditions"  concurrency="last"  result="getPublicSchedulesByConditions_resultHandler(event);" />
+		<mx:method name="getPersonSchedulesByConditions"  concurrency="last"  result="getPersonSchedulesByConditions_resultHandler(event);" />
 	</mx:RemoteObject>
 	<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 		<mx:method name="getSelfReceivedNotReadMessages"  concurrency="last"  result="getSelfReceivedNotReadMessages_resultHandler(event);" />
@@ -72,7 +73,9 @@
 					noticeServiceRO.getTop5DepartmentNotice(departmentIds);			
 					noticeServiceRO.getTop5SchoolNotice();
 					var today:String=CommonUtils.formatDate(new Date(),"YYYY-MM-DD");
-					scheduleServiceRO.getSchedulesByConditions(this.parentApplication.currentUser.id,null,null,null,null,null,null,null,today,today);
+					
+					scheduleServiceRO.getPublicSchedulesByConditions(this.parentApplication.currentUser.id,null,null,null,null,null,today,today);
+					scheduleServiceRO.getPersonSchedulesByConditions(this.parentApplication.currentUser.id,null,null,null,null,null,today,today);
 					var beginTime:String=CommonUtils.formatDate(CommonUtils.currentMonthBeginDate(),"YYYY-MM-DD");
 					var endTime:String=CommonUtils.formatDate(CommonUtils.currentMonthEndDate(),"YYYY-MM-DD");
 					systemServiceRO.getSelfReceivedNotReadMessages(beginTime,endTime);
@@ -94,11 +97,17 @@
 				waittingNum.text=list.length+"";
 				
 			}
-			protected function getSchedulesByConditions_resultHandler(event:ResultEvent):void
+			protected function getPersonSchedulesByConditions_resultHandler(event:ResultEvent):void
 			{
 				var allList:ArrayCollection=event.result as ArrayCollection;
 				CommonUtils.sortByCondition(allList,"beginTime" );
-				scheduleList.dataProvider=allList;
+				personScheduleList.dataProvider=allList;
+			}
+			protected function getPublicSchedulesByConditions_resultHandler(event:ResultEvent):void
+			{
+				var allList:ArrayCollection=event.result as ArrayCollection;
+				CommonUtils.sortByCondition(allList,"beginTime" );
+				publicScheduleList.dataProvider=allList;
 			}
 			private function getTop5DepartmentNotice_resultHandler(event:ResultEvent):void
 			{
@@ -195,13 +204,13 @@
 								</mx:Component>
 							</mx:itemRenderer>
 						</mx:DataGridColumn>
-						<mx:DataGridColumn textAlign="center" headerText="发布时间" width="100" dataField="postTime" labelFunction="DateUtil.datagridFormatDateTime">
+						<mx:DataGridColumn textAlign="center" headerText="发布时间" width="100" dataField="postTime" labelFunction="DateUtil.datagridFormatDate">
 						</mx:DataGridColumn>
-						<mx:DataGridColumn textAlign="center" headerText="发布人" width="100" >
+						<mx:DataGridColumn textAlign="center" headerText="发布部门" width="100" >
 							<mx:itemRenderer>
 								<mx:Component>
 									<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle"  horizontalScrollPolicy="off">
-										<mx1:Text text="{this.parentApplication.getTeacherNameByAccountId(data.posterId)}" width="100">
+										<mx1:Text text="{this.parentApplication.getDepartmentNameById(data.	postDepartmentId)}" width="100">
 										</mx1:Text>
 									</mx:HBox>
 								</mx:Component>
@@ -279,13 +288,13 @@
 								</mx:Component>
 							</mx:itemRenderer>
 						</mx:DataGridColumn>
-						<mx:DataGridColumn textAlign="center" headerText="发布时间" width="100" dataField="postTime" labelFunction="DateUtil.datagridFormatDateTime">
+						<mx:DataGridColumn textAlign="center" headerText="发布时间" width="100" dataField="postTime" labelFunction="DateUtil.datagridFormatDate">
 						</mx:DataGridColumn>
-						<mx:DataGridColumn textAlign="center" headerText="发布部门"  width="100" >
+						<mx:DataGridColumn textAlign="center" headerText="发布人"  width="100" >
 							<mx:itemRenderer>
 								<mx:Component>
 									<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle"  horizontalScrollPolicy="off">
-										<mx1:Text text="{this.parentApplication.getDepartmentNameById(data.postDepartmentId)}" width="100">
+										<mx1:Text text="{this.parentApplication.getTeacherNameByAccountId(data.posterId)}" width="100">
 										</mx1:Text>
 									</mx:HBox>
 								</mx:Component>
@@ -313,9 +322,9 @@
 					<!--<mx:HBox width="100%" height="25" paddingLeft="20"   horizontalGap="10" styleName="CustomHBoxStyle"   verticalAlign="middle">
 						<mx:Label text="今日日程" width="70%" fontWeight="bold"/>
 					</mx:HBox>-->
-					<mx:Panel width="100%" height="100%"  styleName="customPanel" title="今日日程"  cornerRadius="5" borderVisible="true" borderStyle="solid" dropShadowVisible="false">
+					<mx:Panel width="100%" height="50%"  styleName="customPanel" title="今日公共日程"  cornerRadius="5" borderVisible="true" borderStyle="solid" dropShadowVisible="false">
 
-					<mx:DataGrid width="100%" height="100%" id="scheduleList">
+					<mx:DataGrid width="100%" height="100%" id="publicScheduleList">
 						<mx:columns>
 							
 							
@@ -325,8 +334,8 @@
 										<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle"  horizontalGap="0" horizontalScrollPolicy="off">
 											<mx:Image source="@Embed(source='../WebContent/resources/common/ui/circle.png')"  width="{checkCircle(data)}"/>
 											<mx:Image source="@Embed(source='../WebContent/resources/common/ui/emergence1.png')"   width="{checkEmergence1(data.emergence)}" toolTip="重要紧急"/>
-											<mx:Image source="@Embed(source='../WebContent/resources/common/ui/emergence2.png')"  width="{checkEmergence2(data.emergence)}" toolTip="紧急非重要"/>
-											<mx:Image source="@Embed(source='../WebContent/resources/common/ui/emergence3.png')"  width="{checkEmergence3(data.emergence)}" toolTip="重要非紧急"/>
+											<mx:Image source="@Embed(source='../WebContent/resources/common/ui/emergence2.png')"  width="{checkEmergence2(data.emergence)}" toolTip="紧急"/>
+											<mx:Image source="@Embed(source='../WebContent/resources/common/ui/emergence3.png')"  width="{checkEmergence3(data.emergence)}" toolTip="重要"/>
 											
 											<mx1:Text text="{data.beginTime+'-'+data.endTime}"/>
 											<mx:Script>
@@ -393,6 +402,87 @@
 							
 						</mx:columns>
 					</mx:DataGrid>
+					</mx:Panel>
+					<mx:Panel width="100%" height="50%"  styleName="customPanel" title="今日个人日程"  cornerRadius="5" borderVisible="true" borderStyle="solid" dropShadowVisible="false">
+						
+						<mx:DataGrid width="100%" height="100%" id="personScheduleList">
+							<mx:columns>
+								
+								
+								<mx:DataGridColumn textAlign="center" headerText="时间" width="300">
+									<mx:itemRenderer>
+										<mx:Component>
+											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle"  horizontalGap="0" horizontalScrollPolicy="off">
+												<mx:Image source="@Embed(source='../WebContent/resources/common/ui/circle.png')"  width="{checkCircle(data)}"/>
+												<mx:Image source="@Embed(source='../WebContent/resources/common/ui/emergence1.png')"   width="{checkEmergence1(data.emergence)}" toolTip="重要紧急"/>
+												<mx:Image source="@Embed(source='../WebContent/resources/common/ui/emergence2.png')"  width="{checkEmergence2(data.emergence)}" toolTip="紧急"/>
+												<mx:Image source="@Embed(source='../WebContent/resources/common/ui/emergence3.png')"  width="{checkEmergence3(data.emergence)}" toolTip="重要"/>
+												
+												<mx1:Text text="{data.beginTime+'-'+data.endTime}"/>
+												<mx:Script>
+													<![CDATA[
+														
+														//提示信息
+														import cn.org.rapid_framework.flex_security.SecurityControler;
+														
+														import mx.controls.Alert;
+														import mx.core.UIComponent;
+														private function checkCircle(data:Object):int{
+															
+															if(data!=null){	
+																if(data.repeatStatus==1){
+																	return 20;
+																}else
+																	return 0;
+																
+															}else{
+																return 0;
+															}
+														}
+														private function checkEmergence1(emergence:int):int{
+															
+															if(emergence==0){
+																return 20;
+															}else return 0;
+															
+														}
+														private function checkEmergence2(emergence:int):int{
+															
+															if(emergence==2){
+																return 20;
+															}else return 0;
+															
+														}
+														private function checkEmergence3(emergence:int):int{
+															
+															if(emergence==1){
+																return 20;
+															}else return 0;
+															
+														}
+													]]>
+												</mx:Script>
+											</mx:HBox>																			
+										</mx:Component>						
+									</mx:itemRenderer>
+								</mx:DataGridColumn>
+								
+								<mx:DataGridColumn textAlign="center" headerText="主题" width="150">
+									<mx:itemRenderer>
+										<mx:Component>
+											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off" verticalScrollPolicy="off">
+												
+												<!--<mx:Label text="{data.title}" width="80%"/>-->
+												<mx1:Text text="{data.title}" width="140"/>
+											</mx:HBox>																			
+										</mx:Component>						
+									</mx:itemRenderer>
+								</mx:DataGridColumn>
+								
+								
+								
+							</mx:columns>
+						</mx:DataGrid>
 					</mx:Panel>
 				</mx:VBox>
 				<mx:VBox width="100%"  height="100" verticalGap="0" horizontalScrollPolicy="off">

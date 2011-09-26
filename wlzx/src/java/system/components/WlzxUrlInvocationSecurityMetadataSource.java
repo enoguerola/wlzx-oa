@@ -60,7 +60,7 @@ public class WlzxUrlInvocationSecurityMetadataSource
 	                	if(resource.getBelongOperation().getRsType().equals("URL")){
 	                		 String key=resource.getBelongOperation().getRsValue();
 	                		 //System.out.println("角色：["+role.getSymbol()+"]拥有的URL资源有："+key); 
-			                ConfigAttribute ca = new SecurityConfig(dr.getBasicFlag()==false?dr.getId():"basic_dr");  
+			                ConfigAttribute ca = new SecurityConfig(dr.getBasicFlag()==null||dr.getBasicFlag()==false?dr.getId():"basic_dr");  
 		                	resourceMap.get(key).add(ca);
 	                    }
 	                }  

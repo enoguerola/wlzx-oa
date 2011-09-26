@@ -38,7 +38,7 @@ public class MoveRestDayDAOImpl  extends BaseDAOImpl<MoveRestDayForm> implements
 			criteria.add(Restrictions.sqlRestriction("moveRestDay_teacher_id='"+teacherId+"'"));	
 		}
 		if(StringUtils.isNotEmpty(status)){
-			criteria.add(Restrictions.sqlRestriction("moveRestDay_status in('"+status+"')"));	
+			criteria.add(Restrictions.sqlRestriction("moveRestDay_status in("+status+")"));	
 		}
 	
 		if(StringUtils.isNotEmpty(submitBeginDate)){

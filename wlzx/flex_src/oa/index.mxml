@@ -62,7 +62,7 @@
 				account.text=account.text.concat(this.parentApplication.account);
 //				roles.text=roles.text.concat(this.parentApplication.roles);
 //				mainRole.text=mainRole.text.concat(this.parentApplication.mainRole);
-				delayTimer=new Timer(3000);//延迟三秒读取application中用户信息
+				delayTimer=new Timer(1000);//延迟三秒读取application中用户信息
 				delayTimer.addEventListener(TimerEvent.TIMER, loadApplicationUserInfo);
 				delayTimer.start();
 				

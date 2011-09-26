@@ -308,11 +308,11 @@ public class TakeLeaveForm extends AbstractForm {
 	@SuppressWarnings("finally")
 	public int getSections(){
 		int result=0;
-		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		try {
 			Date d1= df.parse(getBeginTime().split(" ")[0]);
 		    Date d2 = df.parse(getEndTime().split(" ")[0]);
-		    long diff = d1.getTime() - d2.getTime();
+		    long diff = d2.getTime() - d1.getTime();
 		    long days = diff / (1000 * 60 * 60 * 24);
 		    result+=days*Constants.DaysOfSections+(Integer.parseInt(getEndTime().split(" ")[1])-Integer.parseInt(getBeginTime().split(" ")[1]));
 	    }catch (Exception e) {

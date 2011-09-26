@@ -108,5 +108,19 @@ public class ScheduleServiceImpl implements ScheduleService {
 		}
 		return false;
 	}
+	@Override
+	public List<ScheduleModel> getPublicSchedulesByConditions(String userId,
+			String type, String state, String departmentIds, String emergence,
+			String title, String beginDate, String endDate) {
+		// TODO Auto-generated method stub
+		return scheduleDAO.getPublicSchedulesByConditions(userId, type, state, departmentIds, emergence, title, beginDate, endDate);
+	}
+	@Override
+	public List<ScheduleModel> getPersonSchedulesByConditions(String userId,
+			String type, String state, String departmentIds, String emergence,
+			String title, String beginDate, String endDate) {
+		// TODO Auto-generated method stub
+		return scheduleDAO.getPersonSchedulesByConditions(userId, type, state, departmentIds, emergence, title, beginDate, endDate);
+	}
 
 }

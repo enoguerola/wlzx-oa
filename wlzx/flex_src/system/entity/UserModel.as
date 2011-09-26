@@ -18,7 +18,7 @@ package system.entity
 		public var person:Object=new Object();
 		public var personName:String;
 		
-		public var mainDR:Object;
+		public var mainDR:DRModel;
 		public var drs:Object=new Array();
 		
 		public var authorizations:Object=new Array();////辅助
@@ -43,7 +43,7 @@ package system.entity
 			var drList:ArrayCollection = ArrayCollection(drs);
 			if(drList!=null&&drList.length>0)
 			for (var i:int = 0; i < drList.length; i++){
-				var _dr:Object = drList.getItemAt(i);	
+				var _dr:DRModel = drList.getItemAt(i) as DRModel;	
 				if(_dr!=null&&!results.contains(_dr))
 					results.addItem(_dr);
 			}
@@ -55,10 +55,10 @@ package system.entity
 			var drList:ArrayCollection=getAllDRs();
 			if(drList!=null&&drList.length>0)
 			for (var i:int = 0; i < drList.length; i++){
-				var _dr:Object = drList.getItemAt(i);	
+				var _dr:DRModel = drList.getItemAt(i) as DRModel;	
 				results+=(_dr.roleId+";");
 			}
-
+			
 			return results;
 		}
 //		public function getAllRoles():String
