@@ -95,7 +95,7 @@
 			<mx:HBox width="100%" horizontalAlign="center">
 				<mx:Label  text=""    width="100%"  letterSpacing="5" textAlign="center" fontSize="14"  fontWeight="bold" height="30"  id="noticeScope"/>
 			</mx:HBox>
-			<mx:HBox width="100%" horizontalAlign="right"  horizontalGap="0">
+			<mx:HBox width="100%" horizontalAlign="right"  horizontalGap="0" paddingRight="10">
 				<mx:Label  text="部门选择："  width="80"  textAlign="right" id="departmentsLabel"/>
 				<mx:ComboBox  width="100" id="departments"    labelField="label"  textAlign="left" />
 				<mx:Label  text="时间区间："  width="80"  textAlign="right"/>

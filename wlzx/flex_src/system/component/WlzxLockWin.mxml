@@ -20,7 +20,7 @@
 			
 		]]>
 	</fx:Script>
-	<mx:Label text="数据检索中" id="tip"  accessibilityEnabled="true"  height="20"  width="100%" textAlign="center"/>
+	<mx:Label text="   数据检索中" id="tip"  accessibilityEnabled="true"  height="20"  width="100%" textAlign="center"/>
 	<mx:Image id="gif" width="100%" height="100%"/>
 
 </mx:VBox>

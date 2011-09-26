@@ -173,7 +173,7 @@ in accordance with the terms of the license agreement accompanying it.
 						<s:LinearGradient rotation="90">
 							<s:GradientEntry color="white"
 											 color.inactiveGroup="white"/>
-							<s:GradientEntry color="0xD0E8AA"
+							<s:GradientEntry color="0xC0CCF0"
 											 color.inactiveGroup="0xD0E8AA"/>
 						</s:LinearGradient>
 					</s:fill>
