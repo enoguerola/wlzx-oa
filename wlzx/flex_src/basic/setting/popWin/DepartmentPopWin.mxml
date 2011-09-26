@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:VGroup xmlns:fx="http://ns.adobe.com/mxml/2009" 
-		 xmlns:s="library://ns.adobe.com/flex/spark" 
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"
 		 xmlns:hc="com.hillelcoren.components.*"
 		 xmlns:render="system.component.render.*"
-		 xmlns:mx="library://ns.adobe.com/flex/mx"  xmlns:valueObjects="system.entity.*" xmlns:flexlib="http://code.google.com/p/flexlib/"   creationComplete="init();" width="800" height="500">
+		  xmlns:valueObjects="system.entity.*" xmlns:flexlib="http://code.google.com/p/flexlib/"   creationComplete="init();" width="800" height="500">
 	
-	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
 		<mx:StringValidator id="name_stringValidator" source="{dname}" property="text"  requiredFieldError="部门名称不能为空"/>
 		<mx:StringValidator id="symbol_stringValidator" source="{symbol}" property="text"  requiredFieldError="部门唯一标识不能为空"/>
@@ -20,15 +18,14 @@
 			<mx:method name="getDepartmentById"  concurrency="last"  result="getDepartmentById_resultHandler(event);" />
 			<mx:method name="departmentUpdate"  concurrency="last"  result="departmentUpdate_resultHandler(event);" />
 		</mx:RemoteObject>
-		<fx:Component id="searchMasterAccountsDropDownItemRenderer">
+		<mx:Component id="searchMasterAccountsDropDownItemRenderer">
 			<render:AdvancedItemRenderer selectedItems="{ outerDocument.search_master_accounts.selectedItems }" />
-		</fx:Component>
-		<fx:Component id="searchLeaderAccountsDropDownItemRenderer">
+		</mx:Component>
+		<mx:Component id="searchLeaderAccountsDropDownItemRenderer">
 			<render:AdvancedItemRenderer selectedItems="{ outerDocument.search_leader_accounts.selectedItems }" />
-		</fx:Component>
-	</fx:Declarations>
+		</mx:Component>
 	
-	<fx:Script> 
+	<mx:Script> 
 		
 		<![CDATA[  
 			import basic.setting.*;
@@ -287,9 +284,9 @@
 			}
 		]]> 
 		
-	</fx:Script> 
+	</mx:Script> 
 	
-	<s:TitleWindow  id="departmentWin" width="100%" height="100%"  close="PopUpManager.removePopUp(this);" skinClass="system.skins.WlzxTitleWindowSkin">
+	<mx:TitleWindow  id="departmentWin" width="100%" height="100%"  close="PopUpManager.removePopUp(this);"  showCloseButton="true">
 		<mx:Form width="100%" height="100%" id="dform">
 			<mx:FormHeading label="部门信息" fontSize="15" width="100%" textAlign="center"/>
 			
@@ -340,7 +337,7 @@
 				<mx:TextInput id="phone" width="200"/>
 			</mx:FormItem>
 			<mx:FormItem label="部门描述">
-				<s:TextArea id="detail" width="400"/>
+				<mx:TextArea id="detail" width="400"/>
 			</mx:FormItem>
 			
 			<mx:FormItem width="100%">
@@ -351,6 +348,6 @@
 			</mx:FormItem> 
 		</mx:Form>
 		
-	</s:TitleWindow>
+	</mx:TitleWindow>
 	
-</s:VGroup>
+</mx:VBox>

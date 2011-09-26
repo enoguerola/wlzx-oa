@@ -69,7 +69,7 @@
 			[Bindable]
 			public var visibleDateRange:DateRange;
 			
-			public var scheduleScope:ArrayCollection = null; 
+			public var scheduleScope:ArrayCollection =  new ArrayCollection(); 
 			public var scheduleState:ArrayCollection = new ArrayCollection( 
 				[ {label:"全部", data:null},  
 					{label:"进行中", data:1},
@@ -103,10 +103,14 @@
 				list.visible=true;
 				schedule.height=0;
 				schedule.visible=false;
-				
+			//	Alert.show(scheduleScope.length+"aaa");
 //				var _init1:Object = {data:null,label:'全部'};
 //				scheduleScope.addItemAt(_init1,0);
-				scheduleScope=ArrayCollection(parentApplication.currentUserDepartment);
+				scheduleScope=new ArrayCollection(CommonUtils.clone(parentApplication.currentUserDepartment.source));
+//				var temp:Array=CommonUtils.clone(this.parentApplication.currentUserDepartment as Object);
+//				Alert.show(temp.length+"aaaaaaaaaaaaaaa");
+//				scheduleScope= ArrayCollection(temp);
+	//			Alert.show(scheduleScope.length+"bbb");
 				//var _init2:Object = ;
 				//Alert.show(parentApplication.currentUser.hasDam('public_schedule_main@defaultVisit@@notSchoolFilter@'));
 				if(parentApplication.currentUser.hasDam('public_schedule_main@defaultVisit@@notSchoolFilter@')){
@@ -116,7 +120,7 @@
 					//Alert.show(scheduleScope.length+"a");
 				}
 				if(parentApplication.currentUser.hasDam('public_schedule_main@defaultVisit@@notselfDepartmentFilter@')){
-					scheduleScope=ArrayCollection(parentApplication.currentUserDepartment);
+//					scheduleScope=ArrayCollection(parentApplication.currentUserDepartment);
 //					if(!scheduleScope.contains(_init1))
 //						scheduleScope.addItemAt(_init1,0);
 //					if(!scheduleScope.contains(_init2))
@@ -124,7 +128,8 @@
 					//Alert.show(scheduleScope.length+"b");
 				}
 				if(parentApplication.currentUser.hasDam('public_schedule_main@defaultVisit@@noFilter@')){
-					scheduleScope=ArrayCollection(parentApplication.allDepartment);
+					scheduleScope= new ArrayCollection(CommonUtils.clone(parentApplication.allDepartment.source));
+//					scheduleScope=ArrayCollection(parentApplication.allDepartment);
 //					if(!scheduleScope.contains(_init1))
 //						scheduleScope.addItemAt(_init1,0);
 					if(!scheduleScope.contains({data:'0',label:'学校日程'}))
