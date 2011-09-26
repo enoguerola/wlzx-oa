@@ -125,7 +125,7 @@
 				<!--************  搜索面板 ************-->
 				<mx:VBox height="60" width="100%" >
 					<component:Fieldset title="统计条件" width="95%" height="95%"  >
-						<mx:HBox width="100%"  horizontalGap="5" verticalAlign="bottom" horizontalAlign="left" >
+						<mx:HBox width="100%"  horizontalGap="5" verticalAlign="bottom" horizontalAlign="left" horizontalScrollPolicy="off" >
 							
 							<mx:HBox verticalAlign="middle">
 								<s:Label  text="部门" />
@@ -139,7 +139,7 @@
 								</mx:Label>
 							</mx:HBox>
 							<mx:HBox verticalAlign="middle">
-								<mx:Label  text="时间区间"  width="60"  textAlign="right"/>
+								<mx:Label  text="时间区间"  width="80"  textAlign="right"/>
 								<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" id="search_date_begin"   formatString="YYYY-MM-DD"  editable="false" width="120"/>
 								<mx:Label  text="--"  width="20" textAlign="center"/>
 								<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" id="search_date_end"  formatString="YYYY-MM-DD" editable="false" width="120"/>
@@ -190,7 +190,7 @@
 										</fx:Component>
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="请假次数|天数(*1/3)" width="60">
+								<mx:DataGridColumn textAlign="center" headerText="请假次数|天数(*1/3)" width="100">
 									<mx:itemRenderer>
 										<fx:Component>
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off" >
@@ -201,7 +201,7 @@
 										</fx:Component>
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="出差次数|天数(*1/3)" width="60">
+								<mx:DataGridColumn textAlign="center" headerText="出差次数|天数(*1/3)" width="100">
 									<mx:itemRenderer>
 										<fx:Component>
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off" >
@@ -212,7 +212,7 @@
 										</fx:Component>
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="加班次数|天数(*1/3)" width="60">
+								<mx:DataGridColumn textAlign="center" headerText="加班次数|天数(*1/3)" width="100">
 									<mx:itemRenderer>
 										<fx:Component>
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off" >
@@ -223,7 +223,7 @@
 										</fx:Component>
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="调休次数|天数(*1/3)" width="60">
+								<mx:DataGridColumn textAlign="center" headerText="调休次数|天数(*1/3)" width="100">
 									<mx:itemRenderer>
 										<fx:Component>
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off" >
@@ -234,7 +234,7 @@
 										</fx:Component>
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="详细" width="60">
+								<mx:DataGridColumn textAlign="center" headerText="详细" width="50">
 									<mx:itemRenderer>
 										<fx:Component>
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off" >

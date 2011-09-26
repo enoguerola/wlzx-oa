@@ -267,7 +267,7 @@
 							</mx:TextInput>
 						</mx:HBox>
 						<mx:HBox>
-							<mx:Label  text="会议状态"  width="100"  textAlign="right"/>
+							<mx:Label  text="会议状态"  width="70"  textAlign="right"/>
 							<mx:ComboBox id="search_status"  dataProvider="{conferenceStatusList}" selectedIndex="0"  editable="false" width="80"/>
 						</mx:HBox>
 					</mx:HBox>
