@@ -97,6 +97,7 @@ public class TeacherService {
 				dr=new DRModel();
 				dr.setDepartmentId(model.getTeacherDepartment());
 				dr.setRoleId(model.getTeacherPosition());
+				drDAO.saveOrUpdate(dr);
 			}
 			user.setMainDR(dr);
 			//初始角色部门初始化，若不存在则置空

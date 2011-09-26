@@ -97,6 +97,7 @@
 			protected function getSchedulesByConditions_resultHandler(event:ResultEvent):void
 			{
 				var allList:ArrayCollection=event.result as ArrayCollection;
+				CommonUtils.sortByCondition(allList,"beginTime" );
 				scheduleList.dataProvider=allList;
 			}
 			private function getTop5DepartmentNotice_resultHandler(event:ResultEvent):void
