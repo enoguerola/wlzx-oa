@@ -436,37 +436,40 @@
 					<mx:Label text="|"/>
 				</mx:HBox>
 			</mx:HBox>
-			<mx:VBox width="100%" height="60"  verticalGap="10" verticalAlign="middle" horizontalAlign="center" >
-				<mx:VBox width="100%" height="100%"   horizontalGap="10" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="0" paddingBottom="0"   paddingLeft="10" paddingRight="10">
-					<mx:FormHeading label="条件查询">
-					</mx:FormHeading>
-					<mx:HBox>
-						<mx:HBox verticalAlign="middle">
-							<mx:Label  text="发布日期"  width="100"  textAlign="right"/>
-							<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" id="search_date_begin"   formatString="YYYY-MM-DD"  editable="false" width="120"/>
-							<mx:Label  text="--"  width="20" textAlign="center"/>
-							<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" id="search_date_end"  formatString="YYYY-MM-DD" editable="false" width="120"/>
-						</mx:HBox>	
-						<mx:HBox>
-							<mx:Label  text="公告类型"  width="100"  textAlign="right"/>
-							<mx:ComboBox id="search_type"   editable="false" width="80"/>
+			<mx:VBox width="100%"  verticalGap="10" verticalAlign="middle" horizontalAlign="center" >
+				<mx:VBox width="100%" height="100%"   horizontalGap="10" verticalAlign="middle"
+						 horizontalAlign="left" borderVisible="true" paddingTop="10" paddingBottom="0"   paddingLeft="10" paddingRight="10">
+					<component:Fieldset title="条件查询" >
+						<mx:HBox horizontalGap="10">
+							<mx:HBox verticalAlign="middle">
+								<mx:Label  text="发布日期"  width="70"  textAlign="right"/>
+								<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" id="search_date_begin"   formatString="YYYY-MM-DD"  editable="false" width="120"/>
+								<mx:Label  text="--"  width="20" textAlign="center"/>
+								<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" id="search_date_end"  formatString="YYYY-MM-DD" editable="false" width="120"/>
+							</mx:HBox>	
+							<mx:HBox>
+								<mx:Label  text="公告类型"  width="70"  textAlign="right"/>
+								<mx:ComboBox id="search_type"   editable="false" width="80"/>
+							</mx:HBox>
+							<mx:HBox verticalAlign="middle">
+								<mx:Label  text="公告范围"  width="70"  textAlign="right"/>
+								<mx:ComboBox id="search_scope"  dataProvider="{scopes}" selectedIndex="0"  editable="false"  width="80"/>
+							</mx:HBox>
+							<mx:HBox verticalAlign="middle">
+								<mx:Label  text="优先级 "  width="70"  textAlign="right"/>
+								<mx:ComboBox  id="_emergence" dataProvider="{noticeEmergenceList}"  selectedIndex="0"  editable="false"/>
+							</mx:HBox>
+							<mx:Button  label="搜索"  width="70"   click="search();"/>
 						</mx:HBox>
-						<mx:HBox verticalAlign="middle">
-							<mx:Label  text="公告范围"  width="100"  textAlign="right"/>
-							<mx:ComboBox id="search_scope"  dataProvider="{scopes}" selectedIndex="0"  editable="false"  width="80"/>
-						</mx:HBox>
-						<mx:HBox verticalAlign="middle">
-							<mx:Label  text="优先级 "  width="100"  textAlign="right"/>
-							<mx:ComboBox  id="_emergence" dataProvider="{noticeEmergenceList}"  selectedIndex="0"  editable="false"/>
-						</mx:HBox>
-						<mx:Button  label="搜索"  width="70"   click="search();"/>
-					</mx:HBox>
+					</component:Fieldset>
 				</mx:VBox>
 			</mx:VBox>
 			<mx:VBox width="100%" height="100%"  verticalAlign="middle" horizontalAlign="center" paddingLeft="10" paddingRight="10" >
-				<mx:TabNavigator id="messagesView"  width="100%" height="100%" tabStyleName="customTabStyles"  horizontalGap="1" borderVisible="false"  tabWidth="120" paddingTop="0"  change="search();">
+				<mx:TabNavigator id="messagesView"  width="100%" height="100%" tabStyleName="customTabStyles"  horizontalGap="1" 
+								 borderVisible="false"  tabWidth="120" paddingTop="0"  change="search();">
 					<mx:HBox label="草稿箱" width="100%" height="100%">
-						<component:WlzxPageDataGrid width="100%" height="100%"   borderVisible="true"  autoLayout="true"  borderAlpha="0.2" verticalAlign="middle"   id="draftTable" pagecount="13"  >				
+						<component:WlzxPageDataGrid width="100%" height="100%"   borderVisible="true"  
+													autoLayout="true"  borderAlpha="0.2" verticalAlign="middle"   id="draftTable" pagecount="13"  >				
 							<component:mygridcolumns>
 								<mx:DataGridColumn textAlign="center" headerText="范围"  width="60">
 									<mx:itemRenderer>

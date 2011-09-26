@@ -213,7 +213,8 @@
 	<mx:VBox top="30" left="10" right="25" verticalGap="10">
 		<mx:HBox horizontalGap="10" width="100%">
 			<mx:Label text="{resourceManager.getString('FlexCalendar','editor.type')}" width="{descWidth}"/>
-			<mx:ComboBox id="type" labelField="label" dataProvider="{types}" change="item.type = type.selectedItem.data;if(type.selectedItem.data=='0'){item.schoolShare=schoolShare.selected=false;item.departmentShare =departmentShare.selected=false;}"/>
+			<mx:ComboBox id="type" labelField="label" dataProvider="{types}" 
+						 change="item.type = type.selectedItem.data;if(type.selectedItem.data=='0'){item.schoolShare=schoolShare.selected=false;item.departmentShare =departmentShare.selected=false;}"/>
 		</mx:HBox>
 		<mx:HBox horizontalGap="10" width="100%">
 			<mx:Label text="{resourceManager.getString('FlexCalendar','editor.emergence')}" width="{descWidth}"/>

@@ -53,7 +53,7 @@
 			</s:HGroup>
 			<s:VGroup width="60%" id="content" verticalAlign="middle" horizontalAlign="center" paddingTop="10" paddingBottom="10" paddingLeft="10" paddingRight="10">
 				<s:VGroup width="100%" horizontalAlign="left">
-					<s:Label text="温  岭  中 学 收  文  处  理 专 用 纸"  id="detail_title" width="100%" textAlign="center" fontSize="16" fontWeight="bold" height="30"/>
+					<s:Label text="温  岭  中 学  收  文  处  理  专  用  纸"  id="detail_title" width="100%" textAlign="center" fontSize="16" fontWeight="bold" height="30"/>
 					<s:HGroup width="100%" horizontalAlign="left">
 						<mx:FormHeading label="收文:" textAlign="left" width="100"/>
 						<s:TextInput id="_zi" change="changed()"/>
