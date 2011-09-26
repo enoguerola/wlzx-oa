@@ -707,9 +707,9 @@
 			
 			<mx:VBox width="100%" height="100%"  verticalGap="10" verticalAlign="middle" horizontalAlign="center" >
 				<mx:VBox width="100%" height="110"   horizontalGap="10" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
-					<mx:FormHeading label="条件查询">
-						
-					</mx:FormHeading>
+
+					<component:Fieldset title="条件查询" >
+					
 					<mx:HBox>
 						<mx:HBox verticalAlign="middle">
 							<mx:Label  text="申请教师"  width="100"  textAlign="right"/>
@@ -744,7 +744,7 @@
 						<mx:Button  label="搜索"  width="70"   click="search()"/>
 					</mx:HBox>
 					
-					
+					</component:Fieldset>
 					
 				</mx:VBox>
 				<mx:HBox width="100%" height="100%" paddingLeft="10" paddingRight="10" paddingBottom="10">
