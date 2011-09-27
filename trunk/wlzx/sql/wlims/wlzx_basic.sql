@@ -1,15 +1,21 @@
 /*
-MySQL Data Transfer
-Source Host: localhost
-Source Database: wlzx_basic
-Target Host: localhost
-Target Database: wlzx_basic
-Date: 2011-9-5 10:53:04
+Navicat MySQL Data Transfer
+
+Source Server         : localhost
+Source Server Version : 50051
+Source Host           : localhost:3306
+Source Database       : wlzx_basic
+
+Target Server Type    : MYSQL
+Target Server Version : 50051
+File Encoding         : 65001
+
+Date: 2011-09-27 15:10:07
 */
 
 SET FOREIGN_KEY_CHECKS=0;
 -- ----------------------------
--- Table structure for basic_teacher
+-- Table structure for `basic_teacher`
 -- ----------------------------
 DROP TABLE IF EXISTS `basic_teacher`;
 CREATE TABLE `basic_teacher` (
@@ -47,88 +53,19 @@ CREATE TABLE `basic_teacher` (
   PRIMARY KEY  (`teacher_id`),
   KEY `teacher_no` (`teacher_no`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=309 DEFAULT CHARSET=utf8 COMMENT='教师记录';
+) ENGINE=InnoDB AUTO_INCREMENT=311 DEFAULT CHARSET=utf8 COMMENT='教师记录';
 
 -- ----------------------------
--- Table structure for basic_teacher_social_relation
+-- Records of basic_teacher
 -- ----------------------------
-DROP TABLE IF EXISTS `basic_teacher_social_relation`;
-CREATE TABLE `basic_teacher_social_relation` (
-  `relation_id` int(20) NOT NULL auto_increment COMMENT '系统自增编号',
-  `teacher_id` bigint(20) default NULL COMMENT '教师外键',
-  `relation_name` varchar(20) NOT NULL COMMENT '姓名',
-  `relation_with` varchar(20) NOT NULL COMMENT '与本人关系',
-  `relation_company` varchar(50) NOT NULL COMMENT '所在工作单位',
-  `relation_phone` varchar(20) NOT NULL COMMENT '联系电话',
-  PRIMARY KEY  (`relation_id`),
-  KEY `relation_id` (`relation_id`),
-  KEY `teacher_id` (`teacher_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='社会关系';
-
--- ----------------------------
--- Table structure for basic_teacher_work_experience
--- ----------------------------
-DROP TABLE IF EXISTS `basic_teacher_work_experience`;
-CREATE TABLE `basic_teacher_work_experience` (
-  `experience_id` int(20) NOT NULL auto_increment COMMENT '系统自增编号',
-  `teacher_id` bigint(20) default NULL COMMENT '教师外键',
-  `experience_start_date` date NOT NULL COMMENT '开始时间',
-  `experience_end_date` date NOT NULL COMMENT '结束时间',
-  `experience_company` varchar(50) NOT NULL COMMENT '工作单位',
-  `experience_position` varchar(50) NOT NULL COMMENT '职务',
-  PRIMARY KEY  (`experience_id`),
-  KEY `experience_id` (`experience_id`),
-  KEY `teacher_id` (`teacher_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='教师工作经历';
-
--- ----------------------------
--- Table structure for wlzx_basic_directory
--- ----------------------------
-DROP TABLE IF EXISTS `wlzx_basic_directory`;
-CREATE TABLE `wlzx_basic_directory` (
-  `id` bigint(20) NOT NULL auto_increment,
-  `name` varchar(200) NOT NULL,
-  `value` varchar(200) NOT NULL,
-  `type` varchar(200) NOT NULL,
-  `sequence` int(11) NOT NULL default '0',
-  `extra_value` varchar(200) default NULL,
-  `creation_date` datetime NOT NULL,
-  `modified_date` timestamp NOT NULL default '0000-00-00 00:00:00' on update CURRENT_TIMESTAMP,
-  PRIMARY KEY  (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Table structure for wlzx_basic_place
--- ----------------------------
-DROP TABLE IF EXISTS `wlzx_basic_place`;
-CREATE TABLE `wlzx_basic_place` (
-  `id` bigint(20) NOT NULL auto_increment,
-  `name` varchar(200) NOT NULL,
-  `type` varchar(200) NOT NULL,
-  `position` varchar(200) NOT NULL,
-  `symbol` varchar(200) NOT NULL,
-  `functions` varchar(200) default NULL,
-  `area_begin` float default NULL,
-  `area_end` float default NULL,
-  `contain_begin` int(11) default NULL,
-  `contain_end` int(11) default NULL,
-  `remarks` text,
-  `creation_date` datetime NOT NULL,
-  `modified_date` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
-  PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records 
--- ----------------------------
-INSERT INTO `basic_teacher` VALUES ('3', '708', '陈才锜', '0', '1965-06-30', '1', '汉', '0', '', '温岭', '', '', '', '13906560909', '666888', '3', '', '', '', '', null, '1', '1', '86026888', '', '2011-07-31', '2011-07-05', '0', 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-09-05');
-INSERT INTO `basic_teacher` VALUES ('4', '709', '赵海勇', '0', '1976-07-07', '1', '汉', '0', '', '汉', '', '', '', '13505860965', '666900', '3', '', '', '', '', null, '1', '20', '86026900', '', '2009-07-08', '2007-07-04', '0', 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-09-05');
+INSERT INTO `basic_teacher` VALUES ('3', '708', '陈才锜', '0', '1965-06-30', '1', '汉', '0', '', '温岭', '', '', '', '13906560909', '666888', '3', '', '', '', '', null, '1', '1', '86026888', '', '2011-07-31', '2011-07-05', '0', 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-09-23');
+INSERT INTO `basic_teacher` VALUES ('4', '709', '赵海勇', '0', '1976-07-07', '1', '汉', '0', '', '汉', '', '', '', '13505860965', '666900', '3', '', '', '', '', null, '1', '20', '86026900', '', '2009-07-08', '2007-07-04', '0', 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-09-23');
 INSERT INTO `basic_teacher` VALUES ('5', '710', '莫勇军', '0', null, '1', '', '2', '', '', '', '', '', '13606862399', '666988', '3', '', '', '', '', null, '1', '75', '86026988', '', null, null, '0', 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-09-05');
 INSERT INTO `basic_teacher` VALUES ('6', '711', '马之骏', '0', null, '1', '', '0', '', '', '', '', '', '13606864810', '666898', '3', '', '', '', '', null, '1', '21', '86026898', '', null, null, '0', 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-09-05');
 INSERT INTO `basic_teacher` VALUES ('7', '712', '江正玲', '0', '1965-07-01', '1', '汉', '0', '', '温岭', '', '', '', '13758699555', '668555', '3', '', '', '', '', null, '1', '18', '86026555', '', '2011-07-01', '2011-07-06', '0', 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-09-05');
 INSERT INTO `basic_teacher` VALUES ('8', '713', '郑晓萍', '1', null, '1', '', '2', '', '', '', '', '', '13705865896', '666868', '3', '', '', '', '', null, '1', '19', '86026868', '', null, null, '0', 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-09-05');
 INSERT INTO `basic_teacher` VALUES ('10', '715', '林金法', '0', null, '1', '', '2', '', '', '', '', '', '13605862067', '666858', '3', '', '', '', '', null, '1', '75', '86026858', '', null, null, '0', 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-09-05');
-INSERT INTO `basic_teacher` VALUES ('11', '716', '李俊成', '0', null, '1', '', '2', '', '', '', '', '', '13758699810', '666810', '3', '', '', '', '', null, '6', '6', '86026810', '', null, null, '0', 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-09-05');
+INSERT INTO `basic_teacher` VALUES ('11', '716', '李俊成', '0', null, '1', '', '2', '', '', '', '', '', '13758699810', '666810', '3', '', '', '', '', null, '6', '121', '86026810', '', null, null, '0', 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-09-23');
 INSERT INTO `basic_teacher` VALUES ('12', '717', '林向荣', '0', null, '1', '', '2', '', '', '', '', '', '13958676629', '665305', '3', '', '', '', '', null, '6', '58', '86026607', '', null, null, '0', 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-09-05');
 INSERT INTO `basic_teacher` VALUES ('13', '718', '肖健', '0', '1978-07-01', '1', '汉', '2', '', '温岭', '', '', '', '13600588110', '660001', '3', '', '', '', '', null, '24', '34', '86026000', '', '2010-07-01', '2011-07-05', '0', 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-09-05');
 INSERT INTO `basic_teacher` VALUES ('14', '719', '王茜', '1', null, '1', '', '2', '', '', '', '', '', '13958675131', '666995', '3', '', '', '', '', null, '6', '77', '86026995', '', null, null, '0', 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-09-05');
@@ -144,7 +81,7 @@ INSERT INTO `basic_teacher` VALUES ('24', '729', '陶腾江', '0', null, '1', ''
 INSERT INTO `basic_teacher` VALUES ('25', '730', '郭修根', '1', null, '1', '', '2', '', '', '', '', '', '13958666655', '669898', '3', '', '', '', '', null, '28', '83', '', '', null, null, '0', 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-09-05');
 INSERT INTO `basic_teacher` VALUES ('26', '731', '周信中', '0', null, '1', '', '2', '', '', '', '', '', '13758699861', '666861', '3', '', '', '', '', null, '3', '80', '86026861', '', null, null, '0', 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-09-05');
 INSERT INTO `basic_teacher` VALUES ('27', '732', '李小平', '0', null, '1', '', '2', '', '', '', '', '', '13958676080', '666993', '3', '', '', '', '', null, '3', '80', '', '', null, null, '0', 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-09-05');
-INSERT INTO `basic_teacher` VALUES ('28', '733', '江敏', '0', '1967-07-01', '1', '汉', '0', '', '温岭', '', '', '', '13958675138', '666756', '3', '', '', '', '', null, '12', '22', '86026001', '', '2002-07-01', '2011-07-01', '0', 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-09-05');
+INSERT INTO `basic_teacher` VALUES ('28', '733', '江敏', '0', '1967-07-01', '1', '汉', '0', '', '温岭', '', '', '', '13958675138', '666756', '3', '', '', '', '', null, '12', '121', '86026001', '', '2002-07-01', '2011-07-01', '0', 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-09-23');
 INSERT INTO `basic_teacher` VALUES ('29', '734', '何小怡', '1', null, '1', '', '2', '', '', '', '', '', '13958649229', '666651', '3', '', '', '', '', null, '12', '60', '86026651', '', null, null, '0', 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-09-05');
 INSERT INTO `basic_teacher` VALUES ('30', '735', '张雯菁', '1', null, '1', '', '2', '', '', '', '', '', '13758699869', '666869', '3', '', '', '', '', null, '10', '61', '86026869', '', null, null, '0', 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-09-05');
 INSERT INTO `basic_teacher` VALUES ('31', '736', '江维荣', '0', null, '1', '', '2', '', '', '', '', '', '13958675196', '666870', '3', '', '', '', '', null, '12', '85', '', '', null, null, '0', 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-09-05');
@@ -390,7 +327,7 @@ INSERT INTO `basic_teacher` VALUES ('275', '980', '汪晓红', '1', null, '1', '
 INSERT INTO `basic_teacher` VALUES ('276', '981', '张美菊', '1', null, '1', '', '2', '', '', '', '', '', '13758699893', '666893', '', '', '', '', '', null, '36', null, '', '', null, null, '1', null, '2011-07-05', '2011-07-05');
 INSERT INTO `basic_teacher` VALUES ('277', '982', '叶勤', '1', null, '1', '', '2', '', '', '', '', '', '13606678129', '666895', '', '', '', '', '', null, '36', null, '86026895', '', null, null, '1', null, '2011-07-05', '2011-07-05');
 INSERT INTO `basic_teacher` VALUES ('278', '983', '叶祥利', '1', null, '1', '', '2', '', '', '', '', '', '13606675558', '665558', '3', '', '', '', '', null, '11', '17', '86026003', '', null, null, '0', 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-09-05');
-INSERT INTO `basic_teacher` VALUES ('279', '984', '毛道方', '1', null, '1', '', '2', '', '', '', '', '', '13958675218', '666912', '', '', '', '', '', null, '11', null, '', '', null, null, '1', null, '2011-07-05', '2011-07-05');
+INSERT INTO `basic_teacher` VALUES ('279', '984', '毛道方', '1', null, '1', '', '2', '', '', '', '', '', '13958675218', '666912', '3', '', '', '', '', null, '11', '103', '', '', null, null, '0', 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-09-05');
 INSERT INTO `basic_teacher` VALUES ('280', '985', '陈福初', '1', null, '1', '', '2', '', '', '', '', '', '13758632000', '662000', '', '', '', '', '', null, '11', null, '86026704', '', null, null, '1', null, '2011-07-05', '2011-07-05');
 INSERT INTO `basic_teacher` VALUES ('281', '986', '徐云强', '1', null, '1', '', '2', '', '', '', '', '', '13906863760', '666901', '3', '', '', '', '', null, '11', '62', '', '', null, null, '0', 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-09-05');
 INSERT INTO `basic_teacher` VALUES ('282', '987', '叶理富', '1', null, '1', '', '2', '', '', '', '', '', '13758670605', '660605', '', '', '', '', '', null, '11', null, '86026902', '', null, null, '1', null, '2011-07-05', '2011-07-05');
@@ -419,4 +356,92 @@ INSERT INTO `basic_teacher` VALUES ('305', '1012', '李永胜', '0', null, '0', 
 INSERT INTO `basic_teacher` VALUES ('306', '1013', '朱国鹏', '0', null, '0', '', '0', '', '', '', '', '', '', '662320', '0', '', '', '', '', null, '17', '91', '', '', null, null, '0', 'uploads/basic/teacherProfile/default_head.jpg', '2011-09-05', '2011-09-05');
 INSERT INTO `basic_teacher` VALUES ('307', '1014', '蒋俊燕', '0', null, '0', '', '0', '', '', '', '', '', '', '661591', '0', '', '', '', '', null, '17', '91', '', '', null, null, '0', 'uploads/basic/teacherProfile/default_head.jpg', '2011-09-05', '2011-09-05');
 INSERT INTO `basic_teacher` VALUES ('308', '1015', '方琰', '0', null, '0', '', '0', '', '', '', '', '', '', '663010', '0', '', '', '', '', null, '19', '93', '', '', null, null, '0', 'uploads/basic/teacherProfile/default_head.jpg', '2011-09-05', '2011-09-05');
+INSERT INTO `basic_teacher` VALUES ('309', '1016', '陈桂花', '1', null, '1', '', '0', '', '', '', '', '', '13626688567', '668567', '0', '', '', '', '', null, '19', '93', '', '', null, null, '0', 'uploads/basic/teacherProfile/default_head.jpg', '2011-09-05', '2011-09-05');
+INSERT INTO `basic_teacher` VALUES ('310', '1017', '邱晓慧', '1', null, '0', '', '0', '', '', '', '', '', '13095768255', '668255', '0', '', '', '', '', null, '13', '87', '', '', null, null, '0', 'uploads/basic/teacherProfile/default_head.jpg', '2011-09-05', '2011-09-05');
+
+-- ----------------------------
+-- Table structure for `basic_teacher_social_relation`
+-- ----------------------------
+DROP TABLE IF EXISTS `basic_teacher_social_relation`;
+CREATE TABLE `basic_teacher_social_relation` (
+  `relation_id` int(20) NOT NULL auto_increment COMMENT '系统自增编号',
+  `teacher_id` bigint(20) default NULL COMMENT '教师外键',
+  `relation_name` varchar(20) NOT NULL COMMENT '姓名',
+  `relation_with` varchar(20) NOT NULL COMMENT '与本人关系',
+  `relation_company` varchar(50) NOT NULL COMMENT '所在工作单位',
+  `relation_phone` varchar(20) NOT NULL COMMENT '联系电话',
+  PRIMARY KEY  (`relation_id`),
+  KEY `relation_id` (`relation_id`),
+  KEY `teacher_id` (`teacher_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='社会关系';
+
+-- ----------------------------
+-- Records of basic_teacher_social_relation
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `basic_teacher_work_experience`
+-- ----------------------------
+DROP TABLE IF EXISTS `basic_teacher_work_experience`;
+CREATE TABLE `basic_teacher_work_experience` (
+  `experience_id` int(20) NOT NULL auto_increment COMMENT '系统自增编号',
+  `teacher_id` bigint(20) default NULL COMMENT '教师外键',
+  `experience_start_date` date NOT NULL COMMENT '开始时间',
+  `experience_end_date` date NOT NULL COMMENT '结束时间',
+  `experience_company` varchar(50) NOT NULL COMMENT '工作单位',
+  `experience_position` varchar(50) NOT NULL COMMENT '职务',
+  PRIMARY KEY  (`experience_id`),
+  KEY `experience_id` (`experience_id`),
+  KEY `teacher_id` (`teacher_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='教师工作经历';
+
+-- ----------------------------
+-- Records of basic_teacher_work_experience
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `wlzx_basic_directory`
+-- ----------------------------
+DROP TABLE IF EXISTS `wlzx_basic_directory`;
+CREATE TABLE `wlzx_basic_directory` (
+  `id` bigint(20) NOT NULL auto_increment,
+  `name` varchar(200) NOT NULL,
+  `value` varchar(200) NOT NULL,
+  `type` varchar(200) NOT NULL,
+  `sequence` int(11) NOT NULL default '0',
+  `extra_value` varchar(200) default NULL,
+  `creation_date` datetime NOT NULL,
+  `modified_date` timestamp NOT NULL default '0000-00-00 00:00:00' on update CURRENT_TIMESTAMP,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of wlzx_basic_directory
+-- ----------------------------
 INSERT INTO `wlzx_basic_directory` VALUES ('1', '通知', '通知', 'noticeType', '0', '', '2011-09-05 07:55:48', '2011-09-05 07:55:48');
+INSERT INTO `wlzx_basic_directory` VALUES ('2', '考勤信息', '考勤信息', 'noticeType', '0', '', '2011-09-05 11:50:14', '2011-09-05 11:50:14');
+
+-- ----------------------------
+-- Table structure for `wlzx_basic_place`
+-- ----------------------------
+DROP TABLE IF EXISTS `wlzx_basic_place`;
+CREATE TABLE `wlzx_basic_place` (
+  `id` bigint(20) NOT NULL auto_increment,
+  `name` varchar(200) NOT NULL,
+  `type` varchar(200) NOT NULL,
+  `position` varchar(200) NOT NULL,
+  `symbol` varchar(200) NOT NULL,
+  `functions` varchar(200) default NULL,
+  `area_begin` float default NULL,
+  `area_end` float default NULL,
+  `contain_begin` int(11) default NULL,
+  `contain_end` int(11) default NULL,
+  `remarks` text,
+  `creation_date` datetime NOT NULL,
+  `modified_date` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of wlzx_basic_place
+-- ----------------------------
