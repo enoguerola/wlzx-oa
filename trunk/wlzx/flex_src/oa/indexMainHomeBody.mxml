@@ -8,14 +8,14 @@
 	<mx:RemoteObject id="scheduleServiceRO" destination="scheduleServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 		<mx:method name="getPublicSchedulesByConditions"  concurrency="last"  result="getPublicSchedulesByConditions_resultHandler(event);" />
 		<mx:method name="getPersonSchedulesByConditions"  concurrency="last"  result="getPersonSchedulesByConditions_resultHandler(event);" />
-	</mx:RemoteObject>
+	</mx:RemoteObject> 
 	<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 		<mx:method name="getSelfReceivedNotReadMessages"  concurrency="last"  result="getSelfReceivedNotReadMessages_resultHandler(event);" />
 	</mx:RemoteObject>
 	<mx:RemoteObject id="allWaittingDealServiceRO" destination="allWaittingDealServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 		<mx:method name="getAllWaittingDealTasksByCondition"  concurrency="last"  result="getAllWaittingDealTasksByCondition_result(event);" />
 	</mx:RemoteObject>
-	<mx:Script> 
+	<mx:Script>  
 		<![CDATA[
 			import basic.utils.DateUtil;
 			
@@ -171,7 +171,7 @@
 								</mx:Component>						
 							</mx:itemRenderer>
 						</mx:DataGridColumn>
-						<mx:DataGridColumn textAlign="center" headerText="公告标题" width="100" >
+						<mx:DataGridColumn textAlign="center" headerText="公告标题" width="250" >
 							<mx:itemRenderer>
 								<mx:Component>
 									<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off" >
@@ -204,7 +204,7 @@
 								</mx:Component>
 							</mx:itemRenderer>
 						</mx:DataGridColumn>
-						<mx:DataGridColumn textAlign="center" headerText="发布时间" width="100" dataField="postTime" labelFunction="DateUtil.datagridFormatDate">
+						<mx:DataGridColumn textAlign="center" headerText="发布时间" width="70" dataField="postTime" labelFunction="DateUtil.datagridFormatDate">
 						</mx:DataGridColumn>
 						<mx:DataGridColumn textAlign="center" headerText="发布部门" width="100" >
 							<mx:itemRenderer>
@@ -226,7 +226,7 @@
 									</mx:Component>
 								</mx:itemRenderer>
 							</mx:DataGridColumn>
-						<mx:DataGridColumn textAlign="center" headerText="详细" width="60">
+						<mx:DataGridColumn textAlign="center" headerText="详细" width="50">
 							<mx:itemRenderer>
 								<mx:Component>
 									<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0" horizontalScrollPolicy="off">
@@ -265,7 +265,7 @@
 								</mx:Component>						
 							</mx:itemRenderer>
 						</mx:DataGridColumn>
-						<mx:DataGridColumn textAlign="center" headerText="公告标题" width="100" >
+						<mx:DataGridColumn textAlign="center" headerText="公告标题" width="250" >
 							<mx:itemRenderer>
 								<mx:Component>
 									<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle"  horizontalScrollPolicy="off">
@@ -298,7 +298,7 @@
 								</mx:Component>
 							</mx:itemRenderer>
 						</mx:DataGridColumn>
-						<mx:DataGridColumn textAlign="center" headerText="发布时间" width="100" dataField="postTime" labelFunction="DateUtil.datagridFormatDate">
+						<mx:DataGridColumn textAlign="center" headerText="发布时间" width="70" dataField="postTime" labelFunction="DateUtil.datagridFormatDate">
 						</mx:DataGridColumn>
 						<mx:DataGridColumn textAlign="center" headerText="发布人"  width="100" >
 							<mx:itemRenderer>
@@ -320,7 +320,7 @@
 									</mx:Component>
 								</mx:itemRenderer>
 							</mx:DataGridColumn>
-						<mx:DataGridColumn textAlign="center" headerText="详细" width="60">
+						<mx:DataGridColumn textAlign="center" headerText="详细" width="50">
 							<mx:itemRenderer>
 								<mx:Component>
 									<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0" horizontalScrollPolicy="off">
@@ -335,7 +335,7 @@
 					</component:NewPanel>
 				</mx:VBox>
 				
-			</mx:VBox>
+			</mx:VBox> 
 			<mx:VBox width="40%" height="100%">
 				<mx:VBox width="100%"  height="100%" verticalGap="0" horizontalScrollPolicy="off">
 					<!--<mx:HBox width="100%" height="25" paddingLeft="20"   horizontalGap="10" styleName="CustomHBoxStyle"   verticalAlign="middle">
@@ -345,7 +345,7 @@
 
 					<mx:DataGrid width="100%" height="100%" id="publicScheduleList">
 						<mx:columns>
-							
+							 
 							
 							<!--<mx:DataGridColumn textAlign="center" headerText="时间" width="300">
 								<mx:itemRenderer>
@@ -413,7 +413,7 @@
 								</mx:itemRenderer>
 							</mx:DataGridColumn>-->
 							
-							<mx:DataGridColumn textAlign="center" headerText="主题" width="150">
+							<mx:DataGridColumn textAlign="center" headerText="主题" width="220">
 								<mx:itemRenderer>
 									<mx:Component>
 										<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off" verticalScrollPolicy="off">
@@ -491,8 +491,19 @@
 						<mx:DataGrid width="100%" height="100%" id="personScheduleList">
 							<mx:columns>
 								
+								<mx:DataGridColumn textAlign="center" headerText="主题" width="220">
+									<mx:itemRenderer>
+										<mx:Component>
+											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off" verticalScrollPolicy="off">
+												
+												<!--<mx:Label text="{data.title}" width="80%"/>-->
+												<mx1:Text text="{data.title}" width="140" toolTip="{data.content}"/>
+											</mx:HBox>																			
+										</mx:Component>						
+									</mx:itemRenderer>
+								</mx:DataGridColumn>
 								
-								<mx:DataGridColumn textAlign="center" headerText="时间" width="300">
+								<mx:DataGridColumn textAlign="center" headerText="时间" width="100">
 									<mx:itemRenderer>
 										<mx:Component>
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle"  horizontalGap="0" horizontalScrollPolicy="off">
@@ -566,17 +577,7 @@
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
 								
-								<mx:DataGridColumn textAlign="center" headerText="主题" width="150">
-									<mx:itemRenderer>
-										<mx:Component>
-											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off" verticalScrollPolicy="off">
-												
-												<!--<mx:Label text="{data.title}" width="80%"/>-->
-												<mx1:Text text="{data.title}" width="140" toolTip="{data.content}"/>
-											</mx:HBox>																			
-										</mx:Component>						
-									</mx:itemRenderer>
-								</mx:DataGridColumn>
+
 								
 								
 								

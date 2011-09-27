@@ -3,7 +3,7 @@
 			 xmlns:s="library://ns.adobe.com/flex/spark" 
 			 xmlns:mx="library://ns.adobe.com/flex/mx"    
 			 horizontalGridLineColor="#cccccc" verticalGridLineColor="#cccccc" variableRowHeight="true"
-			 headerHeight="28" headerStyleName="DGHeader" 
+			 headerHeight="20" headerStyleName="DGHeader" 
 			 horizontalScrollPolicy="off" 
 			 >
 	<fx:Declarations>
