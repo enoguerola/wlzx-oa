@@ -347,7 +347,7 @@
 						<mx:columns>
 							
 							
-							<mx:DataGridColumn textAlign="center" headerText="时间" width="300">
+							<!--<mx:DataGridColumn textAlign="center" headerText="时间" width="300">
 								<mx:itemRenderer>
 									<mx:Component>
 										<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle"  horizontalGap="0" horizontalScrollPolicy="off">
@@ -368,7 +368,6 @@
 													import  system.utils.CommonUtils;
 													private function getTime(data:Object):String{
 														var result:String="";
-														var 
 														result+=CommonUtils.formatDate(data.beginTime,"YYYY-MM-DD JJ:NN")+"-"+CommonUtils.formatDate(data.endTime,"YYYY-MM-DD JJ:NN");
 														return result;
 													
@@ -412,7 +411,7 @@
 										</mx:HBox>																			
 									</mx:Component>						
 								</mx:itemRenderer>
-							</mx:DataGridColumn>
+							</mx:DataGridColumn>-->
 							
 							<mx:DataGridColumn textAlign="center" headerText="主题" width="150">
 								<mx:itemRenderer>
@@ -426,7 +425,35 @@
 								</mx:itemRenderer>
 							</mx:DataGridColumn>
 							
-    
+							<mx:DataGridColumn textAlign="center" headerText="部门【学校】" dataField="loginaccount" width="100">
+								<mx:itemRenderer>
+									<mx:Component>
+										<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
+											<mx:Label text="{checkShare(data)}"/>
+											<mx:Script>
+												<![CDATA[
+													
+													import mx.controls.Alert;
+													import mx.core.UIComponent;
+													private function checkShare(data:Object):String{
+														if(data!=null){
+															var result:String="";
+															
+															if(data.schoolShare=="1")
+																result+="学校共享 ";
+															if(data.departmentShare=="1")
+																result+=this.parentApplication.getDepartmentNameById(data.departmentId);
+															return result;
+														}else{
+															return null;
+														}
+													}
+												]]>
+											</mx:Script>
+										</mx:VBox>																			
+									</mx:Component>						
+								</mx:itemRenderer>
+							</mx:DataGridColumn>
 							
 						</mx:columns>
 					</mx:DataGrid>
@@ -446,15 +473,31 @@
 												<mx:Image source="@Embed(source='../WebContent/resources/common/ui/emergence2.png')"  width="{checkEmergence2(data.emergence)}" toolTip="紧急"/>
 												<mx:Image source="@Embed(source='../WebContent/resources/common/ui/emergence3.png')"  width="{checkEmergence3(data.emergence)}" toolTip="重要"/>
 												
-												<mx1:Text text="{data.beginTime+'-'+data.endTime}"/>
+												<mx1:Text text="{getTime(data)}"/>
 												<mx:Script>
 													<![CDATA[
 														
 														//提示信息
-														import cn.org.rapid_framework.flex_security.SecurityControler;
-														
 														import mx.controls.Alert;
 														import mx.core.UIComponent;
+														import mx.formatters.DateFormatter;
+														import system.utils.CommonUtils;
+														private function getTime(data:Object):String{
+															var result:String="";
+															var beginDate:String=CommonUtils.formatDate(DateFormatter.parseDateString(data.beginTime),"YYYY-MM-DD");
+															var endDate:String=CommonUtils.formatDate(DateFormatter.parseDateString(data.endTime),"YYYY-MM-DD");
+															var beginTime:String=CommonUtils.formatDate(DateFormatter.parseDateString(data.beginTime),"JJ:NN");
+															var endTime:String=CommonUtils.formatDate(DateFormatter.parseDateString(data.endTime),"JJ:NN");
+															
+															if(beginDate==endDate){
+																result=beginTime+"-"+endTime;
+															}else{
+																result=beginDate+" "+beginTime+"-"+endDate+" "+endTime;
+															}
+															return result;
+															
+														}
+														
 														private function checkCircle(data:Object):int{
 															
 															if(data!=null){	
