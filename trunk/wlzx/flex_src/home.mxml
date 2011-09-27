@@ -249,6 +249,7 @@
 							}
 							
 						}
+						if(!CommonUtils.contains(currentUserDepartment,department.id))
 						currentUserDepartment.addItem( {data:department.id, label:department.name});
 						
 						

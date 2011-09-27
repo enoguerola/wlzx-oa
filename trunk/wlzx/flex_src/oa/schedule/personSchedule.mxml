@@ -297,6 +297,7 @@
 					pop.item.type=model.type;
 					pop.item.endDateSpecified=(model.repeatEndTime!=null?true:false);
 					pop.item.endDate=DateFormatter.parseDateString(model.repeatEndTime);
+					pop.item.emergence=pop.emergence.selectedItem.data;
 //					pop.item.MO=!model.repeatOnDays.split(";")[0] as Boolean;
 ////					Alert.show(pop.item.MO+"");
 //					pop.item.TU=Boolean(model.repeatOnDays.split(";")[1]);
@@ -381,6 +382,7 @@
 				var calendarItem:CalendarItem;calendarItem 
 						=new CalendarItem(beginDate,endDate,"新日程");
 				pop.item = converter.calendarItemToItemEditorVO(calendarItem);
+				pop.item.emergence=pop.emergence.selectedItem.data;
 				pop.cancelCallback=function():void{
 					PopUpManager.removePopUp(pop);
 				};

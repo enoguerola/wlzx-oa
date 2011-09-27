@@ -599,8 +599,8 @@
 								</mx:HBox>															
 							</mx:Component>						
 						</mx:itemRenderer>
-					</mx:DataGridColumn>
-					<mx:DataGridColumn textAlign="center" headerText="共享范围" dataField="loginaccount" width="100">
+					</mx:DataGridColumn>-->
+					<!--<mx:DataGridColumn textAlign="center" headerText="共享范围" dataField="loginaccount" width="100">
 						<mx:itemRenderer>
 							<mx:Component>
 								<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
@@ -609,10 +609,8 @@
 										<![CDATA[
 											
 											//提示信息
-											import cn.org.rapid_framework.flex_security.SecurityControler;
-											
-											import mx.controls.Alert;
 											import mx.core.UIComponent;
+											import mx.controls.Alert;
 											private function checkShare(data:Object):String{
 												if(data!=null){
 													var result:String="";
@@ -633,7 +631,7 @@
 							</mx:Component>						
 						</mx:itemRenderer>
 					</mx:DataGridColumn>-->
-					<mx:DataGridColumn textAlign="center" headerText="发布部门" dataField="loginaccount" width="100">
+					<mx:DataGridColumn textAlign="center" headerText="发布者" dataField="loginaccount" width="100">
 						<mx:itemRenderer>
 							<mx:Component>
 								<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
@@ -647,7 +645,18 @@
 											import mx.controls.Alert;
 											import mx.core.UIComponent;
 											private function getPostDepartment(data:Object):String{
-												return this.parentApplication.getDepartmentNameById(data.departmentId);
+												var item:Object=this.outerDocument.scope.selectedItem;
+												var result:String="";
+												if(item.data=="0")
+													result+= this.parentApplication.getDepartmentNameById(data.departmentId)+" ";
+												else
+													result+= this.parentApplication.getTeacherNameByAccountId(data.posterId);
+//												if(data.schoolShare=="1")
+//													result+= this.parentApplication.getDepartmentNameById(data.departmentId)+" ";
+//												 if(data.departmentShare=="1")
+//													result+= this.parentApplication.getTeacherNameByAccountId(data.posterId);
+												return result;
+												
 											}
 										]]>
 									</mx:Script>

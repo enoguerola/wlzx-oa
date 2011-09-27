@@ -12,6 +12,7 @@
 		import mx.core.Application;
 		import mx.managers.PopUpManager;
 		import mx.events.FlexEvent;
+		import system.utils.ComboxUtils;
 		private const bColor:Number = 0xa1a1a1;
 
 		[Embed(source="../WebContent/resources/common/ui/tabClose.swf", symbol="firefox_close_over")]
@@ -107,7 +108,7 @@
 			this.addEventListener(KeyboardEvent.KEY_UP, keyHandler, false, 0, true);
 //			Alert.show(item.repeatRuleId+"");
 //			Alert.show(item.interval+"");
-			this.emergence.selectedIndex=item.emergence;
+			this.emergence.selectedIndex=ComboxUtils.findIndex(emergences,item.emergence);
 			this.repeats.selectedIndex=item.repeatRuleId;
 			this.interval.selectedIndex=item.interval;
 			this.type.selectedIndex=item.type;
