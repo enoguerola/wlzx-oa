@@ -98,6 +98,7 @@
 				symbol.text=role.symbol;
 				sequence.text=role.sequence.toString();
 				level.text=role.level.toString();
+				teacherFlag.selected=role.teacherFlag;
 				/* var userList:ArrayCollection=role.users as ArrayCollection;
 				for (var i:int = 0; i < userList.length; i++){
 					var user:UserModel=userList.getItemAt(i) as UserModel;
@@ -131,6 +132,7 @@
 					role.symbol=symbol.text;
 					role.sequence=parseInt(sequence.text);
 					role.level=parseInt(level.text);
+					role.teacherFlag=teacherFlag.selected;
 					if(this.toolTip=='Update'){
 						/* systemServiceRO.roleUpdate(role,usersIds.text); */
 						systemServiceRO.roleUpdate(role);
@@ -202,7 +204,11 @@
 			</mx:FormItem>
 			
 			<mx:FormItem label="唯一标识" required="true">
-				<mx:TextInput id="symbol" width="200"/>
+				<mx:HBox>
+					<mx:TextInput id="symbol" width="200"/>
+					<mx:Label  text="教师岗位" /><mx:CheckBox id="teacherFlag"/>
+				</mx:HBox>
+				
 			</mx:FormItem>	
 			<mx:FormItem label="同级排序顺序">
 				<mx:TextInput id="sequence" width="200"/>

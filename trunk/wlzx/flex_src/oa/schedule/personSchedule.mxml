@@ -651,8 +651,28 @@
 									<mx:itemRenderer>
 										<mx:Component>
 											<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
-												<mx:Label text="{data.beginTime}"/>
-												
+												<!--<mx:Label text="{data.beginTime}"/>-->
+												<mx1:Text text="{getTime(data)}"/>
+												<mx:Script>
+													<![CDATA[
+														
+														//提示信息
+														import mx.controls.Alert;
+														import mx.core.UIComponent;
+														import mx.formatters.DateFormatter;
+														import system.utils.CommonUtils;
+														private function getTime(data:Object):String{
+															var result:String="";
+															var beginDate:String=CommonUtils.formatDate(DateFormatter.parseDateString(data.beginTime),"YYYY-MM-DD");
+															var beginTime:String=CommonUtils.formatDate(DateFormatter.parseDateString(data.beginTime),"JJ:NN");
+															result=beginDate+" "+beginTime
+															return result;
+															
+														}
+														
+														
+													]]>
+												</mx:Script>
 											</mx:VBox>																			
 										</mx:Component>						
 									</mx:itemRenderer>
@@ -661,7 +681,28 @@
 									<mx:itemRenderer>
 										<mx:Component>
 											<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
-												<mx:Label text="{data.endTime}"/>
+												<!--<mx:Label text="{data.endTime}"/>-->
+												<mx1:Text text="{getTime(data)}"/>
+												<mx:Script>
+													<![CDATA[
+														
+														//提示信息
+														import mx.controls.Alert;
+														import mx.core.UIComponent;
+														import mx.formatters.DateFormatter;
+														import system.utils.CommonUtils;
+														private function getTime(data:Object):String{
+															var result:String="";
+															var endDate:String=CommonUtils.formatDate(DateFormatter.parseDateString(data.endTime),"YYYY-MM-DD");
+															var endTime:String=CommonUtils.formatDate(DateFormatter.parseDateString(data.endTime),"JJ:NN");
+															result=endDate+" "+endTime
+															return result;
+															
+														}
+														
+														
+													]]>
+												</mx:Script>
 											</mx:VBox>																			
 										</mx:Component>						
 									</mx:itemRenderer>

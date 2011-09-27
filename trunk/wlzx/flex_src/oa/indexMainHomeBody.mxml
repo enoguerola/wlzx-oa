@@ -419,7 +419,35 @@
 										<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off" verticalScrollPolicy="off">
 											
 											<!--<mx:Label text="{data.title}" width="80%"/>-->
-											<mx1:Text text="{data.title}" width="140"/>
+											<mx1:Text text="{data.title}" width="140"  toolTip="{getToolTip(data)}"/>
+											<mx:Script>
+												<![CDATA[
+													
+													//提示信息
+													import mx.controls.Alert;
+													import mx.core.UIComponent;
+													import mx.formatters.DateFormatter;
+													import system.utils.CommonUtils;
+													private function getToolTip(data:Object):String{
+														var result:String="起至时间：";
+														var beginDate:String=CommonUtils.formatDate(DateFormatter.parseDateString(data.beginTime),"YYYY-MM-DD");
+														var endDate:String=CommonUtils.formatDate(DateFormatter.parseDateString(data.endTime),"YYYY-MM-DD");
+														var beginTime:String=CommonUtils.formatDate(DateFormatter.parseDateString(data.beginTime),"JJ:NN");
+														var endTime:String=CommonUtils.formatDate(DateFormatter.parseDateString(data.endTime),"JJ:NN");
+														
+														if(beginDate==endDate){
+															result+=beginTime+"-"+endTime;
+														}else{
+															result+=beginDate+" "+beginTime+"-"+endDate+" "+endTime;
+														}
+														result+="\n";
+														result+="详细："+data.content;
+														return result;
+														
+													}
+
+												]]>
+											</mx:Script>
 										</mx:HBox>																			
 									</mx:Component>						
 								</mx:itemRenderer>
@@ -544,7 +572,7 @@
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off" verticalScrollPolicy="off">
 												
 												<!--<mx:Label text="{data.title}" width="80%"/>-->
-												<mx1:Text text="{data.title}" width="140"/>
+												<mx1:Text text="{data.title}" width="140" toolTip="{data.content}"/>
 											</mx:HBox>																			
 										</mx:Component>						
 									</mx:itemRenderer>
