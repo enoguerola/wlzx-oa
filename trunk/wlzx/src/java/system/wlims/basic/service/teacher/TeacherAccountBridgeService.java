@@ -158,7 +158,7 @@ public class TeacherAccountBridgeService {
 		if(StringUtils.isNotEmpty(departmentId)){
 			DepartmentModel department=departmentDAO.get(departmentId);
 			if(department!=null){
-				Set<UserModel> users=department.getAllUsers();
+				Set<UserModel> users=department.getSelfUsers();
 //				List<UserModel> mainUsers=userDAO.getUsersByMainDepartment(departmentId);
 //				if(mainUsers!=null&&mainUsers.size()>0){
 //					for(UserModel user:mainUsers)

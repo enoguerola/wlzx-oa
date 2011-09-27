@@ -20,18 +20,19 @@
 	
 	<fx:Script> 
 		<![CDATA[  
+			import basic.utils.DateUtil;
+			
 			import mx.collections.ArrayCollection;
 			import mx.controls.*;
 			import mx.events.*;
 			import mx.managers.PopUpManager;
 			import mx.rpc.events.*;
 			
+			import system.component.WlzxLockWin;
 			import system.entity.DepartmentModel;
 			import system.entity.UserModel;
 			import system.index;
 			import system.utils.CommonUtils;
-			import basic.utils.DateUtil;
-			import system.component.WlzxLockWin;
 			public var taskStateList:ArrayCollection = new ArrayCollection( 
 				[	{label:"全部", data:null},  
 					{label:"进行中", data:"0"},  
@@ -196,35 +197,36 @@
 				return result2;
 			}
 			public function enterEdit(id:String,typeId:String):void{
-					//	Alert.show(type);
+						Alert.show(typeId);
+						var typeIntId:int=parseInt(typeId);
 				var parent:Object=(Object)(((Object)(this.owner)).owner);
-				if(typeId=="1"){
+				if(typeIntId==1){
 					Alert.show("确定已完成该指派任务?","确认",Alert.YES | Alert.NO,null,function(event:CloseEvent):void{
 						if(event.detail == Alert.YES)
 						{
 							taskServiceRO.finishTask(id,parentApplication.currentUser.id);
 						}
 					});
-				}else if(typeId=="2"){
+				}else if(typeIntId==2){
 					parent.addTab("adjustApprove-detail"+"_"+id,"调课处理",parent.nav,"oa/course/adjust/adjustApprove.swf",null,id);
-				}else if(typeId=="16"){
+				}else if(typeIntId==16){
 					parent.addTab("adjustApprove-detail"+"_"+id,"调课安排",parent.nav,"oa/course/adjust/adjustArrange.swf",null,id);
-				}else if(typeId>="3"&&typeId<="6"){
+				}else if(typeIntId>=3&&typeIntId<=6){
 					parent.addTab("takeLeaveApprove-leave-detail"+"_"+id,"请假处理",parent.nav,"oa/attendance/takeLeaveApprove.swf",null,id+";"+"Leave");
 					
-				}else if(typeId>="7"&&typeId<="10"){
+				}else if(typeIntId>=7&&typeIntId<=10){
 					parent.addTab("takeLeaveApprove-bussiness-detail"+"_"+id,"出差处理",parent.nav,"oa/attendance/takeLeaveApprove.swf",null,id+";"+"Leave");
 					
-				}else if(typeId>="11"&&typeId<="11"){
+				}else if(typeIntId>=11&&typeIntId<=11){
 					parent.addTab("takeLeaveApprove-terminate"+"_"+id,"销假处理",parent.nav,"oa/attendance/takeLeaveApprove.swf",null,id+";"+"Terminate");
 					
-				}else if(typeId>="12"&&typeId<="12"){
+				}else if(typeIntId>=12&&typeIntId<=12){
 					parent.addTab("overWorkApprove-detail"+"_"+id,"加班处理",parent.nav,"oa/attendance/overWorkApprove.swf",null,id);
 					
-				}else if(typeId>="13"&&typeId<="14"){
+				}else if(typeIntId>=13&&typeIntId<=14){
 					parent.addTab("moveRestDayApprove-detail"+"_"+id,"调休处理",parent.nav,"oa/attendance/moveRestDayApprove.swf",null,id);
 					
-				}else if(typeId>="15"&&typeId<="15"){
+				}else if(typeIntId>=15&&typeIntId<=15){
 					parent.addTab("conferenceArrange-detail"+"_"+id,"会议室落实",parent.nav,"oa/conference/conferenceArrange.swf",null,id);
 					
 				}
