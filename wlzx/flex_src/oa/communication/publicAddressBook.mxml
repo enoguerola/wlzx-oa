@@ -152,7 +152,7 @@
 				<mx:Label id="search_account_id" visible="false" width="0">
 					
 				</mx:Label>
-				<mx:LinkButton  label="快速查找" icon="@Embed(source='../WebContent/resources/oa/buttonIcon/search_icon.jpg')" click="search();">
+				<mx:LinkButton  label="快速查找" icon="@Embed(source='../WebContent/resources/oa/buttonIcon/search_icon.jpg')" click="departments.selectedItem=null;search();">
 					
 				</mx:LinkButton>
 				<mx:Label text="|"/>

@@ -94,10 +94,18 @@
 					mainRoleDesc=parentApplication.getRoleNameById(mainRoleId);
 				}
 				mainRole.text=mainRole.text.concat(mainRoleDesc);
+
+				var mainDepartmentDesc:String="";
+				if(parentApplication.currentUser.mainDR!=null){
+					var mainDepartmentId:String=parentApplication.currentUser.mainDR.departmentId;
+					mainDepartmentDesc=parentApplication.getDepartmentNameById(mainDepartmentId);
+				}
+				mainDepartment.text=mainDepartment.text.concat(mainDepartmentDesc);
 				if(parentApplication.currentUser.name=="super_root"){
 					
 					mainRole.text=mainRole.text.concat("超级管理员角色");
 					roles.text=roles.text.concat("超级管理员角色");
+					mainDepartment.text=mainDepartment.text.concat("任意部门");
 				}
 				delayTimer.stop();
 				
@@ -420,6 +428,7 @@
 			<s:HGroup width="35%">
 				<s:Label id="account" text="当前用户："/>
 				<s:Label id="mainRole" text="主职务："/>
+				<s:Label id="mainDepartment" text="主部门："/>
 			</s:HGroup>
 			<s:Label id="roles" text="所有职务："/>
 			<!--<s:HGroup width="35%">
