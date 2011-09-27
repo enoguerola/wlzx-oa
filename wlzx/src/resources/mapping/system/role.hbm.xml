@@ -36,7 +36,9 @@
 		<property name="basicFlag" type="boolean">
 			<column name="basic_flag" />
 		</property> 
-		
+		<property name="teacherFlag" type="boolean">
+			<column name="teacher_flag" />
+		</property> 
 		<set name="relativeDRs" lazy="false"  table="wlzx_system_dr"  cascade="none" inverse="true">
 			<key column="role_id" not-null="true" />
 			<one-to-many not-found="ignore" class="system.entity.DRModel" /> 

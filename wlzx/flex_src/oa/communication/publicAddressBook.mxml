@@ -175,8 +175,26 @@
 							<mx:DataGridColumn textAlign="center" headerText="短号" dataField="userAccount" width="100">
 							</mx:DataGridColumn>
 							<mx:DataGridColumn textAlign="center" headerText="主部门" dataField="mainDepartmentName" width="100">
+								<mx:itemRenderer>
+									<mx:Component>
+										<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
+											<mx:Label text="{parentApplication.getDepartmentNameById(data.mainDepartmentName)}"/>
+											
+										</mx:VBox>																			
+									</mx:Component>	
+									
+								</mx:itemRenderer>
 							</mx:DataGridColumn>
 							<mx:DataGridColumn textAlign="center" headerText="职务" dataField="mainRoleName" width="100">
+								<mx:itemRenderer>
+									<mx:Component>
+										<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
+											<mx:Label text="{parentApplication.getRoleNameById(data.mainRoleName)}"/>
+											
+										</mx:VBox>																			
+									</mx:Component>	
+									
+								</mx:itemRenderer>
 							</mx:DataGridColumn>
 							
 							<mx:DataGridColumn textAlign="center" headerText="电子邮箱" dataField="email" width="100">

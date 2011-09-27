@@ -697,6 +697,7 @@ public class SystemServiceImpl implements SystemService{
 		newRole.setDetail(role.getDetail());
 		newRole.setName(role.getName());
 		newRole.setSequence(role.getSequence());
+		newRole.setTeacherFlag(role.getTeacherFlag());
 //		for(UserModel preUser:role.getUsers()){
 //			newRole.getUsers().remove(preUser);
 //		}
