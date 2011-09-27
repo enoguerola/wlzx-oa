@@ -17,6 +17,7 @@ package oa.entity
 		public var lastEditTime:Date;
 		public var attachments:Object=new Array(); 
 		public var status:int;
+		public var readNums:int=0;
 		public function NoticeModel()
 		{
 			super();

@@ -95,7 +95,7 @@
 				unLockWin();
 			}
 			
-			private function search():void
+			public function search():void
 			{
 				lockWin();
 				var status:String=search_status.selectedItem.data;

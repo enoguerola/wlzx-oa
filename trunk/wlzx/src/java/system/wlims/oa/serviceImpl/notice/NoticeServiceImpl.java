@@ -321,4 +321,15 @@ public class NoticeServiceImpl implements NoticeService {
 		return result;
 	}
 
+	@Override
+	public int addReadNumsByOne(String id) throws ServiceException {
+		// TODO Auto-generated method stub
+		NoticeModel notice= noticeDAO.get(id);
+		if(notice.getStatus()!=0){
+			notice.setReadNums(notice.getReadNums()+1);
+			noticeDAO.merge(notice);
+		}
+		return notice.getReadNums();
+	}
+
 }

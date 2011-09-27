@@ -22,9 +22,9 @@
 			<mx:method name="getDepartmentBySymbol"  concurrency="last"  result="getDepartmentBySymbolResult(event);" />
 		</mx:RemoteObject>-->
 	
-	<mx:StringValidator id="title_stringValidator" source="{title}" property="text"  requiredFieldError="不能为空"/>
-	<mx:StringValidator id="content_stringValidator" source="{rte}" property="text"  requiredFieldError="不能为空"/>
-	<validator:ComboxValidator id="type_stringValidator" source="{noticeType}"/>
+	<mx:StringValidator id="title_stringValidator"  property="text"  requiredFieldError="不能为空"/>
+	<mx:StringValidator id="content_stringValidator" property="text"  requiredFieldError="不能为空"/>
+	<validator:ComboxValidator id="type_stringValidator" />
 
 	<mx:states>
 		<mx:State name="list">           
@@ -51,7 +51,6 @@
 	<mx:Script> 
 		<![CDATA[
 			import basic.utils.DateUtil;
-			import system.utils.ComboxUtils;
 			
 			import mx.collections.ArrayCollection;
 			import mx.containers.FormItem;
@@ -66,12 +65,13 @@
 			import mx.rpc.events.*;
 			import mx.validators.Validator;
 			
+			import oa.entity.AttachmentModel;
+			
 			import system.component.WlzxLockWin;
 			import system.component.validator.ComboxValidator;
 			import system.entity.DepartmentModel;
 			import system.utils.*;
-			import basic.utils.DateUtil;
-			import oa.entity.AttachmentModel;
+			import system.utils.ComboxUtils;
 			private var validatorArr:Array;
 			
 			public var scopes:ArrayCollection = new ArrayCollection( 
@@ -101,7 +101,7 @@
 				upload.urlRequest = urlRequest;
 				search_account.dataProvider=this.parentApplication.allTeacherAcccounts;
 				//systemServiceRO.getDepartmentBySymbol("root");
-				departmentList = this.parentApplication.currentUserFirstLevelDepartment;
+				departmentList = new ArrayCollection(CommonUtils.clone(this.parentApplication.currentUserFirstLevelDepartment.source));
 				
 				
 			}
@@ -128,7 +128,7 @@
 				}
 				noticeTypeList.addItem({label:"其他", data:"其他"});
 				search_type.dataProvider=typeList;
-				noticeType.dataProvider=noticeTypeList;
+			//	noticeType.dataProvider=noticeTypeList;
 				callLater(search);
 				
 				
@@ -202,6 +202,7 @@
 			}
 			
 			public function editInit(id:String):void{
+				noticeType.dataProvider=noticeTypeList;
 				noticeServiceRO.loadNoticeInfoById(id);
 			}
 			
@@ -257,6 +258,7 @@
 				validatorArr = new Array();
 				validatorArr.push(title_stringValidator);
 				validatorArr.push(content_stringValidator);
+				validatorArr.push(type_stringValidator);
 				var validatorErrorArray:Array = Validator.validateAll(validatorArr);
 				var isValidForm:Boolean = validatorErrorArray.length == 0;
 				if (isValidForm) {
@@ -559,6 +561,16 @@
 														}
 													]]>
 												</mx:Script>
+											</mx:HBox>
+										</mx:Component>
+									</mx:itemRenderer>
+								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="阅读数" width="100" >
+									<mx:itemRenderer>
+										<mx:Component>
+											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle"  horizontalScrollPolicy="off">
+												<mx1:Text text="{data.readNums}" width="100">
+												</mx1:Text>
 											</mx:HBox>
 										</mx:Component>
 									</mx:itemRenderer>

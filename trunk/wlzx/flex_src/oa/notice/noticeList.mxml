@@ -34,7 +34,7 @@
 				noticeScope.text="部门公告";
 				if(parentApplication.currentUser.hasDam("department_notice_read_main@defaultVisit@@departmentFilter@")){
 					//Alert.show("aaaaa");
-					var temp:ArrayCollection=ArrayCollection(parentApplication.currentUserFirstLevelDepartment);
+					var temp:ArrayCollection=new ArrayCollection(CommonUtils.clone(parentApplication.currentUserFirstLevelDepartment.source));
 					var dataString:String="";
 					for(var i:int=0;i<temp.length-1;i++){
 						dataString+=temp.getItemAt(i).data+",";
@@ -44,7 +44,7 @@
 					departments.dataProvider=temp;
 				}
 				if(parentApplication.currentUser.hasDam("department_notice_read_main@defaultVisit@@noFilter@")){
-					var temp:ArrayCollection=ArrayCollection(parentApplication.allFirstLevelAboveDepartment);
+					var temp:ArrayCollection=new ArrayCollection(CommonUtils.clone(parentApplication.allFirstLevelAboveDepartment.source));
 					temp.addItemAt({data:null, label:"全部"},0);
 					departments.dataProvider=temp;
 				}
@@ -58,7 +58,7 @@
 			search();
 		}
 			
-		private function search():void
+		public function search():void
 		{
 			
 		
@@ -192,6 +192,16 @@
 					<mx:Component>
 						<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle"  horizontalScrollPolicy="off">
 							<mx1:Text text="{this.parentApplication.getTeacherNameByAccountId(data.posterId)}" width="100">
+							</mx1:Text>
+						</mx:HBox>
+					</mx:Component>
+				</mx:itemRenderer>
+			</mx:DataGridColumn>
+			<mx:DataGridColumn textAlign="center" headerText="阅读数" width="100" >
+				<mx:itemRenderer>
+					<mx:Component>
+						<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle"  horizontalScrollPolicy="off">
+							<mx1:Text text="{data.readNums}" width="100">
 							</mx1:Text>
 						</mx:HBox>
 					</mx:Component>

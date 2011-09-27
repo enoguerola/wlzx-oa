@@ -27,5 +27,7 @@ public interface NoticeService {
 	public boolean publish(String id)throws ServiceException;
 	
 	public NoticeModel get(String id)throws ServiceException;
+	
+	public int addReadNumsByOne(String id)throws ServiceException;
 
 }
