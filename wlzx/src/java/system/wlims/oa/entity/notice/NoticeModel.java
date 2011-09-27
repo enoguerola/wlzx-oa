@@ -24,7 +24,7 @@ public class NoticeModel extends BaseModel {
 	private Date lastEditTime;
 	private Set<AttachmentModel> attachments=new TreeSet<AttachmentModel>(); 
 	private Integer status;
-	
+	private Integer readNums=0;
 	public static enum EScope{
 		School(0, "校级公告"),
 		Department(1, "部门公告");
@@ -138,5 +138,11 @@ public class NoticeModel extends BaseModel {
 	}
 	public Integer getStatus() {
 		return status;
+	}
+	public Integer getReadNums() {
+		return readNums;
+	}
+	public void setReadNums(Integer readNums) {
+		this.readNums = readNums;
 	}
 }

@@ -43,7 +43,7 @@
 			]);
 			public var flowStep:int = 1;
 			
-			private function search():void
+			public function search():void
 			{
 				var parent:Object = (Object)(this.parentDocument);
 				parent.search();

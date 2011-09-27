@@ -48,6 +48,10 @@
         <property name="lastEditTime" type="java.util.Date">
             <column name="last_edit_time" />
         </property>
+         <property name="readNums" type="int">
+            <column name="read_nums" />
+        </property>
+        
       	<set name="attachments" lazy="false" table="wlzx_oa_notice_attachment_relationship" cascade="all-delete-orphan" inverse="false">
         	<key column="notice_id" not-null="true" />
         	<many-to-many not-found="ignore"  column="attachment_id" class="system.wlims.oa.entity.notice.AttachmentModel" /> 

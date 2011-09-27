@@ -524,7 +524,7 @@
 						<component:WlzxPageDataGrid  width="100%" height="100%"  verticalAlign="middle" id="table"  borderVisible="true">				
 							<component:mygridcolumns>
 								
-								<mx:DataGridColumn textAlign="center" headerText="标记" dataField="loginaccount" width="100">
+								<!--<mx:DataGridColumn textAlign="center" headerText="标记" dataField="loginaccount" width="100">
 									<mx:itemRenderer>
 										<mx:Component>
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
@@ -580,7 +580,7 @@
 											</mx:HBox>																			
 										</mx:Component>						
 									</mx:itemRenderer>
-								</mx:DataGridColumn>
+								</mx:DataGridColumn>-->
 								<mx:DataGridColumn textAlign="center" headerText="日程类型"  width="60">
 									<mx:itemRenderer>
 										<mx:Component>
