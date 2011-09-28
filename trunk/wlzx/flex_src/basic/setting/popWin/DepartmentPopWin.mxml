@@ -218,10 +218,10 @@
 				var department:DepartmentModel=event.result as DepartmentModel;
 				if(department!=null){
 					var parent:departmentSetting = this.owner as departmentSetting;
-					parent.selectedNode.@label=department.name;
-					parent.selectedNode.@id=department.id;
+//					parent.selectedNode.@label=department.name;
+//					parent.selectedNode.@id=department.id;
 //					Alert.show(parent.selectedNode.@id);
-					parent.loadDepartmentDetail(department);
+					parent.systemServiceRO.getDepartmentById(department.id);
 					PopUpManager.removePopUp(this);
 				}else{
 					Alert.show("更新失败");
