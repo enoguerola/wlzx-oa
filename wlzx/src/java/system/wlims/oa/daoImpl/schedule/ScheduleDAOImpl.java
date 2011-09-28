@@ -47,7 +47,7 @@ public class ScheduleDAOImpl extends BaseDAOImpl<ScheduleModel> implements Sched
 		if(StringUtils.isNotEmpty(endDate)){
 			criteria.add(Restrictions.sqlRestriction("end_time<='"+endDate+" 59:59:59'"));	
 		}
-		criteria.addOrder(Order.desc("beginTime"));
+		criteria.addOrder(Order.asc("beginTime"));
 		List<ScheduleModel> result = this.getListByCriteria(criteria);
 		return result;
 	}
@@ -82,7 +82,7 @@ public class ScheduleDAOImpl extends BaseDAOImpl<ScheduleModel> implements Sched
 		if(StringUtils.isNotEmpty(endDate)){
 			criteria.add(Restrictions.sqlRestriction("end_time<='"+endDate+" 59:59:59'"));	
 		}
-		criteria.addOrder(Order.desc("beginTime"));
+		criteria.addOrder(Order.asc("beginTime"));
 		criteria.add(Restrictions.or(Restrictions.sqlRestriction("department_share ='1'"), Restrictions.sqlRestriction("school_share ='1'")));	
 
 		List<ScheduleModel> result = this.getListByCriteria(criteria);
@@ -120,7 +120,7 @@ public class ScheduleDAOImpl extends BaseDAOImpl<ScheduleModel> implements Sched
 		if(StringUtils.isNotEmpty(endDate)){
 			criteria.add(Restrictions.sqlRestriction("end_time<='"+endDate+" 59:59:59'"));	
 		}
-		criteria.addOrder(Order.desc("beginTime"));
+		criteria.addOrder(Order.asc("beginTime"));
 		criteria.add(Restrictions.and(Restrictions.sqlRestriction("department_share !='1'"), Restrictions.sqlRestriction("school_share !='1'")));	
 		List<ScheduleModel> result = this.getListByCriteria(criteria);
 		return result;

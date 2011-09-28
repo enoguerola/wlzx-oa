@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50077
 File Encoding         : 65001
 
-Date: 2011-09-27 22:31:26
+Date: 2011-09-28 09:13:47
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -187,7 +187,7 @@ CREATE TABLE `wlzx_oa_notice` (
 -- ----------------------------
 -- Records of wlzx_oa_notice
 -- ----------------------------
-INSERT INTO `wlzx_oa_notice` VALUES ('4', '0', '考勤信息', '6', '718', '0', ' 9月20日教工大会出勤', ' 请假：杨华 李迅若 王茜 陈军红 陈兆明 王华君 江丽芳 应崇杨 郭仁勇 余卜秋 梁瑞阳 徐根玲 叶理富\r 缺席：金伟飞 将照明 徐敏燕', '2011-09-28 05:26:26', '2011-09-28 05:26:26', '718', '1', '0');
+INSERT INTO `wlzx_oa_notice` VALUES ('4', '0', '考勤信息', '6', '718', '0', ' 9月20日教工大会出勤', ' 请假：杨华 李迅若 王茜 陈军红 陈兆明 王华君 江丽芳 应崇杨 郭仁勇 余卜秋 梁瑞阳 徐根玲 叶理富\r 缺席：金伟飞 将照明 徐敏燕', '2011-09-28 05:26:26', '2011-09-28 05:26:26', '718', '1', '5');
 
 -- ----------------------------
 -- Table structure for `wlzx_oa_notice_attachment_relationship`
@@ -329,12 +329,29 @@ CREATE TABLE `wlzx_oa_schedule` (
   `repeat_on_days` varchar(200) default NULL,
   `repeat_end_time` varchar(200) default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of wlzx_oa_schedule
 -- ----------------------------
 INSERT INTO `wlzx_oa_schedule` VALUES ('2', '我的日程', '我的日程', '2011-09-27 18:03:00', '2011-09-27 17:27:08', '1', '1', '1', '1', null, '0', '0', '0', '0', '0', '1', '0;0;0;0;0;0;0', null);
+INSERT INTO `wlzx_oa_schedule` VALUES ('7', '教工宿舍天井美化', null, '2011-09-26 08:31:00', '2011-09-30 17:31:00', '983', '1', '1', '1', '11', '3', '0', '0', '0', '0', '1', '0;0;0;0;0;0;0', null);
+INSERT INTO `wlzx_oa_schedule` VALUES ('8', '劳保发放', null, '2011-09-27 08:32:00', '2011-09-27 17:00:00', '983', '1', '0', '1', '11', '3', '0', '0', '0', '0', '1', '0;0;0;0;0;0;0', null);
+INSERT INTO `wlzx_oa_schedule` VALUES ('9', '回收学生宿舍饮水机', null, '2011-09-26 08:33:00', '2011-09-29 17:33:00', '983', '1', '0', '1', '11', '3', '0', '0', '0', '0', '1', '0;0;0;0;0;0;0', null);
+INSERT INTO `wlzx_oa_schedule` VALUES ('10', '食堂圆桌和酒柜采购', null, '2011-09-26 08:34:00', '2011-09-29 17:00:00', '983', '1', '0', '1', '11', '3', '0', '0', '0', '0', '1', '0;0;0;0;0;0;0', null);
+INSERT INTO `wlzx_oa_schedule` VALUES ('11', '高三第一次月考', null, '2011-09-29 08:49:00', '2011-09-30 16:49:00', '733', '1', '0', '1', '12', '1', '0', '0', '0', '0', '1', '0;0;0;0;0;0;0', null);
+INSERT INTO `wlzx_oa_schedule` VALUES ('12', '安排高三年级模块选课', null, '2011-09-26 08:50:00', '2011-09-30 09:50:00', '733', '1', '0', '1', '12', '3', '0', '0', '0', '0', '1', '0;0;0;0;0;0;0', null);
+INSERT INTO `wlzx_oa_schedule` VALUES ('13', '各教研组推荐参加本学期的“解题、命题、析题”的老师，要求被推荐的老师提前对三年高考五年模拟进行强化训练', null, '2011-09-26 08:51:00', '2011-09-30 09:51:00', '733', '1', '0', '1', '12', '3', '0', '0', '0', '0', '1', '0;0;0;0;0;0;0', null);
+INSERT INTO `wlzx_oa_schedule` VALUES ('14', '教学常规检查(作业管理,提高作业效率)', null, '2011-09-26 08:52:00', '2011-09-30 09:52:00', '733', '1', '0', '1', '12', '3', '0', '0', '0', '0', '1', '0;0;0;0;0;0;0', null);
+INSERT INTO `wlzx_oa_schedule` VALUES ('15', '综合实践活动课程平台建设', null, '2011-09-26 08:52:00', '2011-09-30 09:52:00', '733', '1', '0', '1', '12', '3', '0', '0', '0', '0', '1', '0;0;0;0;0;0;0', null);
+INSERT INTO `wlzx_oa_schedule` VALUES ('16', '1．	周日晚（25号）在6302举行高一高二演讲赛', null, '2011-09-25 18:54:00', '2011-09-25 20:54:00', '722', '1', '0', '1', '3', '1', '0', '0', '0', '0', '1', '0;0;0;0;0;0;0', null);
+INSERT INTO `wlzx_oa_schedule` VALUES ('17', '2．	电影安排：周日晚高三（1-12）及教师；周一晚高三（13-24）及教师；周二晚高二；周四晚高一。', null, '2011-09-25 08:55:00', '2011-09-29 09:55:00', '722', '1', '0', '1', '3', '1', '0', '0', '0', '0', '1', '0;0;0;0;0;0;0', null);
+INSERT INTO `wlzx_oa_schedule` VALUES ('18', '3．	各班班委、团支委名单统计上报', null, '2011-09-26 08:56:00', '2011-09-30 09:56:00', '722', '1', '0', '1', '3', '1', '0', '0', '0', '0', '1', '0;0;0;0;0;0;0', null);
+INSERT INTO `wlzx_oa_schedule` VALUES ('19', '部署国庆系列活动', null, '2011-09-26 08:56:00', '2011-09-30 09:56:00', '722', '1', '0', '1', '3', '3', '0', '0', '0', '0', '1', '0;0;0;0;0;0;0', null);
+INSERT INTO `wlzx_oa_schedule` VALUES ('20', '周四中午清泉助学基金资助生座谈会', null, '2011-09-29 08:57:00', '2011-09-29 17:57:00', '722', '1', '0', '1', '3', '3', '0', '0', '0', '0', '1', '0;0;0;0;0;0;0', null);
+INSERT INTO `wlzx_oa_schedule` VALUES ('21', '周五安全检查', null, '2011-09-30 08:57:00', '2011-09-30 09:57:00', '722', '1', '0', '1', '3', '1', '0', '0', '0', '0', '1', '0;0;0;0;0;0;0', null);
+INSERT INTO `wlzx_oa_schedule` VALUES ('22', 'OA系统调试', null, '2011-09-28 08:58:00', '2011-09-28 10:58:00', '718', '1', '0', '0', '6', '3', '0', '0', '0', '0', '1', '0;0;0;0;0;0;0', null);
+INSERT INTO `wlzx_oa_schedule` VALUES ('23', 'test', 'testtest', '2011-09-28 09:06:13', '2011-09-28 10:06:13', '708', '1', '1', '1', '1', '3', '0', '0', '0', '0', '1', '0;0;0;0;0;0;0', null);
 
 -- ----------------------------
 -- Table structure for `wlzx_oa_sendingfiles`
@@ -432,13 +449,15 @@ CREATE TABLE `wlzx_oa_takeleave_apply` (
   `takeLeave_remark` text,
   `takeLeave_status` int(11) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of wlzx_oa_takeleave_apply
 -- ----------------------------
 INSERT INTO `wlzx_oa_takeleave_apply` VALUES ('1', '20110926194135', '0', '718', '2011-09-26 0', '2011-09-28 0', '1', '', '0', '', '0', '', '0', '716', '2011-09-26 00:00:00', '111111', '1', '712', '2011-09-27 00:00:00', '2222222222222222', '1', null, null, null, null, '', '3');
 INSERT INTO `wlzx_oa_takeleave_apply` VALUES ('2', '20110928053937', '0', '952', '2011-09-27 0', '2011-09-30 0', '1', '1', '0', '1', '0', '1', '0', '946', '2011-09-27 00:00:00', '', '1', null, null, '', null, null, null, null, null, '11', '1');
+INSERT INTO `wlzx_oa_takeleave_apply` VALUES ('3', '20110928160320', '0', '736', '2011-09-28 0', '2011-10-03 0', 'test', 'test', '0', '', '0', '', '0', '733', '2011-09-28 00:00:00', '', '1', '709', '2011-09-28 00:00:00', '', '1', '708', '2011-09-28 00:00:00', null, '1', '', '3');
+INSERT INTO `wlzx_oa_takeleave_apply` VALUES ('4', '20110928161633', '0', '737', '2011-09-28 0', '2011-09-29 0', 'test', '1', '0', '2', '0', '3', '0', null, null, null, null, null, null, null, null, null, null, null, null, null, '0');
 
 -- ----------------------------
 -- Table structure for `wlzx_oa_takeleave_terminate`
@@ -496,7 +515,7 @@ CREATE TABLE `wlzx_oa_workflow_log` (
   `operation_name` varchar(200) NOT NULL,
   `operation_result` text,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of wlzx_oa_workflow_log
@@ -506,3 +525,8 @@ INSERT INTO `wlzx_oa_workflow_log` VALUES ('2', 'TakeLeaveWorkFlowLog', '1', '71
 INSERT INTO `wlzx_oa_workflow_log` VALUES ('3', 'TakeLeaveWorkFlowLog', '1', '712', '2011-09-26 23:40:04', '分管副校长审批', '分管副校长审批编号为20110926194135的申请通过');
 INSERT INTO `wlzx_oa_workflow_log` VALUES ('4', 'TakeLeaveWorkFlowLog', '2', '952', '2011-09-28 05:39:37', '发起申请', '生成编号为20110928053937的申请记录');
 INSERT INTO `wlzx_oa_workflow_log` VALUES ('5', 'TakeLeaveWorkFlowLog', '2', '946', '2011-09-28 05:45:26', '处室审批', '处室审批编号为20110928053937的申请通过');
+INSERT INTO `wlzx_oa_workflow_log` VALUES ('6', 'TakeLeaveWorkFlowLog', '3', '736', '2011-09-28 16:03:20', '发起申请', '生成编号为20110928160320的申请记录');
+INSERT INTO `wlzx_oa_workflow_log` VALUES ('7', 'TakeLeaveWorkFlowLog', '3', '733', '2011-09-28 16:09:21', '处室审批', '处室审批编号为20110928160320的申请通过');
+INSERT INTO `wlzx_oa_workflow_log` VALUES ('8', 'TakeLeaveWorkFlowLog', '3', '709', '2011-09-28 16:10:40', '分管副校长审批', '分管副校长审批编号为20110928160320的申请通过');
+INSERT INTO `wlzx_oa_workflow_log` VALUES ('9', 'TakeLeaveWorkFlowLog', '3', '708', '2011-09-28 16:11:26', '校长审批', '校长审批编号为20110928160320的申请通过');
+INSERT INTO `wlzx_oa_workflow_log` VALUES ('10', 'TakeLeaveWorkFlowLog', '4', '737', '2011-09-28 16:16:33', '发起申请', '生成编号为20110928161633的申请记录');

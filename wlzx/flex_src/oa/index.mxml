@@ -62,7 +62,7 @@
 				account.text=account.text.concat(this.parentApplication.account);
 //				roles.text=roles.text.concat(this.parentApplication.roles);
 //				mainRole.text=mainRole.text.concat(this.parentApplication.mainRole);
-				delayTimer=new Timer(1000);//延迟三秒读取application中用户信息
+				delayTimer=new Timer(2000);//延迟三秒读取application中用户信息
 				delayTimer.addEventListener(TimerEvent.TIMER, loadApplicationUserInfo);
 				delayTimer.start();
 				
@@ -92,15 +92,18 @@
 				if(parentApplication.currentUser.mainDR!=null){
 					var mainRoleId:String=parentApplication.currentUser.mainDR.roleId;
 					mainRoleDesc=parentApplication.getRoleNameById(mainRoleId);
+					mainRole.text=mainRole.text.concat(mainRoleDesc);
 				}
-				mainRole.text=mainRole.text.concat(mainRoleDesc);
+				
 
 				var mainDepartmentDesc:String="";
 				if(parentApplication.currentUser.mainDR!=null){
 					var mainDepartmentId:String=parentApplication.currentUser.mainDR.departmentId;
 					mainDepartmentDesc=parentApplication.getDepartmentNameById(mainDepartmentId);
+					mainDepartment.text=mainDepartment.text.concat(mainDepartmentDesc);
 				}
-				mainDepartment.text=mainDepartment.text.concat(mainDepartmentDesc);
+				
+				
 				if(parentApplication.currentUser.name=="super_root"){
 					
 					mainRole.text=mainRole.text.concat("超级管理员角色");

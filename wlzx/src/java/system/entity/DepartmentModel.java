@@ -93,9 +93,10 @@ public class DepartmentModel  extends BaseModel{
 	public void setMasterUsers(Set<UserModel> masterUsers) {
 		this.masterUsers = masterUsers;
 	}
-	//获得所有子部门
+	//获得所有子部门(含自身)
 	public Set<DepartmentModel> getAllSubordinates() {
 		Set<DepartmentModel> results=new TreeSet<DepartmentModel>();
+		results.add(this);
 		addSubordinates(this,results);
 		return results;
 	}
