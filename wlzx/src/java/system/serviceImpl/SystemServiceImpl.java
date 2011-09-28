@@ -562,12 +562,12 @@ public class SystemServiceImpl implements SystemService{
 		Set<UserModel> masterUsers=department.getMasterUsers();
 		for(UserModel user:masterUsers){
 			user.getMasterDepartments().remove(department);
-			userDAO.saveOrUpdate(user);
+			userDAO.merge(user);
 		}
 		Set<UserModel> leaderUsers=department.getLeaderUsers();
 		for(UserModel user:leaderUsers){
 			user.getLeaderDepartments().remove(department);
-			userDAO.saveOrUpdate(user);
+			userDAO.merge(user);
 		}
 //		Set<UserModel> commonrUsers=department.getCommonUsers();
 //		for(UserModel user:commonrUsers){
@@ -608,7 +608,7 @@ public class SystemServiceImpl implements SystemService{
 //			department.getCommonUsers().add(user);
 //
 //		}
-		departmentDAO.saveOrUpdate(newDepartment);
+		departmentDAO.merge(newDepartment);
 //		//更新部门主管信息
 //		RoleModel role=newDepartment.getSupervisorRole();
 //		role.setSymbol(department.getSymbol()+"_supervisor");

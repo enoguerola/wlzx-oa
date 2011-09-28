@@ -43,11 +43,11 @@
 		</set>
 			
 		
-		<set name="leaderUsers" lazy="false"  table="wlzx_system_department_leader_users"  cascade="none">
+		<set name="leaderUsers" lazy="false"  table="wlzx_system_department_leader_users"  cascade="all">
 			<key column="department_id" not-null="true" />
 			<many-to-many not-found="ignore" column="leader_user_id" class="system.entity.UserModel" /> 
 		</set>
-		<set name="masterUsers" lazy="false"  table="wlzx_system_department_master_users"  cascade="none">
+		<set name="masterUsers" lazy="false"  table="wlzx_system_department_master_users"  cascade="all">
 			<key column="department_id" not-null="true" />
 			<many-to-many not-found="ignore" column="master_user_id" class="system.entity.UserModel" /> 
 		</set>
