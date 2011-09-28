@@ -98,9 +98,10 @@
 ////			}
 ////			
 ////		}
-		//获得所有子部门
+		//获得所有子部门(含自身)
 		public function getAllSubordinates():ArrayCollection{
 			var results:ArrayCollection=new ArrayCollection();
+			results.addItem(this);
 			addSubordinates(this,results);
 			return results;
 		}

@@ -4,7 +4,7 @@ import com.flexcalendar.components.calendar.core.dataModel.CalendarItem;
 import com.flexcalendar.components.calendar.core.dataModel.formatICalendar.Recur;
 import com.flexcalendar.components.calendar.core.dataModel.formatICalendar.WeekDay;
 import com.flexcalendar.components.calendar.utils.DateUtils;
-
+import mx.controls.Alert;
 /**
  * Converter for ItemEditorVO.
  * Can convert CalendarItem to ItemEditorVO.
@@ -89,7 +89,7 @@ public class  MyItemEditorVOConverter
 		{
 			calendarItem = new CalendarItem(itemEditorVO.start, itemEditorVO.end, itemEditorVO.summary, itemEditorVO.description);
 		}
-		calendarItem.setRange(itemEditorVO.start, itemEditorVO.end);
+	//	calendarItem.setRange(itemEditorVO.start, itemEditorVO.end);
 		calendarItem.summary = itemEditorVO.summary;
 		calendarItem.description = itemEditorVO.description;
 

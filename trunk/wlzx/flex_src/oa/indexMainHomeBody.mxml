@@ -74,7 +74,7 @@
 					noticeServiceRO.getTop5SchoolNotice();
 					var today:String=CommonUtils.formatDate(new Date(),"YYYY-MM-DD");
 					
-					scheduleServiceRO.getPublicSchedulesByConditions(this.parentApplication.currentUser.id,null,null,null,null,null,today,today);
+					scheduleServiceRO.getPublicSchedulesByConditions(null,null,null,null,null,null,today,today);
 					scheduleServiceRO.getPersonSchedulesByConditions(this.parentApplication.currentUser.id,null,null,null,null,null,today,today);
 					var beginTime:String=CommonUtils.formatDate(CommonUtils.currentMonthBeginDate(),"YYYY-MM-DD");
 					var endTime:String=CommonUtils.formatDate(CommonUtils.currentMonthEndDate(),"YYYY-MM-DD");
@@ -453,7 +453,7 @@
 								</mx:itemRenderer>
 							</mx:DataGridColumn>
 							
-							<mx:DataGridColumn textAlign="center" headerText="部门【学校】" dataField="loginaccount" width="100">
+							<mx:DataGridColumn textAlign="center" headerText="部门" dataField="loginaccount" width="100">
 								<mx:itemRenderer>
 									<mx:Component>
 										<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">

@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50077
 File Encoding         : 65001
 
-Date: 2011-09-27 22:21:25
+Date: 2011-09-28 09:13:27
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -159,7 +159,7 @@ INSERT INTO `wlzx_system_department` VALUES ('3', '1', '德育处', 'moral_educa
 INSERT INTO `wlzx_system_department` VALUES ('6', '1', '校长办公室', 'headmaster_office', null, '1', '', '2011-05-18 00:00:00', '2011-09-26 20:15:32');
 INSERT INTO `wlzx_system_department` VALUES ('10', '1', '综践处', 'practice_education_office', '', '4', '', '2011-05-19 00:00:00', '2011-09-28 01:00:05');
 INSERT INTO `wlzx_system_department` VALUES ('11', '1', '资源处', 'resources_office', '', '5', '', '2011-05-19 00:00:00', '2011-09-26 21:52:43');
-INSERT INTO `wlzx_system_department` VALUES ('12', '1', '课程处', 'course_office', '', '3', '', '2011-05-20 00:00:00', '2011-09-28 04:08:20');
+INSERT INTO `wlzx_system_department` VALUES ('12', '1', '课程处', 'course_office', '', '3', '', '2011-05-20 00:00:00', '2011-09-28 16:19:29');
 INSERT INTO `wlzx_system_department` VALUES ('13', '1', '语文组', 'course_yuwen', '', '1', '', '2011-07-04 00:00:00', '2011-09-28 01:09:10');
 INSERT INTO `wlzx_system_department` VALUES ('14', '1', '英语组', 'course_yingyu', '', '2', '', '2011-07-04 00:00:00', '2011-09-28 01:04:37');
 INSERT INTO `wlzx_system_department` VALUES ('15', '1', '数学组', 'course_shuxue', '', '3', '', '2011-07-04 00:00:00', '2011-09-28 01:04:54');
@@ -217,7 +217,7 @@ CREATE TABLE `wlzx_system_department_leader_users` (
   `department_id` bigint(20) NOT NULL,
   `leader_user_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=73 DEFAULT CHARSET=latin1 COMMENT='部门上级领导';
+) ENGINE=InnoDB AUTO_INCREMENT=75 DEFAULT CHARSET=latin1 COMMENT='部门上级领导';
 
 -- ----------------------------
 -- Records of wlzx_system_department_leader_users
@@ -236,8 +236,7 @@ INSERT INTO `wlzx_system_department_leader_users` VALUES ('54', '26', '722');
 INSERT INTO `wlzx_system_department_leader_users` VALUES ('55', '27', '722');
 INSERT INTO `wlzx_system_department_leader_users` VALUES ('56', '28', '722');
 INSERT INTO `wlzx_system_department_leader_users` VALUES ('57', '29', '722');
-INSERT INTO `wlzx_system_department_leader_users` VALUES ('70', '12', '709');
-INSERT INTO `wlzx_system_department_leader_users` VALUES ('72', '33', '733');
+INSERT INTO `wlzx_system_department_leader_users` VALUES ('74', '12', '709');
 
 -- ----------------------------
 -- Table structure for `wlzx_system_department_leadship`
@@ -300,7 +299,7 @@ CREATE TABLE `wlzx_system_department_master_users` (
   `department_id` bigint(20) NOT NULL,
   `master_user_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=63 DEFAULT CHARSET=utf8 COMMENT='部门主管用户';
+) ENGINE=InnoDB AUTO_INCREMENT=65 DEFAULT CHARSET=utf8 COMMENT='部门主管用户';
 
 -- ----------------------------
 -- Records of wlzx_system_department_master_users
@@ -327,6 +326,7 @@ INSERT INTO `wlzx_system_department_master_users` VALUES ('57', '20', '925');
 INSERT INTO `wlzx_system_department_master_users` VALUES ('58', '21', '935');
 INSERT INTO `wlzx_system_department_master_users` VALUES ('59', '13', '742');
 INSERT INTO `wlzx_system_department_master_users` VALUES ('62', '33', '951');
+INSERT INTO `wlzx_system_department_master_users` VALUES ('64', '12', '733');
 
 -- ----------------------------
 -- Table structure for `wlzx_system_department_users`
@@ -353,7 +353,7 @@ CREATE TABLE `wlzx_system_dr` (
   `role_id` bigint(20) NOT NULL,
   `basic_flag` tinyint(6) default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=59 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=64 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of wlzx_system_dr
@@ -416,6 +416,11 @@ INSERT INTO `wlzx_system_dr` VALUES ('55', '21', '133', null);
 INSERT INTO `wlzx_system_dr` VALUES ('56', '18', '128', null);
 INSERT INTO `wlzx_system_dr` VALUES ('57', '10', '122', null);
 INSERT INTO `wlzx_system_dr` VALUES ('58', '47', '133', null);
+INSERT INTO `wlzx_system_dr` VALUES ('59', '27', '123', null);
+INSERT INTO `wlzx_system_dr` VALUES ('60', '41', '123', null);
+INSERT INTO `wlzx_system_dr` VALUES ('61', '35', '133', null);
+INSERT INTO `wlzx_system_dr` VALUES ('62', '35', '127', null);
+INSERT INTO `wlzx_system_dr` VALUES ('63', '35', '128', null);
 
 -- ----------------------------
 -- Table structure for `wlzx_system_dr_dam_relationship`
@@ -1196,7 +1201,7 @@ CREATE TABLE `wlzx_system_message` (
   `postRemoved_flag` text,
   `receiveRemoved_flags` text,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of wlzx_system_message
@@ -1206,6 +1211,11 @@ INSERT INTO `wlzx_system_message` VALUES ('2', '0', '', '0', '请课程处落实
 INSERT INTO `wlzx_system_message` VALUES ('3', '0', '', '0', '请课程处落实申请编号为20110907150712的请假/出差申请期间教学工作', '2011-09-07 15:07:12', '0;', 'NULL;', '0', '0;');
 INSERT INTO `wlzx_system_message` VALUES ('4', '0', '', '0', '请课程处落实申请编号为20110928053937的请假/出差申请期间教学工作', '2011-09-28 05:39:38', '0;', 'NULL;', '0', '0;');
 INSERT INTO `wlzx_system_message` VALUES ('5', '0', '', '0', '处室审批已经通过编号为20110928053937的请假/出差申请', '2011-09-28 05:45:26', '0;', 'NULL;', '0', '0;');
+INSERT INTO `wlzx_system_message` VALUES ('6', '0', '', '0', '请课程处落实申请编号为20110928160320的请假/出差申请期间教学工作', '2011-09-28 16:03:21', '0;', 'NULL;', '0', '0;');
+INSERT INTO `wlzx_system_message` VALUES ('7', '0', '', '0', '处室审批已经通过编号为20110928160320的请假/出差申请', '2011-09-28 16:09:21', '0;', 'NULL;', '0', '0;');
+INSERT INTO `wlzx_system_message` VALUES ('8', '0', '', '0', '分管副校长审批已经通过编号为20110928160320的请假/出差申请', '2011-09-28 16:10:40', '0;', 'NULL;', '0', '0;');
+INSERT INTO `wlzx_system_message` VALUES ('9', '0', '736', '0', '您申请的编号为20110928160320的请假/出差校长审批通过', '2011-09-28 16:11:26', '0;', 'NULL;', '0', '0;');
+INSERT INTO `wlzx_system_message` VALUES ('10', '0', '', '0', '请课程处落实申请编号为20110928161633的请假/出差申请期间教学工作', '2011-09-28 16:16:34', '0;', 'NULL;', '0', '0;');
 
 -- ----------------------------
 -- Table structure for `wlzx_system_module`
@@ -1873,12 +1883,11 @@ INSERT INTO `wlzx_system_user` VALUES ('946', '666877', '0', '666877', 'cbcde84f
 INSERT INTO `wlzx_system_user` VALUES ('947', '666878', '0', '666878', '1f51fc04432be002747e295ed8d070de', null, '', '0', null, null, '', '2011-07-05 13:03:42', '2011-09-22 16:20:27', '1', '39');
 INSERT INTO `wlzx_system_user` VALUES ('948', '666855', '0', '666855', '2701e548411c98d8be155057144c37e0', null, '', '0', null, null, '', '2011-07-05 13:03:43', '2011-07-05 13:03:46', '1', '39');
 INSERT INTO `wlzx_system_user` VALUES ('949', '666853', '0', '666853', 'f6439b75441f5f18767c3ded55430da6', null, '', '0', null, null, '', '2011-07-05 13:03:46', '2011-07-05 13:03:47', '1', '39');
-INSERT INTO `wlzx_system_user` VALUES ('950', '667982', '0', '667982', '382242e1729c3e457ca17d9e3bdd6672', null, '', '0', null, null, '', '2011-07-05 13:03:47', '2011-07-05 13:03:49', '1', null);
 INSERT INTO `wlzx_system_user` VALUES ('951', '666831', '0', '666831', 'f7feb1918d3decebaf66c1c33559967c', null, '', '0', null, null, '', '2011-07-05 13:03:49', '2011-09-22 16:20:27', '1', '44');
 INSERT INTO `wlzx_system_user` VALUES ('952', '666823', '0', '666823', '1240af99915f23a52282b13e0efb78e5', null, '', '0', null, null, '', '2011-07-05 13:03:50', '2011-07-05 13:03:52', '1', '31');
-INSERT INTO `wlzx_system_user` VALUES ('953', '662638', '0', '662638', 'b207367a204604ed1a45161c99bd9d3c', null, '', '0', null, null, '', '2011-07-05 13:03:52', '2011-07-05 13:03:53', '1', null);
-INSERT INTO `wlzx_system_user` VALUES ('954', '666821', '0', '666821', 'e60577533070cc4fb9146ae76c892843', null, '', '0', null, null, '', '2011-07-05 13:03:54', '2011-07-05 13:03:55', '1', null);
-INSERT INTO `wlzx_system_user` VALUES ('955', '666822', '0', '666822', '5ed90383b89920ca394e3f786a1b36bf', null, '', '0', null, null, '', '2011-07-05 13:03:55', '2011-07-05 13:03:56', '1', null);
+INSERT INTO `wlzx_system_user` VALUES ('953', '662638', '0', '662638', 'b207367a204604ed1a45161c99bd9d3c', null, '', '0', null, null, '', '2011-07-05 13:03:52', '2011-07-05 13:03:53', '1', '31');
+INSERT INTO `wlzx_system_user` VALUES ('954', '666821', '0', '666821', 'e60577533070cc4fb9146ae76c892843', null, '', '0', null, null, '', '2011-07-05 13:03:54', '2011-07-05 13:03:55', '1', '31');
+INSERT INTO `wlzx_system_user` VALUES ('955', '666822', '0', '666822', '5ed90383b89920ca394e3f786a1b36bf', null, '', '0', null, null, '', '2011-07-05 13:03:55', '2011-07-05 13:03:56', '1', '31');
 INSERT INTO `wlzx_system_user` VALUES ('956', '666825', '0', '666825', '003527a0b94cdb8284e7a57953a77a1f', null, '', '0', null, null, '', '2011-07-05 13:03:56', '2011-07-05 13:03:58', '1', null);
 INSERT INTO `wlzx_system_user` VALUES ('957', '666826', '0', '666826', '36502fc05e417c7dc37d375e715fd82f', null, '', '0', null, null, '', '2011-07-05 13:03:58', '2011-07-05 13:03:59', '1', null);
 INSERT INTO `wlzx_system_user` VALUES ('958', '666827', '0', '666827', '0b193aa6781193f73614b602e2dc372b', null, '', '0', null, null, '', '2011-07-05 13:03:59', '2011-07-05 13:04:01', '1', null);
@@ -1891,10 +1900,10 @@ INSERT INTO `wlzx_system_user` VALUES ('964', '666836', '0', '666836', 'b619718f
 INSERT INTO `wlzx_system_user` VALUES ('965', '666837', '0', '666837', 'eabb8a6853ca429dd9a0229c70c326c2', null, '', '0', null, null, '', '2011-07-05 13:04:09', '2011-07-05 13:04:11', '1', null);
 INSERT INTO `wlzx_system_user` VALUES ('966', '666838', '0', '666838', '9e5012bbbf2462e311d54d00e717ccf6', null, '', '0', null, null, '', '2011-07-05 13:04:11', '2011-07-05 13:04:12', '1', null);
 INSERT INTO `wlzx_system_user` VALUES ('967', '668996', '0', '668996', '719740691d03b352a0b2df76e14c5ccf', null, '', '0', null, null, '', '2011-07-05 13:04:12', '2011-07-05 13:04:14', '1', null);
-INSERT INTO `wlzx_system_user` VALUES ('968', '669588', '0', '669588', '7bb1361cf8577bc2751c7926bc785efc', null, '', '0', null, null, '', '2011-07-05 13:04:14', '2011-09-22 16:20:27', '1', null);
-INSERT INTO `wlzx_system_user` VALUES ('969', '666851', '0', '666851', 'ea15f92460b74da94151362e24ccc36d', null, '', '0', null, null, '', '2011-07-05 13:04:15', '2011-07-05 13:04:17', '1', null);
-INSERT INTO `wlzx_system_user` VALUES ('970', '666852', '0', '666852', '8e9c52151632702abffef4bf28f3f8c6', null, '', '0', null, null, '', '2011-07-05 13:04:17', '2011-07-05 13:04:18', '1', null);
-INSERT INTO `wlzx_system_user` VALUES ('971', '669168', '0', '669168', '0b9b0d8354f74b2e3488b172949666a2', null, '', '0', null, null, '', '2011-07-05 13:04:18', '2011-07-05 13:04:19', '1', null);
+INSERT INTO `wlzx_system_user` VALUES ('968', '669588', '0', '669588', '7bb1361cf8577bc2751c7926bc785efc', null, '', '0', null, null, '', '2011-07-05 13:04:14', '2011-09-22 16:20:27', '1', '61');
+INSERT INTO `wlzx_system_user` VALUES ('969', '666851', '0', '666851', 'ea15f92460b74da94151362e24ccc36d', null, '', '0', null, null, '', '2011-07-05 13:04:15', '2011-07-05 13:04:17', '1', '63');
+INSERT INTO `wlzx_system_user` VALUES ('970', '666852', '0', '666852', '8e9c52151632702abffef4bf28f3f8c6', null, '', '0', null, null, '', '2011-07-05 13:04:17', '2011-07-05 13:04:18', '1', '63');
+INSERT INTO `wlzx_system_user` VALUES ('971', '669168', '0', '669168', '0b9b0d8354f74b2e3488b172949666a2', null, '', '0', null, null, '', '2011-07-05 13:04:18', '2011-07-05 13:04:19', '1', '63');
 INSERT INTO `wlzx_system_user` VALUES ('972', '666879', '0', '666879', '913fb7e4402ad6ecca2776ba4ae0f4a4', null, '', '0', null, null, '', '2011-07-05 13:04:19', '2011-09-22 16:20:27', '1', null);
 INSERT INTO `wlzx_system_user` VALUES ('973', '666881', '0', '666881', 'ab330c3219a2398b2b6db3055a3d54f6', null, '', '0', null, null, '', '2011-07-05 13:04:21', '2011-07-05 13:04:22', '1', null);
 INSERT INTO `wlzx_system_user` VALUES ('974', '666885', '0', '666885', '93c76650cae85bb3d2288478458ee0c9', null, '', '0', null, null, '', '2011-07-05 13:04:22', '2011-07-05 13:04:24', '1', null);
@@ -1912,20 +1921,20 @@ INSERT INTO `wlzx_system_user` VALUES ('985', '662000', '0', '662000', 'bb493c92
 INSERT INTO `wlzx_system_user` VALUES ('986', '666901', '0', '666901', '19ecc9b920d56cf09ae35df835fc300a', null, '', '0', null, null, '', '2011-07-05 13:04:39', '2011-09-22 16:20:27', '1', '46');
 INSERT INTO `wlzx_system_user` VALUES ('987', '660605', '0', '660605', 'c3742a4baffd3441547154a17dc9f00d', null, '', '0', null, null, '', '2011-07-05 13:04:41', '2011-07-05 13:04:42', '1', '45');
 INSERT INTO `wlzx_system_user` VALUES ('988', '666253', '0', '666253', '00b44f0f5c7cf3f42c90234096cff414', null, '', '0', null, null, '', '2011-07-05 13:04:42', '2011-07-05 13:04:44', '1', '45');
-INSERT INTO `wlzx_system_user` VALUES ('989', '666906', '0', '666906', '4bf27d2965096dff968feab07a4bfba7', null, '', '0', null, null, '', '2011-07-05 13:04:44', '2011-07-05 13:04:45', '1', null);
+INSERT INTO `wlzx_system_user` VALUES ('989', '666906', '0', '666906', '4bf27d2965096dff968feab07a4bfba7', null, '', '0', null, null, '', '2011-07-05 13:04:44', '2011-07-05 13:04:45', '1', '45');
 INSERT INTO `wlzx_system_user` VALUES ('990', '666907', '0', '666907', '1bb56dda429f89ba1a3019ab9c79fc2e', null, '', '0', null, null, '', '2011-07-05 13:04:45', '2011-07-05 13:04:46', '1', '47');
-INSERT INTO `wlzx_system_user` VALUES ('991', '666908', '0', '666908', 'c327dde84f81fa348a5de1cf5dad12d9', null, '', '0', null, null, '', '2011-07-05 13:04:46', '2011-07-05 13:04:48', '1', null);
-INSERT INTO `wlzx_system_user` VALUES ('993', '666910', '0', '666910', 'f92e655a3a73680a37a45596bcfec0b7', null, '', '0', null, null, '', '2011-07-05 13:04:49', '2011-07-05 13:04:51', '1', null);
-INSERT INTO `wlzx_system_user` VALUES ('994', '666913', '0', '666913', 'b1cf62af8e209d05a0fdafcddaee2251', null, '', '0', null, null, '', '2011-07-05 13:04:51', '2011-07-05 13:04:53', '1', null);
-INSERT INTO `wlzx_system_user` VALUES ('995', '666797', '0', '666797', '20b73aaeac6188926efdc908631cf4ef', null, '', '0', null, null, '', '2011-07-05 13:04:53', '2011-07-05 13:04:54', '1', null);
-INSERT INTO `wlzx_system_user` VALUES ('996', '666992', '0', '666992', 'e0fc7fd92fb58effd58afb6834d2450c', null, '', '0', null, null, '', '2011-07-05 13:04:54', '2011-07-05 13:04:56', '1', null);
-INSERT INTO `wlzx_system_user` VALUES ('997', '663611', '0', '663611', 'c593a1a7eb33244e9baef66c8769eef6', null, '', '0', null, null, '', '2011-07-05 13:04:56', '2011-07-05 13:04:57', '1', null);
-INSERT INTO `wlzx_system_user` VALUES ('998', '665316', '0', '665316', 'e0c1b1c918bf32fd86bf4b249b784999', null, '', '0', null, null, '', '2011-07-05 13:04:57', '2011-07-05 13:04:59', '1', null);
+INSERT INTO `wlzx_system_user` VALUES ('991', '666908', '0', '666908', 'c327dde84f81fa348a5de1cf5dad12d9', null, '', '0', null, null, '', '2011-07-05 13:04:46', '2011-07-05 13:04:48', '1', '45');
+INSERT INTO `wlzx_system_user` VALUES ('993', '666910', '0', '666910', 'f92e655a3a73680a37a45596bcfec0b7', null, '', '0', null, null, '', '2011-07-05 13:04:49', '2011-07-05 13:04:51', '1', '45');
+INSERT INTO `wlzx_system_user` VALUES ('994', '666913', '0', '666913', 'b1cf62af8e209d05a0fdafcddaee2251', null, '', '0', null, null, '', '2011-07-05 13:04:51', '2011-07-05 13:04:53', '1', '45');
+INSERT INTO `wlzx_system_user` VALUES ('995', '666797', '0', '666797', '20b73aaeac6188926efdc908631cf4ef', null, '', '0', null, null, '', '2011-07-05 13:04:53', '2011-07-05 13:04:54', '1', '45');
+INSERT INTO `wlzx_system_user` VALUES ('996', '666992', '0', '666992', 'e0fc7fd92fb58effd58afb6834d2450c', null, '', '0', null, null, '', '2011-07-05 13:04:54', '2011-07-05 13:04:56', '1', '45');
+INSERT INTO `wlzx_system_user` VALUES ('997', '663611', '0', '663611', 'c593a1a7eb33244e9baef66c8769eef6', null, '', '0', null, null, '', '2011-07-05 13:04:56', '2011-07-05 13:04:57', '1', '45');
+INSERT INTO `wlzx_system_user` VALUES ('998', '665316', '0', '665316', 'e0c1b1c918bf32fd86bf4b249b784999', null, '', '0', null, null, '', '2011-07-05 13:04:57', '2011-07-05 13:04:59', '1', '47');
 INSERT INTO `wlzx_system_user` VALUES ('999', '666928', '0', '666928', '0a1f23905bc89c3ce5f7627588aa5506', null, '', '0', null, null, '', '2011-07-05 13:04:59', '2011-09-22 16:20:27', '1', '33');
-INSERT INTO `wlzx_system_user` VALUES ('1000', '666915', '0', '666915', '27227d807496fdfecf34396ea708d55d', null, '', '0', null, null, '', '2011-07-05 13:05:00', '2011-07-05 13:05:02', '1', null);
-INSERT INTO `wlzx_system_user` VALUES ('1001', '666921', '0', '666921', '8f6c53e4a8b097b556eeae5ba98f9472', null, '', '0', null, null, '', '2011-07-05 13:05:02', '2011-07-05 13:05:04', '1', null);
-INSERT INTO `wlzx_system_user` VALUES ('1002', '666920', '0', '666920', 'c3f477b4403cf76b200daead6b9adda2', null, '', '0', null, null, '', '2011-07-05 13:05:04', '2011-07-05 13:05:05', '1', null);
-INSERT INTO `wlzx_system_user` VALUES ('1003', '666919', '0', '666919', '293567d725ba8399ed93e46ba0bda193', null, '', '0', null, null, '', '2011-07-05 13:05:05', '2011-07-05 13:05:07', '1', null);
+INSERT INTO `wlzx_system_user` VALUES ('1000', '666915', '0', '666915', '27227d807496fdfecf34396ea708d55d', null, '', '0', null, null, '', '2011-07-05 13:05:00', '2011-07-05 13:05:02', '1', '45');
+INSERT INTO `wlzx_system_user` VALUES ('1001', '666921', '0', '666921', '8f6c53e4a8b097b556eeae5ba98f9472', null, '', '0', null, null, '', '2011-07-05 13:05:02', '2011-07-05 13:05:04', '1', '45');
+INSERT INTO `wlzx_system_user` VALUES ('1002', '666920', '0', '666920', 'c3f477b4403cf76b200daead6b9adda2', null, '', '0', null, null, '', '2011-07-05 13:05:04', '2011-07-05 13:05:05', '1', '45');
+INSERT INTO `wlzx_system_user` VALUES ('1003', '666919', '0', '666919', '293567d725ba8399ed93e46ba0bda193', null, '', '0', null, null, '', '2011-07-05 13:05:05', '2011-07-05 13:05:07', '1', '45');
 INSERT INTO `wlzx_system_user` VALUES ('1007', '666866', '0', '666866', '4dc20b83496587d5a768d570c2a77288', null, '', '0', null, null, '', '2011-09-05 07:41:46', '2011-09-22 16:20:27', '1', null);
 INSERT INTO `wlzx_system_user` VALUES ('1008', '665785', '0', '665785', '746ef56a8328645a180399206cf5fc1b', null, '', '0', null, null, '', '2011-09-05 10:36:01', '2011-09-22 16:20:27', '1', '26');
 INSERT INTO `wlzx_system_user` VALUES ('1009', '665311', '0', '665311', '7e6b11e3d03e1a4eb5ff690760b41ca2', null, '', '0', null, null, '', '2011-09-05 10:39:36', '2011-09-22 16:20:27', '1', '33');
@@ -1947,7 +1956,7 @@ CREATE TABLE `wlzx_system_user_dr_relationship` (
   `dr_id` bigint(20) NOT NULL,
   `user_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of wlzx_system_user_dr_relationship
@@ -1978,6 +1987,8 @@ INSERT INTO `wlzx_system_user_dr_relationship` VALUES ('39', '21', '945');
 INSERT INTO `wlzx_system_user_dr_relationship` VALUES ('40', '21', '736');
 INSERT INTO `wlzx_system_user_dr_relationship` VALUES ('41', '17', '983');
 INSERT INTO `wlzx_system_user_dr_relationship` VALUES ('42', '56', '735');
+INSERT INTO `wlzx_system_user_dr_relationship` VALUES ('43', '59', '998');
+INSERT INTO `wlzx_system_user_dr_relationship` VALUES ('44', '60', '998');
 
 -- ----------------------------
 -- Table structure for `wlzx_system_user_leadship`
