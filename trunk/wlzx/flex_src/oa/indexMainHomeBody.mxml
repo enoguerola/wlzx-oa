@@ -474,10 +474,10 @@
 														if(data!=null){
 															var result:String="";
 															
-//															if(data.schoolShare=="1")
-//																result+="学校共享 ";
-//															if(data.departmentShare=="1")
-																result+=this.parentApplication.getDepartmentNameById(data.departmentId);
+															if(data.schoolShare=="1")
+																result+=this.parentApplication.getDepartmentNameById(data.departmentId)+" ";
+															if(data.departmentShare=="1")
+																result+= this.parentApplication.getTeacherNameByAccountId(data.posterId);
 															return result;
 														}else{
 															return null;
