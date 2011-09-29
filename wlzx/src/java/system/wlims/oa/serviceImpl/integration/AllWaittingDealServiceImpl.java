@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import system.wlims.oa.dao.attendance.MoveRestDayDAO;
 import system.wlims.oa.dao.attendance.OverWorkDAO;
 import system.wlims.oa.dao.attendance.TakeLeaveDAO;
@@ -23,6 +24,7 @@ import system.wlims.oa.entity.workFlow.takeLeave.TakeLeaveTerminateForm;
 import system.wlims.oa.service.integration.AllWaittingDealService;
 import system.wlims.oa.vo.TaskVO;
 import system.components.SecurityUserHolder;
+import system.dao.RoleDAO;
 import system.dao.UserDAO;
 import system.entity.UserModel;
 import system.service.SystemService;
@@ -37,6 +39,7 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 	private TakeLeaveDAO takeLeaveDAO;
 	private ConferenceDAO conferenceDAO;
 	private UserDAO userDAO;
+	private RoleDAO roleDAO;
 	private SystemService systemService;
 
 	@Override
@@ -433,116 +436,245 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 //					
 //					list.add(taskVO);
 //				}
-				//请假出差本处室审批
-				if(user.hasDam("takeLeaveOfficeApprove@noFilter@")&&SecurityUserHolder.getCurrentUser()!=null&&SecurityUserHolder.getCurrentUser().hasSubordinateUser(takeLeaveForm.getTeacherId())){
-					//if(takeLeaveForm.getArrangeTechDealAlready()==true){
-						TaskVO taskVO1=new TaskVO();
-						taskVO1.setStatus(TaskVO.EStatus.ToBeDeal.getText());
-						if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.BusinessTrip.getValue().intValue()){
-							taskVO1.setType(TaskVO.EType.AskForLeave_BusinessTrip_OfficalApprove.getText());
-							taskVO1.setTypeId(TaskVO.EType.AskForLeave_BusinessTrip_OfficalApprove.getValue().intValue());
+				/**
+				 * 1.请假人在行政组【0级部门】中---教学1级审批权限人审批【课程处】--教学2级审批权限人审批【教学副校长】--所有审批权限人审批【校长】----------通过给行政组的人配置教学职务来绕开
+				 * 2.请假人拥有教学职务『
+				 * 					主职务含有教学职务（“教师”“教研组长”）:教学1级审批权限人审批【课程处】--教学2级审批权限人审批【教学副校长】--所有审批权限人审批【校长】
+				 * 					副职务含有教学职务（“教师”“教研组长”）:1级下属审批权限【本部门处长】--2级下属审批权限【本部门分管副校长】--所有审批权限人审批【校长】；通知拥有教学1级审批权限人审批的人【课程处】
+				 * 				』
+				 * 3.其他---1级下属审批权限【本部门处长】--2级下属审批权限【本部门分管副校长】--所有审批权限人审批【校长】
+				 */
+				UserModel applier=userDAO.get(takeLeaveForm.getTeacherId());
+				
+				// 请假人拥有教学职务
+				if(applier.getHasTeachingRoleInMain()==true){
+					//请假出差教学1级审批权限人审批【课程处】
+					if(user.hasDam("takeLeaveOfficeTeachingApprove@noFilter@")){
+						//if(takeLeaveForm.getArrangeTechDealAlready()==true){
+							TaskVO taskVO1=new TaskVO();
+							taskVO1.setStatus(TaskVO.EStatus.ToBeDeal.getText());
+							if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.BusinessTrip.getValue().intValue()){
+								taskVO1.setType(TaskVO.EType.AskForLeave_BusinessTrip_OfficalApprove.getText());
+								taskVO1.setTypeId(TaskVO.EType.AskForLeave_BusinessTrip_OfficalApprove.getValue().intValue());
 
-						}
-						else if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.Leave.getValue().intValue()){
-							taskVO1.setType(TaskVO.EType.AskForLeave_Leave_OfficalApprove.getText());
-							taskVO1.setTypeId(TaskVO.EType.AskForLeave_Leave_OfficalApprove.getValue().intValue());
-						}
-						taskVO1.setAssignerId(TaskVO.EAssigner.Default.getValue().intValue()+"");
-						taskVO1.setId(takeLeaveForm.getId());
-						try {
-							Date postDate = new SimpleDateFormat("yyyyMMddHHmmss").parse(takeLeaveForm.getApplyNo());
-							taskVO1.setPostTime(UtilDateTime.toDateString(postDate,"yyyy-MM-dd HH:mm:ss"));
-						} catch (ParseException e) {
-							e.printStackTrace();
-						}
-						if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.BusinessTrip.getValue().intValue())
-							taskVO1.setTitle(TaskVO.ETitle.AskForLeave_BusinessTrip_OfficalApprove.getText());
-						else if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.Leave.getValue().intValue())
-							taskVO1.setTitle(TaskVO.ETitle.AskForLeave_Leave_OfficalApprove.getText());
-						if(takeLeaveForm.getOfficeChiefStatus()==null){
-							if(takeLeaveForm.getStatus()!=null&&takeLeaveForm.getStatus().intValue()==TakeLeaveForm.Status.Cancle.getValue().intValue())
-								taskVO1.setStatus(TaskVO.EStatus.Cancled.getText());
-							else taskVO1.setStatus(TaskVO.EStatus.ToBeDeal.getText());
-						}
-						else taskVO1.setStatus(TaskVO.EStatus.Finished.getText());
-						taskVO1.setWorkersIds(getWorkersIds(TaskVO.EType.AskForLeave_BusinessTrip_OfficalApprove.getValue(),takeLeaveForm.getTeacherId()));
-						//taskVO1.setWorkersIds(takeLeaveForm.getTeacherId());
-						list.add(taskVO1);
-					//}
-				}
-				//请假出差分管副校长审批
-				if(user.hasDam("takeLeaveVicePrincipalApprove@noFilter@")&&SecurityUserHolder.getCurrentUser()!=null&&SecurityUserHolder.getCurrentUser().hasSubordinateUser(takeLeaveForm.getTeacherId())){
-					if(takeLeaveForm.getOfficeChiefStatus()!=null&&takeLeaveForm.getOfficeChiefStatus().intValue()==1){
-						TaskVO taskVO2=new TaskVO();
-						taskVO2.setStatus(TaskVO.EStatus.ToBeDeal.getText());
-						if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.BusinessTrip.getValue().intValue()){
-							taskVO2.setType(TaskVO.EType.AskForLeave_BusinessTrip_VicePrincipalApprove.getText());
-							taskVO2.setTypeId(TaskVO.EType.AskForLeave_BusinessTrip_VicePrincipalApprove.getValue().intValue());
-						}
-						else if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.Leave.getValue().intValue()){
-							taskVO2.setType(TaskVO.EType.AskForLeave_Leave_VicePrincipalApprove.getText());
-							taskVO2.setTypeId(TaskVO.EType.AskForLeave_Leave_VicePrincipalApprove.getValue().intValue());
-						}
-						taskVO2.setAssignerId(TaskVO.EAssigner.Default.getValue().intValue()+"");
-						taskVO2.setId(takeLeaveForm.getId());
-						try {
-							Date postDate = new SimpleDateFormat("yyyyMMddHHmmss").parse(takeLeaveForm.getApplyNo());
-							taskVO2.setPostTime(UtilDateTime.toDateString(postDate,"yyyy-MM-dd HH:mm:ss"));
-						} catch (ParseException e) {
-							e.printStackTrace();
-						}
-						if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.BusinessTrip.getValue().intValue())
-							taskVO2.setTitle(TaskVO.ETitle.AskForLeave_BusinessTrip_VicePrincipalApprove.getText());
-						else if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.Leave.getValue().intValue())
-							taskVO2.setTitle(TaskVO.ETitle.AskForLeave_Leave_VicePrincipalApprove.getText());
-						if(takeLeaveForm.getVicePrincipalStatus()==null){
-							if(takeLeaveForm.getStatus()!=null&&takeLeaveForm.getStatus().intValue()==TakeLeaveForm.Status.Cancle.getValue().intValue())
-								taskVO2.setStatus(TaskVO.EStatus.Cancled.getText());
-							else taskVO2.setStatus(TaskVO.EStatus.ToBeDeal.getText());
-						}
-						else taskVO2.setStatus(TaskVO.EStatus.Finished.getText());
-						taskVO2.setWorkersIds(getWorkersIds(TaskVO.EType.AskForLeave_BusinessTrip_VicePrincipalApprove.getValue(),takeLeaveForm.getTeacherId()));
-						//taskVO2.setWorkersIds(takeLeaveForm.getTeacherId());
-						list.add(taskVO2);
+							}
+							else if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.Leave.getValue().intValue()){
+								taskVO1.setType(TaskVO.EType.AskForLeave_Leave_OfficalApprove.getText());
+								taskVO1.setTypeId(TaskVO.EType.AskForLeave_Leave_OfficalApprove.getValue().intValue());
+							}
+							taskVO1.setAssignerId(TaskVO.EAssigner.Default.getValue().intValue()+"");
+							taskVO1.setId(takeLeaveForm.getId());
+							try {
+								Date postDate = new SimpleDateFormat("yyyyMMddHHmmss").parse(takeLeaveForm.getApplyNo());
+								taskVO1.setPostTime(UtilDateTime.toDateString(postDate,"yyyy-MM-dd HH:mm:ss"));
+							} catch (ParseException e) {
+								e.printStackTrace();
+							}
+							if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.BusinessTrip.getValue().intValue())
+								taskVO1.setTitle(TaskVO.ETitle.AskForLeave_BusinessTrip_OfficalApprove.getText());
+							else if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.Leave.getValue().intValue())
+								taskVO1.setTitle(TaskVO.ETitle.AskForLeave_Leave_OfficalApprove.getText());
+							if(takeLeaveForm.getOfficeChiefStatus()==null){
+								if(takeLeaveForm.getStatus()!=null&&takeLeaveForm.getStatus().intValue()==TakeLeaveForm.Status.Cancle.getValue().intValue())
+									taskVO1.setStatus(TaskVO.EStatus.Cancled.getText());
+								else taskVO1.setStatus(TaskVO.EStatus.ToBeDeal.getText());
+							}
+							else taskVO1.setStatus(TaskVO.EStatus.Finished.getText());
+							taskVO1.setWorkersIds(getWorkersIds(TaskVO.EType.AskForLeave_Leave_Teaching_OfficalApprove.getValue(),null));
+							//taskVO1.setWorkersIds(takeLeaveForm.getTeacherId());
+							list.add(taskVO1);
+						//}
 					}
-				}	
-				//请假出差校长审批
-				if(user.hasDam("takeLeavePrincipalApprove@noFilter@")){
-					if(takeLeaveForm.getVicePrincipalStatus()!=null&&takeLeaveForm.getVicePrincipalStatus().intValue()==1){
-						TaskVO taskVO3=new TaskVO();
-						taskVO3.setStatus(TaskVO.EStatus.ToBeDeal.getText());
-						if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.BusinessTrip.getValue().intValue()){
-							taskVO3.setType(TaskVO.EType.AskForLeave_BusinessTrip_PrincipalApprove.getText());
-							taskVO3.setTypeId(TaskVO.EType.AskForLeave_BusinessTrip_PrincipalApprove.getValue().intValue());
+					//请假出差教学2级审批权限人审批【教学副校长】
+					if(user.hasDam("takeLeaveVicePrincipalTeachingApprove@noFilter@")&&SecurityUserHolder.getCurrentUser()!=null&&SecurityUserHolder.getCurrentUser().hasSubordinateUser(takeLeaveForm.getTeacherId())){
+						if(takeLeaveForm.getOfficeChiefStatus()!=null&&takeLeaveForm.getOfficeChiefStatus().intValue()==1){
+							TaskVO taskVO2=new TaskVO();
+							taskVO2.setStatus(TaskVO.EStatus.ToBeDeal.getText());
+							if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.BusinessTrip.getValue().intValue()){
+								taskVO2.setType(TaskVO.EType.AskForLeave_BusinessTrip_VicePrincipalApprove.getText());
+								taskVO2.setTypeId(TaskVO.EType.AskForLeave_BusinessTrip_VicePrincipalApprove.getValue().intValue());
+							}
+							else if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.Leave.getValue().intValue()){
+								taskVO2.setType(TaskVO.EType.AskForLeave_Leave_VicePrincipalApprove.getText());
+								taskVO2.setTypeId(TaskVO.EType.AskForLeave_Leave_VicePrincipalApprove.getValue().intValue());
+							}
+							taskVO2.setAssignerId(TaskVO.EAssigner.Default.getValue().intValue()+"");
+							taskVO2.setId(takeLeaveForm.getId());
+							try {
+								Date postDate = new SimpleDateFormat("yyyyMMddHHmmss").parse(takeLeaveForm.getApplyNo());
+								taskVO2.setPostTime(UtilDateTime.toDateString(postDate,"yyyy-MM-dd HH:mm:ss"));
+							} catch (ParseException e) {
+								e.printStackTrace();
+							}
+							if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.BusinessTrip.getValue().intValue())
+								taskVO2.setTitle(TaskVO.ETitle.AskForLeave_BusinessTrip_VicePrincipalApprove.getText());
+							else if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.Leave.getValue().intValue())
+								taskVO2.setTitle(TaskVO.ETitle.AskForLeave_Leave_VicePrincipalApprove.getText());
+							if(takeLeaveForm.getVicePrincipalStatus()==null){
+								if(takeLeaveForm.getStatus()!=null&&takeLeaveForm.getStatus().intValue()==TakeLeaveForm.Status.Cancle.getValue().intValue())
+									taskVO2.setStatus(TaskVO.EStatus.Cancled.getText());
+								else taskVO2.setStatus(TaskVO.EStatus.ToBeDeal.getText());
+							}
+							else taskVO2.setStatus(TaskVO.EStatus.Finished.getText());
+							taskVO2.setWorkersIds(getWorkersIds(TaskVO.EType.AskForLeave_Leave_Teaching_VicePrincipalApprove.getValue(),null));
+							//taskVO2.setWorkersIds(takeLeaveForm.getTeacherId());
+							list.add(taskVO2);
 						}
-						else if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.Leave.getValue().intValue()){
-							taskVO3.setType(TaskVO.EType.AskForLeave_Leave_PrincipalApprove.getText());
-							taskVO3.setTypeId(TaskVO.EType.AskForLeave_Leave_PrincipalApprove.getValue().intValue());
+					}	
+					//请假出差所有审批权限人审批【校长】
+					if(user.hasDam("takeLeavePrincipalApprove@noFilter@")){
+						if(takeLeaveForm.getVicePrincipalStatus()!=null&&takeLeaveForm.getVicePrincipalStatus().intValue()==1){
+							TaskVO taskVO3=new TaskVO();
+							taskVO3.setStatus(TaskVO.EStatus.ToBeDeal.getText());
+							if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.BusinessTrip.getValue().intValue()){
+								taskVO3.setType(TaskVO.EType.AskForLeave_BusinessTrip_PrincipalApprove.getText());
+								taskVO3.setTypeId(TaskVO.EType.AskForLeave_BusinessTrip_PrincipalApprove.getValue().intValue());
+							}
+							else if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.Leave.getValue().intValue()){
+								taskVO3.setType(TaskVO.EType.AskForLeave_Leave_PrincipalApprove.getText());
+								taskVO3.setTypeId(TaskVO.EType.AskForLeave_Leave_PrincipalApprove.getValue().intValue());
+							}
+							taskVO3.setAssignerId(TaskVO.EAssigner.Default.getValue().intValue()+"");
+							taskVO3.setId(takeLeaveForm.getId());
+							try {
+								Date postDate = new SimpleDateFormat("yyyyMMddHHmmss").parse(takeLeaveForm.getApplyNo());
+								taskVO3.setPostTime(UtilDateTime.toDateString(postDate,"yyyy-MM-dd HH:mm:ss"));
+							} catch (ParseException e) {
+								e.printStackTrace();
+							}
+							if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.BusinessTrip.getValue().intValue())
+								taskVO3.setTitle(TaskVO.ETitle.AskForLeave_BusinessTrip_PrincipalApprove.getText());
+							else if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.Leave.getValue().intValue())
+								taskVO3.setTitle(TaskVO.ETitle.AskForLeave_Leave_PrincipalApprove.getText());
+							if(takeLeaveForm.getPrincipalStatus()==null){
+								if(takeLeaveForm.getStatus()!=null&&takeLeaveForm.getStatus().intValue()==TakeLeaveForm.Status.Cancle.getValue().intValue())
+									taskVO3.setStatus(TaskVO.EStatus.Cancled.getText());
+								else taskVO3.setStatus(TaskVO.EStatus.ToBeDeal.getText());
+								
+							}
+							else taskVO3.setStatus(TaskVO.EStatus.Finished.getText());
+							taskVO3.setWorkersIds(getWorkersIds(TaskVO.EType.AskForLeave_BusinessTrip_PrincipalApprove.getValue(),null));
+							//taskVO3.setWorkersIds(takeLeaveForm.getTeacherId());
+							list.add(taskVO3);
 						}
-						taskVO3.setAssignerId(TaskVO.EAssigner.Default.getValue().intValue()+"");
-						taskVO3.setId(takeLeaveForm.getId());
-						try {
-							Date postDate = new SimpleDateFormat("yyyyMMddHHmmss").parse(takeLeaveForm.getApplyNo());
-							taskVO3.setPostTime(UtilDateTime.toDateString(postDate,"yyyy-MM-dd HH:mm:ss"));
-						} catch (ParseException e) {
-							e.printStackTrace();
-						}
-						if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.BusinessTrip.getValue().intValue())
-							taskVO3.setTitle(TaskVO.ETitle.AskForLeave_BusinessTrip_PrincipalApprove.getText());
-						else if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.Leave.getValue().intValue())
-							taskVO3.setTitle(TaskVO.ETitle.AskForLeave_Leave_PrincipalApprove.getText());
-						if(takeLeaveForm.getPrincipalStatus()==null){
-							if(takeLeaveForm.getStatus()!=null&&takeLeaveForm.getStatus().intValue()==TakeLeaveForm.Status.Cancle.getValue().intValue())
-								taskVO3.setStatus(TaskVO.EStatus.Cancled.getText());
-							else taskVO3.setStatus(TaskVO.EStatus.ToBeDeal.getText());
-							
-						}
-						else taskVO3.setStatus(TaskVO.EStatus.Finished.getText());
-						taskVO3.setWorkersIds(getWorkersIds(TaskVO.EType.AskForLeave_BusinessTrip_PrincipalApprove.getValue(),takeLeaveForm.getTeacherId()));
-						//taskVO3.setWorkersIds(takeLeaveForm.getTeacherId());
-						list.add(taskVO3);
 					}
+					
+				
+					
+				}else{// 其他
+					//请假出差本处室审批
+					if(user.hasDam("takeLeaveOfficeApprove@noFilter@")&&SecurityUserHolder.getCurrentUser()!=null&&SecurityUserHolder.getCurrentUser().hasSubordinateUser(takeLeaveForm.getTeacherId())){
+						//if(takeLeaveForm.getArrangeTechDealAlready()==true){
+							TaskVO taskVO1=new TaskVO();
+							taskVO1.setStatus(TaskVO.EStatus.ToBeDeal.getText());
+							if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.BusinessTrip.getValue().intValue()){
+								taskVO1.setType(TaskVO.EType.AskForLeave_BusinessTrip_OfficalApprove.getText());
+								taskVO1.setTypeId(TaskVO.EType.AskForLeave_BusinessTrip_OfficalApprove.getValue().intValue());
+
+							}
+							else if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.Leave.getValue().intValue()){
+								taskVO1.setType(TaskVO.EType.AskForLeave_Leave_OfficalApprove.getText());
+								taskVO1.setTypeId(TaskVO.EType.AskForLeave_Leave_OfficalApprove.getValue().intValue());
+							}
+							taskVO1.setAssignerId(TaskVO.EAssigner.Default.getValue().intValue()+"");
+							taskVO1.setId(takeLeaveForm.getId());
+							try {
+								Date postDate = new SimpleDateFormat("yyyyMMddHHmmss").parse(takeLeaveForm.getApplyNo());
+								taskVO1.setPostTime(UtilDateTime.toDateString(postDate,"yyyy-MM-dd HH:mm:ss"));
+							} catch (ParseException e) {
+								e.printStackTrace();
+							}
+							if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.BusinessTrip.getValue().intValue())
+								taskVO1.setTitle(TaskVO.ETitle.AskForLeave_BusinessTrip_OfficalApprove.getText());
+							else if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.Leave.getValue().intValue())
+								taskVO1.setTitle(TaskVO.ETitle.AskForLeave_Leave_OfficalApprove.getText());
+							if(takeLeaveForm.getOfficeChiefStatus()==null){
+								if(takeLeaveForm.getStatus()!=null&&takeLeaveForm.getStatus().intValue()==TakeLeaveForm.Status.Cancle.getValue().intValue())
+									taskVO1.setStatus(TaskVO.EStatus.Cancled.getText());
+								else taskVO1.setStatus(TaskVO.EStatus.ToBeDeal.getText());
+							}
+							else taskVO1.setStatus(TaskVO.EStatus.Finished.getText());
+							taskVO1.setWorkersIds(getWorkersIds(TaskVO.EType.AskForLeave_BusinessTrip_OfficalApprove.getValue(),takeLeaveForm.getTeacherId()));
+							//taskVO1.setWorkersIds(takeLeaveForm.getTeacherId());
+							list.add(taskVO1);
+						//}
+					}
+					//请假出差分管副校长审批
+					if(user.hasDam("takeLeaveVicePrincipalApprove@noFilter@")&&SecurityUserHolder.getCurrentUser()!=null&&SecurityUserHolder.getCurrentUser().hasSubordinateUser(takeLeaveForm.getTeacherId())){
+						if(takeLeaveForm.getOfficeChiefStatus()!=null&&takeLeaveForm.getOfficeChiefStatus().intValue()==1){
+							TaskVO taskVO2=new TaskVO();
+							taskVO2.setStatus(TaskVO.EStatus.ToBeDeal.getText());
+							if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.BusinessTrip.getValue().intValue()){
+								taskVO2.setType(TaskVO.EType.AskForLeave_BusinessTrip_VicePrincipalApprove.getText());
+								taskVO2.setTypeId(TaskVO.EType.AskForLeave_BusinessTrip_VicePrincipalApprove.getValue().intValue());
+							}
+							else if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.Leave.getValue().intValue()){
+								taskVO2.setType(TaskVO.EType.AskForLeave_Leave_VicePrincipalApprove.getText());
+								taskVO2.setTypeId(TaskVO.EType.AskForLeave_Leave_VicePrincipalApprove.getValue().intValue());
+							}
+							taskVO2.setAssignerId(TaskVO.EAssigner.Default.getValue().intValue()+"");
+							taskVO2.setId(takeLeaveForm.getId());
+							try {
+								Date postDate = new SimpleDateFormat("yyyyMMddHHmmss").parse(takeLeaveForm.getApplyNo());
+								taskVO2.setPostTime(UtilDateTime.toDateString(postDate,"yyyy-MM-dd HH:mm:ss"));
+							} catch (ParseException e) {
+								e.printStackTrace();
+							}
+							if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.BusinessTrip.getValue().intValue())
+								taskVO2.setTitle(TaskVO.ETitle.AskForLeave_BusinessTrip_VicePrincipalApprove.getText());
+							else if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.Leave.getValue().intValue())
+								taskVO2.setTitle(TaskVO.ETitle.AskForLeave_Leave_VicePrincipalApprove.getText());
+							if(takeLeaveForm.getVicePrincipalStatus()==null){
+								if(takeLeaveForm.getStatus()!=null&&takeLeaveForm.getStatus().intValue()==TakeLeaveForm.Status.Cancle.getValue().intValue())
+									taskVO2.setStatus(TaskVO.EStatus.Cancled.getText());
+								else taskVO2.setStatus(TaskVO.EStatus.ToBeDeal.getText());
+							}
+							else taskVO2.setStatus(TaskVO.EStatus.Finished.getText());
+							taskVO2.setWorkersIds(getWorkersIds(TaskVO.EType.AskForLeave_BusinessTrip_VicePrincipalApprove.getValue(),takeLeaveForm.getTeacherId()));
+							//taskVO2.setWorkersIds(takeLeaveForm.getTeacherId());
+							list.add(taskVO2);
+						}
+					}	
+					//请假出差校长审批
+					if(user.hasDam("takeLeavePrincipalApprove@noFilter@")){
+						if(takeLeaveForm.getVicePrincipalStatus()!=null&&takeLeaveForm.getVicePrincipalStatus().intValue()==1){
+							TaskVO taskVO3=new TaskVO();
+							taskVO3.setStatus(TaskVO.EStatus.ToBeDeal.getText());
+							if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.BusinessTrip.getValue().intValue()){
+								taskVO3.setType(TaskVO.EType.AskForLeave_BusinessTrip_PrincipalApprove.getText());
+								taskVO3.setTypeId(TaskVO.EType.AskForLeave_BusinessTrip_PrincipalApprove.getValue().intValue());
+							}
+							else if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.Leave.getValue().intValue()){
+								taskVO3.setType(TaskVO.EType.AskForLeave_Leave_PrincipalApprove.getText());
+								taskVO3.setTypeId(TaskVO.EType.AskForLeave_Leave_PrincipalApprove.getValue().intValue());
+							}
+							taskVO3.setAssignerId(TaskVO.EAssigner.Default.getValue().intValue()+"");
+							taskVO3.setId(takeLeaveForm.getId());
+							try {
+								Date postDate = new SimpleDateFormat("yyyyMMddHHmmss").parse(takeLeaveForm.getApplyNo());
+								taskVO3.setPostTime(UtilDateTime.toDateString(postDate,"yyyy-MM-dd HH:mm:ss"));
+							} catch (ParseException e) {
+								e.printStackTrace();
+							}
+							if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.BusinessTrip.getValue().intValue())
+								taskVO3.setTitle(TaskVO.ETitle.AskForLeave_BusinessTrip_PrincipalApprove.getText());
+							else if(takeLeaveForm.getType().intValue()==TakeLeaveForm.Types.Leave.getValue().intValue())
+								taskVO3.setTitle(TaskVO.ETitle.AskForLeave_Leave_PrincipalApprove.getText());
+							if(takeLeaveForm.getPrincipalStatus()==null){
+								if(takeLeaveForm.getStatus()!=null&&takeLeaveForm.getStatus().intValue()==TakeLeaveForm.Status.Cancle.getValue().intValue())
+									taskVO3.setStatus(TaskVO.EStatus.Cancled.getText());
+								else taskVO3.setStatus(TaskVO.EStatus.ToBeDeal.getText());
+								
+							}
+							else taskVO3.setStatus(TaskVO.EStatus.Finished.getText());
+							taskVO3.setWorkersIds(getWorkersIds(TaskVO.EType.AskForLeave_BusinessTrip_PrincipalApprove.getValue(),takeLeaveForm.getTeacherId()));
+							//taskVO3.setWorkersIds(takeLeaveForm.getTeacherId());
+							list.add(taskVO3);
+						}
+					}
+					
 				}
+				
 				//销假审批
 				if(user.hasDam("takeLeaveTerminateApprove@noFilter@")){
 					if(takeLeaveForm.getTakeLeaveTerminateForm()!=null&&StringUtils.isNotEmpty(takeLeaveForm.getTakeLeaveTerminateForm().getId())){
@@ -855,6 +987,12 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 	}
 	public void setSystemService(SystemService systemService) {
 		this.systemService = systemService;
+	}
+	public RoleDAO getRoleDAO() {
+		return roleDAO;
+	}
+	public void setRoleDAO(RoleDAO roleDAO) {
+		this.roleDAO = roleDAO;
 	}
 	
 	

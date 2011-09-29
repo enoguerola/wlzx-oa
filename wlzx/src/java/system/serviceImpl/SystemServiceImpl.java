@@ -1038,6 +1038,15 @@ public class SystemServiceImpl implements SystemService{
 //				if(user.hasDam("takeLeaveWorkDeal@noFilter@"))
 //					result.append(user.getId()+";");
 //			}else
+			if(type.intValue()==TaskVO.EType.AskForLeave_Leave_Teaching_OfficalApprove.getValue().intValue()){
+				for(UserModel user:users)
+				if(user.hasDam("takeLeaveOfficeTeachingApprove@noFilter@"))
+					result.append(user.getId()+";");
+			}else if(type.intValue()==TaskVO.EType.AskForLeave_Leave_Teaching_VicePrincipalApprove.getValue().intValue()){
+				for(UserModel user:users)
+				if(user.hasDam("takeLeaveVicePrincipalTeachingApprove@noFilter@"))
+					result.append(user.getId()+";");
+			}else
 			if(type.intValue()==TaskVO.EType.AskForLeave_BusinessTrip_OfficalApprove.getValue().intValue()){
 				for(UserModel user:users)
 				if(user.hasDam("takeLeaveOfficeApprove@noFilter@"))

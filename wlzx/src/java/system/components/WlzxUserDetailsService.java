@@ -1,6 +1,7 @@
 package system.components;
 
 
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -8,9 +9,11 @@ import org.apache.log4j.Logger;
 
 import system.dao.DRDAO;
 import system.dao.DataAccessModeDAO;
+import system.dao.RoleDAO;
 import system.dao.UserDAO;
 import system.entity.DRModel;
 import system.entity.DataAccessModeModel;
+import system.entity.RoleModel;
 import system.entity.UserModel;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,16 +27,16 @@ public class WlzxUserDetailsService implements UserDetailsService{
 	private final static Logger logger = Logger.getLogger(WlzxUserDetailsService.class);
 	
 	private UserDAO userDAO;
-//	private RoleDAO roleDAO;
+	private RoleDAO roleDAO;
 	private DRDAO drDAO;
 	private DataAccessModeDAO resourcesDao;  
-//	public RoleDAO getRoleDAO() {
-//		return roleDAO;
-//	}
-//
-//	public void setRoleDAO(RoleDAO roleDAO) {
-//		this.roleDAO = roleDAO;
-//	}
+	public RoleDAO getRoleDAO() {
+		return roleDAO;
+	}
+
+	public void setRoleDAO(RoleDAO roleDAO) {
+		this.roleDAO = roleDAO;
+	}
 
 	public UserDetails loadUserByUsername(String userAccount)
 			throws UsernameNotFoundException, DataAccessException {
@@ -48,6 +51,9 @@ public class WlzxUserDetailsService implements UserDetailsService{
 //	            	 userModel.setMainDR(mainDR)(SecurityUserHolder.getSuperRootRoleModel());
 	            	
 	            	userModel.setAuthorizations(new TreeSet<DataAccessModeModel>(resourcesDao.getAllResources()));
+	            	
+	            	userModel.setHasTeachingRole(true);
+	            	userModel.setHasTeachingRoleInMain(true);
 	            	
 	            }else{
 	            	 Set<DataAccessModeModel> dams=new TreeSet<DataAccessModeModel>();
@@ -64,7 +70,26 @@ public class WlzxUserDetailsService implements UserDetailsService{
 	     				}
 	     			}
 	     			userModel.setAuthorizations(dams);
-	            	
+	     			
+	     			Boolean hasTeachingRoleInMain=false;
+	     			Boolean hasTeachingRole=false;
+					List<RoleModel> teachingRoles=roleDAO.getTeachingRoles();
+					if(teachingRoles!=null&&teachingRoles.size()>0){
+						for(RoleModel teachingRole:teachingRoles){
+							if(userModel.hasRoleInMain(teachingRole.getId())){
+								hasTeachingRoleInMain=true;
+								break;
+							}
+						}
+						for(RoleModel teachingRole:teachingRoles){
+							if(userModel.hasRole(teachingRole.getId())){
+								hasTeachingRole=true;
+								break;
+							}
+						}
+					}
+					userModel.setHasTeachingRole(hasTeachingRole);
+	            	userModel.setHasTeachingRoleInMain(hasTeachingRoleInMain);
 	            }
 	           
 	           return userModel;

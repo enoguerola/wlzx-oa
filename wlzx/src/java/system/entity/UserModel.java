@@ -54,7 +54,8 @@ public class UserModel  extends BaseModel implements UserDetails{
 	private Set<DepartmentModel> leaderDepartments=new TreeSet<DepartmentModel>();//领导部门
 	private Set<DepartmentModel> masterDepartments=new TreeSet<DepartmentModel>();//主管部门
 	
-
+	private Boolean hasTeachingRoleInMain=false;//辅助
+	private Boolean hasTeachingRole=false;//辅助
 	
 	
 	public String getPwd() {
@@ -94,7 +95,33 @@ public class UserModel  extends BaseModel implements UserDetails{
 			allDrs.add(getMainDR());
 		return allDrs;
 	}
+	
+	public Set<String> getAllRoleIds() {
+		Set<String> roleIds=new TreeSet<String>();
+		for(DRModel dr:getAllDRs()){
+			roleIds.add(dr.getRoleId());
 
+		}
+		return roleIds;
+	}
+	public Boolean hasRole(String roleId) {
+		Boolean has=false;
+		for(String id:getAllRoleIds()){
+			if(id.equals(roleId)){
+				has=true;
+				break;
+			}
+		}
+		return has;
+	}
+	public Boolean hasRoleInMain(String roleId) {
+		Boolean has=false;
+		if(mainDR!=null){
+			if(roleId.equals(mainDR.getRoleId()))
+				has=true;
+		}
+		return has;
+	}
 
 	//用户拥有的权限
 	@Override
@@ -255,6 +282,18 @@ public class UserModel  extends BaseModel implements UserDetails{
 	}
 	public void setDrs(Set<DRModel> drs) {
 		this.drs = drs;
+	}
+	public Boolean getHasTeachingRoleInMain() {
+		return hasTeachingRoleInMain;
+	}
+	public void setHasTeachingRoleInMain(Boolean hasTeachingRoleInMain) {
+		this.hasTeachingRoleInMain = hasTeachingRoleInMain;
+	}
+	public Boolean getHasTeachingRole() {
+		return hasTeachingRole;
+	}
+	public void setHasTeachingRole(Boolean hasTeachingRole) {
+		this.hasTeachingRole = hasTeachingRole;
 	}
 	
 }

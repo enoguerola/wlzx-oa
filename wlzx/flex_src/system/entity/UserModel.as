@@ -23,13 +23,14 @@ package system.entity
 		
 		public var authorizations:Object=new Array();////辅助
 		
-		private var leaderDepartments:Object=new Array();//领导部门
-		private var masterDepartments:Object=new Array();//主管部门
+		public var leaderDepartments:Object=new Array();//领导部门
+		public var masterDepartments:Object=new Array();//主管部门
 		
 	
-		private var allDepartments:ArrayCollection=new ArrayCollection();//辅助
+		public var allDepartments:ArrayCollection=new ArrayCollection();//辅助
 	
-		
+		public var hasTeachingRoleInMain:Boolean=false;//辅助
+		public var hasTeachingRole:Boolean=false;//辅助
 		
 		
 		public function UserModel()
