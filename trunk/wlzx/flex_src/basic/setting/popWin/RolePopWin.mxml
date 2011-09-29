@@ -206,7 +206,7 @@
 			<mx:FormItem label="唯一标识" required="true">
 				<mx:HBox>
 					<mx:TextInput id="symbol" width="200"/>
-					<mx:Label  text="教师岗位" /><mx:CheckBox id="teacherFlag"/>
+					<mx:Label  text="教学岗位" /><mx:CheckBox id="teacherFlag"/>
 				</mx:HBox>
 				
 			</mx:FormItem>	

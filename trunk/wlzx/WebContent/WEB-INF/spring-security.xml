@@ -71,7 +71,7 @@
 	<!-- 用户信息服务 -->
 	<beans:bean id="wlzxUserDetailsService" class="system.components.WlzxUserDetailsService">
 		<beans:property name="userDAO" ref="userDAO"/>
-<!-- 		<beans:property name="roleDAO" ref="roleDAO" /> -->
+		<beans:property name="roleDAO" ref="roleDAO" />
 		<beans:property name="resourcesDao" ref="dataAccessModeDAO" />
 		<beans:property name="drDAO" ref="drDAO" />
 	</beans:bean>

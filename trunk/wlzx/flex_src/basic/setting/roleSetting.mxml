@@ -210,6 +210,7 @@
 				symbol.text=role.symbol;
 				level.text=role.level+"";
 				detail.text=role.detail;
+				teacherFlag.text=(role.teacherFlag?"是":"否");
 				/* var usersString:String="";
 				if(role.users!=null){
 					var list:ArrayCollection = ArrayCollection(role.getAllUsers());
@@ -264,7 +265,10 @@
 						</mx:FormItem>
 						
 						<mx:FormItem label="唯一标识"  required="true">
-							<mx:Label id="symbol"/>		
+							<mx:HBox>
+								<mx:Label id="symbol" width="200"/>
+								<mx:Label  text="教学岗位:" /><mx:Label id="teacherFlag"/>
+							</mx:HBox>
 						</mx:FormItem>	
 						<mx:FormItem label="岗位级别">
 							<mx:Label id="level"/>		

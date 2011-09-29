@@ -5,7 +5,6 @@ package system.entity;
 
 import java.util.TreeSet;
 import java.util.Set;
-import java.util.TreeSet;
 
 
 
@@ -31,7 +30,7 @@ public class RoleModel extends BaseModel {
 	private String detail;
 	private int level;//岗位级别
 	private Boolean supervisorFlag=false;//部门主管标记，注：有此标记的角色不可自行删除，随部门删除而删除
-	private Boolean teacherFlag=false;
+	private Boolean teacherFlag=false;//教学职务标记
 	private Boolean basicFlag=false;
 	private Set<DRModel> relativeDRs=new TreeSet<DRModel>();
 	public String getDetail() {

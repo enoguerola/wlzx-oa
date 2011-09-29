@@ -16,10 +16,19 @@ public class TaskVO {
 		AskForLeave_Leave_TechArrange(3, "请假工作安排"),
 		AskForLeave_Leave_OfficalApprove(4, "请假处室审批"),
 		AskForLeave_Leave_VicePrincipalApprove(5, "请假副校长审批"),
+		
+		AskForLeave_Leave_Teaching_OfficalApprove(17, "请假课程处审批"),
+		AskForLeave_Leave_Teaching_VicePrincipalApprove(18, "请假教学副校长审批"),
+		
 		AskForLeave_Leave_PrincipalApprove(6, "请假校长审批"),
 		AskForLeave_BusinessTrip_TechArrange(7, "出差工作安排"),
 		AskForLeave_BusinessTrip_OfficalApprove(8, "出差审批"),
 		AskForLeave_BusinessTrip_VicePrincipalApprove(9, "出差审批"),
+		
+		AskForLeave_BusinessTrip_Teaching_OfficalApprove(19, "出差课程处审批"),
+		AskForLeave_BusinessTrip_Teaching_VicePrincipalApprove(20, "出差教学副校长审批"),
+		
+		
 		AskForLeave_BusinessTrip_PrincipalApprove(10, "出差审批"),
 		AskForLeave_Cancle(11, "销假审批"),
 		OverWork_OfficalApprove(12, "加班处室审批"),
@@ -50,10 +59,19 @@ public class TaskVO {
 		AskForLeave_Leave_TechArrange(3, "您有一件请假的教学工作需要安排"),
 		AskForLeave_Leave_OfficalApprove(4, "您有一件请假申请事务需要处理"),
 		AskForLeave_Leave_VicePrincipalApprove(5, "您有一件请假申请事务需要处理"),
+		
+		AskForLeave_Leave_Teaching_OfficalApprove(17, "您有一件请假申请事务需要处理"),
+		AskForLeave_Leave_Teaching_VicePrincipalApprove(18, "您有一件请假申请事务需要处理"),
+		
+		
 		AskForLeave_Leave_PrincipalApprove(6, "您有一件请假申请事务需要处理"),
 		AskForLeave_BusinessTrip_TechArrange(7, "您有一件出差的教学工作需要安排"),
 		AskForLeave_BusinessTrip_OfficalApprove(8, "您有一件出差申请事务需要处理"),
 		AskForLeave_BusinessTrip_VicePrincipalApprove(9, "您有一件出差申请事务需要处理"),
+		
+		AskForLeave_BusinessTrip_Teaching_OfficalApprove(19, "您有一件出差申请事务需要处理"),
+		AskForLeave_BusinessTrip_Teaching_VicePrincipalApprove(20, "您有一件出差申请事务需要处理"),
+		
 		AskForLeave_BusinessTrip_PrincipalApprove(10, "您有一件出差申请事务需要处理"),
 		
 		AskForLeave_Cancle(11, "您有一件销假申请事务需要处理"),
