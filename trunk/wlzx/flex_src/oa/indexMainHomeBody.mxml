@@ -440,6 +440,13 @@
 														}else{
 															result+=beginDate+" "+beginTime+"-"+endDate+" "+endTime;
 														}
+														
+														result+="\n";
+														result+="共享范围："
+														if(data.schoolShare=="1")
+															result+="学校共享 ";
+														if(data.departmentShare=="1")
+															result+="部门共享 ";
 														result+="\n";
 														result+="详细："+data.content;
 														return result;
@@ -467,9 +474,9 @@
 														if(data!=null){
 															var result:String="";
 															
-															if(data.schoolShare=="1")
-																result+="学校共享 ";
-															if(data.departmentShare=="1")
+//															if(data.schoolShare=="1")
+//																result+="学校共享 ";
+//															if(data.departmentShare=="1")
 																result+=this.parentApplication.getDepartmentNameById(data.departmentId);
 															return result;
 														}else{
