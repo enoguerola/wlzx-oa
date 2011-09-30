@@ -514,7 +514,7 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 						//}
 					}
 					//请假出差教学2级审批权限人审批【教学副校长】
-					if(user.hasDam("takeLeaveVicePrincipalTeachingApprove@noFilter@")&&SecurityUserHolder.getCurrentUser()!=null&&SecurityUserHolder.getCurrentUser().hasSubordinateUser(takeLeaveForm.getTeacherId())){
+					if(user.hasDam("takeLeaveVicePrincipalTeachingApprove@noFilter@")){
 						if(takeLeaveForm.getOfficeChiefStatus()!=null&&takeLeaveForm.getOfficeChiefStatus().intValue()==1){
 							TaskVO taskVO2=new TaskVO();
 							taskVO2.setStatus(TaskVO.EStatus.ToBeDeal.getText());
