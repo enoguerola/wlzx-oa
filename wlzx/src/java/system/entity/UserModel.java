@@ -227,16 +227,16 @@ public class UserModel  extends BaseModel implements UserDetails{
 		results.add(this);
 		if(getLeaderDepartments()!=null&&getLeaderDepartments().size()>0)
 			for(DepartmentModel department:getLeaderDepartments()){
-				if(department.getAllUsers()!=null&&department.getAllUsers().size()>0){
-					for(UserModel user:department.getAllUsers()){
+				if(department.getAllSubUsers()!=null&&department.getAllSubUsers().size()>0){
+					for(UserModel user:department.getAllSubUsers()){
 						if(!results.contains(user))results.add(user);
 					}
 				}
 			}
 		if(getMasterDepartments()!=null&&getMasterDepartments().size()>0)
 			for(DepartmentModel department:getMasterDepartments()){
-				if(department.getAllUsers()!=null&&department.getAllUsers().size()>0){
-					for(UserModel user:department.getAllUsers()){
+				if(department.getAllSubUsers()!=null&&department.getAllSubUsers().size()>0){
+					for(UserModel user:department.getAllSubUsers()){
 						if(!results.contains(user))results.add(user);
 					}
 				}
