@@ -5,7 +5,6 @@ package system.entity;
 
 import java.util.TreeSet;
 import java.util.Set;
-import java.util.TreeSet;
 
 
   
@@ -96,7 +95,6 @@ public class DepartmentModel  extends BaseModel{
 	//获得所有子部门(含自身)
 	public Set<DepartmentModel> getAllSubordinates() {
 		Set<DepartmentModel> results=new TreeSet<DepartmentModel>();
-		results.add(this);
 		addSubordinates(this,results);
 		return results;
 	}
@@ -128,8 +126,30 @@ public class DepartmentModel  extends BaseModel{
 		return results;
 		
 	}
-	
+	//获得所有子部门及本部门用户
 	public Set<UserModel> getAllUsers(){
+		
+		Set<UserModel> results=new TreeSet<UserModel>();
+		 Set<DepartmentModel> allSubDepartments=getAllSubordinates();
+		 for(DepartmentModel department:allSubDepartments)
+			for(DRModel dr:department.getRelativeDRs()){
+				for(UserModel user:dr.getAllUsers()){
+					if(!results.contains(user))
+						results.add(user);
+				}
+			}
+		 for(DRModel dr:this.getRelativeDRs()){
+				for(UserModel user:dr.getAllUsers()){
+					if(!results.contains(user))
+						results.add(user);
+				}
+			}
+		return results;
+		
+	}
+//获得所有子部门用户
+
+public Set<UserModel> getAllSubUsers(){
 		
 		Set<UserModel> results=new TreeSet<UserModel>();
 		 Set<DepartmentModel> allSubDepartments=getAllSubordinates();
@@ -143,9 +163,6 @@ public class DepartmentModel  extends BaseModel{
 		return results;
 		
 	}
-
-
-
 	
 	
 	
