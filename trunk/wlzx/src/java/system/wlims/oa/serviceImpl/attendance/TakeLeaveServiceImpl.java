@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import system.components.SecurityUserHolder;
+import system.dao.DepartmentDAO;
 import system.dao.RoleDAO;
 import system.dao.UserDAO;
 import system.entity.MessageModel;
@@ -28,6 +29,7 @@ public class TakeLeaveServiceImpl implements TakeLeaveService {
 	private TeacherService teacherService;
 	private UserDAO userDAO;
 	private RoleDAO roleDAO;
+	private DepartmentDAO departmentDAO;
 	@Override
 	public void addTakeLeaveApply(TakeLeaveForm takeLeave) {
 		// TODO Auto-generated method stub
@@ -125,9 +127,25 @@ public class TakeLeaveServiceImpl implements TakeLeaveService {
 //				newTakeLeave.getLogs().add(log);
 //			}
 			UserModel applier=userDAO.get(takeLeave.getTeacherId());
-			Boolean hasTeachingRole=applier.getHasTeachingRole();
-			Boolean hasTeachingRoleInMain=applier.getHasTeachingRoleInMain();
-			
+			Boolean hasTeachingRoleInMain=false;
+ 			Boolean hasTeachingRole=false;
+			List<RoleModel> teachingRoles=roleDAO.getTeachingRoles();
+			if(teachingRoles!=null&&teachingRoles.size()>0){
+				for(RoleModel teachingRole:teachingRoles){
+					if(applier.hasRoleInMain(teachingRole.getId())){
+						hasTeachingRoleInMain=true;
+						break;
+					}
+				}
+				for(RoleModel teachingRole:teachingRoles){
+					if(applier.hasRole(teachingRole.getId())){
+						hasTeachingRole=true;
+						break;
+					}
+				}
+			}
+			applier.setHasTeachingRole(hasTeachingRole);
+			applier.setHasTeachingRoleInMain(hasTeachingRoleInMain);
 			if(hasTeachingRoleInMain==true){//教学申请审批
 				if(newTakeLeave.getOfficeChiefStatus()==null&&takeLeave.getOfficeChiefStatus()!=null){
 					TakeLeaveWorkFlowLog log=new TakeLeaveWorkFlowLog();
@@ -530,6 +548,12 @@ public class TakeLeaveServiceImpl implements TakeLeaveService {
 	}
 	public void setRoleDAO(RoleDAO roleDAO) {
 		this.roleDAO = roleDAO;
+	}
+	public DepartmentDAO getDepartmentDAO() {
+		return departmentDAO;
+	}
+	public void setDepartmentDAO(DepartmentDAO departmentDAO) {
+		this.departmentDAO = departmentDAO;
 	}
 
 }

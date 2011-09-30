@@ -107,7 +107,7 @@ public class RoleDAO extends BaseDAOImpl<RoleModel> {
 	public List<RoleModel> getTeachingRoles() {
 		DetachedCriteria criteria = DetachedCriteria.forClass(RoleModel.class);
 		criteria.addOrder(Order.asc("level"));
-		criteria.add(Restrictions.ne("teacherFlag", true));
+		criteria.add(Restrictions.eq("teacherFlag", true));
 		List<RoleModel> result = this.getListByCriteria(criteria);
 		return result;
 	}

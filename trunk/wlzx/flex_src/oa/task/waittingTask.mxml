@@ -197,7 +197,7 @@
 				return result2;
 			}
 			public function enterEdit(id:String,typeId:String):void{
-						Alert.show(typeId);
+						//Alert.show(typeId);
 						var typeIntId:int=parseInt(typeId);
 				var parent:Object=(Object)(((Object)(this.owner)).owner);
 				if(typeIntId==1){
