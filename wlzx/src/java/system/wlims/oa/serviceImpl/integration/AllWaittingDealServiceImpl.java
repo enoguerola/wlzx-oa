@@ -24,8 +24,11 @@ import system.wlims.oa.entity.workFlow.takeLeave.TakeLeaveTerminateForm;
 import system.wlims.oa.service.integration.AllWaittingDealService;
 import system.wlims.oa.vo.TaskVO;
 import system.components.SecurityUserHolder;
+import system.dao.DepartmentDAO;
 import system.dao.RoleDAO;
 import system.dao.UserDAO;
+import system.entity.DepartmentModel;
+import system.entity.RoleModel;
 import system.entity.UserModel;
 import system.service.SystemService;
 import system.utils.StringUtils;
@@ -40,6 +43,7 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 	private ConferenceDAO conferenceDAO;
 	private UserDAO userDAO;
 	private RoleDAO roleDAO;
+	private DepartmentDAO departmentDAO;
 	private SystemService systemService;
 
 	@Override
@@ -445,9 +449,33 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 				 * 3.其他---1级下属审批权限【本部门处长】--2级下属审批权限【本部门分管副校长】--所有审批权限人审批【校长】
 				 */
 				UserModel applier=userDAO.get(takeLeaveForm.getTeacherId());
-				
+				Boolean hasTeachingRoleInMain=false;
+     			Boolean hasTeachingRole=false;
+     			Boolean hasRootDepartment=false;
+				List<RoleModel> teachingRoles=roleDAO.getTeachingRoles();
+				DepartmentModel rootDepartment=departmentDAO.getDepartmentBySymbol("root");
+				if(teachingRoles!=null&&teachingRoles.size()>0){
+					for(RoleModel teachingRole:teachingRoles){
+						if(applier.hasRoleInMain(teachingRole.getId())){
+							hasTeachingRoleInMain=true;
+							break;
+						}
+					}
+					for(RoleModel teachingRole:teachingRoles){
+						if(applier.hasRole(teachingRole.getId())){
+							hasTeachingRole=true;
+							break;
+						}
+					}
+				}
+				if(rootDepartment!=null&&applier.hasDepartment(rootDepartment.getId())){
+					hasRootDepartment=true;
+				}
+				applier.setHasTeachingRole(hasTeachingRole);
+				applier.setHasTeachingRoleInMain(hasTeachingRoleInMain);
+				applier.setHasRootDepartment(hasRootDepartment);
 				// 请假人拥有教学职务
-				if(applier.getHasTeachingRoleInMain()==true){
+				if(applier.getHasTeachingRoleInMain()==true||applier.getHasRootDepartment()==true){
 					//请假出差教学1级审批权限人审批【课程处】
 					if(user.hasDam("takeLeaveOfficeTeachingApprove@noFilter@")){
 						//if(takeLeaveForm.getArrangeTechDealAlready()==true){
@@ -993,6 +1021,12 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 	}
 	public void setRoleDAO(RoleDAO roleDAO) {
 		this.roleDAO = roleDAO;
+	}
+	public DepartmentDAO getDepartmentDAO() {
+		return departmentDAO;
+	}
+	public void setDepartmentDAO(DepartmentDAO departmentDAO) {
+		this.departmentDAO = departmentDAO;
 	}
 	
 	

@@ -21,6 +21,7 @@
 		<property name="taskDAO" ref="taskDAO" />
 		<property name="userDAO" ref="userDAO" />
 		<property name="roleDAO" ref="roleDAO" />
+		<property name="departmentDAO" ref="departmentDAO" />
 		<property name="courseAdjustDAO" ref="courseAdjustDAO" />
 		<property name="moveRestDayDAO" ref="moveRestDayDAO" />
 		<property name="overWorkDAO" ref="overWorkDAO" />

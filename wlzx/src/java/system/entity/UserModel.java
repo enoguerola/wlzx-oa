@@ -56,7 +56,7 @@ public class UserModel  extends BaseModel implements UserDetails{
 	
 	private Boolean hasTeachingRoleInMain=false;//辅助
 	private Boolean hasTeachingRole=false;//辅助
-	
+	private Boolean hasRootDepartment=false;;//辅助
 	
 	public String getPwd() {
 		return pwd;
@@ -122,7 +122,24 @@ public class UserModel  extends BaseModel implements UserDetails{
 		}
 		return has;
 	}
+	public Set<String> getAllDepartmentIds() {
+		Set<String> departmentIds=new TreeSet<String>();
+		for(DRModel dr:getAllDRs()){
+			departmentIds.add(dr.getDepartmentId());
 
+		}
+		return departmentIds;
+	}
+	public boolean hasDepartment(String departmentId) {
+		Boolean has=false;
+		for(String id:getAllDepartmentIds()){
+			if(id.equals(departmentId)){
+				has=true;
+				break;
+			}
+		}
+		return has;
+	}
 	//用户拥有的权限
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -295,5 +312,13 @@ public class UserModel  extends BaseModel implements UserDetails{
 	public void setHasTeachingRole(Boolean hasTeachingRole) {
 		this.hasTeachingRole = hasTeachingRole;
 	}
+	
+	public Boolean getHasRootDepartment() {
+		return hasRootDepartment;
+	}
+	public void setHasRootDepartment(Boolean hasRootDepartment) {
+		this.hasRootDepartment = hasRootDepartment;
+	}
+	
 	
 }

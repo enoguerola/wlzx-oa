@@ -23,6 +23,7 @@
 		<flex:remoting-destination />
 		<property name="userDAO" ref="userDAO" />
 		<property name="roleDAO" ref="roleDAO" />
+		<property name="departmentDAO" ref="departmentDAO" />
 		<property name="takeLeaveDAO" ref="takeLeaveDAO" />
 		<property name="systemService" ref="systemServiceDest" />
 		<property name="teacherService" ref="teacherService" />

@@ -7,9 +7,10 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import system.constants.Constants;
+import system.entity.BaseModel;
 import system.entity.workFlow.AbstractForm;
 
-public class TakeLeaveForm extends AbstractForm {
+public class TakeLeaveForm extends AbstractForm implements Comparable<TakeLeaveForm>{
 
 	/**
 	 * 1.请假人在行政组【0级部门】---教学1级审批权限人审批【课程处】--教学2级审批权限人审批【教学副校长】--所有审批权限人审批【校长】----------通过给行政组的人配置教学职务来绕开
@@ -338,4 +339,21 @@ public class TakeLeaveForm extends AbstractForm {
 			return getTerminateForms().iterator().next();
 		else return null;
 	}
+	  @Override  
+	    public boolean equals(Object obj) {  
+	        return getId().equals(((BaseModel)obj).getId());  
+	    }
+	    @Override  
+	    public int hashCode() {  
+	        // TODO Auto-generated method stub  
+	        return   Integer.parseInt(getId()) ;
+	    } 
+		/* (non-Javadoc)
+		 * @see java.lang.Comparable#compareTo(java.lang.Object)
+		 */
+		@Override
+		public int compareTo(TakeLeaveForm form) {
+			// TODO Auto-generated method stub
+			return this.id.compareTo(form.id);//这里的compareTo方法是String中的，String已实现 Comparable接口，按照字母顺序来排序的。它返回的也是int（1,,0,,-1）同时实现了对字母排序。比如，有年龄相同的姓名不相同的元素，那么就会按字母顺序来排，如果都一样，则就是同一元素
+		}
 }
