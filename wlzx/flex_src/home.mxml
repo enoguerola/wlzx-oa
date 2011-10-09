@@ -183,7 +183,7 @@
 //				Alert.show(mainRole+"a");
 				
 				//callLater(function():void{
-					loadModule(default_url);
+					
 					//启动权限控制
 					//SecurityControler.start(null,'enabled');
 				//});
@@ -255,7 +255,7 @@
 						
 					}
 				}
-				
+				loadModule(default_url);
 				
 			}
 			public function getDepartmentObjectById(id:String):DepartmentModel{
