@@ -215,7 +215,7 @@
 						<mx:GridRow   horizontalAlign="center" verticalAlign="middle" width="100%" >
 							<mx:GridItem  borderStyle="solid" verticalAlign="middle">
 								<mx:VBox horizontalAlign="center">
-									<mx1:Text text="请假次数|天数(*1/3)：" width="150" textAlign="center" />
+									<mx1:Text text="请假次数|天数(*1/2)：" width="150" textAlign="center" />
 									<mx1:Text id="takeLeave_leave" textAlign="center" />
 								</mx:VBox>
 							</mx:GridItem>
@@ -315,7 +315,7 @@
 						<mx:GridRow   horizontalAlign="center" verticalAlign="middle" width="100%" horizontalScrollPolicy="off" >
 							<mx:GridItem  borderStyle="solid" verticalAlign="middle">
 								<mx:VBox horizontalAlign="center" horizontalScrollPolicy="off">
-									<mx1:Text text="出差次数|天数(*1/3)：" width="150" textAlign="center" />
+									<mx1:Text text="出差次数|天数(*1/2)：" width="150" textAlign="center" />
 									<mx1:Text id="takeLeave_businessTrip" textAlign="center" />
 								</mx:VBox>
 								
@@ -416,7 +416,7 @@
 						<mx:GridRow   horizontalAlign="center" verticalAlign="middle" width="100%" >
 							<mx:GridItem  borderStyle="solid" verticalAlign="middle">
 								<mx:VBox horizontalAlign="center" horizontalScrollPolicy="off">
-									<mx1:Text text="加班次数|天数(*1/3)：" width="150" textAlign="center" />
+									<mx1:Text text="加班次数|天数(*1/2)：" width="150" textAlign="center" />
 									<mx1:Text id="overWork" textAlign="center" />
 								</mx:VBox>
 							</mx:GridItem>
@@ -480,7 +480,7 @@
 						<mx:GridRow   horizontalAlign="center" verticalAlign="middle" width="100%" >
 							<mx:GridItem  borderStyle="solid" verticalAlign="middle">
 								<mx:VBox horizontalAlign="center" horizontalScrollPolicy="off">
-									<mx1:Text text="调休次数|天数(*1/3)：" width="150" textAlign="center" />
+									<mx1:Text text="调休次数|天数(*1/2)：" width="150" textAlign="center" />
 									<mx1:Text id="moveRestDay" textAlign="center" />
 								</mx:VBox>
 							</mx:GridItem>

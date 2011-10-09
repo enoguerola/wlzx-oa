@@ -88,8 +88,8 @@
 			private var validatorArr:Array;
 			public var sections:ArrayCollection = new ArrayCollection( 
 				[ {label:"上午", data:0},  
-					{label:"下午", data:1},
-					{label:"晚上", data:2},]); 
+					{label:"下午", data:1}/* ,
+					{label:"晚上", data:2}, */]); 
 			
 			
 			public var status:ArrayCollection = new ArrayCollection( 
@@ -830,13 +830,13 @@
 					<mx:HBox horizontalAlign="left" width="100%">
 						<mx:Label    text="小结：今年已加班天数"  visible="true"  letterSpacing="5" textAlign="left" fontSize="14"  fontWeight="normal" height="20" />
 						<mx:Label  id="yearOverWork"  text=""     letterSpacing="5" textAlign="left" fontSize="14"  fontWeight="bold" height="20" />
-						<mx:Label    text="[*1/3天]"     letterSpacing="5" textAlign="left" fontSize="14"  fontWeight="bold" height="20" />
+						<mx:Label    text="[*1/2天]"     letterSpacing="5" textAlign="left" fontSize="14"  fontWeight="bold" height="20" />
 						<mx:Label    text="/已调休天数"    letterSpacing="5" textAlign="left" fontSize="14"  fontWeight="normal" height="20" />
 						<mx:Label  id="yearMoveRest"  text=""    letterSpacing="5" textAlign="left" fontSize="14"  fontWeight="bold" height="20" />
-						<mx:Label    text="[*1/3天]"     letterSpacing="5" textAlign="left" fontSize="14"  fontWeight="bold" height="20" />
+						<mx:Label    text="[*1/2天]"     letterSpacing="5" textAlign="left" fontSize="14"  fontWeight="bold" height="20" />
 						<mx:Label   text="/剩余可调休天数"   letterSpacing="5" textAlign="left" fontSize="14"  fontWeight="normal" height="20" />
 						<mx:Label  id="yearLeftMoveRest"  text=""   letterSpacing="5" textAlign="left" fontSize="14"  fontWeight="bold" height="20" />
-						<mx:Label    text="[*1/3天]"     letterSpacing="5" textAlign="left" fontSize="14"  fontWeight="bold" height="20" />
+						<mx:Label    text="[*1/2天]"     letterSpacing="5" textAlign="left" fontSize="14"  fontWeight="bold" height="20" />
 					</mx:HBox>
 					<mx:HBox horizontalAlign="right" width="100%">
 						<mx:Label id="addUpdateFlag" visible="false"/>

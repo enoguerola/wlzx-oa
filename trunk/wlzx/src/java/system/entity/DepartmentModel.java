@@ -147,7 +147,7 @@ public class DepartmentModel  extends BaseModel{
 		return results;
 		
 	}
-//获得所有子部门用户
+//获得所有主子部门用户
 
 public Set<UserModel> getAllSubUsers(){
 		
@@ -155,7 +155,7 @@ public Set<UserModel> getAllSubUsers(){
 		 Set<DepartmentModel> allSubDepartments=getAllSubordinates();
 		 for(DepartmentModel department:allSubDepartments)
 			for(DRModel dr:department.getRelativeDRs()){
-				for(UserModel user:dr.getAllUsers()){
+				for(UserModel user:dr.getMainUsers()){
 					if(!results.contains(user))
 						results.add(user);
 				}

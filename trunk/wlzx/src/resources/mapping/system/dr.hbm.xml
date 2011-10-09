@@ -26,8 +26,8 @@
 			<key column="dr_id" not-null="true" />
 			<many-to-many not-found="ignore" column="user_id" class="system.entity.UserModel" /> 
 		</set>
-		<set name="mainUsers" lazy="false"  table="wlzx_system_user"  cascade="none"    inverse="true">
-			<key column="main_dr_id" not-null="true" />
+		<set name="mainUsers" lazy="false"  table="wlzx_system_user"  cascade="all"    inverse="true">
+			<key column="main_dr_id"/>
 			<one-to-many not-found="ignore" class="system.entity.UserModel"  /> 
 		</set>
 		

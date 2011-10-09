@@ -190,7 +190,7 @@
 										</fx:Component>
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="请假次数|天数(*1/3)" width="100">
+								<mx:DataGridColumn textAlign="center" headerText="请假次数|天数(*1/2)" width="100">
 									<mx:itemRenderer>
 										<fx:Component>
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off" >
@@ -201,7 +201,7 @@
 										</fx:Component>
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="出差次数|天数(*1/3)" width="100">
+								<mx:DataGridColumn textAlign="center" headerText="出差次数|天数(*1/2)" width="100">
 									<mx:itemRenderer>
 										<fx:Component>
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off" >
@@ -212,7 +212,7 @@
 										</fx:Component>
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="加班次数|天数(*1/3)" width="100">
+								<mx:DataGridColumn textAlign="center" headerText="加班次数|天数(*1/2)" width="100">
 									<mx:itemRenderer>
 										<fx:Component>
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off" >
@@ -223,7 +223,7 @@
 										</fx:Component>
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="调休次数|天数(*1/3)" width="100">
+								<mx:DataGridColumn textAlign="center" headerText="调休次数|天数(*1/2)" width="100">
 									<mx:itemRenderer>
 										<fx:Component>
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off" >
