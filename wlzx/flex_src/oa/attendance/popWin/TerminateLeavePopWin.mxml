@@ -36,8 +36,8 @@
 					{label:"审批不通过", data:8}]); 
 			public var sections:ArrayCollection = new ArrayCollection( 
 				[ {label:"上午", data:0},  
-					{label:"下午", data:1},
-					{label:"晚上", data:2}]); 
+					{label:"下午", data:1}/* ,
+					{label:"晚上", data:2} */]); 
 			private var validatorArr:Array;
 			[Binary]
 			private function init():void

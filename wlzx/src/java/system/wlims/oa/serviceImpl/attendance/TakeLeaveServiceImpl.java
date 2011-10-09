@@ -1,5 +1,8 @@
 package system.wlims.oa.serviceImpl.attendance;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -9,6 +12,7 @@ import system.components.SecurityUserHolder;
 import system.dao.DepartmentDAO;
 import system.dao.RoleDAO;
 import system.dao.UserDAO;
+import system.entity.DepartmentModel;
 import system.entity.MessageModel;
 import system.entity.RoleModel;
 import system.entity.UserModel;
@@ -414,38 +418,83 @@ public class TakeLeaveServiceImpl implements TakeLeaveService {
 		List<TakeLeaveForm> list=takeLeaveDAO.getTakeLeaveAppliesByConditions(teacherId,type,status,submitBeginDate,submitEndDate,takeLeaveBeginDate,takeLeaveEndDate);
 		UserModel user=SecurityUserHolder.getCurrentUser();
 		for(TakeLeaveForm form:list){
-			if(user.hasDam("takeLeaveApprove_main@defaultVisit@@noFilter@")){
-				if(!results.contains(form))
-					results.add(form);
-			}
-			if(user.hasDam("takeLeaveApprove_main@defaultVisit@@notSelfManagerFilter@")||user.hasDam("takeLeaveApprove_main@defaultVisit@@notSelfOfficeFilter@")){
-				if(user.hasSubordinateUser(form.getTeacherId())){
-					if(!results.contains(form))
-					results.add(form);
-				}
-			}
-			
-			if(user.hasDam("takeLeaveVicePrincipalTeachingApprove@noFilter@")||user.hasDam("takeLeaveOfficeTeachingApprove@noFilter@")){
-				UserModel applier=userDAO.get(form.getTeacherId());
-				Boolean hasTeachingRoleInMain=false;
-				List<RoleModel> teachingRoles=roleDAO.getTeachingRoles();
-				if(teachingRoles!=null&&teachingRoles.size()>0){
-					
-					for(RoleModel teachingRole:teachingRoles){
-						if(applier.hasRoleInMain(teachingRole.getId())){
-							hasTeachingRoleInMain=true;
-							break;
-						}
+			/**
+			 * 1.请假人在行政组【0级部门】中---教学1级审批权限人审批【课程处】--教学2级审批权限人审批【教学副校长】--所有审批权限人审批【校长】----------通过给行政组的人配置教学职务来绕开
+			 * 2.请假人拥有教学职务『
+			 * 					主职务含有教学职务（“教师”“教研组长”）:教学1级审批权限人审批【课程处】--教学2级审批权限人审批【教学副校长】--所有审批权限人审批【校长】
+			 * 					副职务含有教学职务（“教师”“教研组长”）:1级下属审批权限【本部门处长】--2级下属审批权限【本部门分管副校长】--所有审批权限人审批【校长】；通知拥有教学1级审批权限人审批的人【课程处】
+			 * 				』
+			 * 3.其他---1级下属审批权限【本部门处长】--2级下属审批权限【本部门分管副校长】--所有审批权限人审批【校长】
+			 */
+			UserModel applier=userDAO.get(form.getTeacherId());
+			Boolean hasTeachingRoleInMain=false;
+ 			Boolean hasTeachingRole=false;
+ 			Boolean hasRootDepartment=false;
+			List<RoleModel> teachingRoles=roleDAO.getTeachingRoles();
+			DepartmentModel rootDepartment=departmentDAO.getDepartmentBySymbol("root");
+			if(teachingRoles!=null&&teachingRoles.size()>0){
+				for(RoleModel teachingRole:teachingRoles){
+					if(applier.hasRoleInMain(teachingRole.getId())){
+						hasTeachingRoleInMain=true;
+						break;
 					}
 				}
-				if(hasTeachingRoleInMain==true&&!results.contains(form))
-					results.add(form);
+				for(RoleModel teachingRole:teachingRoles){
+					if(applier.hasRole(teachingRole.getId())){
+						hasTeachingRole=true;
+						break;
+					}
+				}
 			}
+			if(rootDepartment!=null&&applier.hasDepartment(rootDepartment.getId())){
+				hasRootDepartment=true;
+			}
+			applier.setHasTeachingRole(hasTeachingRole);
+			applier.setHasTeachingRoleInMain(hasTeachingRoleInMain);
+			applier.setHasRootDepartment(hasRootDepartment);
+			// 请假人拥有教学职务
+			if(applier.getHasTeachingRoleInMain()==true||applier.getHasRootDepartment()==true){
+				//请假出差教学1级审批权限人审批【课程处】
+				if(user.hasDam("takeLeaveOfficeTeachingApprove@noFilter@")){
+					if(!results.contains(form))
+						results.add(form);
+				}
+				//请假出差教学2级审批权限人审批【教学副校长】
+				if(user.hasDam("takeLeaveVicePrincipalTeachingApprove@noFilter@")){
+					if(!results.contains(form))
+						results.add(form);
+				}
+				//请假出差所有审批权限人审批【校长】
+				if(user.hasDam("takeLeavePrincipalApprove@noFilter@")){
+					if(!results.contains(form))
+						results.add(form);
+				}
+				
+			}else{
+				//请假出差本处室审批
+				if(user.hasDam("takeLeaveOfficeApprove@noFilter@")&&SecurityUserHolder.getCurrentUser()!=null&&SecurityUserHolder.getCurrentUser().hasSubordinateUser(form.getTeacherId())){
+					if(!results.contains(form))
+						results.add(form);
+				}
+				//请假出差分管副校长审批
+				if(user.hasDam("takeLeaveVicePrincipalApprove@noFilter@")&&SecurityUserHolder.getCurrentUser()!=null&&SecurityUserHolder.getCurrentUser().hasSubordinateUser(form.getTeacherId())){
+					if(!results.contains(form))
+						results.add(form);
+				}	
+				//请假出差校长审批
+				if(user.hasDam("takeLeavePrincipalApprove@noFilter@")){
+					if(!results.contains(form))
+						results.add(form);
+				}
+				
+				
+			}
+			
 		}
 		
 		
 		
-		return list;
+		return new ArrayList(results);
 	}
 	@Override
 	public boolean deleteTakeLeaveById(String id){
