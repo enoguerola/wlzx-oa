@@ -80,15 +80,19 @@
 				//MyToolTip.init(this);  
 
 				securityUserHolder.getCurrentUser();
+				loadAllFrontInfo();
+				var swfUrl:String = this.parent.loaderInfo.url; //获取swf加载路径
+				var endIndex:int = swfUrl.indexOf("home.swf"); //搜索swf目录的路径位置
+				homeUrl= swfUrl.substring(0,endIndex); //截取到swf目录前的url
+//				Alert.show(homeUrl);
+			}
+			public function loadAllFrontInfo():void
+			{
 				teacherAccountBridgeServiceRO.teacherAccountGetAll();
 				systemServiceRO.getDepartmentBySymbol("root");
 				systemServiceRO.getAllRoles();
 				systemServiceRO.getAllDepartments();
 				placeServiceRO.getPlacesByCondition(null,null,null,null,null,null,null);
-				var swfUrl:String = this.parent.loaderInfo.url; //获取swf加载路径
-				var endIndex:int = swfUrl.indexOf("home.swf"); //搜索swf目录的路径位置
-				homeUrl= swfUrl.substring(0,endIndex); //截取到swf目录前的url
-//				Alert.show(homeUrl);
 			}
 			protected function systemFaultHandler(event:FaultEvent):void {
 				Alert.show(event.fault.faultString, 'Error');

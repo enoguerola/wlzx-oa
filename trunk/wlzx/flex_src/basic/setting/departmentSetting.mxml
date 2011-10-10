@@ -46,8 +46,13 @@
 			protected function departmentRemove_resultHandler(event:ResultEvent):void{
 				if(event.result==true){
 					delete selectedNode.parent().node[selectedNode.childIndex()];
-					//重新加载部门全局信息
-					this.parentApplication.systemServiceRO.getDepartmentBySymbol("root");
+					//重新加载全局信息
+					var delayTimer:Timer=new Timer(3000);//延迟三秒读取
+					delayTimer.addEventListener(TimerEvent.TIMER, function():void{
+						this.parentApplication.loadAllFrontInfo();
+						delayTimer.stop();
+					});
+					delayTimer.start();
 //					disabled();
 				}else{
 					Alert.show("删除部门失败");
