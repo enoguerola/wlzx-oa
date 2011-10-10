@@ -229,16 +229,27 @@ public class ReceiptServiceImpl implements ReceiptService {
 		}
 		//model.setCreationDate(new Date());
 		model.setReceiverId(SecurityUserHolder.getCurrentUser().getId());
+		
+		FileFlowModel flow=new FileFlowModel();
+		if(model.getStatus()==1){
+			flow.setIsCompleted(1);
+			flow.setText("登记收文");
+			flow.setCompletedDate(new Date());
+		}else{
+			flow.setIsCompleted(null);
+		}
+		
 		model.setStatus(ReceiptModel.EStatus.Draft.getValue());
 		receiptDAO.saveOrUpdate(model);
 		
-		FileFlowModel flow=new FileFlowModel();
+	
 		flow.setType(FileFlowModel.EType.Draft.getValue());
 		flow.setText(FileFlowModel.EType.Draft.getText());
 		flow.setCreationDate(new Date());
 		flow.setUser(model.getReceiverId());
 		flow.setReceiptId(model.getId());
-		flow.setIsCompleted(null);
+		
+		
 		fileFlowDAO.saveOrUpdate(flow);
 		
 		return receiptDAO.get(model.getId());

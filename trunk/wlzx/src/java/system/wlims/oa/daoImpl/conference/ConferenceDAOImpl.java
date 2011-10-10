@@ -28,7 +28,7 @@ public class ConferenceDAOImpl extends BaseDAOImpl<ConferenceModel> implements C
 			criteria.add(Restrictions.like("name", name));
 		
 		if(StringUtils.isNotEmpty(applyUserId))
-			criteria.add(Restrictions.sqlRestriction("apply_user_id='"+applyUserId+"'"));
+			criteria.add(Restrictions.sqlRestriction("contact_user_id='"+applyUserId+"'"));
 		if(StringUtils.isNotEmpty(states))
 			criteria.add(Restrictions.sqlRestriction("apply_status in ("+states+")"));
 		if(StringUtils.isNotEmpty(placeId))

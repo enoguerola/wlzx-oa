@@ -116,9 +116,12 @@ public class FileFlowModel extends BaseModel {
 	private Integer isCompleted;
 	private String text;
 	private Date completedDate;
+
+
 	private Date creationDate;
 	private String user;
 	private String receiptId;	
+	private ReceiptModel receipt;
 	public static enum EType{
 		Draft(0, "收文登记 "),
 		DeviseHandling(2, "收文拟办"),
@@ -143,6 +146,14 @@ public class FileFlowModel extends BaseModel {
 		}
 	}
 
+	public ReceiptModel getReceipt() {
+		return receipt;
+	}
+
+	public void setReceipt(ReceiptModel receipt) {
+		this.receipt = receipt;
+	}
+	
 	public Integer getType() {
 		return type;
 	}

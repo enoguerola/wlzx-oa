@@ -8,21 +8,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import system.wlims.oa.dao.attendance.MoveRestDayDAO;
-import system.wlims.oa.dao.attendance.OverWorkDAO;
-import system.wlims.oa.dao.attendance.TakeLeaveDAO;
-import system.wlims.oa.dao.conference.ConferenceDAO;
-import system.wlims.oa.dao.course.adjust.CourseAdjustDAO;
-import system.wlims.oa.dao.task.TaskDAO;
-import system.wlims.oa.entity.conference.ConferenceModel;
-import system.wlims.oa.entity.course.adjust.ApplyModel;
-import system.wlims.oa.entity.task.TaskModel;
-import system.wlims.oa.entity.workFlow.moveRestDay.MoveRestDayForm;
-import system.wlims.oa.entity.workFlow.overWork.OverWorkForm;
-import system.wlims.oa.entity.workFlow.takeLeave.TakeLeaveForm;
-import system.wlims.oa.entity.workFlow.takeLeave.TakeLeaveTerminateForm;
-import system.wlims.oa.service.integration.AllWaittingDealService;
-import system.wlims.oa.vo.TaskVO;
 import system.components.SecurityUserHolder;
 import system.dao.DepartmentDAO;
 import system.dao.RoleDAO;
@@ -32,7 +17,25 @@ import system.entity.RoleModel;
 import system.entity.UserModel;
 import system.service.SystemService;
 import system.utils.StringUtils;
-import system.utils.UtilDateTime;;
+import system.utils.UtilDateTime;
+import system.wlims.oa.dao.attendance.MoveRestDayDAO;
+import system.wlims.oa.dao.attendance.OverWorkDAO;
+import system.wlims.oa.dao.attendance.TakeLeaveDAO;
+import system.wlims.oa.dao.conference.ConferenceDAO;
+import system.wlims.oa.dao.course.adjust.CourseAdjustDAO;
+import system.wlims.oa.dao.receipt.ReceiptDAO;
+import system.wlims.oa.dao.task.TaskDAO;
+import system.wlims.oa.entity.conference.ConferenceModel;
+import system.wlims.oa.entity.course.adjust.ApplyModel;
+import system.wlims.oa.entity.receipt.FileFlowModel;
+import system.wlims.oa.entity.task.TaskModel;
+import system.wlims.oa.entity.workFlow.moveRestDay.MoveRestDayForm;
+import system.wlims.oa.entity.workFlow.overWork.OverWorkForm;
+import system.wlims.oa.entity.workFlow.takeLeave.TakeLeaveForm;
+import system.wlims.oa.entity.workFlow.takeLeave.TakeLeaveTerminateForm;
+import system.wlims.oa.service.integration.AllWaittingDealService;
+import system.wlims.oa.vo.ReceiptWorkFlowVO;
+import system.wlims.oa.vo.TaskVO;
 
 public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 	private TaskDAO taskDAO;
@@ -45,6 +48,7 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 	private RoleDAO roleDAO;
 	private DepartmentDAO departmentDAO;
 	private SystemService systemService;
+	private ReceiptDAO receiptDAO;
 
 	@Override
 	public List<TaskVO> getAllDealTasksByCondition(String accountId, String beginTime, String endTime) {
@@ -60,6 +64,12 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 				result.add(task);
 		}
 		return result;
+	}
+	public ReceiptDAO getReceiptDAO() {
+		return receiptDAO;
+	}
+	public void setReceiptDAO(ReceiptDAO receiptDAO) {
+		this.receiptDAO = receiptDAO;
 	}
 	@Override
 	public List<TaskVO> getAllWaittingDealTasksByCondition(String accountId, String beginTime, String endTime) {
@@ -889,6 +899,58 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 						
 					
 				}
+			}
+		
+		
+		
+		
+		//收文任务
+		//List<ConferenceModel> conferenceList=conferenceDAO.getConferencesByConditions(null, null, null, null, null, null, beginTime, endTime);
+		List<FileFlowModel> receiptList=receiptDAO.getReceiptFlowByConditions(user.getId());
+
+		if(receiptList!=null&&receiptList.size()>0)
+			for(FileFlowModel fileFlowModel:receiptList){
+				//if(user.hasDam("conferenceArrange_main@defaultVisit@@noFilter@")){
+				
+						TaskVO taskVO1=new TaskVO();
+						
+						if(fileFlowModel.getType()==2){
+							taskVO1.setType(TaskVO.EType.SW_NB.getText());
+							taskVO1.setTypeId(TaskVO.EType.SW_NB.getValue().intValue());
+							taskVO1.setTitle(TaskVO.ETitle.SW_NB.getText());
+							//taskVO1.setWorkersIds(getWorkersIds(TaskVO.EType.SW_NB.getValue(),null));
+						}else if (fileFlowModel.getType()==4){
+							taskVO1.setType(TaskVO.EType.SW_PB.getText());
+							taskVO1.setTypeId(TaskVO.EType.SW_PB.getValue().intValue());
+							taskVO1.setTitle(TaskVO.ETitle.SW_PB.getText());
+							//taskVO1.setWorkersIds(getWorkersIds(TaskVO.EType.SW_PB.getValue(),null));
+						}else if (fileFlowModel.getType()==6){
+							taskVO1.setType(TaskVO.EType.SW_CB.getText());
+							taskVO1.setTypeId(TaskVO.EType.SW_CB.getValue().intValue());
+							taskVO1.setTitle(TaskVO.ETitle.SW_CB.getText());
+							//taskVO1.setWorkersIds(getWorkersIds(TaskVO.EType.SW_CB.getValue(),null));
+						}else{
+							taskVO1.setType(TaskVO.EType.SW_CY.getText());
+							taskVO1.setTypeId(TaskVO.EType.SW_CY.getValue().intValue());
+							taskVO1.setTitle(TaskVO.ETitle.SW_CY.getText());
+							//taskVO1.setWorkersIds(getWorkersIds(TaskVO.EType.SW_CY.getValue(),null));
+						}
+						
+						
+						taskVO1.setWorkersIds(user.getId());
+						
+						taskVO1.setAssignerId(TaskVO.EAssigner.Default.getValue().intValue()+"");
+						taskVO1.setId(fileFlowModel.getId());
+						
+						taskVO1.setPostTime(UtilDateTime.toDateString(fileFlowModel.getCreationDate(),"yyyy-MM-dd HH:mm:ss"));
+						
+						taskVO1.setStatus(TaskVO.EStatus.ToBeDeal.getText());
+						
+						//taskVO1.setWorkersIds(conferenceModel.getApplyUserId());
+						list.add(taskVO1);
+						
+					
+				//}
 			}
 		return list;
 	}
