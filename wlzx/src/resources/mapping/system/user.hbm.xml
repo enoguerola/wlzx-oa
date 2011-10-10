@@ -4,7 +4,6 @@
 
 <hibernate-mapping>
 	<class name="system.entity.UserModel" table="wlzx_system_user">
-		<cache usage="read-write"/>
 		<id name="id">
 			<column name="id" /> 
 			<generator class="native" />

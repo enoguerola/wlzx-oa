@@ -126,9 +126,22 @@
 					var departmentData:XML=new XML("<node type='menu' label='"+department.name+"'  id='"+department.id+"'></node>");
 					var parent:departmentSetting = this.owner as departmentSetting;
 					parent.selectedNode.appendChild(departmentData);
-					PopUpManager.removePopUp(this);
-					//重新加载部门全局信息
-					this.parentApplication.systemServiceRO.getDepartmentBySymbol("root");
+					
+					
+					
+					//重新加载全局信息
+					this.parentApplication.loadAllFrontInfo();
+					 var delayTimer:Timer=new Timer(3000);//延迟三秒读取
+					 var a:IFlexDisplayObject=this;
+					 delayTimer.addEventListener(TimerEvent.TIMER, function():void{
+						 parent.systemServiceRO.getDepartmentById(department.id);
+						 
+						 PopUpManager.removePopUp(a);
+						 delayTimer.stop();
+					 });
+					 delayTimer.start();
+					
+					
 				}else{
 					Alert.show("添加失败");
 				}
@@ -213,6 +226,7 @@
 //				}		
 //				
 //			}
+			import mx.core.IFlexDisplayObject;
 			protected function departmentUpdate_resultHandler(event:ResultEvent):void
 			{
 				var department:DepartmentModel=event.result as DepartmentModel;
@@ -221,8 +235,19 @@
 //					parent.selectedNode.@label=department.name;
 //					parent.selectedNode.@id=department.id;
 //					Alert.show(parent.selectedNode.@id);
-					parent.systemServiceRO.getDepartmentById(department.id);
-					PopUpManager.removePopUp(this);
+					//重新加载全局信息
+					this.parentApplication.loadAllFrontInfo();
+					var delayTimer:Timer=new Timer(3000);//延迟三秒读取
+					var a:IFlexDisplayObject=this;
+					delayTimer.addEventListener(TimerEvent.TIMER, function():void{
+						parent.systemServiceRO.getDepartmentById(department.id);
+						
+						PopUpManager.removePopUp(a);
+						delayTimer.stop();
+					});
+					delayTimer.start();
+				
+					
 				}else{
 					Alert.show("更新失败");
 				}

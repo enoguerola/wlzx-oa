@@ -561,13 +561,15 @@ public class SystemServiceImpl implements SystemService{
 		
 		Set<UserModel> masterUsers=department.getMasterUsers();
 		for(UserModel user:masterUsers){
-			user.getMasterDepartments().remove(department);
-			userDAO.merge(user);
+			UserModel temp=userDAO.get(user.getId());
+			temp.getMasterDepartments().remove(department);
+			userDAO.merge(temp);
 		}
 		Set<UserModel> leaderUsers=department.getLeaderUsers();
 		for(UserModel user:leaderUsers){
-			user.getLeaderDepartments().remove(department);
-			userDAO.merge(user);
+			UserModel temp=userDAO.get(user.getId());
+			temp.getLeaderDepartments().remove(department);
+			userDAO.merge(temp);
 		}
 //		Set<UserModel> commonrUsers=department.getCommonUsers();
 //		for(UserModel user:commonrUsers){
