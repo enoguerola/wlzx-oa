@@ -11,6 +11,7 @@ import org.hibernate.criterion.Restrictions;
 import system.BaseDAOImpl;
 import system.utils.StringUtils;
 import system.wlims.oa.dao.receipt.ReceiptDAO;
+import system.wlims.oa.entity.receipt.FileFlowModel;
 import system.wlims.oa.entity.receipt.ReceiptModel;
 
 public class ReceiptDAOImpl extends BaseDAOImpl<ReceiptModel> implements ReceiptDAO {
@@ -47,6 +48,17 @@ public class ReceiptDAOImpl extends BaseDAOImpl<ReceiptModel> implements Receipt
 			}
 			criteria.addOrder(Order.desc("registedDate"));
 			List<ReceiptModel> list = getListByCriteria(criteria);
+	
+			return list;
+	}
+	
+	
+	public List<FileFlowModel> getReceiptFlowByConditions(String userId) {
+			DetachedCriteria criteria = DetachedCriteria.forClass(FileFlowModel.class);
+			criteria.add(Restrictions.sqlRestriction(" type in (2,4,6,8) "));
+			criteria.add(Restrictions.eq("user", userId));
+			//criteria.addOrder(Order.desc("registedDate"));
+			List<FileFlowModel> list = getListByCriteria(criteria);
 	
 			return list;
 	}

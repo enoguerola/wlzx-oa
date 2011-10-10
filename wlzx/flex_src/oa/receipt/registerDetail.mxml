@@ -81,8 +81,28 @@
 					[binary]
 					var id:String=flowId;
 					//Alert.show(id+"bbb");
-
-					receiptServiceRO.finishWorkFlow(id,"1","登记收文");
+					
+					
+					if(id!=null&&id!=''){
+						receiptServiceRO.finishWorkFlow(id,"1","登记收文");
+					}else{
+						
+						receipt.title = receipt_text.title.text;
+						receipt.summary = receipt_text.summary.text;
+						
+						//				if(isMove)
+						//				{
+						//Alert.show(receipt_file._zi.text+"ddddd");
+						receipt.doNumber = receipt_file._zi.text + "+" + receipt_file._hao.text;
+						receipt.inNumber = receipt_file.in_number.text;
+						receipt.subject = receipt_file.zhutici.text;
+						//Alert.show(type+"ccc");
+						
+						receipt.inDate = DateFormatter.parseDateString(receipt_file.in_date.text);
+						receipt.office = receipt_file.in_department.text;
+						receipt.status = 1;
+						receiptServiceRO.addReceipt(receipt,receipt_upload.upload.idList);
+					}
 					//						}
 				});
 			
@@ -427,7 +447,7 @@
 			<mx:Label text="|"/>
 			<mx:LinkButton  id="button_save" label="保存" icon="@Embed(source='../WebContent/resources/common/tools/button_draftSave_icon.png')" click="save(1)"/>
 			<mx:Label text="|"/>
-			<mx:LinkButton id="button_register" label="登记" icon="@Embed(source='../WebContent/resources/common/tools/button_save_icon.png')"  click="register();"  enabled="false"/>
+			<mx:LinkButton id="button_register" label="登记" icon="@Embed(source='../WebContent/resources/common/tools/button_save_icon.png')"  click="register();"  />
 			<mx:Label text="|"/>
 			<mx:LinkButton  label="返回" icon="@Embed(source='../WebContent/resources/common/tools/button_back_icon.png')" click="back()"/>
 			<mx:Label text="|"/>

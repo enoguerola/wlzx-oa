@@ -34,7 +34,12 @@ public class TaskVO {
 		OverWork_OfficalApprove(12, "加班处室审批"),
 		MoveRestDay_OfficalApprove(13, "调休处室审批"),
 		MoveRestDay_VicePrincipalApprove(14, "调休副校长审批"),
-		Conference_Approve(15, "会议室安排落实");
+		Conference_Approve(15, "会议室安排落实"),
+		
+		SW_NB(16, "收文拟办"),
+		SW_PB(17, "收文批办"),
+		SW_CB(18, "收文承办"),
+		SW_CY(19, "收文传阅");
 		
 		private Integer value;
 		private String text;
@@ -78,7 +83,11 @@ public class TaskVO {
 		OverWork_OfficalApprove(12, "您有一件加班申请事务需要处理"),
 		MoveRestDay_OfficalApprove(13, "您有一件调休申请事务需要处理"),
 		MoveRestDay_VicePrincipalApprove(14, "您有一件调休申请事务需要处理"),
-		Conference_Approve(15, "您有一件会议室申请需要审批落实");
+		Conference_Approve(15, "您有一件会议室申请需要审批落实"),
+		SW_NB(16, "您有一件收文需要拟办"),
+		SW_PB(17, "您有一件收文需要批办"),
+		SW_CB(18, "您有一件收文需要承办"),
+		SW_CY(19, "您有一件收文需要传阅");
 		
 		private Integer value;
 		private String text;

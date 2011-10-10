@@ -62,6 +62,7 @@
         </property>
         
     
+    	<many-to-one not-found="ignore" class="system.wlims.oa.entity.receipt.ReceiptModel" name="receipt" column="receipt_id" lazy="false" insert="false" update="false"/>
         
         <property name="completedDate" type="java.util.Date">
             <column name="completed_date" />
