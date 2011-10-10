@@ -80,8 +80,8 @@
 			private var validatorArr:Array;
 			public var sections:ArrayCollection = new ArrayCollection( 
 				[ {label:"上午", data:0},  
-					{label:"下午", data:1}/* ,
-					{label:"晚上", data:2}, */]); 
+					{label:"下午", data:1} ,
+					{label:"晚上", data:2}, ]); 
 			
 			private function init():void{
 				search();
@@ -246,7 +246,7 @@
 					var afternoon:CheckBox =new CheckBox ();
 					afternoon.label=sections[1].label;
 					var evening:CheckBox =new CheckBox ();
-					evening.label=sections[2].label;
+					evening.label=sections[2].label;evening.visible=false;
 					rowItem_date.addElement(morning);
 					rowItem_date.addElement(afternoon);
 					rowItem_date.addElement(evening);

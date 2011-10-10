@@ -34,8 +34,8 @@
 			private var validatorArr:Array;
 			public var sections:ArrayCollection = new ArrayCollection( 
 				[ {label:"上午", data:0},  
-					{label:"下午", data:1}/* ,
-					{label:"晚上", data:2}, */]); 
+					{label:"下午", data:1} ,
+					{label:"晚上", data:2}, ]); 
 			
 			
 			public var status:ArrayCollection = new ArrayCollection( 
