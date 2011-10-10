@@ -149,12 +149,18 @@ public class DepartmentModel  extends BaseModel{
 	}
 //获得所有主子部门用户
 
-public Set<UserModel> getAllSubUsers(){
+public Set<UserModel> getAllMainUsers(){
 		
 		Set<UserModel> results=new TreeSet<UserModel>();
 		 Set<DepartmentModel> allSubDepartments=getAllSubordinates();
 		 for(DepartmentModel department:allSubDepartments)
 			for(DRModel dr:department.getRelativeDRs()){
+				for(UserModel user:dr.getMainUsers()){
+					if(!results.contains(user))
+						results.add(user);
+				}
+			}
+		 for(DRModel dr:this.getRelativeDRs()){
 				for(UserModel user:dr.getMainUsers()){
 					if(!results.contains(user))
 						results.add(user);
