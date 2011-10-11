@@ -171,6 +171,7 @@
 			}
 			private var formId:String=null;
 			public function search(){
+				if(formId!=null)
 				teacherServiceRO.get(formId);
 				
 			}
