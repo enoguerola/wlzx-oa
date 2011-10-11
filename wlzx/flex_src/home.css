@@ -16,7 +16,7 @@
 6. C0CCF0	表格的背景色
 7. 			Panel的边界颜色
 
-*/
+*/  
 
 
 global
@@ -35,7 +35,12 @@ global
 
 }
 
+/************** 部分文本框 ****************/
+.BoldText{
+font-weight:bold;
+}
 
+/***********  关闭按钮 **********/
 .closeButton 
 { 
 	defaultSkin:Embed(source="../WebContent/resources/common/ui/tabClose.swf", symbol="firefox_close_up"); 
@@ -79,7 +84,14 @@ s|BorderContainer{
 	background-color:#EEF0FF;   /*	D0DDF0;*/
 
 }
-
+.ColorBox{
+	background-color:#EEF0FF;   /*	D0DDF0;*/
+}
+.WhiteBox{
+	background-color:#FFFFFF;
+	border-style:solid;   /* 带边框 */
+	border-color:#AAAAAA;
+}
 
 .CustomHBoxStyle{
 	background-color:#EEF0FF; 
