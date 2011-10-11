@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2011 年 10 月 11 日 09:40
+-- 生成日期: 2011 年 10 月 11 日 09:57
 -- 服务器版本: 5.0.91
 -- PHP 版本: 5.2.13
 
@@ -1184,7 +1184,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_menu_treeship` (
   `parent_id` bigint(20) NOT NULL,
   `child_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=82 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=84 ;
 
 --
 -- 转存表中的数据 `wlzx_system_menu_treeship`
@@ -1249,7 +1249,9 @@ INSERT INTO `wlzx_system_menu_treeship` (`id`, `parent_id`, `child_id`) VALUES
 (78, 35, 84),
 (79, 50, 9),
 (80, 10, 85),
-(81, 44, 86);
+(81, 44, 86),
+(82, 9, 47),
+(83, 9, 72);
 
 -- --------------------------------------------------------
 
