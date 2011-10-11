@@ -185,7 +185,7 @@
 										<mx:Component>
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off" >
 												<mx:Image source="@Embed(source='../WebContent/resources/common/ui/emergence2.png')"  visible="{checkEmergence(data)}" toolTip="紧急公告"/>
-												<mx1:Text text="{data.title}" width="100">
+												<mx1:Text text="{data.title}" width="100%">
 												</mx1:Text>
 												<mx:Script>
 													<![CDATA[
@@ -283,7 +283,7 @@
 										<mx:Component>
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle"  horizontalScrollPolicy="off">
 												<mx:Image source="@Embed(source='../WebContent/resources/common/ui/emergence2.png')"  width="{checkEmergence(data)}" toolTip="紧急公告"/>
-												<mx1:Text text="{data.title}" width="100">
+												<mx1:Text text="{data.title}" width="100%">
 												</mx1:Text>
 												<mx:Script>
 													<![CDATA[
@@ -436,7 +436,7 @@
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off" verticalScrollPolicy="off">
 												
 												<!--<mx:Label text="{data.title}" width="80%"/>-->
-												<mx1:Text text="{data.title}" width="140"  toolTip="{getToolTip(data)}"/>
+												<mx1:Text text="{data.title}" width="100%"  toolTip="{getToolTip(data)}"/>
 												<mx:Script>
 													<![CDATA[
 														
@@ -521,7 +521,7 @@
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off" verticalScrollPolicy="off">
 												
 												<!--<mx:Label text="{data.title}" width="80%"/>-->
-												<mx1:Text text="{data.title}" width="140" toolTip="{data.content}"/>
+												<mx1:Text text="{data.title}" width="100%" toolTip="{data.content}"/>
 											</mx:HBox>																		
 											
 											
