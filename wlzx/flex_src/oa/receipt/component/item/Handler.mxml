@@ -84,7 +84,8 @@
 			protected function edit(receiptId:String,receiptFlowId:String):void
 			{
 				// TODO Auto-generated method stub
-				var parent:Object = ((Object)(this.parentDocument)).parentDocument.parentDocument;
+				//Alert.show("公告相关字段没有填全!", "Error");
+				var parent:Object = ((Object)(this.parentDocument)).parentDocument;
 				parent.add(receiptId,receiptFlowId);
 			}
 

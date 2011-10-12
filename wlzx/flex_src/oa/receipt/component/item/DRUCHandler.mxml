@@ -80,7 +80,7 @@
 //				Alert.show(receiptId+"a");
 //				Alert.show(receiptFlowId+"b");
 				
-				var parent:Object = ((Object)(this.parentDocument)).parentDocument.parentDocument;
+				var parent:Object = ((Object)(this.parentDocument)).parentDocument;
 				//Alert.show(parent+"");
 				parent.add(this.data.receiptId,this.data.receiptFlowId);
 			}
