@@ -23,7 +23,7 @@
 			import system.utils.CommonUtils;
 			public var fileRef:FileReferenceList = new FileReferenceList();
 			public var allTypes:Array;
-			public var urlRequest:URLRequest = new URLRequest("upload.php");			
+			public var urlRequest:URLRequest = new URLRequest("spring/attachmentUpload.action");			
 			public var uploadImg_num:int = 0;
 			public var upload_size:Number = 0;
 			public var upload_size_total:Number = 0;       
