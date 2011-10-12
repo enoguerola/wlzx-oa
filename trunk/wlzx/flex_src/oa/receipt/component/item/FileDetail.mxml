@@ -8,7 +8,7 @@
 			protected function get_file_detail(id:String):void
 			{
 				// TODO Auto-generated method stub
-				var parent:Object = ((Object)(this.parentDocument)).parentDocument.parentDocument;
+				var parent:Object = ((Object)(this.parentDocument)).parentDocument;
 				parent.add(id);
 			}
 		]]>
