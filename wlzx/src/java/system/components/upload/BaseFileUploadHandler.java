@@ -61,8 +61,13 @@ public abstract class BaseFileUploadHandler implements IUpload{
 		    filename =  "attach_"+simpleDateFormat.format(new Date()) + "."+ getFileType(file.getOriginalFilename());
 		    File directory=new File(uploadDirectory);
 		    if(!directory.exists()){
-		    	directory.mkdir();
+		    	directory.mkdirs();
 		    }
+		    File tfile=new File(uploadDirectory+ filename);
+		   // if(!tfile.exists()){
+		    	tfile.createNewFile();
+		    //}
+		    
 		    DataOutputStream out = new DataOutputStream(new FileOutputStream(uploadDirectory + filename));// 存放文件的绝对路径
 		    InputStream is = null;// 附件输入流
 		    try {
