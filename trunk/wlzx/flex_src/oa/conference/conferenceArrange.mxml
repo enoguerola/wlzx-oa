@@ -99,16 +99,25 @@
 				unLockWin();
 			}
 			
+			
 			public function search():void
 			{
-				lockWin();
-				var status:String=search_status.selectedItem.data;
-				var name:String=search_name.text;
-				var submitBeginDate:String=search_post_date_begin.text;
-				var submitEndDate:String=search_post_date_end.text;
-				var beginDate:String=search_date_begin.text;
-				var endDate:String=search_date_end.text;
-				conferenceServiceRO.getConferencesByConditions(search_account_id.text, name,status,null,beginDate,endDate,submitBeginDate,submitEndDate);
+				
+				var parms:String=((Object)(this.owner)).id;
+				//Alert.show(parms);
+				if(parms!=null&&parms!='null'&&parms!=''){
+					//this.currentState="";
+					enterEditConference(parms);
+				}else{
+					lockWin();
+					var status:String=search_status.selectedItem.data;
+					var name:String=search_name.text;
+					var submitBeginDate:String=search_post_date_begin.text;
+					var submitEndDate:String=search_post_date_end.text;
+					var beginDate:String=search_date_begin.text;
+					var endDate:String=search_date_end.text;
+					conferenceServiceRO.getConferencesByConditions(search_account_id.text, name,status,null,beginDate,endDate,submitBeginDate,submitEndDate);
+				}
 			}
 			
 			
