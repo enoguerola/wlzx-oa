@@ -964,7 +964,7 @@
 										<mx:FormItem label="婚姻状况" width="50%">
 											<s:DropDownList id="marriage" width="100%" selectedIndex="0" dataProvider="{marriageArr}" labelField="label"/>
 										</mx:FormItem>
-										<mx:FormItem label="民族" width="50%"><mx:TextInput id="nation" width="100%"/></mx:FormItem>
+										<mx:FormItem label="民族" width="50%"><mx:TextInput id="nation" width="100%" text="汉族" /></mx:FormItem>
 									</s:HGroup>
 									<mx:FormItem label="身份证号" width="100%"><mx:TextInput id="idCode" width="100%"/></mx:FormItem>
 									<mx:FormItem label="邮箱" width="100%"><mx:TextInput id="mail" width="100%"/></mx:FormItem>
@@ -1118,7 +1118,7 @@
 											<mx:GridItem>
 											</mx:GridItem>
 											<mx:GridItem horizontalAlign="right">
-												<s:Button click="validateForm(event)" label="保存" width="100"  />
+												<s:Button click="validateForm(event)" label="保存" width="100" height="50" fontSize="24" fontWeight="bold" color="red" />
 											</mx:GridItem>
 										</mx:GridRow>
 									
