@@ -145,8 +145,9 @@
 				allTeacherAcccounts.addItem({name:"超级管理员",account:"super_root",id:"1"});
 			}
 			public function getTeacherNameByAccountId(id:String):String{
-				for(var i:int=0;i<allTeacherAcccounts.length;i++){
-					var account:Object=allTeacherAcccounts.getItemAt(i);
+				var temp:ArrayCollection=new ArrayCollection(CommonUtils.clone(allTeacherAcccounts.source));
+				for(var i:int=0;i<temp.length;i++){
+					var account:Object=temp.getItemAt(i);
 					if(account.id==id){
 						return account.name;
 					}
@@ -154,6 +155,7 @@
 				return "";
 			}
 			public function getItemByAccountId(id:String):Object{
+				var temp:ArrayCollection=new ArrayCollection(CommonUtils.clone(allTeacherAcccounts.source));
 				for(var i:int=0;i<allTeacherAcccounts.length;i++){
 					var item:Object=allTeacherAcccounts.getItemAt(i);
 					if(item.id==id){
