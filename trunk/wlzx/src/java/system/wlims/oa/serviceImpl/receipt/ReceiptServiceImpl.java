@@ -235,11 +235,13 @@ public class ReceiptServiceImpl implements ReceiptService {
 			flow.setIsCompleted(1);
 			flow.setText("登记收文");
 			flow.setCompletedDate(new Date());
+			model.setStatus(ReceiptModel.EStatus.Register.getValue());
 		}else{
 			flow.setIsCompleted(null);
+			model.setStatus(ReceiptModel.EStatus.Draft.getValue());
 		}
 		
-		model.setStatus(ReceiptModel.EStatus.Draft.getValue());
+	
 		receiptDAO.saveOrUpdate(model);
 		
 	
