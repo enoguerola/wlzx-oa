@@ -119,7 +119,11 @@
 //				var parent:Object = (Object)(this.owner);
 //				Alert.show(parent+"aaaaaaaaa");
 //				parent.search();
+				
+				var parent:Object = (Object)(this.parentDocument);
+				parent.search();
 				PopUpManager.removePopUp(this);
+				//init();
 				//this.parentApplication.popWin=null;
 			}
 			
