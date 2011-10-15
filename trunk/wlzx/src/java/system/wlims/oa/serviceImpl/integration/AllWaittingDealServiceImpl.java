@@ -409,6 +409,10 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 				list.add(taskVO);
 		}
 		
+		List<RoleModel> teachingRoles=roleDAO.getTeachingRoles();
+		DepartmentModel rootDepartment=departmentDAO.getDepartmentBySymbol("root");
+		
+		
 		//请假出差审批任务
 		List<TakeLeaveForm> takeLeaveList=takeLeaveDAO.getTakeLeaveAppliesByConditions(null,null,TakeLeaveForm.Status.Waiting.getValue().intValue()+","+TakeLeaveForm.Status.OfficePass.getValue().intValue()+","+TakeLeaveForm.Status.VicePrincipalPass.getValue().intValue()+","+TakeLeaveForm.Status.TerminateWaiting.getValue().intValue()+","+TakeLeaveForm.Status.TerminatePass.getValue().intValue()+","+TakeLeaveForm.Status.TerminateDeny.getValue().intValue(),beginTime,endTime,null,null);
 		if(takeLeaveList!=null&&takeLeaveList.size()>0)
@@ -462,8 +466,7 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 				Boolean hasTeachingRoleInMain=false;
      			Boolean hasTeachingRole=false;
      			Boolean hasRootDepartment=false;
-				List<RoleModel> teachingRoles=roleDAO.getTeachingRoles();
-				DepartmentModel rootDepartment=departmentDAO.getDepartmentBySymbol("root");
+			
 				if(teachingRoles!=null&&teachingRoles.size()>0){
 					for(RoleModel teachingRole:teachingRoles){
 						if(applier.hasRoleInMain(teachingRole.getId())){
