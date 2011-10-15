@@ -95,9 +95,16 @@ public class TeacherAccountBridgeService {
 		user.getDrs().remove(dr);
 		userDAO.merge(user);
 	}
+	
+	public TripleObject getTeacherById(String userId){
+		TeacherModel tm = teacherDAO.getTeacherByUserId(userId);
+		return new TripleObject<String, String,String>(tm.getName(), tm.getTeacherNo(),tm.getUserID());
+	}
+	
 	public List<TripleObject<String, String,String>> teacherAccountGetAll(){
 		List<TripleObject<String, String,String>> triples = new ArrayList<TripleObject<String, String,String>>();
 		List<TeacherModel> teachers =teacherDAO.getTeachersByStatus(null) ;
+		
 		if(teachers != null){
 			for(int i=0;i<teachers.size();i++){
 //				UserModel user=userDAO.get(teacher.getUserID());

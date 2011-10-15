@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import system.ServiceException;
 import system.dao.DRDAO;
@@ -192,7 +193,14 @@ public class TeacherService {
      * @throws ServiceException
      */
     public TeacherModel get(String id)throws ServiceException{
-    	TeacherModel teacher = teacherDAO.get(id);
+    	TeacherModel teacher = null;
+    	if(id==null||id.equalsIgnoreCase("null")){
+    		UserModel user= (UserModel) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    		String userId = user.getId();
+    		teacher = teacherDAO.getTeacherByUserId(userId);
+    	}else{
+    		teacher = teacherDAO.get(id);
+    	}
     	teacher.setExperiences(null);
 		teacher.setOtherDepartments(null);
 		teacher.setRelations(null);
