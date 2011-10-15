@@ -230,6 +230,22 @@
 					parent.addTab("conferenceArrange-detail"+"_"+id,"会议室落实",parent.nav,"oa/conference/conferenceArrange.swf",null,id);
 					
 				}
+				else if(typeIntId>=17&&typeIntId<=17){
+					parent.addTab("devise_receipt"+"_"+id,"收文拟办",parent.nav,"oa/receipt/deviseDetail.swf",null,id);
+					
+				}
+				else if(typeIntId>=18&&typeIntId<=18){
+					parent.addTab("ratify_receipt"+"_"+id,"收文批办",parent.nav,"oa/receipt/ratifyDetail.swf",null,id);
+					
+				}
+				else if(typeIntId>=19&&typeIntId<=19){
+					parent.addTab("undertake_receipt"+"_"+id,"收文承办",parent.nav,"oa/receipt/undertakeDetail.swf",null,id);
+					
+				}
+				else if(typeIntId>=20&&typeIntId<=20){
+					parent.addTab("circulate_receipt"+"_"+id,"收文传阅",parent.nav,"oa/receipt/circulateDetail.swf",null,id);
+					
+				}
 			}
 		]]> 		
 	</fx:Script> 
@@ -283,7 +299,7 @@
 						<mx:itemRenderer>
 							<fx:Component>
 								<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle"  horizontalScrollPolicy="off" >
-									<mx1:Text text="{data.title}" width="100%">
+									<mx1:Text text="{data.title}" width="100%" toolTip="{data.content}">
 									</mx1:Text>
 								</mx:HBox>
 							</fx:Component>
@@ -352,7 +368,7 @@
 							<mx:itemRenderer>
 								<fx:Component>
 									<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle"  horizontalScrollPolicy="off" >
-										<mx1:Text text="{data.title}" width="100%">
+										<mx1:Text text="{data.title}" width="100%" >
 										</mx1:Text>
 									</mx:HBox>
 								</fx:Component>
