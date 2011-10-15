@@ -184,6 +184,34 @@ public class ReceiptServiceImpl implements ReceiptService {
 		}
 		return Constants.NONE_ERROR;
 	}
+	
+	
+	@Override
+	public String uncomplete(String id) throws ServiceException {
+		// TODO Auto-generated method stub
+		ReceiptModel model = receiptDAO.get(id);
+		
+		List<FileFlowModel> list = fileFlowDAO.getListByType(model, FileFlowModel.EType.Circulateing.getValue());
+		if(list != null && list.size() > 0){
+			for(FileFlowModel fileFlowModel:list){
+				if(fileFlowModel.getIsCompleted() != 0){
+					fileFlowModel.setIsCompleted(0);
+					fileFlowDAO.saveOrUpdate(fileFlowModel);
+				}
+			}
+		}
+		
+		model.setIsCompleted(0);
+		
+		try {
+			receiptDAO.saveOrUpdate(model);
+		} catch (DAOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return Constants.DAO_ERROR;
+		}
+		return Constants.NONE_ERROR;
+	}
 
 	@Override
 	public String register(String id) throws ServiceException {
@@ -354,24 +382,22 @@ public class ReceiptServiceImpl implements ReceiptService {
 			throws ServiceException {
 		// TODO Auto-generated method stub
 		List<ReceiptWorkFlowVO> results=new ArrayList<ReceiptWorkFlowVO>();
-		List<ReceiptModel> list=receiptDAO.getByConditions(inNumber, office, doNumber, title, subject,summary,beginDate, endDate, states,isCompleted);
-		for(ReceiptModel receipt:list){
-			if(receipt.getFileFlows()!=null&&receipt.getFileFlows().size()>0){
-				for(FileFlowModel fileFlow:receipt.getFileFlows()){
-					if((fileFlow.getIsCompleted()==null)&&fileFlow.getUser().equals(userId)){
+		List<FileFlowModel> list=receiptDAO.getByConditions(inNumber, office, doNumber, title, subject,summary,beginDate, endDate, states,isCompleted);
+		for(FileFlowModel fileFlow:list){
+					//if((fileFlow.getIsCompleted()==null)&&fileFlow.getUser().equals(userId)){
+					if(fileFlow.getUser().equals(userId)){
 						ReceiptWorkFlowVO vo=new ReceiptWorkFlowVO();
-						vo.setReceiptId(receipt.getId());
+						vo.setReceiptId(fileFlow.getReceiptId());
 						vo.setReceiptFlowId(fileFlow.getId());
-						vo.setTitle(receipt.getTitle());
-						vo.setOffice(receipt.getOffice());
-						vo.setAuthorId(receipt.getReceiverId());
-						vo.setInDate(receipt.getInDate());
-						vo.setStatus(receipt.getStatus());
+						vo.setTitle(fileFlow.getReceipt().getTitle());
+						vo.setOffice(fileFlow.getReceipt().getOffice());
+						vo.setAuthorId(fileFlow.getReceipt().getReceiverId());
+						vo.setInDate(fileFlow.getReceipt().getInDate());
+						vo.setStatus(fileFlow.getReceipt().getStatus());
+						vo.setIsCompleted(fileFlow.getIsCompleted());
 						results.add(vo);
 					}
 					
-				}
-			}
 		}
 		return results;
 	}
