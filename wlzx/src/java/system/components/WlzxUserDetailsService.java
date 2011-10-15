@@ -71,25 +71,25 @@ public class WlzxUserDetailsService implements UserDetailsService{
 	     			}
 	     			userModel.setAuthorizations(dams);
 	     			
-	     			Boolean hasTeachingRoleInMain=false;
-	     			Boolean hasTeachingRole=false;
-					List<RoleModel> teachingRoles=roleDAO.getTeachingRoles();
-					if(teachingRoles!=null&&teachingRoles.size()>0){
-						for(RoleModel teachingRole:teachingRoles){
-							if(userModel.hasRoleInMain(teachingRole.getId())){
-								hasTeachingRoleInMain=true;
-								break;
-							}
-						}
-						for(RoleModel teachingRole:teachingRoles){
-							if(userModel.hasRole(teachingRole.getId())){
-								hasTeachingRole=true;
-								break;
-							}
-						}
-					}
-					userModel.setHasTeachingRole(hasTeachingRole);
-	            	userModel.setHasTeachingRoleInMain(hasTeachingRoleInMain);
+//	     			Boolean hasTeachingRoleInMain=false;
+//	     			Boolean hasTeachingRole=false;
+//					List<RoleModel> teachingRoles=roleDAO.getTeachingRoles();
+//					if(teachingRoles!=null&&teachingRoles.size()>0){
+//						for(RoleModel teachingRole:teachingRoles){
+//							if(userModel.hasRoleInMain(teachingRole.getId())){
+//								hasTeachingRoleInMain=true;
+//								break;
+//							}
+//						}
+//						for(RoleModel teachingRole:teachingRoles){
+//							if(userModel.hasRole(teachingRole.getId())){
+//								hasTeachingRole=true;
+//								break;
+//							}
+//						}
+//					}
+//					userModel.setHasTeachingRole(hasTeachingRole);
+//	            	userModel.setHasTeachingRoleInMain(hasTeachingRoleInMain);
 	            }
 	           
 	           return userModel;

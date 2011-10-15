@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2011 年 10 月 11 日 09:57
+-- 生成日期: 2011 年 10 月 15 日 09:56
 -- 服务器版本: 5.0.91
 -- PHP 版本: 5.2.13
 
@@ -176,8 +176,8 @@ INSERT INTO `wlzx_system_department` (`id`, `level`, `name`, `symbol`, `phone`, 
 (1, 0, '行政组', 'root', NULL, 0, '', '2011-05-06 00:00:00', '2011-09-28 00:47:18'),
 (3, 1, '德育处', 'moral_education_office', NULL, 2, '', '2011-05-10 00:00:00', '2011-09-28 01:01:39'),
 (6, 1, '校长办公室', 'headmaster_office', NULL, 1, '', '2011-05-18 00:00:00', '2011-09-26 20:15:32'),
-(10, 1, '综践处', 'practice_education_office', '', 4, '', '2011-05-19 00:00:00', '2011-09-28 01:00:05'),
-(11, 1, '资源处', 'resources_office', '', 5, '', '2011-05-19 00:00:00', '2011-09-26 21:52:43'),
+(10, 1, '综践处', 'practice_education_office', '', 4, '', '2011-05-19 00:00:00', '2011-10-11 18:05:48'),
+(11, 1, '资源处', 'resources_office', '', 5, '', '2011-05-19 00:00:00', '2011-10-11 18:06:48'),
 (12, 1, '课程处', 'course_office', '', 3, '', '2011-05-20 00:00:00', '2011-09-28 16:19:29'),
 (13, 1, '语文组', 'course_yuwen', '', 1, '', '2011-07-04 00:00:00', '2011-09-28 01:09:10'),
 (14, 1, '英语组', 'course_yingyu', '', 2, '', '2011-07-04 00:00:00', '2011-09-28 01:04:37'),
@@ -241,7 +241,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_department_leader_users` (
   `department_id` bigint(20) NOT NULL,
   `leader_user_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='部门上级领导' AUTO_INCREMENT=75 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='部门上级领导' AUTO_INCREMENT=77 ;
 
 --
 -- 转存表中的数据 `wlzx_system_department_leader_users`
@@ -253,7 +253,6 @@ INSERT INTO `wlzx_system_department_leader_users` (`id`, `department_id`, `leade
 (8, 23, 716),
 (9, 25, 716),
 (10, 22, 716),
-(40, 11, 711),
 (44, 39, 983),
 (45, 42, 983),
 (49, 1, 708),
@@ -262,7 +261,9 @@ INSERT INTO `wlzx_system_department_leader_users` (`id`, `department_id`, `leade
 (55, 27, 722),
 (56, 28, 722),
 (57, 29, 722),
-(74, 12, 709);
+(74, 12, 709),
+(75, 10, 709),
+(76, 11, 711);
 
 -- --------------------------------------------------------
 
@@ -331,7 +332,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_department_master_users` (
   `department_id` bigint(20) NOT NULL,
   `master_user_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='部门主管用户' AUTO_INCREMENT=65 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='部门主管用户' AUTO_INCREMENT=67 ;
 
 --
 -- 转存表中的数据 `wlzx_system_department_master_users`
@@ -347,7 +348,6 @@ INSERT INTO `wlzx_system_department_master_users` (`id`, `department_id`, `maste
 (39, 41, 986),
 (40, 40, 990),
 (42, 1, 708),
-(44, 10, 946),
 (46, 3, 722),
 (47, 27, 998),
 (50, 14, 777),
@@ -360,7 +360,9 @@ INSERT INTO `wlzx_system_department_master_users` (`id`, `department_id`, `maste
 (58, 21, 935),
 (59, 13, 742),
 (62, 33, 951),
-(64, 12, 733);
+(64, 12, 733),
+(65, 10, 946),
+(66, 11, 983);
 
 -- --------------------------------------------------------
 
@@ -1271,7 +1273,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_message` (
   `postRemoved_flag` text,
   `receiveRemoved_flags` text,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=20 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=22 ;
 
 --
 -- 转存表中的数据 `wlzx_system_message`
@@ -1296,7 +1298,9 @@ INSERT INTO `wlzx_system_message` (`id`, `from_id`, `to_ids`, `type`, `content`,
 (16, 0, '709;711;712;713;718;', 0, '处室审批已经通过编号为20111009090346的请假/出差申请', '2011-10-09 12:17:28', '0;0;0;0;1;', 'NULL;NULL;NULL;NULL;2011-10-09 22:28:53;', '0', '0;0;0;0;0;'),
 (17, 0, '737', 0, '您申请的编号为20111008091222的请假/出差审批已经通过', '2011-10-09 12:19:13', '0;', 'NULL;', '0', '0;'),
 (18, 0, '', 0, '请课程处落实申请编号为20111010155620的请假/出差申请期间教学工作', '2011-10-10 15:56:21', '0;', 'NULL;', '0', '0;'),
-(19, 0, '', 0, '请课程处落实申请编号为20111010165303的请假/出差申请期间教学工作', '2011-10-10 16:53:04', '0;', 'NULL;', '0', '0;');
+(19, 0, '', 0, '请课程处落实申请编号为20111010165303的请假/出差申请期间教学工作', '2011-10-10 16:53:04', '0;', 'NULL;', '0', '0;'),
+(20, 0, '976', 0, '您申请的编号为20111008155743的请假/出差审批已经通过', '2011-10-11 11:03:36', '0;', 'NULL;', '0', '0;'),
+(21, 0, '709;711;712;713;718;', 0, '课程处审批已经通过编号为20111010165303的请假/出差申请', '2011-10-11 11:04:22', '0;0;0;0;0;', 'NULL;NULL;NULL;NULL;NULL;', '0', '0;0;0;0;0;');
 
 -- --------------------------------------------------------
 
