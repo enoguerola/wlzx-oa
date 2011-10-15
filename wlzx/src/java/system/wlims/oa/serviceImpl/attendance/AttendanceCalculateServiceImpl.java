@@ -13,6 +13,7 @@ import system.entity.DepartmentModel;
 import system.entity.UserModel;
 import system.utils.StringUtils;
 import system.wlims.basic.dao.teacher.TeacherDAO;
+import system.wlims.basic.entity.teacher.TeacherModel;
 import system.wlims.oa.dao.attendance.*;
 import system.wlims.oa.entity.workFlow.moveRestDay.MoveRestDayForm;
 import system.wlims.oa.entity.workFlow.overWork.OverWorkForm;
@@ -160,7 +161,7 @@ public class AttendanceCalculateServiceImpl implements AttendanceCalculateServic
 		return list.size();
 	}
 	@Override
-	public List<AttendanceCalculateVO> getCalculateAttendanceByCondition(
+	public List<AttendanceCalculateVO> getCalculateAttendanceByCondition(String type,
 			String userId, String departmentId, String beginTime,
 			String endTime) {
 		// TODO Auto-generated method stub
@@ -179,21 +180,111 @@ public class AttendanceCalculateServiceImpl implements AttendanceCalculateServic
 			AttendanceCalculateVO vo=new AttendanceCalculateVO();
 			vo.setUserID(user.getId());
 			vo.setUserAccount(user.getName());
-			if(user.getMainDR()!=null)
-			vo.setDepartmentName(user.getMainDR().getDepartmentId());
-			else 	vo.setDepartmentName("未指定");
-			vo.setTakeLeave_leaveDaySections(getSectionsOfValidTakeLeave(user.getId(),beginTime,endTime,TakeLeaveForm.Types.Leave.getValue().toString()));
-			vo.setTakeLeave_leaveTimes(getTimesOfValidTakeLeave(user.getId(),beginTime,endTime,TakeLeaveForm.Types.Leave.getValue().toString()));
-			vo.setTakeLeave_businessTripDaySections(getSectionsOfValidTakeLeave(user.getId(),beginTime,endTime,TakeLeaveForm.Types.BusinessTrip.getValue().toString()));
-			vo.setTakeLeave_businessTripTimes(getTimesOfValidTakeLeave(user.getId(),beginTime,endTime,TakeLeaveForm.Types.BusinessTrip.getValue().toString()));
-
-			vo.setOverWorkDaySections(getSectionsOfValidOverWork(user.getId(),beginTime,endTime));
-			vo.setOverWorkTimes(getTimesOfValidOverWork(user.getId(),beginTime,endTime));
-			vo.setMoveRestDayDaySections(getSectionsOfValidMoveRestDay(user.getId(),beginTime,endTime));
-			vo.setMoveRestDayTimes(getTimesOfValidMoveRestDay(user.getId(),beginTime,endTime));
+			
+			
+			
 			vo.setBeginTime(beginTime);
 			vo.setEndTime(endTime);
-			results.add(vo);
+			if(StringUtils.isEmpty(type)){
+				vo.setTakeLeave_leaveDaySections(getSectionsOfValidTakeLeave(user.getId(),beginTime,endTime,TakeLeaveForm.Types.Leave.getValue().toString()));
+				vo.setTakeLeave_leaveTimes(getTimesOfValidTakeLeave(user.getId(),beginTime,endTime,TakeLeaveForm.Types.Leave.getValue().toString()));
+				
+				vo.setTakeLeave_businessTripDaySections(getSectionsOfValidTakeLeave(user.getId(),beginTime,endTime,TakeLeaveForm.Types.BusinessTrip.getValue().toString()));
+				vo.setTakeLeave_businessTripTimes(getTimesOfValidTakeLeave(user.getId(),beginTime,endTime,TakeLeaveForm.Types.BusinessTrip.getValue().toString()));
+				
+				vo.setOverWorkDaySections(getSectionsOfValidOverWork(user.getId(),beginTime,endTime));
+				vo.setOverWorkTimes(getTimesOfValidOverWork(user.getId(),beginTime,endTime));
+				
+				vo.setMoveRestDayDaySections(getSectionsOfValidMoveRestDay(user.getId(),beginTime,endTime));
+				vo.setMoveRestDayTimes(getTimesOfValidMoveRestDay(user.getId(),beginTime,endTime));
+				
+				if(user.getMainDR()!=null)
+					vo.setDepartmentName(departmentDAO.get(user.getMainDR().getDepartmentId()).getName());
+					else 	vo.setDepartmentName("未指定");
+				TeacherModel teacher=teacherDAO.getTeacherByUserId(user.getId());
+				if(teacher!=null){
+					vo.setUserName(teacher.getName());
+				}
+				
+				results.add(vo);
+			}else if(type.equals("TakeLeave_leave")){
+				vo.setTakeLeave_leaveDaySections(getSectionsOfValidTakeLeave(user.getId(),beginTime,endTime,TakeLeaveForm.Types.Leave.getValue().toString()));
+				vo.setTakeLeave_leaveTimes(getTimesOfValidTakeLeave(user.getId(),beginTime,endTime,TakeLeaveForm.Types.Leave.getValue().toString()));
+				if(vo.getTakeLeave_leaveDaySections()>0||vo.getTakeLeave_leaveTimes()>0){
+					vo.setType("TakeLeave_leave");
+					if(user.getMainDR()!=null)
+						vo.setDepartmentName(departmentDAO.get(user.getMainDR().getDepartmentId()).getName());
+						else 	vo.setDepartmentName("未指定");
+					TeacherModel teacher=teacherDAO.getTeacherByUserId(user.getId());
+					if(teacher!=null){
+						vo.setUserName(teacher.getName());
+					}
+					vo.setTimes(vo.getTakeLeave_leaveTimes());
+					vo.setDaySections(vo.getTakeLeave_leaveDaySections()*0.5);
+					vo.setTypeName("请假");
+					results.add(vo);
+
+				}
+			}
+			else if(type.equals("TakeLeave_businessTrip")){
+				vo.setTakeLeave_businessTripDaySections(getSectionsOfValidTakeLeave(user.getId(),beginTime,endTime,TakeLeaveForm.Types.BusinessTrip.getValue().toString()));
+				vo.setTakeLeave_businessTripTimes(getTimesOfValidTakeLeave(user.getId(),beginTime,endTime,TakeLeaveForm.Types.BusinessTrip.getValue().toString()));
+
+				if(vo.getTakeLeave_businessTripDaySections()>0||vo.getTakeLeave_businessTripTimes()>0){
+					vo.setType("TakeLeave_businessTrip");
+					if(user.getMainDR()!=null)
+						vo.setDepartmentName(departmentDAO.get(user.getMainDR().getDepartmentId()).getName());
+						else 	vo.setDepartmentName("未指定");
+					TeacherModel teacher=teacherDAO.getTeacherByUserId(user.getId());
+					if(teacher!=null){
+						vo.setUserName(teacher.getName());
+					}
+					vo.setTimes(vo.getTakeLeave_businessTripTimes());
+					vo.setDaySections(vo.getTakeLeave_businessTripDaySections()*0.5);
+					vo.setTypeName("出差");
+					results.add(vo);
+
+				}
+			}
+			else if(type.equals("OverWorkDay")){
+				vo.setOverWorkDaySections(getSectionsOfValidOverWork(user.getId(),beginTime,endTime));
+				vo.setOverWorkTimes(getTimesOfValidOverWork(user.getId(),beginTime,endTime));
+				if(vo.getOverWorkDaySections()>0||vo.getOverWorkTimes()>0){
+					vo.setType("OverWorkDay");
+					if(user.getMainDR()!=null)
+						vo.setDepartmentName(departmentDAO.get(user.getMainDR().getDepartmentId()).getName());
+						else 	vo.setDepartmentName("未指定");
+					TeacherModel teacher=teacherDAO.getTeacherByUserId(user.getId());
+					if(teacher!=null){
+						vo.setUserName(teacher.getName());
+					}
+					vo.setTimes(vo.getOverWorkTimes());
+					vo.setDaySections(vo.getOverWorkDaySections()*0.5);
+					vo.setTypeName("加班");
+					results.add(vo);
+				}
+			}else if(type.equals("MoveRestDay")){
+				vo.setMoveRestDayDaySections(getSectionsOfValidMoveRestDay(user.getId(),beginTime,endTime));
+				vo.setMoveRestDayTimes(getTimesOfValidMoveRestDay(user.getId(),beginTime,endTime));
+				if(vo.getMoveRestDayDaySections()>0||vo.getMoveRestDayTimes()>0){
+					vo.setType("MoveRestDay");
+					if(user.getMainDR()!=null)
+						vo.setDepartmentName(departmentDAO.get(user.getMainDR().getDepartmentId()).getName());
+						else 	vo.setDepartmentName("未指定");
+					TeacherModel teacher=teacherDAO.getTeacherByUserId(user.getId());
+					if(teacher!=null){
+						vo.setUserName(teacher.getName());
+					}
+					vo.setTimes(vo.getMoveRestDayTimes());
+					vo.setDaySections(vo.getMoveRestDayDaySections()*0.5);
+					vo.setTypeName("调休");
+					results.add(vo);
+				}
+			}
+
+			
+		
+			
 		}
 		return results;
 	}

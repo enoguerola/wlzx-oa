@@ -7,9 +7,9 @@
 		   xmlns:render="system.component.render.*" layout="vertical" width="100%" height="100%"   creationComplete="init();" xmlns:component="system.component.*" >
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
-		<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+		<!--<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 			<mx:method name="getDepartmentBySymbol"  concurrency="last"  result="getDepartmentBySymbolResult(event);" />
-		</mx:RemoteObject>
+		</mx:RemoteObject>-->
 		<mx:RemoteObject id="attendanceCalculateServiceRO" destination="attendanceCalculateServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 			<mx:method name="getCalculateAttendanceByCondition"  concurrency="last"  result="getCalculateAttendanceByCondition_result(event);" />
 		</mx:RemoteObject>
@@ -32,15 +32,20 @@
 			import system.index;
 			import system.utils.CommonUtils;
 			
+			public var caculateType:ArrayCollection = new ArrayCollection( 
+				[ {label:"请假", data:'TakeLeave_leave'},  
+					{label:"出差", data:'TakeLeave_businessTrip'} ,
+					{label:"调休", data:'MoveRestDay'},
+					{label:"加班", data:'OverWorkDay'}]); 
 			private function init():void {	
 				search_account.dataProvider=this.parentApplication.allTeacherAcccounts;
-				systemServiceRO.getDepartmentBySymbol("root");
+				/* systemServiceRO.getDepartmentBySymbol("root"); */
 				var date:Date=new Date();
 				search_date_begin.text=CommonUtils.formatDate(CommonUtils.currentMonthBeginDate(),"YYYY-MM-DD");
 				search_date_end.text=CommonUtils.formatDate(CommonUtils.currentMonthEndDate(),"YYYY-MM-DD");
 				callLater(search);
 			}
-			private function getDepartmentBySymbolResult(event:ResultEvent):void {
+		/* 	private function getDepartmentBySymbolResult(event:ResultEvent):void {
 				var department:Object=event.result;
 				var resultList:ArrayCollection = new ArrayCollection();
 				resultList.addItem( {dataField:null, headerText:"全部"});
@@ -49,13 +54,13 @@
 				this.departments.dataProvider=resultList;
 				this.departments.selectedIndex=0;
 				systemServiceRO.getDepartmentById(departments.selectedItem.dataField);
-			}
+			} */
 			private function getCalculateAttendanceByCondition_result(event:ResultEvent):void {
 				var allList:ArrayCollection=event.result as ArrayCollection;
 				accountTable.initdata(allList);
 			}
 			
-			private function buildSubDepartments(department:Object,resultList:ArrayCollection,depth:int):void{
+		/* 	private function buildSubDepartments(department:Object,resultList:ArrayCollection,depth:int):void{
 				var headText:String="";
 				for(var j:int = 0;j<depth;j++)
 					headText=headText.concat("----");
@@ -71,7 +76,7 @@
 				}		
 				
 			}
-			
+			 */
 			private function systemFaultHandler(event:FaultEvent):void {
 				Alert.show(event.fault.faultString, 'Error');
 			}
@@ -81,10 +86,11 @@
 			protected function search():void
 			{
 				var accountId:String=search_account_id.text;
-				var departmentId:String=departments.selectedItem.dataField;
+				var type1:String=type.selectedItem.data;
+			/* 	var departmentId:String=departments.selectedItem.dataField; */
 				var beginTime:String=search_date_begin.text;
 				var endTime:String=search_date_end.text;
-				attendanceCalculateServiceRO.getCalculateAttendanceByCondition(accountId,departmentId,beginTime,endTime);
+				attendanceCalculateServiceRO.getCalculateAttendanceByCondition(type1,accountId,null,beginTime,endTime);
 			}
 			public function formatDate(date:Date):String{
 				return CommonUtils.formatDate(date);
@@ -101,8 +107,14 @@
 					search_account_id.text="";
 				}               
 			}
+			import basic.utils.Excel;
+			private var excel:Excel = new Excel;
 			private function export():void{
-			
+				var type1:String=type.selectedItem.data;
+				var accountId:String=search_account_id.text;
+				var beginTime:String=search_date_begin.text;
+				var endTime:String=search_date_end.text;
+				excel.load("general/export/canculateAttendance.action", type1+";"+accountId+";"+beginTime+";"+endTime);
 			}
 			public function detail(userId:String,beginTime:String,endTime:String):void{
 				var parent:Object=(Object)(((Object)(this.owner)).owner);
@@ -127,10 +139,15 @@
 					<component:Fieldset title="统计条件" width="95%" height="95%"  >
 						<mx:HBox width="100%"  horizontalGap="5" verticalAlign="bottom" horizontalAlign="left" horizontalScrollPolicy="off" >
 							
-							<mx:HBox verticalAlign="middle">
+							<!--<mx:HBox verticalAlign="middle">
 								<s:Label  text="部门" />
 								<s:DropDownList  width="200" id="departments" labelField="headerText" />
-							</mx:HBox>	
+							</mx:HBox>	-->
+							<mx:HBox verticalAlign="middle">
+								<mx:Label text="统计类型">
+								</mx:Label>
+								<mx:ComboBox id="type" dataProvider="{caculateType}"/>
+							</mx:HBox>
 							<mx:HBox verticalAlign="middle">
 								<s:Label  text="教师" />
 								<hc:AutoComplete id="search_account"  labelField="name"  width="100"  matchType="anyPart" prompt="选择教师"  change="{ searchAccountHandleAutoCompleteChange() }" dropDownItemRenderer="{ searchAccountDropDownItemRenderer }" selectedItemStyleName="none">
@@ -153,9 +170,38 @@
 				<component:Fieldset title="列表清单" width="95%" height="100%" >
 					<s:Panel width="100%" height="100%"  styleName="customPanel" title="统计列表"  cornerRadius="5" borderVisible="true" dropShadowVisible="false">
 						
-						<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="true"   borderAlpha="1" verticalAlign="middle"   id="accountTable" pagecount="10"  >				
+						<component:WlzxPageDataGrid width="100%" height="100%"  verticalAlign="middle"   id="accountTable" pagecount="10"  >				
 							<component:mygridcolumns>
-								
+								<mx:DataGridColumn textAlign="center" headerText="统计类型" width="60">
+									<mx:itemRenderer>
+										<fx:Component>
+											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off" >
+												<mx1:Text text="{getLabel(data)}" width="80">
+													<fx:Script>
+														<![CDATA[
+															//提示信息
+															private function getLabel(data:Object):String{
+																if(data.type=='TakeLeave_leave'){
+																	return "请假";
+																}else if(data.type=='TakeLeave_businessTrip'){
+																	return "出差";
+																}else if(data.type=='OverWorkDay'){
+																	return "加班";
+																}else if(data.type=='MoveRestDay'){
+																	return "调休";
+																}
+																else return null;
+															}
+															
+															
+														]]>
+													</fx:Script>
+												</mx1:Text>
+												
+											</mx:HBox>
+										</fx:Component>
+									</mx:itemRenderer>
+								</mx:DataGridColumn>
 								<mx:DataGridColumn textAlign="center" headerText="帐号" width="60">
 									<mx:itemRenderer>
 										<fx:Component>
@@ -190,18 +236,83 @@
 										</fx:Component>
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="请假次数|天数(*1/2)" width="100">
+								<mx:DataGridColumn textAlign="center" headerText="开始日期"  width="100">
 									<mx:itemRenderer>
 										<fx:Component>
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off" >
-												<mx1:Text text="{data.takeLeave_leaveTimes+'|'+data.takeLeave_leaveDaySections}" width="80">
+												<mx1:Text text="{data.beginTime}" width="100">
 													
 												</mx1:Text>
 											</mx:HBox>
 										</fx:Component>
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="出差次数|天数(*1/2)" width="100">
+								<mx:DataGridColumn textAlign="center" headerText="截至日期"  width="100">
+									<mx:itemRenderer>
+										<fx:Component>
+											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off" >
+												<mx1:Text text="{data.endTime}" width="100">
+													
+												</mx1:Text>
+											</mx:HBox>
+										</fx:Component>
+									</mx:itemRenderer>
+								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="次数" width="100">
+									<mx:itemRenderer>
+										<fx:Component>
+											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off" >
+												<mx1:Text text="{getLabel(data)}" width="80">
+													<fx:Script>
+														<![CDATA[
+														//提示信息
+														private function getLabel(data:Object):String{
+															if(data.type=='TakeLeave_leave'){
+																return data.takeLeave_leaveTimes;
+															}else if(data.type=='TakeLeave_businessTrip'){
+																return data.takeLeave_businessTripTimes;
+															}else if(data.type=='OverWorkDay'){
+																return data.overWorkTimes;
+															}else if(data.type=='MoveRestDay'){
+																return data.moveRestDayTimes;
+															}
+															else return null;
+														}
+														]]>
+													</fx:Script>
+												</mx1:Text>
+												
+											</mx:HBox>
+										</fx:Component>
+									</mx:itemRenderer>
+								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="天数" width="100">
+									<mx:itemRenderer>
+										<fx:Component>
+											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off" >
+												<mx1:Text text="{getLabel(data)}" width="80">
+													<fx:Script>
+														<![CDATA[
+														private function getLabel(data:Object):String{
+															if(data.type=='TakeLeave_leave'){
+																return parseInt(data.takeLeave_leaveDaySections)*0.5+'';
+															}else if(data.type=='TakeLeave_businessTrip'){
+																return parseInt(data.takeLeave_businessTripDaySections)*0.5+'';
+															}else if(data.type=='OverWorkDay'){
+																return parseInt(data.overWorkDaySections)*0.5+'';
+															}else if(data.type=='MoveRestDay'){
+																return parseInt(data.moveRestDayDaySections)*0.5+'';
+															}
+															else return null;
+														}
+														]]>
+													</fx:Script>
+												</mx1:Text>
+											</mx:HBox>
+										</fx:Component>
+									</mx:itemRenderer>
+								</mx:DataGridColumn>
+								<!--<mx:DataGridColumn textAlign="center" headerText="出差次数|天数(*1/2)" width="100">
 									<mx:itemRenderer>
 										<fx:Component>
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off" >
@@ -233,7 +344,7 @@
 											</mx:HBox>
 										</fx:Component>
 									</mx:itemRenderer>
-								</mx:DataGridColumn>
+								</mx:DataGridColumn>-->
 								<mx:DataGridColumn textAlign="center" headerText="详细" width="50">
 									<mx:itemRenderer>
 										<fx:Component>
