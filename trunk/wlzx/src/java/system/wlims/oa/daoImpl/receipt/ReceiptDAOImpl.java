@@ -18,18 +18,22 @@ public class ReceiptDAOImpl extends BaseDAOImpl<ReceiptModel> implements Receipt
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ReceiptModel> getByConditions(String inNumber, String office,
+	public List<FileFlowModel> getByConditions(String inNumber, String office,
 			String doNumber, String title, String subject, String summary, String beginDate, String endDate,
 			String states, Integer isCompleted) {
-			DetachedCriteria criteria = DetachedCriteria.forClass(ReceiptModel.class);
+			DetachedCriteria criteria = DetachedCriteria.forClass(FileFlowModel.class);
+			if(StringUtils.isNotEmpty(states))
+				criteria.add(Restrictions.sqlRestriction("type in("+states+")"));	
+			
+			criteria.createCriteria("receipt");
+			
 			if(StringUtils.isNotEmpty(inNumber))
 				criteria.add(Restrictions.ilike("inNumber", inNumber, MatchMode.ANYWHERE));
 			
 			if(StringUtils.isNotEmpty(doNumber))
 				criteria.add(Restrictions.ilike("doNumber", doNumber, MatchMode.ANYWHERE));
 			
-			if(StringUtils.isNotEmpty(states))
-				criteria.add(Restrictions.sqlRestriction("status in("+states+")"));	
+			
 			if(StringUtils.isNotEmpty(title))
 				criteria.add(Restrictions.like("title", title, MatchMode.ANYWHERE));
 			if(StringUtils.isNotEmpty(subject))
@@ -43,11 +47,11 @@ public class ReceiptDAOImpl extends BaseDAOImpl<ReceiptModel> implements Receipt
 			if(StringUtils.isNotEmpty(endDate)){
 				criteria.add(Restrictions.sqlRestriction("registed_date<='"+endDate+" 59:59:59'"));	
 			}
-			if(isCompleted!=null){
+			/*if(isCompleted!=null){
 				criteria.add(Restrictions.sqlRestriction("is_completed ='"+isCompleted+"'"));	
-			}
-			criteria.addOrder(Order.desc("registedDate"));
-			List<ReceiptModel> list = getListByCriteria(criteria);
+			}*/
+			//criteria.addOrder(Order.desc("registedDate"));
+			List<FileFlowModel> list = getListByCriteria(criteria);
 	
 			return list;
 	}
