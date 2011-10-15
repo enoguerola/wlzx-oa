@@ -8,6 +8,8 @@
 		<mx:RemoteObject id="receiptServiceRO" destination="receiptServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 			<mx:method name="get" concurrency="last" result="get_resultHandler(event);"/>
 			<mx:method name="complete" concurrency="last" result="complete_resultHandler(event);"/>
+			<mx:method name="uncomplete" concurrency="last" result="complete_resultHandler(event);"/>
+
 		</mx:RemoteObject> 
 	</fx:Declarations>
 	<fx:Script>
@@ -41,6 +43,11 @@
 			public function complete(id:String):void
 			{
 				receiptServiceRO.complete(id);
+			}
+			
+			public function uncomplete(id:String):void
+			{
+				receiptServiceRO.uncomplete(id);
 			}
 			
 			public function add(id:String):void
