@@ -189,6 +189,15 @@
 								
 								<mx:DataGridColumn textAlign="center" headerText="帐号" dataField="name" width="100">
 								</mx:DataGridColumn>
+								
+								<mx:DataGridColumn textAlign="center" headerText="姓名" dataField="id" width="100">
+										<mx:itemRenderer>
+											<fx:Component>
+												<mx:Label text="{parentApplication.getTeacherNameByAccountId(data.id)}"/>
+											</fx:Component>
+										</mx:itemRenderer>
+								</mx:DataGridColumn>
+								
 								<mx:DataGridColumn textAlign="center" headerText="邮箱" dataField="email" width="170">
 									<mx:itemRenderer>
 										<fx:Component>
