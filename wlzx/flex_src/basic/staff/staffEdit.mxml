@@ -1,0 +1,1332 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Module xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		   xmlns:s="library://ns.adobe.com/flex/spark" 
+		   xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:valueObjects="basic.entity.*" xmlns:mutiComboBox="system.component.mutiComboBox.*" xmlns:component="system.component.*" layout="vertical" width="100%" height="100%" creationComplete="init();" xmlns:staff="basic.staff.*">
+	<mx:states>
+		<!--<mx:State name="department_list">           
+		</mx:State>
+		<mx:State name="department_add">           
+		</mx:State>-->
+		<mx:State name="list">           
+		</mx:State>
+		<mx:State name="add">           
+		</mx:State>
+		<mx:State name="relation_list">           
+		</mx:State>
+		<mx:State name="relation_add">           
+		</mx:State>
+	</mx:states>
+	<fx:Metadata>
+		[Event(name="uploadevent", type="system.event.UploadEvent")]
+	</fx:Metadata>
+	<fx:Style source="home.css">
+		
+	</fx:Style>
+	<fx:Script>
+		<![CDATA[
+			import basic.entity.*;
+			import basic.service.TeacherRemoteService;
+			import basic.utils.DateUtil;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.CalendarLayoutChangeEvent;
+			import mx.events.CloseEvent;
+			import mx.events.FlexEvent;
+			import mx.events.ValidationResultEvent;
+			import mx.formatters.DateFormatter;
+			import mx.modules.*;
+			import mx.rpc.events.*;
+			import mx.validators.Validator;
+			
+			import system.entity.*;
+			import system.event.UploadEvent;
+			import system.utils.ComboxUtils;
+			import system.utils.CommonUtils;
+			
+			private var validatorArr:Array;
+			private var createDate:Date;
+			private var modifiedDate:Date;
+			private var style:int;
+			[binary]
+			private var teacherId:String;
+			private var userID:String;
+			private var showFirst:Boolean;
+			
+			public var sexArr:ArrayCollection = new ArrayCollection(
+				[    
+					{data:"0", label:"男"}, 
+					{data:"1", label:"女"}
+				]                
+			);
+			public var marriageArr:ArrayCollection = new ArrayCollection(
+				[    
+					{data:"0", label:"未婚"}, 
+					{data:"1", label:"已婚"}
+				]                
+			);
+			
+			public var politicArr:ArrayCollection = new ArrayCollection(
+				[    
+					{data:"0", label:"党员"}, 
+					{data:"1", label:"团员"},
+					{data:"2", label:"其他"}
+				]                
+			);
+			
+			public var educationArr:ArrayCollection = new ArrayCollection(
+				[    
+					{data:"0", label:"本科"}, 
+					{data:"1", label:"高中"},
+					{data:"2", label:"大专"},
+					{data:"3", label:"硕士"},
+					{data:"4", label:"博士"}
+				]                
+			);
+			
+			public var statusArr:ArrayCollection = new ArrayCollection(
+				[    
+					{data:"0", label:"正式"}, 
+					{data:"1", label:"试用"},
+					{data:"2", label:"离职"},
+					{data:"3", label:"离休"}
+				]                
+			);
+			
+			/* 	public var departmentList:ArrayCollection = new ArrayCollection();
+			
+			public var roleList:ArrayCollection = new ArrayCollection(); */
+			
+			private var file:FileReference;
+			private var path:String;
+			[Bindable] 
+			private var imageSrc:String;  
+			
+			private function init():void
+			{
+				//	systemServiceRO.getDepartmentBySymbol("root");//初始化部门数据字典
+				
+				showFirst = true;
+				
+				validatorArr = new Array();
+				validatorArr.push(name_stringValidator);
+				//validatorArr.push(birthday_dateValidator);
+				//validatorArr.push(nation_stringValidator);
+				//validatorArr.push(idCode_stringValidator);
+				//validatorArr.push(nativePlace_stringValidator);
+				validatorArr.push(teacherno_stringValidator);
+				validatorArr.push(position_stringValidator);
+				//validatorArr.push(cellphone_phoneNumberValidator);
+				//validatorArr.push(homephone_phoneNumberValidator);
+				/**
+				 * When component is created, this function is called.
+				 * It instantiates a FileReference object and sets its
+				 * listeners.
+				 *  
+				 * @param event Event object contains details of the event triggering this handler.
+				 */ 
+				file = new FileReference();
+				
+				// Set the event listeners on the FileReference ojbect.
+				file.addEventListener(Event.SELECT, selectHandler);
+				file.addEventListener(Event.OPEN, openHandler);
+				file.addEventListener(ProgressEvent.PROGRESS, progressHandler);
+				file.addEventListener(IOErrorEvent.IO_ERROR, uploadIoErrorHandler);
+				file.addEventListener(DataEvent.UPLOAD_COMPLETE_DATA, uploadCompleteHandler);
+				this.addEventListener(UploadEvent.UPLOAD_EVENT, uploadEventHandler);
+				// Set the upload path from the parent document.
+				path = 'uploads/basic/teacherProfile/';
+				// Instantiate a new FileFilter.
+				imageTypes = new FileFilter("Images (*.jpg, *.jpeg, *.png, *.gif)", "*.jpg; *.jpeg; *.png; *.gif;");
+				
+				department.dataProvider=this.parentApplication.allDepartment;
+				
+				position.dataProvider=this.parentApplication.allRole;
+				
+				callLater(initStaffWin);
+				
+			}
+			
+			private function initStaffWin():void{
+				
+				var parms:String=((Object)(this.owner)).id;
+				teacher = new TeacherModel();	
+				//if(parms != null && parms!="" && parms!= "null"){		
+				teacherId = parms ;//弹出窗口时设定的中转参数
+				lockWin();
+				formId=teacherId;
+				search();
+				//teacherServiceRO.get(teacherId);
+				
+				
+				//}else{
+				//					department.selectedIndex=departmentList.length-1;
+				//					systemServiceRO.getDepartmentRoles(department.selectedItem.data);
+				//	teacher = new TeacherModel();					
+				//	imageSrc = "uploads/basic/teacherProfile/default_head.jpg";
+				//}
+				
+				
+				
+			}
+			private var formId:String=null;
+			public function search(){
+				if(formId!=null)
+					teacherServiceRO.get(formId);
+				
+			}
+			protected function teacherGetResult_resultHandler(event:ResultEvent):void
+			{
+				teacher = event.result as TeacherModel;
+				staffInputDepartmentPosition.teacherId=teacher.id;
+				style = teacher.style;
+				createDate = teacher.creationDate;
+				modifiedDate = teacher.modifiedDate;
+				userID = teacher.userID;
+				if(teacher.teacherPhoto != null && teacher.teacherPhoto != "")
+					imageSrc = teacher.teacherPhoto;
+				else
+					imageSrc = "resources/oa/layout/default_head.jpg";
+				teacherName.text = teacher.name;
+				mail.text = teacher.teacherMail;
+				teacherno.text = teacher.teacherNo;
+				sex.selectedIndex = ComboxUtils.findIndex(sexArr, teacher.sex + "");
+				birthday.text = DateUtil.formatDate(teacher.birthday as Date, "YYYY-MM-DD");
+				marriage..selectedIndex = ComboxUtils.findIndex(politicArr, teacher.teacherMarried + "") ;
+				nation.text = teacher.nation;
+				politicStatus.selectedIndex = ComboxUtils.findIndex(politicArr, teacher.politicsStatus + "");
+				idCode.text = teacher.teacherID;
+				nativePlace.text = teacher.teacherNativePlace;
+				homePhone.text = teacher.homePhone;
+				cellPhone.text = teacher.teacherMobilePhone;
+				education..selectedIndex = ComboxUtils.findIndex(politicArr, teacher.teacherEducation) ;
+				profession.text = teacher.teacherProfession;
+				school.text = teacher.teacherGraduateSchool;
+				professionalTitle.text = teacher.teacherProfessionTitle;
+				skillLevel.text = teacher.teacherSkillLevel;
+				skillLevelDate.text = DateUtil.formatDate(teacher.teacherSkillLevelDate as Date, "YYYY-MM-DD");
+				
+				contactPhone.text = teacher.teacherContactPhone;
+				officePhone.text = teacher.teacherOfficePhone;
+				workDate.text = DateUtil.formatDate(teacher.teacherWorkDate as Date, "YYYY-MM-DD");
+				attendDate.text = DateUtil.formatDate(teacher.teacherAttendDate as Date, "YYYY-MM-DD");
+				teacherAddress.text = teacher.address;
+				
+				department.selectedIndex = ComboxUtils.findIndex(this.parentApplication.allDepartment, teacher.teacherDepartment) ;
+				position.selectedIndex = ComboxUtils.findIndex(this.parentApplication.allRole, teacher.teacherPosition) ;
+				//		systemServiceRO.getDepartmentRoles(teacher.teacherDepartment);
+				staffInputDepartmentPosition.getDepartment();
+				
+				//				for(var i:int=0;i<2000;i++){
+				//					trace("");
+				//				}
+				//
+				//				callLater(function():void{
+				//					position.dataProvider=roleList;
+				//					//position.selectedIndex=0;
+				//					callLater(function():void{
+				//						Alert.show(roleList.length+"");
+				//						Alert.show(teacher.teacherPosition);
+				//						Alert.show(ComboxUtils.findIndex(roleList,  teacher.teacherPosition)+"bb");
+				//						position.selectedIndex = ComboxUtils.findIndex(roleList,  teacher.teacherPosition);
+				//					});
+				//
+				//				});
+				//				for (var i:int = 0; i < departmentList.length; i++){
+				//					var _item:Object = departmentList.getItemAt(i);
+				//					if(_item.data==teacher.teacherDepartment){
+				//						this.department.selectedIndex=i;
+				//						break;
+				//					}
+				//				}
+				//				for (var j:int = 0; j < departmentList.length; j++){
+				//					var _item2:Object = departmentList.getItemAt(j);
+				//					if(_item.data==teacher.teacherPosition){
+				//						this.department.selectedIndex=i;
+				//						break;
+				//					}
+				//				}
+				status.selectedIndex = ComboxUtils.findIndex(statusArr, teacher.teacherStatus + "") ;
+				callLater(function():void{
+					showPeriod(teacher.teacherWorkDate, teacher.teacherAttendDate);
+				});
+				unLockWin();
+			}
+			
+			protected function validateForm(event:MouseEvent):void
+			{
+				
+				var validatorErrorArray:Array = Validator.validateAll(validatorArr);
+				var isValidForm:Boolean = validatorErrorArray.length == 0;
+				if (isValidForm) {
+					teacher.name = teacherName.text;
+					teacher.teacherMail = mail.text;
+					teacher.teacherNo = teacherno.text;
+					teacher.sex = parseInt(sex.selectedItem.data);
+					teacher.birthday = DateFormatter.parseDateString(birthday.text);
+					teacher.teacherMarried = parseInt(marriage.selectedItem.data);
+					teacher.nation = nation.text;
+					teacher.politicsStatus = parseInt(politicStatus.selectedItem.data);
+					teacher.teacherID = idCode.text;
+					teacher.teacherNativePlace = nativePlace.text;
+					teacher.homePhone = homePhone.text;
+					teacher.teacherMobilePhone = cellPhone.text;
+					teacher.teacherEducation = education.selectedItem.data;
+					teacher.teacherProfession = profession.text;
+					teacher.teacherGraduateSchool = school.text;
+					teacher.teacherProfessionTitle = professionalTitle.text;
+					teacher.teacherSkillLevel = skillLevel.text;
+					teacher.teacherSkillLevelDate = DateFormatter.parseDateString(skillLevelDate.text);
+					teacher.teacherDepartment = department.selectedItem.data;
+					teacher.teacherPosition = position.selectedItem.data;
+					teacher.teacherContactPhone = contactPhone.text;
+					teacher.teacherOfficePhone = officePhone.text;
+					teacher.teacherWorkDate = DateFormatter.parseDateString(workDate.text);
+					teacher.address = teacherAddress.text;
+					
+					teacher.teacherPhoto = imageSrc;
+					teacher.teacherStatus = parseInt(status.selectedItem.data);
+					teacher.teacherAttendDate = DateFormatter.parseDateString(attendDate.text);
+					
+					teacher.creationDate = createDate;
+					teacher.modifiedDate = modifiedDate;
+					teacher.style = style;
+					teacher.userID = userID;
+					teacherServiceRO.save(teacher);
+				} else {
+					var err:ValidationResultEvent;
+					var errorMessageArray:Array = [];
+					for each (err in validatorErrorArray) {
+						var errField:String = FormItem(err.currentTarget.source.parent).label
+						errorMessageArray.push(errField + ": " + err.message);
+					}
+					Alert.show(errorMessageArray.join("\n\n"), "请按照以下错误提示信息重新填写", Alert.OK);
+				}
+			}
+			
+			protected function systemFaultHandler(event:FaultEvent):void {
+				Alert.show(event.fault.faultString, 'Error');
+			}
+			
+			protected function teacherAddResult_resultHandler(event:ResultEvent):void
+			{
+				var teacher:Object=event.result;
+				if(teacher!=null){
+					if(teacher.teacherNo == "")
+						Alert.show("短号重复");
+					else{
+						createDate = teacher.creationDate;
+						modifiedDate = teacher.modifiedDate;
+						style = teacher.style;
+						teacherId = teacher.id;
+						userID = teacher.userID;
+						Alert.show("添加成功");
+						//重新加载帐号姓名对应全局信息
+						this.parentApplication.teacherAccountBridgeServiceRO.teacherAccountGetAll();
+					}
+				}else{
+					Alert.show("添加失败");
+				}
+			}
+			
+			private const button_add:Class;
+			
+			/******************
+			 *   work experience
+			 * */
+			public function work_cancleApply(id:String):void
+			{
+				Alert.show("你确定要删除该项吗?","确认删除",Alert.NO|Alert.YES,null,function(event:CloseEvent):void{
+					if(event.detail == Alert.YES)
+						teacherExperienceServiceRO.remove(id);
+				},null,Alert.NO);
+			}
+			public function work_enterEdit(data:Object):void
+			{
+				workCompany.text = data.company;
+				workPosition.text = data.position;
+				workStartDate.text = DateUtil.formatDate(data.startDate as Date, "YYYY-MM-DD");
+				workEndDate.text = DateUtil.formatDate(data.endDate as Date, "YYYY-MM-DD");
+				workId.text = data.id;
+				this.currentState = "add";
+			}
+			
+			protected function work_save_clickHandler(event:MouseEvent):void
+			{
+				if(validateWorkInput()){
+					var experience:TeacherExperience = new TeacherExperience();
+					experience.company = workCompany.text;
+					experience.endDate = DateFormatter.parseDateString(workEndDate.text);
+					experience.position = workPosition.text;
+					experience.startDate = DateFormatter.parseDateString(workEndDate.text);
+					experience.id = workId.text;
+					teacherExperienceServiceRO.save(experience, teacherId);
+				}
+			}
+			private function validateWorkInput():Boolean
+			{	
+				validatorArr = new Array();
+				validatorArr.push(workCompany_stringValidator);
+				validatorArr.push(workPosition_stringValidator);
+				validatorArr.push(workStart_dateValidator);
+				validatorArr.push(workEnd_dateValidator);
+				
+				var validatorErrorArray:Array = Validator.validateAll(validatorArr);
+				var isValidForm:Boolean = validatorErrorArray.length == 0;
+				if (isValidForm) {
+					if(teacherId != null)
+						return true;
+					else{
+						Alert.show("请先保存教师信息");
+						return false;
+					}
+				} else {
+					var err:ValidationResultEvent;
+					var errorMessageArray:Array = [];
+					for each (err in validatorErrorArray) {
+						var errField:String = FormItem(err.currentTarget.source.parent).label
+						errorMessageArray.push(errField + ": " + err.message);
+					}
+					Alert.show(errorMessageArray.join("\n\n"), "请按照以下错误提示信息重新填写", Alert.OK);
+					return false;
+				}
+			}
+			
+			protected function teacherExperienceAddResult_resultHandler(event:ResultEvent):void
+			{
+				this.currentState = "list";
+				getExperience();
+			}
+			
+			protected function teacherExperienceRemoveResult_resultHandler(event:ResultEvent):void
+			{
+				this.currentState = "list";
+				getExperience();
+			}
+			
+			protected function teacherExperienceGetResult_resultHandler(event:ResultEvent):void
+			{
+				this.currentState = "list";
+				var allList:ArrayCollection = event.result as ArrayCollection;
+				experiences_table.initdata(allList);
+			}
+			
+			private function getExperience():void
+			{
+				//				Alert.show(teacherId);
+				teacherExperienceServiceRO.get(teacherId, experiences_table.curpage,experiences_table.pagecount);
+			}
+			
+			/**********************
+			 *   relation
+			 * */
+			
+			public function relation_cancleApply(id:String):void
+			{
+				Alert.show("你确定要删除该项吗?","确认删除",Alert.NO|Alert.YES,null,function(event:CloseEvent):void{
+					if(event.detail == Alert.YES)
+						teacherRelationServiceRO.remove(id);
+				},null,Alert.NO);	
+			}
+			public function relation_enterEdit(data:Object):void
+			{
+				relationName.text = data.name;
+				relationWith.text = data.relation;
+				relationCompany.text = data.company;
+				relationPhone.text = data.phone;
+				relationId.text = data.id;
+				this.currentState = "relation_add";
+			}
+			
+			
+			protected function relation_save_clickHandler(event:MouseEvent):void
+			{
+				if(validateRelationInput()){
+					var relation:TeacherRelation = new TeacherRelation();
+					relation.name = relationName.text;
+					relation.relation = relationWith.text;
+					relation.company = relationCompany.text;
+					relation.phone = relationPhone.text;
+					relation.id = relationId.text;
+					teacherRelationServiceRO.save(relation, teacherId);
+				}
+			}
+			private function validateRelationInput():Boolean
+			{	
+				validatorArr = new Array();
+				validatorArr.push(relation_name_stringValidator);
+				validatorArr.push(relation_with_stringValidator);
+				validatorArr.push(relation_company_stringValidator);
+				validatorArr.push(relation_phone_stringValidator);
+				
+				var validatorErrorArray:Array = Validator.validateAll(validatorArr);
+				var isValidForm:Boolean = validatorErrorArray.length == 0;
+				if (isValidForm) {
+					if(teacherId != null)
+						return true;
+					else{
+						Alert.show("请先保存教师信息");
+						return false;
+					}
+				} else {
+					var err:ValidationResultEvent;
+					var errorMessageArray:Array = [];
+					for each (err in validatorErrorArray) {
+						var errField:String = FormItem(err.currentTarget.source.parent).label
+						errorMessageArray.push(errField + ": " + err.message);
+					}
+					Alert.show(errorMessageArray.join("\n\n"), "请按照以下错误提示信息重新填写", Alert.OK);
+					return false;
+				}
+			}
+			
+			protected function teacherRelationAddResult_resultHandler(event:ResultEvent):void
+			{
+				this.currentState = "relation_list";
+				getRelation();
+			}
+			
+			protected function teacherRelationRemoveResult_resultHandler(event:ResultEvent):void
+			{
+				this.currentState = "relation_list";
+				getRelation();
+			}
+			
+			protected function teacherRelationGetResult_resultHandler(event:ResultEvent):void
+			{
+				this.currentState = "relation_list";
+				var allList:ArrayCollection = event.result as ArrayCollection;
+				relations_table.initdata(allList);
+			}
+			
+			private function getRelation()
+			{
+				teacherRelationServiceRO.get(teacherId, relations_table.curpage,relations_table.pagecount);
+			}
+			
+			
+			//			/**********************
+			//			 *   department
+			//			 * */
+			//			public function department_cancleApply(teacherId:String,positionId:String):void
+			//			{
+			//				Alert.show("你确定要删除该项吗?","确认删除",Alert.NO|Alert.YES,null,function(event:CloseEvent):void{
+			//					if(event.detail == Alert.YES)
+			//						teacherAccountBridgeServiceRO.remove(teacherId,positionId);
+			//				},null,Alert.NO);
+			//			}
+			//			
+			//			protected function teacherDepartmentRemoveResult_resultHandler(event:ResultEvent):void
+			//			{
+			//				this.currentState = "department_list";
+			//				getDepartment();
+			//			}
+			//			
+			//			protected function teacherDepartmentAddResult_resultHandler(event:ResultEvent):void
+			//			{
+			//				this.currentState = "department_list";
+			//				getDepartment();
+			//			}
+			//			
+			//			public function department_enterEdit(data:Object):void
+			//			{
+			//				this.currentState='department_add';
+			//				for(var i=0;i<departmentList.length;i++){
+			//					var item1:Object=departmentList.getItemAt(i);
+			//					if(item1.dataField==data.departmentId){
+			//						departmentName.selectedItem=item1;
+			//						break;
+			//					}
+			//				}
+			//				callLater(function():void{
+			//					for(var j=0;j<roleList.length;j++){
+			//						var item2:Object=departmentList.getItemAt(j);
+			//						if(item2.dataField==data.positionId){
+			//							departmentName.selectedItem=item2;
+			//							break;
+			//						}
+			//					}
+			//					
+			//				});
+			//				
+			////				departmentName.text = data.departmentName;
+			////				departmentPosition.text = data.positionName;
+			//				departmentId.text = data.positionId;
+			//			}
+			//			
+			//			private function getDepartment():void
+			//			{
+			//				teacherAccountBridgeServiceRO.get(teacherId, departments_table.curpage, departments_table.pagecount);
+			//			}
+			//			
+			//			protected function department_save_clickHandler(event:MouseEvent):void
+			//			{
+			//				if(validateDepartmentInput()){
+			////					var department:TeacherDepartment = new TeacherDepartment();
+			////					department.departmentId = departmentName.text;
+			////					department.position = departmentPosition.text;
+			////					department.id = departmentId.text;
+			//					var positionId = departmentPosition.selectedItem.dataField;
+			////					teacherAccountBridgeServiceRO.save(department, teacherId);
+			//					teacherAccountBridgeServiceRO.save(positionId, teacherId,departmentId.text);
+			//
+			//				}
+			//			}
+			//			
+			//			protected function teacherDepartmentGetResult_resultHandler(event:ResultEvent):void
+			//			{
+			//				this.currentState = "department_list";
+			//				var allList:ArrayCollection = event.result as ArrayCollection;
+			//				departments_table.initdata(allList);
+			//			}
+			//			
+			//			private function validateDepartmentInput():Boolean
+			//			{	
+			//				validatorArr = new Array();
+			//				validatorArr.push(department_department_stringValidator);
+			//				validatorArr.push(department_position_stringValidator);
+			//				
+			//				var validatorErrorArray:Array = Validator.validateAll(validatorArr);
+			//				var isValidForm:Boolean = validatorErrorArray.length == 0;
+			//				if (isValidForm) {
+			//					if(teacherId != null)
+			//						return true;
+			//					else{
+			//						Alert.show("请先保存教师信息");
+			//						return false;
+			//					}
+			//				} else {
+			//					var err:ValidationResultEvent;
+			//					var errorMessageArray:Array = [];
+			//					for each (err in validatorErrorArray) {
+			//						var errField:String = FormItem(err.currentTarget.source.parent).label
+			//						errorMessageArray.push(errField + ": " + err.message);
+			//					}
+			//					Alert.show(errorMessageArray.join("\n\n"), "请按照以下错误提示信息重新填写", Alert.OK);
+			//					return false;
+			//				}
+			//			}
+			
+			
+			/*
+			*  tab页 跳转到  其他信息时显示
+			*/
+			protected function navigatorcontent1_activateHandler(event:Event):void
+			{
+				// TODO Auto-generated method stub
+				this.currentState = "list";
+				if(showFirst && teacherId != null)
+				{
+					getExperience();
+					getRelation();
+					showFirst = false;
+				}
+			}
+			
+			/**
+			 * Called to format dates in the data grid.
+			 */          
+			private function formatDate(data:Object, column:DataGridColumn):String
+			{
+				return DateUtil.formatDate(data[column.dataField] as Date, "YYYY-MM-DD");
+			}
+			
+			
+			protected function navigatorcontent2_showHandler(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				this.currentState = "department_list";
+			}
+			
+			
+			// Limit the file types in the Browse popup box to ".jpg" 
+			// so we can easily find it again when reloading page. 
+			private var imageTypes:FileFilter;
+			
+			/**
+			 * Event handler for the "Browse" button's click.
+			 * 
+			 * @param event Event object contains details of the event triggering this handler.
+			 */          
+			private function browseHandler(event:Event):void {
+				pbrUploadProgress.visible = false;
+				btnUpload.visible = false;
+				file.browse([imageTypes]);
+			}
+			
+			/**
+			 * Event handler for when the user selects a file from disk.
+			 * 
+			 * @param event Event object contains details of the event triggering this handler.
+			 */ 
+			private function selectHandler(event:Event):void {
+				btnUpload.visible = true;
+			}
+			
+			/**
+			 * Event handler for when the file is opened.
+			 * 
+			 * @param event Event object contains details of the event triggering this handler.
+			 */ 
+			private function openHandler(event:Event):void {
+				pbrUploadProgress.visible = true;
+				pbrUploadProgress.label = "已上传 %3%% .";
+			}
+			
+			/**
+			 * Event handler for the "Upload" button.
+			 * Initiates file upload operation.
+			 * 
+			 * @param event Event object contains details of the event triggering this handler.
+			 */ 
+			private function uploadHandler(event:Event):void {
+				var url:String =parentApplication.homeUrl+'basic/staff/teacherImgaeUploadServlet';
+				var request:URLRequest = new URLRequest(url);
+				request.method = URLRequestMethod.POST;
+				
+				var variables:URLVariables = new URLVariables();
+				variables.employeeID = teacherId; 
+				request.data = variables;
+				
+				pbrUploadProgress.visible = true;
+				file.upload(request);
+			}
+			
+			/**
+			 * Event handler for when the upload starts.
+			 * 
+			 * @param event ProgressEvent object contains details of the event triggering this handler.
+			 */ 
+			private function progressHandler(event:ProgressEvent):void {
+				pbrUploadProgress.setProgress(event.bytesLoaded, event.bytesTotal);                       
+			}
+			
+			/**
+			 * Event handler for when the upload operation has completed.
+			 * Specifically manages response data.
+			 * 
+			 * @param event DataEvent object contains details of the event triggering this handler.
+			 */       
+			private function uploadCompleteHandler(event:DataEvent):void {
+				try {
+					var xmlResponse:XML = XML(event.data);
+					pbrUploadProgress.label = "上传成功";
+					
+					// Create a custom event. 
+					//var uploadEvent:UploadEvent = new UploadEvent("uploadevent");
+					// Fetch the file element of the servlet's XML response.
+					//uploadEvent.ServerResponse = xmlResponse.elements("file");
+					// Fetch the entire XML response. 
+					//uploadEvent.ServerResponseRaw = event.data;
+					//Alert.show(event.data);
+					//Alert.show(xmlResponse.elements("file"));
+					// Dispatch the custom event.
+					//dispatchEvent(uploadEvent);
+					
+					imageSrc = path + xmlResponse.elements("file").attribute("id").toString();
+				}
+				catch (error:Error) {
+					pbrUploadProgress.label = "Exception occurred.";
+					Alert.show("Exception details: " + error.message,"Exception occured.");
+				}
+			}
+			
+			/**
+			 * Event handler for the image IO error.
+			 * 
+			 * @param event IOErrorEvent object contains details of the event triggering this handler.
+			 */  
+			private function imageIOErrorHandler(event:IOErrorEvent):void {
+				imgPhoto.source = "resources/oa/layout/default_head.jpg";
+			}
+			
+			/**
+			 * Event handler for the file upload IO error.
+			 * 
+			 * @param event IOErrorEvent object contains details of the event triggering this handler.
+			 */  
+			private function uploadIoErrorHandler(event:IOErrorEvent):void {
+				pbrUploadProgress.label = "Encountered error.";
+				Alert.show("IO Error: " + event.toString());
+			}
+			
+			/**
+			 * Custom event handler for the UploadEvent.
+			 * 
+			 * <p>Sets some text fields from the event and invalidates
+			 * the DataGrid's display list to force a refresh.</p>
+			 *
+			 * @param event UploadEvent custom event
+			 */ 
+			private function uploadEventHandler(event:UploadEvent):void {
+				
+			}
+			
+			//			private function getDepartmentBySymbolResult(event:ResultEvent):void {
+			//				var _department:DepartmentModel=event.result as DepartmentModel;
+			//				
+			//				buildSubDepartments(_department,departmentList,0);
+			//				//Alert.show(_department.name);
+			//				systemServiceRO.getDepartmentRoles(_department.id);
+			//				callLater(function():void{
+			////					department.dataProvider=departmentList;
+			////					var temp:Object=departmentList.getItemAt(0);
+			////					//Alert.show(temp.id+"");
+			//				
+			//				});
+			//				
+			//			}
+			//			private function getDepartmentRolesResult(event:ResultEvent):void {
+			//				roleList.removeAll();
+			//				var allList:ArrayCollection=event.result as ArrayCollection;
+			//				if(allList.length>0){
+			//					for (var i:int = 0; i < allList.length; i++){
+			//						var _role:RoleModel = allList.getItemAt(i) as RoleModel;
+			//						var headText:String="";
+			//						for(var j:int = 0;j<_role.level;j++)
+			//							headText=headText.concat("--");
+			//						headText=headText.concat(_role.name);
+			//						roleList.addItem( {data:_role.id, label:headText})
+			//					}
+			//				}	
+			//				if(teacher!=null&&teacher.id!=null&&teacher.id!="")
+			//					position.selectedIndex = ComboxUtils.findIndex(roleList,  teacher.teacherPosition);
+			//				else position.selectedIndex =0;
+			//				//Alert.show(position.selectedIndex +"a");
+			//
+			//			}
+			//			private function buildSubDepartments(department:DepartmentModel,resultList:ArrayCollection,depth:int):void{
+			//				var headText:String="";
+			//				for(var j:int = 0;j<depth;j++)
+			//					headText = headText.concat("--");
+			//				headText = headText.concat(department.name);
+			//				resultList.addItem( {data:department.id, label:headText})
+			//				var list:ArrayCollection = ArrayCollection(department.subordinates);			
+			//				if(list.length>0){
+			//					for (var i:int = 0; i < list.length; i++){
+			//						var _department:DepartmentModel = list.getItemAt(i) as DepartmentModel;	
+			//						buildSubDepartments(_department,resultList,depth+1);
+			//					}
+			//					//					CommonUtils.sortBySequence(resultList);
+			//				}		
+			//				
+			//			}
+			//			private function departmentSelectionChangedHandlerMain(event:Event):void{
+			//				var target:mx.controls.ComboBox=event.target as mx.controls.ComboBox
+			//				systemServiceRO.getDepartmentRoles(target.selectedItem.data);
+			//				callLater(function():void{
+			//					position.dataProvider=roleList;
+			//					position.selectedIndex=0;
+			//				});
+			//			}
+			//			private function departmentSelectionChangedHandler(event:Event):void{
+			//				var target:mx.controls.ComboBox=event.target as mx.controls.ComboBox
+			//				systemServiceRO.getDepartmentRoles(target.selectedItem.data);
+			//				callLater(function():void{
+			//					departmentPosition.dataProvider=roleList;
+			//					departmentPosition.selectedIndex=0;
+			//				});
+			//			}
+			
+			protected function workDate_changeHandler(event:CalendarLayoutChangeEvent):void
+			{
+				// TODO Auto-generated method stub
+				changeHandler(event.newDate, workPeriod);
+			}
+			
+			private function changeHandler(date:Date, target):void
+			{
+				if(date == null)
+					return ;
+				var currentDate:Date = new Date();
+				var text:String = "";
+				var _year:int = (currentDate.getFullYear() - date.getFullYear());
+				if(_year > 0)
+					text = _year + "年"
+				var _month:int = (currentDate.getMonth() - date.getMonth());
+				if(_month > 0)
+					text += _month + "月";
+				target.text = text;
+			}
+			
+			
+			protected function attendDate_changeHandler(event:CalendarLayoutChangeEvent):void
+			{
+				// TODO Auto-generated method stub
+				changeHandler(event.newDate, attendPeriod);
+			}
+			
+			private function showPeriod(workDate:Date, attendDate:Date):void
+			{
+				changeHandler(workDate, workPeriod);
+				changeHandler(attendDate, attendPeriod);
+			}
+			import system.component.WlzxLockWin;
+			import mx.core.FlexGlobals;
+			import mx.managers.PopUpManager;
+			private var window:WlzxLockWin=null;
+			private function lockWin():void{
+				if(window==null){
+					window=WlzxLockWin(PopUpManager.createPopUp(this,WlzxLockWin,true)); 
+					PopUpManager.centerPopUp(window);
+					window.percentHeight=100;
+					window.percentWidth=100;
+				}		
+				
+			}
+			private function unLockWin():void{
+				if(window!=null)
+					PopUpManager.removePopUp(window);
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+		<mx:StringValidator id="teacherno_stringValidator" source="{teacherno}" property="text"  requiredFieldError="不能为空"/>
+		<mx:StringValidator id="name_stringValidator" source="{teacherName}" property="text"  requiredFieldError="不能为空"/>
+		<!--	<mx:DateValidator id="birthday_dateValidator" inputFormat="YYYY-MM-DD" source="{birthday}" property="text"  requiredFieldError="请选择"/>
+		<mx:StringValidator id="nation_stringValidator" source="{nation}" property="text"  requiredFieldError="不能为空"/>
+		<mx:RegExpValidator id="idCode_stringValidator" expression="^[0-9]\{18\}[\w]?$" noMatchError="格式错误" source="{idCode}" property="text"  requiredFieldError="不能为空"/>
+		--><mx:StringValidator id="nativePlace_stringValidator" source="{nativePlace}" property="text"  requiredFieldError="不能为空"/>
+		<mx:StringValidator id="position_stringValidator" source="{position}" property="text"  requiredFieldError="不能为空"/>
+		<mx:PhoneNumberValidator id="cellphone_phoneNumberValidator" source="{cellPhone}" property="text" minDigits="6" requiredFieldError="错误格式的电话"/>
+		<mx:PhoneNumberValidator id="homephone_phoneNumberValidator" source="{homePhone}" required="false" property="text" minDigits="6" requiredFieldError="错误格式的电话"/>
+		<mx:DateValidator id="work_dateValidator" inputFormat="YYYY-MM-DD" source="{workDate}" property="text"  requiredFieldError="请选择"/>
+		<mx:DateValidator id="attend_dateValidator" inputFormat="YYYY-MM-DD" source="{attendDate}" property="text"  requiredFieldError="请选择"/>
+		
+		<mx:StringValidator id="workCompany_stringValidator" source="{workCompany}" property="text"  requiredFieldError="不能为空"/>
+		<mx:StringValidator id="workPosition_stringValidator" source="{workPosition}" property="text"  requiredFieldError="不能为空"/>
+		<mx:DateValidator id="workStart_dateValidator" inputFormat="YYYY-MM-DD" source="{workStartDate}" property="text"  requiredFieldError="请选择"/>
+		<mx:DateValidator id="workEnd_dateValidator" inputFormat="YYYY-MM-DD" source="{workEndDate}" property="text"  requiredFieldError="请选择"/>
+		
+		<mx:StringValidator id="relation_name_stringValidator" source="{relationName}" property="text"  requiredFieldError="不能为空"/>
+		<mx:StringValidator id="relation_with_stringValidator" source="{relationWith}" property="text"  requiredFieldError="不能为空"/>
+		<mx:StringValidator id="relation_company_stringValidator" source="{relationCompany}" property="text"  requiredFieldError="不能为空"/>
+		<mx:StringValidator id="relation_phone_stringValidator" source="{relationPhone}" property="text"  requiredFieldError="不能为空"/>
+		
+		<!--	<mx:StringValidator id="department_department_stringValidator" source="{departmentName}" property="text"  requiredFieldError="不能为空"/>
+		<mx:StringValidator id="department_position_stringValidator" source="{departmentPosition}" property="text"  requiredFieldError="不能为空"/>
+		-->		
+		<valueObjects:TeacherModel id="teacher"/>
+		<mx:RemoteObject id="teacherServiceRO" destination="teacherServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+			<mx:method name="save"  concurrency="last"  result="teacherAddResult_resultHandler(event);" />
+			<mx:method name="get"  concurrency="last"  result="teacherGetResult_resultHandler(event);" />
+		</mx:RemoteObject>
+		<mx:RemoteObject id="teacherExperienceServiceRO" destination="teacherExperienceServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+			<mx:method name="save"  concurrency="last"  result="teacherExperienceAddResult_resultHandler(event);" />
+			<mx:method name="get"  concurrency="last"  result="teacherExperienceGetResult_resultHandler(event);" />
+			<mx:method name="remove"  concurrency="last"  result="teacherExperienceRemoveResult_resultHandler(event);" />
+		</mx:RemoteObject>
+		<!--<mx:RemoteObject id="teacherAccountBridgeServiceRO" destination="teacherAccountBridgeServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+		<mx:method name="save"  concurrency="last"  result="teacherDepartmentAddResult_resultHandler(event);" />
+		<mx:method name="get"  concurrency="last"  result="teacherDepartmentGetResult_resultHandler(event);" />
+		<mx:method name="remove"  concurrency="last"  result="teacherDepartmentRemoveResult_resultHandler(event);" />
+		</mx:RemoteObject>-->
+		<mx:RemoteObject id="teacherRelationServiceRO" destination="teacherRelationServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+			<mx:method name="save"  concurrency="last"  result="teacherRelationAddResult_resultHandler(event);" />
+			<mx:method name="get"  concurrency="last"  result="teacherRelationGetResult_resultHandler(event);" />
+			<mx:method name="remove"  concurrency="last"  result="teacherRelationRemoveResult_resultHandler(event);" />
+		</mx:RemoteObject>
+		<!--<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+		<mx:method name="getDepartmentBySymbol"  concurrency="last"  result="getDepartmentBySymbolResult(event);" />
+		<mx:method name="getDepartmentRoles"  concurrency="multiple"  result="getDepartmentRolesResult(event);" />
+		</mx:RemoteObject>-->
+	</fx:Declarations>
+	<s:Panel width="100%" height="100%" title="教师信息编辑"  styleName="PanelStyle"   borderVisible="true" dropShadowVisible="false">
+		
+		<s:VGroup width="100%" height="100%">
+			<mx:TabNavigator id="systems"  width="100%" height="100%" tabStyleName="customTabStyles"   horizontalGap="1" borderVisible="false"  tabWidth="120" paddingTop="0">
+				<s:NavigatorContent label="基础信息" show="navigatorcontent2_showHandler(event)" >
+					<s:layout>
+						<s:VerticalLayout/>
+					</s:layout>
+					<mx:Form width="100%" height="100%" textAlign="left" labelWidth="70" id="teacherForm">
+						<s:Scroller width="100%" height="100%" verticalScrollPolicy="on">
+							<s:VGroup width="100%" height="100%" gap="10" >							
+								
+								<component:Fieldset title="基本信息" width="95%" height="95%" >
+									
+									<s:HGroup  width="100%" height="40%" >
+										<s:VGroup width="10%" height="100%" >
+											<s:Label>
+												
+											</s:Label>
+										</s:VGroup>
+										<s:VGroup width="60%" height="100%">
+											<s:HGroup width="100%">
+												<mx:FormItem label="姓名" width="50%"><s:TextInput id="teacherName" width="100%"/></mx:FormItem>
+												<mx:FormItem label="性别" width="50%">
+													<s:DropDownList id="sex" selectedIndex="0" width="100%" dataProvider="{sexArr}" labelField="label"/> 
+												</mx:FormItem>
+											</s:HGroup>
+											<s:HGroup width="100%">
+												<mx:FormItem label="婚姻状况" width="50%">
+													<s:DropDownList id="marriage" width="100%" selectedIndex="0" dataProvider="{marriageArr}" labelField="label"/>
+												</mx:FormItem>
+												<mx:FormItem label="民族" width="50%"><mx:TextInput id="nation" width="100%" text="汉族" /></mx:FormItem>
+											</s:HGroup>
+											<mx:FormItem label="身份证号" width="100%"><mx:TextInput id="idCode" width="100%"/></mx:FormItem>
+											<mx:FormItem label="邮箱" width="100%"><mx:TextInput id="mail" width="100%"/></mx:FormItem>
+											<mx:FormItem label="家庭地址" width="100%"><mx:TextInput id="teacherAddress" width="100%"/></mx:FormItem>
+											<mx:FormItem label="短号" width="100%"><mx:TextInput id="teacherno" width="100%"/></mx:FormItem>
+										</s:VGroup>
+										<s:VGroup width="30%">
+											<s:HGroup width="100%">
+												<mx:FormItem label="出生年月" width="100%">
+													<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" id="birthday" width="100%"  formatString="YYYY-MM-DD"/>
+												</mx:FormItem>
+											</s:HGroup>
+											<mx:FormItem label="政治面貌" width="100%">
+												<s:DropDownList 
+													id="politicStatus" 
+													width="100%" dataProvider="{politicArr}"
+													selectedIndex="0" 
+													labelField="label"/> 
+											</mx:FormItem>
+											<mx:FormItem label="籍贯" width="100%">
+												<mx:TextInput id="nativePlace" width="100%"/>
+											</mx:FormItem>
+											<mx:FormItem label="家庭电话" width="100%">
+												<mx:TextInput id="homePhone" width="100%"/>
+											</mx:FormItem>
+											<mx:FormItem label="手机" width="100%"><mx:TextInput id="cellPhone" width="100%"/></mx:FormItem>
+										</s:VGroup>
+										<s:VGroup width="10%">
+											<mx:FormItem label="照片" width="100%" height="200%">
+												<mx:Image id="imgPhoto" visible="true" autoLoad="true" width="100" height="100" source="{imageSrc}" ioError="imageIOErrorHandler(event)"/>
+												<mx:VBox>
+													<mx:HBox>
+														<mx:Button id="btnBrowse" label="浏览" click="browseHandler(event)" />
+														<mx:Button id="btnUpload" label="上传" click="uploadHandler(event)" visible="false"  />
+													</mx:HBox>
+													<mx:ProgressBar id="pbrUploadProgress" indeterminate="false" mode="manual" width="20"
+																	fontWeight="bold" color="red" labelPlacement="bottom" trackHeight="9" visible="false" />
+												</mx:VBox>
+											</mx:FormItem>
+										</s:VGroup>
+									</s:HGroup>
+									<mx:Spacer height="10" />
+								</component:Fieldset>
+								<!--*******************-->
+								<component:Fieldset title="教育背景" width="95%" height="95%" >
+									
+									<s:HGroup  width="100%" height="20%">
+										<s:VGroup width="10%" height="100%">
+											<s:Label>
+											</s:Label>
+										</s:VGroup>
+										<s:VGroup width="25%">
+											<mx:FormItem label="学历" width="100%">
+												<mx:ComboBox id="education" width="100%" selectedIndex="0" dataProvider="{educationArr}" labelField="label"/>
+											</mx:FormItem>
+											<mx:FormItem label="职称" width="100%">
+												<mx:TextInput id='professionalTitle' width="100%"/>
+											</mx:FormItem>
+										</s:VGroup>
+										<s:VGroup width="30%">
+											<mx:FormItem label="专业" width="100%">
+												<mx:TextInput id='profession' width="100%"/>
+											</mx:FormItem>
+											<mx:FormItem label="技能等级" width="100%">
+												<mx:TextInput id='skillLevel' width="100%"/>
+											</mx:FormItem>
+										</s:VGroup>
+										<s:VGroup width="45%">
+											<mx:FormItem label="毕业院校" width="100%" labelWidth="100">
+												<mx:TextInput id='school' width="90%"/>
+											</mx:FormItem>
+											<mx:FormItem label="技能鉴定时间" width="100%" labelWidth="100">
+												<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" id="skillLevelDate" width="90%" formatString="YYYY-MM-DD" />
+											</mx:FormItem>
+										</s:VGroup>
+									</s:HGroup>
+									<mx:Spacer height="10" />
+								</component:Fieldset>
+								<!--***********-->
+								<component:Fieldset title="温中聘请信息" width="95%" height="95%" >
+									<s:HGroup  width="100%" height="40%">
+										<s:VGroup width="10%" height="100%">
+											<s:Label>
+											</s:Label>
+										</s:VGroup>								
+										
+										<mx:Grid width="100%">
+											
+											<mx:GridRow horizontalAlign="right">
+												<mx:GridItem horizontalAlign="right" >
+													<mx:FormItem label="部门" width="100%">
+														<mx:ComboBox  id="department" 
+																	  width="190" labelField="label" 
+																	  />
+													</mx:FormItem>
+												</mx:GridItem>
+												<mx:GridItem horizontalAlign="right" >
+													<mx:FormItem label="职务" width="100%">
+														<mx:ComboBox  width="90%" id="position"  fontSize="12" labelField="label"  textAlign="left" />
+														
+													</mx:FormItem>
+												</mx:GridItem>
+												<mx:GridItem  horizontalAlign="right">
+													<mx:FormItem label="办公电话" width="100%" labelWidth="100">
+														<mx:TextInput id='officePhone' width="100"/>
+													</mx:FormItem>
+												</mx:GridItem>
+											</mx:GridRow>
+											<mx:GridRow horizontalAlign="right" >
+												<mx:GridItem  horizontalAlign="right">
+													<mx:FormItem label="电话" width="100%">
+														<mx:TextInput id='contactPhone' width="190"/>
+													</mx:FormItem>
+												</mx:GridItem>
+												<mx:GridItem  horizontalAlign="right">
+													<mx:FormItem label="何时工作" width="100%">
+														<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" id='workDate' width="100%"  formatString="YYYY-MM-DD" change="workDate_changeHandler(event)"/>
+													</mx:FormItem>
+												</mx:GridItem>
+												<mx:GridItem  horizontalAlign="right">
+													<mx:FormItem label="工龄" width="100%" labelWidth="100">
+														<mx:TextInput id='workPeriod' width="100" editable="false"/>
+													</mx:FormItem>
+												</mx:GridItem>
+											</mx:GridRow>
+											<mx:GridRow>
+												<mx:GridItem horizontalAlign="right">
+													<mx:FormItem label="入校时间" width="100%">
+														<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'
+																	  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]'
+																	  yearNavigationEnabled="true" id="attendDate" width="190"  formatString="YYYY-MM-DD"
+																	  change="attendDate_changeHandler(event)"/>
+													</mx:FormItem>
+												</mx:GridItem>
+												<mx:GridItem horizontalAlign="right">
+													<mx:FormItem label="校龄" width="100%">
+														<mx:TextInput id='attendPeriod' width="100%" editable="false"/>
+													</mx:FormItem>
+												</mx:GridItem>
+												<mx:GridItem horizontalAlign="right">
+													<mx:FormItem label="状态" width="100%" labelWidth="100">
+														<s:DropDownList id='status' width="100" 
+																		dataProvider="{statusArr}" 
+																		labelField="label" selectedIndex="0"/>
+													</mx:FormItem>
+												</mx:GridItem>
+											</mx:GridRow>
+											<mx:GridRow >
+												<mx:GridItem>
+												</mx:GridItem>
+												<mx:GridItem>
+												</mx:GridItem>
+												<mx:GridItem horizontalAlign="right">
+													<s:Button click="validateForm(event)" label="保存" width="100" height="50" fontSize="24" fontWeight="bold" color="red" />
+												</mx:GridItem>
+											</mx:GridRow>
+											
+										</mx:Grid >
+										
+										
+										
+									</s:HGroup>
+									<mx:Spacer height="10" />
+								</component:Fieldset>
+								
+								<component:Fieldset title="其他单位信息" width="95%" height="95%" >
+									<s:HGroup width="100%">
+										<staff:staffInputDepartmentPosition id="staffInputDepartmentPosition">
+										</staff:staffInputDepartmentPosition>
+									</s:HGroup>
+								</component:Fieldset>
+								
+							</s:VGroup>
+						</s:Scroller>
+					</mx:Form>
+					
+				</s:NavigatorContent>
+				<s:NavigatorContent label="其他信息" show="navigatorcontent1_activateHandler(event)">
+					<s:layout>
+						<s:VerticalLayout/>
+					</s:layout>
+					<s:Scroller width="100%" height="100%" verticalScrollPolicy="auto">
+						<s:VGroup width="100%">
+							<s:HGroup width="100%" height="50%">
+								
+								<s:Panel width="100%" height="100%" title="工作经历" styleName="PanelStyle"  borderVisible="false" id="work_experience" dropShadowVisible="false">
+									<s:VGroup width="100%" height="100%" id="work_experience_listPanel" excludeFrom="add">
+										<s:HGroup verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12" height="30" paddingLeft="20">
+											<s:Label text="|"/>
+											<mx:LinkButton  label="添加" icon="@Embed(source='../WebContent/resources/common/tools/button_add_icon.png')" click=" this.currentState='add'" />
+											<s:Label text="|"/>
+										</s:HGroup>
+										<s:VGroup width="100%" height="100%"  gap="10" verticalAlign="middle" horizontalAlign="center">
+											<s:HGroup width="100%" height="100%" paddingLeft="10" paddingRight="10" paddingBottom="10">
+												<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="true"   borderAlpha="0.2" verticalAlign="middle"   id="experiences_table" pagecount="10" >				
+													<component:mygridcolumns>
+														<mx:DataGridColumn textAlign="center" headerText="开始时间" dataField="startDate" width="100" labelFunction="formatDate"></mx:DataGridColumn>
+														<mx:DataGridColumn textAlign="center" headerText="截止时间" dataField="endDate" width="170" labelFunction="formatDate"></mx:DataGridColumn>
+														<mx:DataGridColumn textAlign="center" headerText="工作单位" dataField="company" width="120"></mx:DataGridColumn>
+														<mx:DataGridColumn textAlign="center" headerText="职务" dataField="position" width="120"></mx:DataGridColumn>
+														<mx:DataGridColumn textAlign="center" headerText="编辑" width="60">
+															<mx:itemRenderer>
+																<fx:Component>
+																	<mx:LinkButton  label="[编辑]"   click="{this.outerDocument.work_enterEdit(data);}"  >											
+																	</mx:LinkButton>										
+																</fx:Component>
+															</mx:itemRenderer>
+														</mx:DataGridColumn>
+														<mx:DataGridColumn textAlign="center" headerText="删除"  width="60">
+															<mx:itemRenderer>
+																<fx:Component>
+																	<mx:LinkButton  label="[删除]"   click="{this.outerDocument.work_cancleApply(data.id);}"  >											
+																	</mx:LinkButton>										
+																</fx:Component>
+															</mx:itemRenderer>
+														</mx:DataGridColumn>
+													</component:mygridcolumns>
+												</component:WlzxPageDataGrid>
+											</s:HGroup>
+										</s:VGroup>
+									</s:VGroup>
+									<s:VGroup width="100%" height="100%" id="work_experience_addPanel" excludeFrom="list, relation_add, relation_list">
+										<s:HGroup verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12">
+											<s:HGroup width="100%" height="30" paddingLeft="20"  gap="0"  verticalAlign="middle">
+												<s:Label text="|"/>
+												<mx:LinkButton  label="返回" icon="@Embed(source='../WebContent/resources/common/tools/button_back_icon.png')" click="currentState='list';" />
+												<s:Label text="|"/>
+											</s:HGroup>
+										</s:HGroup>
+										<s:VGroup width="100%" height="50%" gap="10" verticalAlign="middle" horizontalAlign="left" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
+											<s:VGroup width="100%" horizontalAlign="center" height="100%" verticalAlign="middle" paddingLeft="20" paddingRight="20">
+												<mx:Grid width="80%" height="100%" id="container"  verticalGap="10" horizontalGap="5"   borderStyle="solid" paddingBottom="10" paddingTop="10" paddingLeft="10" paddingRight="10">
+													<mx:GridRow width="100%" height="30"  >
+														<mx:GridItem    verticalAlign="middle" horizontalAlign="right">
+															<mx:Label  text="开始时间" width="60"  textAlign="right" />
+														</mx:GridItem>
+														<mx:GridItem  verticalAlign="middle" horizontalAlign="center">
+															<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  
+																		  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]'
+																		  yearNavigationEnabled="true" width="120" formatString="YYYY-MM-DD"  name="workStartDate" 
+																		  id="workStartDate"/>
+														</mx:GridItem>
+														<mx:GridItem    verticalAlign="middle" horizontalAlign="right">
+															<mx:Label  text="截止时间" width="60"  textAlign="right" />
+														</mx:GridItem>
+														<mx:GridItem  verticalAlign="middle" horizontalAlign="center">
+															<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" width="120" formatString="YYYY-MM-DD"  name="workEndDate" id="workEndDate"/>
+														</mx:GridItem>
+														<mx:GridItem    verticalAlign="middle" horizontalAlign="right">
+															<mx:Label  text="工作单位" width="60"  textAlign="right" />
+														</mx:GridItem>
+														<mx:GridItem  verticalAlign="middle" horizontalAlign="center" >
+															<mx:TextInput width="120" name="workDepartment" id="workCompany"/>
+														</mx:GridItem>
+														<mx:GridItem    verticalAlign="middle" horizontalAlign="left">
+															<mx:Label  text="职务" width="60"  textAlign="right"/>
+														</mx:GridItem>
+														<mx:GridItem  verticalAlign="middle" horizontalAlign="center" >
+															<mx:TextInput width="120" name="workPosition" id="workPosition"/>
+															<mx:TextInput id="workId" visible="false" width="1"/>
+														</mx:GridItem>
+														<mx:GridItem  verticalAlign="middle" horizontalAlign="center" >
+															<mx:Button label="保存" width="60" click="work_save_clickHandler(event)" />
+														</mx:GridItem>
+													</mx:GridRow>
+												</mx:Grid>
+											</s:VGroup>
+										</s:VGroup>
+									</s:VGroup>
+								</s:Panel>
+							</s:HGroup>
+							<s:HGroup width="100%" height="50%">
+								<s:Panel width="100%" height="100%" title="社会关系" styleName="PanelStyle"  borderVisible="false" id="relations" dropShadowVisible="false">
+									<s:VGroup width="100%" height="100%" id="relation_listPanel" excludeFrom="relation_add">
+										<s:HGroup verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12" height="30" paddingLeft="20">
+											<s:Label text="|"/>
+											<mx:LinkButton  label="添加" icon="@Embed(source='../WebContent/resources/common/tools/button_add_icon.png')" click=" this.currentState='relation_add'" />
+											<s:Label text="|"/>
+										</s:HGroup>
+										<s:VGroup width="100%" height="100%"  gap="10" verticalAlign="middle" horizontalAlign="center">
+											<s:HGroup width="100%" height="100%" paddingLeft="10" paddingRight="10" paddingBottom="10">
+												<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="true"   borderAlpha="0.2" verticalAlign="middle"   id="relations_table" pagecount="10"  >				
+													<component:mygridcolumns>
+														
+														<mx:DataGridColumn textAlign="center" headerText="姓名" dataField="name" width="100"></mx:DataGridColumn>
+														<mx:DataGridColumn textAlign="center" headerText="与本人关系" dataField="relation" width="170"></mx:DataGridColumn>
+														<mx:DataGridColumn textAlign="center" headerText="工作单位" dataField="company" width="120"></mx:DataGridColumn>
+														<mx:DataGridColumn textAlign="center" headerText="联系电话" dataField="phone" width="120"></mx:DataGridColumn>
+														<mx:DataGridColumn textAlign="center" headerText="编辑" width="60">
+															<mx:itemRenderer>
+																<fx:Component>
+																	<mx:LinkButton  label="[编辑]"   click="{this.outerDocument.relation_enterEdit(data);}"  >											</mx:LinkButton>										
+																</fx:Component>
+															</mx:itemRenderer>
+														</mx:DataGridColumn>
+														<mx:DataGridColumn textAlign="center" headerText="删除"  width="60">
+															<mx:itemRenderer>
+																<fx:Component>
+																	<mx:LinkButton  label="[删除]"   click="{this.outerDocument.relation_cancleApply(data.id);}" >											</mx:LinkButton>										
+																</fx:Component>
+															</mx:itemRenderer>
+														</mx:DataGridColumn>
+													</component:mygridcolumns>
+												</component:WlzxPageDataGrid>
+											</s:HGroup>
+										</s:VGroup>
+									</s:VGroup>
+									<s:VGroup width="100%" height="100%" id="relation_addPanel" excludeFrom="relation_list, list, add">
+										<s:HGroup verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12">
+											<s:HGroup width="100%" height="30" paddingLeft="20"  gap="0"  verticalAlign="middle">
+												<s:Label text="|"/>
+												<mx:LinkButton  label="返回" icon="@Embed(source='../WebContent/resources/common/tools/button_back_icon.png')" click="currentState='relation_list';" />
+												<s:Label text="|"/>
+											</s:HGroup>
+										</s:HGroup>
+										<s:VGroup width="100%" height="50%" gap="10" verticalAlign="middle" horizontalAlign="left" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
+											<s:VGroup width="100%" horizontalAlign="center" height="100%" verticalAlign="middle" paddingLeft="20" paddingRight="20">
+												<mx:Grid width="80%" height="100%" id="relation_container"  verticalGap="10" horizontalGap="5"   borderStyle="solid" paddingBottom="10" paddingTop="10" paddingLeft="10" paddingRight="10">
+													
+													<mx:GridRow width="100%" height="30"  >
+														<mx:GridItem    verticalAlign="middle" horizontalAlign="right">
+															<mx:Label  text="姓名" width="60"  textAlign="right" />
+														</mx:GridItem>
+														<mx:GridItem  verticalAlign="middle" horizontalAlign="center">
+															<mx:TextInput width="120" id="relationName"/>
+														</mx:GridItem>
+														<mx:GridItem    verticalAlign="middle" horizontalAlign="right">
+															<mx:Label  text="与本人关系" width="80"  textAlign="right" />
+														</mx:GridItem>
+														<mx:GridItem  verticalAlign="middle" horizontalAlign="center">
+															<mx:TextInput width="120" id="relationWith"/>
+														</mx:GridItem>
+														<mx:GridItem    verticalAlign="middle" horizontalAlign="right">
+															<mx:Label  text="工作单位" width="60"  textAlign="right" />
+														</mx:GridItem>
+														
+														<mx:GridItem  verticalAlign="middle" horizontalAlign="center" >
+															<mx:TextInput width="120" id="relationCompany"/>
+														</mx:GridItem>
+														<mx:GridItem    verticalAlign="middle" horizontalAlign="left">
+															<mx:Label  text="联系电话" width="60"  textAlign="right"/>
+														</mx:GridItem>
+														<mx:GridItem  verticalAlign="middle" horizontalAlign="center" >
+															<mx:TextInput width="120" id="relationPhone"/>
+															<mx:TextInput id="relationId" visible="false" width="1"/>
+														</mx:GridItem>
+														<mx:GridItem  verticalAlign="middle" horizontalAlign="center" >
+															<mx:Button label="保存" width="60" click="relation_save_clickHandler(event)"  />
+														</mx:GridItem>
+													</mx:GridRow>
+												</mx:Grid>													
+											</s:VGroup>
+										</s:VGroup>
+									</s:VGroup>
+								</s:Panel>
+							</s:HGroup>
+						</s:VGroup>
+					</s:Scroller>
+					
+				</s:NavigatorContent>
+			</mx:TabNavigator>
+		</s:VGroup>
+	</s:Panel>
+</mx:Module>
