@@ -56,6 +56,15 @@ public interface ReceiptService {
    */
   String complete(String id)throws ServiceException;
   
+  
+  /**
+   * 
+   * @param id
+   * @return
+   * @throws ServiceException
+   */
+  String uncomplete(String id)throws ServiceException;
+  
   /**
    * 
    * @param id
