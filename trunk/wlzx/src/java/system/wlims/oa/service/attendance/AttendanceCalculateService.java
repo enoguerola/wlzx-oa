@@ -15,7 +15,7 @@ public interface AttendanceCalculateService {
 	public int getTimesOfValidTakeLeave(String userId,String beginTime,String endTime,String type);
 	public int getTimesOfValidOverWork(String userId,String beginTime,String endTime);
 	public int getTimesOfValidMoveRestDay(String userId,String beginTime,String endTime);
-	public List<AttendanceCalculateVO> getCalculateAttendanceByCondition(String userId,String departmentId,String beginTime,String endTime);
+	public List<AttendanceCalculateVO> getCalculateAttendanceByCondition(String type,String userId,String departmentId,String beginTime,String endTime);
 	
 	public List<TakeLeaveForm> getValidTakeLeave_LeaveAttendanceByCondition(String userId,String beginTime,String endTime);
 	public List<TakeLeaveForm> getValidTakeLeave_BusinessTripAttendanceByCondition(String userId,String beginTime,String endTime);

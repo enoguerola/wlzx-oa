@@ -5,6 +5,7 @@ public class AttendanceCalculateVO {
 	private String userAccount;
 	private String departmentName;
 	private String userName;
+	private String type;
 	private int takeLeave_leaveTimes;
 	private int takeLeave_leaveDaySections;
 	private int takeLeave_businessTripTimes;
@@ -15,6 +16,9 @@ public class AttendanceCalculateVO {
 	private int moveRestDayDaySections;
 	private String beginTime;
 	private String endTime;
+	private int times;//冗余
+	private double daySections;//冗余
+	private String typeName;//冗余
 	public String getUserID() {
 		return userID;
 	}
@@ -100,4 +104,29 @@ public class AttendanceCalculateVO {
 	public void setEndTime(String endTime) {
 		this.endTime = endTime;
 	}
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
+	public int getTimes() {
+		return times;
+	}
+	public void setTimes(int times) {
+		this.times = times;
+	}
+	public double getDaySections() {
+		return daySections;
+	}
+	public void setDaySections(double daySections) {
+		this.daySections = daySections;
+	}
+	public String getTypeName() {
+		return typeName;
+	}
+	public void setTypeName(String typeName) {
+		this.typeName = typeName;
+	}
+	
 }
