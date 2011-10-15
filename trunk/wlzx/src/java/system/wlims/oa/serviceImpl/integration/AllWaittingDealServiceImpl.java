@@ -401,6 +401,7 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 				taskVO.setId(task.getId());
 				taskVO.setPostTime(UtilDateTime.toDateString(task.getPostTime(),"yyyy-MM-dd HH:mm:ss"));
 				taskVO.setTitle(task.getTitle());
+				taskVO.setContent(task.getContent());
 				if(task.getStatusByWorkerId(accountId).equals(TaskModel.EStatus.OnGoing.getValue().intValue()+""))
 					taskVO.setStatus(TaskVO.EStatus.ToBeDeal.getText());
 				else if(task.getStatusByWorkerId(accountId).equals(TaskModel.EStatus.Finished.getValue().intValue()+""))
@@ -943,7 +944,7 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 						taskVO1.setWorkersIds(user.getId());
 						
 						taskVO1.setAssignerId(TaskVO.EAssigner.Default.getValue().intValue()+"");
-						taskVO1.setId(fileFlowModel.getId());
+						taskVO1.setId(fileFlowModel.getReceiptId()+ ";"+fileFlowModel.getId());
 						
 						taskVO1.setPostTime(UtilDateTime.toDateString(fileFlowModel.getCreationDate(),"yyyy-MM-dd HH:mm:ss"));
 						
