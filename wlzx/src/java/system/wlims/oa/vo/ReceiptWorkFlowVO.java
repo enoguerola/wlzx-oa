@@ -10,6 +10,7 @@ public class ReceiptWorkFlowVO {
 	private Date inDate;
 	private String office;
 	private Integer status;
+	private Integer isCompleted;
 	
 	public String getTitle() {
 		return title;
@@ -26,6 +27,12 @@ public class ReceiptWorkFlowVO {
 
 	public Integer getStatus() {
 		return status;
+	}
+	public Integer getIsCompleted() {
+		return isCompleted;
+	}
+	public void setIsCompleted(Integer isCompleted) {
+		this.isCompleted = isCompleted;
 	}
 	public void setStatus(Integer status) {
 		this.status = status;

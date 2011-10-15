@@ -9,6 +9,7 @@ public class TaskVO {
 	private String assignerId;
 	private String workersIds;
 	private String status;
+	private String content;
 	public static enum EType{
 		Task(1, "领导指派"),
 		CourseAdjust_Approve(2, "调课审批"),
@@ -36,10 +37,10 @@ public class TaskVO {
 		MoveRestDay_VicePrincipalApprove(14, "调休副校长审批"),
 		Conference_Approve(15, "会议室安排落实"),
 		
-		SW_NB(16, "收文拟办"),
-		SW_PB(17, "收文批办"),
-		SW_CB(18, "收文承办"),
-		SW_CY(19, "收文传阅");
+		SW_NB(17, "收文拟办"),
+		SW_PB(18, "收文批办"),
+		SW_CB(19, "收文承办"),
+		SW_CY(20, "收文传阅");
 		
 		private Integer value;
 		private String text;
@@ -84,10 +85,10 @@ public class TaskVO {
 		MoveRestDay_OfficalApprove(13, "您有一件调休申请事务需要处理"),
 		MoveRestDay_VicePrincipalApprove(14, "您有一件调休申请事务需要处理"),
 		Conference_Approve(15, "您有一件会议室申请需要审批落实"),
-		SW_NB(16, "您有一件收文需要拟办"),
-		SW_PB(17, "您有一件收文需要批办"),
-		SW_CB(18, "您有一件收文需要承办"),
-		SW_CY(19, "您有一件收文需要传阅");
+		SW_NB(17, "您有一件收文需要拟办"),
+		SW_PB(18, "您有一件收文需要批办"),
+		SW_CB(19, "您有一件收文需要承办"),
+		SW_CY(20, "您有一件收文需要传阅");
 		
 		private Integer value;
 		private String text;
@@ -192,6 +193,12 @@ public class TaskVO {
 	}
 	public void setTypeId(int typeId) {
 		this.typeId = typeId;
+	}
+	public String getContent() {
+		return content;
+	}
+	public void setContent(String content) {
+		this.content = content;
 	}
 
 }
