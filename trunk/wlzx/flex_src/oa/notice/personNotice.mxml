@@ -672,6 +672,8 @@
 									<mx:itemRenderer>
 										<mx:Component>
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0" horizontalScrollPolicy="off">
+												<mx:LinkButton  label="[编辑]"   click="{this.outerDocument.enterEdit(data.id);}" enabled="{checkAuth(data)}">											
+												</mx:LinkButton>
 												<mx:LinkButton  label="[删除]"   click="{this.outerDocument.deleteNotice(data.id);}" enabled="{checkAuth(data)}">											
 												</mx:LinkButton>
 												<mx:Script>
