@@ -83,13 +83,14 @@
 			
 				search_accounts.dataProvider=this.parentApplication.allTeacherAcccounts;
 				search_assigner.dataProvider=this.parentApplication.allTeacherAcccounts;
-				accounts.dataProvider=this.parentApplication.allTeacherAcccounts;
+				
 				assigner.dataProvider=this.parentApplication.allTeacherAcccounts;
 //				search_subordinate_account.dataProvider=this.parentApplication.allTeacherAcccounts;
 				//Alert.show(parentApplication.currentUser.getAllSubordinates().length+"a");
 	//			Alert.show(parentApplication.currentUser.getAllSubordinates().length);
 				if(parentApplication.currentUser.name=="super_root"){
 					allListTree.dataProvider=parentApplication.allTeacherAcccounts;
+					accounts.dataProvider=this.parentApplication.allTeacherAcccounts;
 				}else securityUserHolder.getCurrentUserSubordinates();
 //				taskTable.Pre.addEventListener(MouseEvent.CLICK,search);
 //				taskTable.Next.addEventListener(MouseEvent.CLICK,search);
@@ -112,7 +113,7 @@
 				}
 				search_subordinate_account.dataProvider=allSubordinates;
 				allListTree.dataProvider=allSubordinates;
-
+				accounts.dataProvider=allSubordinates;
 			}
 			protected function updateTaskResult_resultHandler(event:ResultEvent):void
 			{
@@ -419,7 +420,16 @@
 			{
 				// TODO Auto-generated method stub
 				var id:String=allListTree.selectedItem.id;
-				detailPersonTask(id);
+				accounts.selectedItems.addItem(this.parentApplication.getItemByAccountId(id));
+				
+				Alert.show("是否打开查看该员工个人工作?","打开",Alert.YES | Alert.NO,null,function(event:CloseEvent):void{
+					if(event.detail == Alert.YES)
+					{
+						
+						detailPersonTask(id);
+					}
+				});
+				
 			}
 
 		]]> 		
