@@ -88,6 +88,6 @@
 		]]>
 	</fx:Script>
 	<s:HGroup horizontalAlign="center" verticalAlign="middle" width="100%" height="100%" id="hgroup">
-		<mx:LinkButton click="edit(data.receiptId,data.receiptFlowId)" id="devise_button" label="拟办"  enabled="{data.isCompleted==1}"/>
+		<mx:LinkButton click="edit(data.receiptId,data.receiptFlowId)" id="devise_button" label="拟办"  enabled="{data.isCompleted!=1}"/>
 	</s:HGroup>
 </s:MXDataGridItemRenderer>
