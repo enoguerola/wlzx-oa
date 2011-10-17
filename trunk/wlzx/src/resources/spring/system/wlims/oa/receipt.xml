@@ -52,6 +52,7 @@
 		<property name="attachmentDAO" ref="attachmentDAO" />
 		<property name="receiptDAO" ref="receiptDAO" />
 		<property name="fileFlowDAO" ref="fileFlowDAO" />
+		<property name="systemService" ref="systemServiceDest" />
 	</bean>
 	<!--<bean id="receiptService" class="system.wlims.oa.serviceImpl.receipt.ReceiptServiceImpl">
 		<property name="receiptDAO" ref="receiptDAO" />
