@@ -14,7 +14,9 @@ import system.DAOException;
 import system.ServiceException;
 import system.components.SecurityUserHolder;
 import system.constants.Constants;
+import system.entity.MessageModel;
 import system.entity.UserModel;
+import system.service.SystemService;
 import system.utils.StringUtils;
 import system.utils.UtilDateTime;
 import system.wlims.oa.dao.notice.AttachmentDAO;
@@ -31,6 +33,7 @@ public class ReceiptServiceImpl implements ReceiptService {
 	private ReceiptDAO receiptDAO;
 	private FileFlowDAO fileFlowDAO;
 	private AttachmentDAO attachmentDAO;
+	private SystemService systemService;
 	public void setReceiptDAO(ReceiptDAO receiptDAO) {
 		this.receiptDAO = receiptDAO;
 	}
@@ -374,13 +377,42 @@ public class ReceiptServiceImpl implements ReceiptService {
 			receiptDAO.saveOrUpdate(file);
 			
 		}
-		return true;
+		String temp="";
+		if(file.getStatus()==3){
+			temp = "拟办";
+		}else if(file.getStatus()==5){
+			temp = "批办";
+		}else if(file.getStatus()==7){
+			temp = "承办";
+		}else if(file.getStatus()==9){
+			temp = "传阅";
+		}
+		String content="您负责的"+file.getTitle()+"公文已经"+temp+"完毕，请继续对该公文流转进行处理";
+		systemService.sendMessage(MessageModel.DefaultFromId,  file.getReceiverId(), MessageModel.MessageType.SYSTEM.getValue(), content);
+
+		
+		if(StringUtils.isNotEmpty(state)&&Integer.parseInt(state)==1)
+		{return true;}
+		else
+		{return false;}
 	}
+	public SystemService getSystemService() {
+		return systemService;
+	}
+
+	public void setSystemService(SystemService systemService) {
+		this.systemService = systemService;
+	}
+
 	@Override
 	public List<ReceiptWorkFlowVO> getWorkFlowsByConditions(String inNumber, String office, String doNumber,String title,String subject,String summary,String beginDate,
 			String endDate, String states, Integer isCompleted, String userId)
 			throws ServiceException {
 		// TODO Auto-generated method stub
+		String ss[] = new String[10] ;
+		if(states!=null&&!states.equalsIgnoreCase("null")){
+			 ss = states.split(",");
+		}
 		List<ReceiptWorkFlowVO> results=new ArrayList<ReceiptWorkFlowVO>();
 		List<FileFlowModel> list=receiptDAO.getByConditions(inNumber, office, doNumber, title, subject,summary,beginDate, endDate, states,isCompleted);
 		for(FileFlowModel fileFlow:list){
@@ -395,6 +427,9 @@ public class ReceiptServiceImpl implements ReceiptService {
 						vo.setInDate(fileFlow.getReceipt().getInDate());
 						vo.setStatus(fileFlow.getReceipt().getStatus());
 						vo.setIsCompleted(fileFlow.getIsCompleted());
+						if(!fileFlow.getReceipt().getStatus().toString().equals(ss[0])&&!fileFlow.getReceipt().getStatus().toString().equals(ss[1])){
+							vo.setIsCompleted(1);
+						}
 						results.add(vo);
 					}
 					
