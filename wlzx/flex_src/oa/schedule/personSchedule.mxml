@@ -464,6 +464,19 @@
 					job.send();
 				}
 			}
+			
+			
+			import basic.utils.Excel;
+			private var excel:Excel = new Excel;
+			private function export():void{
+				var type1:String=type.selectedItem.data;
+				var accountId:String=this.parentApplication.currentUser.id;
+				var beginTime:String=fromDateChooser.text;
+				var endTime:String=toDateChooser.text;
+				var scheduleState:String=state.selectedItem.data;
+				excel.load("general/export/personSchedule.action", type1+";"+accountId+";"+beginTime+";"+endTime+";"+scheduleState);
+			}
+			
 		]]>
 	</mx:Script>
 	
@@ -483,7 +496,7 @@
 					<mx:Label text="|"/>
 					<mx:LinkButton label="打印" click="print_clickHandler(event)" icon="@Embed(source='../WebContent/resources/common/tools/button_printer_icon.png')"/>
 					<mx:Label text="|"/>
-					<mx:LinkButton  label="导出" icon="@Embed(source='../WebContent/resources/common/tools/button_printer_icon.png')"/>
+					<mx:LinkButton  label="导出" icon="@Embed(source='../WebContent/resources/common/tools/button_printer_icon.png')"  click="export()"/>
 					<mx:Label text="|"/>
 				</mx:HBox>
 			</mx:HBox>
