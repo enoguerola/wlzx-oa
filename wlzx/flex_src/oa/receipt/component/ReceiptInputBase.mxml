@@ -86,10 +86,18 @@
 			private function finishWorkFlow_resultHandler(event:ResultEvent):void
 			{
 				if(event.result==true){
-					Alert.show("保存成功");
-//					this.currentState='list';
-//					search();
+					Alert.show("提交成功");
+					this.currentState='list';
+					
+					
+					//parent.search();
 				}
+				if(event.result==false){
+					Alert.show("保存成功");
+					this.currentState='list';
+					//parent.search();
+				}
+				
 			}
 			public function finishWorkFlow(receiptFlowId:String,state:String):void
 			{
