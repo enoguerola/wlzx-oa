@@ -1118,7 +1118,7 @@
 											<mx:GridItem>
 											</mx:GridItem>
 											<mx:GridItem horizontalAlign="right">
-												<s:Button click="validateForm(event)" label="保存" width="100" height="50" fontSize="24" fontWeight="bold" color="red" />
+												<s:Button click="validateForm(event)" label="保存" width="100" cornerRadius="" height="50" fontSize="24" fontWeight="bold" />
 											</mx:GridItem>
 										</mx:GridRow>
 									
