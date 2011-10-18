@@ -490,6 +490,54 @@
 						scheduleServiceRO.deleteSchedule(id);
 				},null,Alert.NO);
 			}
+			
+			
+			import basic.utils.Excel;
+			private var excel:Excel = new Excel;
+			private function export():void{
+				//var type1:String=type.selectedItem.data;
+				//var accountId:String=this.parentApplication.currentUser.id;
+				//var beginTime:String=fromDateChooser.text;
+				//var endTime:String=toDateChooser.text;
+				//var scheduleState:String=state.selectedItem.data;
+				
+				
+				var scheduleBeginDate:String=fromDateChooser.text;
+				var scheduleEndDate:String=toDateChooser.text;
+				
+				var scheduleState:String=state.selectedItem.data;
+				//Alert.show("b");
+				var scheduelType:String=null;
+				var scheduelDepartmentShare:String=null;
+				var scheduelSchoolShare:String=null;
+				var scheduelDepartmentId:String=null;
+				var scheduelEmergence:String=null;
+				var scheduelTitle:String=null;
+				//Alert.show("a");
+				var item:Object=scope.selectedItem;
+				//Alert.show(item.name);
+				var scheduleScope:String=item.data;
+				//Alert.show(scheduleScope);
+				if(scheduleScope==null){
+					scheduelDepartmentShare=null;
+					scheduelSchoolShare=null;
+					scheduelDepartmentId=null;
+					scheduelType="1";
+				}else if(scheduleScope=="0"){
+					scheduelDepartmentShare=null;
+					scheduelSchoolShare="1";
+					scheduelDepartmentId=null;
+					scheduelType="1";
+				}else{
+					scheduelDepartmentShare="1";
+					scheduelDepartmentId=scheduleScope;
+					scheduelType="1";
+				}
+				
+				//scheduleServiceRO.getSchedulesByConditions(null,scheduelType,scheduleState,scheduelDepartmentShare,scheduelDepartmentId,scheduelSchoolShare,scheduelEmergence,scheduelTitle,scheduleBeginDate,scheduleEndDate);
+
+				excel.load("general/export/publicSchedule.action", scheduelType+";"+scheduleState+";"+scheduelDepartmentShare+";"+scheduelDepartmentId+";"+scheduelSchoolShare+";"+scheduelEmergence+";"+scheduelTitle+";"+scheduleBeginDate+";"+scheduleEndDate);
+			}
 		]]>
 	</mx:Script>
 	
@@ -502,7 +550,7 @@
 				<mx:Label text="|"/>
 				<mx:LinkButton label="打印" click="print_clickHandler(event)" icon="@Embed(source='../WebContent/resources/common/tools/button_printer_icon.png')"/>
 				<mx:Label text="|"/>
-				<mx:LinkButton  label="导出" icon="@Embed(source='../WebContent/resources/common/tools/button_printer_icon.png')"/>
+				<mx:LinkButton  label="导出" icon="@Embed(source='../WebContent/resources/common/tools/button_printer_icon.png')" click="export()"/>
 				<mx:Label text="|"/>
 			</mx:HBox>
 		</mx:HBox>
