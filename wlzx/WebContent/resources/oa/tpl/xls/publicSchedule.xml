@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xls-fields data-row-index="4" column-row-index="2" column-row-span="2">
+	<field-title rowspan="2">
+		<field-cell>A1</field-cell>
+		<field-text>详细信息</field-text>
+		<field-key-data>xls.title</field-key-data>
+	</field-title>
+	<field-columns>
+		<field-column>
+			<field-cell>A</field-cell>
+			<field-text>发布者</field-text>
+			<field-key-data>base.posterId</field-key-data>
+		</field-column>
+		<field-column>
+			<field-cell>B</field-cell>
+			<field-text>开始时间</field-text>
+			<field-key-data>base.beginTime</field-key-data>
+		</field-column>
+		<field-column>
+			<field-cell>C</field-cell>
+			<field-text>截止时间</field-text>
+			<field-key-data>base.endTime</field-key-data>
+		</field-column>
+		<field-column>
+			<field-cell>D</field-cell>
+			<field-text>主题</field-text>
+			<field-key-data>base.title</field-key-data>
+		</field-column>
+		<field-column>
+			<field-cell>E</field-cell>
+			<field-text>优先级</field-text>
+			<field-key-data>base.emergence</field-key-data>
+		</field-column>
+		<field-column>
+			<field-cell>F</field-cell>
+			<field-text>状态</field-text>
+			<field-key-data>base.finishStatus</field-key-data>
+		</field-column>
+		
+		
+	</field-columns>
+</xls-fields>
