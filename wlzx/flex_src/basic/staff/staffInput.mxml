@@ -139,9 +139,20 @@
 				// Instantiate a new FileFilter.
 				imageTypes = new FileFilter("Images (*.jpg, *.jpeg, *.png, *.gif)", "*.jpg; *.jpeg; *.png; *.gif;");
 				
-				department.dataProvider=this.parentApplication.allDepartment;
+				var temp:ArrayCollection=new ArrayCollection(CommonUtils.clone(this.parentApplication.allDepartment.source));
+				var _init:Object = {label:'请选择',data:"-1"};
+				temp.addItemAt(_init,0);				
+				department.dataProvider=temp;
+				//department.selectedIndex=0;
 				
-				position.dataProvider=this.parentApplication.allRole;
+				
+				
+				
+				var temp1:ArrayCollection=new ArrayCollection(CommonUtils.clone(this.parentApplication.allRole.source));
+				var _init1:Object = {label:'请选择',data:"2"};
+				temp1.addItemAt(_init1,0);	
+				position.dataProvider=temp1;
+				//position.selectedIndex=2;
 				
 				callLater(initStaffWin);
 				
@@ -210,9 +221,17 @@
 				workDate.text = DateUtil.formatDate(teacher.teacherWorkDate as Date, "YYYY-MM-DD");
 				attendDate.text = DateUtil.formatDate(teacher.teacherAttendDate as Date, "YYYY-MM-DD");
 				teacherAddress.text = teacher.address;
+			//	Alert.show(teacher.teacherDepartment+"");
+				var temp:ArrayCollection=new ArrayCollection(CommonUtils.clone(this.parentApplication.allDepartment.source));
+				var _init:Object = {label:'请选择',data:"-1"};
+				temp.addItemAt(_init,0);
 				
-				department.selectedIndex = ComboxUtils.findIndex(this.parentApplication.allDepartment, teacher.teacherDepartment) ;
-				position.selectedIndex = ComboxUtils.findIndex(this.parentApplication.allRole, teacher.teacherPosition) ;
+				var temp1:ArrayCollection=new ArrayCollection(CommonUtils.clone(this.parentApplication.allRole.source));
+				var _init1:Object = {label:'请选择',data:"2"};
+				temp1.addItemAt(_init1,0);
+				
+				department.selectedIndex = ComboxUtils.findIndex(temp, teacher.teacherDepartment) ;
+				position.selectedIndex = ComboxUtils.findIndex(temp1, teacher.teacherPosition) ;
 		//		systemServiceRO.getDepartmentRoles(teacher.teacherDepartment);
 				staffInputDepartmentPosition.getDepartment();
 
@@ -254,6 +273,10 @@
 			
 			protected function validateForm(event:MouseEvent):void
 			{
+				if(parseInt(department.selectedItem.data)==-1){
+					Alert.show("部门不能为空啊！");
+					return ;
+				}
 				
 				var validatorErrorArray:Array = Validator.validateAll(validatorArr);
 				var isValidForm:Boolean = validatorErrorArray.length == 0;
@@ -276,6 +299,10 @@
 					teacher.teacherProfessionTitle = professionalTitle.text;
 					teacher.teacherSkillLevel = skillLevel.text;
 					teacher.teacherSkillLevelDate = DateFormatter.parseDateString(skillLevelDate.text);
+					
+					//Alert.show(department.selectedItem+"");
+					
+					
 					teacher.teacherDepartment = department.selectedItem.data;
 					teacher.teacherPosition = position.selectedItem.data;
 					teacher.teacherContactPhone = contactPhone.text;
@@ -1118,7 +1145,7 @@
 											<mx:GridItem>
 											</mx:GridItem>
 											<mx:GridItem horizontalAlign="right">
-												<s:Button click="validateForm(event)" label="保存" width="100" cornerRadius="" height="50" fontSize="24" fontWeight="bold" />
+												<mx:Button label="保 存" width="70" click="validateForm(event)" emphasized="true" />
 											</mx:GridItem>
 										</mx:GridRow>
 									
