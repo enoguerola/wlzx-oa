@@ -24,8 +24,8 @@ public class Constants {
 	public static String RESOURCE_WEB_INF = "WEB-INF";
 	
 	// prefix of file resource
-	public static String RESOURCE_FILE_PREFIX = "file:/";
-	
+//	public static String RESOURCE_FILE_PREFIX = "file:/";
+	public static String RESOURCE_FILE_PREFIX = System.getProperty("os.name").toUpperCase().indexOf("WINDOWS") > -1 ? "file:/" : "file:";
 	// file output path
 	public static String TEMP_FILE_OUTPUT_PATH = "temp";
 	public static  String TEMP_SWF_OUTPUT_PATH = "swf";
