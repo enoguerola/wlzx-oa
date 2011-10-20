@@ -342,10 +342,11 @@
 				child.setStyle("hideEffect", fadeOut);
 				
 				navigator.addChild(child as DisplayObject);
-				navigator.getTabAt(navigator.getChildIndex(child)).contextMenu=tabMenu;  
-				//添加双击tab页事件监听   
-				navigator.getTabAt(navigator.getChildIndex(child)).addEventListener(MouseEvent.DOUBLE_CLICK,tab_closeHandler);   
-				
+				if(navigator.selectedIndex!=0){
+					navigator.getTabAt(navigator.getChildIndex(child)).contextMenu=tabMenu;  
+					//添加双击tab页事件监听   
+					navigator.getTabAt(navigator.getChildIndex(child)).addEventListener(MouseEvent.DOUBLE_CLICK,tab_closeHandler);   
+				}
 				navigator.selectedIndex = navigator.getChildIndex(child);
 				navigator.setClosePolicyForTab(0, SuperTab.CLOSE_NEVER);
 			}
