@@ -55,25 +55,31 @@
 			private var _moduleInfo:IModuleInfo;
 			private var delayTimer:Timer;
 			private function init():void {
-			//	lockWin();
+				//	lockWin();
 				systemServiceRO.getAuthorizationMenusBySystem("oa");
-				initHomeTab();
-//				Alert.show(this.parentApplication.account);
+				
+				
+				//				Alert.show(this.parentApplication.account);
 				account.text=account.text.concat(this.parentApplication.account);
-//				roles.text=roles.text.concat(this.parentApplication.roles);
-//				mainRole.text=mainRole.text.concat(this.parentApplication.mainRole);
-				delayTimer=new Timer(2000);//延迟三秒读取application中用户信息
+				//				roles.text=roles.text.concat(this.parentApplication.roles);
+				//				mainRole.text=mainRole.text.concat(this.parentApplication.mainRole);
+				delayTimer=new Timer(4000);//延迟三秒读取application中用户信息
 				delayTimer.addEventListener(TimerEvent.TIMER, loadApplicationUserInfo);
 				delayTimer.start();
 				
 				
 				
-//				Alert.show("aa");
-//				lastLoginTime.text=lastLoginTime.text.concat(this.parentApplication.lastLoginTime);
-//				var timer:Timer = new Timer(1000);			
-//				timer.addEventListener(TimerEvent.TIMER, updateCurrentTime);				
-//				timer.start();
-//				currentTime.text=currentTime.text.concat(this.parentApplication.lastLoginTime);
+				//				Alert.show("aa");
+				//				lastLoginTime.text=lastLoginTime.text.concat(this.parentApplication.lastLoginTime);
+				//				var timer:Timer = new Timer(1000);			
+				//				timer.addEventListener(TimerEvent.TIMER, updateCurrentTime);				
+				//				timer.start();
+				//				currentTime.text=currentTime.text.concat(this.parentApplication.lastLoginTime);
+				initCompents();
+				
+				addGuiListeners(); 
+				
+				initHomeTab();
 				
 			}
 			private function loadApplicationUserInfo(event:TimerEvent):void{
@@ -82,8 +88,8 @@
 				if(rolesIds!=null&&rolesIds!=""){
 					var rolesIds_attr:Array=rolesIds.split(";");
 					for(var i:int=0;i<rolesIds_attr.length;i++){
- 						if(rolesIds_attr[i]!=null&&rolesIds_attr[i]!='')
- 						roleDesc+=(this.parentApplication.getRoleNameById(rolesIds_attr[i])+" | ");
+						if(rolesIds_attr[i]!=null&&rolesIds_attr[i]!='')
+							roleDesc+=(this.parentApplication.getRoleNameById(rolesIds_attr[i])+" | ");
 					}
 					
 				}
@@ -95,7 +101,7 @@
 					mainRole.text=mainRole.text.concat(mainRoleDesc);
 				}
 				
-
+				
 				var mainDepartmentDesc:String="";
 				if(parentApplication.currentUser.mainDR!=null){
 					var mainDepartmentId:String=parentApplication.currentUser.mainDR.departmentId;
@@ -114,16 +120,16 @@
 				
 			}
 			private function updateCurrentTime(event:TimerEvent):void{
-//				currentTime.text=CommonUtils.formatDate(new Date());
+				//				currentTime.text=CommonUtils.formatDate(new Date());
 			}
 			private function getAuthorizationMenusBySystem_resultHandler(event:ResultEvent):void {
 				//Alert.show("bb");
-
+				
 				var rootSystem:SystemModel =SystemModel(event.result);
-
+				
 				var menuList:ArrayCollection = ArrayCollection(rootSystem.menus);
 				CommonUtils.sortBySequence(menuList);
-//				trace(menuList.toString()+"");
+				//				trace(menuList.toString()+"");
 				//Alert.show("aaaaaa");
 				menus.historyManagementEnabled = true;
 				makeAccordion(menuList);
@@ -135,25 +141,25 @@
 				Alert.show(event.fault.faultString, 'Error');
 				
 			}
-//			[Embed(source="../WebContent/resources/oa/menuIcon/oa_inside_affair.png")]
-//			private const oa_inside_affair:Class;
-//			[Embed(source="../WebContent/resources/oa/menuIcon/oa_official_document.png")]
-//			private const oa_official_document:Class;
-//			[Embed(source="../WebContent/resources/oa/menuIcon/oa_public_affair.png")]
-//			private const oa_public_affair:Class;
-//			[Embed(source="../WebContent/resources/oa/menuIcon/oa_school_affair.png")]
-//			private const oa_school_affair:Class;
-//			[Embed(source="../WebContent/resources/oa/menuIcon/oa_system_management.png")]
-//			private const oa_system_management:Class;
-//			[Embed(source="../WebContent/resources/oa/menuIcon/human_resource.png")]
-//			private const human_resource:Class;
-//			[Embed(source="../WebContent/resources/oa/menuIcon/personal_office.png")]
-//			private const personal_office:Class;
+			//			[Embed(source="../WebContent/resources/oa/menuIcon/oa_inside_affair.png")]
+			//			private const oa_inside_affair:Class;
+			//			[Embed(source="../WebContent/resources/oa/menuIcon/oa_official_document.png")]
+			//			private const oa_official_document:Class;
+			//			[Embed(source="../WebContent/resources/oa/menuIcon/oa_public_affair.png")]
+			//			private const oa_public_affair:Class;
+			//			[Embed(source="../WebContent/resources/oa/menuIcon/oa_school_affair.png")]
+			//			private const oa_school_affair:Class;
+			//			[Embed(source="../WebContent/resources/oa/menuIcon/oa_system_management.png")]
+			//			private const oa_system_management:Class;
+			//			[Embed(source="../WebContent/resources/oa/menuIcon/human_resource.png")]
+			//			private const human_resource:Class;
+			//			[Embed(source="../WebContent/resources/oa/menuIcon/personal_office.png")]
+			//			private const personal_office:Class;
 			
-
+			
 			private function makeAccordion(menuList:ArrayCollection):void{
 				var vbox:VBox =null;
-			
+				
 				var tree:Tree =null;
 				for (var i:int = 0; i < menuList.length; i++){	
 					var _menu:MenuModel = MenuModel(menuList.getItemAt(i));						
@@ -163,14 +169,14 @@
 					vbox.setStyle("borderVisible",false);
 					
 					vbox.label=_menu.name;
-//					//bad code
-//					if(_menu.menuIcon=='oa_system_management')nc.icon=oa_system_management;
-//					else if(_menu.menuIcon=='oa_school_affair')nc.icon=oa_school_affair;
-//					else if(_menu.menuIcon=='oa_inside_affair')nc.icon=oa_inside_affair;
-//					else if(_menu.menuIcon=='oa_public_affair')nc.icon=oa_public_affair;
-//					else if(_menu.menuIcon=='oa_official_document')nc.icon=oa_official_document;
-//					else if(_menu.menuIcon=='human_resource')nc.icon=human_resource;
-//					else if(_menu.menuIcon=='personal_office')nc.icon=personal_office;
+					//					//bad code
+					//					if(_menu.menuIcon=='oa_system_management')nc.icon=oa_system_management;
+					//					else if(_menu.menuIcon=='oa_school_affair')nc.icon=oa_school_affair;
+					//					else if(_menu.menuIcon=='oa_inside_affair')nc.icon=oa_inside_affair;
+					//					else if(_menu.menuIcon=='oa_public_affair')nc.icon=oa_public_affair;
+					//					else if(_menu.menuIcon=='oa_official_document')nc.icon=oa_official_document;
+					//					else if(_menu.menuIcon=='human_resource')nc.icon=human_resource;
+					//					else if(_menu.menuIcon=='personal_office')nc.icon=personal_office;
 					vbox.icon=IconUtility.getClass(vbox,_menu.menuIcon,16,16);
 					if(ArrayCollection(_menu.children).length>0){
 						var resultXML:String=buildSubMenus(_menu);
@@ -192,7 +198,7 @@
 					}
 					menus.addChild(vbox);
 				}
-								
+				
 			}
 			public function dbClickMenuItem(event:Event):void{ 
 				var tree:Tree=Tree(event.target);
@@ -204,11 +210,11 @@
 						tree.expandChildrenOf(tree.selectedItem,true);
 					}
 					
-
+					
 				}
 				//	addTab(selectedNode.@symbol,selectedNode.@label,nav,selectedNode.@url,null,selectedNode.@parms);
 				//else {
-					//Alert.show("a");
+				//Alert.show("a");
 				//}
 				//Alert.show(selectedNode.@label);
 			} 
@@ -216,9 +222,9 @@
 				var selectedNode:XML=Tree(event.target).selectedItem as XML; 
 				if(selectedNode.children().length()==0)
 					addTab(selectedNode.@symbol,selectedNode.@label,nav,selectedNode.@url,null,selectedNode.@parms);
-//				else {
-//					Alert.show("a");
-//				}
+				//				else {
+				//					Alert.show("a");
+				//				}
 				//Alert.show(selectedNode.@label);
 			} 
 			private function buildSubMenus(menu:MenuModel):String{
@@ -262,8 +268,8 @@
 					var obj:* = navigator.getChildAt(i);
 					if(obj.name == symbol){
 						navigator.selectedIndex = i;
-					//	obj.child.search();
-					//	obj.child.dispatchEvent(new BaseEvent(BaseEvent.Reload));
+						//	obj.child.search();
+						//	obj.child.dispatchEvent(new BaseEvent(BaseEvent.Reload));
 						//Alert.show(obj.child);
 						obj.child.search();
 						if(symbol == "noticeDetial"){
@@ -299,31 +305,31 @@
 					//	Alert.show("模块加载错误，这可能是用户长时间未操作导致的用户认证过期，请重新登录操作。如果仍存在问题，请检查网络或联系系统管理员","提示",Alert.YES,null,exitCallBack);
 					//					Alert.show("你确定要退出系统吗?","确认",Alert.YES,null,exitCallBack);
 				}); 
-//				var bar:ProgressBar=new ProgressBar();
-//				bar.minimum=0;
-//				bar.visible=true;
-//				bar.maximum=100;
-//				bar.percentWidth=100;
-//				bar.direction=ProgressBarDirection.RIGHT;
-//				
-//				bar.labelPlacement="bottom"
-//				child.addEventListener( ModuleEvent.PROGRESS,function(e:ModuleEvent):void{
-//					if(!child.contains(bar))child.addChild(bar);
-//					bar.mode=ProgressBarMode.POLLED;
-//					
-//					bar.label = "当前模块加载进度："+Math.round(e.bytesLoaded * 100 / e.bytesTotal) + "%";
-////					Alert.show(bar.label);
-//					bar.setProgress(e.bytesLoaded,e.bytesTotal);	
-//					bar.validateNow();
-//				});
+				//				var bar:ProgressBar=new ProgressBar();
+				//				bar.minimum=0;
+				//				bar.visible=true;
+				//				bar.maximum=100;
+				//				bar.percentWidth=100;
+				//				bar.direction=ProgressBarDirection.RIGHT;
+				//				
+				//				bar.labelPlacement="bottom"
+				//				child.addEventListener( ModuleEvent.PROGRESS,function(e:ModuleEvent):void{
+				//					if(!child.contains(bar))child.addChild(bar);
+				//					bar.mode=ProgressBarMode.POLLED;
+				//					
+				//					bar.label = "当前模块加载进度："+Math.round(e.bytesLoaded * 100 / e.bytesTotal) + "%";
+				////					Alert.show(bar.label);
+				//					bar.setProgress(e.bytesLoaded,e.bytesTotal);	
+				//					bar.validateNow();
+				//				});
 				
-//				fade = new Fade();
+				//				fade = new Fade();
 				// Rotate effect
-//				rotate = new Rotate();
-//				rotate.angleFrom = -180;
-//				rotate.angleTo = 0;
-//				rotate.easingFunction = Elastic.easeInOut;
-//				rotate.duration = 1000;
+				//				rotate = new Rotate();
+				//				rotate.angleFrom = -180;
+				//				rotate.angleTo = 0;
+				//				rotate.easingFunction = Elastic.easeInOut;
+				//				rotate.duration = 1000;
 				var fadeIn:Fade = new Fade();
 				fadeIn.duration=100;
 				fadeIn.alphaFrom=0;
@@ -336,15 +342,19 @@
 				child.setStyle("hideEffect", fadeOut);
 				
 				navigator.addChild(child as DisplayObject);
+				navigator.getTabAt(navigator.getChildIndex(child)).contextMenu=tabMenu;  
+				//添加双击tab页事件监听   
+				navigator.getTabAt(navigator.getChildIndex(child)).addEventListener(MouseEvent.DOUBLE_CLICK,tab_closeHandler);   
+				
 				navigator.selectedIndex = navigator.getChildIndex(child);
 				navigator.setClosePolicyForTab(0, SuperTab.CLOSE_NEVER);
 			}
-
-
 			
-//			protected function onModuleProgress (e:ModuleEvent) : void {    
-//				ProgressBashow("[MyFlexHero]:ModuleEvent.PROGRESS 当前已经加载了: " + e.bytesLoaded + " of " + e.bytesTotal + " loaded.");   
-//			} 
+			
+			
+			//			protected function onModuleProgress (e:ModuleEvent) : void {    
+			//				ProgressBashow("[MyFlexHero]:ModuleEvent.PROGRESS 当前已经加载了: " + e.bytesLoaded + " of " + e.bytesTotal + " loaded.");   
+			//			} 
 			private var window:WlzxLockWin=null;
 			private function lockWin():void{
 				
@@ -366,7 +376,7 @@
 			private function exitSystem():void{
 				// TODO Auto-generated method stub
 				Alert.show("你确定要退出系统吗?","确认",Alert.YES | Alert.NO,null,exitCallBack);
-
+				
 			}
 			//具体执行退出操作
 			private function exitCallBack(event:CloseEvent):void
@@ -377,23 +387,23 @@
 				}
 			}
 			
-
+			
 			protected function image_mouseOverHandler(event:MouseEvent):void
 			{
 				event.target.alpha=2;
 				event.target.width+=2;
 				event.target.height+=2;
 			}
-
-
+			
+			
 			protected function image_mouseOutHandler(event:MouseEvent):void
 			{
 				event.target.alpha=1.5;
 				event.target.width-=2;
 				event.target.height-=2;
 			}
-
-
+			
+			
 			protected function nav_changeHandler(event:IndexChangedEvent):void
 			{
 				// TODO Auto-generated method stub
@@ -404,10 +414,116 @@
 					m.search();
 				}
 			}
-
+			import flexlib.events.SuperTabEvent;
+			private var tabMenu:ContextMenu;   
+			private var  close_cur:String="关闭当前页";   
+			private var  close_other:String="关闭其他页";   
+			private var  close_all:String="关闭所有页";   
+			private var closeTabItem:ContextMenuItem;   
+			private var closeOthersItem:ContextMenuItem;   
+			private var closeAllItem:ContextMenuItem;   
+			//初始化某些组件   
+			private function initCompents():void{   
+				tabMenu = new ContextMenu();   
+				closeTabItem = new ContextMenuItem(close_cur);   
+				closeOthersItem = new ContextMenuItem(close_other);   
+				closeAllItem = new ContextMenuItem(close_all);   
+				tabMenu.hideBuiltInItems();   
+				tabMenu.customItems.push(closeTabItem);   
+				tabMenu.customItems.push(closeOthersItem);   
+				tabMenu.customItems.push(closeAllItem);   
+				
+				
+				
+			}   
+			private function addGuiListeners():void{   
+				closeTabItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT,tabRightMenuHandler);   
+				closeOthersItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT,tabRightMenuHandler);   
+				closeAllItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT,tabRightMenuHandler);   
+				tabMenu.addEventListener(ContextMenuEvent.MENU_SELECT,tabMenuHandler);   
+				//nav.addEventListener(SuperTabEvent.TAB_CLOSE,closeSuperTabHandler);   
+				
+			}
+			//处理tab右键关闭事件   
+			private function tabRightMenuHandler(ev:ContextMenuEvent):void{   
+				var cap:String = (ev.target as ContextMenuItem).caption;   
+				var home:* = nav.getChildAt(0);   
+				var idx:int;   
+				switch(cap){   
+					case close_cur:   
+						idx = nav.selectedIndex;   
+						if(idx >= 0)   
+							nav.removeChildAt(idx);   
+						break;   
+					case close_other:   
+						var selected:* = nav.selectedChild;   
+						for each(var cnt:* in nav.getChildren()){   
+						if(cnt != selected && cnt != home){   
+							nav.removeChild(cnt);   
+						}   
+					}   
+						break;   
+					case close_all:   
+						//                      nav.removeAllChildren();   
+						for each(var tab:* in nav.getChildren()){   
+						if(tab != home)   
+							nav.removeChild(tab);   
+					}   
+						break;   
+				}   
+			}   
+			
+			private function tabMenuHandler(ev:ContextMenuEvent):void{   
+				var tag:DisplayObject=ev.mouseTarget as DisplayObject;   
+				var idx:uint=nav.selectedIndex;   
+				if(tag){   
+					closeTabItem.visible = true;   
+					closeOthersItem.visible = true;   
+					closeAllItem.visible = true;   
+					if(idx==0)   
+						closeTabItem.enabled = false;   
+					else  
+						closeTabItem.enabled = true;   
+					
+					if(nav.numChildren==1 || (nav.numChildren==2 && idx>0))   
+						closeOthersItem.enabled = false;   
+					else  
+						closeOthersItem.enabled = true;   
+					
+					if(nav.numChildren==1 && idx==0)   
+						closeAllItem.enabled = false;   
+					else  
+						closeAllItem.enabled = true;   
+					
+					return;   
+				}   
+				closeTabItem.visible = false;   
+				closeOthersItem.visible = false;   
+				closeAllItem.visible = false;   
+			}  
+			//给tab页添加菜单   
+			private function addTabMenu():void{   
+				//设置首页不可关闭   
+				nav.setClosePolicyForTab(0,SuperTab.CLOSE_NEVER);   
+				for(var i:uint=0;i<nav.getChildren().length;i++){   
+					var tabBtn:mx.controls.Button=nav.getTabAt(i);   
+					//添加双击tab页事件监听   
+					//tabBtn.addEventListener(MouseEvent.DOUBLE_CLICK,maxsizeHandler);   
+					tabBtn.contextMenu=tabMenu;                    
+				}   
+			}   
+			
+			protected function tab_closeHandler(event:MouseEvent):void
+			{
+				var idx:int = nav.selectedIndex;   
+				if(idx >= 0)   
+					nav.removeChildAt(idx);   
+				
+			}
+			
 		]]>
 	</fx:Script>
-
+	
 	<!--************* 顶部横幅  ***************-->
 	<s:BorderContainer width="100%" height="65"  styleName="TopBannerStyle" >
 		<s:layout>
@@ -435,9 +551,9 @@
 			</s:HGroup>
 			<s:Label id="roles" text="所有职务："/>
 			<!--<s:HGroup width="35%">
-				<s:Label id="lastLoginTime" text="上次登录："/>
-				<s:Label text="当前时间："/>
-				<s:Label id="currentTime" text=""/>
+			<s:Label id="lastLoginTime" text="上次登录："/>
+			<s:Label text="当前时间："/>
+			<s:Label id="currentTime" text=""/>
 			</s:HGroup>-->
 			
 		</s:VGroup>
