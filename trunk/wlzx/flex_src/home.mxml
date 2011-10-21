@@ -3,7 +3,7 @@
 			   xmlns:s="library://ns.adobe.com/flex/spark" 
 			   xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" preloader="system.component.Preloader" height="100%"  pageTitle="浙江省温岭中学"  preinitialize="init();" >
 	<s:layout>
-		<s:BasicLayout/>
+		<s:BasicLayout/> 
 	</s:layout>
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
@@ -11,7 +11,7 @@
 		</mx:HTTPService> 
 		<mx:RemoteObject id="securityUserHolder" destination="securityUserHolder"  fault="securityUserHolder_fault_handler(event);">
 			<mx:method name="getCurrentUser"  concurrency="last"  result="getCurrentUserResult(event);" />
-		</mx:RemoteObject>
+		</mx:RemoteObject> 
 		<mx:RemoteObject id="teacherAccountBridgeServiceRO" destination="teacherAccountBridgeServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 			<mx:method name="teacherAccountGetAll"  concurrency="last"  result="teacherAccountGetAll_resultHandler(event);" />
 		</mx:RemoteObject>

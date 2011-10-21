@@ -67,7 +67,7 @@
 				delayTimer.addEventListener(TimerEvent.TIMER, loadApplicationUserInfo);
 				delayTimer.start();
 				
-				
+				 
 				
 				//				Alert.show("aa");
 				//				lastLoginTime.text=lastLoginTime.text.concat(this.parentApplication.lastLoginTime);
