@@ -75,7 +75,7 @@ public interface ReceiptService {
   
   
   @SuppressWarnings("unchecked")
-  ReceiptModel addReceipt(ReceiptModel model, List list)throws ServiceException;
+  ReceiptModel addReceipt(ReceiptModel model, String list)throws ServiceException;
   ReceiptModel updateReceipt(ReceiptModel model,String adds,String removes)throws ServiceException;
   boolean addNextWorkFlows(String receiptId,String flowType,String userIds);
   boolean finishWorkFlow(String flowId,String state,String text)throws ServiceException;

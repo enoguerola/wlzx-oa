@@ -56,11 +56,13 @@
       <set name="fileFlows" lazy="false" cascade="delete" inverse="true" table="wlzx_oa_sendingfile_flow" order-by="creation_date">
         	<key column="sendingfile_id" not-null="true" />
         	<one-to-many not-found="ignore" class="system.wlims.oa.entity.sendingFiles.FileFlowModel" /> 
-       </set>	
-     <set name="attachments" lazy="false" table="wlzx_oa_sendingfiles_attachment" cascade="all-delete-orphan" inverse="false">
-        	<key column="sendingfile_id" not-null="true" />
-        	<many-to-many not-found="ignore"  column="attachment_id" class="system.wlims.oa.entity.notice.AttachmentModel" /> 
-     </set> 
+      </set>	
+    
+     
+     <set name="attachments" lazy="false"  table="wlzx_oa_attachment" cascade="none" where="belong_object='SendingFileModel'" inverse="true" >
+			<key column="belong_object_id" not-null="true" />
+			<one-to-many not-found="ignore" class="system.wlims.oa.entity.notice.AttachmentModel"/> 
+		</set> 
     
     </class>
 </hibernate-mapping>

@@ -8,7 +8,7 @@ import system.wlims.oa.entity.notice.NoticeModel;
 public interface NoticeService {
 	
 	@SuppressWarnings("unchecked")
-	public void addNotice(NoticeModel notice, List list);
+	public void addNotice(NoticeModel notice, String attachmentIds);
 	
 	public boolean updateNotice(NoticeModel notice, String adds,String removes);
 	

@@ -31,7 +31,7 @@ public class ConferenceServiceImpl implements ConferenceService {
 	private TeacherService teacherService;
 	@SuppressWarnings("unchecked")
 	@Override
-	public void addConference(ConferenceModel conference, List list) {
+	public void addConference(ConferenceModel conference, String attachmentIds) {
 		// TODO Auto-generated method stub
 //		UserModel userModel = SecurityUserHolder.getCurrentUser();
 //		conference.setLastEditorId(userModel.getId());
@@ -47,15 +47,33 @@ public class ConferenceServiceImpl implements ConferenceService {
 //		}
 		conference.setApplyDateTime(new Date());
 		conference.setApplyStatus(ConferenceModel.EStatus.Booking.getValue());
-		if(list != null && list.size() > 0){
-			for(Object id : list){
-				 //	System.out.println(id);
-				AttachmentModel attachmentModel = attachmentDAO.get((String)id);
-				conference.getAttachments().add(attachmentModel);
-			}
-		}
-			
 		conferenceDAO.saveOrUpdate(conference);
+		
+		/*if(list != null && !list.equalsIgnoreCase("")){
+			String[] temp = list.split(";");
+			for(String id : temp){
+				 //	System.out.println(id);
+				AttachmentModel attachmentModel = attachmentDAO.get(id.toString());
+				attachmentModel.setBelongObject("ConferenceModel");
+				attachmentModel.setBelongObjectId(conference.getId());
+				attachmentDAO.saveOrUpdate(attachmentModel);
+				//conference.getAttachments().add(attachmentModel);
+			}
+		}*/
+		if(StringUtils.isNotEmpty(attachmentIds)){
+			String[] ids=attachmentIds.split(";");
+			for(int i=0;i<ids.length;i++){
+				AttachmentModel attachment=attachmentDAO.get(ids[i]);
+				attachment.setBelongObject("ConferenceModelFJ");
+				attachment.setBelongObjectId(conference.getId());
+				attachmentDAO.saveOrUpdate(attachment);
+			}
+			
+		}
+		ConferenceModel newModel=conferenceDAO.get(conference.getId());
+		conferenceDAO.merge(newModel);
+		
+		
 	}
 
 	@Override
@@ -303,36 +321,10 @@ public class ConferenceServiceImpl implements ConferenceService {
 	}
 
 	@Override
-	public boolean saveSummary(String id, String adds,String removes) {
+	public boolean saveSummary(String id, String fj ,String zj) {
 		// TODO Auto-generated method stub
 		ConferenceModel conference=conferenceDAO.get(id);
-		if(StringUtils.isNotEmpty(adds)){
-			String[] adds_attr=adds.split(";");
-			for(int i=0;i<adds_attr.length;i++){
-				String tempid=adds_attr[i];
-				if(StringUtils.isNotEmpty(tempid)){
-					AttachmentModel attachmentModel = attachmentDAO.get(tempid);
-					if(attachmentModel!=null)
-					conference.getSummaryAttachments().add(attachmentModel);
-				}
-			}
-		}
-		if(StringUtils.isNotEmpty(removes)){
-			String[] removes_attr=removes.split(";");
-			for(int i=0;i<removes_attr.length;i++){
-				String tempid=removes_attr[i];
-				if(StringUtils.isNotEmpty(tempid)){
-					AttachmentModel attachmentModel =null;
-					for(AttachmentModel a:conference.getSummaryAttachments()){
-						if(a.getId().equals(tempid)){
-							attachmentModel=a;
-						}
-					}
-					if(attachmentModel!=null)
-					conference.getSummaryAttachments().remove(attachmentModel);
-				}
-			}
-		}
+		
 //		if(conference!=null&&list != null && list.size() > 0){
 //			for(Object aid : list){
 //				System.out.println(aid);
@@ -341,7 +333,26 @@ public class ConferenceServiceImpl implements ConferenceService {
 //			}
 //		}
 			
-		conferenceDAO.saveOrUpdate(conference);
+		if(StringUtils.isNotEmpty(fj)){
+			String[] ids=fj.split(";");
+			for(int i=0;i<ids.length;i++){
+				AttachmentModel attachment=attachmentDAO.get(ids[i]);
+				attachment.setBelongObject("ConferenceModelFJ");
+				attachment.setBelongObjectId(conference.getId());
+				attachmentDAO.saveOrUpdate(attachment);
+			}
+		}
+		
+		if(StringUtils.isNotEmpty(zj)){
+			String[] ids=zj.split(";");
+			for(int i=0;i<ids.length;i++){
+				AttachmentModel attachment=attachmentDAO.get(ids[i]);
+				attachment.setBelongObject("ConferenceModelZJ");
+				attachment.setBelongObjectId(conference.getId());
+				attachmentDAO.saveOrUpdate(attachment);
+			}
+		}
+		conferenceDAO.merge(conference);
 		return true;
 	}
 	public boolean sendConferenceMessages(String id) {

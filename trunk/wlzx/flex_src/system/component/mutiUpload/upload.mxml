@@ -1,387 +1,229 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%" fontSize="12" backgroundAlpha="0"  creationComplete="initApp()">
-	<mx:Metadata>
-		[Event(type="system.event.UploadEvent", name="deleted")]
-		[Event(type="system.event.UploadEvent", name="uploaded")]
-	</mx:Metadata>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%" 
+		 creationComplete="moduleInit();"  verticalAlign="middle" horizontalAlign="center" xmlns:ui="ui.*">
+	
+	<mx:RemoteObject id="attachmentServiceRO" destination="attachmentServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+		<mx:method name="remove"  concurrency="last"  result="remove_resultHandler(event);" />
+	</mx:RemoteObject>
+	
 	<mx:Script>
-		<![CDATA[
-			import flash.events.Event;
+		
+		<![CDATA[  
+			import com.adobe.serialization.json.JSON;
+			
 			import flash.events.MouseEvent;
-			import flash.external.ExternalInterface;
-			import flash.net.FileFilter;
-			import flash.net.FileReference;
-			import flash.net.FileReferenceList;
-			import flash.net.URLRequest;
+			import flash.events.ProgressEvent;
 			
 			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
 			import mx.events.CloseEvent;
-			import mx.events.IndexChangedEvent;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
 			
-			import system.event.UploadEvent;
-			import system.utils.CommonUtils;
-			public var fileRef:FileReferenceList = new FileReferenceList();
-			public var allTypes:Array;
-			public var urlRequest:URLRequest = new URLRequest("spring/attachmentUpload.action");			
-			public var uploadImg_num:int = 0;
-			public var upload_size:Number = 0;
-			public var upload_size_total:Number = 0;       
-			private var info:Array = new Array();
+			import basic.utils.LockWinTool;
 			
-			public var idList:Array = new Array();
-			public var addIds:String = "";
-			public var removeIds:String = "";
-			
-			//===================
-			// 功能设置
-			//===================
-						
-			/* 允许一次性上传的最大图片数 ********************/
-			private var upload_maxCount:int = 50;
-			
-			
-			
-			//===================
-			// 浏览本地文件
-			//===================
-			internal function browseHandler(e:Event):void{				
-				fileRef.browse(allTypes);				
-			}
-			
-			//===================
-			// 选中文件,关闭对话框
-			//===================
-			internal function selectHandler(e:Event):void{							
-				var imageNum:int = fileRef.fileList.length;
-				if(imageNum>upload_maxCount){
-					Alert.show("一次最多只能上传"+upload_maxCount+"张图片","提示信息");
-					return;
-				}
-				info = new Array();	
-				var sizeMum:Number = 0;
-				delete_btn.enabled = true;
-				add_btn.enabled = true;
-				for(var i:Number=0;i<imageNum;i++){
-					info.push({label:fileRef.fileList[i].name,data:fileRef.fileList[i].size/1000+"KB",width:0});
-					sizeMum+=fileRef.fileList[i].size;					
-				}			
-				process_list.dataProvider = info;
-				tip_txt.text="共"+imageNum+"张图片，"+(sizeMum/(1000*1000)).toString().slice(0,-4)+"MB";
-			}
-			
-			//===================
-			// 单个文件上传结束
-			//===================
-			internal function completeHandler():void{
-				//browse_btn.enabled = false;
-				fileRef.fileList[uploadImg_num].removeEventListener(ProgressEvent.PROGRESS,onProcessHandler);
-				fileRef.fileList[uploadImg_num].removeEventListener(Event.COMPLETE,onComplete);	
-				upload_size+=fileRef.fileList[uploadImg_num].size;
-				//Alert.show(processBar_width.width + "");
-				processBar_Total.width=(upload_size/upload_size_total)*processBar_width.width;
-				tip_txt.text="已上传" + int(upload_size*100/upload_size_total) + "%  (" + (uploadImg_num+1) +"/" + fileRef.fileList.length + ")";
-				uploadImg_num++;
-				process_list.scrollToIndex(uploadImg_num);
-				if(uploadImg_num>=fileRef.fileList.length){
-//					ExternalInterface.call("uploadCompelete");
-					return;
-				} 
-				upLoadImg(uploadImg_num);
-			}
-			internal function onComplete(e:Event):void{
-				completeHandler();
-			}
-			
-			//===================
-			// 监听上传进度
-			//===================
-			internal function onProcessHandler(e:ProgressEvent):void{					
-				var proc:uint = e.bytesLoaded/e.bytesTotal*100;
-				var num:Number = uploadImg_num;				
-				if(process_list.indexToItemRenderer(num)!=null)
-				{
-					process_list.indexToItemRenderer(num).document.processBar.width = proc*0.01*245;
-					info[num].width = proc*0.01*245;										
-				}			
-			}
-			
-			//===================
-			// 执行上传操作
-			//===================
-			internal function upLoadImg(oNum:int):void{
-				try
-				{	
-					fileRef.fileList[oNum].upload(urlRequest, "file");
-					fileRef.fileList[oNum].addEventListener(Event.COMPLETE,onComplete);						
-					fileRef.fileList[oNum].addEventListener(ProgressEvent.PROGRESS,onProcessHandler);	
-					fileRef.fileList[oNum].addEventListener(IOErrorEvent.IO_ERROR,ioErrorHandler); 
-					fileRef.fileList[oNum].addEventListener(DataEvent.UPLOAD_COMPLETE_DATA, uploadComplete);
-				}
-				catch(e:Event){
-					completeHandler();
-				}				
-			}
-			
-			private function uploadComplete(e:DataEvent):void   
-			{   
-				var xmlResponse:XML = XML(e.data);
-				var id:String = xmlResponse.elements("field").toString()
-				idList.push(id);
-				//idList.push(id);
-				// dispatchEvent completed
-				dispatchEvent( new UploadEvent( UploadEvent.COMPLETED, id, false, false ) );
-				
-				
-				addIds+=id+";";
-				
-				
-			}
-			
-			//===================
-			// 上传出错
-			//===================
-			private function ioErrorHandler(e:IOErrorEvent):void   
-			{   
-				Alert.show(e.toString());   
-			}
-			
-			//===================
-			// 点击上传按钮
-			//===================
-			public function uploadHandler():void{
-				//if(uploadImg_num!=0) return;
-				if(process_list.dataProvider==null || info.length<=0){
-					Alert.show("您还未选择图片!","提示信息");
-					return;
-				}		
-				for(var i:Number=0;i<fileRef.fileList.length;i++){				
-					upload_size_total+=fileRef.fileList[i].size;										
-				}				
-				//set upload_size
-				for(i=0; i< uploadImg_num;i++)
-				{
-					upload_size += fileRef.fileList[i].size;
-				}
-				upLoadImg(uploadImg_num);	
-				var temp:ArrayCollection=uploadAlready_list.dataProvider as ArrayCollection;
-				if(temp==null)temp=new ArrayCollection();
-				
-				for each(var o:Object in info){
-					temp.addItem({label:o.label,data:o.data,width:o.width});
-				}
-				uploadAlready_list.dataProvider=temp;
-			}
-			
-			//===================
-			// 执行删除操作
-			//===================
-			internal function deleteHandler(e:Event):void{
-				if(process_list.selectedIndices.length<=0){
-					Alert.show("您还没有选择图片","提示信息");
-					return;
-				}
-				Alert.show("您确定要删除选定图片？","提示信息",Alert.YES|Alert.NO,process_list,alertHandler,null,Alert.NO);
-				function alertHandler(evt:CloseEvent):void{
-					if(evt.detail==Alert.YES){
-						deleteItem();
-					} else {
-												
-					}
-				}
-				function deleteItem():void{
-					var selectItems:Array = process_list.selectedItems;
-					var selectIndex:Array = process_list.selectedIndices;
-					var iCount:int = selectItems.length;
-					var sizeMum:Number = 0;
-					for(var i:int=0;i<iCount;i++){
-						info.splice(selectIndex[i],1);
-						fileRef.fileList.splice(selectIndex[i],1);
-						//add by yufeng
-						if(i < uploadImg_num)
-						{
-							//delete uploaded file
-							uploadImg_num --;
-							dispatchEvent( new UploadEvent( UploadEvent.DELETED, idList[i], false, false ) );
-						}else
-						{
-							
-						}
-						//idList.splice(selectIndex[i],1);	
-					}
-					for(var j:Number=0;j<fileRef.fileList.length;j++){						
-						sizeMum+=fileRef.fileList[j].size;					
-					}			
-					process_list.dataProvider = info;
-					tip_txt.text="共"+fileRef.fileList.length+"张图片，"+(sizeMum/(1000*1000)).toString().slice(0,-4)+"MB";
-										
-					if(info.length<=0){
-						delete_btn.enabled = false;
-					}					
-				}
-			}	
-			
-			//===================
-			// 执行添加操作
-			//===================
-			internal function addHandler(e:Event):void{
-				var addFileRef:FileReferenceList = new FileReferenceList();
-				var sameImgIndex:Array = new Array();
-				var beforeAddLength:Number = fileRef.fileList.length;				
-				addFileRef.browse(allTypes);
-				addFileRef.addEventListener(Event.SELECT,addSelectHandler);
-				
-				function addSelectHandler():void{										
-					if(addFileRef.fileList.length+fileRef.fileList.length>upload_maxCount){
-						Alert.show("一次最多只能上传"+upload_maxCount+"张图片","提示信息");
-						return;
-					}					
-					for(var i:int=0;i<addFileRef.fileList.length;i++){
-						for(var j:int=0;j<fileRef.fileList.length;j++){
-							if(fileRef.fileList[j].name==addFileRef.fileList[i].name){
-								sameImgIndex.push(i);								
-							}
-						}
-					}
-				//	Alert.show(sameImgIndex.toString());					
-					for(var k:Number=0;k<addFileRef.fileList.length;k++){	
-						fileRef.fileList.push(addFileRef.fileList[k]);
-						info.push({label:addFileRef.fileList[k].name,data:addFileRef.fileList[k].size/1000+"KB",width:0});
-					}
-					for(var m:Number=0;m<sameImgIndex.length;m++){
-						fileRef.fileList.splice(beforeAddLength+sameImgIndex[m]-m,1);
-						info.splice(beforeAddLength+sameImgIndex[m]-m,1);
-					}					
-					var imageNum:int = fileRef.fileList.length;
-				//	Alert.show(imageNum.toString());
-					var sizeMum:Number = 0;
-					for(var l:Number=0;l<imageNum;l++){						
-						sizeMum+=fileRef.fileList[l].size;					
-					}			
-					process_list.dataProvider = info;
-					tip_txt.text="共"+imageNum+"张图片，"+(sizeMum/(1000*1000)).toString().slice(0,-4)+"MB";	
-				}				
-			}
-			
-			//===================
-			// 初始化函数
-			//===================		
-			internal function initApp():void{
-				var imageTypes:FileFilter = new FileFilter("Images","*.jpg;*.jpeg;*.gif;*.png");
-				var docTypes:FileFilter = new FileFilter("Documents","*.doc;*.docx;*.xls;*.xlsx;*.pdf");
-				allTypes = new Array(imageTypes, docTypes);
-				
-				browse_btn.addEventListener(MouseEvent.CLICK,browseHandler);
-				fileRef.addEventListener(Event.SELECT,selectHandler);
-				delete_btn.addEventListener(MouseEvent.CLICK,deleteHandler);
-				delete_already_btn.addEventListener(MouseEvent.CLICK,deleteAlreadyHandler);
-				add_btn.addEventListener(MouseEvent.CLICK,addHandler);	
-//				save.addEventListener(MouseEvent.CLICK,uploadHandler);	
-				/* 注册供js调用的函数 ********************/
-//				ExternalInterface.addCallback("uploadImg",uploadHandler);		
-			}
-			
-			//===================
-			// 执行已添加附件删除操作
-			//===================
-			private function deleteAlreadyHandler(e:Event):void{
-				if(uploadAlready_list.selectedIndices.length<=0){
-					Alert.show("您还没有选择图片","提示信息");
-					return;
-				}
-				Alert.show("您确定要删除选定图片？","提示信息",Alert.YES|Alert.NO,uploadAlready_list,alertHandler,null,Alert.NO);
-				function alertHandler(evt:CloseEvent):void{
-					if(evt.detail==Alert.YES){
-						deleteItems();
-					} else {
-						
-					}
-				}
-				function deleteItems():void{
-					var selectItems:Array = uploadAlready_list.selectedItems;
-					var selectIndex:Array = uploadAlready_list.selectedIndices;
-					var iCount:int = selectItems.length;
-					var sizeMum:Number = 0;
-					for(var i:int=0;i<iCount;i++){
-						//Alert.show(selectItems[i].id);
-						dispatchEvent( new UploadEvent( UploadEvent.DELETED, selectItems[i].id, false, false ) );
-						removeIds+=selectItems[i].id+";";
-						//idList.splice(i,1);
-					}
-					//Alert.show(uploadAlready_list.dataProvider.length+"c");
-					var temp:ArrayCollection=uploadAlready_list.dataProvider as ArrayCollection;
-//					var uploadAlreadyList:ArrayCollection=new ArrayCollection(CommonUtils.clone(temp));
-				//	Alert.show(temp.length+"d");
-					for(var j:int=0;j<iCount;j++){
-						//Alert.show(selectIndex[j]+"a");
-						temp.removeItemAt(selectIndex[j]);
-						//idList.splice();
-					}
-				//	Alert.show(temp.length+"b");
-					uploadAlready_list.dataProvider=temp;
-				
-								
-				}
-			}	
-			public function empty():void{
-//			
-				uploadImg_num = 0;
-				upload_size = 0;
-				upload_size_total = 0;       
-				info = new Array()			
-				idList = new Array();
-				addIds = "";
-				removeIds = "";
-				process_list.dataProvider=null;
-				uploadAlready_list.dataProvider=null;
-				fileRef = new FileReferenceList();
-				initApp();
-				browse_btn.enabled = true;
-				tip_txt.text='';
+			import basic.utils.DateTimeTool;
+			private var myFileRef:FileReferenceList = new FileReferenceList();
+			private var urlRequest:URLRequest = new URLRequest();
+			[Binary]
+			public var showControl:Boolean=false;//控制添加与删除按钮是否可见
+			<!-- ***模块初始化*** -->
+			public function moduleInit():void {
+				var url:String =parentApplication.homeUrl+'servlet/attachmentUpload.action';
+				urlRequest.url=url;
+				myFileRef.addEventListener(Event.SELECT,chooseHandler);//监听上传对话框确定按钮
 
+				
+				
 			}
-		]]>
-	</mx:Script>
-	<mx:HBox  width="100%">
-		<mx:Panel  width="50%"  title="上传附件操作区" verticalGap="0" borderVisible="false"  dropShadowVisible="false">
-			<mx:HBox>
-				<mx:Button label="浏览文件" id="browse_btn" enabled="true"/>
-				<mx:Label text="按住 Ctrl 或 Shift 键可以多选" x="85" y="3"/>
-				<mx:Button label="添加文件" x="330" id="add_btn" enabled="false" visible="false"/>
-				<mx:Button label="删除文件" x="410" id="delete_btn" enabled="false"/>
-			</mx:HBox>
+			private function systemFaultHandler(event:FaultEvent):void {
+				LockWinTool.unLockCurrentWin();
+				Alert.show(event.fault.faultString, 'Error');
+			}
+			private function chooseHandler(event:Event):void {//上传框确认按钮按下
+				for(var i:int=0;i<myFileRef.fileList.length;i++){
+					var f:FileReference = FileReference(myFileRef.fileList[i]); 
+					if(f.size> 20 * 1024 * 1024){
+						Alert.show("单个文件最大不允许超过20M");
+						continue;
+					}
+					LockWinTool.lockCurrentWin(this,"上传中");
+					f.upload(urlRequest);
+					f.addEventListener(DataEvent.UPLOAD_COMPLETE_DATA, uploadCompleteHandler);
+				}
+			}
 			
-			<mx:Canvas width="100%" height="25" backgroundColor="0Xf1f1f1" x="0" y="41" borderStyle="solid" borderColor="0Xbbbbbb">
-				<mx:Label text="文件名" x="5" y="3"/>
-				<mx:Label text="文件大小" x="215" y="3"/>
-				<mx:Label text="上传进度" x="320" y="3"/>
-			</mx:Canvas> 
-			<mx:List x="0" y="67" width="100%" rowCount="10" allowMultipleSelection="true" borderStyle="solid" borderColor="0Xbbbbbb" rowHeight="25" itemRenderer="system.component.mutiUpload.ImageItem" id="process_list" height="165"/>
-			<mx:Canvas width="100%" height="25" backgroundColor="0Xf1f1f1"  borderStyle="solid" borderColor="0Xbbbbbb">
-				<mx:Label text="" fontWeight="bold" id="tip_txt" x="5" y="3"/>			
-			</mx:Canvas> 
-			<mx:Canvas borderStyle="solid" width="100%"  height="25" borderColor="0X124fc0" backgroundColor="0xffffff">
-				<mx:Canvas backgroundColor="0X124fc0" backgroundAlpha="0.5" id="processBar_width" width="100%" height="0.01"/>
-				<mx:Canvas backgroundColor="0X124fc0" backgroundAlpha="0.5" id="processBar_Total" width="0" height="23"/>
-			</mx:Canvas>
-			<mx:HBox width="100%" horizontalAlign="right" height="30"> 
-				<mx:Button label="上传" id="save" click="uploadHandler();"/>
-			</mx:HBox>
-		</mx:Panel>
-		<mx:Panel  width="50%" title="已上传附件" verticalGap="0" borderVisible="false"  dropShadowVisible="false">
-			<mx:HBox>
-				<mx:Label text="按住 Ctrl 或 Shift 键可以多选" x="85" y="3"/>
-				<mx:Button label="删除文件" x="410" id="delete_already_btn"/>
-			</mx:HBox>
-			<mx:Canvas width="100%" height="25" backgroundColor="0Xf1f1f1" x="0" y="41" borderStyle="solid" borderColor="0Xbbbbbb">
-				<mx:Label text="文件名" x="5" y="3"/>
-				<mx:Label text="文件大小" x="215" y="3"/>
-				<mx:Label text="上传进度" x="320" y="3"/>
-			</mx:Canvas> 
-			<mx:List x="0" y="67" width="100%" rowCount="10" allowMultipleSelection="true" borderStyle="solid" borderColor="0Xbbbbbb" rowHeight="25" itemRenderer="system.component.mutiUpload.ImageItem" id="uploadAlready_list" height="250"/>
+			private function uploadCompleteHandler(event:DataEvent):void {
+				LockWinTool.unLockCurrentWin();
+				var list:ArrayCollection= new ArrayCollection();
+				if(dataGrid.dataProvider!=null){
+					var temp:ArrayCollection=dataGrid.dataProvider as ArrayCollection ;
+					for(var i:int=0;i<temp.length;i++){
+						list.addItem(temp.getItemAt(i));
+					}
+				}
+				var obj:Object = JSON.decode(event.data);
+				list.addItem(obj);
+				dataGrid.dataProvider=list;
+				dataGrid.validateNow();
+			}
+			private function select(event:MouseEvent):void{//浏览按钮按下
+				
+				try
+				{
+					myFileRef.browse();
+				}
+				catch (error:Error) 
+				{
+					Alert.show("文件选择出现错误，请选择正确的文件");
+				}
+			}
 			
+			public function deleteItem(id:String):void{
+				Alert.show("你确定要删除该项吗?","确认删除",Alert.NO|Alert.YES,null,function(event:CloseEvent):void{
+					if(event.detail == Alert.YES)
+						attachmentServiceRO.remove(id);
+				},null,Alert.NO);
+			}
+			private function remove_resultHandler(event:ResultEvent):void {
+				var list:ArrayCollection= new ArrayCollection();
+				if(dataGrid.dataProvider!=null){
+					var temp:ArrayCollection=dataGrid.dataProvider as ArrayCollection ;
+					for(var i:int=0;i<temp.length;i++){
+						if(temp.getItemAt(i).id!=event.result)
+						list.addItem(temp.getItemAt(i));
+					}
+				}
+				dataGrid.dataProvider=list;
+				dataGrid.validateNow();
+			}	
+			public function downLoad(data:Object):void{
+				
+			}
 			
-		</mx:Panel>
-	</mx:HBox>
+			<!-- ***初始化附件区域已有文件*** -->
+			public function loadData(list:ArrayCollection,show:Boolean=false):void{
+				dataGrid.dataProvider=list;
+				showControl=show;
+				addControl.visible=show;
+				this.validateNow();
+			}
+			<!-- ***返回附件IDs*** -->
+			public function getAttachmentsIds():String{
+			
+				var results:String="";
+				if(dataGrid.dataProvider!=null){
+					var temp:ArrayCollection=dataGrid.dataProvider as ArrayCollection ;
+					for(var i:int=0;i<temp.length;i++){
+						results+=temp.getItemAt(i).id+";";
+					}
+				}
+				return results;
+			}
+			
+			private var downloadURL:URLRequest;
+			private var file:FileReference; //这是要主要的地方
+			
+			public function download(path:String):void {
+				downloadURL = new URLRequest(parentApplication.homeUrl+"uploads/oa/attachment/" + path );
+//				Alert.show(downloadURL.url);
+				file = new FileReference();
+				configureListeners(file);
+				file.download(downloadURL);
+				
+			}
+			
+			private function configureListeners(dispatcher:IEventDispatcher):void {
+				dispatcher.addEventListener(Event.CANCEL, cancelHandler);
+				dispatcher.addEventListener(Event.COMPLETE, completeHandler);
+				dispatcher.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
+				dispatcher.addEventListener(Event.OPEN, openHandler);
+				dispatcher.addEventListener(ProgressEvent.PROGRESS, progressHandler);
+				dispatcher.addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
+				dispatcher.addEventListener(Event.SELECT, selectHandler);
+			}
+			
+			private function cancelHandler(event:Event):void {
+				trace("cancelHandler: " + event);
+			}
+			
+			private function completeHandler(event:Event):void {
+				trace("completeHandler: " + event);
+				Alert.show("下载成功");
+			}
+			
+			private function ioErrorHandler(event:IOErrorEvent):void {
+				trace("ioErrorHandler: " + event);
+				Alert.show("网络连接有错");
+			}
+			
+			private function openHandler(event:Event):void {
+				trace("openHandler: " + event);
+			}
+			
+			private function progressHandler(event:ProgressEvent):void {
+				var file:FileReference = FileReference(event.target);
+				trace("progressHandler name=" + file.name + " bytesLoaded=" + event.bytesLoaded + " bytesTotal=" + event.bytesTotal);
+			}
+			
+			private function securityErrorHandler(event:SecurityErrorEvent):void {
+				trace("securityErrorHandler: " + event);
+			}
+			
+			private function selectHandler(event:Event):void {
+				var file:FileReference = FileReference(event.target);
+				trace("selectHandler: name=" + file.name + " URL=" + downloadURL.url);
+			}
+
+			
+		]]> 
 		
+	</mx:Script>
+<!--	<ui:Fieldset title="附件区域" width="100%" height="100%" >-->
+		<mx:HBox width="100%" horizontalAlign="left">
+		<!--	<mx:LinkButton  label="附件区域" />-->
+			<mx:LinkButton  label="上传附件" click="select(event)"  id="addControl" icon="@Embed(source='../WebContent/resources/common/tools/button_attachment_icon.png')"  />
+		</mx:HBox>
+		<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+			<mx:DataGrid width="100%" height="100%" id="dataGrid" styleName="DataGridBox">
+				<mx:columns>
+					<mx:DataGridColumn headerText="文件名称" dataField="name" fontSize="12"/>
+					<mx:DataGridColumn headerText="文件大小" dataField="size" fontSize="12"/>
+					<mx:DataGridColumn headerText="文件类型" dataField="type" fontSize="12"/>
+					<mx:DataGridColumn headerText="上传时间" dataField="uploadDate" fontSize="12">
+						<mx:itemRenderer>
+							<mx:Component>
+								<mx:HBox  horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off" verticalScrollPolicy="off">
+									<mx:Label text="{getDateLabel(data.uploadDate as Date)}" width="100%"/>
+									<mx:Script>
+										<![CDATA[  
+											import basic.utils.DateTimeTool;
+											private function getDateLabel(date:Date):String{
+												return DateTimeTool.formatDate(date);
+											}
+											
+										]]> 
+									</mx:Script> 
+								</mx:HBox>
+							</mx:Component>
+						</mx:itemRenderer>
+					</mx:DataGridColumn>
+					<mx:DataGridColumn  headerText="操作" fontSize="12">
+						<mx:itemRenderer>
+							<mx:Component>
+								<mx:HBox  horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off" verticalScrollPolicy="off">
+									<mx:LinkButton label="下载" click="this.outerDocument.download(data.path)" >
+										
+									</mx:LinkButton>
+									<mx:LinkButton label="删除" click="this.outerDocument.deleteItem(data.id)"  visible="{this.outerDocument.showControl}">
+									
+									</mx:LinkButton>
+								</mx:HBox>
+							</mx:Component>
+						</mx:itemRenderer>
+					</mx:DataGridColumn>
+				</mx:columns>
+			</mx:DataGrid>
+		</mx:HBox>
+<!--	</ui:Fieldset>-->
 </mx:VBox>

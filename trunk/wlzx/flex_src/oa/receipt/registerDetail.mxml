@@ -2,7 +2,9 @@
 <mx:Module xmlns:mx="http://www.adobe.com/2006/mxml"
 		   layout="absolute" width="100%" height="100%" creationComplete="init()"
 		   xmlns:content="oa.receipt.component.*"
-		   xmlns:valueObjects="oa.entity.receipt.*" currentState="text_body">
+		   xmlns:valueObjects="oa.entity.receipt.*" 
+		   xmlns:mutiUpload="system.component.mutiUpload.*"
+		   currentState="text_body">
 	<mx:Script>
 		<![CDATA[
 			import mx.collections.ArrayCollection;
@@ -101,7 +103,7 @@
 						receipt.inDate = DateFormatter.parseDateString(receipt_file.in_date.text);
 						receipt.office = receipt_file.in_department.text;
 						receipt.status = 1;
-						receiptServiceRO.addReceipt(receipt,receipt_upload.upload.idList);
+						receiptServiceRO.addReceipt(receipt,upload1.getAttachmentsIds());
 					}
 					//						}
 				});
@@ -180,11 +182,11 @@
 						//编辑
 						//							Alert.show(receipt_upload.upload.addIds+"cccccc");
 						//							Alert.show(receipt_upload.upload.removeIds+"dddddd");
-						receiptServiceRO.updateReceipt(receipt,receipt_upload.upload.addIds,receipt_upload.upload.removeIds);
+						receiptServiceRO.addReceipt(receipt,upload1.getAttachmentsIds());
 						
 					}else{
 						//新增
-						receiptServiceRO.addReceipt(receipt,receipt_upload.upload.idList);
+						receiptServiceRO.addReceipt(receipt,upload1.getAttachmentsIds());
 						
 					}
 					
@@ -290,7 +292,7 @@
 					//	Alert.show(model.name+"");
 				}
 				//Alert.show(uploadList.length+"");
-				receipt_upload.upload.uploadAlready_list.dataProvider=uploadList;
+//				receipt_upload.upload.uploadAlready_list.dataProvider=uploadList;
 				//	receipt_text.title.text = receipt.title;
 				//				//attachments here
 				//				var list:ArrayCollection = receipt.attachments as ArrayCollection;
@@ -471,7 +473,7 @@
 			<content:receiptFileInput width="100%" id="receipt_file" height="100%"/>
 		</mx:VBox>
 		<mx:VBox label="附件上传" width="100%" height="100%"  id="upload_box">
-			<content:Upload width="100%" id="receipt_upload" height="100%"/>
+			<mutiUpload:upload width="100%" id="upload1"></mutiUpload:upload>
 		</mx:VBox>
 	</mx:VBox>
 </mx:Module>
