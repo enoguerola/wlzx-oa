@@ -184,11 +184,13 @@
 			}
 			public function enterEditConference(id:String):void
 			{
-				conferenceMaintain.upload.empty();
-				conferenceMaintain.summaryUpload.empty();
+	//			conferenceMaintain.upload.empty();
+	//			conferenceMaintain.summaryUpload.empty();
+	//			conferenceMaintain.addUpdateFlag.text="update"+"_"+id;
+	//			conferenceMaintain.disabledTimePositionChange();
+	//			conferenceMaintain.hideSummaryArea();
 				conferenceMaintain.addUpdateFlag.text="update"+"_"+id;
-				conferenceMaintain.disabledTimePositionChange();
-				conferenceMaintain.hideSummaryArea();
+				conferenceMaintain.editInit(id);
 				this.currentState='add';
 			}
 			public function sendConferenceMessage(id:String):void
@@ -197,8 +199,8 @@
 			}
 			public function enterSummaryConference(id:String):void
 			{
-				conferenceMaintain.upload.empty();
-				conferenceMaintain.summaryUpload.empty();
+	//			conferenceMaintain.upload.empty();
+	//			conferenceMaintain.summaryUpload.empty();
 				conferenceMaintain.addUpdateFlag.text="update"+"_"+id;
 //				conferenceMaintain.hideSummaryArea();
 				conferenceMaintain.disabledConferenceChange();
@@ -222,8 +224,8 @@
 			public function enterAdd():void{
 //				conferenceMaintain.hideSummaryArea();
 //				conferenceMaintain.enabledConferenceChange();
-				conferenceMaintain.upload.empty();
-				conferenceMaintain.summaryUpload.empty();
+		//		conferenceMaintain.upload.empty();
+		//		conferenceMaintain.summaryUpload.empty();
 				conferenceMaintain.addUpdateFlag.text="add";
 				this.currentState='add';
 			}
