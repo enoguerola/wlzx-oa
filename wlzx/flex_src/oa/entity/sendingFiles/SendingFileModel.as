@@ -6,8 +6,9 @@ package oa.entity.sendingFiles
 	
 	[Bindable]
 	[RemoteClass(alias="system.wlims.oa.entity.sendingFiles.SendingFileModel")]
-	public class SendingFileModel extends BaseModel
+	public class SendingFileModel 
 	{
+		public var  id:String;
 		public var  title:String;
 		public var  content:String;
 		public var  authorId:String;
@@ -27,7 +28,7 @@ package oa.entity.sendingFiles
 		public var  attachments:ArrayCollection = new ArrayCollection();
 		public function SendingFileModel()
 		{
-			super();
+			//super();
 		}
 		public function getFirstDraftStepFlowId():String{
 			for(var i:int=0;i<fileFlows.length;i++){

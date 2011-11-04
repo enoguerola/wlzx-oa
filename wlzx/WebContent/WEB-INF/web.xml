@@ -144,6 +144,17 @@
 		<url-pattern>/basic/staff/teacherImgaeUploadServlet</url-pattern>
 	</servlet-mapping>
 	
+	<servlet>
+		<servlet-name>FileUpload Servlet</servlet-name>
+		<servlet-class>system.servlet.FileUpload</servlet-class>
+		
+		<load-on-startup>10</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>FileUpload Servlet</servlet-name>
+		<url-pattern>/servlet/attachmentUpload.action</url-pattern>
+	</servlet-mapping>
 	
 	<welcome-file-list>
 		<welcome-file>home.html</welcome-file>

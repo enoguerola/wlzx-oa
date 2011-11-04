@@ -9,10 +9,10 @@ import system.wlims.oa.entity.conference.ConferenceModel;
 public interface ConferenceService {
 	
 	@SuppressWarnings("unchecked")
-	public void addConference(ConferenceModel Conference, List list);
+	public void addConference(ConferenceModel Conference, String list);
 	public boolean updateConference(ConferenceModel conference, String adds,String removes);
 	public boolean adjustConferenceById(String id,Date date,String beginTime,String endTime,String placeId);
-	public boolean saveSummary(String id, String adds,String removes);
+	public boolean saveSummary(String id, String fj,String zj);
 	public boolean remove(String id);
 	public boolean cancleConferenceById(String id);
 	public ConferenceModel get(String id)throws ServiceException;

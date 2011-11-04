@@ -20,6 +20,7 @@ public class OverWorkForm extends AbstractForm {
 	private String applyNo;
 	private String teacherId;
 	private String times;
+	private String beginDate;
 	private String reason;
 	
 	private String officeChiefApproverId;
@@ -28,6 +29,25 @@ public class OverWorkForm extends AbstractForm {
 	private String officeChiefApproveOption;
 	private Integer status;
 	private Set<OverWorkWorkFlowLog> logs=new TreeSet<OverWorkWorkFlowLog>();
+	
+	public String getBeginDate() {
+		String[] ss = times.split(" ");
+		String[] tt = ss[1].split("-");
+		String temp =ss[0];
+		
+		if(tt[0].equalsIgnoreCase("1")){
+			temp = temp + " 上午";
+		} 
+		if(tt[1].equalsIgnoreCase("1")){
+			temp = temp + " 下午";
+		}
+		if(tt[2].equalsIgnoreCase("1")){
+			temp = temp +" 晚上";
+		}
+		
+		return temp;
+	}
+	
 	public static enum Status{
 		Waiting(0, "待审批"),
 		OfficePass(1, "审批通过"),

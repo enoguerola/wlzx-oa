@@ -65,7 +65,7 @@
 						uploadList.push({label:model.name,data:parseInt(model.size)/1000+"KB",width:145,id:model.id});
 						//	uploadListfileRef.fileList
 					}
-					documentMaintain.documentMaintainPart2.upload.uploadAlready_list.dataProvider=uploadList;
+			//		documentMaintain.documentMaintainPart2.upload.uploadAlready_list.dataProvider=uploadList;
 				}
 			}
 			private function save_resultHandler(event:ResultEvent):void

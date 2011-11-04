@@ -69,7 +69,7 @@
 						uploadList.push({label:model.name,data:parseInt(model.size)/1000+"KB",width:145,id:model.id});
 						//	uploadListfileRef.fileList
 					}
-					documentMaintain.documentMaintainPart2.upload.uploadAlready_list.dataProvider=uploadList;
+	//				documentMaintain.documentMaintainPart2.upload.uploadAlready_list.dataProvider=uploadList;
 					
 					//加载核稿、会签、签发记录
 					for each(var flow:Object in documentMaintain.sendingFile.fileFlows){
@@ -213,8 +213,8 @@
 					documentMaintain.sendingFile.title=documentMaintain.documentMaintainPart3.title.text;
 					
 					if(addUpdateFlag.text == "Add")
-						sendingFileServiceRO.addSendingFile(documentMaintain.sendingFile,documentMaintain.documentMaintainPart2.upload.idList);
-					else sendingFileServiceRO.updateSendingFile(documentMaintain.sendingFile,documentMaintain.documentMaintainPart2.upload.addIds,documentMaintain.documentMaintainPart2.upload.removeIds);
+						sendingFileServiceRO.addSendingFile(documentMaintain.sendingFile,documentMaintain.documentMaintainPart2.upload.getAttachmentsIds());
+					else sendingFileServiceRO.addSendingFile(documentMaintain.sendingFile,documentMaintain.documentMaintainPart2.upload.getAttachmentsIds());
 					
 				}
 			}

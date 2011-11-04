@@ -25,6 +25,8 @@ public class MoveRestDayForm extends AbstractForm {
 	private String applyNo;
 	private String teacherId;
 	private String times;
+	
+	private String time;
 	private String reason;
 	
 	private String officeChiefApproverId;
@@ -37,8 +39,31 @@ public class MoveRestDayForm extends AbstractForm {
 	private Date vicePrincipalApproveTime;
 	private String vicePrincipalApproveOption; 
 	
+	
 	private Integer status;
 	private Set<MoveRestDayWorkFlowLog> logs=new TreeSet<MoveRestDayWorkFlowLog>();
+	
+	
+	public String getTime() {
+		String[] ss = times.split(";");
+		String temp ="" ;
+		for(int i=0;i<ss.length;i++){
+			String[] nn = ss[i].split(" ");
+			String[] tt = nn[1].split("-");
+			temp =temp+"  "+nn[0];
+			if(tt[0].equalsIgnoreCase("1")){
+				temp = temp + " 上午";
+			} 
+			if(tt[1].equalsIgnoreCase("1")){
+				temp = temp + " 下午";
+			}
+			if(tt[2].equalsIgnoreCase("1")){
+				temp = temp +" 晚上";
+			}
+		}
+		
+		return temp;
+	}
 	public static enum Rules{
 		FirstApprove(1, "处室负责人审批"),
 		SecordApprove(2, "分管副校长审批");

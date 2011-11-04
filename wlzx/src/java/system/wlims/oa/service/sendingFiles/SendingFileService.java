@@ -10,7 +10,7 @@ public interface SendingFileService {
 
 
   @SuppressWarnings("unchecked")
-  SendingFileModel addSendingFile(SendingFileModel model, List list)throws ServiceException;
+  SendingFileModel addSendingFile(SendingFileModel model, String attachmentIds)throws ServiceException;
   SendingFileModel updateSendingFile(SendingFileModel model,String adds,String removes)throws ServiceException;
 
   void removeById(String id)throws ServiceException;

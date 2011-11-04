@@ -23,6 +23,7 @@ import system.wlims.oa.dao.notice.AttachmentDAO;
 import system.wlims.oa.dao.receipt.FileFlowDAO;
 import system.wlims.oa.dao.receipt.ReceiptDAO;
 import system.wlims.oa.entity.notice.AttachmentModel;
+import system.wlims.oa.entity.notice.NoticeModel;
 import system.wlims.oa.entity.receipt.FileFlowModel;
 import system.wlims.oa.entity.receipt.ReceiptModel;
 import system.wlims.oa.service.receipt.ReceiptService;
@@ -248,17 +249,9 @@ public class ReceiptServiceImpl implements ReceiptService {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public ReceiptModel addReceipt(ReceiptModel model,List list)
+	public ReceiptModel addReceipt(ReceiptModel model,String attachmentIds)
 			throws ServiceException {
 		// TODO Auto-generated method stub
-		if(list != null && list.size() > 0){
-			for(Object id : list){
-				 //System.out.println(id);
-				AttachmentModel attachmentModel = attachmentDAO.get((String)id);
-				model.getAttachments().add(attachmentModel);
-			}
-		}
-		//model.setCreationDate(new Date());
 		model.setReceiverId(SecurityUserHolder.getCurrentUser().getId());
 		
 		FileFlowModel flow=new FileFlowModel();
@@ -272,8 +265,31 @@ public class ReceiptServiceImpl implements ReceiptService {
 			model.setStatus(ReceiptModel.EStatus.Draft.getValue());
 		}
 		
-	
 		receiptDAO.saveOrUpdate(model);
+		
+		if(StringUtils.isNotEmpty(attachmentIds)){
+			String[] ids=attachmentIds.split(";");
+			for(int i=0;i<ids.length;i++){
+				AttachmentModel attachment=attachmentDAO.get(ids[i]);
+				attachment.setBelongObject("ReceiptModel");
+				attachment.setBelongObjectId(model.getId());
+				attachmentDAO.saveOrUpdate(attachment);
+			}
+		}
+		ReceiptModel newModel=receiptDAO.get(model.getId());
+		
+		/*if(list != null && list.size() > 0){
+			for(Object id : list){
+				 //System.out.println(id);
+				AttachmentModel attachmentModel = attachmentDAO.get((String)id);
+				model.getAttachments().add(attachmentModel);
+			}
+		}*/
+		//model.setCreationDate(new Date());
+		
+		
+	
+		receiptDAO.merge(newModel);
 		
 	
 		flow.setType(FileFlowModel.EType.Draft.getValue());

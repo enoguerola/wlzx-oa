@@ -29,7 +29,29 @@ public class TakeLeaveForm extends AbstractForm implements Comparable<TakeLeaveF
 	private Integer type;
 	private String teacherId;
 	private String beginTime;
+	private String beginDate;
 	private String endTime;
+	private String endDate;
+	public String getBeginDate() {
+		String[] ss = beginTime.split(" ");
+		if(ss[1].equalsIgnoreCase("0")){
+			return ss[0]+" 上午";
+		}else if(ss[1].equalsIgnoreCase("1")){
+			return ss[0]+" 下午";
+		}else{
+			return ss[0]+" 晚上";
+		}
+	}
+	public String getEndDate() {
+		String[] ss = endTime.split(" ");
+		if(ss[1].equalsIgnoreCase("0")){
+			return ss[0]+" 上午";
+		}else if(ss[1].equalsIgnoreCase("1")){
+			return ss[0]+" 下午";
+		}else{
+			return ss[0]+" 晚上";
+		}
+	}
 	private String reason;
 	private String arrangeTech;
 	private String arrangeService;

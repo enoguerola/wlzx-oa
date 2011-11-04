@@ -38,6 +38,12 @@
         	<key column="id" not-null="true" />
         	<many-to-many not-found="ignore"  column="conference_id" class="system.wlims.oa.entity.conference.ConferenceModel" /> 
         </set>
+        <property name="belongObject" type="string">
+            <column name="belong_object" />
+        </property>
+         <property name="belongObjectId" type="string">
+            <column name="belong_object_id" />
+        </property>
         
     </class>
 </hibernate-mapping>

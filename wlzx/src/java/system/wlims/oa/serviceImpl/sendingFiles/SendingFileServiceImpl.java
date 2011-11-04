@@ -27,6 +27,7 @@ import system.wlims.oa.dao.notice.AttachmentDAO;
 import system.wlims.oa.dao.sendingFiles.FileFlowDAO;
 import system.wlims.oa.dao.sendingFiles.SendingFileDAO;
 import system.wlims.oa.entity.notice.AttachmentModel;
+import system.wlims.oa.entity.receipt.ReceiptModel;
 import system.wlims.oa.entity.sendingFiles.FileFlowModel;
 import system.wlims.oa.entity.sendingFiles.SendingFileModel;
 import system.wlims.oa.service.sendingFiles.SendingFileService;
@@ -59,19 +60,34 @@ public class SendingFileServiceImpl implements SendingFileService {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public SendingFileModel addSendingFile(SendingFileModel model,List list)
+	public SendingFileModel addSendingFile(SendingFileModel model,String attachmentIds)
 			throws ServiceException {
 		// TODO Auto-generated method stub
-		if(list != null && list.size() > 0){
+		/*if(list != null && list.size() > 0){
 			for(Object id : list){
 				 //System.out.println(id);
 				AttachmentModel attachmentModel = attachmentDAO.get((String)id);
 				model.getAttachments().add(attachmentModel);
 			}
-		}
+		}*/
 		model.setCreationDate(new Date());
 		model.setStatus(SendingFileModel.EStatus.Drafting.getValue());
 		sendingFileDAO.saveOrUpdate(model);
+		
+		if(StringUtils.isNotEmpty(attachmentIds)){
+			String[] ids=attachmentIds.split(";");
+			for(int i=0;i<ids.length;i++){
+				AttachmentModel attachment=attachmentDAO.get(ids[i]);
+				attachment.setBelongObject("SendingFileModel");
+				attachment.setBelongObjectId(model.getId());
+				attachmentDAO.saveOrUpdate(attachment);
+			}
+		}
+		SendingFileModel newModel=sendingFileDAO.get(model.getId());
+		
+		sendingFileDAO.merge(newModel);
+		
+		
 		
 		FileFlowModel flow=new FileFlowModel();
 		flow.setType(FileFlowModel.EType.Draft.getValue());

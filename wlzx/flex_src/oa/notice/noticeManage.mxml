@@ -8,6 +8,7 @@
 		   xmlns:component="system.component.*" currentState="list" xmlns:mx1="library://ns.adobe.com/flex/mx" 
 		   xmlns:mutiUpload="system.component.mutiUpload.*" xmlns:s="library://ns.adobe.com/flex/spark" >
 		<mx:RemoteObject id="noticeServiceRO" destination="noticeServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);" >
+			<mx:method name="addNotice"  concurrency="last"  result="updateNoticeResult_resultHandler(event);" />
 			<mx:method name="updateNotice"  concurrency="last"  result="updateNoticeResult_resultHandler(event);" />
 			<mx:method name="loadNoticeInfoById"  concurrency="last"  result="loadNoticeInfoById_resultHandler(event);" />
 			<mx:method name="deleteNoticeById"  concurrency="last"  result="deleteNoticeByIdResult_resultHandler(event);" />
@@ -97,8 +98,8 @@
 				search_date_end.text=CommonUtils.formatDate(CommonUtils.currentMonthEndDate(),"YYYY-MM-DD");
 				directoryServiceRO.getDirectoryItemsByType("noticeType");
 				//this.currentState='list';
-				var urlRequest:URLRequest = new URLRequest("spring/attachmentUpload.action");
-				upload.urlRequest = urlRequest;
+				//var urlRequest:URLRequest = new URLRequest("spring/attachmentUpload.action");
+				//upload.urlRequest = urlRequest;
 				search_account.dataProvider=this.parentApplication.allTeacherAcccounts;
 				//systemServiceRO.getDepartmentBySymbol("root");
 				departmentList = new ArrayCollection(CommonUtils.clone(this.parentApplication.currentUserFirstLevelDepartment.source));
@@ -139,6 +140,7 @@
 				this.currentState='list';
 				search();
 			}
+			
 			protected function loadNoticeInfoById_resultHandler(event:ResultEvent):void
 			{
 				//Alert.show("load");
@@ -151,12 +153,15 @@
 				if(form.emergence == 1)
 					emergence.selected = true;
 				rte.text = form.content;
+				/*
 				var uploadList:Array=new Array();
 				for each(var model:AttachmentModel in form.attachments){
 					uploadList.push({label:model.name,data:parseInt(model.size)/1000+"KB",width:145,id:model.id});
 					//	uploadListfileRef.fileList
 				}
-				upload.uploadAlready_list.dataProvider=uploadList;
+				upload.uploadAlready_list.dataProvider=uploadList;*/
+				
+				upload.loadData(ArrayCollection(form.attachments),true);
 			}
 			
 			protected function deleteNoticeByIdResult_resultHandler(event:ResultEvent):void
@@ -237,9 +242,10 @@
 			
 			protected function add_clickHandler(event:MouseEvent):void
 			{
-				if(validateInput())
-				{
-					form.content = rte.text;
+				//Alert.show(validateInput()+"");
+			//	if(validateInput())
+				//{
+					/*form.content = rte.text;
 					if(emergence.selected)
 						form.emergence = 1;
 					else
@@ -249,16 +255,44 @@
 					
 					form.title = title.text;
 					form.type = noticeType.selectedItem.data;
-					noticeServiceRO.updateNotice(form, upload.addIds,upload.removeIds);
-				}
+					noticeServiceRO.addNotice(form, upload.getAttachmentsIds());*/
+				
+					
+					
+					form.content = rte.text;
+					if(emergence.selected)
+						form.emergence = 1;
+					else
+						form.emergence = 0;
+					form.postDepartmentId = postdepartment.selectedItem.data;
+					form.scope = parseInt(noticeScope.selectedItem.data);
+					//form.status = 1;
+					form.title = title.text;
+					form.type = noticeType.selectedItem.data;
+					noticeServiceRO.addNotice(form, upload.getAttachmentsIds());
+				//}
 			}
+			
+			/*private function validateInput():Boolean
+			{	
+				validatorArr = new Array();
+				validatorArr.push(title_stringValidator);
+				validatorArr.push(content_stringValidator);
+				validatorArr.push(type_stringValidator);
+				var validatorErrorArray:Array = Validator.validateAll(validatorArr);
+				var isValidForm:Boolean = validatorErrorArray.length == 0;
+				if (isValidForm) {
+					return true;
+				} else {
+					return false;
+				}
+			}*/
 			
 			private function validateInput():Boolean
 			{	
 				validatorArr = new Array();
 				validatorArr.push(title_stringValidator);
 				validatorArr.push(content_stringValidator);
-				validatorArr.push(type_stringValidator);
 				var validatorErrorArray:Array = Validator.validateAll(validatorArr);
 				var isValidForm:Boolean = validatorErrorArray.length == 0;
 				if (isValidForm) {

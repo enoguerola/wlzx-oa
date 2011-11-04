@@ -7,12 +7,12 @@
 			import mx.events.FlexEvent;
 			private function init():void
 			{			
-				var urlRequest:URLRequest = new URLRequest(parentApplication.homeUrl+"spring/attachmentUpload.action");
-				upload.urlRequest = urlRequest;
+			//	var urlRequest:URLRequest = new URLRequest(parentApplication.homeUrl+"spring/attachmentUpload.action");
+			//	upload.urlRequest = urlRequest;
 				
 			}
 			public function empty():void{
-				upload.empty();
+			//	upload.empty();
 			}
 			public function isValid():Boolean{
 				return true;

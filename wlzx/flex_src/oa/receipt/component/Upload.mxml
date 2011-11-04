@@ -30,15 +30,15 @@
 						//	Alert.show(model.name+"");
 					}
 					//Alert.show(uploadList.length+"");
-					upload.uploadAlready_list.dataProvider=uploadList;
+//					upload.uploadAlready_list.dataProvider=uploadList;
 				
 				}
 				
 				var urlRequest:URLRequest = new URLRequest(parentApplication.homeUrl+"spring/attachmentUpload.action");
-				upload.urlRequest = urlRequest;
+		//		upload.urlRequest = urlRequest;
 			}
 			public function empty():void{
-				upload.empty();
+//				upload.empty();
 			}
 			// when attachment is deleted
 			private function remove(event:UploadEvent):void
@@ -51,11 +51,11 @@
 			private function uploaded(event:UploadEvent):void
 			{
 //				var parent:Object = (Object)(this.parentDocument);
-//				parent.add(event.id);
+//				parent.add(event.id); 	//	<-- mutiUpload:upload width="100%" height="100%" id="upload" paddingTop="10" paddingLeft="10" paddingRight="10" deleted="remove(event)" uploaded="uploaded(event)"/>
+
 			}
 		]]>
 	</mx:Script>
 	<component:AdvancedTitleBarPanel width="100%" height="100%" id="text_panel" paddingTop="10"  paddingBottom="10">
-		<mutiUpload:upload width="100%" height="100%" id="upload" paddingTop="10" paddingLeft="10" paddingRight="10" deleted="remove(event)" uploaded="uploaded(event)"/>
 	</component:AdvancedTitleBarPanel>
 </mx:VBox>
