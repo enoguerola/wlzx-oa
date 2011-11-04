@@ -62,22 +62,28 @@
 			[Binary]
 			public var usersSelected:Array= new Array();
 			private function init():void {
-				departmentList=parentApplication.currentUserFirstLevelDepartment;
-				departmentList.addItem( {data:"-1", headerText:"×校外"});
-				departmentList = this.parentApplication.currentUserDepartment;
-				departments.dataProvider= departmentList;
-				departments.selectedIndex=0;
-				/* systemServiceRO.getDepartmentBySymbol("root"); */
-				placeServiceRO.getPlacesByCondition(null,null,null,null,null,null,null);
-//				Alert.show("aaaaaaaaa");
-				linkman_account.dataProvider=this.parentApplication.allTeacherAcccounts;
+					departmentList=parentApplication.currentUserFirstLevelDepartment;
+					departmentList.addItem( {data:"-1", headerText:"×校外"});
+					departmentList = this.parentApplication.currentUserDepartment;
+					departments.dataProvider= departmentList;
+					departments.selectedIndex=0;
+					/* systemServiceRO.getDepartmentBySymbol("root"); */
+					placeServiceRO.getPlacesByCondition(null,null,null,null,null,null,null);
+	//				Alert.show("aaaaaaaaa");
+					linkman_account.dataProvider=this.parentApplication.allTeacherAcccounts;
+					
+				/*
 				var urlRequest:URLRequest = new URLRequest(parentApplication.homeUrl+"spring/attachmentUpload.action");
 				upload.urlRequest = urlRequest;
 				summaryUpload.urlRequest = urlRequest;
+				*/
 //				var urlRequest:URLRequest = new URLRequest("spring/attachmentUpload.action");
 //				upload.urlRequest = urlRequest;
 
 			}
+			
+			
+			
 			private function systemFaultHandler(event:FaultEvent):void {
 				Alert.show(event.fault.faultString, 'Error');
 			}
@@ -154,6 +160,8 @@
 			protected function get_resultHandler(event:ResultEvent):void
 			{
 				form = event.result as ConferenceModel;
+				
+				Alert.show(addUpdateFlag.text+"");
 				date.text=CommonUtils.formatDate(form.meetingDate,"YYYY-MM-DD");
 				begin_hour.value=parseInt(form.beginTime.split(":")[0]);
 				begin_minute.value=parseInt(form.beginTime.split(":")[1]);
@@ -177,23 +185,27 @@
 					usersSelected.push({data:parentApplication.getTeacherNameByAccountId(array[i]),id:array[i]});
 				}
 				organizedUsersSelected();
+				/*
 				var uploadList:Array=new Array();
 				var summaryUploadList:Array=new Array();
 				for each(var model:AttachmentModel in form.attachments){
 					uploadList.push({label:model.name,data:parseInt(model.size)/1000+"KB",width:145,id:model.id});
 				//	uploadListfileRef.fileList
 				}
+				
 				for each(var model:AttachmentModel in form.summaryAttachments){
 					summaryUploadList.push({label:model.name,data:parseInt(model.size)/1000+"KB",width:145,id:model.id});
-				}
+				}*/
+				upload.loadData(ArrayCollection(form.attachments),true);
+				
 //				upload.addEventListener(UploadEvent.DELETED,function(e:UploadEvent):void{
 //					//Alert.show(e.id+"--");
 //					attachmentServiceRO.remove(e.id);
 //
 //				});
 			
-				upload.uploadAlready_list.dataProvider=uploadList;
-				summaryUpload.uploadAlready_list.dataProvider=summaryUploadList;
+			//	upload.uploadAlready_list.dataProvider=uploadList;
+			//	summaryUpload.uploadAlready_list.dataProvider=summaryUploadList;
 			
 			}
 //			private function getDepartmentBySymbolResult(event:ResultEvent):void {
@@ -258,11 +270,13 @@
 			}
 			protected function add_clickHandler(event:MouseEvent):void
 			{
+				//Alert.show();
 				if(validateInput()){
 					var beginTime:String=((begin_hour.value)>=10?(begin_hour.value):"0"+(begin_hour.value))+":"+((begin_minute.value)>=10?(begin_minute.value):"0"+(begin_minute.value));
 					var endTime:String=((end_hour.value)>=10?(end_hour.value):"0"+(end_hour.value))+":"+((end_minute.value)>=10?(end_minute.value):"0"+(end_minute.value));
 					
 					if(addUpdateFlag.text=="add"){
+						
 						form = new ConferenceModel();
 						form.applyUserId=this.parentApplication.currentUser.id;
 					
@@ -279,9 +293,10 @@
 						form.serviceNeeded=services.text;					
 						form.description=description.text;
 						form.teacherAttendIds=usersIds.text;
-
-						conferenceServiceRO.addConference(form, upload.idList);
+						
+						conferenceServiceRO.addConference(form, upload.getAttachmentsIds());
 					}else if(addUpdateFlag.text == "update"+"_"+form.id){
+						Alert.show("1");
 						form.applyUserId=this.parentApplication.currentUser.id;
 						
 						form.meetingDate=DateFormatter.parseDateString(date.text);
@@ -297,7 +312,7 @@
 						form.serviceNeeded=services.text;					
 						form.description=description.text;
 						form.teacherAttendIds=usersIds.text;
-						conferenceServiceRO.updateConference(form, upload.addIds,upload.removeIds);
+						conferenceServiceRO.addConference(form, upload.getAttachmentsIds());
 					}else if(addUpdateFlag.text == "adjust"+"_"+form.id){
 						form.meetingDate=DateFormatter.parseDateString(date.text);
 						form.beginTime=beginTime;
@@ -310,7 +325,7 @@
 //						form.beginTime=beginTime;
 //						form.endTime=endTime;
 //						form.placeId=places.selectedItem.data;						
-						conferenceServiceRO.saveSummary(form.id,summaryUpload.addIds,summaryUpload.removeIds);
+						conferenceServiceRO.saveSummary(form.id,upload.getAttachmentsIds(),summaryUpload.getAttachmentsIds());
 						//lockWin();
 					}
 				}
@@ -337,8 +352,8 @@
 				organizedUsersSelected();
 				hideSummaryArea();
 				enabledConferenceChange();
-				upload.empty();
-				summaryUpload.empty();
+			//	upload.empty();
+			//	summaryUpload.empty();
 			}
 			public function editInit(id:String):void{
 				saveButton.label="更新";

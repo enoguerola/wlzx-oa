@@ -180,8 +180,8 @@
 //			}
 			public function enterSummaryConference(id:String):void
 			{
-				conferenceMaintain.upload.empty();
-				conferenceMaintain.summaryUpload.empty();
+//				conferenceMaintain.upload.empty();
+//				conferenceMaintain.summaryUpload.empty();
 				conferenceMaintain.addUpdateFlag.text="summary"+"_"+id;
 				conferenceMaintain.disabledConferenceChange();
 				this.currentState='add';
