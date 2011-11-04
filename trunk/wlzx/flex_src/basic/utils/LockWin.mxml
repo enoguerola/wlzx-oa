@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+
+组件简介：	锁频弹窗 ，即“加载等待框”
+
+功能：		等待加载时弹出，对加载过程进行提示
+
+制作者：		吴裕岳
+
+上次修改：	吴裕岳
+
+-->
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" width="150" height="100" horizontalAlign="center" verticalAlign="middle" creationComplete="init();" >
+
+	<mx:Script>
+		<![CDATA[ 
+			import  org.bytearray.gif.player.GIFPlayer;	
+			public var defaultTipText:String="数据检索中";
+			public var gifPath:String="basic/utils/loading.gif";
+			private function init():void { 
+				var myGIFPlayer:GIFPlayer = new GIFPlayer(true); 
+				var request:URLRequest = new URLRequest(gifPath); 
+				myGIFPlayer.load(request); 
+				
+				myGIFPlayer.visible = true; 
+				gif.addChild(myGIFPlayer); 
+			} 
+			
+		]]>
+	</mx:Script>
+	<mx:Label text="{defaultTipText}" id="tip"   height="20" width="100%" textAlign="center"/>
+	<mx:Image id="gif" width="100%" height="100%" />
+
+</mx:VBox>
