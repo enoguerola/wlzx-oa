@@ -328,6 +328,8 @@
 				parent.addTab("applyForm-detail"+"_"+id,"调课详单",parent.nav,"oa/course/adjust/adjustApplyForm.swf",null,id);
 					
 			}
+			
+			
 		]]> 		
 	</mx:Script> 
 	
