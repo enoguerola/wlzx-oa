@@ -106,7 +106,7 @@ public class ReceiptServiceImpl implements ReceiptService {
 				criteria.add(Restrictions.eq("status", Integer.parseInt(status)));
 			}
 		}
-		
+		criteria.addOrder(Order.desc("inDate"));
 		//List<ReceiptModel> list = receiptDAO.getListByCriteria(criteria, (page - 1)*pageCount, pageCount);
 		List<ReceiptModel> list = receiptDAO.getListByCriteria(criteria);
 		if(SecurityUserHolder.isSuperRootUser())
