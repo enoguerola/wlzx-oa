@@ -193,7 +193,7 @@
 						
 						
 							<mx:VBox width="100%" height="60" verticalAlign="middle" horizontalAlign="left"   verticalGap="0" borderVisible="true"    paddingLeft="10" paddingRight="10">
-								<component:Fieldset title="条件查询" >
+								<component:Fieldset title="条件查询"  width="100%">
 									<mx:HBox width="100%" height="30"   horizontalGap="10" >
 										<s:HGroup verticalAlign="middle">
 											<s:Label  text="名称" />

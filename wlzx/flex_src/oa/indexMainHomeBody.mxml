@@ -18,7 +18,7 @@
 	<mx:Script>  
 		<![CDATA[
 			import basic.utils.DateUtil;
-			
+			import system.component.lockWin.LockWinTool;
 			import mx.collections.ArrayCollection;
 			import mx.containers.FormItem;
 			import mx.controls.Alert;
@@ -54,6 +54,8 @@
 			
 			public function search():void
 			{
+				LockWinTool.lockCurrentWin(this,"加载信息中");
+
 				var departmentIds:String="";
 				//if(parentApplication.currentUser.hasDam("department_notice_read_main@defaultVisit@@departmentFilter@")){
 				//					var temp:ArrayCollection=ArrayCollection(parentApplication.currentUserDepartment);
@@ -77,10 +79,9 @@
 				/* if(parentApplication.currentUser.hasDam("department_notice_read_main@defaultVisit@@noFilter@")){
 				departmentIds=null;
 				} */
-				noticeServiceRO.getTop5DepartmentNotice(departmentIds);			
+				noticeServiceRO.getTop5DepartmentNotice(departmentIds);
 				noticeServiceRO.getTop5SchoolNotice();
 				var today:String=CommonUtils.formatDate(new Date(),"YYYY-MM-DD");
-				
 				scheduleServiceRO.getPublicSchedulesByConditions(null,null,null,null,null,null,today,today);
 				scheduleServiceRO.getPersonSchedulesByConditions(this.parentApplication.currentUser.id,null,null,null,null,null,today,today);
 				var beginTime:String=CommonUtils.formatDate(CommonUtils.currentMonthBeginDate(),"YYYY-MM-DD");
@@ -92,14 +93,16 @@
 			
 			private function systemFaultHandler(event:FaultEvent):void {
 				Alert.show(event.fault.faultString, 'Error');
+				LockWinTool.unLockCurrentWin();
 			}
 			protected function getSelfReceivedNotReadMessages_resultHandler(event:ResultEvent):void{
 				var allList:ArrayCollection=event.result as ArrayCollection;
 				notReadNum.text=allList.length+"";
+				
 			}
 			protected function getAllWaittingDealTasksByCondition_result(event:ResultEvent):void
 			{
-				
+				LockWinTool.unLockCurrentWin();
 				var list:ArrayCollection=event.result as ArrayCollection;
 				waittingNum.text=list.length+"";
 				

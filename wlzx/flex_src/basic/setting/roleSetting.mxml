@@ -17,7 +17,8 @@
 	<fx:Script>
 		<![CDATA[
 			import basic.setting.popWin.RolePopWin;
-			
+			import system.component.lockWin.LockWinTool;
+
 			import flexlib.controls.SuperTabBar;
 			import flexlib.controls.tabBarClasses.SuperTab;
 			import flexlib.events.TabReorderEvent;
@@ -48,6 +49,7 @@
 			}
 			<!-- ***获取岗位数据*** -->	
 			private function getAllRoles_resultHandler(event:ResultEvent):void {
+				LockWinTool.unLockCurrentWin();
 				if(event.result!=null){
 					var roleData:String="<roles>";
 					if(event.result!=null){
@@ -72,6 +74,7 @@
 			}
 			private function systemFaultHandler(event:FaultEvent):void {
 				Alert.show(event.fault.faultString, 'Error');
+				LockWinTool.unLockCurrentWin();
 			}
 			protected function roleRemove_resultHandler(event:ResultEvent):void{
 				if(event.result==true){
@@ -205,6 +208,7 @@
 //				
 //			}
 			public function loadRoleDetail(role:Object):void{
+				LockWinTool.unLockCurrentWin();
 				rname.text=role.name;
 				creationDate.text=CommonUtils.formatDate(role.creationDate,"YYYY-MM-DD");
 				symbol.text=role.symbol;
@@ -224,10 +228,13 @@
 			private function tree_itemClick(evt:Event):void {
 				selectedNode=roles.selectedItem as XML;
 				var id:String=selectedNode.@id;
+				LockWinTool.lockCurrentWin(this,"岗位信息加载中");
+
 				systemServiceRO.getRoleById(id);
 				
 			}
 			public function search():void{
+				LockWinTool.lockCurrentWin(this,"岗位列表加载中");
 				systemServiceRO.getAllRoles(); 
 			
 			}
