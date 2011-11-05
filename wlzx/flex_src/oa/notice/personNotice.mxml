@@ -2,6 +2,7 @@
 <mx:Module xmlns:mx="http://www.adobe.com/2006/mxml" 
 		   xmlns:hc="com.hillelcoren.components.*"
 		   xmlns:render="system.component.render.*"
+		  
 		   layout="vertical" width="100%" creationComplete="init();"  height="100%" xmlns:valueObjects="oa.entity.*" xmlns:component="system.component.*" xmlns:mx1="library://ns.adobe.com/flex/mx" xmlns:mutiUpload="system.component.mutiUpload.*"  currentState="list">
 	<valueObjects:NoticeModel id="form"/>
 	<mx:RemoteObject id="noticeServiceRO" destination="noticeServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
@@ -22,7 +23,7 @@
 		}
 	</mx:Style>-->
 	<mx:StringValidator id="title_stringValidator" source="{title}" property="text"  requiredFieldError="公告标题不能为空"/>
-	<mx:StringValidator id="content_stringValidator" source="{rte}" property="text"  requiredFieldError="公告内容不能为空"/>
+	<mx:StringValidator id="content_stringValidator" source="{rte}" property="htmlText"  requiredFieldError="公告内容不能为空"/>
 	
 	<mx:states>
 		<mx:State name="add" enterState="add_activateHandler(event)">           
@@ -181,7 +182,7 @@
 				postdepartment.selectedIndex = ComboxUtils.findIndex(departmentList, form.postDepartmentId);
 				if(form.emergence == 1)
 					emergence.selected = true;
-				rte.text = form.content;
+				rte.htmlText = form.content;
 				/*
 				var uploadList:Array=new Array();
 				for each(var model:AttachmentModel in form.attachments){
@@ -276,7 +277,7 @@
 					if(addUpdateFlag.text == "add"){
 						//Alert.show("add");
 						form = new NoticeModel();
-						form.content = rte.text;
+						form.content = rte.htmlText;
 						if(emergence.selected)
 							form.emergence = 1;
 						else
@@ -289,7 +290,7 @@
 						//Alert.show("add begin");
 						noticeServiceRO.addNotice(form, upload.getAttachmentsIds());
 					}else if(addUpdateFlag.text == "update"+"_"+form.id){
-						form.content = rte.text;
+						form.content = rte.htmlText;
 						if(emergence.selected)
 							form.emergence = 1;
 						else
@@ -324,7 +325,7 @@
 					if(addUpdateFlag.text=="add"){
 						form = new NoticeModel();
 						//Alert.show("ok");
-						form.content = rte.text;
+						form.content = rte.htmlText;
 						if(emergence.selected)
 							form.emergence = 1;
 						else
@@ -337,7 +338,7 @@
 						form.status = 1;
 						noticeServiceRO.addNotice(form, upload.getAttachmentsIds());
 					}else if(addUpdateFlag.text == "update"+"_"+form.id){
-						form.content = rte.text;
+						form.content = rte.htmlText;
 						if(emergence.selected)
 							form.emergence = 1;
 						else
@@ -370,7 +371,7 @@
 			
 			private function addInit():void{
 				title.text = " ";
-				rte.text = " ";
+				rte.htmlText = " ";
 				noticeType.selectedIndex = 1;
 				noticeScope.selectedIndex = 1;
 				postdepartment.selectedIndex = 1;
@@ -746,7 +747,12 @@
 						</mx:FormItem>
 						
 						<mx:FormItem label="内容" width="100%" height="100%">
-							<mx:RichTextEditor id="rte" title="Halo RichTextEditor"   headerHeight="0" width="100%" height="100%" dropShadowVisible="false" text="" >
+							<!--<rtf:RtfEditor width="100%" height="100%" toolbar="{new DefaultToolbar()}" id="rte">
+								
+							</rtf:RtfEditor>-->
+						<!--	<fck:FCKEditor width="100%" height="100%" id="rte" alpha="0">
+							</fck:FCKEditor>-->
+							<mx:RichTextEditor id="rte" title="Halo RichTextEditor"   headerHeight="0" width="100%" height="100%" dropShadowVisible="false" htmlText="" >
 							</mx:RichTextEditor>
 						</mx:FormItem>
 					</mx:Form>
