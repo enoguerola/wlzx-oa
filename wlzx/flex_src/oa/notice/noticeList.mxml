@@ -147,8 +147,7 @@
 					<mx:Component>
 						<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off" >
 							<mx:Image source="@Embed(source='../WebContent/resources/common/ui/emergence2.png')"  visible="{checkEmergence(data)}" toolTip="紧急公告"/>
-							<mx1:Text text="{data.title}" width="100">
-							</mx1:Text>
+							<mx:Label text="{data.title}" width="100%"/>
 							<mx:Script>
 								<![CDATA[
 									
@@ -181,8 +180,8 @@
 				<mx:itemRenderer>
 					<mx:Component>
 						<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle"  horizontalScrollPolicy="off">
-							<mx1:Text text="{this.parentApplication.getDepartmentNameById(data.postDepartmentId)}" width="100">
-							</mx1:Text>
+							<mx:Label text="{this.parentApplication.getDepartmentNameById(data.postDepartmentId)}" width="100">
+							</mx:Label>
 						</mx:HBox>
 					</mx:Component>
 				</mx:itemRenderer>
@@ -191,8 +190,8 @@
 				<mx:itemRenderer>
 					<mx:Component>
 						<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle"  horizontalScrollPolicy="off">
-							<mx1:Text text="{this.parentApplication.getTeacherNameByAccountId(data.posterId)}" width="100">
-							</mx1:Text>
+							<mx:Label text="{this.parentApplication.getTeacherNameByAccountId(data.posterId)}" width="100">
+							</mx:Label>
 						</mx:HBox>
 					</mx:Component>
 				</mx:itemRenderer>
@@ -201,8 +200,8 @@
 				<mx:itemRenderer>
 					<mx:Component>
 						<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle"  horizontalScrollPolicy="off">
-							<mx1:Text text="{data.readNums}" width="100">
-							</mx1:Text>
+							<mx:Label text="{data.readNums}" width="100">
+							</mx:Label>
 						</mx:HBox>
 					</mx:Component>
 				</mx:itemRenderer>

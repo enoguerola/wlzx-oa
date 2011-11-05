@@ -29,7 +29,7 @@ public class ScheduleDAOImpl extends BaseDAOImpl<ScheduleModel> implements Sched
 			criteria.add(Restrictions.sqlRestriction("department_share ='"+departmentShare+"'"));	
 		}
 		if(StringUtils.isNotEmpty(departmentIds)){
-			criteria.add(Restrictions.sqlRestriction("department_id in('"+departmentIds+"')"));	
+			criteria.add(Restrictions.sqlRestriction("department_id in("+departmentIds+")"));	
 		}
 		if(StringUtils.isNotEmpty(schoolShare)){
 			criteria.add(Restrictions.sqlRestriction("school_share ='"+schoolShare+"'"));	
@@ -66,7 +66,7 @@ public class ScheduleDAOImpl extends BaseDAOImpl<ScheduleModel> implements Sched
 		}
 		
 		if(StringUtils.isNotEmpty(departmentIds)){
-			criteria.add(Restrictions.sqlRestriction("department_id in('"+departmentIds+"')"));	
+			criteria.add(Restrictions.sqlRestriction("department_id in("+departmentIds+")"));	
 		}
 		
 		if(StringUtils.isNotEmpty(type)){
@@ -104,7 +104,7 @@ public class ScheduleDAOImpl extends BaseDAOImpl<ScheduleModel> implements Sched
 			
 		
 		if(StringUtils.isNotEmpty(departmentIds)){
-			criteria.add(Restrictions.sqlRestriction("department_id in('"+departmentIds+"')"));	
+			criteria.add(Restrictions.sqlRestriction("department_id in("+departmentIds+")"));	
 		}
 		
 		if(StringUtils.isNotEmpty(type)){

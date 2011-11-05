@@ -188,8 +188,8 @@
 										<mx:Component>
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off" >
 												<mx:Image source="@Embed(source='../WebContent/resources/common/ui/emergence2.png')"  visible="{checkEmergence(data)}" toolTip="紧急公告"/>
-												<mx1:Text text="{data.title}" width="100%">
-												</mx1:Text>
+												<mx:Label text="{data.title}" width="100%">
+												</mx:Label>
 												<mx:Script>
 													<![CDATA[
 														
@@ -216,24 +216,24 @@
 										</mx:Component>
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="发布时间" width="70" dataField="postTime" labelFunction="DateUtil.datagridFormatDate">
+								<mx:DataGridColumn textAlign="center" headerText="发布时间" width="80" dataField="postTime" labelFunction="DateUtil.datagridFormatDate">
 								</mx:DataGridColumn>
 								<mx:DataGridColumn textAlign="center" headerText="发布部门" width="100" >
 									<mx:itemRenderer>
 										<mx:Component>
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle"  horizontalScrollPolicy="off">
-												<mx1:Text text="{this.parentApplication.getDepartmentNameById(data.	postDepartmentId)}" width="100">
-												</mx1:Text>
+												<mx:Label text="{this.parentApplication.getDepartmentNameById(data.	postDepartmentId)}" width="100">
+												</mx:Label>
 											</mx:HBox>
 										</mx:Component>
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="阅读数" width="60" >
+								<mx:DataGridColumn textAlign="center" headerText="阅读数" width="50" >
 									<mx:itemRenderer>
 										<mx:Component>
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle"  horizontalScrollPolicy="off">
-												<mx1:Text text="{data.readNums}" width="100">
-												</mx1:Text>
+												<mx:Label text="{data.readNums}" width="100%">
+												</mx:Label>
 											</mx:HBox>
 										</mx:Component>
 									</mx:itemRenderer>
@@ -286,8 +286,8 @@
 										<mx:Component>
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle"  horizontalScrollPolicy="off">
 												<mx:Image source="@Embed(source='../WebContent/resources/common/ui/emergence2.png')"  width="{checkEmergence(data)}" toolTip="紧急公告"/>
-												<mx1:Text text="{data.title}" width="100%">
-												</mx1:Text>
+												<mx:Label text="{data.title}" width="100%">
+												</mx:Label>
 												<mx:Script>
 													<![CDATA[
 														
@@ -314,24 +314,24 @@
 										</mx:Component>
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="发布时间" width="70" dataField="postTime" labelFunction="DateUtil.datagridFormatDate">
+								<mx:DataGridColumn textAlign="center" headerText="发布时间" width="80" dataField="postTime" labelFunction="DateUtil.datagridFormatDate">
 								</mx:DataGridColumn>
 								<mx:DataGridColumn textAlign="center" headerText="发布人"  width="100" >
 									<mx:itemRenderer>
 										<mx:Component>
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle"  horizontalScrollPolicy="off">
-												<mx1:Text text="{this.parentApplication.getTeacherNameByAccountId(data.posterId)}" width="100">
-												</mx1:Text>
+												<mx:Label text="{this.parentApplication.getTeacherNameByAccountId(data.posterId)}" width="100">
+												</mx:Label>
 											</mx:HBox>
 										</mx:Component>
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="阅读数" width="60" >
+								<mx:DataGridColumn textAlign="center" headerText="阅读数" width="50" >
 									<mx:itemRenderer>
 										<mx:Component>
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle"  horizontalScrollPolicy="off">
-												<mx1:Text text="{data.readNums}" width="100">
-												</mx1:Text>
+												<mx:Label text="{data.readNums}" width="100%">
+												</mx:Label>
 											</mx:HBox>
 										</mx:Component>
 									</mx:itemRenderer>
@@ -374,7 +374,7 @@
 								<mx:Image source="@Embed(source='../WebContent/resources/common/ui/emergence2.png')"  width="{checkEmergence2(data.emergence)}" toolTip="紧急"/>
 								<mx:Image source="@Embed(source='../WebContent/resources/common/ui/emergence3.png')"  width="{checkEmergence3(data.emergence)}" toolTip="重要"/>
 								
-								<mx1:Text text="{getTime(data)}"/>
+								<mx:Label text="{getTime(data)}"/>
 								<mx:Script>
 								<![CDATA[
 								
@@ -439,7 +439,7 @@
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off" verticalScrollPolicy="off">
 												
 												<!--<mx:Label text="{data.title}" width="80%"/>-->
-												<mx1:Text text="{data.title}" width="100%"  toolTip="{getToolTip(data)}"/>
+												<mx:Label text="{data.title}" width="100%"  toolTip="{getToolTip(data)}"/>
 												<mx:Script>
 													<![CDATA[
 														
@@ -524,7 +524,7 @@
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off" verticalScrollPolicy="off">
 												
 												<!--<mx:Label text="{data.title}" width="80%"/>-->
-												<mx1:Text text="{data.title}" width="100%" toolTip="{data.content}"/>
+												<mx:Label text="{data.title}" width="100%" toolTip="{data.content}"/>
 											</mx:HBox>																		
 											
 											
@@ -547,7 +547,7 @@
 														  
 														  "/>
 												
-												<mx1:Text text="{getTime(data)}"/>
+												<mx:Label text="{getTime(data)}"/>
 												<mx:Script>
 													<![CDATA[
 														

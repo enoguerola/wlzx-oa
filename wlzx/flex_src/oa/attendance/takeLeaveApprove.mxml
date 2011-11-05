@@ -80,7 +80,7 @@
 			import mx.validators.Validator;
 			import system.component.WlzxLockWin;
 			import system.utils.*;
-
+			import system.component.lockWin.LockWinTool;
 			private var validatorArr:Array;
 			public var sections:ArrayCollection = new ArrayCollection( 
 				[ {label:"上午", data:0},  
@@ -322,10 +322,12 @@
 			
 			protected function getTakeLeaveAppliesByConditions_resultHandler(event:ResultEvent):void
 			{
+				LockWinTool.unLockCurrentWin();
 				var allList:ArrayCollection=event.result as ArrayCollection;
 				applyTable.initdata(allList);
 			}
 			public  function search():void{
+				LockWinTool.lockCurrentWin(this,"正在检索请假出差记录");
 				var teacher:String=search_account_id.text;
 				var type:String=search_type.selectedItem.data;
 				var status:String=search_state.selectedItem.data;
@@ -646,7 +648,7 @@
 				}               
 			}
 			
-			private var window:WlzxLockWin=null;
+			/* private var window:WlzxLockWin=null;
 			private function lockWin():void{
 				
 				window=WlzxLockWin(PopUpManager.createPopUp(this,WlzxLockWin,true)); 
@@ -658,7 +660,7 @@
 			private function unLockWin():void{
 				if(window!=null)
 					PopUpManager.removePopUp(window);
-			}
+			} */
 			private function print(applyId:String):void{
 				var url:URLRequest = new URLRequest("general/print/QJDPrint.action");
 				var variables:URLVariables = new URLVariables();//传过去的data
@@ -739,7 +741,7 @@
 						
 						<component:WlzxPageDataGrid width="100%" height="100%"   borderVisible="true"  autoLayout="true"  borderAlpha="0.2" verticalAlign="middle"   id="applyTable" pagecount="10"  >				
 							<component:mygridcolumns>
-								<mx:DataGridColumn textAlign="center" headerText="申请编号" dataField="applyNo" width="120">
+								<mx:DataGridColumn textAlign="center" headerText="申请编号" dataField="applyNo" width="100">
 									<mx:itemRenderer>
 										<mx:Component>
 											<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
@@ -774,11 +776,11 @@
 										</mx:Component>						
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="申请人" width="100" >
+								<mx:DataGridColumn textAlign="center" headerText="申请人" width="80" >
 									<mx:itemRenderer>
 										<mx:Component>
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle"  horizontalScrollPolicy="off">
-												<mx1:Text text="{this.parentApplication.getTeacherNameByAccountId(data.teacherId)}" width="100">
+												<mx1:Text text="{this.parentApplication.getTeacherNameByAccountId(data.teacherId)}" width="100%">
 													
 												</mx1:Text>
 											</mx:HBox>
@@ -846,7 +848,7 @@
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
 								
-								<mx:DataGridColumn textAlign="center" headerText="状态"  width="60" dataField="status">
+								<mx:DataGridColumn textAlign="center" headerText="状态"  width="100" dataField="status">
 									<mx:itemRenderer>
 										<mx:Component>
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">

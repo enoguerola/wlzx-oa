@@ -2,7 +2,7 @@ package system.wlims.oa.service.notice;
 
 
 import system.ServiceException;
-import system.wlims.oa.entity.notice.AttachmentModel;
+import system.wlims.oa.entity.AttachmentModel;
 
 public interface AttachmentService {
 

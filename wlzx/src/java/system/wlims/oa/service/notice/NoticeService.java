@@ -7,14 +7,13 @@ import system.wlims.oa.entity.notice.NoticeModel;
 
 public interface NoticeService {
 	
-	@SuppressWarnings("unchecked")
 	public void addNotice(NoticeModel notice, String attachmentIds);
 	
 	public boolean updateNotice(NoticeModel notice, String adds,String removes);
 	
 	public NoticeModel loadNoticeInfoById(String id);
 		
-	public List<NoticeModel> getNoticesByConditions(String userId,String type,String scope,String emergence,String deparmentId,
+	public List<NoticeModel> getNoticesByConditions(String userId,String type,String scope,String emergence,String deparmentIds,
 			String title, String status, String beginDate,String endDate, Integer index, Integer page);
 	
 	boolean deleteNoticeById(String id);

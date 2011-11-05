@@ -1,9 +1,7 @@
 package system.wlims.oa.serviceImpl.notice;
 
 import java.util.ArrayList;
-import java.util.TreeSet;
 import java.util.List;
-import java.util.Set;
 
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
@@ -14,14 +12,12 @@ import system.ServiceException;
 import system.components.SecurityUserHolder;
 import system.dao.DepartmentDAO;
 import system.dao.UserDAO;
-import system.entity.DepartmentModel;
 import system.entity.UserModel;
 import system.utils.StringUtils;
 import system.utils.UtilDateTime;
 import system.wlims.oa.dao.notice.AttachmentDAO;
 import system.wlims.oa.dao.notice.NoticeDAO;
-import system.wlims.oa.entity.conference.ConferenceModel;
-import system.wlims.oa.entity.notice.AttachmentModel;
+import system.wlims.oa.entity.AttachmentModel;
 import system.wlims.oa.entity.notice.NoticeModel;
 import system.wlims.oa.service.notice.NoticeService;
 
@@ -32,7 +28,6 @@ public class NoticeServiceImpl implements NoticeService {
 	private UserDAO userDAO;
 	private AttachmentDAO attachmentDAO;
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void addNotice(NoticeModel notice, String attachmentIds) {
 		// TODO Auto-generated method stub
@@ -86,7 +81,7 @@ public class NoticeServiceImpl implements NoticeService {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<NoticeModel> getNoticesByConditions(String userId, String type,
-			String scope, String emergence, String deparmentId, String title, String status,
+			String scope, String emergence, String deparmentIds, String title, String status,
 			String beginDate, String endDate, Integer index, Integer page) {
 		// TODO Auto-generated method stub
 		DetachedCriteria criteria = DetachedCriteria.forClass(NoticeModel.class);
@@ -101,17 +96,18 @@ public class NoticeServiceImpl implements NoticeService {
 			criteria.add(Restrictions.eq("emergence", Integer.parseInt(emergence)));
 		
 		 //System.out.println(deparmentId);
-		if(StringUtils.isNotEmpty(deparmentId)){
-			// get all department under id
-			Set<DepartmentModel> departmentSet = new TreeSet<DepartmentModel>();
-			DepartmentModel departmentModel = departmentDAO.get(deparmentId);
-			departmentSet.add(departmentModel);
-			departmentSet.addAll(departmentDAO.getAllSubordinates(departmentModel));
-			Set<String> stringSet = new TreeSet<String>();
-			for(DepartmentModel model: departmentSet){
-				stringSet.add(model.getId());
-			}
-			criteria.add(Restrictions.in("postDepartmentId", stringSet.toArray()));
+		if(StringUtils.isNotEmpty(deparmentIds)){
+//			// get all department under id
+//			Set<DepartmentModel> departmentSet = new TreeSet<DepartmentModel>();
+//			DepartmentModel departmentModel = departmentDAO.get(deparmentId);
+//			departmentSet.add(departmentModel);
+//			departmentSet.addAll(departmentDAO.getAllSubordinates(departmentModel));
+//			Set<String> stringSet = new TreeSet<String>();
+//			for(DepartmentModel model: departmentSet){
+//				stringSet.add(model.getId());
+//			}
+//			criteria.add(Restrictions.in("postDepartmentId", stringSet.toArray()));
+			criteria.add(Restrictions.sqlRestriction("post_department_id in("+deparmentIds+")"));
 		}
 		
 		if(StringUtils.isNotEmpty(title))
@@ -230,7 +226,7 @@ public class NoticeServiceImpl implements NoticeService {
 		criteria.add(Restrictions.eq("scope", NoticeModel.EScope.Department.getValue()));
 		criteria.add(Restrictions.eq("status", NoticeModel.EStatus.Published.getValue()));
 		if(StringUtils.isNotEmpty(departments))
-			criteria.add(Restrictions.sqlRestriction("post_department_id in('"+departments+"')"));
+			criteria.add(Restrictions.sqlRestriction("post_department_id in("+departments+")"));
 		criteria.addOrder(Order.desc("postTime"));
 
 //		if(!SecurityUserHolder.isSuperRootUser()){

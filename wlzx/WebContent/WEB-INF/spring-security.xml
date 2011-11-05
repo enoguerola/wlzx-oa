@@ -48,7 +48,9 @@
 		<!-- 注入userService为了查询相应的用户 -->
 		<beans:property name="userDAO" ref="userDAO"></beans:property>
 	</beans:bean>
-	<beans:bean id="loginSuccessHandler" class="system.components.MyAccessAuthenticationSuccessHandler"/> 
+	<beans:bean id="loginSuccessHandler" class="system.components.MyAccessAuthenticationSuccessHandler">
+			<beans:property name="userDAO" ref="userDAO" />
+	</beans:bean>
 	<beans:bean id="loginFailureHandler" class="system.components.MyAccessAuthenticationFailureHandler"/>
 	
     <!-- 一个自定义的UrlFilter，必须包含authenticationManager,accessDecisionManager,securityMetadataSource三个属性，我们的所有控制将在这三个类中实现，解释详见具体配置 -->

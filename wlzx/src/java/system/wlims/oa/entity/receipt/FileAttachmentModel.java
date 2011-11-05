@@ -2,7 +2,7 @@ package system.wlims.oa.entity.receipt;
 
 import java.sql.Date;
 
-import system.wlims.oa.entity.notice.AttachmentModel;
+import system.wlims.oa.entity.AttachmentModel;
 
 
 /**

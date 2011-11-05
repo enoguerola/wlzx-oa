@@ -22,7 +22,7 @@ import system.utils.UtilDateTime;
 import system.wlims.oa.dao.notice.AttachmentDAO;
 import system.wlims.oa.dao.receipt.FileFlowDAO;
 import system.wlims.oa.dao.receipt.ReceiptDAO;
-import system.wlims.oa.entity.notice.AttachmentModel;
+import system.wlims.oa.entity.AttachmentModel;
 import system.wlims.oa.entity.notice.NoticeModel;
 import system.wlims.oa.entity.receipt.FileFlowModel;
 import system.wlims.oa.entity.receipt.ReceiptModel;
