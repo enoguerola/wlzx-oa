@@ -273,14 +273,15 @@
 			
 			protected function validateForm(event:MouseEvent):void
 			{
-				if(parseInt(department.selectedItem.data)==-1){
-					Alert.show("部门不能为空啊！");
-					return ;
-				}
+				
 				
 				var validatorErrorArray:Array = Validator.validateAll(validatorArr);
 				var isValidForm:Boolean = validatorErrorArray.length == 0;
 				if (isValidForm) {
+					if(parseInt(department.selectedItem.data)==-1){
+						Alert.show("部门不能为空！", "请按照以下错误提示信息重新填写", Alert.OK);
+						return ;
+					}
 					teacher.name = teacherName.text;
 					teacher.teacherMail = mail.text;
 					teacher.teacherNo = teacherno.text;
@@ -325,6 +326,9 @@
 					for each (err in validatorErrorArray) {
 						var errField:String = FormItem(err.currentTarget.source.parent).label
 						errorMessageArray.push(errField + ": " + err.message);
+					}
+					if(parseInt(department.selectedItem.data)==-1){
+						errorMessageArray.push("部门" + ": " + "部门不能为空");
 					}
 					Alert.show(errorMessageArray.join("\n\n"), "请按照以下错误提示信息重新填写", Alert.OK);
 				}
@@ -982,7 +986,7 @@
 								</s:VGroup>
 								<s:VGroup width="60%" height="100%">
 									<s:HGroup width="100%">
-										<mx:FormItem label="姓名" width="50%"><s:TextInput id="teacherName" width="100%"/></mx:FormItem>
+										<mx:FormItem label="姓名" width="50%" required="true"><s:TextInput id="teacherName" width="100%"/></mx:FormItem>
 										<mx:FormItem label="性别" width="50%">
 											<s:DropDownList id="sex" selectedIndex="0" width="100%" dataProvider="{sexArr}" labelField="label"/> 
 										</mx:FormItem>
@@ -996,7 +1000,7 @@
 									<mx:FormItem label="身份证号" width="100%"><mx:TextInput id="idCode" width="100%"/></mx:FormItem>
 									<mx:FormItem label="邮箱" width="100%"><mx:TextInput id="mail" width="100%"/></mx:FormItem>
 									<mx:FormItem label="家庭地址" width="100%"><mx:TextInput id="teacherAddress" width="100%"/></mx:FormItem>
-									<mx:FormItem label="短号" width="100%"><mx:TextInput id="teacherno" width="100%"/></mx:FormItem>
+									<mx:FormItem label="短号" width="100%" required="true"><mx:TextInput id="teacherno" width="100%"/></mx:FormItem>
 								</s:VGroup>
 								<s:VGroup width="30%">
 									<s:HGroup width="100%">
@@ -1082,14 +1086,14 @@
 									
 										<mx:GridRow horizontalAlign="right">
 											<mx:GridItem horizontalAlign="right" >
-												<mx:FormItem label="部门" width="100%">
+												<mx:FormItem label="部门" width="100%" required="true">
 													<mx:ComboBox  id="department" 
 																  width="190" labelField="label" 
 																  />
 												</mx:FormItem>
 											</mx:GridItem>
 											<mx:GridItem horizontalAlign="right" >
-												<mx:FormItem label="职务" width="100%">
+												<mx:FormItem label="职务" width="100%" required="true">
 													<mx:ComboBox  width="90%" id="position"  fontSize="12" labelField="label"  textAlign="left" />
 													
 												</mx:FormItem>
