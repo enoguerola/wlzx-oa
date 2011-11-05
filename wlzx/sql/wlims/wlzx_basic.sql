@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2011 年 10 月 15 日 09:56
+-- 生成日期: 2011 年 11 月 05 日 10:08
 -- 服务器版本: 5.0.91
 -- PHP 版本: 5.2.13
 
@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS `basic_teacher` (
   PRIMARY KEY  (`teacher_id`),
   KEY `teacher_no` (`teacher_no`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='教师记录' AUTO_INCREMENT=311 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='教师记录' AUTO_INCREMENT=312 ;
 
 --
 -- 转存表中的数据 `basic_teacher`
@@ -84,9 +84,9 @@ INSERT INTO `basic_teacher` (`teacher_id`, `user_id`, `teacher_cname`, `teacher_
 (18, 723, '张友良', 0, NULL, 1, '', 2, '', '', '', '', '', '13906864598', '666833', '3', '', '', '', '', NULL, '3', '122', '86026002', '', NULL, NULL, 0, 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-09-28'),
 (20, 725, '毛雪芬', 1, NULL, 1, '', 2, '', '', '', '', '', '13758699776', '666776', '3', '', '', '', '', NULL, '18', '128', '86026776', '', NULL, NULL, 0, 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-10-09'),
 (21, 726, '沈林丽', 1, NULL, 1, '', 2, '', '', '', '', '', '13958675151', '665151', '3', '', '', '', '', NULL, '28', '129', '86026857', '', NULL, NULL, 0, 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-09-28'),
-(22, 727, '陈晓丽', 1, NULL, 1, '', 2, '', '', '', '', '', '13758699863', '666863', '3', '', '', '', '', NULL, '3', '127', '86026863', '', NULL, NULL, 0, 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-09-28'),
+(22, 727, '陈晓丽', 1, NULL, 1, '', 2, '', '', '', '', '', '13758699863', '666863', '3', '', '', '', '', NULL, '3', '128', '86026863', '', NULL, NULL, 0, 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-10-13'),
 (23, 728, '孙韶红', 1, NULL, 1, '', 2, '', '', '', '', '', '13819608165', '668165', '3', '', '', '', '', NULL, '3', '127', '86026027', '', NULL, NULL, 0, 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-09-28'),
-(24, 729, '陶腾江', 0, NULL, 1, '', 2, '', '', '', '', '', '13858688068', '668068', '3', '', '', '', '', NULL, '3', '127', '86026022', '', NULL, NULL, 0, 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-09-28'),
+(24, 729, '陶腾江', 0, NULL, 1, '', 2, '', '', '', '', '', '13858688068', '668068', '3', '', '', '', '', NULL, '3', '128', '86026022', '', NULL, NULL, 0, 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-10-13'),
 (25, 730, '郭修根', 1, NULL, 1, '', 2, '', '', '', '', '', '13958666655', '669898', '3', '', '', '', '', NULL, '28', '129', '28056121', '', NULL, NULL, 0, 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-09-28'),
 (26, 731, '周信中', 0, NULL, 1, '', 2, '', '', '', '', '', '13758699861', '666861', '3', '', '', '', '', NULL, '3', '127', '86026861', '', NULL, NULL, 0, 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-10-10'),
 (27, 732, '李小平', 0, NULL, 1, '', 2, '', '', '', '', '', '13958676080', '666993', '3', '', '', '', '', NULL, '3', '127', '', '', NULL, NULL, 0, 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-09-28'),
@@ -158,7 +158,7 @@ INSERT INTO `basic_teacher` (`teacher_id`, `user_id`, `teacher_cname`, `teacher_
 (96, 801, '洪峰', 1, NULL, 1, '', 2, '', '', '', '', '', '13758699605', '666605', '3', '', '', '', '', NULL, '14', '128', '86026605', '', NULL, NULL, 0, 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-10-08'),
 (97, 802, '马君', 1, NULL, 1, '', 2, '', '', '', '', '', '13758699625', '666625', '3', '', '', '', '', NULL, '14', '128', '86026625', '', NULL, NULL, 0, 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-10-08'),
 (98, 803, '阮慧健', 0, NULL, 1, '', 2, '', '', '', '', '', '13758699771', '669771', '3', '', '', '', '', NULL, '14', '128', '86026958', '', NULL, NULL, 0, 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-10-08'),
-(99, 804, '张卫', 1, NULL, 1, '', 2, '', '', '', '', '', '13758699657', '666657', '3', '', '', '', '', NULL, '14', '128', '86026657', '', NULL, NULL, 0, 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-10-08'),
+(99, 804, '张卫', 1, NULL, 1, '', 2, '', '', '', '', '', '13758699657', '666657', '3', '', '', '', '', NULL, '14', '128', '86026657', '', NULL, NULL, 0, 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-10-21'),
 (100, 805, '张萍', 1, NULL, 1, '', 2, '', '', '', '', '', '13758670369', '666927', '3', '', '', '', '', NULL, '14', '128', '86026927', '', NULL, NULL, 0, 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-10-08'),
 (101, 806, '郑丽', 1, NULL, 1, '', 2, '', '', '', '', '', '13758699638', '666638', '3', '', '', '', '', NULL, '14', '128', '86026638', '', NULL, NULL, 0, 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-10-08'),
 (102, 807, '陈牡丹', 1, NULL, 1, '', 2, '', '', '', '', '', '13586240383', '660383', '3', '', '', '', '', NULL, '14', '128', '86026675', '', NULL, NULL, 0, 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-10-08'),
@@ -176,7 +176,7 @@ INSERT INTO `basic_teacher` (`teacher_id`, `user_id`, `teacher_cname`, `teacher_
 (115, 820, '陈国华', 0, NULL, 1, '', 2, '', '', '', '', '', '13606677671', '666697', '3', '', '', '', '', NULL, '15', '128', '86026697', '', NULL, NULL, 0, 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-10-08'),
 (116, 821, '阎大贵', 0, NULL, 1, '', 2, '', '', '', '', '', '13758699698', '666698', '3', '', '', '', '', NULL, '15', '128', '86026698', '', NULL, NULL, 0, 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-10-08'),
 (117, 822, '林新华', 0, NULL, 1, '', 2, '', '', '', '', '', '13758699700', '666700', '3', '', '', '', '', NULL, '15', '128', '86026700', '', NULL, NULL, 0, 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-10-08'),
-(118, 823, '陈军杰', 0, NULL, 1, '', 2, '', '', '', '', '', '13867687195', '666701', '3', '', '', '', '', NULL, '15', '128', '86026701', '', NULL, NULL, 0, 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-10-08'),
+(118, 823, '陈军杰', 0, NULL, 1, '', 2, '', '', '', '', '', '13867687195', '666701', '3', '', '', '', '', NULL, '15', '128', '86026701', '', NULL, NULL, 0, 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-10-21'),
 (119, 824, '陈素凤', 1, NULL, 1, '', 2, '', '', '', '', '', '13758699702', '666702', '3', '', '', '', '', NULL, '15', '128', '', '', NULL, NULL, 0, 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-10-08'),
 (120, 825, '王文杰', 0, NULL, 1, '', 2, '', '', '', '', '', '13758699703', '666703', '3', '', '', '', '', NULL, '15', '128', '', '', NULL, NULL, 0, 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-10-08'),
 (121, 826, '周维永', 0, NULL, 1, '', 2, '', '', '', '', '', '13586278066', '668066', '3', '', '', '', '', NULL, '15', '128', '86026705', '', NULL, NULL, 0, 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-10-08'),
@@ -198,7 +198,7 @@ INSERT INTO `basic_teacher` (`teacher_id`, `user_id`, `teacher_cname`, `teacher_
 (137, 842, '杨兴', 1, NULL, 1, '', 2, '', '', '', '', '', '13758699265', '666265', '3', '', '', '', '', NULL, '15', '128', '86026265', '', NULL, NULL, 0, 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-10-08'),
 (138, 843, '孙海琴', 1, NULL, 1, '', 2, '', '', '', '', '', '13600588666', '666707', '3', '', '', '', '', NULL, '15', '128', '86026707', '', NULL, NULL, 0, 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-10-08'),
 (139, 844, '瞿永刚', 0, NULL, 1, '', 2, '', '', '', '', '', '13758699270', '669270', '3', '', '', '', '', NULL, '15', '128', '86026270', '', NULL, NULL, 0, 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-10-08'),
-(140, 845, '毛永斌', 0, NULL, 1, '', 2, '', '', '', '', '', '13575859123', '669123', '3', '', '', '', '', NULL, '15', '128', '86026820', '', NULL, NULL, 0, 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-10-08'),
+(140, 845, '毛永斌', 0, NULL, 1, '', 2, '', '', '', '', '', '13575859123', '669123', '3', '', '', '', '', NULL, '15', '128', '86026820', '', NULL, NULL, 0, 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-10-17'),
 (141, 846, '林丽卫', 1, NULL, 1, '', 2, '', '', '', '', '', '13758697818', '668818', '3', '', '', '', '', NULL, '15', '128', '', '', NULL, NULL, 0, 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-10-08'),
 (142, 847, '闻丹', 1, NULL, 1, '', 2, '', '', '', '', '', '13758650560', '660560', '3', '', '', '', '', NULL, '15', '128', '', '', NULL, NULL, 0, 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-10-08'),
 (143, 848, '叶灵娅', 1, NULL, 1, '', 2, '', '', '', '', '', '13958663331', '663331', '3', '', '', '', '', NULL, '15', '128', '', '', NULL, NULL, 0, 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-10-08'),
@@ -275,7 +275,7 @@ INSERT INTO `basic_teacher` (`teacher_id`, `user_id`, `teacher_cname`, `teacher_
 (215, 920, '王玉红', 1, NULL, 1, '', 2, '', '', '', '', '', '13758699790', '666790', '3', '', '', '', '', NULL, '19', '128', '86026790', '', NULL, NULL, 0, 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-10-09'),
 (216, 921, '王海波', 1, NULL, 1, '', 2, '', '', '', '', '', '13758656777', '666792', '3', '', '', '', '', NULL, '19', '128', '86026792', '', NULL, NULL, 0, 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-10-09'),
 (217, 922, '谢艳林', 1, NULL, 1, '', 2, '', '', '', '', '', '13758699789', '666789', '3', '', '', '', '', NULL, '19', '128', '86026789', '', NULL, NULL, 0, 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-10-09'),
-(218, 923, '江丽君', 1, NULL, 1, '', 2, '', '', '', '', '', '13758699791', '666791', '3', '', '', '', '', NULL, '19', '128', '86026791', '', NULL, NULL, 0, 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-10-09'),
+(218, 923, '江丽君', 1, NULL, 1, '', 2, '', '', '', '', '', '13758699791', '666791', '3', '', '', '', '', NULL, '19', '128', '86026791', '', NULL, NULL, 0, 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-10-21'),
 (219, 924, '朱莉华', 1, NULL, 1, '', 2, '', '', '', '', '', '13958601608', '600608', '3', '', '', '', '', NULL, '19', '128', '86198620', '', NULL, NULL, 0, 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-10-09'),
 (220, 925, '史林杰', 0, NULL, 1, '', 2, '', '', '', '', '', '13958616693', '666269', '3', '', '', '', '', NULL, '20', '133', '86026269', '', NULL, NULL, 0, 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-09-28'),
 (221, 926, '林仁明', 1, NULL, 1, '', 2, '', '', '', '', '', '13758699815', '666815', '3', '', '', '', '', NULL, '20', '128', '86026815', '', NULL, NULL, 0, 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-10-09'),
@@ -289,7 +289,7 @@ INSERT INTO `basic_teacher` (`teacher_id`, `user_id`, `teacher_cname`, `teacher_
 (229, 934, '彭小琴', 1, NULL, 1, '', 2, '', '', '', '', '', '13758699813', '666813', '3', '', '', '', '', NULL, '20', '128', '86026813', '', NULL, NULL, 0, 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-10-09');
 INSERT INTO `basic_teacher` (`teacher_id`, `user_id`, `teacher_cname`, `teacher_sex`, `teacher_birthday`, `teacher_marrage`, `teacher_nation`, `teacher_politics_status`, `teacher_identify`, `teacher_native_place`, `teacher_email`, `teacher_home_phone`, `teacher_address`, `teacher_mobile_phone`, `teacher_no`, `teacher_education`, `teacher_profession`, `teacher_graduate_school`, `teacher_professional_title`, `teacher_skill_level`, `teacher_skill_level_date`, `teacher_department`, `teacher_position`, `teacher_office_phone`, `teacher_contact_phone`, `teacher_work_date`, `teacher_attend_date`, `teacher_status`, `teacher_photo_src`, `teacher_create_date`, `teacher_modified_date`) VALUES
 (230, 935, '李倩倩', 1, NULL, 1, '', 2, '', '', '', '', '', '13758699816', '666816', '3', '', '', '', '', NULL, '21', '133', '86026816', '', NULL, NULL, 0, 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-09-28'),
-(231, 936, '江红燕', 1, NULL, 1, '', 2, '', '', '', '', '', '13867620272', '666808', '3', '', '', '', '', NULL, '21', '128', '86026808', '', NULL, NULL, 0, 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-10-09'),
+(231, 936, '江红燕', 1, NULL, 1, '', 2, '', '', '', '', '', '13867620272', '666808', '3', '', '', '', '', NULL, '21', '128', '86026808', '', NULL, NULL, 0, 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-10-13'),
 (232, 937, '赵乾坤', 0, NULL, 1, '', 2, '', '', '', '', '', '13758699809', '666809', '3', '', '', '', '', NULL, '21', '128', '86026809', '', NULL, NULL, 0, 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-10-09'),
 (233, 938, '郭建江', 0, NULL, 1, '', 2, '', '', '', '', '', '13758699811', '666811', '3', '', '', '', '', NULL, '21', '128', '86026811', '', NULL, NULL, 0, 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-10-09'),
 (234, 939, '孔海君', 1, NULL, 1, '', 2, '', '', '', '', '', '13958697865', '666812', '3', '', '', '', '', NULL, '21', '128', '86026812', '', NULL, NULL, 0, 'resources/oa/layout/default_head.jpg', '2011-07-05', '2011-10-09'),
@@ -365,7 +365,8 @@ INSERT INTO `basic_teacher` (`teacher_id`, `user_id`, `teacher_cname`, `teacher_
 (307, 1014, '蒋俊燕', 1, NULL, 0, '', 0, '', '', '', '', '', '', '661591', '0', '', '', '', '', NULL, '17', '128', '', '', NULL, NULL, 0, 'uploads/basic/teacherProfile/default_head.jpg', '2011-09-05', '2011-10-08'),
 (308, 1015, '方琰', 1, NULL, 0, '', 0, '', '', '', '', '', '', '663010', '0', '', '', '', '', NULL, '19', '128', '', '', NULL, NULL, 0, 'uploads/basic/teacherProfile/default_head.jpg', '2011-09-05', '2011-10-09'),
 (309, 1016, '陈桂花', 1, NULL, 1, '', 0, '', '', '', '', '', '13626688567', '668567', '0', '', '', '', '', NULL, '19', '128', '', '', NULL, NULL, 0, 'uploads/basic/teacherProfile/default_head.jpg', '2011-09-05', '2011-10-09'),
-(310, 1017, '邱晓慧', 1, NULL, 0, '', 0, '', '', '', '', '', '13095768255', '668255', '0', '', '', '', '', NULL, '13', '128', '', '', NULL, NULL, 0, 'uploads/basic/teacherProfile/default_head.jpg', '2011-09-05', '2011-09-28');
+(310, 1017, '邱晓慧', 1, NULL, 0, '', 0, '', '', '', '', '', '13095768255', '668255', '0', '', '', '', '', NULL, '13', '128', '', '', NULL, NULL, 0, 'uploads/basic/teacherProfile/default_head.jpg', '2011-09-05', '2011-09-28'),
+(311, 1018, '邱晓慧', 1, NULL, 1, '汉族', 0, '', '', '', '', '', '15157299919', '669919', '0', '', '', '', '', NULL, '13', '128', '', '', NULL, NULL, 0, 'uploads/basic/teacherProfile/default_head.jpg', '2011-11-01', '2011-11-01');
 
 -- --------------------------------------------------------
 

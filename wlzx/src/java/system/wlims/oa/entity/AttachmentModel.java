@@ -1,4 +1,4 @@
-package system.wlims.oa.entity.notice;
+package system.wlims.oa.entity;
 
 import java.util.Date;
 

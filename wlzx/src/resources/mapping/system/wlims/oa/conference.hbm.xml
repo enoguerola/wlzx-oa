@@ -58,11 +58,11 @@
         
         <set name="attachments" lazy="false"  table="wlzx_oa_attachment" cascade="none" where="belong_object='ConferenceModelFJ'" inverse="true" >
 			<key column="belong_object_id" not-null="true" />
-			<one-to-many not-found="ignore" class="system.wlims.oa.entity.notice.AttachmentModel"/> 
+			<one-to-many not-found="ignore" class="system.wlims.oa.entity.AttachmentModel"/> 
 		</set>
 		 <set name="summaryAttachments" lazy="false"  table="wlzx_oa_attachment" cascade="none" where="belong_object='ConferenceModelZJ'" inverse="true" >
 			<key column="belong_object_id" not-null="true" />
-			<one-to-many not-found="ignore" class="system.wlims.oa.entity.notice.AttachmentModel"/> 
+			<one-to-many not-found="ignore" class="system.wlims.oa.entity.AttachmentModel"/> 
 		</set>
         		
     </class>
