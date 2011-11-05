@@ -28,7 +28,7 @@
 			import mx.managers.PopUpManager;
 			import mx.modules.*;
 			import mx.rpc.events.*;
-			
+			import system.component.lockWin.LockWinTool;
 			import spark.components.*;
 			
 			import system.entity.*;
@@ -36,12 +36,14 @@
 			public var selectedNode:XML;
 			public var pop:DepartmentPopWin=null;
 			private function init():void {
+				LockWinTool.lockCurrentWin(this,"部门列表加载中");
 				systemServiceRO.getDepartmentBySymbol("root");
 
 			}
 
 			private function systemFaultHandler(event:FaultEvent):void {
 				Alert.show(event.fault.faultString, 'Error');
+				LockWinTool.unLockCurrentWin();
 			}
 			protected function departmentRemove_resultHandler(event:ResultEvent):void{
 				if(event.result==true){
@@ -59,6 +61,7 @@
 				}
 			}
 			private function getDepartmentBySymbolResult(event:ResultEvent):void {
+				LockWinTool.unLockCurrentWin();
 				var department:DepartmentModel=event.result as DepartmentModel;
 				var resultXML:String=buildSubDepartments(department);
 				var departmentData:XML=new XML(resultXML);
@@ -150,11 +153,11 @@
 			private function tree_itemClick(evt:Event):void {
 				selectedNode=departments.selectedItem as XML;
 				var id:String=selectedNode.@id;
+				LockWinTool.lockCurrentWin(this,"部门信息加载中");
 				systemServiceRO.getDepartmentById(id);
 					
 			}
 			public function loadDepartmentDetail(department:DepartmentModel):void{
-				lockWin();
 				dname.text=department.name;
 				creationDate.text=CommonUtils.formatDate(department.creationDate,"YYYY-MM-DD");
 				symbol.text=department.symbol;
@@ -179,7 +182,7 @@
 				}
 				masters.text=mastersString;
 				masters.validateProperties();
-				unLockWin();
+				LockWinTool.unLockCurrentWin();
 //				if(department.getSupervisorRole()!=null){
 //					var _role:RoleModel = department.getSupervisorRole() as RoleModel;	
 //					rolesString=rolesString.concat(_role.name+"");
@@ -210,20 +213,7 @@
 //				return result;
 //			
 //			}
-			import system.component.WlzxLockWin;
-			private var window:WlzxLockWin=null;
-			private function lockWin():void{
-				
-				window=WlzxLockWin(PopUpManager.createPopUp(this,WlzxLockWin,true)); 
-				PopUpManager.centerPopUp(window);
-				window.percentHeight=100;
-				window.percentWidth=100;			
-				
-			}
-			private function unLockWin():void{
-				if(window!=null)
-					PopUpManager.removePopUp(window);
-			}
+			
 		]]>
 	</fx:Script>
 	
