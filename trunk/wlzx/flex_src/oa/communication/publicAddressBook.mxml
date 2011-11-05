@@ -9,14 +9,16 @@
 		<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 			<mx:method name="getDepartmentBySymbol"  concurrency="last"  result="getDepartmentBySymbolResult(event);" />
 		</mx:RemoteObject>
-		<mx:RemoteObject id="teacherAccountBridgeServiceRO" destination="teacherAccountBridgeServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+		<!--<mx:RemoteObject id="teacherAccountBridgeServiceRO" destination="teacherAccountBridgeServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 			<mx:method name="getUserAddressesByConditions"  concurrency="last"  result="getUserAddressesByConditions_resultHandler(event);" />
+		</mx:RemoteObject>-->
+		<mx:RemoteObject id="teacherServiceRO" destination="teacherServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+			<mx:method name="getTeacherModels"  concurrency="last"  result="getTeacherModels_resultHandler(event);" />
 		</mx:RemoteObject>
-	
 	<mx:Script>
 		<![CDATA[
 			import basic.setting.popWin.DepartmentPopWin;
-			
+			import system.component.lockWin.LockWinTool;
 			import flexlib.controls.SuperTabBar;
 			import flexlib.controls.tabBarClasses.SuperTab;
 			import flexlib.events.TabReorderEvent;
@@ -69,10 +71,18 @@
 				
 				return resultXML;
 			}
-			private function getUserAddressesByConditions_resultHandler(event:ResultEvent):void{
-				var allList:ArrayCollection=event.result as ArrayCollection;				
-				table.initdata(allList);
-				unLockWin();
+			private function getTeacherModels_resultHandler(event:ResultEvent):void{
+				LockWinTool.unLockCurrentWin();
+				var result:Object=event.result as Object;
+				var list:Object=new Object;
+				list.data=(result==null?new ArrayCollection():result.items);
+				list.totalLength=(result==null?0:result.totalCount);
+				if(result!=null){
+					pc.AppandData(list);
+					
+				}else{
+					table.dataProvider=null;
+				}
 			}
 			
 			private function treeSelectedItemId():String{
@@ -113,15 +123,21 @@
 				if(window!=null)
 					PopUpManager.removePopUp(window);
 			}
-			public function search():void{
-				lockWin();
-				var departmentId:String=treeSelectedItemId();
-				var userId:String=search_account_id.text;
-//				Alert.show(departmentId+"d");
-//				Alert.show(userId+"u");
-				teacherAccountBridgeServiceRO.getUserAddressesByConditions(departmentId,userId);
-			}
 			
+			public function search():void{
+				pc.GoToControll(1);
+			}
+			import basic.entity.TeacherModel;
+
+			public function searchPage(index:int,dataLength:int):void{
+				LockWinTool.lockCurrentWin(this,"搜索通讯录信息中");
+				/* var departmentId:String=treeSelectedItemId();
+				var userId:String=search_account_id.text; */
+				var teacher:TeacherModel = new TeacherModel();
+				teacher.name = search_account.text;
+				teacher.teacherDepartment = treeSelectedItemId();
+				teacherServiceRO.getTeacherModels(teacher,index-1,index-1+dataLength);
+			}
 			protected function departments_changeHandler(event:ListEvent):void
 			{
 				// TODO Auto-generated method stub
@@ -160,25 +176,25 @@
 			
 			<mx:HBox  width="100%" height="100%" paddingBottom="10" paddingLeft="10" paddingRight="10">
 				<mx:VBox width="200" height="100%">
-					<mx:Panel width="100%" height="100%"  styleName="customPanel"  title="部门结构"   dropShadowVisible="false" borderVisible="true">
+					<mx:Panel width="100%" height="100%"  styleName="customPanel"  title="部门结构"  id="departmentPanel"  dropShadowVisible="false" borderVisible="true">
 						<mx:Tree  id="departments" labelField="@label"   width="100%" height="100%"  change="departments_changeHandler(event)" borderVisible="false">
 						</mx:Tree>
 					</mx:Panel>
 				</mx:VBox>
 				<mx:VBox  width="100%" height="100%"  >
-					<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="true"   borderAlpha="0.2" verticalAlign="middle"   id="table" pagecount="20">				
-						<component:mygridcolumns>
+					<mx:DataGrid id="table" rowCount="10" width="100%" height="100%"    verticalAlign="middle" >
+						<mx:columns>
 							
 							
-							<mx:DataGridColumn textAlign="center" headerText="姓名" dataField="userName" width="100">
+							<mx:DataGridColumn textAlign="center" headerText="姓名" dataField="name" width="100">
 							</mx:DataGridColumn>
-							<mx:DataGridColumn textAlign="center" headerText="短号" dataField="userAccount" width="100">
+							<mx:DataGridColumn textAlign="center" headerText="短号" dataField="teacherNo" width="100">
 							</mx:DataGridColumn>
-							<mx:DataGridColumn textAlign="center" headerText="主部门" dataField="mainDepartmentName" width="100">
+							<mx:DataGridColumn textAlign="center" headerText="主部门" dataField="teacherDepartment" width="100">
 								<mx:itemRenderer>
 									<mx:Component>
 										<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
-											<mx:Label text="{parentApplication.getDepartmentNameById(data.mainDepartmentName)}"/>
+											<mx:Label text="{parentApplication.getDepartmentNameById(data.teacherDepartment)}"/>
 											
 										</mx:VBox>																			
 									</mx:Component>	
@@ -189,7 +205,7 @@
 								<mx:itemRenderer>
 									<mx:Component>
 										<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
-											<mx:Label text="{parentApplication.getRoleNameById(data.mainRoleName)}"/>
+											<mx:Label text="{parentApplication.getRoleNameById(data.teacherPosition)}"/>
 											
 										</mx:VBox>																			
 									</mx:Component>	
@@ -197,15 +213,16 @@
 								</mx:itemRenderer>
 							</mx:DataGridColumn>
 							
-							<mx:DataGridColumn textAlign="center" headerText="电子邮箱" dataField="email" width="100">
+							<mx:DataGridColumn textAlign="center" headerText="电子邮箱" dataField="teacherMail" width="100">
 							</mx:DataGridColumn>
-							<mx:DataGridColumn textAlign="center" headerText="办公电话" dataField="officePhone" width="100">
+							<mx:DataGridColumn textAlign="center" headerText="办公电话" dataField="teacherOfficePhone" width="100">
 							</mx:DataGridColumn>
-							<mx:DataGridColumn textAlign="center" headerText="手机号码" dataField="mobilePhone" width="100">
+							<mx:DataGridColumn textAlign="center" headerText="手机号码" dataField="teacherMobilePhone" width="100">
 							</mx:DataGridColumn>
 							
-						</component:mygridcolumns>
-					</component:WlzxPageDataGrid>
+						</mx:columns>
+					</mx:DataGrid>
+					<component:SPageController id="pc" useCache="{false}" TargetUI="{table}" callBackFunc="{searchPage}"  PerPage="15" ClientPages="3"  width="100%"/>
 				</mx:VBox>
 			</mx:HBox>
 			

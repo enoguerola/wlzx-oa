@@ -30,6 +30,7 @@
 			import system.entity.UserModel;
 			import system.index;
 			import system.utils.CommonUtils;
+			import system.component.lockWin.LockWinTool;
 			[Bindable] 
 			public var status:ArrayCollection = new ArrayCollection( 
 				[ {label:"全部", data:null},  
@@ -63,8 +64,17 @@
 				Alert.show("密码重置成功");
 			}
 			protected function getUsersByCondition_resultHandler(event:ResultEvent):void{
-				var allList:ArrayCollection=event.result as ArrayCollection;
-				accountTable.initdata(allList);
+				LockWinTool.unLockCurrentWin();
+				var result:Object=event.result as Object;
+				var list:Object=new Object;
+				list.data=(result==null?new ArrayCollection():result.items);
+				list.totalLength=(result==null?0:result.totalCount);
+				if(result!=null){
+					pc.AppandData(list);
+					
+				}else{
+					table.dataProvider=null;
+				}
 			}
 			public function formatDate(date:Date):String{
 				return CommonUtils.formatDate(date);
@@ -72,48 +82,53 @@
 			}
 
 
-			protected function search():void
-			{
-				// TODO Auto-generated method stub
+			public function search():void{
+				pc.GoToControll(1);
+			}
+			public function searchPage(index:int,dataLength:int):void{
+				LockWinTool.lockCurrentWin(this,"搜索帐号信息中");
 				var account:String=search_account_id.text;
 				var state:Object=search_state.selectedItem.data;
-//				Alert.show(state+"");
-				systemServiceRO.getUsersByCondition(account,state);
+				systemServiceRO.getUsersByCondition(account,state,index-1,index-1+dataLength);
 			}
 			protected function activeAccount():void
 			{
-				selectedAccount=accountTable.selectedRowId;
-				if(selectedAccount!=null){
-					systemServiceRO.activeUser(selectedAccount);
-				}else {
+				var selectedIndex:int = table.selectedIndex;
+				if(selectedIndex==-1)
 					Alert.show("请先选择需要激活的帐号记录");
+				else{
+					systemServiceRO.activeUser(selectedAccount);
 				}
+				
 			}
 			protected function freezeAccount():void
 			{
-				selectedAccount=accountTable.selectedRowId;
-				if(selectedAccount!=null){
-					systemServiceRO.freezeUser(selectedAccount);
-				}else {
+				var selectedIndex:int = table.selectedIndex;
+				if(selectedIndex==-1)
 					Alert.show("请先选择需要冻结的帐号记录");
+				else{
+					systemServiceRO.freezeUser(selectedAccount);
 				}
+				
 			}
 			protected function resetAccountPW():void
 			{
-				selectedAccount=accountTable.selectedRowId;
-				if(selectedAccount!=null){
-					systemServiceRO.resetUserPW(selectedAccount);
-				}else {
+				var selectedIndex:int = table.selectedIndex;
+				if(selectedIndex==-1)
 					Alert.show("请先选择需要重置密码的帐号记录");
+				else{
+					systemServiceRO.resetUserPW(selectedAccount);
 				}
+				
+			
 			}
 			protected function checkDetail():void
 			{
-				selectedAccount=accountTable.selectedRowId;
-				if(selectedAccount!=null){
-					Alert.show(selectedAccount);
-				}else {
+				var selectedIndex:int = table.selectedIndex;
+				if(selectedIndex==-1){
 					Alert.show("请先选择需要查看详细信息的帐号记录");
+				}else {
+					Alert.show(table.selectedItem.id);
 				}
 			}
 			private function searchAccountHandleAutoCompleteChange():void
@@ -160,7 +175,7 @@
 			<s:VGroup width="100%" height="100%" gap="10" verticalAlign="middle" horizontalAlign="center" >
 				<mx:HBox width="100%"  horizontalGap="10" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="10" paddingBottom="0"   paddingLeft="10" paddingRight="10">
 						
-					<component:Fieldset title="条检查询" >
+					<component:Fieldset title="条件查询"  width="100%">
 						<mx:HBox horizontalScrollPolicy="off" >
 						<s:HGroup verticalAlign="middle">
 							<s:Label  text="用户姓名" />
@@ -180,12 +195,10 @@
 					</component:Fieldset>
 					
 				</mx:HBox>
-				<mx:HBox width="100%" height="100%" paddingLeft="10" paddingRight="10" paddingBottom="10">
-					<s:Panel width="100%" height="100%"  styleName="customPanel" title="查询结果"  cornerRadius="5" borderVisible="false" dropShadowVisible="false">
+				<mx:VBox width="100%" height="100%" paddingLeft="10" paddingRight="10" paddingBottom="10">
 						
-						<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="true"   borderAlpha="0.2" verticalAlign="middle"   id="accountTable" pagecount="10"  >				
-							<component:mygridcolumns>
-								
+						<mx:DataGrid id="table" rowCount="10" width="100%" height="100%"    verticalAlign="middle" >
+							<mx:columns>
 								<mx:DataGridColumn textAlign="center" headerText="帐号" dataField="name" width="100">
 								</mx:DataGridColumn>
 								
@@ -272,10 +285,10 @@
 										</fx:Component>
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
-							</component:mygridcolumns>
-						</component:WlzxPageDataGrid>
-					</s:Panel>
-				</mx:HBox>
+							</mx:columns>
+					</mx:DataGrid>
+					<component:SPageController id="pc" useCache="{false}" TargetUI="{table}" callBackFunc="{searchPage}"  PerPage="13" ClientPages="3"  width="100%"/>
+				</mx:VBox>
 				
 			</s:VGroup>
 		</mx:VBox>

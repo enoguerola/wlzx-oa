@@ -8,6 +8,7 @@ package system.service;
 import java.util.List;
 import java.util.Set;
 
+import system.PaginationSupport;
 import system.entity.*;
 
 import system.vo.MessageVO;
@@ -68,6 +69,7 @@ public interface SystemService{
 	public List<UserModel> getAllUsers();
 	//按条件查询用户
 	public List<UserModel> getUsersByCondition(String account,Boolean status);
+	public PaginationSupport<UserModel> getUsersByCondition(String account,Boolean status, int index,int pageSize);
 	//激活用户
 	public UserModel activeUser(String account);
 	//冻结用户

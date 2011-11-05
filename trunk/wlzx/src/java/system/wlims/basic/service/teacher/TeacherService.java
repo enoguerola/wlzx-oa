@@ -7,6 +7,7 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import system.PaginationSupport;
 import system.ServiceException;
 import system.dao.DRDAO;
 import system.dao.DepartmentDAO;
@@ -125,7 +126,7 @@ public class TeacherService {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<TeacherModel> getTeacherModels(TeacherModel model, int page, int pageCount)throws ServiceException{
+	public List<TeacherModel> getTeacherModels(TeacherModel model)throws ServiceException{
 		DetachedCriteria criteria = DetachedCriteria.forClass(TeacherModel.class);
 		
 		if(model != null){
@@ -148,24 +149,45 @@ public class TeacherService {
 			
 		}
 		
-		int startIndex = (page - 1) * pageCount;
-		
 //		List<TeacherModel> list =  teacherDAO.getListByCriteria(criteria, startIndex, pageCount);
 		List<TeacherModel> list =  teacherDAO.getListByCriteria(criteria);
-		for(TeacherModel teacher : list){
+//		for(TeacherModel teacher : list){
 //			UserModel user = userDAO.getUserByUserAccount(teacher.getTeacherNo());
 //			teacher.setTeacherDepartmentName(user.getMainDepartment()==null?"未指定":user.getMainDepartment().getName());
 //			teacher.setTeacherPositionName(user.getMainRole()==null?"未指定":user.getMainRole().getName());
 //			teacher.setTeacherDepartment(user.getMainDepartment()==null?null:user.getMainDepartment().getId());
 //			teacher.setTeacherPosition(user.getMainRole()==null?null:user.getMainRole().getId());
-			teacher.setExperiences(null);
-			teacher.setOtherDepartments(null);
-			teacher.setRelations(null);
-		}
+//			teacher.setExperiences(null);
+//			teacher.setOtherDepartments(null);
+//			teacher.setRelations(null);
+//		}
 		return list;
 		
 	}
-	
+	public PaginationSupport<TeacherModel> getTeacherModels(TeacherModel model, int index,int pageSize)throws ServiceException{
+		DetachedCriteria criteria = DetachedCriteria.forClass(TeacherModel.class);
+		
+		if(model != null){
+			
+			if(StringUtils.isNotEmpty(model.getName()))
+				criteria.add(Restrictions.like("name", model.getName()));
+			
+			if(StringUtils.isNotEmpty(model.getTeacherDepartment()))
+				criteria.add(Restrictions.eq("teacherDepartment", model.getTeacherDepartment()));
+				
+			if(model.getTeacherAttendDate() != null)
+				criteria.add(Restrictions.eq("teacherAttendDate", model.getTeacherAttendDate()));
+			
+			 //System.out.println(model.getTeacherStatus());
+			
+			if(model.getTeacherStatus() != null && model.getTeacherStatus() > -1)
+				criteria.add(Restrictions.eq("teacherStatus", model.getTeacherStatus()));
+				
+		}
+		
+		return teacherDAO.findPageByCriteria(criteria, pageSize, index);
+		
+	}
 	public void changeStatus(String id, int status)throws ServiceException{
 		String hql = "update TeacherModel set teacherStatus=" + status + " where id=" + id;
 		teacherDAO.execUpdateByHSQL(hql);

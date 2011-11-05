@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+作者：WarmC 菜虫
+Blog：http://flex.joelove.cn/
+Email:warm.cai@gmail.com
+功能：分页控制器 服务器分页版
+说明：对于数据量大的数据分页，采用服务器端分页的形式进行分页
+特点及说明：
+1.通过useCache可设置是否进行客户端本地缓存数据，通过sharedObject缓存
+2.通过Versioning可设置是否进行版本统一控制，需外部传当前版本号
+3.通过ClientPages可设置客户端内存中缓存的数据页数，例如每页显示5条数据，
+但是ClientPages设置为3的话，其实每次请求的数据时15条，将在客户端内存
+缓存多2(3-1)页的数据
+-->
+
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml" styleName="BottomBox">
+	<mx:Script>
+		<![CDATA[
+			import mx.controls.DataGrid;
+			import mx.collections.ArrayCollection;
+			
+			private var _dataProvider:ArrayCollection;
+			private var _totalPages:Number=0;
+			private var _displayIndex:int=0;
+			private var _currIndex:int=0;
+			private var _currDS:ArrayCollection;
+			/**-----------------Getter and Setter--------------------**/
+			/**每页显示数据条数，默认10条**/
+			private var _perPage:Number=10;
+			public function set PerPage(value:Number):void{
+				if(value<=0)
+					_perPage=10;
+				else
+					_perPage=value;
+			}
+			/**客户端内存 缓存数据页数,默认2页**/
+			private var _clientPages:int=2;
+			public function set ClientPages(value:int):void{
+				if(value<=0)
+					_clientPages=2;
+				else
+					_clientPages=value;
+			}
+			/**指定被控制的控件**/
+			private var _targetUI:Object;
+			public function set TargetUI(value:Object):void{
+				_targetUI=value;
+			}
+			/**读取服务器端数据 方法（外部方法）
+			 * 说明:该方法用于通知外部需要读取服务器数据，在客户端缓存数据不足时，
+			 * 	    将会调用本方法,以补充数据池数据
+			 * 参数说明:func必须是以下格式的方法 func(int index,int dataLength):void
+			 * 	       index 当前请求需要显示的页数位置，
+			 *         dataLength  当前请求需要显示的内容长度
+			 * **/
+			private var _callBackFunc:Function;
+			public function set callBackFunc(func:Function):void{
+				_callBackFunc=func;
+				if(_targetUI){
+					trace("BeginControll by set callBackFunc()...");
+					if(_dataProvider==null){/**未有数据存在，通知补充数据**/
+						btnGo.enabled=true;
+					}
+				}
+			}
+			/**是否启动客户端数据缓存，默认（false）不启动**/
+			private var _useCache:Boolean=false;
+			public function set useCache(value:Boolean):void{
+				_useCache=value;
+				if(value){
+					_CacheProxy=new CacheProxy('PagingData');
+				}
+			}
+			/**是否启动客户端数据缓存 版本控制，默认（null）不启动**/
+			private var _Versioning:String=null;
+			private var _CacheProxy:CacheProxy;
+			public function set Versioning(value:String):void{
+				_Versioning=value;
+				trace("set versioning:",value);
+				if(_CacheProxy&&(_CacheProxy.useVersioning==false)){
+					_CacheProxy.setVersion(value);
+					_CacheProxy.useVersioning=true;
+				}
+			}
+			/**------------Public Function----------**/ 
+			/**追加数据
+			 * 说明:在外部读取完数据后，需要通过本方法补充数据池
+			 *     与_callBackFunc协同工作
+			 * 参数说明:data={data:ArrayCollection,totalLength:int}
+			 * 		  data.data ArrayCollection类型的数据
+			 * 		  data.totalLength 全部数据的长度(可选,空值则不显示总页数)
+			 * 		  data.version 数据当前的版本号(可选,空值则不进行版本控制)
+			 * **/
+			public function AppandData(data:Object):void{
+				if(data){
+					if(_useCache)
+						_CacheProxy.setCache(lastNotifyIndex,data);
+					trace("获取到补充数据……长度为:",data.data.length);
+					ShowData(data);
+				}
+			}
+			/**页面跳转已经启动控制开关**/
+			public function GoToControll(index:int=1):void{
+				if(_targetUI)
+					notifyParent(index);
+			}
+			/**----------Private Function---------**/
+			/**数据显示**/
+			private function ShowData(data:Object):void{
+				if(data.totalLength&&data.totalLength>0){
+					_totalPages=Math.ceil(data.totalLength/_perPage);
+				}
+				if(data.data){
+					if(data.data!=_dataProvider){
+						_dataProvider=data.data;
+						locked(false);
+						RefershData();
+					}
+				}
+			}
+			/**通知上级补充数据**/
+			private var lastNotifyIndex:int=0;
+			private function notifyParent(index:int):void{
+				if(_callBackFunc!=null){
+					locked(true);
+					lastNotifyIndex=index;
+					if(_useCache){
+						var cacheData:Object=_CacheProxy.getCache(lastNotifyIndex);
+						if(cacheData){
+							ShowData(cacheData);
+						}else{
+							_callBackFunc(lastNotifyIndex,_perPage*_clientPages);
+						}
+					}else{
+						_callBackFunc(lastNotifyIndex,_perPage*_clientPages);
+					}
+				}
+			}
+			/**锁定与解锁**/
+			private function locked(value:Boolean):void{
+				this.btnGo.enabled=this.btnNext.enabled=this.btnPrevious.enabled=!value;
+			}
+			private function goto(value:Number):void{
+				_displayIndex+=value;
+				_currIndex+=value;
+				if(_currIndex>=_clientPages){/**超过数据池界限**/
+					trace("超过数据池的右界限...");
+					_currIndex=0;//重置当前位置指针
+					notifyParent(int(_displayIndex/_clientPages)*_clientPages*_perPage+1);
+				}else if(_currIndex<0){
+					trace("超过数据池的左界限...");
+					_currIndex=_clientPages-1;//重置当前位置指针
+					notifyParent(int(_displayIndex/_clientPages)*_clientPages*_perPage+1);
+				}else{
+					RefershData();
+				}
+			}
+			private function gotoIndex():void{
+				var index:int=int(Number(txtPageIndex.text));
+				if(index==_displayIndex+1){
+					/**指定跳转页与当前页一致，不管它!**/
+					return;
+				}else if(index>=1&&index<=_totalPages){
+					/**页面跳转**/
+					var LEdge:int=_displayIndex-_currIndex+1;//左边缘
+					var REdge:int=_displayIndex+(_clientPages-_currIndex);//右边缘
+					trace("当前数据池[",LEdge,"...",REdge,"],请求的页面:",index);
+					if(index>=LEdge&&index<=REdge){
+						/***跳转页面在当前数据池之内，直接跳转**/
+						_currIndex=index-LEdge;
+						RefershData();
+					}else{
+						/***跳转页面超过当前数据池界限**/
+						_currIndex=0;//重置当前位置指针
+						notifyParent((index-1)*_perPage+1);
+					}
+					_displayIndex=index-1;
+				}else{
+					trace("页数超过指定范围");
+					return;
+				}
+			}
+			public function RefershData():void{
+				filterFunction();
+				lblInfo.text="第 "+(_displayIndex+1)+" 页/共 "+_totalPages+" 页";
+				btnNext.enabled=_displayIndex>=_totalPages-1?false:true;
+				btnPrevious.enabled=_displayIndex<=0?false:true;
+			}
+			private function filterFunction():void{
+				_currDS=new ArrayCollection(_dataProvider.toArray().slice(_currIndex*_perPage,_perPage*(_currIndex+1)));
+				_targetUI.dataProvider=_currDS;
+			}
+		]]>
+	</mx:Script>
+	<mx:Style source="SPageController.css"/>
+	<mx:Label id="lblInfo" text=""/>
+	<mx:LinkButton label="上一页" id="btnPrevious" click="goto(-1);" enabled="false"/>
+	<mx:LinkButton label="下一页" id="btnNext" click="goto(1);" enabled="false"/>
+	<mx:Label text="转到"/>
+	<mx:TextInput width="48" id="txtPageIndex" restrict="0-9"/>
+	<mx:Label text="页"/>
+	<mx:LinkButton label="跳转" id="btnGo" click="gotoIndex();" enabled="false"/>
+	
+</mx:HBox>
