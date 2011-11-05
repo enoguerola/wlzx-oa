@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2011 年 11 月 05 日 10:07
+-- 生成日期: 2011 年 11 月 05 日 13:15
 -- 服务器版本: 5.0.91
 -- PHP 版本: 5.2.13
 
@@ -34,7 +34,8 @@ CREATE TABLE IF NOT EXISTS `wlzx_oa_attachment` (
   `type` varchar(10) NOT NULL,
   `size` bigint(20) NOT NULL,
   `upload_date` datetime default NULL,
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY  (`id`),
+  KEY `belong_object` (`belong_object`,`belong_object_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=18 ;
 
 --
@@ -637,7 +638,8 @@ CREATE TABLE IF NOT EXISTS `wlzx_oa_workflow_log` (
   `operation_time` timestamp NOT NULL default '0000-00-00 00:00:00' on update CURRENT_TIMESTAMP,
   `operation_name` varchar(200) NOT NULL,
   `operation_result` text,
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY  (`id`),
+  KEY `operation_object` (`operation_object_type`,`operation_object_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=89 ;
 
 --
