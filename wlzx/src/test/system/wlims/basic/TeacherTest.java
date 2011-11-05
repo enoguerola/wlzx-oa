@@ -24,7 +24,7 @@ public class TeacherTest extends BaseTest {
 	
 	public void getAll() throws ServiceException{
 		
-		List<TeacherModel> list = teacherService.getTeacherModels(null, 1, 3);
+		List<TeacherModel> list = teacherService.getTeacherModels(null);
 		System.out.println(list == null);
 		if(list != null){
 			for(TeacherModel model:list){

@@ -113,7 +113,7 @@ public class TeacherExcelExportAction{
 	private void insertData(List<Map<String, Object>> data){
 		List<TeacherModel> list = new ArrayList<TeacherModel>();
 		try {
-			list = teacherService.getTeacherModels(null, 1, Integer.MAX_VALUE);
+			list = teacherService.getTeacherModels(null);
 			for(TeacherModel model : list){
 				Map<String, Object> ents = new HashMap<String, Object>();
 				ents.put("base", model);

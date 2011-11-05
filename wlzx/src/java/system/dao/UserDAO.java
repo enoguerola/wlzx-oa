@@ -10,6 +10,7 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 
 import system.BaseDAOImpl;
+import system.PaginationSupport;
 import system.entity.UserModel;
 import system.utils.StringUtils;
 
@@ -129,6 +130,19 @@ public class UserDAO extends BaseDAOImpl<UserModel>{
 		criteria.add(Restrictions.ne("accountStyle",new Integer(-1)));
 		List<UserModel> result = this.getListByCriteria(criteria);
 		return result;
+	}
+
+	public PaginationSupport<UserModel> getUsersByCondition(String account,Boolean status, int index, int pageSize) {
+		DetachedCriteria criteria = DetachedCriteria.forClass(UserModel.class);
+		if(StringUtils.isNotEmpty(account)){
+			criteria.add(Restrictions.eq("name", account));
+		}
+		if(StringUtils.isNotEmpty(status)){
+			criteria.add(Restrictions.eq("active", status));
+		}
+		//过滤超级用户;
+		criteria.add(Restrictions.ne("accountStyle",new Integer(-1)));
+		return this.findPageByCriteria(criteria, pageSize, index);
 	}
 
 }

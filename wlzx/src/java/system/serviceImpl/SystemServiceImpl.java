@@ -14,6 +14,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 
+import system.PaginationSupport;
 import system.components.SecurityUserHolder;
 import system.dao.*;
 import system.entity.*;
@@ -1165,6 +1166,12 @@ public class SystemServiceImpl implements SystemService{
 	public List<DepartmentModel> getAllDepartments() {
 		// TODO Auto-generated method stub
 		return departmentDAO.getAllDepartments();
+	}
+	@Override
+	public PaginationSupport<UserModel> getUsersByCondition(String account,
+			Boolean status, int index, int pageSize) {
+		// TODO Auto-generated method stub
+		return userDAO.getUsersByCondition(account, status,index,pageSize);
 	}
 
 	

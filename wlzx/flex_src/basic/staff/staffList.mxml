@@ -13,9 +13,9 @@
 			<mx:method name="remove"  concurrency="last"  result="removeResult_resultHandler(event);" />
 			<mx:method name="changeStatus"  concurrency="last"  result="changeResult_resultHandler(event);" />
 		</mx:RemoteObject>
-		<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+		<!--<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 			<mx:method name="getDepartmentBySymbol"  concurrency="last"  result="getDepartmentBySymbolResult(event);" />
-		</mx:RemoteObject>
+		</mx:RemoteObject>-->
 		<fx:Component id="searchAccountDropDownItemRenderer">
 			<render:AdvancedItemRenderer selectedItems="{ outerDocument.search_account.selectedItems }" />
 		</fx:Component>
@@ -25,7 +25,7 @@
 		<![CDATA[
 			import basic.utils.DateUtil;
 			import basic.utils.Excel;
-			
+			import system.component.lockWin.LockWinTool;
 			import flash.events.*;
 			import flash.net.FileFilter;
 			import flash.net.FileReference;
@@ -65,34 +65,51 @@
 			
 			protected function searchResult_resultHandler(event:ResultEvent):void
 			{
-				var allList:ArrayCollection = event.result as ArrayCollection;
-				teacherDG.initdata(allList);
-				unLockWin();
+				LockWinTool.unLockCurrentWin();
+				var result:Object=event.result as Object;
+				var list:Object=new Object;
+				list.data=(result==null?new ArrayCollection():result.items);
+				list.totalLength=(result==null?0:result.totalCount);
+				if(result!=null){
+					pc.AppandData(list);
+					
+				}else{
+					table.dataProvider=null;
+				}
 			}
 			
 			public function initData():void {
 				search_account.dataProvider=this.parentApplication.allTeacherAcccounts;
-				systemServiceRO.getDepartmentBySymbol("root");//初始化部门数据字典
+				//systemServiceRO.getDepartmentBySymbol("root");//初始化部门数据字典
 				creationCompletedHandler();
+				
+				departmentList = new ArrayCollection(CommonUtils.clone(this.parentApplication.allDepartment.source));
+				var _init:Object = {label:'请选择',data:""};
+				departmentList.addItemAt(_init,0);
+				department.dataProvider=departmentList;
+				department.selectedIndex = 0;
+				search();
 			}
 			
 			public function detail(event:Event):void{
-				var selectedIndex:int = teacherDG.cudg.selectedIndex;
+				var selectedIndex:int = table.selectedIndex;
 				if(selectedIndex==-1)
 					Alert.show("当前未选中任意行");
 				else{
-					editItem(teacherDG.cudg.selectedItem.id);
+					editItem(table.selectedItem.id);
 				}
 			}
-			
 			public function search():void{
-				lockWin();
+				pc.GoToControll(1);
+			}
+			public function searchPage(index:int,dataLength:int):void{
+				LockWinTool.lockCurrentWin(this,"搜索员工信息中");
 				teacher = new TeacherModel();
 				teacher.name = _name.text;
 				teacher.teacherDepartment = department.selectedItem.data;
 				teacher.teacherStatus = status.selectedItem.data;
 				teacher.teacherAttendDate = DateFormatter.parseDateString(attendDate.text);
-				teacherServiceRO.getTeacherModels(teacher, teacherDG.curpage, teacherDG.pagecount);
+				teacherServiceRO.getTeacherModels(teacher,index-1,index-1+dataLength);
 			}
 			
 			private function creationCompletedHandler():void
@@ -107,7 +124,7 @@
 			
 			private function uploadComplete(e:DataEvent):void   
 			{   
-				unLockWin();
+				LockWinTool.unLockCurrentWin();
 				var xmlResponse:XML = XML(e.data);
 				//Alert.show(xmlResponse+"");
 				var list:XMLList = xmlResponse.field;
@@ -130,7 +147,7 @@
 			private function ioErrorHandler(e:IOErrorEvent):void   
 			{   
 				Alert.show("有错误"); 
-				unLockWin();
+				LockWinTool.unLockCurrentWin();
 			}  
 			import	mx.controls.ProgressBarMode;
 
@@ -171,7 +188,7 @@
 			{      
 				if (e.detail == Alert.YES)   
 				{      
-					lockWin();
+					LockWinTool.lockCurrentWin(this,"档案导入中");
 					var params:URLVariables = new URLVariables();
 					params.name = "123213";
 					var request:URLRequest = new URLRequest(parentApplication.homeUrl+"basic/staff/spring/excelUpload.action");
@@ -210,7 +227,7 @@
 			}
 			
 			protected function systemFaultHandler(event:FaultEvent):void {
-				unLockWin();
+				LockWinTool.unLockCurrentWin();
 				Alert.show(event.fault.faultString, 'Error');
 			}
 			
@@ -274,16 +291,16 @@
 				this.parentApplication.teacherAccountBridgeServiceRO.teacherAccountGetAll();
 			}
 
-			private function getDepartmentBySymbolResult(event:ResultEvent):void {
+			/* private function getDepartmentBySymbolResult(event:ResultEvent):void {
 				var _department:DepartmentModel = event.result as DepartmentModel;
 				buildSubDepartments(_department,departmentList,0);
 				var _init:Object = {label:'请选择',data:""};
 				departmentList.addItemAt(_init,0);
 				department.selectedIndex = 0;
 				search();
-			}
+			} */
 			
-			private function buildSubDepartments(department:DepartmentModel,resultList:ArrayCollection,depth:int):void{
+			/* private function buildSubDepartments(department:DepartmentModel,resultList:ArrayCollection,depth:int):void{
 				var headText:String="";
 				for(var j:int = 0;j<depth;j++)
 					headText=headText.concat("--");
@@ -296,7 +313,7 @@
 						buildSubDepartments(_department,resultList,depth+1);
 					}
 				}		
-			}
+			} */
 			private function searchAccountHandleAutoCompleteChange():void
 			{
 				var color:Object = search_account.selectedItem;
@@ -308,20 +325,7 @@
 					_name.text="";
 				}               
 			}
-			import system.component.WlzxLockWin;
-			private var window:WlzxLockWin=null;
-			private function lockWin():void{
-				
-				window=WlzxLockWin(PopUpManager.createPopUp(this,WlzxLockWin,true)); 
-				PopUpManager.centerPopUp(window);
-				window.percentHeight=100;
-				window.percentWidth=100;			
-				
-			}
-			private function unLockWin():void{
-				if(window!=null)
-					PopUpManager.removePopUp(window);
-			}
+			
 			
 		]]>
 	</fx:Script>
@@ -340,38 +344,34 @@
 					<mx:Label id="lblProgress" text="上传" visible="false"/>
 				</mx:HBox>
 			</s:HGroup>
-			<s:VGroup width="100%" height="100%" gap="0">
-				<mx:HBox width="100%"  horizontalGap="10" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
-					<component:Fieldset title="搜索条件" >
-						<mx:HBox width="100%" horizontalScrollPolicy="off" >
-							<s:HGroup verticalAlign="middle">
-								<s:Label  text="姓名" />
-								<hc:AutoComplete id="search_account"  labelField="name"  width="200"  matchType="anyPart" prompt="选择"  change="{ searchAccountHandleAutoCompleteChange() }" dropDownItemRenderer="{ searchAccountDropDownItemRenderer }" selectedItemStyleName="none">
+
+				<mx:HBox width="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off"   horizontalGap="10"    verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="10" paddingBottom="0"   paddingLeft="10" paddingRight="10">
+					<component:Fieldset title="条件查询"  width="100%">
+						<mx:HBox width="100%" height="100%"  horizontalAlign="left" verticalAlign="middle">
+								<mx:Label  text="姓名" />
+								<hc:AutoComplete id="search_account"  labelField="name"  width="150"  matchType="anyPart" prompt="选择"  change="{ searchAccountHandleAutoCompleteChange() }" dropDownItemRenderer="{ searchAccountDropDownItemRenderer }" selectedItemStyleName="none">
 									
 								</hc:AutoComplete>
 								<mx:Label id="_name" visible="false"/>
-							</s:HGroup>	
-							<s:HGroup verticalAlign="middle">
+							
 								<s:Label  text="部门" />
-								<mx:ComboBox  width="100%" id="department" dataProvider="{departmentList}" selectedIndex="0" labelField="label" editable="false"/>
-							</s:HGroup>
-							<s:HGroup verticalAlign="middle">
-								<s:Label  text="状态" />
-								<mx:ComboBox  width="100%" id="status" dataProvider="{statusArr}" selectedIndex="0" labelField="label" editable="false"/>
-							</s:HGroup>
-							<s:HGroup verticalAlign="middle">
+								<mx:ComboBox  width="200" id="department" labelField="label" editable="false"/>
+							
+								<mx:Label  text="状态" />
+								<mx:ComboBox  width="150" id="status" dataProvider="{statusArr}" selectedIndex="0" labelField="label" editable="false"/>
+							
 								<s:Label  text="入校时间" />
-								<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" formatString="YYYY-MM-DD" width="100%" id="attendDate" />
-							</s:HGroup>
-							<mx:Button  label="搜索"  width="80"   click="search()"/>
+								<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" formatString="YYYY-MM-DD" width="150" id="attendDate" />
+							
+								<mx:Button  label="搜索"  width="80"   click="search()"/>
 						</mx:HBox>
 					</component:Fieldset>
 				</mx:HBox>
 					
-				<s:VGroup  width="100%" height="100%" gap="0" >
-					<component:WlzxPageDataGrid width="100%" height="100%" paddingLeft="10" paddingRight="10" borderVisible="true"   borderAlpha="0.2" verticalAlign="middle"   id="teacherDG" pagecount="13">				
-						<component:mygridcolumns>
-							
+				<mx:VBox width="100%" height="100%" paddingLeft="10" paddingRight="10" paddingBottom="10">
+					
+					<mx:DataGrid id="table" rowCount="10" width="100%" height="100%"    verticalAlign="middle" >
+						<mx:columns>		
 							<mx:DataGridColumn textAlign="center" headerText="姓名" dataField="name" width="80"></mx:DataGridColumn>
 							<mx:DataGridColumn textAlign="center" headerText="性别" dataField="sex" width="40" labelFunction="formatSex"></mx:DataGridColumn>
 							<mx:DataGridColumn textAlign="center" headerText="出生年月" dataField="birthday" width="100" labelFunction="formatDate"></mx:DataGridColumn>
@@ -460,11 +460,12 @@
 								</mx:itemRenderer>
 							</mx:DataGridColumn>
 							
-						</component:mygridcolumns>
-					</component:WlzxPageDataGrid>
+						</mx:columns>
+					</mx:DataGrid>
+					<component:SPageController id="pc" useCache="{false}" TargetUI="{table}" callBackFunc="{searchPage}"  PerPage="13" ClientPages="3"  width="100%"/>
 					
-				</s:VGroup>
-			</s:VGroup>
+				</mx:VBox>
+			
 		</mx:VBox>
 		
 		
