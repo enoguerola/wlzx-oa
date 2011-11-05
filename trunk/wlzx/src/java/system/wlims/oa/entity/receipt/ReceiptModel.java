@@ -5,7 +5,7 @@ import java.util.Set;
 
 
 import system.wlims.basic.entity.BaseModel;
-import system.wlims.oa.entity.notice.AttachmentModel;
+import system.wlims.oa.entity.AttachmentModel;
 import system.wlims.oa.entity.receipt.FileFlowModel;
 
 /**

@@ -17,7 +17,7 @@ import system.wlims.basic.entity.PlaceModel;
 import system.wlims.basic.service.teacher.TeacherService;
 import system.wlims.oa.dao.notice.AttachmentDAO;
 import system.wlims.oa.dao.conference.ConferenceDAO;
-import system.wlims.oa.entity.notice.AttachmentModel;
+import system.wlims.oa.entity.AttachmentModel;
 import system.wlims.oa.entity.conference.ConferenceModel;
 import system.wlims.oa.service.conference.ConferenceService;
 

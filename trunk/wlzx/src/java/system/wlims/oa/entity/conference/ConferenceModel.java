@@ -5,7 +5,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import system.wlims.oa.entity.BaseModel;
-import system.wlims.oa.entity.notice.AttachmentModel;
+import system.wlims.oa.entity.AttachmentModel;
 
 public class ConferenceModel extends BaseModel {
 

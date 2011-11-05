@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.Set;
 import java.util.TreeSet;
 
+import system.wlims.oa.entity.AttachmentModel;
 import system.wlims.oa.entity.BaseModel;
 
 public class NoticeModel extends BaseModel {

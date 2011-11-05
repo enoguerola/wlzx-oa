@@ -19,7 +19,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import system.ServiceException;
 import system.components.upload.BaseFileUploadHandler;
 import system.utils.ResourcesUtils;
-import system.wlims.oa.entity.notice.AttachmentModel;
+import system.wlims.oa.entity.AttachmentModel;
 import system.wlims.oa.service.notice.AttachmentService;
 
 @Controller

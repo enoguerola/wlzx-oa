@@ -22,7 +22,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import system.ServiceException;
 import system.utils.ResourcesUtils;
-import system.wlims.oa.entity.notice.AttachmentModel;
+import system.wlims.oa.entity.AttachmentModel;
 import system.wlims.oa.service.notice.AttachmentService;
 
 import com.google.gson.Gson;

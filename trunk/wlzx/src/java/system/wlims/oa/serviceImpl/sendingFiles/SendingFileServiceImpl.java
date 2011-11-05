@@ -26,7 +26,7 @@ import system.utils.UtilDateTime;
 import system.wlims.oa.dao.notice.AttachmentDAO;
 import system.wlims.oa.dao.sendingFiles.FileFlowDAO;
 import system.wlims.oa.dao.sendingFiles.SendingFileDAO;
-import system.wlims.oa.entity.notice.AttachmentModel;
+import system.wlims.oa.entity.AttachmentModel;
 import system.wlims.oa.entity.receipt.ReceiptModel;
 import system.wlims.oa.entity.sendingFiles.FileFlowModel;
 import system.wlims.oa.entity.sendingFiles.SendingFileModel;

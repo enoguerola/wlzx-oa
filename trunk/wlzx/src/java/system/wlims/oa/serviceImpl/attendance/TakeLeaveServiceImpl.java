@@ -408,6 +408,7 @@ public class TakeLeaveServiceImpl implements TakeLeaveService {
 		// TODO Auto-generated method stub
 		return takeLeaveDAO.get(id);
 	}
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<TakeLeaveForm> getTakeLeaveAppliesByConditions(
 			String teacherId, String type, String status,
@@ -417,6 +418,8 @@ public class TakeLeaveServiceImpl implements TakeLeaveService {
 		Set<TakeLeaveForm> results=new TreeSet<TakeLeaveForm>();
 		List<TakeLeaveForm> list=takeLeaveDAO.getTakeLeaveAppliesByConditions(teacherId,type,status,submitBeginDate,submitEndDate,takeLeaveBeginDate,takeLeaveEndDate);
 		UserModel user=SecurityUserHolder.getCurrentUser();
+		List<RoleModel> teachingRoles=roleDAO.getTeachingRoles();
+		DepartmentModel rootDepartment=departmentDAO.getDepartmentBySymbol("root");
 		for(TakeLeaveForm form:list){
 			/**
 			 * 1.请假人在行政组【0级部门】中---教学1级审批权限人审批【课程处】--教学2级审批权限人审批【教学副校长】--所有审批权限人审批【校长】----------通过给行政组的人配置教学职务来绕开
@@ -430,8 +433,7 @@ public class TakeLeaveServiceImpl implements TakeLeaveService {
 			Boolean hasTeachingRoleInMain=false;
  			Boolean hasTeachingRole=false;
  			Boolean hasRootDepartment=false;
-			List<RoleModel> teachingRoles=roleDAO.getTeachingRoles();
-			DepartmentModel rootDepartment=departmentDAO.getDepartmentBySymbol("root");
+		
 			if(teachingRoles!=null&&teachingRoles.size()>0){
 				for(RoleModel teachingRole:teachingRoles){
 					if(applier.hasRoleInMain(teachingRole.getId())){

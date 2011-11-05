@@ -2,7 +2,7 @@ package system.wlims.oa.serviceImpl.notice;
 
 import system.ServiceException;
 import system.wlims.oa.dao.notice.AttachmentDAO;
-import system.wlims.oa.entity.notice.AttachmentModel;
+import system.wlims.oa.entity.AttachmentModel;
 import system.wlims.oa.service.notice.AttachmentService;
 
 public class AttachmentServiceImpl implements AttachmentService {

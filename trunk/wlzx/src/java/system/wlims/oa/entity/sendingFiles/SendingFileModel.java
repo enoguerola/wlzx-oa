@@ -6,7 +6,7 @@ import java.util.TreeSet;
 
 
 import system.wlims.basic.entity.BaseModel;
-import system.wlims.oa.entity.notice.AttachmentModel;
+import system.wlims.oa.entity.AttachmentModel;
 
 /**
  * 发文

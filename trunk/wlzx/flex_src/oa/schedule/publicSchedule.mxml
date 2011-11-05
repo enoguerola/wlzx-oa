@@ -717,7 +717,7 @@
 							<mx:Component>
 								<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
 									<!--<mx:Label text="{data.beginTime}"/>-->
-									<mx1:Text text="{getTime(data)}"/>
+									<mx:Label text="{getTime(data)}"/>
 									<mx:Script>
 										<![CDATA[
 											
@@ -747,7 +747,7 @@
 							<mx:Component>
 								<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
 									<!--<mx:Label text="{data.endTime}"/>-->
-									<mx1:Text text="{getTime(data)}"/>
+									<mx:Label text="{getTime(data)}"/>
 									<mx:Script>
 										<![CDATA[
 											
@@ -772,11 +772,11 @@
 							</mx:Component>						
 						</mx:itemRenderer>
 					</mx:DataGridColumn>
-					<mx:DataGridColumn textAlign="center" headerText="主题" dataField="title" width="150">
+					<mx:DataGridColumn textAlign="center" headerText="主题" dataField="title" width="300">
 						<mx:itemRenderer>
 							<mx:Component>
 								<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
-									<mx1:Text text="{data.title}" width="140" toolTip="{data.content}"/>
+									<mx:Label text="{data.title}" width="100%" toolTip="{data.content}"/>
 									<!--<mx:Label text="{data.title}" width="80%"/>-->
 									
 								</mx:HBox>																			
