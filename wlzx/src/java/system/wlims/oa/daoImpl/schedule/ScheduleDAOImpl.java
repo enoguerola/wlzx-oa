@@ -41,11 +41,11 @@ public class ScheduleDAOImpl extends BaseDAOImpl<ScheduleModel> implements Sched
 			criteria.add(Restrictions.sqlRestriction("emergence ='"+emergence+"'"));	
 		}
 		
-		if(StringUtils.isNotEmpty(beginDate)){
-			criteria.add(Restrictions.sqlRestriction("begin_time>='"+beginDate+" 00:00:00'"));	
-		}
 		if(StringUtils.isNotEmpty(endDate)){
-			criteria.add(Restrictions.sqlRestriction("end_time<='"+endDate+" 59:59:59'"));	
+			criteria.add(Restrictions.sqlRestriction("begin_time<='"+endDate+" 59:59:59'"));	
+		}
+		if(StringUtils.isNotEmpty(beginDate)){
+			criteria.add(Restrictions.sqlRestriction("end_time>='"+beginDate+" 00:00:00'"));	
 		}
 		criteria.addOrder(Order.asc("beginTime"));
 		List<ScheduleModel> result = this.getListByCriteria(criteria);
@@ -76,11 +76,11 @@ public class ScheduleDAOImpl extends BaseDAOImpl<ScheduleModel> implements Sched
 			criteria.add(Restrictions.sqlRestriction("emergence ='"+emergence+"'"));	
 		}
 		
-		if(StringUtils.isNotEmpty(beginDate)){
-			criteria.add(Restrictions.sqlRestriction("begin_time>='"+beginDate+" 00:00:00'"));	
-		}
 		if(StringUtils.isNotEmpty(endDate)){
-			criteria.add(Restrictions.sqlRestriction("end_time<='"+endDate+" 59:59:59'"));	
+			criteria.add(Restrictions.sqlRestriction("begin_time<='"+endDate+" 59:59:59'"));	
+		}
+		if(StringUtils.isNotEmpty(beginDate)){
+			criteria.add(Restrictions.sqlRestriction("end_time>='"+beginDate+" 00:00:00'"));	
 		}
 		criteria.addOrder(Order.asc("beginTime"));
 		criteria.add(Restrictions.or(Restrictions.sqlRestriction("department_share ='1'"), Restrictions.sqlRestriction("school_share ='1'")));	
@@ -114,11 +114,11 @@ public class ScheduleDAOImpl extends BaseDAOImpl<ScheduleModel> implements Sched
 			criteria.add(Restrictions.sqlRestriction("emergence ='"+emergence+"'"));	
 		}
 		
-		if(StringUtils.isNotEmpty(beginDate)){
-			criteria.add(Restrictions.sqlRestriction("begin_time>='"+beginDate+" 00:00:00'"));	
-		}
 		if(StringUtils.isNotEmpty(endDate)){
-			criteria.add(Restrictions.sqlRestriction("end_time<='"+endDate+" 59:59:59'"));	
+			criteria.add(Restrictions.sqlRestriction("begin_time<='"+endDate+" 59:59:59'"));	
+		}
+		if(StringUtils.isNotEmpty(beginDate)){
+			criteria.add(Restrictions.sqlRestriction("end_time>='"+beginDate+" 00:00:00'"));	
 		}
 		criteria.addOrder(Order.asc("beginTime"));
 		criteria.add(Restrictions.and(Restrictions.sqlRestriction("department_share !='1'"), Restrictions.sqlRestriction("school_share !='1'")));	
