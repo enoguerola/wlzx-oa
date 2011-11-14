@@ -71,7 +71,7 @@ public class FileUpload extends HttpServlet {
 			while (iter.hasNext()) {
 				FileItem item = iter.next();
 				if (!item.isFormField()) {
-					String name = new SimpleDateFormat("yyyyMMddHHMMss").format(new Date())+"_"+item.getName();
+					String name = new SimpleDateFormat("yyyyMMddHHMMss").format(new Date())+"."+item.getName().substring(item.getName().lastIndexOf("."));
 					System.out.println(name);
 					try {
 						File directory=new File(uploadDirectory);
