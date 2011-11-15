@@ -202,9 +202,9 @@
 					<component:Fieldset title="搜索条件" width="95%" height="95%" >
 						<mx:HBox width="100%" horizontalAlign="left" verticalAlign="bottom" horizontalGap="10">
 							<mx:Label  text="时间区间"  width="100"  textAlign="right"/>
-							<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" id="search_date_begin"   formatString="YYYY-MM-DD"  editable="false" width="100"/>
-							<mx:Label  text="--"  width="20" textAlign="center"/>
-							<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" id="search_date_end"  formatString="YYYY-MM-DD" editable="false" width="100"/>
+							<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" id="search_date_begin"   formatString="YYYY-MM-DD"  editable="false" width="105"/>
+							<mx:Label  text="--"  width="30" textAlign="center"/>
+							<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" id="search_date_end"  formatString="YYYY-MM-DD" editable="false" width="105"/>
 							<mx:Button  label="搜索"  width="60"   click="search()"/>
 						</mx:HBox>
 					</component:Fieldset>
@@ -215,7 +215,7 @@
 			<component:Fieldset title="任务列表" width="95%" height="50%" >
 				
 			
-			<mx:Panel width="100%"   styleName="customPanel" title="任务"  cornerRadius="5" borderVisible="false" dropShadowVisible="false" verticalScrollPolicy="auto">
+<!--			<mx:Panel width="100%"   styleName="customPanel" title="任务"  cornerRadius="5" borderVisible="false" dropShadowVisible="false" verticalScrollPolicy="auto">-->
 				
 				<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="true"    autoLayout="true"  borderAlpha="0.2" verticalAlign="middle"   id="taskTable" pagecount="5"  >				
 					<component:mygridcolumns>						
@@ -257,13 +257,13 @@
 				</component:mygridcolumns>
 				</component:WlzxPageDataGrid>
 				
-			</mx:Panel>
+			<!--</mx:Panel>-->
 				
 		</component:Fieldset>
 		
 			<!--*************** 日程面板 ****************-->
 		<component:Fieldset title="日程列表" width="95%" height="50%" >
-			<mx:Panel width="100%"   styleName="customPanel" title="日程"  cornerRadius="5" dropShadowVisible="false" verticalScrollPolicy="auto">
+			<!--<mx:Panel width="100%"   styleName="customPanel" title="日程"  cornerRadius="5" dropShadowVisible="false" verticalScrollPolicy="auto">-->
 				<component:WlzxPageDataGrid width="100%" height="100%"   borderVisible="true"  autoLayout="true"  borderAlpha="0.2" verticalAlign="middle"   id="scheduleTable" pagecount="5"  >				
 					<component:mygridcolumns>						
 						<mx:DataGridColumn textAlign="center" headerText="标记" dataField="loginaccount" width="100">
@@ -477,7 +477,7 @@
 					</component:mygridcolumns>
 				</component:WlzxPageDataGrid>
 				
-			</mx:Panel>
+			<!--</mx:Panel>-->
 		</component:Fieldset>	
 			
 		</mx:VBox>

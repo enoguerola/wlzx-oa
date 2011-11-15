@@ -718,14 +718,14 @@
 						<mx:HBox verticalAlign="middle">
 							<mx:Label  text="提交日期"  width="100"  textAlign="right"/>
 							<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" id="search_date_begin"   formatString="YYYY-MM-DD"  editable="false" width="120"/>
-							<mx:Label  text="--"  width="20" textAlign="center"/>
+							<mx:Label  text="--"  width="30" textAlign="center"/>
 							<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" id="search_date_end"  formatString="YYYY-MM-DD" editable="false" width="120"/>
 						</mx:HBox>	
 						
 						<mx:HBox verticalAlign="middle">
 							<mx:Label  text="请假/出差日期"  width="100"  textAlign="right"/>
 							<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" id="search_takeLeave_date_begin"   formatString="YYYY-MM-DD"  editable="false" width="120"/>
-							<mx:Label  text="--"  width="20"  textAlign="center"/>
+							<mx:Label  text="--"  width="30"  textAlign="center"/>
 							<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" id="search_takeLeave_date_end"  formatString="YYYY-MM-DD" editable="false" width="120"/>
 						</mx:HBox>	
 						

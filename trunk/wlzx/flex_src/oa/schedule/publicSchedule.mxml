@@ -72,8 +72,8 @@
 			public var scheduleScope:ArrayCollection =  new ArrayCollection(); 
 			public var scheduleState:ArrayCollection = new ArrayCollection( 
 				[ {label:"全部", data:null},  
-					{label:"进行中", data:1},
-					{label:"已完结", data:2}]); 
+					{label:"进行中", data:0},
+					{label:"已完结", data:1}]); 
 			
 			protected function init(event:Event = null):void {
 				
@@ -559,13 +559,13 @@
 			<mx:Label text="起止日期：" width="70">
 				
 			</mx:Label>
-			<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" width="100" editable="false" id="fromDateChooser" selectedDate="{flexCalendar.visibleRange.start}"  formatString="YYYY-MM-DD">
+			<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" width="105" editable="false" id="fromDateChooser" selectedDate="{flexCalendar.visibleRange.start}"  formatString="YYYY-MM-DD">
 				
 			</mx:DateField>
-			<mx:Label text="--" width="20">
+			<mx:Label text="--" width="30">
 				
 			</mx:Label>
-			<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" width="100" editable="false" id="toDateChooser" selectedDate="{flexCalendar.visibleRange.end}" formatString="YYYY-MM-DD">
+			<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" width="105" editable="false" id="toDateChooser" selectedDate="{flexCalendar.visibleRange.end}" formatString="YYYY-MM-DD">
 				
 			</mx:DateField>
 			<mx:Label text="日程范围：" width="70" >

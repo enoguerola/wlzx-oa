@@ -240,6 +240,11 @@ public class ConferenceServiceImpl implements ConferenceService {
 					}
 					
 				}
+				if(StringUtils.isNotEmpty(userId)&&StringUtils.isNotEmpty(model.getContactUserId()))
+				{
+					if(userId.equals(model.getContactUserId()))
+						results.add(model);
+				}
 			}
 		}
 		return results;		

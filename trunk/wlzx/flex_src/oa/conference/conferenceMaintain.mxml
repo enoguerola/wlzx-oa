@@ -161,7 +161,6 @@
 			{
 				form = event.result as ConferenceModel;
 				
-				Alert.show(addUpdateFlag.text+"");
 				date.text=CommonUtils.formatDate(form.meetingDate,"YYYY-MM-DD");
 				begin_hour.value=parseInt(form.beginTime.split(":")[0]);
 				begin_minute.value=parseInt(form.beginTime.split(":")[1]);
@@ -296,7 +295,6 @@
 						
 						conferenceServiceRO.addConference(form, upload.getAttachmentsIds());
 					}else if(addUpdateFlag.text == "update"+"_"+form.id){
-						Alert.show("1");
 						form.applyUserId=this.parentApplication.currentUser.id;
 						
 						form.meetingDate=DateFormatter.parseDateString(date.text);
