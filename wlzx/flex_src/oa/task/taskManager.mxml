@@ -20,8 +20,7 @@
 	
 	<mx:StringValidator id="title_stringValidator" source="{title}" property="text"  requiredFieldError="任务标题 不能为空"/>
 	<mx:StringValidator id="content_stringValidator" source="{content}" property="text"  requiredFieldError="任务内容不能为空"/>
-	<mx:StringValidator id="accounts_id_stringValidator" source="{accounts_id}" property="text"  requiredFieldError="任务责任人 不能为空"/>
-	<mx:StringValidator id="assigner_id_stringValidator" source="{assigner_id}" property="text"  requiredFieldError="任务指派人不能为空"/>
+	<mx:StringValidator id="accounts_id_stringValidator" source="{accounts}" property="text"  requiredFieldError="任务责任人 不能为空"/>
 	<mx:states>
 		<mx:State name="list">           
 			<mx:RemoveChild target="{addPanel}"/>
@@ -97,6 +96,7 @@
 //				taskTable.First.addEventListener(MouseEvent.CLICK,search);
 //				taskTable.Last.addEventListener(MouseEvent.CLICK,search);
 //				taskTable.Switch.addEventListener(MouseEvent.CLICK,search);
+				
 				search();
 			}
 			protected function systemFaultHandler(event:FaultEvent):void {
@@ -196,9 +196,13 @@
 				assigner.selectedItem=parentApplication.getItemByAccountId(parentApplication.currentUser.id);
 				assigner.text=parentApplication.getTeacherNameByAccountId(parentApplication.currentUser.id)
 				assigner_id.text=parentApplication.currentUser.id;
+				accounts.selectedItems.removeAll();
+				title.text="";
+				content.text="";
+				accounts_id.text="";
 				postButton.label="指派";
 			}
-			public function enterAdd(type:int):void{
+			public function enterAdd():void{
 				addUpdateFlag.text="add";
 				this.currentState='add';
 			}
@@ -273,7 +277,6 @@
 				validatorArr.push(title_stringValidator);
 				validatorArr.push(content_stringValidator);
 				validatorArr.push(accounts_id_stringValidator);
-				validatorArr.push(assigner_id_stringValidator);
 				var validatorErrorArray:Array = Validator.validateAll(validatorArr);
 				var isValidForm:Boolean = validatorErrorArray.length == 0;
 				if (isValidForm) {
@@ -351,7 +354,6 @@
 						accounts_id.text+=";";
 					}             
 				}
-				//Alert.show(accounts_id.text);
 				  
 			}
 			private function assignerHandleAutoCompleteChange():void
@@ -421,7 +423,7 @@
 				// TODO Auto-generated method stub
 				var id:String=allListTree.selectedItem.id;
 				accounts.selectedItems.addItem(this.parentApplication.getItemByAccountId(id));
-				
+				accountsHandleAutoCompleteChange();
 				Alert.show("是否打开查看该员工个人工作?","打开",Alert.YES | Alert.NO,null,function(event:CloseEvent):void{
 					if(event.detail == Alert.YES)
 					{
@@ -456,7 +458,7 @@
 			<mx:HBox verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12"  >
 				<mx:HBox width="100%" height="30" paddingLeft="20"  horizontalGap="0" styleName="ToolBar"   verticalAlign="middle" id="toolBar">
 					<mx:Label text="|"/>
-					<mx:LinkButton  label="新建工作" icon="@Embed(source='../WebContent/resources/common/tools/button_add_icon.png')"    click="this.currentState='add';" />
+					<mx:LinkButton  label="新建工作" icon="@Embed(source='../WebContent/resources/common/tools/button_add_icon.png')"    click="enterAdd();" />
 					<mx:Label text="|"/>
 				</mx:HBox>
 			</mx:HBox>
@@ -484,7 +486,7 @@
 								</mx:GridItem>
 								<mx:GridItem >
 									<mx:HBox verticalAlign="middle">
-										<mx:Label  text="--"  width="20" textAlign="center"/>
+										<mx:Label  text="--"  width="30" textAlign="center"/>
 										<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" id="search_date_end"  formatString="YYYY-MM-DD" editable="false" width="125"/>
 									</mx:HBox>
 								</mx:GridItem>

@@ -492,10 +492,10 @@
 					<mx:Label text="|"/>
 					<mx:LinkButton  label="新建" icon="@Embed(source='../WebContent/resources/common/tools/button_add_icon.png')"  click="add()" />
 					<mx:Label text="|"/>
-					<mx:LinkButton  label="工作提交" icon="@Embed(source='../WebContent/resources/common/tools/button_add_icon.png')"/>
+<!--					<mx:LinkButton  label="工作提交" icon="@Embed(source='../WebContent/resources/common/tools/button_add_icon.png')"/>
 					<mx:Label text="|"/>
 					<mx:LinkButton label="打印" click="print_clickHandler(event)" icon="@Embed(source='../WebContent/resources/common/tools/button_printer_icon.png')"/>
-					<mx:Label text="|"/>
+					<mx:Label text="|"/>-->
 					<mx:LinkButton  label="导出" icon="@Embed(source='../WebContent/resources/common/tools/button_printer_icon.png')"  click="export()"/>
 					<mx:Label text="|"/>
 				</mx:HBox>
@@ -505,13 +505,13 @@
 					<mx:Label text="起止日期：" width="70">
 						
 					</mx:Label>
-					<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" width="100" editable="false" id="fromDateChooser" selectedDate="{flexCalendar.visibleRange.start}"  formatString="YYYY-MM-DD"  >
+					<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" width="105" editable="false" id="fromDateChooser" selectedDate="{flexCalendar.visibleRange.start}"  formatString="YYYY-MM-DD"  >
 						
 					</mx:DateField>
-					<mx:Label text="--" width="20">
+					<mx:Label text="--" width="30">
 						
 					</mx:Label>
-					<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" width="100" editable="false" id="toDateChooser" selectedDate="{flexCalendar.visibleRange.end}" formatString="YYYY-MM-DD" >
+					<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" width="105" editable="false" id="toDateChooser" selectedDate="{flexCalendar.visibleRange.end}" formatString="YYYY-MM-DD" >
 						
 					</mx:DateField>
 					<mx:Label text="日程类型：" width="70" >

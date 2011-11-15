@@ -99,7 +99,7 @@
 			var job : FlexPrintJob = new FlexPrintJob();
 			job.printAsBitmap = false;
 			if(job.start()) {
-				job.addObject(print_content, FlexPrintJobScaleType.NONE);
+				job.addObject(print_content, FlexPrintJobScaleType.SHOW_ALL);
 				job.send();
 			}
 		}

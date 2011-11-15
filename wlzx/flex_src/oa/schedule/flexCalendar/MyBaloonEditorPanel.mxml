@@ -292,9 +292,9 @@
 
 		<mx:Box horizontalAlign="right" width="100%">
 			<mx:HBox>
+				<mx:Button label="{resourceManager.getString('FlexCalendar','editor.save')}" width="70" click="{saveCallback()}"/>
 				<mx:Button label="{resourceManager.getString('FlexCalendar','editor.delete')}" width="70" click="{deleteCallback()}" visible="{!isNew}"/>
 				<mx:Button label="{resourceManager.getString('FlexCalendar','editor.cancel')}" width="70" click="{cancelCallback()}"/>
-				<mx:Button label="{resourceManager.getString('FlexCalendar','editor.save')}" width="70" click="{saveCallback()}"/>
 			</mx:HBox>
 		</mx:Box>
 		<mx:Box height="10" id="bottomSpacer">

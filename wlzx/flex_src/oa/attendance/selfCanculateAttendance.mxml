@@ -204,7 +204,7 @@
 					<mx:HBox horizontalAlign="left" verticalAlign="bottom">
 						<mx:Label  text="时间区间"  width="80"  textAlign="left"/>
 						<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" id="search_date_begin"   formatString="YYYY-MM-DD"  editable="false" width="120"/>
-						<mx:Label  text="--"  width="20" textAlign="center"/>
+						<mx:Label  text="--"  width="30" textAlign="center"/>
 						<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" id="search_date_end"  formatString="YYYY-MM-DD" editable="false" width="120"/>
 						<mx:Button  label="搜  索"  width="80"   click="search()"/>
 					</mx:HBox>
