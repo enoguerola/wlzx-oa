@@ -279,21 +279,21 @@ public class SystemServiceImpl implements SystemService{
 	public UserModel activeUser(String account){
 		UserModel user=userDAO.get(account);
 		user.setActive(true);
-		userDAO.saveOrUpdate(user);
+		userDAO.merge(user);
 		return user;
 	}
 	//冻结用户
 	public UserModel freezeUser(String account){
 		UserModel user=userDAO.get(account);
 		user.setActive(false);
-		userDAO.saveOrUpdate(user);
+		userDAO.merge(user);
 		return user;
 	}
 	//重置用户密码
 	public UserModel resetUserPW(String account){
 		UserModel user=userDAO.get(account);
 		user.setPwd(CipherUtil.encodeByMD5(user.getName()));
-		userDAO.saveOrUpdate(user);
+		userDAO.merge(user);
 		return user;
 	}
 	//修改个人用户密码【0:失败；1：原密码错误；2：修改成功】
@@ -306,7 +306,7 @@ public class SystemServiceImpl implements SystemService{
 				return 1;
 			else{
 				preUser.setPwd(CipherUtil.encodeByMD5(newPW));
-				userDAO.saveOrUpdate(preUser);
+				userDAO.merge(preUser);
 				return 2;
 			}
 		}
