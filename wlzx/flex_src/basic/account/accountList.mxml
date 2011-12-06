@@ -97,6 +97,7 @@
 				if(selectedIndex==-1)
 					Alert.show("请先选择需要激活的帐号记录");
 				else{
+					selectedAccount=table.selectedItem.id;
 					systemServiceRO.activeUser(selectedAccount);
 				}
 				
@@ -107,6 +108,8 @@
 				if(selectedIndex==-1)
 					Alert.show("请先选择需要冻结的帐号记录");
 				else{
+					selectedAccount=table.selectedItem.id;
+					//Alert.show(table.selectedItem.name);
 					systemServiceRO.freezeUser(selectedAccount);
 				}
 				
@@ -117,12 +120,13 @@
 				if(selectedIndex==-1)
 					Alert.show("请先选择需要重置密码的帐号记录");
 				else{
+					selectedAccount=table.selectedItem.id;
 					systemServiceRO.resetUserPW(selectedAccount);
 				}
 				
 			
 			}
-			protected function checkDetail():void
+			/* protected function checkDetail():void
 			{
 				var selectedIndex:int = table.selectedIndex;
 				if(selectedIndex==-1){
@@ -130,7 +134,7 @@
 				}else {
 					Alert.show(table.selectedItem.id);
 				}
-			}
+			} */
 			private function searchAccountHandleAutoCompleteChange():void
 			{
 				var color:Object = search_account.selectedItem;
