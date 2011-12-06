@@ -67,6 +67,7 @@
 			
 			protected function getDetailInfoByIdById_resultHandler(event:ResultEvent):void{
 				form=event.result as MoveRestDayForm;
+				print_b.addEventListener(MouseEvent.CLICK,function():void{print(form.id);} );
 				detail_applyNo.text="编号：【"+form.applyNo+"】";
 				detail_teacher_name.text=this.parentApplication.getTeacherNameByAccountId(form.teacherId); 
 				detail_teacher_id.text=form.teacherId;
@@ -162,13 +163,25 @@
 				if(window!=null)
 					PopUpManager.removePopUp(window);
 			}
-			
+			private function print(applyId:String):void{
+				var url:URLRequest = new URLRequest("general/print/TXDPrint.action");
+				var variables:URLVariables = new URLVariables();//传过去的data
+				variables.id = applyId;
+				//variables.exampleUserLabel = "guest";
+				url.data=variables;
+				url.method = URLRequestMethod.POST;
+				navigateToURL(url);
+			}	
 		]]> 		
 	</mx:Script> 
 	
 		<mx:VBox borderVisible="true" width="100%" height="100%" borderStyle="solid">		
 		
-		
+			<mx:HBox width="100%" height="25" paddingLeft="20"  horizontalGap="10" styleName="CustomHBoxStyle"   verticalAlign="middle">
+				<mx:Label text="|"/>
+				<mx:LinkButton id="print_b" label="打印" icon="@Embed(source='../WebContent/resources/common/tools/button_printer_icon.png')"  />
+				<mx:Label text="|"/>
+			</mx:HBox>
 		<mx:VBox width="100%" height="100%" id="detailPanel">
 			
 			<mx:VBox width="100%"    horizontalGap="10" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
