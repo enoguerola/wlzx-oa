@@ -6,6 +6,7 @@ import java.util.List;
 
 
 import system.components.SecurityUserHolder;
+import system.dao.DepartmentDAO;
 import system.entity.MessageModel;
 import system.entity.UserModel;
 import system.service.SystemService;
@@ -14,6 +15,7 @@ import system.wlims.basic.service.teacher.TeacherService;
 import system.wlims.oa.dao.attendance.MoveRestDayDAO;
 import system.wlims.oa.entity.workFlow.moveRestDay.MoveRestDayForm;
 import system.wlims.oa.entity.workFlow.moveRestDay.MoveRestDayWorkFlowLog;
+import system.wlims.oa.entity.workFlow.overWork.OverWorkForm;
 import system.wlims.oa.service.attendance.MoveRestDayService;
 import system.wlims.oa.vo.TaskVO;
 
@@ -21,6 +23,7 @@ public class MoveRestDayServiceImpl implements MoveRestDayService {
 	private MoveRestDayDAO moveRestDayDAO;
 	private SystemService systemService;
 	private TeacherService teacherService;
+	private DepartmentDAO departmentDAO;
 	@Override
 	public void addMoveRestDayApply(MoveRestDayForm moveRestDay) {
 		// TODO Auto-generated method stub
@@ -77,6 +80,13 @@ public class MoveRestDayServiceImpl implements MoveRestDayService {
 						newMoveRestDay.setStatus(MoveRestDayForm.Status.Pass.getValue());
 						String content="您申请的编号为"+moveRestDay.getApplyNo()+"的调休审批已经通过";
 						systemService.sendMessage(MessageModel.DefaultFromId, moveRestDay.getTeacherId(),MessageModel.MessageType.SYSTEM.getValue(), content);
+						//通知督导科
+						if(departmentDAO.getSupervisorFlagDepartment()!=null&&departmentDAO.getSupervisorFlagDepartment().getMasterUsers().size()>0){
+							
+							String content2=teacherService.getTeacherNameByUserId(moveRestDay.getTeacherId())+"申请的编号为"+moveRestDay.getApplyNo()+"的调休审批已经通过";
+							
+							systemService.sendMessage(MessageModel.DefaultFromId,departmentDAO.getSupervisorFlagDepartment().getMasterUsers().iterator().next().getId() ,MessageModel.MessageType.SYSTEM.getValue(), content2,MoveRestDayForm.class.getSimpleName(),moveRestDay.getId());
+						}
 					}
 					else {
 						newMoveRestDay.setOfficeChiefStatus(moveRestDay.getOfficeChiefStatus().intValue());
@@ -109,6 +119,13 @@ public class MoveRestDayServiceImpl implements MoveRestDayService {
 					newMoveRestDay.setStatus(MoveRestDayForm.Status.Pass.getValue());	
 					String content="您申请的编号为"+moveRestDay.getApplyNo()+"的调休审批已经通过";
 					systemService.sendMessage(MessageModel.DefaultFromId, moveRestDay.getTeacherId(),MessageModel.MessageType.SYSTEM.getValue(), content);
+					//通知督导科
+					if(departmentDAO.getSupervisorFlagDepartment()!=null&&departmentDAO.getSupervisorFlagDepartment().getMasterUsers().size()>0){
+						
+						String content2=teacherService.getTeacherNameByUserId(moveRestDay.getTeacherId())+"申请的编号为"+moveRestDay.getApplyNo()+"的调休审批已经通过";
+						
+						systemService.sendMessage(MessageModel.DefaultFromId,departmentDAO.getSupervisorFlagDepartment().getMasterUsers().iterator().next().getId() ,MessageModel.MessageType.SYSTEM.getValue(), content2,MoveRestDayForm.class.getSimpleName(),moveRestDay.getId());
+					}
 
 				}
 				else if(moveRestDay.getVicePrincipalStatus().intValue()==2){
@@ -211,6 +228,12 @@ public class MoveRestDayServiceImpl implements MoveRestDayService {
 	}
 	public void setTeacherService(TeacherService teacherService) {
 		this.teacherService = teacherService;
+	}
+	public DepartmentDAO getDepartmentDAO() {
+		return departmentDAO;
+	}
+	public void setDepartmentDAO(DepartmentDAO departmentDAO) {
+		this.departmentDAO = departmentDAO;
 	}
 
 }

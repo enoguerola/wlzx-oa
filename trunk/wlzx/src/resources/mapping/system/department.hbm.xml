@@ -8,6 +8,10 @@
 			<column name="id" />
 			<generator class="native" />
 		</id>
+		
+		<property name="supervisorFlag" type="boolean">
+			<column name="supervisor_flag" />
+		</property>
 		<property name="level" type="int">
 			<column name="level" />
 		</property>

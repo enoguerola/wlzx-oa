@@ -17,7 +17,7 @@
 		public var leaders:Object=new Array();//直属上级部门
 	
 //		public var mainUsers:Object=new Array();//主部门用户集
-		
+		public var supervisorFlag:Boolean=false;//督导部门标记
 		public var leaderUsers:Object=new Array();//直属领导用户集
 		public var masterUsers:Object=new Array();//部门普通用户集
 		public var relativeDRs:Object=new Array();

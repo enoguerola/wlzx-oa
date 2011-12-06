@@ -35,6 +35,8 @@ public class MessageModel extends SimpleBaseModel{
 	private String readDates;
 	private String postRemovedFlag;
 	private String receiveRemovedFlags;
+	private String linkObjectType;
+	private String linkObjectId;
 	public static enum MessageType{
 		SYSTEM(0, "系统消息"),
 		Person(1, "个人消息");
@@ -263,5 +265,17 @@ public class MessageModel extends SimpleBaseModel{
 	}
 	public void setReadDates(String readDates) {
 		this.readDates = readDates;
+	}
+	public String getLinkObjectType() {
+		return linkObjectType;
+	}
+	public void setLinkObjectType(String linkObjectType) {
+		this.linkObjectType = linkObjectType;
+	}
+	public String getLinkObjectId() {
+		return linkObjectId;
+	}
+	public void setLinkObjectId(String linkObjectId) {
+		this.linkObjectId = linkObjectId;
 	}
 }

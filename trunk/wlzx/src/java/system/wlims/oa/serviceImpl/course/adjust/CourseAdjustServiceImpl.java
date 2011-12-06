@@ -5,6 +5,7 @@ import java.util.Set;
 
 
 import system.components.SecurityUserHolder;
+import system.dao.DepartmentDAO;
 import system.entity.MessageModel;
 import system.service.SystemService;
 import system.utils.UtilDateTime;
@@ -13,12 +14,14 @@ import system.wlims.oa.dao.course.adjust.CourseAdjustDAO;
 import system.wlims.oa.entity.course.adjust.ApplyItemModel;
 import system.wlims.oa.entity.course.adjust.ApplyModel;
 import system.wlims.oa.entity.course.adjust.ApplyWorkFlowLog;
+import system.wlims.oa.entity.workFlow.takeLeave.TakeLeaveForm;
 import system.wlims.oa.service.course.adjust.CourseAdjustService;
 
 public class CourseAdjustServiceImpl implements CourseAdjustService{
 	private CourseAdjustDAO courseAdjustDAO;
 	private SystemService systemService;
 	private TeacherService teacherService;
+	private DepartmentDAO departmentDAO;
 	public CourseAdjustDAO getCourseAdjustDAO() {
 		return courseAdjustDAO;
 	}
@@ -73,7 +76,7 @@ public class CourseAdjustServiceImpl implements CourseAdjustService{
 			String content="您于"+UtilDateTime.toDateString(apply.getApplyCreationDate(), "yyyy-MM-dd HH:mm:ss")+"调课申请记录已取消，详情请查看调课申请记录";
 
 			systemService.sendMessage(MessageModel.DefaultFromId, apply.getApplyTeacherId(), MessageModel.MessageType.SYSTEM.getValue(), content);
-
+			
 			return true;
 		}
 	
@@ -175,7 +178,13 @@ public class CourseAdjustServiceImpl implements CourseAdjustService{
 			}
 			String content="您申请的调课审批已经通过，调课教师为"+adjustTeachers+"，上课班级为"+adjustClasses+"，原课时间为"+adjustPreTimes+"，调整为"+adjustTimes+"，请准时上课";
 			systemService.sendMessage(MessageModel.DefaultFromId, apply.getApplyTeacherId(), MessageModel.MessageType.SYSTEM.getValue(), content);
-
+			//通知督导科
+			if(departmentDAO.getSupervisorFlagDepartment()!=null&&departmentDAO.getSupervisorFlagDepartment().getMasterUsers().size()>0){
+				
+				String content2=teacherService.getTeacherNameByUserId(apply.getApplyTeacherId())+"申请的调课审批已经通过，调课教师为"+adjustTeachers+"，上课班级为"+adjustClasses+"，原课时间为"+adjustPreTimes+"，调整为"+adjustTimes;
+				
+				systemService.sendMessage(MessageModel.DefaultFromId,departmentDAO.getSupervisorFlagDepartment().getMasterUsers().iterator().next().getId() ,MessageModel.MessageType.SYSTEM.getValue(), content2,ApplyModel.class.getSimpleName(),apply.getId());
+			}
 		}
 		else if(apply.getApplyStatus()==ApplyModel.ApplyStatus.DENY.getStatus()){
 			log.setOperationResult("课程处审批编号为"+apply.getApplyNo()+"的申请不通过");
@@ -258,6 +267,14 @@ public class CourseAdjustServiceImpl implements CourseAdjustService{
 
 	public void setTeacherService(TeacherService teacherService) {
 		this.teacherService = teacherService;
+	}
+
+	public DepartmentDAO getDepartmentDAO() {
+		return departmentDAO;
+	}
+
+	public void setDepartmentDAO(DepartmentDAO departmentDAO) {
+		this.departmentDAO = departmentDAO;
 	}
 
 	

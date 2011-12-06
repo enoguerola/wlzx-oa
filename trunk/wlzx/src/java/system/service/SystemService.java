@@ -147,7 +147,8 @@ public interface SystemService{
 	public MessageModel getMessage(String id);
 	//发送消息
 	public boolean sendMessage(String fromId,String toIds,int type,String content);
-	
+	//发送消息2
+	public boolean sendMessage(String fromId,String toIds,int type,String content,String linkObject,String linkObjectId);
 	//删除消息
 	public boolean deleteMessage(String id);
 	//伪删除消息

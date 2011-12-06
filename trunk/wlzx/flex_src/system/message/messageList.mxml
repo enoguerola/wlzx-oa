@@ -20,7 +20,7 @@
 			border:1px;
 		}
 	</fx:Style>-->
-	<fx:Script>
+	<fx:Script> 
 		<![CDATA[
 			import mx.collections.ArrayCollection;
 			import mx.controls.*;

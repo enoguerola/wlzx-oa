@@ -1,7 +1,6 @@
 package system.wlims.oa.serviceImpl.attendance;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -150,6 +149,9 @@ public class TakeLeaveServiceImpl implements TakeLeaveService {
 			}
 			applier.setHasTeachingRole(hasTeachingRole);
 			applier.setHasTeachingRoleInMain(hasTeachingRoleInMain);
+			
+			
+			
 			if(hasTeachingRoleInMain==true){//教学申请审批
 				if(newTakeLeave.getOfficeChiefStatus()==null&&takeLeave.getOfficeChiefStatus()!=null){
 					TakeLeaveWorkFlowLog log=new TakeLeaveWorkFlowLog();
@@ -159,16 +161,27 @@ public class TakeLeaveServiceImpl implements TakeLeaveService {
 						if(newTakeLeave.getSections()/Constants.DaysOfSections<=TakeLeaveForm.Rules.FirstApprove.getValue()*1.0){
 								newTakeLeave.setStatus(TakeLeaveForm.Status.Pass.getValue());
 								String content="您申请的编号为"+takeLeave.getApplyNo()+"的请假/出差审批已经通过";
-								systemService.sendMessage(MessageModel.DefaultFromId, takeLeave.getTeacherId(),MessageModel.MessageType.SYSTEM.getValue(), content);
+								systemService.sendMessage(MessageModel.DefaultFromId, takeLeave.getTeacherId(),MessageModel.MessageType.SYSTEM.getValue(), content,TakeLeaveForm.class.getSimpleName(),takeLeave.getId());
+								
+								//通知督导科
+								if(departmentDAO.getSupervisorFlagDepartment()!=null&&departmentDAO.getSupervisorFlagDepartment().getMasterUsers().size()>0){
+									
+									String content2=teacherService.getTeacherNameByUserId(takeLeave.getTeacherId())+"申请的编号为"+takeLeave.getApplyNo()+"的请假/出差审批已经通过";
+									
+									systemService.sendMessage(MessageModel.DefaultFromId,departmentDAO.getSupervisorFlagDepartment().getMasterUsers().iterator().next().getId() ,MessageModel.MessageType.SYSTEM.getValue(), content2,TakeLeaveForm.class.getSimpleName(),takeLeave.getId());
+								}
+								
+								
 
 						}
 						else {
 							newTakeLeave.setStatus(TakeLeaveForm.Status.OfficePass.getValue());
 							String content="课程处审批已经通过编号为"+takeLeave.getApplyNo()+"的"+teacherService.getTeacherNameByUserId(takeLeave.getTeacherId())+"请假/出差申请";
 							if(takeLeave.getType().intValue()==TakeLeaveForm.Types.BusinessTrip.getValue().intValue())
-								systemService.sendMessage(MessageModel.DefaultFromId, systemService.getWorkersIds(TaskVO.EType.AskForLeave_BusinessTrip_VicePrincipalApprove.getValue()), MessageModel.MessageType.SYSTEM.getValue(), content);
-							else systemService.sendMessage(MessageModel.DefaultFromId, systemService.getWorkersIds(TaskVO.EType.AskForLeave_Leave_VicePrincipalApprove.getValue()), MessageModel.MessageType.SYSTEM.getValue(), content);
-
+								systemService.sendMessage(MessageModel.DefaultFromId, systemService.getWorkersIds(TaskVO.EType.AskForLeave_BusinessTrip_VicePrincipalApprove.getValue()), MessageModel.MessageType.SYSTEM.getValue(), content,TakeLeaveForm.class.getSimpleName(),takeLeave.getId());
+							else systemService.sendMessage(MessageModel.DefaultFromId, systemService.getWorkersIds(TaskVO.EType.AskForLeave_Leave_VicePrincipalApprove.getValue()), MessageModel.MessageType.SYSTEM.getValue(), content,TakeLeaveForm.class.getSimpleName(),takeLeave.getId());
+							
+							
 						
 						}
 					}
@@ -176,7 +189,7 @@ public class TakeLeaveServiceImpl implements TakeLeaveService {
 						log.setOperationResult("课程处审批编号为"+takeLeave.getApplyNo()+"的"+teacherService.getTeacherNameByUserId(takeLeave.getTeacherId())+"请假/出差申请不通过");
 						newTakeLeave.setStatus(TakeLeaveForm.Status.Deny.getValue());	
 						String content="您申请的编号为"+takeLeave.getApplyNo()+"的请假/出差课程处审批不通过";
-						systemService.sendMessage(MessageModel.DefaultFromId, takeLeave.getTeacherId(),MessageModel.MessageType.SYSTEM.getValue(), content);
+						systemService.sendMessage(MessageModel.DefaultFromId, takeLeave.getTeacherId(),MessageModel.MessageType.SYSTEM.getValue(), content,TakeLeaveForm.class.getSimpleName(),takeLeave.getId());
 
 					}
 					log.setOperationTime(new Date());
@@ -191,15 +204,21 @@ public class TakeLeaveServiceImpl implements TakeLeaveService {
 						if(newTakeLeave.getSections()/Constants.DaysOfSections<=TakeLeaveForm.Rules.SecordApprove.getValue()*1.0){
 							newTakeLeave.setStatus(TakeLeaveForm.Status.Pass.getValue());
 							String content="您申请的编号为"+takeLeave.getApplyNo()+"的请假/出差审批已经通过";
-							systemService.sendMessage(MessageModel.DefaultFromId, takeLeave.getTeacherId(),MessageModel.MessageType.SYSTEM.getValue(), content);
-		
+							systemService.sendMessage(MessageModel.DefaultFromId, takeLeave.getTeacherId(),MessageModel.MessageType.SYSTEM.getValue(), content,TakeLeaveForm.class.getSimpleName(),takeLeave.getId());
+							//通知督导科
+							if(departmentDAO.getSupervisorFlagDepartment()!=null&&departmentDAO.getSupervisorFlagDepartment().getMasterUsers().size()>0){
+								
+								String content2=teacherService.getTeacherNameByUserId(takeLeave.getTeacherId())+"申请的编号为"+takeLeave.getApplyNo()+"的请假/出差审批已经通过";
+								
+								systemService.sendMessage(MessageModel.DefaultFromId,departmentDAO.getSupervisorFlagDepartment().getMasterUsers().iterator().next().getId() ,MessageModel.MessageType.SYSTEM.getValue(), content2,TakeLeaveForm.class.getSimpleName(),takeLeave.getId());
+							}
 						}
 						else { 
 							newTakeLeave.setStatus(TakeLeaveForm.Status.VicePrincipalPass.getValue());
 							String content="分管教学副校长审批已经通过编号为"+takeLeave.getApplyNo()+"的"+teacherService.getTeacherNameByUserId(takeLeave.getTeacherId())+"请假/出差申请";
 							if(takeLeave.getType().intValue()==TakeLeaveForm.Types.BusinessTrip.getValue().intValue())
-								systemService.sendMessage(MessageModel.DefaultFromId, systemService.getWorkersIds(TaskVO.EType.AskForLeave_BusinessTrip_VicePrincipalApprove.getValue()), MessageModel.MessageType.SYSTEM.getValue(), content);
-							else systemService.sendMessage(MessageModel.DefaultFromId, systemService.getWorkersIds(TaskVO.EType.AskForLeave_Leave_VicePrincipalApprove.getValue()), MessageModel.MessageType.SYSTEM.getValue(), content);
+								systemService.sendMessage(MessageModel.DefaultFromId, systemService.getWorkersIds(TaskVO.EType.AskForLeave_BusinessTrip_VicePrincipalApprove.getValue()), MessageModel.MessageType.SYSTEM.getValue(), content,TakeLeaveForm.class.getSimpleName(),takeLeave.getId());
+							else systemService.sendMessage(MessageModel.DefaultFromId, systemService.getWorkersIds(TaskVO.EType.AskForLeave_Leave_VicePrincipalApprove.getValue()), MessageModel.MessageType.SYSTEM.getValue(), content,TakeLeaveForm.class.getSimpleName(),takeLeave.getId());
 							
 						}
 						
@@ -208,7 +227,7 @@ public class TakeLeaveServiceImpl implements TakeLeaveService {
 						log.setOperationResult("分管教学副校长审批编号为"+takeLeave.getApplyNo()+"的"+teacherService.getTeacherNameByUserId(takeLeave.getTeacherId())+"请假/出差申请不通过");
 						newTakeLeave.setStatus(TakeLeaveForm.Status.Deny.getValue());	
 						String content="您申请的编号为"+takeLeave.getApplyNo()+"的请假/出差分管教学副校长审批不通过";
-						systemService.sendMessage(MessageModel.DefaultFromId, takeLeave.getTeacherId(),MessageModel.MessageType.SYSTEM.getValue(), content);
+						systemService.sendMessage(MessageModel.DefaultFromId, takeLeave.getTeacherId(),MessageModel.MessageType.SYSTEM.getValue(), content,TakeLeaveForm.class.getSimpleName(),takeLeave.getId());
 
 					}
 					log.setOperationTime(new Date());
@@ -225,14 +244,20 @@ public class TakeLeaveServiceImpl implements TakeLeaveService {
 //						else newTakeLeave.setStatus(TakeLeaveForm.Status.Pass.getValue());	
 						newTakeLeave.setStatus(TakeLeaveForm.Status.Pass.getValue());	
 						String content="您申请的编号为"+takeLeave.getApplyNo()+"的请假/出差校长审批通过";
-						systemService.sendMessage(MessageModel.DefaultFromId, takeLeave.getTeacherId(),MessageModel.MessageType.SYSTEM.getValue(), content);
-
+						systemService.sendMessage(MessageModel.DefaultFromId, takeLeave.getTeacherId(),MessageModel.MessageType.SYSTEM.getValue(), content,TakeLeaveForm.class.getSimpleName(),takeLeave.getId());
+						//通知督导科
+						if(departmentDAO.getSupervisorFlagDepartment()!=null&&departmentDAO.getSupervisorFlagDepartment().getMasterUsers().size()>0){
+							
+							String content2=teacherService.getTeacherNameByUserId(takeLeave.getTeacherId())+"申请的编号为"+takeLeave.getApplyNo()+"的请假/出差审批已经通过";
+							
+							systemService.sendMessage(MessageModel.DefaultFromId,departmentDAO.getSupervisorFlagDepartment().getMasterUsers().iterator().next().getId() ,MessageModel.MessageType.SYSTEM.getValue(), content2,TakeLeaveForm.class.getSimpleName(),takeLeave.getId());
+						}
 					}
 					else if(takeLeave.getPrincipalStatus().intValue()==2){
 						log.setOperationResult("校长审批编号为"+takeLeave.getApplyNo()+"的"+teacherService.getTeacherNameByUserId(takeLeave.getTeacherId())+"请假/出差申请不通过");
 						newTakeLeave.setStatus(TakeLeaveForm.Status.Deny.getValue());	
 						String content="您申请的编号为"+takeLeave.getApplyNo()+"的请假/出差校长审批不通过";
-						systemService.sendMessage(MessageModel.DefaultFromId, takeLeave.getTeacherId(),MessageModel.MessageType.SYSTEM.getValue(), content);
+						systemService.sendMessage(MessageModel.DefaultFromId, takeLeave.getTeacherId(),MessageModel.MessageType.SYSTEM.getValue(), content,TakeLeaveForm.class.getSimpleName(),takeLeave.getId());
 
 					}
 					log.setOperationTime(new Date());
@@ -249,26 +274,32 @@ public class TakeLeaveServiceImpl implements TakeLeaveService {
 						if(newTakeLeave.getSections()/Constants.DaysOfSections<=TakeLeaveForm.Rules.FirstApprove.getValue()*1.0){
 								newTakeLeave.setStatus(TakeLeaveForm.Status.Pass.getValue());
 								String content="您申请的编号为"+takeLeave.getApplyNo()+"的请假/出差审批已经通过";
-								systemService.sendMessage(MessageModel.DefaultFromId, takeLeave.getTeacherId(),MessageModel.MessageType.SYSTEM.getValue(), content);
+								systemService.sendMessage(MessageModel.DefaultFromId, takeLeave.getTeacherId(),MessageModel.MessageType.SYSTEM.getValue(), content,TakeLeaveForm.class.getSimpleName(),takeLeave.getId());
 								//通知课程处
 								if(hasTeachingRole==true){
 									String noticeMessageContent="教师"+teacherService.getTeacherNameByUserId(takeLeave.getTeacherId())+"申请的编号为"+takeLeave.getApplyNo()+"的请假/出差所在处室审批已经通过";
-									systemService.sendMessage(MessageModel.DefaultFromId, systemService.getWorkersIds(TaskVO.EType.AskForLeave_Leave_Teaching_OfficalApprove.getValue()),MessageModel.MessageType.SYSTEM.getValue(), noticeMessageContent);
+									systemService.sendMessage(MessageModel.DefaultFromId, systemService.getWorkersIds(TaskVO.EType.AskForLeave_Leave_Teaching_OfficalApprove.getValue()),MessageModel.MessageType.SYSTEM.getValue(), noticeMessageContent,TakeLeaveForm.class.getSimpleName(),takeLeave.getId());
 								}
-
+								//通知督导科
+								if(departmentDAO.getSupervisorFlagDepartment()!=null&&departmentDAO.getSupervisorFlagDepartment().getMasterUsers().size()>0){
+									
+									String content2=teacherService.getTeacherNameByUserId(takeLeave.getTeacherId())+"申请的编号为"+takeLeave.getApplyNo()+"的请假/出差审批已经通过";
+									
+									systemService.sendMessage(MessageModel.DefaultFromId,departmentDAO.getSupervisorFlagDepartment().getMasterUsers().iterator().next().getId() ,MessageModel.MessageType.SYSTEM.getValue(), content2,TakeLeaveForm.class.getSimpleName(),takeLeave.getId());
+								}
 						}
 						else {
 							newTakeLeave.setStatus(TakeLeaveForm.Status.OfficePass.getValue());
 							String content="处室审批已经通过编号为"+takeLeave.getApplyNo()+"的"+teacherService.getTeacherNameByUserId(takeLeave.getTeacherId())+"请假/出差申请";
 							
 							if(takeLeave.getType().intValue()==TakeLeaveForm.Types.BusinessTrip.getValue().intValue())
-								systemService.sendMessage(MessageModel.DefaultFromId, systemService.getWorkersIds(TaskVO.EType.AskForLeave_BusinessTrip_VicePrincipalApprove.getValue()), MessageModel.MessageType.SYSTEM.getValue(), content);
-							else systemService.sendMessage(MessageModel.DefaultFromId, systemService.getWorkersIds(TaskVO.EType.AskForLeave_Leave_VicePrincipalApprove.getValue()), MessageModel.MessageType.SYSTEM.getValue(), content);
+								systemService.sendMessage(MessageModel.DefaultFromId, systemService.getWorkersIds(TaskVO.EType.AskForLeave_BusinessTrip_VicePrincipalApprove.getValue()), MessageModel.MessageType.SYSTEM.getValue(), content,TakeLeaveForm.class.getSimpleName(),takeLeave.getId());
+							else systemService.sendMessage(MessageModel.DefaultFromId, systemService.getWorkersIds(TaskVO.EType.AskForLeave_Leave_VicePrincipalApprove.getValue()), MessageModel.MessageType.SYSTEM.getValue(), content,TakeLeaveForm.class.getSimpleName(),takeLeave.getId());
 							
 							//通知课程处
 							if(hasTeachingRole==true){
 								String noticeMessageContent="教师"+teacherService.getTeacherNameByUserId(takeLeave.getTeacherId())+"申请的编号为"+takeLeave.getApplyNo()+"的请假/出差分管副校长审批已经通过";
-								systemService.sendMessage(MessageModel.DefaultFromId, systemService.getWorkersIds(TaskVO.EType.AskForLeave_Leave_Teaching_OfficalApprove.getValue()),MessageModel.MessageType.SYSTEM.getValue(), noticeMessageContent);
+								systemService.sendMessage(MessageModel.DefaultFromId, systemService.getWorkersIds(TaskVO.EType.AskForLeave_Leave_Teaching_OfficalApprove.getValue()),MessageModel.MessageType.SYSTEM.getValue(), noticeMessageContent,TakeLeaveForm.class.getSimpleName(),takeLeave.getId());
 							}
 						
 						}
@@ -277,7 +308,7 @@ public class TakeLeaveServiceImpl implements TakeLeaveService {
 						log.setOperationResult("处室审批编号为"+takeLeave.getApplyNo()+"的"+teacherService.getTeacherNameByUserId(takeLeave.getTeacherId())+"请假/出差申请不通过");
 						newTakeLeave.setStatus(TakeLeaveForm.Status.Deny.getValue());	
 						String content="您申请的编号为"+takeLeave.getApplyNo()+"的请假/出差处室审批不通过";
-						systemService.sendMessage(MessageModel.DefaultFromId, takeLeave.getTeacherId(),MessageModel.MessageType.SYSTEM.getValue(), content);
+						systemService.sendMessage(MessageModel.DefaultFromId, takeLeave.getTeacherId(),MessageModel.MessageType.SYSTEM.getValue(), content,TakeLeaveForm.class.getSimpleName(),takeLeave.getId());
 
 					}
 					log.setOperationTime(new Date());
@@ -292,20 +323,26 @@ public class TakeLeaveServiceImpl implements TakeLeaveService {
 						if(newTakeLeave.getSections()/Constants.DaysOfSections<=TakeLeaveForm.Rules.SecordApprove.getValue()*1.0){
 							newTakeLeave.setStatus(TakeLeaveForm.Status.Pass.getValue());
 							String content="您申请的编号为"+takeLeave.getApplyNo()+"的请假/出差审批已经通过";
-							systemService.sendMessage(MessageModel.DefaultFromId, takeLeave.getTeacherId(),MessageModel.MessageType.SYSTEM.getValue(), content);
+							systemService.sendMessage(MessageModel.DefaultFromId, takeLeave.getTeacherId(),MessageModel.MessageType.SYSTEM.getValue(), content,TakeLeaveForm.class.getSimpleName(),takeLeave.getId());
 							//通知课程处
 							if(hasTeachingRole==true){
 								String noticeMessageContent="教师"+teacherService.getTeacherNameByUserId(takeLeave.getTeacherId())+"申请的编号为"+takeLeave.getApplyNo()+"的请假/出差校长审批已经通过";
-								systemService.sendMessage(MessageModel.DefaultFromId, systemService.getWorkersIds(TaskVO.EType.AskForLeave_Leave_Teaching_OfficalApprove.getValue()),MessageModel.MessageType.SYSTEM.getValue(), noticeMessageContent);
+								systemService.sendMessage(MessageModel.DefaultFromId, systemService.getWorkersIds(TaskVO.EType.AskForLeave_Leave_Teaching_OfficalApprove.getValue()),MessageModel.MessageType.SYSTEM.getValue(), noticeMessageContent,TakeLeaveForm.class.getSimpleName(),takeLeave.getId());
 							}
-		
+							//通知督导科
+							if(departmentDAO.getSupervisorFlagDepartment()!=null&&departmentDAO.getSupervisorFlagDepartment().getMasterUsers().size()>0){
+								
+								String content2=teacherService.getTeacherNameByUserId(takeLeave.getTeacherId())+"申请的编号为"+takeLeave.getApplyNo()+"的请假/出差审批已经通过";
+								
+								systemService.sendMessage(MessageModel.DefaultFromId,departmentDAO.getSupervisorFlagDepartment().getMasterUsers().iterator().next().getId() ,MessageModel.MessageType.SYSTEM.getValue(), content2,TakeLeaveForm.class.getSimpleName(),takeLeave.getId());
+							}
 						}
 						else { 
 							newTakeLeave.setStatus(TakeLeaveForm.Status.VicePrincipalPass.getValue());
 							String content="分管副校长审批已经通过编号为"+takeLeave.getApplyNo()+"的"+teacherService.getTeacherNameByUserId(takeLeave.getTeacherId())+"请假/出差申请";
 							if(takeLeave.getType().intValue()==TakeLeaveForm.Types.BusinessTrip.getValue().intValue())
-								systemService.sendMessage(MessageModel.DefaultFromId, systemService.getWorkersIds(TaskVO.EType.AskForLeave_BusinessTrip_VicePrincipalApprove.getValue()), MessageModel.MessageType.SYSTEM.getValue(), content);
-							else systemService.sendMessage(MessageModel.DefaultFromId, systemService.getWorkersIds(TaskVO.EType.AskForLeave_Leave_VicePrincipalApprove.getValue()), MessageModel.MessageType.SYSTEM.getValue(), content);
+								systemService.sendMessage(MessageModel.DefaultFromId, systemService.getWorkersIds(TaskVO.EType.AskForLeave_BusinessTrip_VicePrincipalApprove.getValue()), MessageModel.MessageType.SYSTEM.getValue(), content,TakeLeaveForm.class.getSimpleName(),takeLeave.getId());
+							else systemService.sendMessage(MessageModel.DefaultFromId, systemService.getWorkersIds(TaskVO.EType.AskForLeave_Leave_VicePrincipalApprove.getValue()), MessageModel.MessageType.SYSTEM.getValue(), content,TakeLeaveForm.class.getSimpleName(),takeLeave.getId());
 							
 						}
 						
@@ -314,7 +351,7 @@ public class TakeLeaveServiceImpl implements TakeLeaveService {
 						log.setOperationResult("分管副校长审批编号为"+takeLeave.getApplyNo()+"的"+teacherService.getTeacherNameByUserId(takeLeave.getTeacherId())+"请假/出差申请不通过");
 						newTakeLeave.setStatus(TakeLeaveForm.Status.Deny.getValue());	
 						String content="您申请的编号为"+takeLeave.getApplyNo()+"的请假/出差分管副校长审批不通过";
-						systemService.sendMessage(MessageModel.DefaultFromId, takeLeave.getTeacherId(),MessageModel.MessageType.SYSTEM.getValue(), content);
+						systemService.sendMessage(MessageModel.DefaultFromId, takeLeave.getTeacherId(),MessageModel.MessageType.SYSTEM.getValue(), content,TakeLeaveForm.class.getSimpleName(),takeLeave.getId());
 
 					}
 					log.setOperationTime(new Date());
@@ -331,20 +368,26 @@ public class TakeLeaveServiceImpl implements TakeLeaveService {
 //						else newTakeLeave.setStatus(TakeLeaveForm.Status.Pass.getValue());	
 						newTakeLeave.setStatus(TakeLeaveForm.Status.Pass.getValue());	
 						String content="您申请的编号为"+takeLeave.getApplyNo()+"的请假/出差校长审批通过";
-						systemService.sendMessage(MessageModel.DefaultFromId, takeLeave.getTeacherId(),MessageModel.MessageType.SYSTEM.getValue(), content);
+						systemService.sendMessage(MessageModel.DefaultFromId, takeLeave.getTeacherId(),MessageModel.MessageType.SYSTEM.getValue(), content,TakeLeaveForm.class.getSimpleName(),takeLeave.getId());
 						
 						//通知课程处
 						if(hasTeachingRole==true){
 							String noticeMessageContent="";
-							systemService.sendMessage(MessageModel.DefaultFromId, systemService.getWorkersIds(TaskVO.EType.AskForLeave_Leave_Teaching_OfficalApprove.getValue()),MessageModel.MessageType.SYSTEM.getValue(), noticeMessageContent);
+							systemService.sendMessage(MessageModel.DefaultFromId, systemService.getWorkersIds(TaskVO.EType.AskForLeave_Leave_Teaching_OfficalApprove.getValue()),MessageModel.MessageType.SYSTEM.getValue(), noticeMessageContent,TakeLeaveForm.class.getSimpleName(),takeLeave.getId());
 						}
-
+						//通知督导科
+						if(departmentDAO.getSupervisorFlagDepartment()!=null&&departmentDAO.getSupervisorFlagDepartment().getMasterUsers().size()>0){
+							
+							String content2=teacherService.getTeacherNameByUserId(takeLeave.getTeacherId())+"申请的编号为"+takeLeave.getApplyNo()+"的请假/出差审批已经通过";
+							
+							systemService.sendMessage(MessageModel.DefaultFromId,departmentDAO.getSupervisorFlagDepartment().getMasterUsers().iterator().next().getId() ,MessageModel.MessageType.SYSTEM.getValue(), content2,TakeLeaveForm.class.getSimpleName(),takeLeave.getId());
+						}
 					}
 					else if(takeLeave.getPrincipalStatus().intValue()==2){
 						log.setOperationResult("校长审批编号为"+takeLeave.getApplyNo()+"的"+teacherService.getTeacherNameByUserId(takeLeave.getTeacherId())+"请假/出差申请不通过");
 						newTakeLeave.setStatus(TakeLeaveForm.Status.Deny.getValue());	
 						String content="您申请的编号为"+takeLeave.getApplyNo()+"的请假/出差校长审批不通过";
-						systemService.sendMessage(MessageModel.DefaultFromId, takeLeave.getTeacherId(),MessageModel.MessageType.SYSTEM.getValue(), content);
+						systemService.sendMessage(MessageModel.DefaultFromId, takeLeave.getTeacherId(),MessageModel.MessageType.SYSTEM.getValue(), content,TakeLeaveForm.class.getSimpleName(),takeLeave.getId());
 
 					}
 					log.setOperationTime(new Date());
