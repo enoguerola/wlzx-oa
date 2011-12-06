@@ -5,23 +5,23 @@
 	<mx:states>
 		<mx:State name="list">           
 			<mx:RemoveChild target="{addPanel}"/>
-			<mx:RemoveChild target="{detailPanel}"/>
+			<!--<mx:RemoveChild target="{detailPanel}"/>-->
 		</mx:State>
 		<mx:State name="add" enterState="add_activateHandler(event)"  exitState="add_exitStateHandler(event)">           
 			<mx:RemoveChild target="{listPanel}"/>
-			<mx:RemoveChild target="{detailPanel}"/>
+			<!--<mx:RemoveChild target="{detailPanel}"/>-->
 		</mx:State>
-		<mx:State name="detail">           
+		<!--<mx:State name="detail">           
 			<mx:RemoveChild target="{listPanel}"/>
 			<mx:RemoveChild target="{addPanel}"/>
-		</mx:State>
+		</mx:State>-->
 		
 	</mx:states>
 	<mx:transitions>
 		
 		<mx:Transition id="myTransition1" fromState="list" toState="*" >
 			
-			<mx:Parallel id="t1" targets="{[addPanel],[detailPanel]}" >
+			<mx:Parallel id="t1" targets="{[addPanel] /*  ,[detailPanel] */  }" >
 				
 				<mx:WipeLeft duration="1500">
 					
@@ -49,7 +49,7 @@
 		<mx:method name="updateMoveRestDayApply"  concurrency="last"  result="updateMoveRestDayApplyResult_resultHandler(event);" />
 		<mx:method name="cancleMoveRestDayApplyById"  concurrency="last"  result="cancleMoveRestDayApplyByIdResult_resultHandler(event);" />
 		<mx:method name="loadApplyInfoById"  concurrency="last"  result="loadApplyInfoById_resultHandler(event);" />
-		<mx:method name="getDetailInfoById"  concurrency="last"  result="getDetailInfoByIdById_resultHandler(event);" />
+		<!--<mx:method name="getDetailInfoById"  concurrency="last"  result="getDetailInfoByIdById_resultHandler(event);" />-->
 		<mx:method name="getUserMoveRestDayApplies"  concurrency="last"  result="getUserMoveRestDayApplies_resultHandler(event);" />
 	</mx:RemoteObject>
 	<mx:RemoteObject id="attendanceCalculateServiceRO" destination="attendanceCalculateServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
@@ -145,7 +145,7 @@
 				
 				
 			}
-			protected function getDetailInfoByIdById_resultHandler(event:ResultEvent):void{
+			/* protected function getDetailInfoByIdById_resultHandler(event:ResultEvent):void{
 				form=event.result as MoveRestDayForm;
 				detail_applyNo.text="编号：【"+form.applyNo+"】";
 				
@@ -172,7 +172,7 @@
 				logTable.initdata(form.logs as ArrayCollection);
 				this.currentState='detail';
 				
-			}
+			} */
 			public  function timeTip(times:String):String
 			{
 				
@@ -320,7 +320,10 @@
 				});
 			}
 			public function detailApply(applyId:String):void{
-				moveRestDayServiceRO.getDetailInfoById(applyId);
+				/* moveRestDayServiceRO.getDetailInfoById(applyId); */
+				var parent:Object=(Object)(((Object)(this.owner)).owner);
+				parent.addTab("moveRestDayForm-detail"+"_"+id,"调休详单",parent.nav,"oa/attendance/moveRestDayForm.swf",null,id);
+				
 			}
 			public function sendApply(applyId:String):void{
 				
@@ -673,7 +676,7 @@
 				
 			</mx:VBox>
 		</mx:VBox>
-		<mx:VBox width="100%" height="100%" id="detailPanel">
+<!--		<mx:VBox width="100%" height="100%" id="detailPanel">
 			<mx:HBox verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12">
 				<mx:HBox width="100%" height="25" paddingLeft="20"  horizontalGap="10" styleName="CustomHBoxStyle"  verticalAlign="middle">
 					<mx:Label text="|"/>
@@ -816,7 +819,7 @@
 				</mx:VBox>
 				
 			</mx:VBox>
-		</mx:VBox>
+		</mx:VBox>-->
 		
 	</mx:VBox>
 </mx:Module>

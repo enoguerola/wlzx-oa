@@ -182,14 +182,14 @@
 <!--					<mx:Image  source="@Embed(source='../WebContent/resources/oa/login_button_yellow.jpg')" click="reset();"></mx:Image>
 -->				
 				</s:HGroup>
-				<s:HGroup width="100%" height="20">	
+				<!--<s:HGroup width="100%" height="20">	
 					<s:HGroup width="60"></s:HGroup>
 					<s:CheckBox label="记住我" id="_spring_security_remember_me"  name="_spring_security_remember_me" />
 					
 					<mx:Image source="@Embed(source='../WebContent/resources/oa/login_wh.jpg')">
 						
 					</mx:Image>
-				</s:HGroup>
+				</s:HGroup>-->
 			</mx:VBox>
 		
 			

@@ -15,23 +15,23 @@
 	<mx:states>
 		<mx:State name="list">           
 			<mx:RemoveChild target="{addPanel}"/>
-			<mx:RemoveChild target="{detailPanel}"/>
+			<!--<mx:RemoveChild target="{detailPanel}"/>-->
 		</mx:State>
 		<mx:State name="add" enterState="add_activateHandler(event)"  exitState="add_exitStateHandler(event)">           
 			<mx:RemoveChild target="{listPanel}"/>
-			<mx:RemoveChild target="{detailPanel}"/>
+			<!--<mx:RemoveChild target="{detailPanel}"/>-->
 		</mx:State>
-		<mx:State name="detail">           
+		<!--<mx:State name="detail">           
 			<mx:RemoveChild target="{listPanel}"/>
 			<mx:RemoveChild target="{addPanel}"/>
-		</mx:State>
+		</mx:State>-->
 		
 	</mx:states>
 	<mx:transitions>
 		
 		<mx:Transition id="myTransition1" fromState="list" toState="*" >
 			
-			<mx:Parallel id="t1" targets="{[addPanel],[detailPanel]}" >
+			<mx:Parallel id="t1" targets="{[addPanel]/* ,[detailPanel] */}" >
 				
 				<mx:WipeLeft duration="1500">
 					
@@ -60,7 +60,7 @@
 		<mx:method name="approveMoveRestDay"  concurrency="last"  result="approveMoveRestDayResult_resultHandler(event);" />
 		<mx:method name="deleteMoveRestDayById"  concurrency="last"  result="deleteMoveRestDayByIdResult_resultHandler(event);" />
 		<mx:method name="loadApplyInfoById"  concurrency="last"  result="loadApplyInfoById_resultHandler(event);" />
-		<mx:method name="getDetailInfoById"  concurrency="last"  result="getDetailInfoByIdById_resultHandler(event);" />
+		<!--<mx:method name="getDetailInfoById"  concurrency="last"  result="getDetailInfoByIdById_resultHandler(event);" />-->
 		<mx:method name="getMoveRestDayAppliesByConditions"  concurrency="last"  result="getMoveRestDayAppliesByConditions_resultHandler(event);" />
 	</mx:RemoteObject>
 	<mx:RemoteObject id="attendanceCalculateServiceRO" destination="attendanceCalculateServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
@@ -337,7 +337,7 @@
 				var row:GridRow=target.parent.parent as GridRow;
 				timeContainer.removeElement(row);
 			}
-			protected function getDetailInfoByIdById_resultHandler(event:ResultEvent):void{
+			/* protected function getDetailInfoByIdById_resultHandler(event:ResultEvent):void{
 				form=event.result as MoveRestDayForm;
 				detail_applyNo.text="编号：【"+form.applyNo+"】";
 				print_b.addEventListener(MouseEvent.CLICK,function():void{print(form.id);} );
@@ -376,7 +376,7 @@
 				logTable.initdata(form.logs as ArrayCollection);
 				this.currentState='detail';
 				
-			}
+			} */
 			
 			protected function getMoveRestDayAppliesByConditions_resultHandler(event:ResultEvent):void
 			{
@@ -456,7 +456,7 @@
 				});
 			}
 			public function detailApply(applyId:String):void{
-				detail_officeChief_approve_time.text="";
+				/* detail_officeChief_approve_time.text="";
 				detail_officeChief_approver_id.text="";
 				detail_officeChief_approve_status.selection=null;
 				
@@ -464,7 +464,9 @@
 				detail_vicePrincipal_approver_id.text="";
 				detail_vicePrincipal_approve_status.selection=null;
 
-				moveRestDayServiceRO.getDetailInfoById(applyId);
+				moveRestDayServiceRO.getDetailInfoById(applyId); */
+				var parent:Object=(Object)(((Object)(this.owner)).owner);
+				parent.addTab("moveRestDayForm-detail"+"_"+id,"调休详单",parent.nav,"oa/attendance/moveRestDayForm.swf",null,id);
 			}
 			public function sendApply(applyId:String):void{
 				
@@ -1033,7 +1035,7 @@
 				
 			</mx:VBox>
 		</mx:VBox>
-		<mx:VBox width="100%" height="100%" id="detailPanel">
+		<!--<mx:VBox width="100%" height="100%" id="detailPanel">
 			<mx:HBox verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12">
 				<mx:HBox width="100%" height="25" paddingLeft="20"  horizontalGap="10" styleName="CustomHBoxStyle"   verticalAlign="middle">
 					<mx:Label text="|"/>
@@ -1077,7 +1079,7 @@
 							</mx:GridItem>
 							
 						</mx:GridRow>
-						<!--<mx:GridRow width="100%">
+						<mx:GridRow width="100%">
 							<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5"     verticalAlign="middle" horizontalAlign="center">
 								<mx1:Text text="调休事由"  textAlign="center" width="80" id="detail_reason_label"/>
 							</mx:GridItem>
@@ -1087,7 +1089,7 @@
 								</mx:TextArea>
 							</mx:GridItem>
 							
-						</mx:GridRow>-->
+						</mx:GridRow>
 						
 						
 						<mx:GridRow width="100%">
@@ -1189,7 +1191,7 @@
 				</mx:VBox>
 				
 			</mx:VBox>
-		</mx:VBox>
+		</mx:VBox>-->
 		
 	</mx:VBox>
 </mx:Module>
