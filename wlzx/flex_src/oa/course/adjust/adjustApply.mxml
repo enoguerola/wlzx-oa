@@ -12,22 +12,22 @@
 	<mx:states>
 		<mx:State name="list">           
 			<mx:RemoveChild target="{addPanel}"/>
-			<mx:RemoveChild target="{detailPanel}"/>
+			<!--<mx:RemoveChild target="{detailPanel}"/>-->
 		</mx:State>
 		<mx:State name="add" enterState="add_activateHandler(event)"  exitState="add_exitStateHandler(event)">           
 			<mx:RemoveChild target="{listPanel}"/>
-			<mx:RemoveChild target="{detailPanel}"/>
+			<!--<mx:RemoveChild target="{detailPanel}"/>-->
 		</mx:State>
-		<mx:State name="detail">           
+		<!--<mx:State name="detail">           
 			<mx:RemoveChild target="{addPanel}"/>		
 			<mx:RemoveChild target="{listPanel}"/>
-		</mx:State>
+		</mx:State>-->
 	</mx:states>
 	<mx:transitions>
 		
 		<mx:Transition id="myTransition1" fromState="list" toState="*" >
 			
-			<mx:Parallel id="t1" targets="{[addPanel],[detailPanel]}" >
+			<mx:Parallel id="t1" targets="{[addPanel]/* ,[detailPanel] */}" >
 				
 				<mx:WipeLeft duration="1500">
 					
@@ -54,7 +54,7 @@
 	<mx:RemoteObject id="applyServiceRO" destination="courseAdjustServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 		<mx:method name="applyAdd"  concurrency="last"  result="applyAddResult_resultHandler(event);" />
 		<mx:method name="applyUpdate"  concurrency="last"  result="applyUpdateResult_resultHandler(event);" />
-		<mx:method name="getApplyById"  concurrency="last"  result="getApplyById_resultHandler(event);" />
+		<!--<mx:method name="getApplyById"  concurrency="last"  result="getApplyById_resultHandler(event);" />-->
 		<mx:method name="loadApplyInfo"  concurrency="last"  result="loadApplyInfo_resultHandler(event);" />
 		<mx:method name="cancleApplyById"  concurrency="last"  result="cancleApplyById_resultHandler(event);" />
 		<mx:method name="personalApplySearch"  concurrency="last"  result="personalApplySearch_resultHandler(event);" />
@@ -173,7 +173,7 @@
 				this.currentState='list';
 				search();
 			}
-			protected function getApplyById_resultHandler(event:ResultEvent):void
+			/* protected function getApplyById_resultHandler(event:ResultEvent):void
 			{
 				apply=event.result as ApplyModel;
 				detail_applyType.text=applyTypes.getItemAt(apply.applyType).label;
@@ -196,7 +196,7 @@
 				else detail_approveRemark.text=apply.approveRemark;
 				logTable.initdata(apply.logs as ArrayCollection);
 				unLockWin();
-			}
+			} */
 			protected function loadApplyInfo_resultHandler(event:ResultEvent):void{
 				apply=event.result as ApplyModel;
 				applyReason.text=apply.applyReason;
@@ -921,7 +921,7 @@
 				
 			</mx:VBox>
 		</mx:VBox>
-		<mx:VBox width="100%" height="100%" id="detailPanel">
+		<!--<mx:VBox width="100%" height="100%" id="detailPanel">
 			<mx:HBox verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12">
 				<mx:HBox width="100%" height="25" paddingLeft="20"  horizontalGap="10" styleName="CustomHBoxStyle"   verticalAlign="middle">
 					<mx:Label text="|"/>
@@ -1020,10 +1020,10 @@
 												</mx:GridItem>
 												
 												<mx:GridItem  borderStyle="solid" verticalAlign="middle">
-													<mx1:Text width="60" textAlign="center" text="{detailApplyItemsRepeater.currentItem.adjustActualTeacherId!=null?getUserName(detailApplyItemsRepeater.currentItem.adjustActualTeacherId):'--'}" />
+													<mx1:Text width="60" textAlign="center" text="{detailApplyItemsRepeater.currentItem.adjustActualTeacherId!=null?getUserName(detailApplyItemsRepeater.currentItem.adjustActualTeacherId):'-'}" />
 												</mx:GridItem>
 												<mx:GridItem  borderStyle="solid" verticalAlign="middle">
-													<mx1:Text  textAlign="center" width="200"  text="{detailApplyItemsRepeater.currentItem.adjustActualDate!=null?formatDate((detailApplyItemsRepeater.currentItem.adjustActualDate) as Date)+detailApplyItemsRepeater.currentItem.adjustActualTime:'--'}"  />
+													<mx1:Text  textAlign="center" width="200"  text="{detailApplyItemsRepeater.currentItem.adjustActualDate!=null?formatDate((detailApplyItemsRepeater.currentItem.adjustActualDate) as Date)+detailApplyItemsRepeater.currentItem.adjustActualTime:'-'}"  />
 												</mx:GridItem>
 											</mx:GridRow>
 											
@@ -1131,7 +1131,7 @@
 					</component:WlzxPageDataGrid>
 				</mx:Panel>
 		</mx:VBox>
-	</mx:VBox>
+	</mx:VBox>-->
 	
 	</mx:VBox>
 	
