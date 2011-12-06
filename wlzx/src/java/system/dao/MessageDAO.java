@@ -61,6 +61,8 @@ public class MessageDAO extends BaseDAOImpl<MessageModel>{
 					vo.setContent(model.getContent());
 					vo.setCreationDate(model.getCreationDate());
 					vo.setType(model.getType());
+					vo.setLinkObjectId(model.getLinkObjectId());
+					vo.setLinkObjectType(model.getLinkObjectType());
 					result.add(vo);
 				}
 			}else if(StringUtils.isNotEmpty(toId)){
@@ -74,6 +76,8 @@ public class MessageDAO extends BaseDAOImpl<MessageModel>{
 					vo.setType(model.getType());
 					vo.setReadDate(model.getReadDateByUserId(toId));
 					vo.setReadFlag(model.getReadFlagByUserId(toId));
+					vo.setLinkObjectId(model.getLinkObjectId());
+					vo.setLinkObjectType(model.getLinkObjectType());
 					result.add(vo);
 				}
 			}

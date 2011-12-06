@@ -79,6 +79,7 @@
 					department.phone=phone.text;
 					department.symbol=symbol.text;
 					department.sequence=parseInt(sequence.text);
+					department.supervisorFlag=supervisorFlag.selected;
 				//	var supervisor:String =supervisorName.text;
 //					var  selectedLeaderRolesArray:Array = [];
 //					var len:int = leaderDepartmentRoles.length;					
@@ -159,7 +160,7 @@
 					phone.text=department.phone;
 					symbol.text=department.symbol;
 					sequence.text=department.sequence.toString();
-					
+					supervisorFlag.selected=department.supervisorFlag;
 					var leaderUsers:ArrayCollection=ArrayCollection(department.leaderUsers);
 					var leadersSelectedItems:ArrayCollection=new ArrayCollection();
 					var leadersIds:String="";
@@ -351,7 +352,11 @@
 			</mx:FormItem>
 			
 			<mx:FormItem label="唯一标识" required="true">
-				<mx:TextInput id="symbol" width="200"/>
+				<mx:HBox width="100%">
+					<mx:TextInput id="symbol" width="200"/>
+					<mx:Label  text="督导部门标识" /><mx:CheckBox id="supervisorFlag"/>
+				</mx:HBox>
+				
 			</mx:FormItem>	
 			
 			<mx:FormItem label="同级排序顺序">

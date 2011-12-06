@@ -14,6 +14,8 @@ public class MessageVO{
 	private String content;
 	private Date creationDate;
 	private String readDate;
+	private String linkObjectType;
+	private String linkObjectId;
 	public String getId() {
 		return id;
 	}
@@ -61,6 +63,18 @@ public class MessageVO{
 	}
 	public void setReadDate(String readDate) {
 		this.readDate = readDate;
+	}
+	public String getLinkObjectType() {
+		return linkObjectType;
+	}
+	public void setLinkObjectType(String linkObjectType) {
+		this.linkObjectType = linkObjectType;
+	}
+	public String getLinkObjectId() {
+		return linkObjectId;
+	}
+	public void setLinkObjectId(String linkObjectId) {
+		this.linkObjectId = linkObjectId;
 	}
 	
 }

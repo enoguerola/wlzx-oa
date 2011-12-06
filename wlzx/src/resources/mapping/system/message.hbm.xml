@@ -8,6 +8,13 @@
 			<column name="id" /> 
 			<generator class="native" />
 		</id>
+		
+		<property name="linkObjectType" type="string">
+			<column name="link_object_type" />
+		</property>
+		<property name="linkObjectId" type="string">
+			<column name="link_object_id" />
+		</property>
 		<property name="fromId" type="string">
 			<column name="from_id" />
 		</property>

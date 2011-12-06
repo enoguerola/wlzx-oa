@@ -27,6 +27,7 @@ public class DepartmentModel  extends BaseModel{
 	 */
 	private static final long serialVersionUID = -7972036409727505069L;
 	private int level;//部门级别
+	private Boolean supervisorFlag=false;//督导部门标记
 	private String detail;
 	private String phone;
 	private Set<DepartmentModel> subordinates=new TreeSet<DepartmentModel>();//直属下级部门
@@ -169,6 +170,14 @@ public Set<UserModel> getAllMainUsers(){
 		return results;
 		
 	}
+
+public Boolean getSupervisorFlag() {
+	return supervisorFlag;
+}
+
+public void setSupervisorFlag(Boolean supervisorFlag) {
+	this.supervisorFlag = supervisorFlag;
+}
 	
 	
 	

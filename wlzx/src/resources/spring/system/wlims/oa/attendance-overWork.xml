@@ -24,6 +24,7 @@
 		<property name="overWorkDAO" ref="overWorkDAO" />
 		<property name="systemService" ref="systemServiceDest" />
 		<property name="teacherService" ref="teacherService" />
+		<property name="departmentDAO" ref="departmentDAO" />
 	</bean>
 	
 </beans>

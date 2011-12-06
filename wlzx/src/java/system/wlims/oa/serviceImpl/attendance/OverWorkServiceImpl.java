@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import system.components.SecurityUserHolder;
+import system.dao.DepartmentDAO;
 import system.entity.MessageModel;
 import system.entity.UserModel;
 import system.service.SystemService;
@@ -19,6 +20,7 @@ public class OverWorkServiceImpl implements OverWorkService {
 	private OverWorkDAO overWorkDAO;
 	private SystemService systemService;
 	private TeacherService teacherService;
+	private DepartmentDAO departmentDAO;
 	@Override
 	public void addOverWorkApply(OverWorkForm overWork) {
 		// TODO Auto-generated method stub
@@ -73,6 +75,13 @@ public class OverWorkServiceImpl implements OverWorkService {
 					newOverWork.setStatus(OverWorkForm.Status.OfficePass.getValue());
 					String content="您的申请编号为"+overWork.getApplyNo()+"加班申请已通过";
 					systemService.sendMessage(MessageModel.DefaultFromId,overWork.getTeacherId(), MessageModel.MessageType.SYSTEM.getValue(), content);
+					//通知督导科
+					if(departmentDAO.getSupervisorFlagDepartment()!=null&&departmentDAO.getSupervisorFlagDepartment().getMasterUsers().size()>0){
+						
+						String content2=teacherService.getTeacherNameByUserId(overWork.getTeacherId())+"的申请编号为"+overWork.getApplyNo()+"加班申请已通过";
+						
+						systemService.sendMessage(MessageModel.DefaultFromId,departmentDAO.getSupervisorFlagDepartment().getMasterUsers().iterator().next().getId() ,MessageModel.MessageType.SYSTEM.getValue(), content2,OverWorkForm.class.getSimpleName(),overWork.getId());
+					}
 
 				}
 				else if(overWork.getOfficeChiefStatus().intValue()==2){
@@ -81,6 +90,7 @@ public class OverWorkServiceImpl implements OverWorkService {
 					newOverWork.setStatus(OverWorkForm.Status.OfficeDeny.getValue());
 					String content="您的申请编号为"+overWork.getApplyNo()+"加班申请处室未通过";
 					systemService.sendMessage(MessageModel.DefaultFromId,overWork.getTeacherId(), MessageModel.MessageType.SYSTEM.getValue(), content);
+					
 				}
 				log.setOperationTime(new Date());
 				log.setOperationTeacherId(overWork.getOfficeChiefApproverId());
@@ -173,6 +183,12 @@ public class OverWorkServiceImpl implements OverWorkService {
 	}
 	public void setTeacherService(TeacherService teacherService) {
 		this.teacherService = teacherService;
+	}
+	public DepartmentDAO getDepartmentDAO() {
+		return departmentDAO;
+	}
+	public void setDepartmentDAO(DepartmentDAO departmentDAO) {
+		this.departmentDAO = departmentDAO;
 	}
 
 }

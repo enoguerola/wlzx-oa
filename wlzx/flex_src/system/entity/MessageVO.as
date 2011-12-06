@@ -13,7 +13,9 @@
 		public var creationDate:Date;
 		public var readFlag:String;
 		public var readDate:String;
-
+		public var linkObjectType:String;
+		public var linkObjectId:String;
+		
 		public function MessageVO()
 		{
 			super();

@@ -12,7 +12,7 @@
 	<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 		<mx:method name="getSelfReceivedNotReadMessages"  concurrency="last"  result="getSelfReceivedNotReadMessages_resultHandler(event);" />
 	</mx:RemoteObject>
-	<mx:RemoteObject id="allWaittingDealServiceRO" destination="allWaittingDealServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+	<mx:RemoteObject id="allWaittingDealServiceRO" destination="allWaittingDealServiceDest" showBusyCursor="false" fault="systemFaultHandler(event);">
 		<mx:method name="getAllWaittingDealTasksByCondition"  concurrency="last"  result="getAllWaittingDealTasksByCondition_result(event);" />
 	</mx:RemoteObject>
 	<mx:Script>  
@@ -54,7 +54,7 @@
 			
 			public function search():void
 			{
-				LockWinTool.lockCurrentWin(this,"加载信息中");
+				//LockWinTool.lockCurrentWin(this,"加载信息中");
 
 				var departmentIds:String="";
 				//if(parentApplication.currentUser.hasDam("department_notice_read_main@defaultVisit@@departmentFilter@")){
@@ -87,7 +87,7 @@
 				var beginTime:String=CommonUtils.formatDate(CommonUtils.currentMonthBeginDate(),"YYYY-MM-DD");
 				var endTime:String=CommonUtils.formatDate(CommonUtils.currentMonthEndDate(),"YYYY-MM-DD");
 				systemServiceRO.getSelfReceivedNotReadMessages(beginTime,endTime);
-				allWaittingDealServiceRO.getAllWaittingDealTasksByCondition(this.parentApplication.currentUser.id,beginTime,endTime);
+				 allWaittingDealServiceRO.getAllWaittingDealTasksByCondition(this.parentApplication.currentUser.id,beginTime,endTime); 
 				
 			}
 			

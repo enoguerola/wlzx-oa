@@ -322,7 +322,7 @@
 			public function detailApply(applyId:String):void{
 				/* moveRestDayServiceRO.getDetailInfoById(applyId); */
 				var parent:Object=(Object)(((Object)(this.owner)).owner);
-				parent.addTab("moveRestDayForm-detail"+"_"+id,"调休详单",parent.nav,"oa/attendance/moveRestDayForm.swf",null,id);
+				parent.addTab("moveRestDayForm-detail"+"_"+applyId,"调休详单",parent.nav,"oa/attendance/moveRestDayForm.swf",null,applyId);
 				
 			}
 			public function sendApply(applyId:String):void{

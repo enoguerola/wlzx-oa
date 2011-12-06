@@ -589,6 +589,7 @@ public class SystemServiceImpl implements SystemService{
 		newDepartment.setName(department.getName());
 		newDepartment.setSequence(department.getSequence());
 		newDepartment.setLevel(department.getLevel());
+		newDepartment.setSupervisorFlag(department.getSupervisorFlag());
 		String[] masterIds=masterUserIds.split(";");
 		for(String id:masterIds){
 			UserModel user=userDAO.get(id);
@@ -974,6 +975,11 @@ public class SystemServiceImpl implements SystemService{
 	}
 	//发送消息
 	public boolean sendMessage(String fromId,String toIds,int type,String content){
+		return this.sendMessage(fromId, toIds, type, content,null,null);
+	}
+	//发送消息2
+	public boolean sendMessage(String fromId, String toIds, int type,
+			String content, String linkObjectType, String linkObjectId) {
 		MessageModel message=new MessageModel();
 		message.setFromId(fromId);
 		message.setToIds(toIds);
@@ -994,10 +1000,11 @@ public class SystemServiceImpl implements SystemService{
 		message.setReadDates(readDates);
 		message.setReceiveRemovedFlags(receiveRemovedFlags);
 		message.setPostRemovedFlag(postRemovedFlag);
+		message.setLinkObjectType(linkObjectType);
+		message.setLinkObjectId(linkObjectId);
 		messageDAO.saveOrUpdate(message);
 		return true;
 	}
-	
 	//删除消息
 	public boolean deleteMessage(String id){
 		MessageModel message=messageDAO.get(id);
@@ -1173,6 +1180,7 @@ public class SystemServiceImpl implements SystemService{
 		// TODO Auto-generated method stub
 		return userDAO.getUsersByCondition(account, status,index,pageSize);
 	}
+	
 
 	
 }
