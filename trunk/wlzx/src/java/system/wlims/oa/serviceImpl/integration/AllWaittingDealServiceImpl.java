@@ -402,6 +402,7 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 				taskVO.setPostTime(UtilDateTime.toDateString(task.getPostTime(),"yyyy-MM-dd HH:mm:ss"));
 				taskVO.setTitle(task.getTitle());
 				taskVO.setContent(task.getContent());
+				if(task.getStatusByWorkerId(accountId)==null)continue;
 				if(task.getStatusByWorkerId(accountId).equals(TaskModel.EStatus.OnGoing.getValue().intValue()+""))
 					taskVO.setStatus(TaskVO.EStatus.ToBeDeal.getText());
 				else if(task.getStatusByWorkerId(accountId).equals(TaskModel.EStatus.Finished.getValue().intValue()+""))
