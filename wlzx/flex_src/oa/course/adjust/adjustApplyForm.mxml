@@ -109,9 +109,9 @@
 
 		]]> 		
 	</mx:Script> 
-	<mx:VBox borderVisible="true" width="100%" height="100%" borderStyle="solid">
-	<mx:VBox width="100%" height="50%"   horizontalGap="10" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
-		<mx:HBox verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12">
+	<mx:VBox borderVisible="true" width="100%" height="100%" borderStyle="solid" horizontalGap="10" verticalAlign="middle" horizontalAlign="left"  paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
+<!--	<mx:VBox width="100%" height="50%"   >
+-->		<mx:HBox verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12">
 			<mx:HBox width="100%" height="25" paddingLeft="20"  horizontalGap="10" styleName="CustomHBoxStyle"   verticalAlign="middle">
 				<mx:Label text="|"/>
 				<mx:LinkButton id="print_b" label="打印" icon="@Embed(source='../WebContent/resources/common/tools/button_printer_icon.png')"  />
@@ -122,9 +122,9 @@
 			<mx:Label  text="调课申请单" id="detail_applyNo"   width="100%"  letterSpacing="5" textAlign="center" fontSize="14"  fontWeight="bold" height="30" />
 		</mx:HBox>
 		
-		<mx:VBox width="100%" horizontalAlign="center" height="100%" verticalAlign="middle"   borderVisible="true" paddingLeft="20" paddingRight="20">
-			
-			<mx:Grid width="100%" height="100%"   verticalGap="10" horizontalGap="5"   borderStyle="solid" paddingBottom="10" paddingTop="10" paddingLeft="10" paddingRight="10">
+		<!--<mx:VBox width="100%" horizontalAlign="center" height="100%" verticalAlign="middle"   borderVisible="true" paddingLeft="20" paddingRight="20">
+		-->	
+			<mx:Grid width="100%" height="100%"   verticalGap="10" horizontalGap="5"   borderStyle="solid" paddingBottom="10" paddingTop="10" paddingLeft="10" paddingRight="10" backgroundColor="white">
 				
 				<mx:GridRow width="100%" height="30" >
 					
@@ -270,54 +270,54 @@
 			</mx:Grid>
 			
 			
-		</mx:VBox>
-		<mx:Panel width="100%"   styleName="customPanel" title="流程日志"  cornerRadius="5" borderVisible="false" dropShadowVisible="false" paddingLeft="20" paddingRight="20">
-			
-			<component:WlzxPageDataGrid width="100%" height="100%"   borderVisible="true"  autoLayout="true"  borderAlpha="0.2" verticalAlign="middle"   id="logTable" pagecount="10"  >				
-				<component:mygridcolumns>
-					<mx:DataGridColumn textAlign="center" headerText="操作时间"  width="100">
-						<mx:itemRenderer>
-							<mx:Component>
-								<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
-									<mx:Label text="{this.outerDocument.formatDate(data.operationTime)}"/>
-								</mx:VBox>																			
-							</mx:Component>						
-						</mx:itemRenderer>
-					</mx:DataGridColumn>
-					<mx:DataGridColumn textAlign="center" headerText="操作人"  width="60">
-						<mx:itemRenderer>
-							<mx:Component>
-								<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
-									<mx1:Text text="{this.parentApplication.getTeacherNameByAccountId(data.operationTeacherId)}" >
-										
-									</mx1:Text>
-								</mx:VBox>																			
-							</mx:Component>
-						</mx:itemRenderer>
-					</mx:DataGridColumn>
-					<mx:DataGridColumn textAlign="center" headerText="操作名称"  width="100" >
-						<mx:itemRenderer>
-							<mx:Component>
-								<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle"  horizontalScrollPolicy="off">
-									<mx:Label text="{data.operationName}"/>
-								</mx:VBox>																			
-							</mx:Component>
-						</mx:itemRenderer>
-					</mx:DataGridColumn>
-					<mx:DataGridColumn textAlign="center" headerText="操作结果"  width="200" >
-						<mx:itemRenderer>
-							<mx:Component>
-								<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
-									<mx:Label text="{data.operationResult}"/>
-								</mx:VBox>																			
-							</mx:Component>
-						</mx:itemRenderer>
-					</mx:DataGridColumn>
-					
-					
-				</component:mygridcolumns>
-			</component:WlzxPageDataGrid>
-		</mx:Panel>
-		</mx:VBox>
+		<!--</mx:VBox>-->
+			<mx:Panel width="100%"   styleName="customPanel" title="流程日志"  cornerRadius="5" borderVisible="false" dropShadowVisible="false">
+				
+				<component:WlzxPageDataGrid width="100%" height="100%"   borderVisible="true"  autoLayout="true"  borderAlpha="0.2" verticalAlign="middle"   id="logTable" pagecount="10"  >				
+					<component:mygridcolumns>
+						<mx:DataGridColumn textAlign="center" headerText="操作时间"  width="100">
+							<mx:itemRenderer>
+								<mx:Component>
+									<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
+										<mx:Label text="{this.outerDocument.formatDate(data.operationTime)}"/>
+									</mx:VBox>																			
+								</mx:Component>						
+							</mx:itemRenderer>
+						</mx:DataGridColumn>
+						<mx:DataGridColumn textAlign="center" headerText="操作人"  width="60">
+							<mx:itemRenderer>
+								<mx:Component>
+									<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
+										<mx1:Text text="{this.parentApplication.getTeacherNameByAccountId(data.operationTeacherId)}" >
+											
+										</mx1:Text>
+									</mx:VBox>																			
+								</mx:Component>
+							</mx:itemRenderer>
+						</mx:DataGridColumn>
+						<mx:DataGridColumn textAlign="center" headerText="操作名称"  width="100" >
+							<mx:itemRenderer>
+								<mx:Component>
+									<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle"  horizontalScrollPolicy="off">
+										<mx:Label text="{data.operationName}"/>
+									</mx:VBox>																			
+								</mx:Component>
+							</mx:itemRenderer>
+						</mx:DataGridColumn>
+						<mx:DataGridColumn textAlign="center" headerText="操作结果"  width="200" >
+							<mx:itemRenderer>
+								<mx:Component>
+									<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
+										<mx:Label text="{data.operationResult}"/>
+									</mx:VBox>																			
+								</mx:Component>
+							</mx:itemRenderer>
+						</mx:DataGridColumn>
+						
+						
+					</component:mygridcolumns>
+				</component:WlzxPageDataGrid>
+			</mx:Panel>
+		<!--</mx:VBox>-->
 		</mx:VBox>
 </mx:Module>
