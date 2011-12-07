@@ -110,6 +110,7 @@
 			}
 			protected function getSelfReceivedNotReadMessages_resultHandler(event:ResultEvent):void{
 				var allList:ArrayCollection=event.result as ArrayCollection;
+				
 				notReadNum.text=allList.length+"";
 				
 			}
@@ -120,6 +121,7 @@
 				waittingNum.text=list.length+""; */
 				var result:String=event.result as String;
 				//Alert.show(result+"");
+				if(result!=null)
 				waittingNum.text=result;
 			}
 			protected function getPersonSchedulesByConditions_resultHandler(event:ResultEvent):void
@@ -646,13 +648,13 @@
 						<mx:VBox width="100%" height="100%" borderStyle="solid" horizontalAlign="center" verticalAlign="middle">
 							<mx:HBox width="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
 								<mx:Label text="本月待办工作数：" fontWeight="bold"/>
-								<mx:Label text="" id="waittingNum"  fontWeight="bold" fontStyle="italic"/>
+								<mx:Label text="0" id="waittingNum"  fontWeight="bold" fontStyle="italic"/>
 								<mx:LinkButton  label="【查看】"  fontWeight="bold"  click="openWaittingTask();">											
 								</mx:LinkButton>
 							</mx:HBox> 
 							<mx:HBox width="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
 								<mx:Label text="本月未读消息数：" fontWeight="bold"/>
-								<mx:Label text="" id="notReadNum"  fontWeight="bold" fontStyle="italic" />
+								<mx:Label text="0" id="notReadNum"  fontWeight="bold" fontStyle="italic" />
 								<mx:LinkButton  label="【查看】"  fontWeight="bold"  click="openNotReadMessage();">											
 								</mx:LinkButton>
 							</mx:HBox>
