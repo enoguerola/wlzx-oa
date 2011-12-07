@@ -113,7 +113,7 @@
 			public function enterDetailMessage(id:String):void{
 				//Alert.show(id);
 				if(popDetail!=null)PopUpManager.removePopUp(popDetail);
-				popDetail=MessageDetailPopWin(PopUpManager.createPopUp(this,MessageDetailPopWin,true)); 
+				popDetail=MessageDetailPopWin(PopUpManager.createPopUp(this,MessageDetailPopWin,false)); 
 				popDetail.owner=this;
 				PopUpManager.centerPopUp(popDetail);
 				popDetail.percentHeight=100;
