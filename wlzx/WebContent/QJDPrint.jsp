@@ -3,32 +3,44 @@
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
-<head><title>温岭中学教职工请假单打印</title>
+<head><title>温岭中学教职工${tlForm.type==0?"请假":"出差审批"}单打印</title>
 
 <script language='javascript' type='text/javascript'>
 
 </script>
+
+<!--****** 隐藏打印按钮的代码并打印*******-->
+<script>
+  function beforePrint(){
+  var btn = document.getElementById("mySpan");
+  btn.style.display = "none";
+  }
+</script>
+<!--****** /隐藏打印按钮的代码并打印*******-->
+
 </head>
 
 
 <body>
 	<div style="text-align:center;">	
-       <h2> 温岭中学教职工${tlForm.type==0?"请假":"出差"}单
+       <h2> 温岭中学教职工${tlForm.type==0?"请假":"出差审批"}单
        </h2><br />
        
       
     </div>   
      <div style="width:90%;text-align:right;">
-     <input id="btnPrint" type="button" value="打印" onclick="javascript:window.print();" />
+      <span id="mySpan">
+	    	 <input id="btnPrint" type="button" value="打印" onClick="javascript:beforePrint();window.print();" />
+	     </span>
     </div>
     <div style="width:90%;text-align:right;">
-    	 ${tlForm.applyNo}   
+    	编号：【${tlForm.applyNo}】
     </div>
     
-    
+     
     
 
-<table width="80%" height="600" border="1" align="center" cellpadding="1" cellspacing="0">
+<table width="80%" height="600" border="1" style="text-align:center;" align="center" cellpadding="1" cellspacing="0">
   <tr>
     <td width="20%" height="26">姓名</td>
     <td width="15%">${tlForm.teacherId}</td>
@@ -40,8 +52,8 @@
     <td colspan="3">${tlForm.reason}</td>  
   </tr>
   <tr>
-    <td align="left" rowspan="3" >${tlForm.type==0?"请假":"出差"}期间工作安排情况</td>
-    <td colspan="3" height="30">教学工作: ${tlForm.arrangeTech}
+    <td align="left" rowspan="3" style="text-align:center;">${tlForm.type==0?"请假":"出差"}期间工作安排情况</td>
+    <td colspan="3" height="30" style="text-align: left;">教学工作: ${tlForm.arrangeTech}
     <div style="text-align:right;">
     (${tlForm.arrangeTechDealAlready==true?"已落实":"未落实"})
     </div>
@@ -49,14 +61,14 @@
    
   </tr>
   <tr>
-    <td  height="30" colspan="3">服务工作:${tlForm.arrangeService}
+    <td  height="30" colspan="3" style="text-align: left;">服务工作:${tlForm.arrangeService}
     <div style="text-align:right;">
      (${tlForm.arrangeServiceDealAlready==true?"已落实":"未落实"})
     </div>
     </td>
   </tr>
   <tr>
-    <td height="36" colspan="3">管理工作:${tlForm.arrangeManage} 
+    <td height="36" colspan="3" style="text-align: left;">管理工作:${tlForm.arrangeManage} 
     <div style="text-align:right;">
     (${tlForm.arrangeManageDealAlready==true?"已落实":"未落实"})
     </div>
@@ -69,10 +81,16 @@
         <td>${tlForm.officeChiefApproveOption}</td>
       </tr>
       <tr>
-        <td align="right"> (${tlForm.officeChiefStatus==null?"暂无" :(tlForm.officeChiefStatus==1?"通过":"未通过")}) 
-        <div style="text-align:right;">
-        	签名:${tlForm.officeChiefApproverId} 日期：${fn:substring(tlForm.officeChiefApproveTime,0,10)}
-        </div>
+        <td align="right">
+	        <div style="text-align:left; padding-left: 250px;">
+	         	(${tlForm.officeChiefStatus==null?"暂无" :(tlForm.officeChiefStatus==1?"通过":"未通过")}) 
+			</div>
+	        <div style="text-align:left; padding-left: 250px;">
+	        	签名:${tlForm.officeChiefApproverId} 
+	        </div>
+	         <div style="text-align:left; padding-left: 250px;">
+	         	日期：${fn:substring(tlForm.officeChiefApproveTime,0,10)}
+	         </div>
         </td>
       </tr>
     </table></td>
@@ -84,10 +102,16 @@
         <td>${tlForm.vicePrincipalApproveOption}</td>
       </tr>
       <tr>
-        <td align="right"> (${tlForm.vicePrincipalStatus==null?"暂无" :(tlForm.vicePrincipalStatus==1?"通过":"未通过")})
-        <div style="text-align:right;">
-                      签名:${tlForm.vicePrincipalApproverId} 日期：${fn:substring(tlForm.vicePrincipalApproveTime,0,10)}
-        </div>              
+        <td align="right"> 
+	       	  <div style="text-align:left; padding-left: 250px;">
+	      		  (${tlForm.vicePrincipalStatus==null?"暂无" :(tlForm.vicePrincipalStatus==1?"通过":"未通过")})
+	       	 </div>
+	         <div style="text-align:left; padding-left: 250px;">
+	                签名:${tlForm.vicePrincipalApproverId} 
+	        </div>    
+	         <div style="text-align:left; padding-left: 250px;">
+	        		日期：${fn:substring(tlForm.vicePrincipalApproveTime,0,10)}
+	        </div>   
         </td>
       </tr>
     </table></td>
@@ -99,10 +123,16 @@
         <td>${tlForm.principalApproveOption}</td>
       </tr>
       <tr>
-        <td align="right"> (${tlForm.principalStatus==null?"暂无" :(tlForm.principalStatus==1?"通过":"未通过")})
-        <div style="text-align:right;">
-                      签名:${tlForm.principalApproverId} 日期：${fn:substring(tlForm.principalApproveTime,0,10)}
-        </div>
+        <td align="right">
+        	<div style="text-align:left; padding-left: 250px;">
+        		 (${tlForm.principalStatus==null?"暂无" :(tlForm.principalStatus==1?"通过":"未通过")})
+        	 </div>
+	        <div style="text-align:left; padding-left: 250px;">
+	                      签名:${tlForm.principalApproverId} 
+	        </div>
+	        <div style="text-align:left; padding-left: 250px;">
+	       		 日期：${fn:substring(tlForm.principalApproveTime,0,10)}
+	       	 </div>
         </td>
       </tr>
     </table></td>
@@ -112,6 +142,18 @@
     <td colspan="3">${tlForm.remark==""||tlForm.remark==null?"无":tlForm.remark}</td>  
   </tr>
   
+</table>
+<table width="80%"  border="0" align="center" style="text-align: left;font-weight: bold;line-height: 25px;" cellpadding="1" cellspacing="0">
+    <tr>
+    	<td>
+        说明：<br/>
+1.	${tlForm.type==0?"凡因病、因事请假的，口头请假一律无效，必须填写请假单。":"因公外出必须填写出差审批单，口头请假一律无效。"}<br/>
+2.	${tlForm.type==0?"请假一天，经课程处（处室）负责人批准，请假二天，经分管校长批准，请假三天（三天以上）须交校长审批，并落实好相应的工作。":"出差一天，经课程处（处室）负责人批准，出差二天，经分管校长批准，出差三天（三天以上）须交校长审批，并落实好相应的工作。" }<br/>
+3.	要按要求离校前将${tlForm.type==0?"请假单":"出差审批单"}（一式两份）一份交课程处（处室），一份交督导科，回校后及时到课程处（处室）及督导科销假。<br/>
+4.	如遇特殊情况，先电话分别告知课程处（处室）和督导科，事后必须做好补假及注销手续。
+<br/>
+        </td>
+    </tr>
 </table>
 </body>
 </html> 
