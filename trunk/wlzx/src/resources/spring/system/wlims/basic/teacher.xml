@@ -27,7 +27,7 @@
 		<property name="sessionFactory" ref="basicSessionFactory" />
 	</bean>
 	
-	<bean id="teacherServiceDest" class="system.wlims.basic.service.teacher.TeacherService">
+	<bean id="teacherServiceDest" class="system.wlims.basic.serviceImpl.teacher.TeacherServiceImpl">
 		<flex:remoting-destination />
 		<property name="teacherDAO" ref="teacherDAO" />
 		<property name="userDAO" ref="userDAO" />
@@ -35,14 +35,14 @@
 		<property name="departmentDAO" ref="departmentDAO" />
 		<property name="drDAO" ref="drDAO" />	
 	</bean>
-	<bean id="teacherService" class="system.wlims.basic.service.teacher.TeacherService">
+	<bean id="teacherService" class="system.wlims.basic.serviceImpl.teacher.TeacherServiceImpl">
 		<property name="teacherDAO" ref="teacherDAO" />
 		<property name="userDAO" ref="userDAO" />
 		<property name="roleDAO" ref="roleDAO" />
 		<property name="departmentDAO" ref="departmentDAO" />
 		<property name="drDAO" ref="drDAO" />
 	</bean>
-	<bean id="teacherAccountBridgeServiceDest" class="system.wlims.basic.service.teacher.TeacherAccountBridgeService">
+	<bean id="teacherAccountBridgeServiceDest" class="system.wlims.basic.serviceImpl.teacher.TeacherAccountBridgeServiceImpl">
 		<flex:remoting-destination />
 		<property name="teacherDAO" ref="teacherDAO" />
 		<property name="userDAO" ref="userDAO" />
@@ -50,19 +50,19 @@
 		<property name="drDAO" ref="drDAO" />
 		<property name="departmentDAO" ref="departmentDAO" />
 	</bean>
-	<bean id="teacherAccountBridgeService" class="system.wlims.basic.service.teacher.TeacherAccountBridgeService">
+	<bean id="teacherAccountBridgeService" class="system.wlims.basic.serviceImpl.teacher.TeacherAccountBridgeServiceImpl">
 		<property name="teacherDAO" ref="teacherDAO" />
 		<property name="userDAO" ref="userDAO" />
 		<property name="roleDAO" ref="roleDAO" />
 		<property name="drDAO" ref="drDAO" />
 		<property name="departmentDAO" ref="departmentDAO" />
 	</bean>
-	<bean id="teacherExperienceServiceDest" class="system.wlims.basic.service.teacher.TeacherExperienceService">
+	<bean id="teacherExperienceServiceDest" class="system.wlims.basic.serviceImpl.teacher.TeacherExperienceServiceImpl">
 	    <flex:remoting-destination />
 		<property name="teacherDAO" ref="teacherDAO" />
 		<property name="teacherExperienceDAO" ref="teacherExperienceDAO" />
 	</bean>
-	<bean id="teacherRelationServiceDest" class="system.wlims.basic.service.teacher.TeacherRelationService">
+	<bean id="teacherRelationServiceDest" class="system.wlims.basic.serviceImpl.teacher.TeacherRelationServiceImpl">
 		<flex:remoting-destination />
 		<property name="teacherDAO" ref="teacherDAO" />
 		<property name="teacherRelationDAO" ref="teacherRelationDAO" />

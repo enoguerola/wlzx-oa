@@ -11,7 +11,6 @@ import java.util.List;
 import system.components.SecurityUserHolder;
 import system.dao.DepartmentDAO;
 import system.dao.RoleDAO;
-import system.dao.UserDAO;
 import system.entity.DepartmentModel;
 import system.entity.RoleModel;
 import system.entity.UserModel;
@@ -43,7 +42,7 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 	private OverWorkDAO overWorkDAO;
 	private TakeLeaveDAO takeLeaveDAO;
 	private ConferenceDAO conferenceDAO;
-	private UserDAO userDAO;
+//	private UserDAO userDAO;
 	private RoleDAO roleDAO;
 	private DepartmentDAO departmentDAO;
 	private SystemService systemService;
@@ -84,7 +83,7 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 	private List<TaskVO> getTasksByCondition(String accountId, String beginTime, String endTime) {
 		// TODO Auto-generated method stub
 		List<TaskVO> list=new ArrayList<TaskVO>();
-		UserModel user=userDAO.get(accountId);
+		UserModel user=systemService.getUserByUserId(accountId);
 		if(user==null)return null;
 		long begin_a=System.currentTimeMillis();
 		//领导指派任务
@@ -128,7 +127,10 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 				 * 				』
 				 * 3.其他---1级下属审批权限【本部门处长】--2级下属审批权限【本部门分管副校长】--所有审批权限人审批【校长】
 				 */
-				UserModel applier=userDAO.get(takeLeaveForm.getTeacherId());
+				
+				long begin_t=System.currentTimeMillis();
+				UserModel applier=systemService.getUserByUserId(takeLeaveForm.getTeacherId());
+				System.out.println(System.currentTimeMillis()-begin_t+"t0");
 				Boolean hasTeachingRoleInMain=false;
      			Boolean hasTeachingRole=false;
      			Boolean hasRootDepartment=false;
@@ -140,12 +142,14 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 							break;
 						}
 					}
+					System.out.println(System.currentTimeMillis()-begin_t+"t1");
 					for(RoleModel teachingRole:teachingRoles){
 						if(applier.hasRole(teachingRole.getId())){
 							hasTeachingRole=true;
 							break;
 						}
 					}
+					System.out.println(System.currentTimeMillis()-begin_t+"t2");
 				}
 				if(rootDepartment!=null&&applier.hasDepartment(rootDepartment.getId())){
 					hasRootDepartment=true;
@@ -153,6 +157,8 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 				applier.setHasTeachingRole(hasTeachingRole);
 				applier.setHasTeachingRoleInMain(hasTeachingRoleInMain);
 				applier.setHasRootDepartment(hasRootDepartment);
+				System.out.println(System.currentTimeMillis()-begin_t+"t3");
+
 				// 请假人拥有教学职务
 				if(applier.getHasTeachingRoleInMain()==true||applier.getHasRootDepartment()==true){
 					//请假出差教学1级审批权限人审批【课程处】
@@ -699,12 +705,7 @@ public class AllWaittingDealServiceImpl  implements AllWaittingDealService{
 	public void setConferenceDAO(ConferenceDAO conferenceDAO) {
 		this.conferenceDAO = conferenceDAO;
 	}
-	public UserDAO getUserDAO() {
-		return userDAO;
-	}
-	public void setUserDAO(UserDAO userDAO) {
-		this.userDAO = userDAO;
-	}
+	
 	public SystemService getSystemService() {
 		return systemService;
 	}

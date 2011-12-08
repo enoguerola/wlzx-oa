@@ -266,6 +266,10 @@ public class SystemServiceImpl implements SystemService{
 	public UserModel getUserByUserAccount(String userAccount){		
 		return userDAO.getUserByUserAccount(userAccount);
 	}
+	//获得某用户
+	public UserModel getUserByUserId(String userId){		
+		return userDAO.get(userId);
+	}
 	//获得所有用户
 	public List<UserModel> getAllUsers(){		
 		return userDAO.getAllUsers();

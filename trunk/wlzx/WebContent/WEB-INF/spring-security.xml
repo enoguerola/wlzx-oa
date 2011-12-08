@@ -28,14 +28,25 @@
 		<logout invalidate-session="true"/>
 		
          <session-management session-fixation-protection="migrateSession" invalid-session-url="/timeout.jsp">  
-<!--             <concurrency-control max-sessions="1" error-if-maximum-exceeded="false"/> -->
+            <concurrency-control max-sessions="1" error-if-maximum-exceeded="false"/>
          </session-management>
        
        	<custom-filter ref="loginFilter" position="FORM_LOGIN_FILTER"  />
 		<custom-filter ref="wlzxUrlFilter" before="FILTER_SECURITY_INTERCEPTOR"/>
+		 <!-- 注销过滤器 -->
+        <custom-filter before="LOGOUT_FILTER" ref="logoutFilter"/>
     </http>
 
-	
+	 <!-- 注销过滤器，完成前台用户注销时的定向功能 -->
+    <beans:bean id="logoutFilter" class="org.springframework.security.web.authentication.logout.LogoutFilter">
+        <beans:constructor-arg value="/login.html" />
+        <beans:constructor-arg>
+            <beans:list>
+                <beans:bean class="system.components.MyLogoutHandler" />
+            </beans:list>
+        </beans:constructor-arg>
+        <beans:property name="filterProcessesUrl" value="/j_spring_security_logout" />
+    </beans:bean>
 	<!-- 登录验证器 -->
     <beans:bean id="loginFilter" class="system.components.MyUsernamePasswordAuthenticationFilter">
 		<!-- 处理登录的action -->
