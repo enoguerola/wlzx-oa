@@ -4,6 +4,7 @@
 
 <hibernate-mapping>
 	<class name="system.entity.RoleModel" table="wlzx_system_role">
+		<cache usage="read-write"/>
 		<id name="id">
 			<column name="id" />
 			<generator class="native" />
@@ -40,6 +41,7 @@
 			<column name="teacher_flag" />
 		</property> 
 		<set name="relativeDRs" lazy="false"  table="wlzx_system_dr"  cascade="none" inverse="true">
+			<cache usage="read-write"/>
 			<key column="role_id" not-null="true" />
 			<one-to-many not-found="ignore" class="system.entity.DRModel" /> 
 		</set>	

@@ -4,6 +4,7 @@
 
 <hibernate-mapping>
 	<class name="system.entity.MenuModel" table="wlzx_system_menu">
+		<cache usage="read-write"/>
 		<id name="id">
 			<column name="id" />
 			<generator class="native" />
