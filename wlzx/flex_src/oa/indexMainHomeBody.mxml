@@ -12,11 +12,11 @@
 	<mx:RemoteObject id="systemServiceRO" destination="systemServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 		<mx:method name="getSelfReceivedNotReadMessages"  concurrency="last"  result="getSelfReceivedNotReadMessages_resultHandler(event);" />
 	</mx:RemoteObject>
-	<!--<mx:RemoteObject id="allWaittingDealServiceRO" destination="allWaittingDealServiceDest" showBusyCursor="false" fault="systemFaultHandler(event);">
+	<mx:RemoteObject id="allWaittingDealServiceRO" destination="allWaittingDealServiceDest" showBusyCursor="false" fault="systemFaultHandler(event);">
 		<mx:method name="getAllWaittingDealTasksByCondition"  concurrency="last"  result="getAllWaittingDealTasksByCondition_result(event);" />
-	</mx:RemoteObject>-->
-	<mx:HTTPService id="allWaittingDealServiceServlet" url="general/allWaittingDealTaskCanculate.action" showBusyCursor="false" method="get" result="getAllWaittingDealTasksByCondition_result(event);" fault="systemFaultHandler(event);" useProxy="false" resultFormat="text">  
-	</mx:HTTPService>
+	</mx:RemoteObject>
+	<!--<mx:HTTPService id="allWaittingDealServiceServlet" url="general/allWaittingDealTaskCanculate.action" showBusyCursor="false" method="get" result="getAllWaittingDealTasksByCondition_result(event);" fault="systemFaultHandler(event);" useProxy="false" resultFormat="text">  
+	</mx:HTTPService>-->
 	<mx:Script>  
 		<![CDATA[
 			import basic.utils.DateUtil;
@@ -89,14 +89,14 @@
 				var beginTime:String=CommonUtils.formatDate(CommonUtils.currentMonthBeginDate(),"YYYY-MM-DD");
 				var endTime:String=CommonUtils.formatDate(CommonUtils.currentMonthEndDate(),"YYYY-MM-DD");
 				systemServiceRO.getSelfReceivedNotReadMessages(beginTime,endTime);
-				/*  allWaittingDealServiceRO.getAllWaittingDealTasksByCondition(this.parentApplication.currentUser.id,beginTime,endTime);  */
-				var params:URLVariables = new URLVariables();
+				  allWaittingDealServiceRO.getAllWaittingDealTasksByCondition(this.parentApplication.currentUser.id,beginTime,endTime);  
+				/* var params:URLVariables = new URLVariables();
 				//这个user,psw就是传入后台的参数user,jsp就用 request.getParameter("user")来取
 				params.userId = httpEncoding(this.parentApplication.currentUser.id);
 				params.beginTime = httpEncoding(beginTime);
 				params.endTime = httpEncoding(endTime);
 				
-				allWaittingDealServiceServlet.send(params);
+				allWaittingDealServiceServlet.send(params); */
 				
 				
 			}
@@ -116,14 +116,14 @@
 			}
 			protected function getAllWaittingDealTasksByCondition_result(event:ResultEvent):void
 			{
-				/* LockWinTool.unLockCurrentWin();
+				 LockWinTool.unLockCurrentWin();
 				var list:ArrayCollection=event.result as ArrayCollection;
-				waittingNum.text=list.length+""; */
-				var result:String=event.result as String;
+				waittingNum.text=list.length+""; 
+				/* var result:String=event.result as String;
 				//Alert.show(result+"");
 				if(result!=null)
 				waittingNum.text=result;
-				else waittingNum.text="0";
+				else waittingNum.text="0"; */
 			}
 			protected function getPersonSchedulesByConditions_resultHandler(event:ResultEvent):void
 			{

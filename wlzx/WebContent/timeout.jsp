@@ -26,13 +26,13 @@
 		}
 	}
 	function doUpdate(num){
-		document.getElementById('showDiv').innerHTML = '将在'+num+'秒后自动跳转到指定页面' ;
+		document.getElementById('showDiv').innerHTML = '将在'+num+'秒后自动跳转到登录页面' ;
 		if(num == 0) { window.location=URL; }
 	}
 </script>
 </head>
 <body>
-<div>长时间未操作，用户认证过期。请重新登录</div>
+<div>用户状态退出系统</div>
 <div id="showDiv"></div>
 <script language="javascript">
 	load('login.html');
