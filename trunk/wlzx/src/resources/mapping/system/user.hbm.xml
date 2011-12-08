@@ -4,6 +4,7 @@
 
 <hibernate-mapping>
 	<class name="system.entity.UserModel" table="wlzx_system_user">
+		<cache usage="read-write"/>
 		<id name="id">
 			<column name="id" /> 
 			<generator class="native" />
@@ -44,10 +45,12 @@
 
 		
 		<set name="masterDepartments" lazy="false"  table="wlzx_system_department_master_users"  cascade="all">
+			<cache usage="read-write"/>
 			<key column="master_user_id" not-null="true" />
 			<many-to-many not-found="ignore"  column="department_id" class="system.entity.DepartmentModel" /> 
 		</set>
 		<set name="leaderDepartments" lazy="false"  table="wlzx_system_department_leader_users"  cascade="all">
+			<cache usage="read-write"/>
 			<key column="leader_user_id" not-null="true" />
 			<many-to-many not-found="ignore"  column="department_id" class="system.entity.DepartmentModel" /> 
 		</set>
@@ -56,6 +59,7 @@
 		<many-to-one not-found="ignore" name="mainDR"  column="main_dr_id" class="system.entity.DRModel"  lazy="false" />
 		
 		<set name="drs" lazy="false"  table="wlzx_system_user_dr_relationship">
+			<cache usage="read-write"/>
 			<key column="user_id" not-null="true" />
 			<many-to-many not-found="ignore"  column="dr_id" class="system.entity.DRModel" /> 
 		</set>

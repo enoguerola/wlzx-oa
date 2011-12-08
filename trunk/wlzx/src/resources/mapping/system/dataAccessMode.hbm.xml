@@ -4,6 +4,7 @@
 
 <hibernate-mapping>
 	<class name="system.entity.DataAccessModeModel" table="wlzx_system_data_access_mode">
+		<cache usage="read-write"/>
 		<id name="id">
 			<column name="id" />
 			<generator class="native" />
