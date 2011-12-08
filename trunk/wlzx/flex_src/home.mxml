@@ -126,7 +126,7 @@
 			                 
 			private function logout_success_handle(event:ResultEvent):void  
 			{ 
-				ExternalInterface.call("function() {window.location.href='login.html';}"); 
+				ExternalInterface.call("function() {window.location.href='home.html';}"); 
 				//Alert.show(e.result.Result); 
 			} 
 			private function logout_fault_handler(event:FaultEvent):void
