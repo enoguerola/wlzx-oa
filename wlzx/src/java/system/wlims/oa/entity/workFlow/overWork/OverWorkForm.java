@@ -31,18 +31,22 @@ public class OverWorkForm extends AbstractForm {
 	private Set<OverWorkWorkFlowLog> logs=new TreeSet<OverWorkWorkFlowLog>();
 	
 	public String getBeginDate() {
-		String[] ss = times.split(" ");
-		String[] tt = ss[1].split("-");
-		String temp =ss[0];
-		
-		if(tt[0].equalsIgnoreCase("1")){
-			temp = temp + " 上午";
-		} 
-		if(tt[1].equalsIgnoreCase("1")){
-			temp = temp + " 下午";
-		}
-		if(tt[2].equalsIgnoreCase("1")){
-			temp = temp +" 晚上";
+		String temp="";
+		for(String time:times.split(";")){
+			String[] ss = time.split(" ");
+			String[] tt = ss[1].split("-");
+			temp +=ss[0];
+			
+			if(tt[0].equalsIgnoreCase("1")){
+				temp = temp + " 上午";
+			} 
+			if(tt[1].equalsIgnoreCase("1")){
+				temp = temp + " 下午";
+			}
+			if(tt[2].equalsIgnoreCase("1")){
+				temp = temp +" 晚上";
+			}
+			temp+="  ";
 		}
 		
 		return temp;

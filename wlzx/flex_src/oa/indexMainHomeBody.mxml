@@ -123,6 +123,7 @@
 				//Alert.show(result+"");
 				if(result!=null)
 				waittingNum.text=result;
+				else waittingNum.text="0";
 			}
 			protected function getPersonSchedulesByConditions_resultHandler(event:ResultEvent):void
 			{
