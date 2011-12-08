@@ -15,35 +15,34 @@
        http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
 
 	<!-- 注入配置 -->
-	<bean id="systemDAO" class="system.dao.SystemDAO">
+	<bean id="systemDAO" class="system.daoImpl.SystemDAOImpl">
 		<property name="sessionFactory" ref="systemSessionFactory" />
 	</bean>
-	<bean id="menuDAO" class="system.dao.MenuDAO">
+	<bean id="menuDAO" class="system.daoImpl.MenuDAOImpl">
 		<property name="sessionFactory" ref="systemSessionFactory" />
 	</bean>
-	<bean id="moduleDAO" class="system.dao.ModuleDAO">
+	<bean id="moduleDAO" class="system.daoImpl.ModuleDAOImpl">
 		<property name="sessionFactory" ref="systemSessionFactory" />
 	</bean>
-	<bean id="operationDAO" class="system.dao.OperationDAO">
+	<bean id="operationDAO" class="system.daoImpl.OperationDAOImpl">
 		<property name="sessionFactory" ref="systemSessionFactory" />
 	</bean>
-	<bean id="dataAccessModeDAO" class="system.dao.DataAccessModeDAO">
+	<bean id="dataAccessModeDAO" class="system.daoImpl.DataAccessModeDAOImpl">
 		<property name="sessionFactory" ref="systemSessionFactory" />
 	</bean>
-	<bean id="departmentDAO" class="system.dao.DepartmentDAO">
+	<bean id="departmentDAO" class="system.daoImpl.DepartmentDAOImpl">
 		<property name="sessionFactory" ref="systemSessionFactory" />
 	</bean>
-	<bean id="roleDAO" class="system.dao.RoleDAO">
+	<bean id="roleDAO" class="system.daoImpl.RoleDAOImpl">
 		<property name="sessionFactory" ref="systemSessionFactory" />
 	</bean>
-	<bean id="userDAO" class="system.dao.UserDAO">
-		<property name="departmentDAO" ref="departmentDAO" />
+	<bean id="userDAO" class="system.daoImpl.UserDAOImpl">
 		<property name="sessionFactory" ref="systemSessionFactory" />
 	</bean>
-	<bean id="messageDAO" class="system.dao.MessageDAO">
+	<bean id="messageDAO" class="system.daoImpl.MessageDAOImpl">
 		<property name="sessionFactory" ref="systemSessionFactory" />
 	</bean>
-	<bean id="drDAO" class="system.dao.DRDAO">
+	<bean id="drDAO" class="system.daoImpl.DRDAOImpl">
 		<property name="sessionFactory" ref="systemSessionFactory" />
 	</bean>
 	<bean id="systemServiceDest" class="system.serviceImpl.SystemServiceImpl">

@@ -3,15 +3,8 @@
  */
 package system.dao;
 
-import java.util.List;
-
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Restrictions;
-
-import system.BaseDAOImpl;
-
+import system.BaseDAO;
 import system.entity.OperationModel;
-import system.utils.StringUtils;
 
 
   
@@ -28,44 +21,9 @@ import system.utils.StringUtils;
  *
  */
 
-public class OperationDAO extends BaseDAOImpl<OperationModel> {
-//	/** 
-//     * 获取某操作的数据访问方式
-//     * @param operation 
-//     * @return DataAccessModeModel 
-//     * @创建时间 2011-4-15 上午10:41:15
-//     */ 
-//	public DataAccessModeModel getDataAccessMode(OperationModel operation){
-//		return null;
-//	}
-//	/** 
-//     * 获取某操作的所属模块
-//     * @param operation 
-//     * @return ModuleModel 
-//     * @创建时间 2011-4-15 上午10:41:15
-//     */ 
-//	public ModuleModel getBelongModule(OperationModel operation){
-//		return null;
-//	}
-	/** 
-	  * 通过唯一性系统标记查询操作实体
-	  * @param symbol 
-	  * @return T
-	  * @创建时间 2011-4-15 上午10:41:15
-	  */
-	@SuppressWarnings("unchecked")
-	public OperationModel getOperationBySymbol(String symbol){
-		if (StringUtils.isNotEmpty(symbol)) {
-			DetachedCriteria criteria = DetachedCriteria.forClass(OperationModel.class);
-			criteria.add(Restrictions.eq("symbol", symbol));
-			List<OperationModel> result = this.getListByCriteria(criteria);
-			return result != null && result.size() > 0 ? result.get(0) : null;
-		}
-		return null;
-	}
+public interface OperationDAO extends BaseDAO<OperationModel>{
 
-	public void removeOperationBySymbol(String symbol) {
-		// TODO Auto-generated method stub
-		remove(getOperationBySymbol(symbol));
-	}
+	public OperationModel getOperationBySymbol(String symbol);
+
+	public void removeOperationBySymbol(String symbol);
 }

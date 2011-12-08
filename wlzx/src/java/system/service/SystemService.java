@@ -65,6 +65,8 @@ public interface SystemService{
 	public List<UserModel> getUnAuthUsers();
 	//获得某用户
 	public UserModel getUserByUserAccount(String userAccount);
+	//获得某用户
+	public UserModel getUserByUserId(String userId);
 	//获得所有用户
 	public List<UserModel> getAllUsers();
 	//按条件查询用户

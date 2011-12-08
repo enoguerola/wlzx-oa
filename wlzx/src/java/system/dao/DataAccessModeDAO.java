@@ -5,12 +5,8 @@ package system.dao;
 
 import java.util.List;
 
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Restrictions;
-
-import system.BaseDAOImpl;
+import system.BaseDAO;
 import system.entity.DataAccessModeModel;
-import system.utils.StringUtils;
 
 
   
@@ -27,58 +23,13 @@ import system.utils.StringUtils;
  *
  */
 
-public class DataAccessModeDAO extends BaseDAOImpl<DataAccessModeModel> {
-//	/** 
-//     * 获取某数据访问方式所属操作
-//     * @param dataAccessModeModel 
-//     * @return OperationModel 
-//     * @创建时间 2011-4-15 上午10:41:15
-//     */ 
-//	public OperationModel getBelongOperation(DataAccessModeModel dataAccessModeModel){
-//		return null;
-//	}
-	/** 
-	  * 通过唯一性系统标记查询数据访问方式实体
-	  * @param symbol 
-	  * @return T
-	  * @创建时间 2011-4-15 上午10:41:15
-	  */
-	@SuppressWarnings("unchecked")
-	public DataAccessModeDAO getDAMBySymbol(String symbol){
-		if (StringUtils.isNotEmpty(symbol)) {
-			DetachedCriteria criteria = DetachedCriteria.forClass(DataAccessModeDAO.class);
-			criteria.add(Restrictions.eq("symbol", symbol));
-			List<DataAccessModeDAO> result = this.getListByCriteria(criteria);
-			return result != null && result.size() > 0 ? result.get(0) : null;
-		}
-		return null;
-	}
+public interface DataAccessModeDAO extends BaseDAO<DataAccessModeModel>{
 
-	/** 
-	  * 通过唯一性系统标记查询数据访问方式实体
-	  * @param symbol 
-	  * @return T
-	  * @创建时间 2011-4-15 上午10:41:15
-	  */
-	@SuppressWarnings("unchecked")
-	public DataAccessModeModel getDataAccessModeBySymbol(String symbol){
-		if (StringUtils.isNotEmpty(symbol)) {
-			DetachedCriteria criteria = DetachedCriteria.forClass(DataAccessModeModel.class);
-			criteria.add(Restrictions.eq("symbol", symbol));
-			List<DataAccessModeModel> result = this.getListByCriteria(criteria);
-			return result != null && result.size() > 0 ? result.get(0) : null;
-		}
-		return null;
-	}
+	public DataAccessModeModel getDAMBySymbol(String symbol);
 
-	@SuppressWarnings("unchecked")
-	public List<DataAccessModeModel> getAllResources() {
-		DetachedCriteria criteria = DetachedCriteria.forClass(DataAccessModeModel.class);
-		List<DataAccessModeModel> result = this.getListByCriteria(criteria);
-		return result;
-	}
+	public DataAccessModeModel getDataAccessModeBySymbol(String symbol);
 
-	public void removeDataAccessModeBySymbol(String symbol) {
-		this.remove(getDataAccessModeBySymbol(symbol));	
-	}
+	public List<DataAccessModeModel> getAllResources();
+
+	public void removeDataAccessModeBySymbol(String symbol);
 }

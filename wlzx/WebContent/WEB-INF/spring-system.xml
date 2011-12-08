@@ -79,21 +79,29 @@
 			<ref local="systemHibernateProperties" />
 		</property>
 	</bean>
-	<!-- 配置事务-->
-	<bean id="systemTxManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-		<property name="dataSource" ref="systemDataSource" />
+	<bean id="hibernateTemplate" class="org.springframework.orm.hibernate3.HibernateTemplate">
+		<property name="sessionFactory">
+			<ref bean="systemSessionFactory" />
+		</property>
+		<property name="cacheQueries">
+			<value>true</value>
+		</property>
 	</bean>
-	<tx:advice id="systemTxAdvice" transaction-manager="systemTxManager">
-		<tx:attributes>
-			<tx:method name="get*" read-only="true" />
-			<tx:method name="insert*" />
-			<tx:method name="update*" />
-			<tx:method name="delete*" />
-		</tx:attributes>
-	</tx:advice>
-	<aop:aspectj-autoproxy proxy-target-class="true"/> 
-	<aop:config proxy-target-class="true">
-		<aop:pointcut id="serviceOperation" expression="execution(* system.service.*.*(..))" />
-		<aop:advisor advice-ref="systemTxAdvice" pointcut-ref="serviceOperation" />
-	</aop:config>
+	<!-- 配置事务-->
+<!-- 	<bean id="systemTxManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager"> -->
+<!-- 		<property name="dataSource" ref="systemDataSource" /> -->
+<!-- 	</bean> -->
+<!-- 	<tx:advice id="systemTxAdvice" transaction-manager="systemTxManager"> -->
+<!-- 		<tx:attributes> -->
+<!-- 			<tx:method name="get*" read-only="true" /> -->
+<!-- 			<tx:method name="insert*" /> -->
+<!-- 			<tx:method name="update*" /> -->
+<!-- 			<tx:method name="delete*" /> -->
+<!-- 		</tx:attributes> -->
+<!-- 	</tx:advice> -->
+<!-- 	<aop:aspectj-autoproxy proxy-target-class="true"/>  -->
+<!-- 	<aop:config proxy-target-class="true"> -->
+<!-- 		<aop:pointcut id="serviceOperation" expression="execution(* system.service.*.*(..))" /> -->
+<!-- 		<aop:advisor advice-ref="systemTxAdvice" pointcut-ref="serviceOperation" /> -->
+<!-- 	</aop:config> -->
 </beans>

@@ -16,7 +16,7 @@
 
 <base href="<%=basePath%>">
 <script language='javascript' type='text/javascript'>
-	var secs =5; //倒计时的秒数
+	var secs =2; //倒计时的秒数
 	var URL ;
 	function load(url){
 		URL =url;
