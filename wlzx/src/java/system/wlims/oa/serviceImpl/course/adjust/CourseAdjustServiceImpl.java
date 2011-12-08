@@ -51,10 +51,10 @@ public class CourseAdjustServiceImpl implements CourseAdjustService{
 	}
 
 	@Override
-	public List<ApplyModel> personalApplySearch() {
+	public List<ApplyModel> personalApplySearch(String userId) {
 		// TODO Auto-generated method stub
-		String accountId= SecurityUserHolder.getCurrentUser().getId();
-		return courseAdjustDAO.personalApplySearch(accountId);
+//		String accountId= SecurityUserHolder.getCurrentUser().getId();
+		return courseAdjustDAO.personalApplySearch(userId);
 	}
 
 	@Override

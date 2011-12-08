@@ -153,8 +153,8 @@
 				applyServiceRO.getApplyById(applyId);
 			}
 			public function search():void{
-				lockWin();
-				applyServiceRO.personalApplySearch();
+				//lockWin();
+				applyServiceRO.personalApplySearch(parentApplication.currentUser.id);
 			}
 			protected function systemFaultHandler(event:FaultEvent):void {
 				Alert.show(event.fault.faultString, 'Error');

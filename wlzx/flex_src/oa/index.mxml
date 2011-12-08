@@ -271,10 +271,14 @@
 						//	obj.child.search();
 						//	obj.child.dispatchEvent(new BaseEvent(BaseEvent.Reload));
 						//Alert.show(obj.child);
-						obj.child.search();
-						if(symbol == "noticeDetial"){
-							obj.child.detail();
+						var m:Object=obj.child as Object;
+						if(m!=null&&"moduleRefresh" in m){
+							m.search();
 						}
+						if(m!=null&&"noticeDetial" in m){
+							m.detail();
+						}
+						
 						return;
 					}
 				}
