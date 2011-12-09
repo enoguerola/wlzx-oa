@@ -108,7 +108,7 @@ public class SystemServiceImpl implements SystemService{
 		this.messageDAO = messageDAO;
 	}
 	//获得当前登录用户所有权限集
-	public Set<DataAccessModeModel> getAuthorizations(){
+	public Set<DataAccessModeModel> fetchAuthorizations(){
 //		Set<DataAccessModeModel> dams=new TreeSet<DataAccessModeModel>();
 //		//添加基础权限
 //		RoleModel basic=roleDAO.getRoleBySymbol("basic_role");
@@ -131,9 +131,9 @@ public class SystemServiceImpl implements SystemService{
 		return  user.getAuthorizations();
 	}
 	//获得当前登录用户某系统权限集
-	public SystemModel getAuthorizationMenusBySystem(String systemSymbol){
+	public SystemModel fetchAuthorizationMenusBySystem(String systemSymbol){
 		SystemModel authSystem=getSystemBySymbol(systemSymbol);
-		Set<DataAccessModeModel> dams=getAuthorizations();
+		Set<DataAccessModeModel> dams=fetchAuthorizations();
 		if(authSystem.getDams().size()>0){
 			if(dams.containsAll(authSystem.getDams()))
 				return authSystem;
