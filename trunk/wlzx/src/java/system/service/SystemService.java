@@ -33,9 +33,9 @@ public interface SystemService{
 	
 
 	//获得当前登录用户所有权限集
-	public Set<DataAccessModeModel> getAuthorizations();
+	public Set<DataAccessModeModel> fetchAuthorizations();
 	//获得当前登录用户某系统权限集
-	public SystemModel getAuthorizationMenusBySystem(String systemSymbol);
+	public SystemModel fetchAuthorizationMenusBySystem(String systemSymbol);
 	
 	//获得某系统
 	public SystemModel getSystemBySymbol(String symbol);
