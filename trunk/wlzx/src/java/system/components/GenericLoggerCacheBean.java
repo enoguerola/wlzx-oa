@@ -109,7 +109,9 @@ public class GenericLoggerCacheBean {
 	    
 	    @SuppressWarnings("rawtypes")
 		public void afterReturning(Object returnValue, Method method, Object[] args, Object target) throws Throwable {
-			String targetCacheKeyPrefix = target.toString().split(" ")[1] + ".";
+			//String targetCacheKeyPrefix = target.toString().split(" ")[1] + ".";
+			String targetCacheKeyPrefix = target.toString().split(" ")[1].substring(0,target.toString().split(" ")[1].lastIndexOf(".") ) + ".";
+
 			List cachedKeys = cache.getKeys();
 			if (!CollectionUtils.isEmpty(cachedKeys)) {
 				for (Object cachedKey : cachedKeys) {
