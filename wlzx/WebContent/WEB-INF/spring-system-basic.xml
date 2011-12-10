@@ -76,6 +76,8 @@
 	<tx:advice id="basicTxAdvice" transaction-manager="basicTxManager">
 		<tx:attributes>
 			<tx:method name="get*" read-only="true" />
+			<tx:method name="fetch*" read-only="true" />
+			<tx:method name="find*" read-only="true" />
 			<tx:method name="insert*" />
 			<tx:method name="update*" />
 			<tx:method name="delete*" />
