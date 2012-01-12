@@ -30,6 +30,7 @@ public class ScheduleModel extends BaseModel {
 	private Integer repeatInterval;
 	private String repeatOnDays;
 	private String repeatEndTime;
+	private String departmentName;//辅助
 
 	public static enum Type{
 		Personal(0, "私人日程"),
@@ -329,5 +330,11 @@ public class ScheduleModel extends BaseModel {
 	}
 	public void setSchoolShare(Integer schoolShare) {
 		this.schoolShare = schoolShare;
+	}
+	public String getDepartmentName() {
+		return departmentName;
+	}
+	public void setDepartmentName(String departmentName) {
+		this.departmentName = departmentName;
 	}
 }

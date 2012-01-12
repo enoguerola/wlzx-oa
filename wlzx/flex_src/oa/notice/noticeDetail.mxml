@@ -160,7 +160,7 @@
 
 		]]> 		
 	</mx:Script> 
-	<mx:VBox borderVisible="true" width="100%" height="100%" borderStyle="solid">
+	<mx:VBox borderVisible="true" width="100%" height="100%" borderStyle="solid" backgroundColor="white">
 		<mx:HBox width="100%" height="25" paddingLeft="20"  horizontalGap="10" styleName="CustomHBoxStyle"  verticalAlign="middle">
 			<mx:Label text="|"/>
 			<mx:LinkButton label="打印" click="linkbutton1_clickHandler(event)" icon="@Embed(source='../WebContent/resources/common/tools/button_printer_icon.png')"/>
@@ -168,28 +168,19 @@
 			<mx:LinkButton label="返回"/>-->
 			<mx:Label text="|"/>
 		</mx:HBox>
-		<mx:VBox width="100%" height="100%" id="detailPanel"  paddingTop="0"   paddingLeft="10" paddingRight="10">
+		<mx:VBox width="100%" height="100%" id="detailPanel"  paddingTop="0"   paddingLeft="10" paddingRight="10" verticalScrollPolicy="auto">
 			
-			<!--<s:Group width="100%">
-				<s:layout>
-					<s:BasicLayout/>
-				</s:layout>
-				<s:mxmlContent>
-					<s:HGroup right="4" width="144" verticalCenter="0">
-						
-					</s:HGroup>
-				</s:mxmlContent>
-			</s:Group>-->
-			<mx:VBox width="100%" id="print_content" paddingTop="10" verticalAlign="middle" horizontalAlign="center" height="100%">
-				<mx:VBox width="100%" horizontalAlign="center" verticalGap="0">
-					<mx:HBox width="100%" horizontalAlign="center" verticalGap="0">
+			
+			<mx:VBox width="100%" id="print_content" paddingTop="10" verticalAlign="middle" horizontalAlign="center" height="100%" verticalScrollPolicy="off" >
+				<mx:VBox width="100%" horizontalAlign="center" verticalGap="0" height="80">
+					<mx:HBox width="100%" horizontalAlign="center" verticalGap="0" height="40">
 						<mx:Label  text=""  id="detail_title" width="100%"  letterSpacing="5" textAlign="center" fontSize="16"  fontWeight="bold" height="30" />
 						<mx:Image id="emergence_icon" source="@Embed(source='../WebContent/resources/common/ui/emergence2.png')"  visible="false"/>
 						<mx:Label id="emergence_text" text="紧急公告"   visible="false"/>
 	
 					</mx:HBox>
 					
-					<mx:HBox horizontalAlign="right" right="20">
+					<mx:HBox horizontalAlign="right" right="20" height="40">
 						<mx:Label text="发布部门：" visible="true" textAlign="right" />
 						<mx:Label text="" id="department"/>
 						<mx:Label text="发布时间：" visible="true"/>
@@ -201,8 +192,8 @@
 					</mx:HBox>
 				</mx:VBox>
 				
-				<mx:VBox width="100%" horizontalAlign="center" height="100%" verticalAlign="middle"   paddingLeft="20" paddingRight="20" >
-					<mx:TextArea id="detail_content" width="100%" editable="false" height="100%" >
+				<mx:VBox width="100%" horizontalAlign="center" height="100%" verticalAlign="middle"   paddingLeft="20" paddingRight="20" verticalScrollPolicy="off" >
+					<mx:TextArea id="detail_content" width="100%" editable="false" height="100%" borderStyle="none" verticalScrollPolicy="auto" >
 					</mx:TextArea>
 				</mx:VBox>	
 				
@@ -210,8 +201,8 @@
 			<mx:HBox width="100%" height="20" id="detail_fj">
 				<mx:LinkButton  label="附件下载区" icon="@Embed(source='../WebContent/resources/common/tools/button_attachment_icon.png')" />
 			</mx:HBox>
-			<mx:VBox width="100%" id="detail_attachments">
-			</mx:VBox>
+			<mx:HBox width="100%" id="detail_attachments"  height="40">
+			</mx:HBox>
 		</mx:VBox>
 		
 	</mx:VBox>

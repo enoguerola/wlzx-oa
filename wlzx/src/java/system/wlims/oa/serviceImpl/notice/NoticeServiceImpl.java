@@ -8,6 +8,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 import system.DAOException;
+import system.PaginationSupport;
 import system.ServiceException;
 import system.components.SecurityUserHolder;
 import system.dao.DepartmentDAO;
@@ -338,6 +339,14 @@ public class NoticeServiceImpl implements NoticeService {
 			noticeDAO.merge(notice);
 		}
 		return notice.getReadNums();
+	}
+
+	@Override
+	public PaginationSupport<NoticeModel> getFrontPageSchoolNoticesByConditions(
+			String type, String emergence, String deparmentIds,
+			String title, String beginDate, String endDate,  Integer pageSize, Integer startIndex) throws ServiceException {
+		// TODO Auto-generated method stub
+		return noticeDAO.getNoticesByConditions(type, NoticeModel.EScope.School.getValue()+"", emergence, deparmentIds, title, beginDate, endDate, pageSize, startIndex) ;
 	}
 
 }
