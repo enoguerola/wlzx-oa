@@ -2,6 +2,7 @@ package system.wlims.oa.service.notice;
 
 import java.util.List;
 
+import system.PaginationSupport;
 import system.ServiceException;
 import system.wlims.oa.entity.notice.NoticeModel;
 
@@ -29,4 +30,7 @@ public interface NoticeService {
 	
 	public int addReadNumsByOne(String id)throws ServiceException;
 
+	
+	public PaginationSupport<NoticeModel> getFrontPageSchoolNoticesByConditions(String type,String emergence,String deparmentIds,
+			String title, String beginDate,String endDate, Integer pageSize, Integer startIndex )throws ServiceException;
 }

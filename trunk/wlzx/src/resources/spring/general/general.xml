@@ -9,7 +9,7 @@
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">   
 	<context:annotation-config/>
 	<!-- 把标记了@Controller注解的类转换为bean -->     
-    <context:component-scan base-package="system.wlims.basic.action,system.wlims.oa.action" /> 
+    <context:component-scan base-package="system.wlims.basic.action,system.wlims.oa.action,system.wlims.front.action" /> 
 
   	<!-- 启动Spring MVC的注解功能，完成请求和注解POJO的映射 --> 
     <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" />  

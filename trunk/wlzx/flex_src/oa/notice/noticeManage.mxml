@@ -153,7 +153,7 @@
 				
 				if(form.emergence == 1)
 					emergence.selected = true;
-				rte.text = form.content;
+				rte.htmlText = form.content;
 				/*
 				var uploadList:Array=new Array();
 				for each(var model:AttachmentModel in form.attachments){
@@ -260,7 +260,7 @@
 				
 					
 					
-					form.content = rte.text;
+					form.content = rte.htmlText;
 					if(emergence.selected)
 						form.emergence = 1;
 					else

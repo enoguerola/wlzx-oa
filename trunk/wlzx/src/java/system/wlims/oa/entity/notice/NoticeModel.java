@@ -26,6 +26,7 @@ public class NoticeModel extends BaseModel {
 	private Set<AttachmentModel> attachments=new TreeSet<AttachmentModel>(); 
 	private Integer status;
 	private Integer readNums=0;
+	private String postDepartmentName;//辅助
 	public static enum EScope{
 		School(0, "校级公告"),
 		Department(1, "部门公告");
@@ -145,5 +146,11 @@ public class NoticeModel extends BaseModel {
 	}
 	public void setReadNums(Integer readNums) {
 		this.readNums = readNums;
+	}
+	public String getPostDepartmentName() {
+		return postDepartmentName;
+	}
+	public void setPostDepartmentName(String postDepartmentName) {
+		this.postDepartmentName = postDepartmentName;
 	}
 }
