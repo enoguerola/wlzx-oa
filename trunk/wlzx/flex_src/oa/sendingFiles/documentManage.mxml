@@ -201,7 +201,7 @@
 		
 		<!-- **************  编辑面板 **********************-->
 		<mx:VBox width="100%" height="100%" id="editPanel">
-			<mx:HBox width="100%" height="25" paddingLeft="20"  horizontalGap="10" styleName="CustomHBoxStyle"   verticalAlign="middle">
+			<mx:HBox width="100%" height="25" paddingLeft="20"  horizontalGap="10" styleName="ToolBar"   verticalAlign="middle">
 				<mx:Label text="|"/>
 				<mx:LinkButton  label="返回" icon="@Embed(source='../WebContent/resources/common/tools/button_back_icon.png')" click="this.currentState='list';"/>
 				<mx:Label id="addUpdateFlag" visible="false" text="Add" width="0"/>

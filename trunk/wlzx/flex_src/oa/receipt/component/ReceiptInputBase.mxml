@@ -136,7 +136,7 @@
 				<s:Button label="提交" color="#000000" click="save(1)" id="save1"/>
 				<s:Button label="保存" color="#000000" click="save(0)" id="save0"/>
 			</s:HGroup>-->
-			<mx:HBox width="100%" height="25" paddingLeft="20"  horizontalGap="10" styleName="CustomHBoxStyle"   verticalAlign="middle" id="bar">
+			<mx:HBox width="100%" height="25" paddingLeft="20"  horizontalGap="10" styleName="ToolBar"   verticalAlign="middle" id="bar">
 				<mx:Label text="|"/>
 				<mx:LinkButton  label="提交" icon="@Embed(source='../WebContent/resources/common/tools/button_draftSave_icon.png')" click="save('1')" id="save1" />
 				<mx:LinkButton  label="保存" icon="@Embed(source='../WebContent/resources/common/tools/button_save_icon.png')"  click="save()" id="save0"/>

@@ -190,17 +190,17 @@
 			}
 		]]> 		
 	</fx:Script> 
-	<mx:VBox borderVisible="true" width="100%" height="100%" borderStyle="solid">
-		<mx:VBox width="100%"     verticalGap="15" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="10" paddingBottom="10"   paddingLeft="100" paddingRight="10">
-			
+	<mx:VBox borderVisible="true" width="100%" height="100%" borderStyle="solid" paddingLeft="10" paddingRight="10" paddingTop="10" paddingBottom="10">
+<!--		<mx:VBox width="100%"     verticalGap="15" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="10" paddingBottom="10"   paddingLeft="100" paddingRight="10">
+-->			
 			<!--************** 搜索条件框 ***********-->
-			<mx:VBox width="100%" horizontalAlign="left" paddingLeft="0" verticalGap="10" >
+			<!--<mx:VBox width="100%" horizontalAlign="left" paddingLeft="0" verticalGap="10" >-->
 				<mx:HBox width="100%" horizontalAlign="left">
 					<mx:Label  text=""    width="100%"  letterSpacing="5" textAlign="center" fontSize="14"  fontWeight="bold" height="30"  id="search_account_name"/>
 					<mx:Label id="search_account_id" visible="false" width="0"/>
 				</mx:HBox>
 				
-				<component:Fieldset title="搜索条件" height="80" width="85%" verticalAlign="bottom" horizontalAlign="left" >
+				<component:Fieldset title="搜索条件" height="80" width="100%" verticalAlign="bottom" horizontalAlign="left" >
 					<mx:HBox horizontalAlign="left" verticalAlign="bottom">
 						<mx:Label  text="时间区间"  width="80"  textAlign="left"/>
 						<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" id="search_date_begin"   formatString="YYYY-MM-DD"  editable="false" width="120"/>
@@ -209,11 +209,11 @@
 						<mx:Button  label="搜  索"  width="80"   click="search()"/>
 					</mx:HBox>
 				</component:Fieldset>
-			</mx:VBox>
+			<!--</mx:VBox>-->
 			
 			<!--***************  记录列表框 ****************-->
-			<component:Fieldset title="记录列表" paddingLeft="50" width="85%" paddingTop="30" >
-				<mx:Panel styleName="customPanel" title="考勤记录"  cornerRadius="5" borderVisible="true" dropShadowVisible="false" verticalScrollPolicy="auto" width="100%">
+			<!--<component:Fieldset title="记录列表" width="100%" paddingTop="30"  height="100%">-->
+				<mx:Panel styleName="customPanel" title="考勤记录"  cornerRadius="5" borderVisible="true" dropShadowVisible="false" verticalScrollPolicy="auto" width="100%"  height="100%">
 					<mx:Grid width="100%" height="100%" horizontalAlign="center" verticalAlign="middle"  horizontalGap="-1" verticalGap="-1" >
 						
 						<mx:GridRow   horizontalAlign="center" verticalAlign="middle" width="100%" >
@@ -566,8 +566,8 @@
 					
 				</mx:Panel>
 				
-			</component:Fieldset>
-		</mx:VBox>
+			<!--</component:Fieldset>-->
+		<!--</mx:VBox>-->
 	</mx:VBox>	
 		
 </mx:Module>

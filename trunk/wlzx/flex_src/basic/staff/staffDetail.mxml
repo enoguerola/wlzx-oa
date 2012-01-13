@@ -452,18 +452,18 @@
 		</mx:RemoteObject>
 	</fx:Declarations>
 	<mx:VBox borderVisible="true" width="100%" height="100%" borderStyle="solid">
-		
-		<s:VGroup width="100%" height="100%">
-			
+						
+					<mx:FormHeading width="100%"  label="{teacher.name+'档案信息'}" textAlign="center" paddingTop="10"/>
 					<mx:Form width="100%"  textAlign="left" labelWidth="70" id="teacherForm">
-							<s:VGroup width="100%" height="100%">							
-								<s:HGroup  width="100%" height="40%">
+							<s:VGroup width="100%" height="100%">	
+								<component:Fieldset title="基本信息" width="100%" height="40%" paddingBottom="5" >
+								<s:HGroup  width="100%" height="100%">
 									
-									<s:VGroup width="10%" height="100%" >
+									<!--<s:VGroup width="10%" height="100%" >
 										<s:Label>
 											<s:text>基本信息</s:text>
 										</s:Label>
-									</s:VGroup>
+									</s:VGroup>-->
 									<s:VGroup width="50%" height="100%">
 										<s:HGroup width="100%">
 											<mx:FormItem label="姓名" width="50%"><s:TextInput id="teacherName" width="100%"/></mx:FormItem>
@@ -510,14 +510,16 @@
 										</mx:FormItem>
 									</s:VGroup>
 								</s:HGroup>
+								</component:Fieldset>
 								
 								<!--***-->
-								<s:HGroup  width="100%" height="20%">
-									<s:VGroup width="10%" height="100%">
+								<component:Fieldset title="教育背景" width="100%" height="20%" paddingBottom="5">
+								<s:HGroup  width="100%" height="100%">
+									<!--<s:VGroup width="10%" height="100%">
 										<s:Label>
 											<s:text>教育背景</s:text>
 										</s:Label>
-									</s:VGroup>
+									</s:VGroup>-->
 									<s:VGroup width="25%">
 										<mx:FormItem label="学历" width="100%">
 											<mx:ComboBox id="education" width="100%" selectedIndex="0" dataProvider="{educationArr}" labelField="label"/>
@@ -543,12 +545,15 @@
 										</mx:FormItem>
 									</s:VGroup>
 								</s:HGroup>
-								<s:HGroup  width="100%" height="40%">
-									<s:VGroup width="10%" height="100%">
+								</component:Fieldset>
+								<component:Fieldset title="温中聘请信息" width="100%" height="40%" paddingBottom="5">
+								<s:HGroup  width="100%" height="100%">
+
+									<!--<s:VGroup width="10%" height="100%">
 										<s:Label>
 											<s:text>温中聘请信息</s:text>
 										</s:Label>
-									</s:VGroup>								
+									</s:VGroup>		-->						
 									<s:VGroup width="100%">
 										<s:HGroup width="100%" horizontalAlign="right">
 											<mx:FormItem label="部门" width="25%">
@@ -591,23 +596,21 @@
 										</s:HGroup>
 									</s:VGroup>
 								</s:HGroup>
-								<s:HGroup width="100%">
-									<mx:Panel width="100%" height="100%"  styleName="customPanel" title="部门记录"  cornerRadius="5" borderVisible="false" dropShadowVisible="false">
-										<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="true"   borderAlpha="0.2" verticalAlign="middle"   id="departments_table" pagecount="10"  >				
-											<component:mygridcolumns>
-												
-												<mx:DataGridColumn textAlign="center" headerText="部门" dataField="departmentName" width="150"></mx:DataGridColumn>
-												<mx:DataGridColumn textAlign="center" headerText="职务" dataField="positionName" width="250"></mx:DataGridColumn>
-												
-											</component:mygridcolumns>
-										</component:WlzxPageDataGrid>
-									</mx:Panel>
-								</s:HGroup>
-								<s:Panel width="100%"  title="工作经历"  borderVisible="false" id="work_experience" dropShadowVisible="false">
+								</component:Fieldset>
+								<mx:Panel width="100%" height="100%"  styleName="customPanel" title="部门记录"  cornerRadius="5" borderVisible="false" dropShadowVisible="false">
+									<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="true"   borderAlpha="0.2" verticalAlign="middle"   id="departments_table" pagecount="10"  >				
+										<component:mygridcolumns>
+											
+											<mx:DataGridColumn textAlign="center" headerText="部门" dataField="departmentName" width="150"></mx:DataGridColumn>
+											<mx:DataGridColumn textAlign="center" headerText="职务" dataField="positionName" width="250"></mx:DataGridColumn>
+											
+										</component:mygridcolumns>
+									</component:WlzxPageDataGrid>
+								</mx:Panel>
+								<mx:Panel width="100%"  title="工作经历"  borderVisible="false" id="work_experience" dropShadowVisible="false">
 									<s:VGroup width="100%" height="100%" id="work_experience_listPanel">
 										
 										<s:VGroup width="100%" height="100%"  gap="10" verticalAlign="middle" horizontalAlign="center">
-											<s:HGroup width="100%" height="100%" paddingLeft="10" paddingRight="10" paddingBottom="10">
 												<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="true"   borderAlpha="0.2" verticalAlign="middle"   id="experiences_table" pagecount="10" >				
 													<component:mygridcolumns>
 														<mx:DataGridColumn textAlign="center" headerText="开始时间" dataField="startDate" width="100" labelFunction="formatDate"></mx:DataGridColumn>
@@ -617,16 +620,14 @@
 														
 													</component:mygridcolumns>
 												</component:WlzxPageDataGrid>
-											</s:HGroup>
 										</s:VGroup>
 									</s:VGroup>
 									
-								</s:Panel>
-								<s:Panel width="100%"  title="社会关系"  borderVisible="false" id="relations" dropShadowVisible="false">
+								</mx:Panel>
+								<mx:Panel width="100%"  title="社会关系"  borderVisible="false" id="relations" dropShadowVisible="false">
 									<s:VGroup width="100%" height="100%" id="relation_listPanel" >
 										
 										<s:VGroup width="100%" height="100%"  gap="10" verticalAlign="middle" horizontalAlign="center">
-											<s:HGroup width="100%" height="100%" paddingLeft="10" paddingRight="10" paddingBottom="10">
 												<component:WlzxPageDataGrid width="100%" height="100%"
 																			borderVisible="true"   borderAlpha="0.2" verticalAlign="middle"  
 																			id="relations_table" pagecount="10"  >				
@@ -639,16 +640,14 @@
 														
 													</component:mygridcolumns>
 												</component:WlzxPageDataGrid>
-											</s:HGroup>
 										</s:VGroup>
 									</s:VGroup>
 									
-								</s:Panel>
+								</mx:Panel>
 								
 							</s:VGroup>
 					</mx:Form>
 					
 				
-		</s:VGroup>
 	</mx:VBox>
 </mx:Module>

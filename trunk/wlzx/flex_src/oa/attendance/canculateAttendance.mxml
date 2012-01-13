@@ -124,19 +124,18 @@
 	</fx:Script> 
 	
 		<mx:VBox borderVisible="true" width="100%" height="100%" borderStyle="solid">	
-		<s:VGroup width="100%" height="100%">
 			<s:HGroup verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12">
-				<mx:HBox width="100%" height="25" paddingLeft="20"  horizontalGap="10" styleName="ToolBar"   verticalAlign="middle">
+				<mx:HBox width="100%" height="30" paddingLeft="20"  horizontalGap="10" styleName="ToolBar"   verticalAlign="middle">
 					<mx:Label text="|"/>
 					<mx:LinkButton  label="导出" icon="@Embed(source='../WebContent/resources/common/tools/button_printer_icon.png')"  click="export()"/>
 					<mx:Label text="|"/>
 				</mx:HBox>
 			</s:HGroup>
-			<mx:VBox width="100%" height="100%" verticalGap="10" verticalAlign="middle" horizontalAlign="left" paddingLeft="10" paddingBottom="10" >
+			<mx:VBox width="100%" height="100%" verticalGap="10" verticalAlign="middle" horizontalAlign="left" paddingLeft="10" paddingBottom="10" paddingRight="10" >
 				
 				<!--************  搜索面板 ************-->
 				<mx:VBox height="60" width="100%" >
-					<component:Fieldset title="统计条件" width="95%" height="95%"  >
+					<component:Fieldset title="统计条件" width="100%" height="100%"  >
 						<mx:HBox width="100%"  horizontalGap="5" verticalAlign="bottom" horizontalAlign="left" horizontalScrollPolicy="off" >
 							
 							<!--<mx:HBox verticalAlign="middle">
@@ -167,8 +166,8 @@
 				</mx:VBox>
 				
 				<!--**************** 列表区域 ****************-->
-				<component:Fieldset title="列表清单" width="95%" height="100%" >
-					<s:Panel width="100%" height="100%"  styleName="customPanel" title="统计列表"  cornerRadius="5" borderVisible="true" dropShadowVisible="false">
+				<!--<component:Fieldset title="列表清单" width="100%" height="100%" >-->
+					<mx:Panel width="100%" height="100%"  styleName="customPanel" title="统计列表"  cornerRadius="5" borderVisible="true" dropShadowVisible="false">
 						
 						<component:WlzxPageDataGrid width="100%" height="100%"  verticalAlign="middle"   id="accountTable" pagecount="10"  >				
 							<component:mygridcolumns>
@@ -357,11 +356,10 @@
 								</mx:DataGridColumn>
 							</component:mygridcolumns>
 						</component:WlzxPageDataGrid>
-					</s:Panel>
-				</component:Fieldset>
+					</mx:Panel>
+				<!--</component:Fieldset>-->
 				
 			</mx:VBox>
-		</s:VGroup>
 		
 		
 	</mx:VBox>

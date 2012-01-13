@@ -237,7 +237,7 @@
 		]]>
 	</fx:Script>
 	<mx:VBox borderVisible="true" width="100%" height="100%" borderStyle="solid">
-			<mx:HBox width="100%" height="35" paddingLeft="20"  horizontalGap="10" styleName="CustomHBoxStyle"   verticalAlign="middle" >
+			<mx:HBox width="100%" height="35" paddingLeft="20"  horizontalGap="10" styleName="ToolBar"   verticalAlign="middle" >
 				<mx:Label text="|"/>
 				<mx:Label text="部门选择" textAlign="center"  />
 				<mx:ComboBox width="200" id="departments" labelField="label"  selectedIndex="0" change="switchRoleAuthorization();" />

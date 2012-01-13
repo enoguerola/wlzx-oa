@@ -279,7 +279,7 @@
 
 		<mx:Spacer height="10"/>
 			<!-- ************ 待办工作面板 **************-->
-		<component:Fieldset title="待办工作列表" width="95%" height="50%" >
+		<component:Fieldset title="待办工作列表" width="100%" height="50%" >
 			
 <!--			<mx:Panel width="100%" height="100%"  styleName="customPanel" title="待办工作"  cornerRadius="5" borderVisible="false" dropShadowVisible="false" verticalScrollPolicy="auto" >
 -->
@@ -348,7 +348,7 @@
 			
 			<mx:Spacer height="10"/>
 			<!-- ************ 历史工作面板 **************-->
-		<component:Fieldset title="历史工作列表" width="95%" height="50%" >
+		<component:Fieldset title="历史工作列表" width="100%" height="50%" >
 			
 <!--			<mx:Panel width="100%"  height="100%"  styleName="customPanel" title="历史工作"  cornerRadius="5" borderVisible="false" dropShadowVisible="false" verticalScrollPolicy="auto">
 -->				
