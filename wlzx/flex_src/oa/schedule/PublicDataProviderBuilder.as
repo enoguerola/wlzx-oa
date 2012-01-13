@@ -42,12 +42,12 @@ public class PublicDataProviderBuilder
 			item.departmentShare=CommonUtils.int2Boolean(model.departmentShare);
 			item.schoolShare=CommonUtils.int2Boolean(model.schoolShare);
 			item.emergence=model.emergence;
-			item.interval=model.repeatInterval;
+			/*item.interval=model.repeatInterval;*/
 			item.recurring=CommonUtils.int2Boolean(model.repeatStatus);
-			item.repeatRuleId=model.repeatType;
+			/*item.repeatRuleId=model.repeatType;*/
 			item.type=model.type;
-			item.endDateSpecified=(model.repeatEndTime!=null?true:false);
-			item.endDate=DateFormatter.parseDateString(model.repeatEndTime);
+			/*item.endDateSpecified=(model.repeatEndTime!=null?true:false);
+			item.endDate=DateFormatter.parseDateString(model.repeatEndTime);*/
 			var calendarItem:CalendarItem=converter.itemEditorVOToCalendarItem(item);
 			calendarItem.itemId=model.id;
 			if(model.finishStatus==1){

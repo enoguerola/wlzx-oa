@@ -26,7 +26,7 @@ public class  MyItemEditorVOConverter
 		itemEditorVO.start = calendarItem.start;
 		itemEditorVO.end = calendarItem.end;
 		itemEditorVO.recurring = calendarItem.isRecurring();
-		if (itemEditorVO.recurring)
+		/*if (itemEditorVO.recurring)
 		{
 			itemEditorVO.repeatRuleId = getRepeatRuleId(calendarItem.recur);
 
@@ -41,7 +41,7 @@ public class  MyItemEditorVOConverter
 			{
 				itemEditorVO.endDate = calendarItem.recur.until;
 			}
-		}
+		}*/
 
 		return itemEditorVO;
 	}
@@ -62,13 +62,13 @@ public class  MyItemEditorVOConverter
 
 	private function markWeekDays(itemEditorVO:MyItemEditorVO, recur:Recur):void
 	{
-		itemEditorVO.MO = markDay(DateUtils.MO, recur.byDay);
+		/*itemEditorVO.MO = markDay(DateUtils.MO, recur.byDay);
 		itemEditorVO.TU = markDay(DateUtils.TU, recur.byDay);
 		itemEditorVO.WE = markDay(DateUtils.WE, recur.byDay);
 		itemEditorVO.TH = markDay(DateUtils.TH, recur.byDay);
 		itemEditorVO.FR = markDay(DateUtils.FR, recur.byDay);
 		itemEditorVO.SA = markDay(DateUtils.SA, recur.byDay);
-		itemEditorVO.SU = markDay(DateUtils.SU, recur.byDay);
+		itemEditorVO.SU = markDay(DateUtils.SU, recur.byDay);*/
 	}
 
 	private function markDay(day:String, byDay:Array):Boolean
@@ -93,7 +93,7 @@ public class  MyItemEditorVOConverter
 		calendarItem.summary = itemEditorVO.summary;
 		calendarItem.description = itemEditorVO.description;
 
-		if(itemEditorVO.recurring)
+		/*if(itemEditorVO.recurring)
 		{
 			var recurString:String = new String();
 			recurString += getFreqType(itemEditorVO.repeatRuleId);
@@ -103,7 +103,7 @@ public class  MyItemEditorVOConverter
 
 
 			calendarItem.recur = new Recur(recurString);
-		}
+		}*/
 
 		return calendarItem;
 	}
@@ -154,7 +154,7 @@ public class  MyItemEditorVOConverter
 
 	private function getByDay(itemEditorVO:MyItemEditorVO):String
 	{
-		if(itemEditorVO.repeatRuleId == MyItemEditorVO.EVERY_MO_WED_FRI)
+		/*if(itemEditorVO.repeatRuleId == MyItemEditorVO.EVERY_MO_WED_FRI)
 		{
 			return ";BYDAY=MO,WE,FR";
 		}
@@ -185,7 +185,7 @@ public class  MyItemEditorVOConverter
 					else
 						return "";
 					
-				}
+				}*/
 		
 		return "";
 	}
@@ -229,7 +229,7 @@ public class  MyItemEditorVOConverter
 
 	private function getEndDay(itemEditorVO:MyItemEditorVO):String
 	{
-		if(!itemEditorVO.endDateSpecified)
+		/*if(!itemEditorVO.endDateSpecified)
 		{
 			return "";
 		}
@@ -243,7 +243,8 @@ public class  MyItemEditorVOConverter
                     "" + itemEditorVO.endDate.date;
 
 			return untilString;
-		}
+		}*/
+		return "";
 	}
 
 }

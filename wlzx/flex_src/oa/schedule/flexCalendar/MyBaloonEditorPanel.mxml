@@ -108,13 +108,16 @@
 			this.addEventListener(KeyboardEvent.KEY_UP, keyHandler, false, 0, true);
 //			Alert.show(item.repeatRuleId+"");
 //			Alert.show(item.interval+"");
-			this.emergence.selectedIndex=ComboxUtils.findIndex(emergences,item.emergence);
-			this.repeats.selectedIndex=item.repeatRuleId;
-			this.interval.selectedIndex=item.interval;
-			this.type.selectedIndex=item.type;
-			this.departmentShare.selected=item.departmentShare;
-			this.schoolShare.selected=item.schoolShare;
-			callLater(function():void{
+			if(item!=null){
+				this.emergence.selectedIndex=ComboxUtils.findIndex(emergences,item.emergence);
+				this.type.selectedIndex=item.type;
+				this.departmentShare.selected=item.departmentShare;
+				this.schoolShare.selected=item.schoolShare;
+			}
+			/*  this.repeats.selectedIndex=item.repeatRuleId;
+			this.interval.selectedIndex=item.interval;  */
+			
+			/* callLater(function():void{
 //				Alert.show(item.MO+"");
 //				Alert.show(item.TH+"");
 				this.w1.selected=item.MO;
@@ -125,7 +128,7 @@
 				this.w6.selected=item.SA;
 				this.w7.selected=item.SU;
 			
-			});
+			}); */
 		//	emergence.selectedIndex=3;
 			setDayNames();
 	//		DrawTipMark();
@@ -156,14 +159,14 @@
 
 		private function setDayNames():void
 		{
-			var dayLetters:Array = resourceManager.getString("controls", "dayNamesShortest").split(",");
+			/* var dayLetters:Array = resourceManager.getString("controls", "dayNamesShortest").split(",");
 			w1.label = dayLetters[1];
 			w2.label = dayLetters[2];
 			w3.label = dayLetters[3];
 			w4.label = dayLetters[4];
 			w5.label = dayLetters[5];
 			w6.label = dayLetters[6];
-			w7.label = dayLetters[0];
+			w7.label = dayLetters[0]; */
 		}
 
 		private function DrawTipMark():void
@@ -249,13 +252,13 @@
 			<editor:DateTimeChooser id="end" selectedDate="{item.end}" width="100%" change="item.end = end.selectedDate"/>
 		</mx:HBox>
 
-		<mx:HBox horizontalGap="10" width="100%">
+		<!--<mx:HBox horizontalGap="10" width="100%" visible="false">
 			<mx:Label text="{resourceManager.getString('FlexCalendar','editor.repeat')}" width="{descWidth}"/>
 			<mx:CheckBox id="recurring" selected="{item.recurring}" change="onRecuringSelected(recurring.selected)" />
-		</mx:HBox>
+		</mx:HBox>-->
 
 
-		<mx:VBox visible="{item.recurring}" includeInLayout="{item.recurring}" width="100%" id="recurringArea">
+		<!--<mx:VBox visible="{item.recurring}" includeInLayout="{item.recurring}" width="100%" id="recurringArea" >
 
 			<mx:HBox horizontalGap="10" width="100%">
 				<mx:Label text="{resourceManager.getString('FlexCalendar','editor.repeats')}" width="{descWidth}"/>
@@ -288,7 +291,7 @@
 							  change="item.endDate = endsOn.selectedDate"/>
 			</mx:HBox>
 
-		</mx:VBox>
+		</mx:VBox>-->
 
 		<mx:Box horizontalAlign="right" width="100%">
 			<mx:HBox>
