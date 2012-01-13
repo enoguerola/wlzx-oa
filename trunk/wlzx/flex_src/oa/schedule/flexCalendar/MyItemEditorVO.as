@@ -28,7 +28,7 @@ public class MyItemEditorVO
 	public var schoolShare:Boolean;
 	public var departmentShare:Boolean;
 
-	public var repeatRuleId:int;
+/*	public var repeatRuleId:int;
 	public var interval:int = 1;
 
 	public var MO:Boolean;
@@ -40,7 +40,7 @@ public class MyItemEditorVO
 	public var SU:Boolean; 
 
 	public var endDateSpecified:Boolean;
-	public var endDate:Date;
+	public var endDate:Date;*/
 
 
 	public function MyItemEditorVO()

@@ -291,12 +291,12 @@
 					pop.item.departmentShare=CommonUtils.int2Boolean(model.departmentShare);
 					pop.item.schoolShare=CommonUtils.int2Boolean(model.schoolShare);
 					pop.item.emergence=model.emergence;
-					pop.item.interval=model.repeatInterval;
+					/* pop.item.interval=model.repeatInterval; */
 					pop.item.recurring=CommonUtils.int2Boolean(model.repeatStatus);
-					pop.item.repeatRuleId=model.repeatType;
+					/* pop.item.repeatRuleId=model.repeatType; */
 					pop.item.type=model.type;
-					pop.item.endDateSpecified=(model.repeatEndTime!=null?true:false);
-					pop.item.endDate=DateFormatter.parseDateString(model.repeatEndTime);
+				/* 	pop.item.endDateSpecified=(model.repeatEndTime!=null?true:false);
+					pop.item.endDate=DateFormatter.parseDateString(model.repeatEndTime); */
 					pop.item.emergence=pop.emergence.selectedItem.data;
 //					pop.item.MO=!model.repeatOnDays.split(";")[0] as Boolean;
 ////					Alert.show(pop.item.MO+"");
@@ -324,13 +324,13 @@
 						model.posterId=this.parentApplication.currentUser.id;
 						//					Alert.show(pop.item.endDate+"");
 						//					Alert.show(pop.item.endDateSpecified+"");
-						if(pop.item.endDateSpecified)
+						/* if(pop.item.endDateSpecified)
 							model.repeatEndTime=CommonUtils.formatDate(pop.item.endDate);
-						else model.repeatEndTime=null;
+						else model.repeatEndTime=null; */
 						model.repeatStatus=int(pop.item.recurring);
-						model.repeatInterval=pop.item.interval;
+						/* model.repeatInterval=pop.item.interval;
 						model.repeatOnDays=int(pop.item.MO)+";"+int(pop.item.TU)+";"+int(pop.item.WE)+";"+int(pop.item.TH)+";"+int(pop.item.FR)+";"+int(pop.item.SA)+";"+int(pop.item.SU);
-						model.repeatType=pop.item.repeatRuleId;
+						model.repeatType=pop.item.repeatRuleId; */
 //						model.submitStatus=0;
 						scheduleServiceRO.updateSchedule(model);
 						PopUpManager.removePopUp(pop);
@@ -365,7 +365,7 @@
 			import mx.core.FlexGlobals;
 			import mx.managers.PopUpManager;
 			import com.flexcalendar.components.calendar.core.dataModel.*;
-			public var pop:MyBaloonEditorPanel=null;
+			public var pop:MyBaloonEditorPanel=new MyBaloonEditorPanel();
 			private var converter:MyItemEditorVOConverter = new MyItemEditorVOConverter();
 			public function add(beginDate:Date=null,endDate:Date=null):void{
 				if(beginDate==null)beginDate=new Date();
@@ -400,12 +400,12 @@
 					model.posterId=this.parentApplication.currentUser.id;
 //					Alert.show(pop.item.endDate+"");
 //					Alert.show(pop.item.endDateSpecified+"");
-					if(pop.item.endDateSpecified)
-					model.repeatEndTime=CommonUtils.formatDate(pop.item.endDate);
-					model.repeatStatus=int(pop.item.recurring);
+					/* if(pop.item.endDateSpecified)
+					model.repeatEndTime=CommonUtils.formatDate(pop.item.endDate); */
+				/* 	model.repeatStatus=int(pop.item.recurring);
 					model.repeatInterval=pop.item.interval;
 					model.repeatOnDays=int(pop.item.MO)+";"+int(pop.item.TU)+";"+int(pop.item.WE)+";"+int(pop.item.TH)+";"+int(pop.item.FR)+";"+int(pop.item.SA)+";"+int(pop.item.SU);
-					model.repeatType=pop.item.repeatRuleId;
+					model.repeatType=pop.item.repeatRuleId; */
 					model.submitStatus=0;
 					scheduleServiceRO.addSchedule(model);
 					PopUpManager.removePopUp(pop);
@@ -501,38 +501,38 @@
 				</mx:HBox>
 			</mx:HBox>
 			<mx:VBox width="100%" height="100%"  paddingLeft="10" paddingRight="10" >
-				<mx:HBox height="30" width="100%" verticalAlign="middle" horizontalAlign="left" id="conditionBar">
-					<mx:Label text="起止日期：" width="70">
+					<mx:HBox height="30" width="100%" verticalAlign="middle" horizontalAlign="left" id="conditionBar">
+						<mx:Label text="起止日期：" width="70">
+							
+						</mx:Label>
+						<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" width="105" editable="false" id="fromDateChooser" selectedDate="{flexCalendar.visibleRange.start}"  formatString="YYYY-MM-DD"  >
+							
+						</mx:DateField>
+						<mx:Label text="--" width="30">
+							
+						</mx:Label>
+						<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" width="105" editable="false" id="toDateChooser" selectedDate="{flexCalendar.visibleRange.end}" formatString="YYYY-MM-DD" >
+							
+						</mx:DateField>
+						<mx:Label text="日程类型：" width="70" >
+							
+						</mx:Label>
+						<mx:ComboBox id="type" width="130" dataProvider="{scheduleType}" selectedIndex="0">
+							
+						</mx:ComboBox>
+						<mx:Label text="日程状态：" width="70">
+							
+						</mx:Label>
+						<mx:ComboBox width="100"   id="state" dataProvider="{scheduleState}"  selectedIndex="0">
+							
+						</mx:ComboBox>
+						<mx:Button id="searchButton" label="查询"   width="80"  click="search()"/>									
+	
+						<mx:RadioButtonGroup id="scheduleView"  itemClick="scheduleViewSwitch(event);" />
+						<mx:RadioButton label="列表视图"  groupName="scheduleView" id="listView" selected="true" value="list"/>
+						<mx:RadioButton label="日历视图" groupName="scheduleView" id="dateView" value="schedule"/>
 						
-					</mx:Label>
-					<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" width="105" editable="false" id="fromDateChooser" selectedDate="{flexCalendar.visibleRange.start}"  formatString="YYYY-MM-DD"  >
-						
-					</mx:DateField>
-					<mx:Label text="--" width="30">
-						
-					</mx:Label>
-					<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" width="105" editable="false" id="toDateChooser" selectedDate="{flexCalendar.visibleRange.end}" formatString="YYYY-MM-DD" >
-						
-					</mx:DateField>
-					<mx:Label text="日程类型：" width="70" >
-						
-					</mx:Label>
-					<mx:ComboBox id="type" width="130" dataProvider="{scheduleType}" selectedIndex="0">
-						
-					</mx:ComboBox>
-					<mx:Label text="日程状态：" width="70">
-						
-					</mx:Label>
-					<mx:ComboBox width="100"   id="state" dataProvider="{scheduleState}"  selectedIndex="0">
-						
-					</mx:ComboBox>
-					<mx:Button id="searchButton" label="查询"   width="80"  click="search()"/>									
-
-					<mx:RadioButtonGroup id="scheduleView"  itemClick="scheduleViewSwitch(event);" />
-					<mx:RadioButton label="列表视图"  groupName="scheduleView" id="listView" selected="true" value="list"/>
-					<mx:RadioButton label="日历视图" groupName="scheduleView" id="dateView" value="schedule"/>
-					
-				</mx:HBox>
+					</mx:HBox>
 				
 					<mx:VBox width="100%" height="100%" label="个人日程列表"  name="list" id="list">
 						
