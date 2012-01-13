@@ -63,10 +63,11 @@
 		 		<ul class="append">
 		 			<c:forEach items="${schedules}" var="schedule">       
 						<li>
-			    			<span title="主题：${schedule.title}内容:${schedule.content}">
+			    			<span title="主题：${schedule.title}
+			    			内容：${schedule.content}">
 			    			
 			    			<c:set var="oneSchedule" value="${schedule.title}[${fn:substring(schedule.beginTime,0,16)}--${fn:substring(schedule.endTime,0,16)}][${schedule.departmentName}]" scope="request"/>
-			    				${fn:substring(oneSchedule,0,67)}
+			    				${oneSchedule}
 			    			</span>
 			    		</li>
 					</c:forEach>

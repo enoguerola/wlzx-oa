@@ -18,17 +18,17 @@
 	</div>
 <!-- 	<div class="myPanelTitleLine"></div> -->
 	<div id="page">
-			<div style="width:100%;">
+			<div style="width:100%;padding:20px;">
 				<h2 style="margin:0;padding:0;width:100%;"><span style="color:red;font-weight:bold;" id="lbTitle">${notice.title}</span>
 				部门：<span>${notice.postDepartmentName}</span>&nbsp;&nbsp;浏览次数：<span>${notice.readNums}</span></h2>
 			</div>
-			<div style="width:100%;font-size:16px; ">
+			<div style="width:100%;font-size:16px;;padding:20px; ">
 				${notice.content}
           	</div>
-			<div style="width:100%;margin-bottom:20px;">
+			<div style="width:100%;margin-bottom:20px;;padding:20px;">
 				<img src="resources/front/attachment.jpg">附件区
 					<c:forEach items="${notice.attachments}" var="attachment">       
-						<div style="color:#A02A00;font-size:14px;">
+						<div style="color:#A02A00;font-size:14px;height:30px;margin-top:10px;margin-left:40px;">
 							<a href="uploads/oa/attachment/${attachment.path}" target="_blank"> ${attachment.name}</a>
 						</div>	    
 					</c:forEach>
