@@ -436,7 +436,7 @@
 	<mx:VBox borderVisible="true" width="100%" height="100%" borderStyle="solid">
 		<mx:VBox width="100%" height="100%" id="listPanel">
 			<mx:HBox verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12" >
-				<mx:HBox width="100%" height="25" paddingLeft="20"  horizontalGap="0" styleName="CustomHBoxStyle"   verticalAlign="middle">
+				<mx:HBox width="100%" height="30" paddingLeft="20"  horizontalGap="0" styleName="ToolBar"   verticalAlign="middle">
 					<mx:Label text="|"/>
 					<mx:LinkButton  label="新增" icon="@Embed(source='../WebContent/resources/common/tools/button_add_icon.png')" click="returnArea.height=30;addUpdateFlag.text='add';this.currentState='add';" />
 					<mx:Label text="|"/>
@@ -445,7 +445,7 @@
 			<mx:VBox width="100%"  verticalGap="10" verticalAlign="middle" horizontalAlign="center" >
 				<mx:VBox width="100%" height="100%"   horizontalGap="10" verticalAlign="middle"
 						 horizontalAlign="left" borderVisible="true" paddingTop="10" paddingBottom="0"   paddingLeft="10" paddingRight="10">
-					<component:Fieldset title="条件查询" >
+					<component:Fieldset title="条件查询"  width="100%">
 						<mx:HBox horizontalGap="10">
 							<mx:HBox verticalAlign="middle">
 								<mx:Label  text="发布日期"  width="70"  textAlign="right"/>
@@ -718,7 +718,7 @@
 		
 		<mx:VBox width="100%" height="100%" id="addPanel">
 			<mx:HBox verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12" id="returnArea">
-				<mx:HBox width="100%" height="25" paddingLeft="20"  horizontalGap="10" styleName="CustomHBoxStyle"   verticalAlign="middle">
+				<mx:HBox width="100%" height="25" paddingLeft="20"  horizontalGap="10" styleName="ToolBar"   verticalAlign="middle">
 					<mx:Label text="|"/>
 					<mx:LinkButton  label="返回" icon="@Embed(source='../WebContent/resources/common/tools/button_back_icon.png')" click="this.currentState='list';" />
 					<mx:Label text="|"/>

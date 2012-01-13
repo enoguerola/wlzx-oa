@@ -964,50 +964,53 @@
 			<mx:method name="getDepartmentRoles"  concurrency="multiple"  result="getDepartmentRolesResult(event);" />
 		</mx:RemoteObject>-->
 	</fx:Declarations>
-	<s:Panel width="100%" height="100%" title="教师信息编辑"  styleName="PanelStyle"   borderVisible="true" dropShadowVisible="false">
-
-		<s:VGroup width="100%" height="100%">
+<!--	<mx:Panel width="100%" height="100%" title="教师信息编辑"  styleName="PanelStyle"   borderVisible="true" dropShadowVisible="false">
+-->
+		<mx:VBox width="100%" height="100%" verticalScrollPolicy="auto"> 
 			<mx:TabNavigator id="systems"  width="100%" height="100%" tabStyleName="customTabStyles"   horizontalGap="1" borderVisible="false"  tabWidth="120" paddingTop="0">
-				<s:NavigatorContent label="基础信息" show="navigatorcontent2_showHandler(event)" >
+				<!--<s:NavigatorContent label="基础信息" show="navigatorcontent2_showHandler(event)" width="100%">
 					<s:layout>
 						<s:VerticalLayout/>
-					</s:layout>
+					</s:layout>-->
+					<mx:VBox label="基础信息" show="navigatorcontent2_showHandler(event)" width="100%" borderStyle="solid"  verticalScrollPolicy="off">
+						
+					
 					<mx:Form width="100%" height="100%" textAlign="left" labelWidth="70" id="teacherForm">
-						<s:Scroller width="100%" height="100%" verticalScrollPolicy="on">
-							<s:VGroup width="100%" height="100%" gap="10" >							
+						<!--<s:Scroller width="100%" height="100%" verticalScrollPolicy="on">-->
+							<mx:VBox width="100%" height="100%"  verticalGap="10" >							
 							
-								<component:Fieldset title="基本信息" width="95%" height="95%" >
+								<component:Fieldset title="基本信息" width="100%" height="100%" >
 									
-								<s:HGroup  width="100%" height="40%" >
-								<s:VGroup width="10%" height="100%" >
+								<mx:HBox  width="100%" height="40%" >
+								<mx:VBox width="10%" height="100%" >
 									<s:Label>
 										
 									</s:Label>
-								</s:VGroup>
-								<s:VGroup width="60%" height="100%">
-									<s:HGroup width="100%">
+								</mx:VBox>
+								<mx:VBox width="60%" height="100%">
+									<mx:HBox width="100%">
 										<mx:FormItem label="姓名" width="50%" required="true"><s:TextInput id="teacherName" width="100%"/></mx:FormItem>
 										<mx:FormItem label="性别" width="50%">
 											<s:DropDownList id="sex" selectedIndex="0" width="100%" dataProvider="{sexArr}" labelField="label"/> 
 										</mx:FormItem>
-									</s:HGroup>
-									<s:HGroup width="100%">
+									</mx:HBox>
+									<mx:HBox width="100%">
 										<mx:FormItem label="婚姻状况" width="50%">
 											<s:DropDownList id="marriage" width="100%" selectedIndex="0" dataProvider="{marriageArr}" labelField="label"/>
 										</mx:FormItem>
 										<mx:FormItem label="民族" width="50%"><mx:TextInput id="nation" width="100%" text="汉族" /></mx:FormItem>
-									</s:HGroup>
+									</mx:HBox>
 									<mx:FormItem label="身份证号" width="100%"><mx:TextInput id="idCode" width="100%"/></mx:FormItem>
 									<mx:FormItem label="邮箱" width="100%"><mx:TextInput id="mail" width="100%"/></mx:FormItem>
 									<mx:FormItem label="家庭地址" width="100%"><mx:TextInput id="teacherAddress" width="100%"/></mx:FormItem>
 									<mx:FormItem label="短号" width="100%" required="true"><mx:TextInput id="teacherno" width="100%"/></mx:FormItem>
-								</s:VGroup>
-								<s:VGroup width="30%">
-									<s:HGroup width="100%">
+								</mx:VBox>
+								<mx:VBox width="30%">
+									<mx:HBox width="100%">
 										<mx:FormItem label="出生年月" width="100%">
 											<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" id="birthday" width="100%"  formatString="YYYY-MM-DD"/>
 										</mx:FormItem>
-									</s:HGroup>
+									</mx:HBox>
 									<mx:FormItem label="政治面貌" width="100%">
 										<s:DropDownList 
 											id="politicStatus" 
@@ -1022,8 +1025,8 @@
 										<mx:TextInput id="homePhone" width="100%"/>
 									</mx:FormItem>
 									<mx:FormItem label="手机" width="100%"><mx:TextInput id="cellPhone" width="100%"/></mx:FormItem>
-								</s:VGroup>
-								<s:VGroup width="10%">
+								</mx:VBox>
+								<mx:VBox width="10%">
 									<mx:FormItem label="照片" width="100%" height="200%">
 										<mx:Image id="imgPhoto" visible="true" autoLoad="true" width="100" height="100" source="{imageSrc}" ioError="imageIOErrorHandler(event)"/>
 										<mx:VBox>
@@ -1035,52 +1038,52 @@
 															fontWeight="bold" color="red" labelPlacement="bottom" trackHeight="9" visible="false" />
 										</mx:VBox>
 									</mx:FormItem>
-								</s:VGroup>
-							</s:HGroup>
+								</mx:VBox>
+							</mx:HBox>
 								<mx:Spacer height="10" />
 								</component:Fieldset>
 									<!--*******************-->
-								<component:Fieldset title="教育背景" width="95%" height="95%" >
+								<component:Fieldset title="教育背景" width="100%" height="100%" >
 								
-								<s:HGroup  width="100%" height="20%">
-								<s:VGroup width="10%" height="100%">
+								<mx:HBox  width="100%" height="20%">
+								<mx:VBox width="10%" height="100%">
 									<s:Label>
 									</s:Label>
-								</s:VGroup>
-								<s:VGroup width="25%">
+								</mx:VBox>
+								<mx:VBox width="25%">
 									<mx:FormItem label="学历" width="100%">
 										<mx:ComboBox id="education" width="100%" selectedIndex="0" dataProvider="{educationArr}" labelField="label"/>
 									</mx:FormItem>
 									<mx:FormItem label="职称" width="100%">
 										<mx:TextInput id='professionalTitle' width="100%"/>
 									</mx:FormItem>
-								</s:VGroup>
-								<s:VGroup width="30%">
+								</mx:VBox>
+								<mx:VBox width="30%">
 									<mx:FormItem label="专业" width="100%">
 										<mx:TextInput id='profession' width="100%"/>
 									</mx:FormItem>
 									<mx:FormItem label="技能等级" width="100%">
 										<mx:TextInput id='skillLevel' width="100%"/>
 									</mx:FormItem>
-								</s:VGroup>
-								<s:VGroup width="45%">
+								</mx:VBox>
+								<mx:VBox width="45%">
 									<mx:FormItem label="毕业院校" width="100%" labelWidth="100">
 										<mx:TextInput id='school' width="90%"/>
 									</mx:FormItem>
 									<mx:FormItem label="技能鉴定时间" width="100%" labelWidth="100">
 										<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" id="skillLevelDate" width="90%" formatString="YYYY-MM-DD" />
 									</mx:FormItem>
-								</s:VGroup>
-							</s:HGroup>
+								</mx:VBox>
+							</mx:HBox>
 									<mx:Spacer height="10" />
 								</component:Fieldset>
 								<!--***********-->
-								<component:Fieldset title="温中聘请信息" width="95%" height="95%" >
-									<s:HGroup  width="100%" height="40%">
-								<s:VGroup width="10%" height="100%">
+								<component:Fieldset title="温中聘请信息" width="100%" height="100%" >
+									<mx:HBox  width="100%" height="40%">
+								<mx:VBox width="10%" height="100%">
 									<s:Label>
 									</s:Label>
-								</s:VGroup>								
+								</mx:VBox>								
 								
 									<mx:Grid width="100%">
 									
@@ -1157,39 +1160,38 @@
 							
 									
 										
-									</s:HGroup>
+									</mx:HBox>
 									<mx:Spacer height="10" />
 								</component:Fieldset>
 								
-								<component:Fieldset title="其他单位信息" width="95%" height="95%" >
-									<s:HGroup width="100%">
-										<staff:staffInputDepartmentPosition id="staffInputDepartmentPosition">
+								<component:Fieldset title="其他单位信息" width="100%"  paddingBottom="5" paddingTop="10">
+									
+										<staff:staffInputDepartmentPosition id="staffInputDepartmentPosition" width="100%">
 										</staff:staffInputDepartmentPosition>
-									</s:HGroup>
 								</component:Fieldset>
 
-							</s:VGroup>
-						</s:Scroller>
+							</mx:VBox>
+						<!--</s:Scroller>-->
 					</mx:Form>
-					
-				</s:NavigatorContent>
-				<s:NavigatorContent label="其他信息" show="navigatorcontent1_activateHandler(event)">
+					</mx:VBox>	
+				<!--</s:NavigatorContent>-->
+				<!--<s:NavigatorContent label="其他信息" show="navigatorcontent1_activateHandler(event)" width="100%">
 					<s:layout>
 						<s:VerticalLayout/>
-					</s:layout>
-					<s:Scroller width="100%" height="100%" verticalScrollPolicy="auto">
-						<s:VGroup width="100%">
-							<s:HGroup width="100%" height="50%">
+					</s:layout>-->
+					<!--<s:Scroller width="100%" height="100%" verticalScrollPolicy="auto">-->
+						<mx:VBox width="100%" label="其他信息" show="navigatorcontent1_activateHandler(event)" borderStyle="solid"  paddingTop="10"  paddingLeft="10" paddingRight="10"  paddingBottom="10" verticalScrollPolicy="off">
+							<mx:HBox width="100%" height="50%">
 								
-								<s:Panel width="100%" height="100%" title="工作经历" styleName="PanelStyle"  borderVisible="false" id="work_experience" dropShadowVisible="false">
-									<s:VGroup width="100%" height="100%" id="work_experience_listPanel" excludeFrom="add">
-										<s:HGroup verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12" height="30" paddingLeft="20">
+								<mx:Panel width="100%" height="100%" title="工作经历" styleName="PanelStyle"  borderVisible="false" id="work_experience" dropShadowVisible="false">
+									<mx:VBox width="100%" height="100%" id="work_experience_listPanel" excludeFrom="add">
+										<mx:HBox verticalAlign="middle" horizontalAlign="left" width="100%" fontSize="12" height="30" paddingLeft="20" styleName="ToolBar">
 											<s:Label text="|"/>
 											<mx:LinkButton  label="添加" icon="@Embed(source='../WebContent/resources/common/tools/button_add_icon.png')" click=" this.currentState='add'" />
 											<s:Label text="|"/>
-										</s:HGroup>
-										<s:VGroup width="100%" height="100%"  gap="10" verticalAlign="middle" horizontalAlign="center">
-											<s:HGroup width="100%" height="100%" paddingLeft="10" paddingRight="10" paddingBottom="10">
+										</mx:HBox>
+										<mx:VBox width="100%" height="100%"   verticalGap="10" verticalAlign="middle" horizontalAlign="center">
+											<mx:HBox width="100%" height="100%">
 													<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="true"   borderAlpha="0.2" verticalAlign="middle"   id="experiences_table" pagecount="10" >				
 														<component:mygridcolumns>
 															<mx:DataGridColumn textAlign="center" headerText="开始时间" dataField="startDate" width="100" labelFunction="formatDate"></mx:DataGridColumn>
@@ -1214,20 +1216,20 @@
 															</mx:DataGridColumn>
 														</component:mygridcolumns>
 													</component:WlzxPageDataGrid>
-											</s:HGroup>
-										</s:VGroup>
-									</s:VGroup>
-									<s:VGroup width="100%" height="100%" id="work_experience_addPanel" excludeFrom="list, relation_add, relation_list">
-										<s:HGroup verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12">
-											<s:HGroup width="100%" height="30" paddingLeft="20"  gap="0"  verticalAlign="middle">
+											</mx:HBox>
+										</mx:VBox>
+									</mx:VBox>
+									<mx:VBox width="100%" height="100%" id="work_experience_addPanel" excludeFrom="list, relation_add, relation_list">
+										<mx:HBox verticalAlign="middle" horizontalAlign="left" width="100%" fontSize="12">
+											<mx:HBox width="100%" height="30" paddingLeft="20"   horizontalGap="0"  verticalAlign="middle" styleName="ToolBar">
 												<s:Label text="|"/>
 												<mx:LinkButton  label="返回" icon="@Embed(source='../WebContent/resources/common/tools/button_back_icon.png')" click="currentState='list';" />
 												<s:Label text="|"/>
-											</s:HGroup>
-										</s:HGroup>
-										<s:VGroup width="100%" height="50%" gap="10" verticalAlign="middle" horizontalAlign="left" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
-											<s:VGroup width="100%" horizontalAlign="center" height="100%" verticalAlign="middle" paddingLeft="20" paddingRight="20">
-												<mx:Grid width="80%" height="100%" id="container"  verticalGap="10" horizontalGap="5"   borderStyle="solid" paddingBottom="10" paddingTop="10" paddingLeft="10" paddingRight="10">
+											</mx:HBox>
+										</mx:HBox>
+										<mx:VBox width="100%" height="50%"  verticalGap="10" verticalAlign="middle" horizontalAlign="left" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
+											<mx:VBox width="100%" horizontalAlign="center" height="100%" verticalAlign="middle">
+												<mx:Grid width="80%" height="100%" id="container"  verticalGap="10" horizontalGap="5"   borderStyle="solid">
 													<mx:GridRow width="100%" height="30"  >
 														<mx:GridItem    verticalAlign="middle" horizontalAlign="right">
 															<mx:Label  text="开始时间" width="60"  textAlign="right" />
@@ -1262,21 +1264,21 @@
 														</mx:GridItem>
 													</mx:GridRow>
 												</mx:Grid>
-											</s:VGroup>
-										</s:VGroup>
-									</s:VGroup>
-								</s:Panel>
-							</s:HGroup>
-							<s:HGroup width="100%" height="50%">
-								<s:Panel width="100%" height="100%" title="社会关系" styleName="PanelStyle"  borderVisible="false" id="relations" dropShadowVisible="false">
-									<s:VGroup width="100%" height="100%" id="relation_listPanel" excludeFrom="relation_add">
-										<s:HGroup verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12" height="30" paddingLeft="20">
+											</mx:VBox>
+										</mx:VBox>
+									</mx:VBox>
+								</mx:Panel>
+							</mx:HBox>
+							<mx:HBox width="100%" height="50%">
+								<mx:Panel width="100%" height="100%" title="社会关系" styleName="PanelStyle"  borderVisible="false" id="relations" dropShadowVisible="false">
+									<mx:VBox width="100%" height="100%" id="relation_listPanel" excludeFrom="relation_add">
+										<mx:HBox verticalAlign="middle" horizontalAlign="left" width="100%" fontSize="12" height="30" paddingLeft="20" styleName="ToolBar">
 											<s:Label text="|"/>
 											<mx:LinkButton  label="添加" icon="@Embed(source='../WebContent/resources/common/tools/button_add_icon.png')" click=" this.currentState='relation_add'" />
 											<s:Label text="|"/>
-										</s:HGroup>
-										<s:VGroup width="100%" height="100%"  gap="10" verticalAlign="middle" horizontalAlign="center">
-											<s:HGroup width="100%" height="100%" paddingLeft="10" paddingRight="10" paddingBottom="10">
+										</mx:HBox>
+										<mx:VBox width="100%" height="100%"   verticalGap="10" verticalAlign="middle" horizontalAlign="center">
+											<mx:HBox width="100%" height="100%">
 													<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="true"   borderAlpha="0.2" verticalAlign="middle"   id="relations_table" pagecount="10"  >				
 														<component:mygridcolumns>
 															
@@ -1300,19 +1302,19 @@
 															</mx:DataGridColumn>
 														</component:mygridcolumns>
 													</component:WlzxPageDataGrid>
-											</s:HGroup>
-										</s:VGroup>
-									</s:VGroup>
-									<s:VGroup width="100%" height="100%" id="relation_addPanel" excludeFrom="relation_list, list, add">
-										<s:HGroup verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12">
-											<s:HGroup width="100%" height="30" paddingLeft="20"  gap="0"  verticalAlign="middle">
+											</mx:HBox>
+										</mx:VBox>
+									</mx:VBox>
+									<mx:VBox width="100%" height="100%" id="relation_addPanel" excludeFrom="relation_list, list, add">
+										<mx:HBox verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12">
+											<mx:HBox width="100%" height="30" paddingLeft="20"  horizontalAlign="left"  horizontalGap="0"  verticalAlign="middle" styleName="ToolBar">
 												<s:Label text="|"/>
 												<mx:LinkButton  label="返回" icon="@Embed(source='../WebContent/resources/common/tools/button_back_icon.png')" click="currentState='relation_list';" />
 												<s:Label text="|"/>
-											</s:HGroup>
-										</s:HGroup>
-										<s:VGroup width="100%" height="50%" gap="10" verticalAlign="middle" horizontalAlign="left" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
-											<s:VGroup width="100%" horizontalAlign="center" height="100%" verticalAlign="middle" paddingLeft="20" paddingRight="20">
+											</mx:HBox>
+										</mx:HBox>
+										<mx:VBox width="100%" height="50%"  verticalGap="10" verticalAlign="middle" horizontalAlign="left" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
+											<mx:VBox width="100%" horizontalAlign="center" height="100%" verticalAlign="middle">
 												<mx:Grid width="80%" height="100%" id="relation_container"  verticalGap="10" horizontalGap="5"   borderStyle="solid" paddingBottom="10" paddingTop="10" paddingLeft="10" paddingRight="10">
 													
 													<mx:GridRow width="100%" height="30"  >
@@ -1347,16 +1349,16 @@
 														</mx:GridItem>
 													</mx:GridRow>
 												</mx:Grid>													
-											</s:VGroup>
-										</s:VGroup>
-									</s:VGroup>
-								</s:Panel>
-							</s:HGroup>
-						</s:VGroup>
-					</s:Scroller>
+											</mx:VBox>
+										</mx:VBox>
+									</mx:VBox>
+								</mx:Panel>
+							</mx:HBox>
+						</mx:VBox>
+					<!--</s:Scroller>-->
 					
-				</s:NavigatorContent>
+				<!--</s:NavigatorContent>-->
 			</mx:TabNavigator>
-		</s:VGroup>
-		</s:Panel>
+		</mx:VBox>
+		<!--</mx:Panel>-->
 </mx:Module>

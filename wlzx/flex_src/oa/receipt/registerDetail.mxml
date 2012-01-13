@@ -445,7 +445,7 @@
 		</mx:Transition>
 	</mx:transitions>
 	<mx:VBox width="100%" height="100%"   verticalGap="0" verticalAlign="middle">
-		<mx:HBox width="100%" height="25" paddingLeft="20"  horizontalGap="10" styleName="CustomHBoxStyle"   verticalAlign="middle">
+		<mx:HBox width="100%" height="25" paddingLeft="20"  horizontalGap="10" styleName="ToolBar"   verticalAlign="middle">
 			<mx:Label text="|"/>
 			<mx:LinkButton  id="button_save" label="保存" icon="@Embed(source='../WebContent/resources/common/tools/button_draftSave_icon.png')" click="save(1)"/>
 			<mx:Label text="|"/>

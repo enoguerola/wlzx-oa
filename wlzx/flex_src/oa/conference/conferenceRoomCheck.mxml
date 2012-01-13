@@ -358,9 +358,9 @@
 			
 		]]> 		
 	</mx:Script> 
-	<mx:VBox borderVisible="true" width="100%" height="100%" borderStyle="solid">
-		<mx:VBox width="100%"  height="100%"   verticalGap="0" verticalAlign="top" horizontalAlign="left" borderVisible="true" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
-			<mx:VBox width="100%" horizontalAlign="center" verticalGap="0" height="60">
+	<mx:VBox width="100%" height="100%" borderStyle="solid" verticalAlign="top" horizontalAlign="left" borderVisible="true" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
+<!--		<mx:VBox width="100%"  height="100%"   verticalGap="0" verticalAlign="top" horizontalAlign="left" borderVisible="true" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">
+-->			<mx:VBox width="100%" horizontalAlign="center" verticalGap="0" height="60">
 				<mx:HBox width="100%" horizontalAlign="center">
 					<mx:Label  text="会议室安排统计表"    width="100%"  letterSpacing="5" textAlign="center" fontSize="14"  fontWeight="bold" height="30"  id="search_account_name"/>
 				</mx:HBox>
@@ -373,8 +373,8 @@
 				</mx:HBox>
 				
 			</mx:VBox>
-			<mx:VBox width="100%" horizontalAlign="center" verticalGap="0" verticalAlign="middle">
-				<mx:Grid width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" autoLayout="true" verticalGap="-1" horizontalGap="-1" id="table">
+			<mx:VBox width="100%"  height="100%" horizontalAlign="center" verticalGap="0" verticalAlign="top" backgroundColor="white">
+				<mx:Grid width="100%" height="100%" horizontalAlign="center" verticalAlign="top" autoLayout="true" verticalGap="-1" horizontalGap="-1" id="table">
 					<!--	
 					<mx:GridRow  autoLayout="true" horizontalAlign="center" verticalAlign="middle" width="100%" >
 						<mx:GridItem  borderStyle="solid" verticalAlign="middle">
@@ -409,6 +409,6 @@
 			</mx:VBox>
 
 			
-		</mx:VBox>
-	</mx:VBox>
+<!--		</mx:VBox>
+-->	</mx:VBox>
 </mx:Module>

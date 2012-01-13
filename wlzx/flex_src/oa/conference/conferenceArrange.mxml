@@ -264,16 +264,16 @@
 	<mx:Component id="searchAccountDropDownItemRenderer">
 		<render:AdvancedItemRenderer selectedItems="{ outerDocument.search_account.selectedItems }" />
 	</mx:Component>
-	<mx:VBox borderVisible="true" width="100%" height="100%" borderStyle="solid">
+	<mx:VBox borderVisible="true" width="100%" height="100%" borderStyle="solid"  paddingLeft="10" paddingRight="10" paddingTop="10" paddingBottom="10">
 		<mx:VBox width="100%" height="100%" id="listPanel">
-			<mx:HBox verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12" >
-				<mx:HBox width="100%" height="25" paddingLeft="20"  horizontalGap="10" styleName="CustomHBoxStyle"   verticalAlign="middle">
+			<!--<mx:HBox verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12" >
+				<mx:HBox width="100%" height="25" paddingLeft="20"  horizontalGap="10" styleName="ToolBar"   verticalAlign="middle">
 					
 				</mx:HBox>
-			</mx:HBox>
-			<mx:VBox width="100%" height="100"  verticalGap="10" verticalAlign="middle" horizontalAlign="center" >
-				<mx:VBox width="100%" height="100%"   horizontalGap="10" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="0" paddingBottom="0"   paddingLeft="10" paddingRight="10">
-				<component:Fieldset title="条件查询" >
+			</mx:HBox>-->
+		<!--	<mx:VBox width="100%" height="100"  verticalGap="10" verticalAlign="middle" horizontalAlign="center" >-->
+<!--				<mx:VBox width="100%" height="100%"   horizontalGap="10" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="0" paddingBottom="0"   paddingLeft="10" paddingRight="10">
+-->				<component:Fieldset title="条件查询" width="100%" height="100">
 					
 					<mx:HBox>
 						<mx:HBox verticalAlign="middle">
@@ -315,10 +315,10 @@
 					</mx:HBox>
 				
 				</component:Fieldset>
-				</mx:VBox>
-			</mx:VBox>
+				<!--</mx:VBox>-->
+			<!--</mx:VBox>-->
 			<mx:VBox width="100%" height="100%"  verticalAlign="middle" horizontalAlign="center" >					
-				<mx:HBox  width="100%" height="100%" paddingLeft="10" paddingRight="10">
+				<mx:HBox  width="100%" height="100%" >
 					<component:WlzxPageDataGrid width="100%" height="100%"   borderVisible="true"  autoLayout="true"  borderAlpha="0.2" verticalAlign="middle"   id="conferenceTable" pagecount="10"  >				
 						<component:mygridcolumns>
 							<mx:DataGridColumn textAlign="center" headerText="会议时间"  width="100">
@@ -468,7 +468,7 @@
 		
 		<mx:VBox width="100%" height="100%" id="addPanel">
 			<mx:HBox verticalAlign="middle" horizontalAlign="right" width="100%" fontSize="12" id="returnArea">
-				<mx:HBox width="100%" height="25" paddingLeft="20"  horizontalGap="10" styleName="CustomHBoxStyle"   verticalAlign="middle">
+				<mx:HBox width="100%" height="25" paddingLeft="20"  horizontalGap="10" styleName="ToolBar"   verticalAlign="middle">
 					<mx:Label text="|"/>
 					<mx:LinkButton  label="返回" icon="@Embed(source='../WebContent/resources/common/tools/button_back_icon.png')" click="this.currentState='list';" />
 					<mx:Label text="|"/>
