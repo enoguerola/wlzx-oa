@@ -20,7 +20,7 @@
 	<div id="page">
 			<div style="width:100%;padding:20px;">
 				<h2 style="margin:0;padding:0;width:100%;"><span style="color:red;font-weight:bold;" id="lbTitle">${notice.title}</span>
-				部门：<span>${notice.postDepartmentName}</span>&nbsp;&nbsp;浏览次数：<span>${notice.readNums}</span></h2>
+				部门：<span>${notice.postDepartmentName}</span>&nbsp;&nbsp;发布时间：<span>${notice.postTime}</span></h2>
 			</div>
 			<div style="width:100%;font-size:16px;;padding:20px; ">
 				${notice.content}

@@ -20,7 +20,7 @@
 	<div id="page" >
 			<div style="width:100%;padding:20px;">
 				<h2 style="margin:0;padding:0;width:100%;text-align:center;"><span style="color:red;font-weight:bold;width:100%;" id="lbTitle">${news.title}</span></h2>
-				<h3 style="margin:0;padding:0;width:100%;text-align:center;padding-top:10px;">部门：<span>${news.author}</span>&nbsp;&nbsp;浏览次数：<span>${news.readNums}</span></h3>
+				<h3 style="margin:0;padding:0;width:100%;text-align:center;padding-top:10px;">作者：<span>${news.author}</span>&nbsp;&nbsp;发布时间：<span>${news.postTime}</span></h3>
 			</div>
 			<div style="font-size:14px;padding:10px;width:100%;">
 				${news.content}
