@@ -14,7 +14,7 @@
 <script>
 	function tab_switch_page(page){
 		
-		document.getElementById("startIndex").value=(page-1)*15;
+		document.getElementById("startIndex").value=(page-1)*20;
 		document.forms[0].submit(); 
 	}
 
@@ -33,8 +33,8 @@
 							<label>公告优先级</label>
 							<select style="width:120px;margin-top:5px;" id="emergence" name="emergence">
 								<option value="">全部</option>
-								<option value="1">--紧急--</option>
-								<option value="0">--普通--</option>
+								<option value="1" <c:if test="${emergence==1}">selected</c:if>>--紧急--</option>
+								<option value="0" <c:if test="${emergence==0}">selected</c:if>>--普通--</option>
 							
 							</select>
 						</li>
@@ -44,7 +44,7 @@
 								<option value="">全部</option>
 								<c:if test="${noticeTypes!=null}">
 									<c:forEach items="${noticeTypes}" var="noticeType">
-										<option value="${noticeType.value}">${noticeType.name}</option>
+										<option value="${noticeType.value}" <c:if test="${type==noticeType.value}">selected</c:if>>${noticeType.name}</option>
 									</c:forEach>
 								</c:if>    
 								<option value="其他">其他</option>
@@ -53,11 +53,11 @@
 						</li>
 						<li style="margin:10px;">
 							<label>发布部门</label>
-							<select style="width:120px;margin-top:5px;" id="departmentIds" id="departmentIds">
+							<select style="width:120px;margin-top:5px;" id="departmentIds" name="departmentIds">
 								<option value="">全部</option>
 								<c:if test="${departments!=null}">
 									<c:forEach items="${departments}" var="department">
-										<option value="${department.id}">${department.name}</option>
+										<option value="${department.id}" <c:if test="${departmentIds==department.id}">selected</c:if>>${department.name}</option>
 									</c:forEach>
 								</c:if>    
 							</select>
@@ -68,7 +68,7 @@
 <!-- 						</li> -->
 						<li style="margin:10px;">
 							<label>关 键 字：</label>
-							<input type="text" style="width:120px;margin-top:5px;" id="title" name="title">
+							<input type="text" style="width:120px;margin-top:5px;" id="title" name="title" value="${title}">
 						</li>
 					</ul>
 					<input type="hidden" value="0" id="startIndex" name="startIndex"/>

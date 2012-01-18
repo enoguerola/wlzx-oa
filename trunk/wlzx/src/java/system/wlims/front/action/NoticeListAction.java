@@ -36,14 +36,14 @@ public class NoticeListAction  {
 			throws ServletException, IOException {
 		String type = (String)request.getParameter("type");
 		String emergence = (String)request.getParameter("emergence");
-		String deparmentIds = (String)request.getParameter("deparmentIds");
+		String departmentIds = (String)request.getParameter("departmentIds");
 		String title = (String)request.getParameter("title");
 		String beginDate = (String)request.getParameter("beginDate");
 		String endDate = (String)request.getParameter("endDate");
-		int pageSize = 15;
+		int pageSize = 20;
 		int startIndex = StringUtils.isEmpty(request.getParameter("startIndex"))?0:Integer.parseInt(request.getParameter("startIndex"));
 		 try {
-			 PaginationSupport<NoticeModel> noticePages=noticeServiceDest.getFrontPageSchoolNoticesByConditions(type, emergence, deparmentIds, title, beginDate, endDate, pageSize, startIndex);
+			 PaginationSupport<NoticeModel> noticePages=noticeServiceDest.getFrontPageSchoolNoticesByConditions(type, emergence, departmentIds, title, beginDate, endDate, pageSize, startIndex);
 			if(noticePages!=null&&noticePages.getItemCount()>0){
 				for(NoticeModel notice:noticePages.getItems()){
 					DepartmentModel department=departmentDAO.get(notice.getPostDepartmentId());
@@ -56,6 +56,12 @@ public class NoticeListAction  {
 		   
 		   request.setAttribute("departments", departmentDAO.getAllDepartments());
 		   request.setAttribute("noticePages", noticePages);
+		   
+		   
+		   request.setAttribute("type", type);
+		   request.setAttribute("emergence", emergence);
+		   request.setAttribute("departmentIds", departmentIds);
+		   request.setAttribute("title", title);
 			
 		} catch (ServiceException e) {
 			// TODO Auto-generated catch block
