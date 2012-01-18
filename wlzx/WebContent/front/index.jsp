@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8"%>
+<%@ page contentType="text/html;charset=utf-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix='fmt'%>
@@ -7,6 +7,49 @@
 <link rel="stylesheet" href="front/index.less" type="text/less" media="screen" />
 <script src="front/js/less-1.1.3.min.js" type="text/javascript"></script>
 <!--[if lt IE 9]><script type="text/javascript" src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+<script type='text/javascript' src='front/jquery/jquery-1.5.2.min.js'></script>
+<script type='text/javascript'>
+	$(document).ready(function() {
+		$.ajax({
+
+
+			url: "newsJSON.action",
+			dataType: "json",//返回json格式的数据
+			beforeSend: function(XMLHttpRequest){
+				$("#ajaxResult").html("<img src='resources/front/loading.gif'/>");
+			//ShowLoading();
+			},
+			success: function(data, textStatus){
+				var last=JSON.stringify(data); 
+				//alert(prodStr);
+				var json=JSON.parse(last);
+				var str="";
+				$("#ajaxResult").html("aaa");
+				 for(var i=0; i<data.length&&i<5; i++)
+				  {
+					 str+="<li><a target='_blank' title='"+data[i].title+data[i].postTime+"' href='newsDetail.action?id="+data[i].id+"'>"+data[i].title+data[i].postTime+"</a></li>";
+					
+				  }
+// 				alert(str);
+				$("#ajaxResult").html(str);
+
+			},
+
+			complete: function(XMLHttpRequest, textStatus){
+// 				$("#ajaxResult").html("");
+
+			//HideLoading();
+			},
+			error: function(){
+				$("#ajaxResult").html("新闻来源温岭门户数据读取异常，请检查网络或门户所在服务器");
+			//请求出错处理
+			}
+		});
+		
+		
+	});
+	
+</script>
 <html>
 <head>
 <title>温岭中学数字化校园</title>
@@ -50,10 +93,12 @@
 		 </div>
 		  
 		  <div>
-		 	<div class="myPanelTitle"><a target="_self" class="title_hover" title="校园新闻" href="#">校园新闻</a></div>
+		 	<div class="myPanelTitle"><a target="_self" class="title_hover" title="校园动态" href="newsList.action">校园动态</a></div>
 		 	<div class="myPanelTitleLine"></div>
-		 	<div class="myPanelContent">
-		 	
+		 	<div>
+			 	<ul class="append" id="ajaxResult">
+			 	
+			 	</ul>
 		 	</div>
 		 </div>
 		 <div>

@@ -20,6 +20,8 @@
 	 <http pattern="/noticeList.action" security="none" />  
 	 <http pattern="/scheduleList.action" security="none" /> 
 	 <http pattern="/noticeDetail.action" security="none" />  
+	 <http pattern="/newsList.action" security="none" />  
+	 <http pattern="/newsDetail.action" security="none" /> 
     <http pattern="/login.html" security="none" />   
     <http use-expressions="false" entry-point-ref="authenticationProcessingFilterEntryPoint">
 
