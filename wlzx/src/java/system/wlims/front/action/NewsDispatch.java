@@ -112,20 +112,21 @@ public class NewsDispatch  {
 	public static String replaceAddress(String content){
 		String replaceStr="UploadFiles";
 		String afterReplaceStr=WebRoot+"Article/"+replaceStr;
-		return content.replaceAll(replaceStr, afterReplaceStr);
+		String s=content.replace(replaceStr, afterReplaceStr);
+		return s.replace("onmousewheel=\"return bbimg(this)\"", "").replace("onload=\"resizepic(this)\"", "");
 	}
 	public static String replaceSpecialStr(String content){
 		String replaceStr="才�";
 		String afterReplaceStr="才锜";
-		return content.replaceAll(replaceStr, afterReplaceStr);
+		return content.replace(replaceStr, afterReplaceStr);
 		
 	}
 	
 	public static void main(String[] args) throws Exception {
-		getNews("1046");
+		//getNews("1046");
 		//getNewsList("2");
-		//String temp="<img onmousewheel='return bbimg(this)' src='UploadFiles/201201/20120117165034867.jpg' onload='resizepic(this)' border='0' style='zoom: 80%; '>";
-		//System.out.println(replaceAddress(temp));
+//		String temp="<img onmousewheel='return bbimg(this)' src='UploadFiles/201201/20120117165034867.jpg' onload='resizepic(this)' border='0' style='zoom: 80%; '>";
+//		System.out.println(replaceAddress(temp));
 	}
 
 
