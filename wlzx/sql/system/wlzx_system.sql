@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2011 年 12 月 08 日 17:45
+-- 生成日期: 2012 年 02 月 03 日 13:13
 -- 服务器版本: 5.0.91
 -- PHP 版本: 5.2.13
 
@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_data_access_mode` (
   `empty_flag` tinyint(1) NOT NULL default '1',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `symbol` (`symbol`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=97 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=103 ;
 
 --
 -- 转存表中的数据 `wlzx_system_data_access_mode`
@@ -146,7 +146,13 @@ INSERT INTO `wlzx_system_data_access_mode` (`id`, `name`, `symbol`, `sequence`, 
 (93, '本处室调休数据', 'moveRestDay_approve_main@defaultVisit@@notSelfOfficeFilter@', 0, NULL, '', '2011-08-25 00:00:00', '2011-08-25 23:13:51', 1),
 (94, '全部数据', 'adjust_class_apply_arrange_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2011-09-04 00:00:00', '2011-09-04 14:46:35', 1),
 (95, '全部数据', 'takeLeaveOfficeTeachingApprove@noFilter@', 0, NULL, NULL, '2011-09-29 00:00:00', '2011-09-29 23:15:54', 1),
-(96, '全部数据', 'takeLeaveVicePrincipalTeachingApprove@noFilter@', 0, NULL, NULL, '2011-09-29 00:00:00', '2011-09-29 23:17:12', 1);
+(96, '全部数据', 'takeLeaveVicePrincipalTeachingApprove@noFilter@', 0, NULL, NULL, '2011-09-29 00:00:00', '2011-09-29 23:17:12', 1),
+(97, '全部数据', 'logistics_purchase_apply_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2012-02-03 00:00:00', '2012-02-03 12:07:35', 1),
+(98, '全部数据', 'logistics_purchase_approve_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2012-02-03 00:00:00', '2012-02-03 12:08:47', 1),
+(99, '全部数据', 'logistics_purchase_manage_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2012-02-03 00:00:00', '2012-02-03 12:09:36', 1),
+(100, '全部数据', 'logistics_repair_apply_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2012-02-03 00:00:00', '2012-02-03 12:10:23', 1),
+(101, '全部数据', 'logistics_repair_techrelative_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2012-02-03 00:00:00', '2012-02-03 12:11:23', 1),
+(102, '全部数据', 'logistics_repair_nottechrelative_main@defaultVisit@@noFilter@', 0, NULL, NULL, '2012-02-03 00:00:00', '2012-02-03 12:12:23', 1);
 
 -- --------------------------------------------------------
 
@@ -277,7 +283,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_department_leadship` (
   `leader_id` bigint(20) NOT NULL,
   `subordinate_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=48 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=47 ;
 
 --
 -- 转存表中的数据 `wlzx_system_department_leadship`
@@ -1035,7 +1041,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_menu` (
   `modified_date` timestamp NOT NULL default '0000-00-00 00:00:00' on update CURRENT_TIMESTAMP,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `symbol` (`symbol`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=87 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=97 ;
 
 --
 -- 转存表中的数据 `wlzx_system_menu`
@@ -1108,7 +1114,16 @@ INSERT INTO `wlzx_system_menu` (`id`, `name`, `symbol`, `sequence`, `detail`, `m
 (83, '发文传阅', 'documentCirculation ', 4, '', '', '2011-07-22 00:00:00', '2011-07-22 16:35:03'),
 (84, '发文管理', 'documentManage', 5, '', '', '2011-07-22 00:00:00', '2011-07-22 16:35:41'),
 (85, '公文管理', 'oa_document_manager', 2, NULL, NULL, '2011-07-28 13:56:29', '2011-07-28 13:57:18'),
-(86, '调课安排', 'adjust_class_apply_arrange', 1, '', '', '2011-09-04 00:00:00', '2011-09-04 13:26:57');
+(86, '调课安排', 'adjust_class_apply_arrange', 1, '', '', '2011-09-04 00:00:00', '2011-09-04 13:26:57'),
+(88, '后勤管理', 'logistics', 2, '', 'resources/oa/menuIcon/oa_logistics.png', '2012-02-03 00:00:00', '2012-02-03 13:10:31'),
+(89, '采购管理', 'logistics_purchase', 0, '', '', '2012-02-03 00:00:00', '2012-02-03 11:57:31'),
+(90, '维修管理', 'logistics_repair', 1, '', '', '2012-02-03 00:00:00', '2012-02-03 11:58:27'),
+(91, '采购申请', 'logistics_purchase_apply', 0, '', '', '2012-02-03 00:00:00', '2012-02-03 12:00:29'),
+(92, '采购审批', 'logistics_purchase_approve', 1, '', '', '2012-02-03 00:00:00', '2012-02-03 12:00:57'),
+(93, '采购管理', 'logistics_purchase_manage', 2, '', '', '2012-02-03 00:00:00', '2012-02-03 12:01:20'),
+(94, '维修申请', 'logistics_repair_apply', 0, '', '', '2012-02-03 00:00:00', '2012-02-03 12:02:18'),
+(95, '电教维修处理', 'logistics_repair_techrelative', 1, '', '', '2012-02-03 00:00:00', '2012-02-03 12:03:31'),
+(96, '非电教维修处理', 'logistics_repair_nottechrelative', 2, '', '', '2012-02-03 00:00:00', '2012-02-03 12:04:00');
 
 -- --------------------------------------------------------
 
@@ -1121,7 +1136,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_menu_module_relationship` (
   `menu_id` bigint(20) NOT NULL,
   `module_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=66 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=72 ;
 
 --
 -- 转存表中的数据 `wlzx_system_menu_module_relationship`
@@ -1175,7 +1190,13 @@ INSERT INTO `wlzx_system_menu_module_relationship` (`id`, `menu_id`, `module_id`
 (62, 82, 66),
 (63, 83, 67),
 (64, 84, 68),
-(65, 86, 69);
+(65, 86, 69),
+(66, 91, 70),
+(67, 92, 71),
+(68, 93, 72),
+(69, 94, 73),
+(70, 95, 74),
+(71, 96, 75);
 
 -- --------------------------------------------------------
 
@@ -1188,7 +1209,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_menu_relationship` (
   `system_id` bigint(20) NOT NULL,
   `menu_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=11 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=12 ;
 
 --
 -- 转存表中的数据 `wlzx_system_menu_relationship`
@@ -1200,7 +1221,8 @@ INSERT INTO `wlzx_system_menu_relationship` (`id`, `system_id`, `menu_id`) VALUE
 (7, 3, 17),
 (8, 3, 18),
 (9, 3, 31),
-(10, 3, 50);
+(10, 3, 50),
+(11, 3, 88);
 
 -- --------------------------------------------------------
 
@@ -1213,7 +1235,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_menu_treeship` (
   `parent_id` bigint(20) NOT NULL,
   `child_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=84 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=93 ;
 
 --
 -- 转存表中的数据 `wlzx_system_menu_treeship`
@@ -1280,7 +1302,15 @@ INSERT INTO `wlzx_system_menu_treeship` (`id`, `parent_id`, `child_id`) VALUES
 (80, 10, 85),
 (81, 44, 86),
 (82, 9, 47),
-(83, 9, 72);
+(83, 9, 72),
+(85, 88, 89),
+(86, 88, 90),
+(87, 89, 91),
+(88, 89, 92),
+(89, 89, 93),
+(90, 90, 94),
+(91, 90, 95),
+(92, 90, 96);
 
 -- --------------------------------------------------------
 
@@ -1481,7 +1511,7 @@ INSERT INTO `wlzx_system_message` (`id`, `from_id`, `to_ids`, `type`, `content`,
 (170, 0, '1', 0, '您的申请编号为20111206210433加班申请已通过', '2011-12-06 21:04:49', '1;', '2011-12-06 21:05:18;', '0', '0;', NULL, NULL),
 (171, 0, '1', 0, '您的申请编号为20111206212854加班申请已通过', '2011-12-06 21:29:14', '1;', '2011-12-06 21:29:24;', '0', '0;', NULL, NULL),
 (172, 0, '718', 0, 'null的申请编号为20111206212854加班申请已通过', '2011-12-06 21:29:17', '1;', '2011-12-06 21:52:55;', '0', '0;', 'OverWorkForm', 3),
-(173, 718, '1;', 1, '111111', '2011-12-08 17:43:34', '0;', 'NULL;', '0', '0;', NULL, NULL);
+(173, 718, '1;', 1, '111111', '2011-12-08 17:43:34', '1;', '2011-12-08 18:04:42;', '0', '0;', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1501,7 +1531,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_module` (
   `parms` varchar(300) default NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `symbol` (`symbol`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=70 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=76 ;
 
 --
 -- 转存表中的数据 `wlzx_system_module`
@@ -1555,7 +1585,13 @@ INSERT INTO `wlzx_system_module` (`id`, `name`, `symbol`, `sequence`, `detail`, 
 (66, '发文签发主模块', 'documentIssue_main', 0, '', '2011-07-22 00:00:00', '2011-07-22 16:42:27', 'oa/sendingFiles/documentIssue.swf', ''),
 (67, '发文传阅主模块', 'documentCirculate_main', 0, '', '2011-07-22 00:00:00', '2011-07-22 16:43:19', 'oa/sendingFiles/documentCirculate.swf', ''),
 (68, '发文管理主模块', 'documentManage_main', 0, '', '2011-07-22 00:00:00', '2011-07-22 16:43:57', 'oa/sendingFiles/documentManage.swf', ''),
-(69, '调课安排主模块', 'adjust_class_apply_arrange_main', 0, '', '2011-09-04 00:00:00', '2011-09-04 14:46:35', 'oa/course/adjust/adjustArrange.swf', '');
+(69, '调课安排主模块', 'adjust_class_apply_arrange_main', 0, '', '2011-09-04 00:00:00', '2011-09-04 14:46:35', 'oa/course/adjust/adjustArrange.swf', ''),
+(70, '采购申请主模块', 'logistics_purchase_apply_main', 0, '', '2012-02-03 00:00:00', '2012-02-03 12:07:35', 'oa/logistics/purchaseApply.swf', ''),
+(71, '采购审批主模块', 'logistics_purchase_approve_main', 0, '', '2012-02-03 00:00:00', '2012-02-03 12:08:47', 'oa/logistics/purchaseApprove.swf', ''),
+(72, '采购管理主模块', 'logistics_purchase_manage_main', 0, '', '2012-02-03 00:00:00', '2012-02-03 12:09:36', 'oa/logistics/purchaseManage.swf', ''),
+(73, '维修申请主模块', 'logistics_repair_apply_main', 0, '', '2012-02-03 00:00:00', '2012-02-03 12:10:23', 'oa/logistics/repairApply.swf', ''),
+(74, '电教维修处理', 'logistics_repair_techrelative_main', 0, '', '2012-02-03 00:00:00', '2012-02-03 12:11:23', 'oa/logistics/repairTechRelative.swf', ''),
+(75, '非电教维修处理', 'logistics_repair_nottechrelative_main', 2, '', '2012-02-03 00:00:00', '2012-02-03 12:12:23', 'oa/logistics/repairNotTechRelative.swf', '');
 
 -- --------------------------------------------------------
 
@@ -1568,7 +1604,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_module_operation_relationship` (
   `module_id` bigint(20) NOT NULL,
   `operation_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=94 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=100 ;
 
 --
 -- 转存表中的数据 `wlzx_system_module_operation_relationship`
@@ -1640,7 +1676,13 @@ INSERT INTO `wlzx_system_module_operation_relationship` (`id`, `module_id`, `ope
 (90, 11, 84),
 (91, 69, 85),
 (92, 41, 86),
-(93, 41, 87);
+(93, 41, 87),
+(94, 70, 88),
+(95, 71, 89),
+(96, 72, 90),
+(97, 73, 91),
+(98, 74, 92),
+(99, 75, 93);
 
 -- --------------------------------------------------------
 
@@ -1678,7 +1720,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_operation` (
   `modified_date` timestamp NOT NULL default '0000-00-00 00:00:00' on update CURRENT_TIMESTAMP,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `symbol` (`symbol`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=88 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=94 ;
 
 --
 -- 转存表中的数据 `wlzx_system_operation`
@@ -1751,7 +1793,13 @@ INSERT INTO `wlzx_system_operation` (`id`, `name`, `symbol`, `sequence`, `rs_typ
 (84, '公共日程修改删除', 'publicScheduleEditAndDelete', 1, 'METHOD', 'publicScheduleEditAndDelete()', '', '2011-07-29 00:00:00', '2011-07-29 10:34:37'),
 (85, '页面访问', 'adjust_class_apply_arrange_main@defaultVisit@', 0, 'URL', '/oa/course/adjust/adjustArrange.swf*', NULL, '2011-09-04 00:00:00', '2011-09-04 14:46:35'),
 (86, '教师请假出差1天以内[含1天]审批权限', 'takeLeaveOfficeTeachingApprove', 0, 'METHOD', 'takeLeaveOfficeTeachingApprove()', '教师请假出差1天以内[含1天]审批权限', '2011-09-29 00:00:00', '2011-09-29 23:15:54'),
-(87, '教师请假出差2天以内[含2天]审批权限', 'takeLeaveVicePrincipalTeachingApprove', 0, 'METHOD', 'takeLeaveVicePrincipalTeachingApprove()', '教师请假出差2天以内[含2天]审批权限', '2011-09-29 00:00:00', '2011-09-29 23:18:06');
+(87, '教师请假出差2天以内[含2天]审批权限', 'takeLeaveVicePrincipalTeachingApprove', 0, 'METHOD', 'takeLeaveVicePrincipalTeachingApprove()', '教师请假出差2天以内[含2天]审批权限', '2011-09-29 00:00:00', '2011-09-29 23:18:06'),
+(88, '页面访问', 'logistics_purchase_apply_main@defaultVisit@', 0, 'URL', '/oa/logistics/purchaseApply.swf*', NULL, '2012-02-03 00:00:00', '2012-02-03 12:07:35'),
+(89, '页面访问', 'logistics_purchase_approve_main@defaultVisit@', 0, 'URL', '/oa/logistics/purchaseApprove.swf*', NULL, '2012-02-03 00:00:00', '2012-02-03 12:08:47'),
+(90, '页面访问', 'logistics_purchase_manage_main@defaultVisit@', 0, 'URL', '/oa/logistics/purchaseManage.swf*', NULL, '2012-02-03 00:00:00', '2012-02-03 12:09:36'),
+(91, '页面访问', 'logistics_repair_apply_main@defaultVisit@', 0, 'URL', '/oa/logistics/repairApply.swf*', NULL, '2012-02-03 00:00:00', '2012-02-03 12:10:23'),
+(92, '页面访问', 'logistics_repair_techrelative_main@defaultVisit@', 0, 'URL', '/oa/logistics/repairTechRelative.swf*', NULL, '2012-02-03 00:00:00', '2012-02-03 12:11:23'),
+(93, '页面访问', 'logistics_repair_nottechrelative_main@defaultVisit@', 0, 'URL', '/oa/logistics/repairNotTechRelative.swf*', NULL, '2012-02-03 00:00:00', '2012-02-03 12:12:23');
 
 -- --------------------------------------------------------
 
@@ -1764,7 +1812,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_operation_dam_relationship` (
   `operation_id` bigint(20) NOT NULL,
   `dam_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=97 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=103 ;
 
 --
 -- 转存表中的数据 `wlzx_system_operation_dam_relationship`
@@ -1844,7 +1892,13 @@ INSERT INTO `wlzx_system_operation_dam_relationship` (`id`, `operation_id`, `dam
 (93, 45, 93),
 (94, 85, 94),
 (95, 86, 95),
-(96, 87, 96);
+(96, 87, 96),
+(97, 88, 97),
+(98, 89, 98),
+(99, 90, 99),
+(100, 91, 100),
+(101, 92, 101),
+(102, 93, 102);
 
 -- --------------------------------------------------------
 
@@ -1950,8 +2004,8 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_user` (
 --
 
 INSERT INTO `wlzx_system_user` (`id`, `symbol`, `sequence`, `name`, `password`, `last_login_time`, `last_login_ip`, `account_style`, `person_id`, `person_name`, `email`, `creation_date`, `modified_date`, `active`, `main_dr_id`) VALUES
-(1, 'super_root', 0, 'super_root', '134bca5421a15476a1e5ebaebdba1ede', '2011-12-08 17:07:32', '0:0:0:0:0:0:0:1', -1, NULL, NULL, NULL, '2011-05-07 11:04:22', '2011-07-05 17:33:02', 1, NULL),
-(708, '666888', 0, '666888', '75e266f182b4fa3625d4a4f4f779af54', '2011-12-05 21:55:57', '218.108.223.147', 0, NULL, NULL, '', '2011-07-05 12:57:49', '2011-09-22 16:20:27', 1, 2),
+(1, 'super_root', 0, 'super_root', '134bca5421a15476a1e5ebaebdba1ede', '2012-02-03 13:11:55', '127.0.0.1', -1, NULL, NULL, NULL, '2011-05-07 11:04:22', '2011-07-05 17:33:02', 1, NULL),
+(708, '666888', 0, '666888', '75e266f182b4fa3625d4a4f4f779af54', '2011-12-21 14:11:16', '127.0.0.1', 0, NULL, NULL, '', '2011-07-05 12:57:49', '2011-09-22 16:20:27', 1, 2),
 (709, '666900', 0, '666900', '2e6d1125057ec7c4402a5a2ad84f6601', '2011-11-23 17:31:01', '61.153.193.242', 0, NULL, NULL, '', '2011-07-05 12:57:51', '2011-09-22 16:20:27', 1, 6),
 (710, '666988', 0, '666988', 'cb3d82f7133330c48bee639908125906', '2011-11-30 08:54:56', '61.153.193.242', 0, NULL, NULL, '', '2011-07-05 12:57:52', '2011-09-22 16:20:27', 1, 20),
 (711, '666898', 0, '666898', 'd0ffb310c9c2039ca2daba46ab3addc5', '2011-12-05 18:21:01', '61.153.193.242', 0, NULL, NULL, '', '2011-07-05 12:57:53', '2011-09-22 16:20:27', 1, 7),
@@ -1960,7 +2014,7 @@ INSERT INTO `wlzx_system_user` (`id`, `symbol`, `sequence`, `name`, `password`, 
 (715, '666858', 0, '666858', '12a9fd862f0759c848b616fda835321a', '2011-11-29 08:29:12', '61.153.193.242', 0, NULL, NULL, '', '2011-07-05 12:57:59', '2011-09-22 16:20:27', 1, 20),
 (716, '666810', 0, '666810', '8c225035f7ac955201cb1668d5a072d4', '2011-12-05 10:51:48', '61.153.193.242', 0, NULL, NULL, '', '2011-07-05 12:58:01', '2011-09-22 16:20:27', 1, 8),
 (717, '665305', 0, '665305', 'b450b24e02a13f8a2f6a3f6a1599c914', '2011-11-07 14:43:21', '61.153.193.242', 0, NULL, NULL, '', '2011-07-05 12:58:02', '2011-07-05 12:58:04', 1, 24),
-(718, '660001', 0, '660001', '24e0b74e1411efc7ef92ab8e879a0ee9', '2011-12-08 17:42:35', '0:0:0:0:0:0:0:1', 0, NULL, NULL, '', '2011-07-05 12:58:04', '2011-09-22 16:20:27', 1, 25),
+(718, '660001', 0, '660001', '24e0b74e1411efc7ef92ab8e879a0ee9', '2011-12-08 23:15:53', '0:0:0:0:0:0:0:1', 0, NULL, NULL, '', '2011-07-05 12:58:04', '2011-09-22 16:20:27', 1, 25),
 (719, '666995', 0, '666995', 'ef053b16349a72abd90acb084ae1e007', NULL, '', 0, NULL, NULL, '', '2011-07-05 12:58:05', '2011-09-22 16:20:27', 1, 40),
 (720, '666966', 0, '666966', '36ef0194bf0abb102fbcfd27595a9bf8', '2011-12-01 16:12:29', '61.153.193.242', 0, NULL, NULL, '', '2011-07-05 12:58:07', '2011-09-22 16:20:27', 1, 27),
 (721, '666288', 0, '666288', '3eb3029563c6c602adcf5d7463cfcd0c', '2011-12-06 09:38:00', '61.153.193.242', 0, NULL, NULL, '', '2011-07-05 12:58:08', '2011-09-22 16:20:27', 1, 26),
