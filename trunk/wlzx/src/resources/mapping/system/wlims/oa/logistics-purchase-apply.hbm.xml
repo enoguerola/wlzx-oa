@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+ <class name="system.wlims.oa.entity.logistics.PurchaseApplyModel" table="wlzx_oa_logistics_purchase">
+        <id name="id">
+            <column name="id" />
+            <generator class="native" />
+        </id>
+        <property name="applyNo" type="string">
+            <column name="apply_no" />
+        </property>
+        
+        <property name="purchaseName" type="string">
+            <column name="purchase_name" />
+        </property>
+        <property name="purchaseDescription" type="string">
+            <column name="purchase_description" />
+        </property>
+        <property name="isGovernmentPurchase" type="string">
+            <column name="is_government_purchase" />
+        </property>
+        <property name="applyUser" type="string">
+            <column name="apply_user" />
+        </property>
+        <property name="applyUserDepartmentId" type="string">
+            <column name="apply_user_department_id" />
+        </property>
+        <property name="applyTime" type="java.util.Date">
+            <column name="apply_time" />
+        </property>
+        <property name="money" type="double">
+            <column name="money" />
+        </property>
+        <property name="applyUserDepartmentLeader" type="string">
+            <column name="apply_user_department_leader" />
+        </property>
+        <property name="resourceDepartmentLeader" type="string">
+            <column name="resource_department_leader" />
+        </property>
+         <property name="applyUserViceHeaderMaster" type="string">
+            <column name="apply_user_vice_header_master" />
+        </property>
+         <property name="financeViceHeaderMaster" type="string">
+            <column name="finance_vice_header_master" />
+        </property>
+         <property name="headerMaster" type="string">
+            <column name="header_master" />
+        </property>
+       
+    </class>
+</hibernate-mapping>
