@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+<class name="system.wlims.oa.entity.logistics.RepairModel" table="wlzx_oa_logistics_repair">
+        <id name="id">
+            <column name="id" />
+            <generator class="native" />
+        </id>
+        
+ 		<property name="repairNo" type="string">
+            <column name="repair_no" />
+        </property>
+ 		<property name="items" type="string">
+            <column name="items" />
+        </property>
+        <property name="description" type="string">
+            <column name="description" />
+        </property>
+ 		<property name="isElectric" type="string">
+            <column name="is_electric" />
+        </property>
+        <property name="applyId" type="string">
+            <column name="apply_id" />
+        </property>
+        <property name="applyDate" type="java.util.Date">
+            <column name="apply_date" />
+        </property>
+        <property name="phone" type="string">
+            <column name="phone" />
+        </property>
+ 		<property name="repairType" type="int">
+            <column name="repair_type" />
+        </property>
+ 		<property name="cause" type="string">
+            <column name="cause" />
+        </property>
+         <property name="failureCause" type="string">
+            <column name="failure_cause" />
+        </property>
+ 		<property name="result" type="string">
+            <column name="result" />
+        </property>
+         <property name="repairResult" type="string">
+            <column name="repair_result" />
+        </property>
+         <property name="repairer" type="string">
+            <column name="repairer" />
+        </property>
+        <property name="repairDate" type="java.util.Date">
+            <column name="repair_date" />
+        </property>
+        <property name="operatorId" type="string">
+            <column name="operator_id" />
+        </property>
+        <property name="operateDate" type="java.util.Date">
+            <column name="operate_date" />
+        </property>
+ 		<property name="status" type="int">
+            <column name="status" />
+        </property>       
+        		
+    </class>
+</hibernate-mapping>

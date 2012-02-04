@@ -16,14 +16,14 @@ public class RepairModel extends BaseModel {
 	private String repairNo;
 	private String items;
 	private String description;
-	private int isElectric;//是否电教： 1电教 2非电教
+	private String isElectric;//是否电教： 1电教 2非电教
 	private String applyId;
 	private Date applyDate;
 	private String phone;
 	private int repairType;
-	private int cause;//故障原因：1人为  2非人为
+	private String cause;//故障原因：1人为  2非人为
 	private String failureCause;
-	private int result;//维修结果：1完成 2未完成
+	private String result;//维修结果：1完成 2未完成
 	private String repairResult;
 	private String repairer;
 	private Date repairDate;
@@ -71,10 +71,10 @@ public class RepairModel extends BaseModel {
 	public String getDescription() {
 		return description;
 	}
-	public void setIsElectric(int isElectric) {
+	public void setIsElectric(String isElectric) {
 		this.isElectric = isElectric;
 	}
-	public int getIsElectric() {
+	public String getIsElectric() {
 		return isElectric;
 	}
 	public void setApplyId(String applyId) {
@@ -101,10 +101,10 @@ public class RepairModel extends BaseModel {
 	public int getRepairType() {
 		return repairType;
 	}
-	public void setCause(int cause) {
+	public void setCause(String cause) {
 		this.cause = cause;
 	}
-	public int getCause() {
+	public String getCause() {
 		return cause;
 	}
 	public void setFailureCause(String failureCause) {
@@ -113,10 +113,10 @@ public class RepairModel extends BaseModel {
 	public String getFailureCause() {
 		return failureCause;
 	}
-	public void setResult(int result) {
+	public void setResult(String result) {
 		this.result = result;
 	}
-	public int getResult() {
+	public String getResult() {
 		return result;
 	}
 	public void setRepairResult(String repairResult) {

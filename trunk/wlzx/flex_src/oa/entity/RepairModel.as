@@ -9,14 +9,14 @@ package oa.entity
 		public var repairNo:String;
 		public var items:String;
 		public var description:String;
-		public var isElectric:int;//是否电教： 1电教 2非电教
+		public var isElectric:String;//是否电教： 1电教 2非电教
 		public var applyId:String;
 		public var applyDate:Date;
 		public var phone:String;
 		public var repairType:int;
-		public var cause:int;//故障原因：1人为  2非人为
+		public var cause:String;//故障原因：1人为  2非人为
 		public var failureCause:String;
-		public var result:int;//维修结果：1完成 2未完成
+		public var result:String;//维修结果：1完成 2未完成
 		public var repairResult:String;
 		public var repairer:String;
 		public var repairDate:Date;
