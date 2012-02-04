@@ -19,6 +19,7 @@
 		<param-value>
 			 /WEB-INF/applicationContext-ehcache.xml,
 			 classpath:net/bull/javamelody/monitoring-spring.xml,
+			 classpath:spring-system-jbpm.xml,
 			 /WEB-INF/spring-system.xml,
 			classpath:spring/system/*.xml,
 			 /WEB-INF/spring-system-basic.xml,
