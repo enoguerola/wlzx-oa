@@ -978,3 +978,33 @@ INSERT INTO `wlzx_oa_workflow_log` VALUES ('196', 'OverWorkWorkFlowLog', '2', '1
 INSERT INTO `wlzx_oa_workflow_log` VALUES ('197', 'MoveRestDayWorkFlowLog', '1', '1', '2011-12-06 21:20:55', '发起申请', '生成编号为20111206212055的申请记录');
 INSERT INTO `wlzx_oa_workflow_log` VALUES ('198', 'OverWorkWorkFlowLog', '3', '1', '2011-12-06 21:28:54', '发起申请', '生成编号为20111206212854的申请记录');
 INSERT INTO `wlzx_oa_workflow_log` VALUES ('199', 'OverWorkWorkFlowLog', '3', '1', '2011-12-06 21:29:17', '处室审批', '处室审批编号为20111206212854的申请通过');
+
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `wlzx_oa_logistics_purchase`
+--
+
+CREATE TABLE IF NOT EXISTS `wlzx_oa_logistics_purchase` (
+  `id` bigint(20) NOT NULL auto_increment,
+  `apply_no` varchar(200) NOT NULL COMMENT '申请编号',
+  `purchase_name` varchar(500) NOT NULL COMMENT '采购名称',
+  `purchase_description` text COMMENT '采购描述',
+  `is_government_purchase` tinyint(1) default NULL COMMENT '是否政府采购',
+  `apply_user` bigint(20) NOT NULL COMMENT '申请人',
+  `apply_user_department_id` bigint(20) NOT NULL COMMENT '申请部门',
+  `apply_time` datetime NOT NULL COMMENT '申请时间',
+  `money` double NOT NULL COMMENT '采购金额',
+  `apply_user_department_leader` bigint(20) default NULL COMMENT '申请部门领导',
+  `resource_department_leader` bigint(20) default NULL COMMENT '资源处领导',
+  `apply_user_vice_header_master` bigint(20) default NULL COMMENT '申请部门分管副校长',
+  `finance_vice_header_master` bigint(20) default NULL COMMENT '财务副校长',
+  `header_master` bigint(20) default NULL COMMENT '校长',
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='采购申请表' AUTO_INCREMENT=1 ;
+
+--
+-- 转存表中的数据 `wlzx_oa_logistics_purchase`
+--
+

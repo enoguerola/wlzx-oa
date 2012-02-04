@@ -1,20 +1,29 @@
 package system.wlims.oa.entity.logistics;
 
+import java.util.Date;
+
 import system.wlims.oa.entity.BaseModel;
 
-public class PurchaseFormModel extends BaseModel{
+public class PurchaseApplyModel extends BaseModel{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -9078432634342762817L;
+	private String applyNo;
+	private String purchaseName;
+	private String purchaseDescription;
+	private Boolean isGovernmentPurchase;
 	private String applyUser;
+	private String applyUserDepartmentId;
+	private Date applyTime;
+	private Double money;
+
 	private String applyUserDepartmentLeader;
 	private String resourceDepartmentLeader;
 	private String applyUserViceHeaderMaster;
 	private String financeViceHeaderMaster;
 	private String headerMaster;
-	private Double money;
 	public String getApplyUser() {
 		return applyUser;
 	}
@@ -56,5 +65,41 @@ public class PurchaseFormModel extends BaseModel{
 	}
 	public void setMoney(Double money) {
 		this.money = money;
+	}
+	public String getApplyNo() {
+		return applyNo;
+	}
+	public void setApplyNo(String applyNo) {
+		this.applyNo = applyNo;
+	}
+	public String getPurchaseName() {
+		return purchaseName;
+	}
+	public void setPurchaseName(String purchaseName) {
+		this.purchaseName = purchaseName;
+	}
+	public String getPurchaseDescription() {
+		return purchaseDescription;
+	}
+	public void setPurchaseDescription(String purchaseDescription) {
+		this.purchaseDescription = purchaseDescription;
+	}
+	public Boolean getIsGovernmentPurchase() {
+		return isGovernmentPurchase;
+	}
+	public void setIsGovernmentPurchase(Boolean isGovernmentPurchase) {
+		this.isGovernmentPurchase = isGovernmentPurchase;
+	}
+	public String getApplyUserDepartmentId() {
+		return applyUserDepartmentId;
+	}
+	public void setApplyUserDepartmentId(String applyUserDepartmentId) {
+		this.applyUserDepartmentId = applyUserDepartmentId;
+	}
+	public Date getApplyTime() {
+		return applyTime;
+	}
+	public void setApplyTime(Date applyTime) {
+		this.applyTime = applyTime;
 	}
 }

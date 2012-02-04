@@ -15,7 +15,7 @@ import org.jbpm.api.RepositoryService;
 import org.jbpm.api.TaskService;
 import org.jbpm.api.task.Task;
 
-import system.wlims.oa.entity.logistics.PurchaseFormModel;
+import system.wlims.oa.entity.logistics.PurchaseApplyModel;
 
 public class DemoTest extends TestCase {
 	//----发布流程定义
@@ -89,7 +89,7 @@ public class DemoTest extends TestCase {
 //	}
 //	}
 //	public void testPurchase(){
-//		  PurchaseFormModel purchase=new PurchaseFormModel();
+//		  PurchaseApplyModel purchase=new PurchaseApplyModel();
 //		  purchase.setApplyUser("ttttt");
 //		  Map map=new HashMap();
 //		  map.put("purchase", purchase);
