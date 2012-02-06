@@ -56,4 +56,37 @@ public class RepairServiceImpl implements RepairService {
 		repairDAO.merge(model);
 	}
 
+	@Override
+	public PaginationSupport<RepairModel> getRepairsByConditions(
+			String applyId, String applyBeginDate, String applyEndDate,
+			String repairer, String repairBeginDate, String repairEndDate,
+			String status, String isElectric, int startIndex, int pageSize)
+			throws ServiceException {
+		// TODO Auto-generated method stub
+		return repairDAO.getRepairsByConditions(applyId, applyBeginDate, applyEndDate, repairer, repairBeginDate, repairEndDate, status, isElectric, startIndex, pageSize);
+	}
+
+	@Override
+	public void confirm(String id) throws ServiceException {
+		// TODO Auto-generated method stub
+		RepairModel model=repairDAO.get(id);
+		model.setStatus(RepairModel.EStatus.Untreated.getValue());
+		repairDAO.merge(model);
+	}
+
+	@Override
+	public void deleteRepair(String id) throws ServiceException {
+		// TODO Auto-generated method stub
+		RepairModel model=repairDAO.get(id);
+		repairDAO.remove(model);
+	}
+
+	@Override
+	public void cancleRepair(String id) throws ServiceException {
+		// TODO Auto-generated method stub
+		RepairModel model=repairDAO.get(id);
+		model.setStatus(RepairModel.EStatus.Cancled.getValue());
+		repairDAO.merge(model);
+	}
+
 }
