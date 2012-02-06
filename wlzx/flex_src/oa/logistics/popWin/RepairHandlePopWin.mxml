@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:VGroup xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:hc="com.hillelcoren.components.*"
+		 xmlns:render="system.component.render.*"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"  xmlns:valueObjects="oa.entity.*" xmlns:flexlib="http://code.google.com/p/flexlib/"   creationComplete="init();" width="700" height="570">
+	
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+<!--		<mx:StringValidator id="name_stringValidator" source="{pname}" property="text" required="true"  requiredFieldError="场所名称不能为空"/>
+		<mx:StringValidator id="positionBuilding_stringValidator" source="{position_building}"  required="true" property="text"  requiredFieldError="场所所在教学楼不能为空"/>
+		<mx:StringValidator id="positionDetail_stringValidator" source="{position_detail}" property="text"  requiredFieldError="场所所在教学楼具体位置不能为空"/>
+		<mx:NumberValidator id="area_begin_numberValidator" source="{area_begin}" required="false" property="text"   invalidCharError="请输入数值" domain="real"/>
+		<mx:NumberValidator id="contain_begin_numberValidator" source="{contain_begin}" required="false" property="text" integerError="请输入正整数" domain="int" minValue="0"/>-->
+		
+		<valueObjects:RepairModel id="repair"/>		
+		<mx:RemoteObject id="repairServiceRO" destination="repairServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+			<mx:method name="saveRepair"  concurrency="last"  result="saveRepairResult_resultHandler(event);" />
+			<mx:method name="getRepair"  concurrency="last"  result="getRepair_resultHandler(event);" />
+		</mx:RemoteObject>
+		<fx:Component id="searchAccountDropDownItemRenderer">
+			<render:AdvancedItemRenderer selectedItems="{ outerDocument.apply_account.selectedItems }" />
+		</fx:Component>		
+		<fx:Component id="operateAccountDropDownItemRenderer">
+			<render:AdvancedItemRenderer selectedItems="{ outerDocument.operate_account.selectedItems }" />
+		</fx:Component>	
+	</fx:Declarations>
+	<fx:Script> 
+		
+		<![CDATA[  
+		
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.core.FlexGlobals;
+			import mx.events.ValidationResultEvent;
+			import mx.formatters.DateFormatter;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.*;
+			import mx.validators.Validator;
+			
+			import oa.logistics.repairTechRelative;
+			
+			import system.utils.CommonUtils;
+			private var validatorArr:Array; 
+			[Bindable]
+			public var yesFlag:Boolean=false;
+			[Bindable]
+			public var noFlag:Boolean=false;
+			[Bindable]
+			public var causeYesFlag:Boolean=false;
+			[Bindable]
+			public var causeNoFlag:Boolean=false;
+			[Bindable]
+			public var resultYesFlag:Boolean=false;
+			[Bindable]
+			public var resultNoFlag:Boolean=false;
+			private function init():void
+			{
+				apply_account.dataProvider=this.parentApplication.allTeacherAcccounts;
+				operate_account.dataProvider=this.parentApplication.allTeacherAcccounts;
+				operate_account.selectedItems.addItem(this.parentApplication.getItemByAccountId(this.parentApplication.currentUser.id));
+				operateAccountHandleAutoCompleteChange();
+				operateDate.text=CommonUtils.formatDate(new Date(),"YYYY-MM-DD");
+				callLater(initRepairWin);
+			} 
+			private function initRepairWin():void{
+				if(this.toolTip=='Update'){		
+					this.placeWin.title="维修申请处理";
+				}else if(this.toolTip=='Check'){
+					repair=new RepairModel();
+					this.placeWin.title="维修查看";					
+					conform.visible=false;
+					back.label="返回";
+				}
+				var repairId:String=this.id;//弹出窗口时设定的中转参数
+				repairServiceRO.getRepair(repairId);
+			}
+			protected function systemFaultHandler(event:FaultEvent):void {
+				Alert.show(event.fault.faultString, 'Error');
+			}
+			protected function saveRepairResult_resultHandler(event:ResultEvent):void
+			{				
+				var parent:repairTechRelative = this.owner as repairTechRelative;
+				parent.search();
+				PopUpManager.removePopUp(this);
+			}
+			protected function getRepair_resultHandler(event:ResultEvent):void
+			{
+				repair=event.result as RepairModel;
+				items.text=repair.items;
+				if(repair.isElectric=='1')
+					yesFlag=true;
+				else yesFlag=false;
+				if(repair.isElectric=='2')
+					noFlag=true;
+				else noFlag=false;
+				description.text=repair.description;
+				phone.text=repair.phone;
+				date.text=CommonUtils.formatDate(repair.applyDate,"YYYY-MM-DD");
+				apply_account.selectedItems.addItem(this.parentApplication.getItemByAccountId(repair.applyId));
+				searchAccountHandleAutoCompleteChange();
+				if(repair.cause=='1')
+					causeYesFlag=true;
+				else causeYesFlag=false;
+				if(repair.cause=='2')
+					causeNoFlag=true;
+				else causeNoFlag=false;
+				failureCause.text=repair.failureCause;
+				if(repair.result=='1')
+					resultYesFlag=true;
+				else resultYesFlag=false;
+				if(repair.result=='2')
+					resultNoFlag=true;
+				else resultNoFlag=false;
+				repairResult.text=repair.repairResult;
+				repairer.text=repair.repairer;
+				repairDate.text=CommonUtils.formatDate(repair.repairDate,"YYYY-MM-DD");
+				operate_account.selectedItems.addItem(this.parentApplication.getItemByAccountId(repair.operatorId));
+				operateAccountHandleAutoCompleteChange();
+				operateDate.text=CommonUtils.formatDate(repair.operateDate,"YYYY-MM-DD");
+			}
+			protected function placeUpdate_resultHandler(event:ResultEvent):void
+			{
+				
+			}
+			private function validateForm(evt:MouseEvent):void {
+				repair.cause=cause.selectedValue.toString();
+				repair.failureCause=failureCause.text;
+				repair.result=result.selectedValue.toString();
+				repair.repairResult=repairResult.text;
+				repair.repairer=repairer.text;
+				repair.repairDate=DateField.stringToDate(repairDate.text,"YYYY-MM-DD");
+				repair.operatorId=operate_account_id.text;
+				repair.operateDate=DateField.stringToDate(operateDate.text,"YYYY-MM-DD");
+				repair.status=3;
+				repairServiceRO.saveRepair(repair);
+			}
+		
+			private function handupForm(evt:MouseEvent):void
+			{
+				repair.status=1;
+				validateForm(evt);
+			} 
+			
+			private function searchAccountHandleAutoCompleteChange():void
+			{
+				var color:Object = apply_account.selectedItem;
+				
+				if (color != null && color.hasOwnProperty( "id" ))
+				{
+					apply_account_id.text=color.id;
+				} else{
+					apply_account_id.text="";
+				}               
+			}
+			private function operateAccountHandleAutoCompleteChange():void
+			{
+				var color:Object = operate_account.selectedItem;
+				
+				if (color != null && color.hasOwnProperty( "id" ))
+				{
+					operate_account_id.text=color.id;
+				} else{
+					operate_account_id.text="";
+				}               
+			}
+		]]> 
+		
+	</fx:Script> 
+	<s:TitleWindow  id="placeWin" width="100%" height="100%" styleName="PanelStyle"  close="PopUpManager.removePopUp(this);" skinClass="system.skins.WlzxTitleWindowSkin">
+		<mx:Form width="100%" height="100%" id="dform">
+			<mx:FormHeading label="申请信息" fontSize="15" width="100%" textAlign="center"/>
+			
+			<mx:FormItem label="维修项目" >
+				<mx:HBox>
+					<mx:TextInput id="items" width="200" editable="false"/>
+					<mx:FormItem  label="是否电教" >
+						<mx:RadioButtonGroup id="isElectric"/> 
+						<mx:HBox>
+							<mx:RadioButton label="是" groupName="isElectric" value="1" selected="{yesFlag}" enabled="false"/> 
+							<mx:RadioButton  label="否" groupName="isElectric" value="2" selected="{noFlag}" enabled="false"/>
+						</mx:HBox>
+					</mx:FormItem>
+				</mx:HBox>
+			</mx:FormItem>
+			<mx:FormItem label="维修项目描述" >
+				<s:TextArea id="description" width="400" height="100" editable="false"/>				
+			</mx:FormItem>
+			<mx:FormItem label="联系方式 ">
+				<mx:TextInput id="phone" width="150" editable="false"/>					
+			</mx:FormItem>
+			
+			<mx:FormItem label="申请人">
+				<mx:HBox  horizontalGap="10" width="100%"  verticalAlign="middle">
+					<hc:AutoComplete id="apply_account"  labelField="name"  width="150"  matchType="anyPart" prompt="选择教师"  change="{ searchAccountHandleAutoCompleteChange() }" dropDownItemRenderer="{ searchAccountDropDownItemRenderer }" selectedItemStyleName="none" enabled="false">						
+					</hc:AutoComplete>
+					<mx:Label id="apply_account_id" visible="false" width="1">
+					</mx:Label>
+					<s:Label text="申请时间" verticalAlign="middle"/>
+					<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" id="date"   formatString="YYYY-MM-DD"  editable="false" width="120" enabled="false"/>
+				</mx:HBox>					
+			</mx:FormItem>				
+			<mx:HRule  width="98%" />
+			<mx:FormHeading label="维修确认信息" fontSize="15" width="100%" textAlign="left"/>
+			<mx:FormItem label="维修类型 ">
+				<mx:ComboBox id="repairType" width="150" editable="false"/>					
+			</mx:FormItem>
+			<mx:FormHeading label="维修处理信息" fontSize="15" width="100%" textAlign="left"/>
+			<mx:FormItem label="故障原因" >
+				<mx:HBox>
+					<mx:RadioButtonGroup id="cause"/> 
+					<mx:HBox>
+						<mx:RadioButton label="人为" groupName="cause" value="1" selected="{causeYesFlag}"/> 
+						<mx:RadioButton  label="非人为" groupName="cause" value="2" selected="{causeNoFlag}"/>
+					</mx:HBox>
+					<s:Label text="" width="80"/>
+					<mx:FormItem  label="维修结果" >
+						<mx:RadioButtonGroup id="result"/> 
+						<mx:HBox>
+							<mx:RadioButton label="完成" groupName="result" value="1" selected="{resultYesFlag}"/> 
+							<mx:RadioButton  label="未完成" groupName="result" value="2" selected="{resultNoFlag}"/>
+						</mx:HBox>
+					</mx:FormItem>
+				</mx:HBox>
+			</mx:FormItem>
+			<mx:FormItem label="">
+				<mx:HBox  horizontalGap="10" width="100%"  verticalAlign="middle">
+					<s:TextArea id="failureCause" width="200" height="100"/>	
+					<s:TextArea id="repairResult" width="200" height="100"/>	
+				</mx:HBox>					
+			</mx:FormItem>	
+			<mx:FormItem label="维修人">
+				<mx:HBox  horizontalGap="10" width="100%"  verticalAlign="middle">
+					<mx:TextInput id="repairer" width="150"/>
+					<s:Label text="维修时间" verticalAlign="middle"/>
+					<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" id="repairDate"   formatString="YYYY-MM-DD"  editable="false" width="120"/>
+				</mx:HBox>					
+			</mx:FormItem>
+			<mx:FormItem label="操作人">
+				<mx:HBox  horizontalGap="10"  width="100%"  verticalAlign="middle">
+					<hc:AutoComplete id="operate_account"  labelField="name"  width="150"  matchType="anyPart" prompt="选择教师"  change="{ searchAccountHandleAutoCompleteChange() }" dropDownItemRenderer="{ operateAccountDropDownItemRenderer }" selectedItemStyleName="none">						
+					</hc:AutoComplete>
+					<s:Label text="操作时间" verticalAlign="middle"/>
+					<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" id="operateDate"   formatString="YYYY-MM-DD"  editable="false" width="120"/>
+					<mx:Label id="operate_account_id" visible="false" width="1">
+					</mx:Label>
+				</mx:HBox>					
+			</mx:FormItem>
+			<mx:FormItem width="100%">
+				<mx:HBox verticalAlign="middle" horizontalAlign="right" width="100%">
+					<mx:Button label="确定" click="validateForm(event)" id="conform"/>
+					<mx:Button label="取消" click="PopUpManager.removePopUp(this);" id="back" />
+				</mx:HBox>
+			</mx:FormItem> 
+		</mx:Form>
+		
+	</s:TitleWindow>
+	
+</s:VGroup>

@@ -141,7 +141,7 @@
 				<s:TextArea id="description" width="400"/>				
 			</mx:FormItem>
 			<mx:FormItem label="联系方式 " required="true">
-				<mx:TextInput id="phone" width="200"/>					
+				<mx:TextInput id="phone" width="150"/>					
 			</mx:FormItem>
 			
 			<mx:FormItem label="申请人">
