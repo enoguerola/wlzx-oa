@@ -99,6 +99,7 @@
 				sequence.text=role.sequence.toString();
 				level.text=role.level.toString();
 				teacherFlag.selected=role.teacherFlag;
+				financeViceHeaderMasterFlag.selected=role.financeViceHeaderMasterFlag;
 				/* var userList:ArrayCollection=role.users as ArrayCollection;
 				for (var i:int = 0; i < userList.length; i++){
 					var user:UserModel=userList.getItemAt(i) as UserModel;
@@ -106,6 +107,8 @@
 				}
 				organizedUsersSelected();
 				canculateUsersSelected(); */
+				
+				if(role.symbol=="root_supervisor")symbol.enabled=false;
 			}
 			protected function roleUpdate_resultHandler(event:ResultEvent):void
 			{
@@ -133,6 +136,7 @@
 					role.sequence=parseInt(sequence.text);
 					role.level=parseInt(level.text);
 					role.teacherFlag=teacherFlag.selected;
+					role.financeViceHeaderMasterFlag=financeViceHeaderMasterFlag.selected;
 					if(this.toolTip=='Update'){
 						/* systemServiceRO.roleUpdate(role,usersIds.text); */
 						systemServiceRO.roleUpdate(role);
@@ -207,6 +211,7 @@
 				<mx:HBox>
 					<mx:TextInput id="symbol" width="200"/>
 					<mx:Label  text="教学岗位" /><mx:CheckBox id="teacherFlag"/>
+					<mx:Label  text="财务副校长岗位" /><mx:CheckBox id="financeViceHeaderMasterFlag"/>
 				</mx:HBox>
 				
 			</mx:FormItem>	

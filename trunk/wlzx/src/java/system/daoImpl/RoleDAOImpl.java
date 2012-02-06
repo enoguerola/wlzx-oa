@@ -11,6 +11,7 @@ import org.hibernate.criterion.Restrictions;
 
 import system.BaseDAOImpl;
 import system.dao.RoleDAO;
+import system.entity.DepartmentModel;
 import system.entity.RoleModel;
 import system.utils.StringUtils;
 
@@ -92,7 +93,13 @@ public class RoleDAOImpl extends BaseDAOImpl<RoleModel> implements RoleDAO {
 		}
 		return null;
 	}
-
+	@SuppressWarnings("unchecked")
+	public RoleModel getFinanceViceHeaderMasterRole(){
+		DetachedCriteria criteria = DetachedCriteria.forClass(RoleModel.class);
+		criteria.add(Restrictions.eq("financeViceHeaderMasterFlag", true));
+		List<RoleModel> result = this.getListByCriteria(criteria);
+		return result != null && result.size() > 0 ? result.get(0) : null;
+	}
 	@SuppressWarnings("unchecked")
 	public List<RoleModel> getAllRoles(boolean filterBasicFlag) {
 		DetachedCriteria criteria = DetachedCriteria.forClass(RoleModel.class);

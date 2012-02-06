@@ -1001,8 +1001,15 @@ CREATE TABLE IF NOT EXISTS `wlzx_oa_logistics_purchase` (
   `apply_user_vice_header_master` bigint(20) default NULL COMMENT '申请部门分管副校长',
   `finance_vice_header_master` bigint(20) default NULL COMMENT '财务副校长',
   `header_master` bigint(20) default NULL COMMENT '校长',
+  `cancle_flag` tinyint(1) default NULL COMMENT '取消标记',
+  `submit_flag` tinyint(1) default NULL COMMENT '提交标记',
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='采购申请表' AUTO_INCREMENT=1 ;
+
+--
+-- 转存表中的数据 `wlzx_oa_logistics_purchase`
+--
+
 
 --
 -- 转存表中的数据 `wlzx_oa_logistics_purchase`

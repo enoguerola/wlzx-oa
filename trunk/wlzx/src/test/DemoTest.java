@@ -1,6 +1,7 @@
 
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -8,11 +9,16 @@ import junit.framework.TestCase;
 
 import org.jbpm.api.Configuration;
 import org.jbpm.api.ExecutionService;
+import org.jbpm.api.HistoryService;
+import org.jbpm.api.IdentityService;
+import org.jbpm.api.ManagementService;
 import org.jbpm.api.ProcessDefinition;
 import org.jbpm.api.ProcessEngine;
 import org.jbpm.api.ProcessInstance;
 import org.jbpm.api.RepositoryService;
 import org.jbpm.api.TaskService;
+import org.jbpm.api.history.HistoryActivityInstance;
+import org.jbpm.api.history.HistoryTask;
 import org.jbpm.api.task.Task;
 
 import system.wlims.oa.entity.logistics.PurchaseApplyModel;
@@ -24,11 +30,17 @@ public class DemoTest extends TestCase {
 	    private RepositoryService repositoryService;  
 	    private ExecutionService executionService;  
 	    private TaskService taskService;  
+	    private HistoryService historyService;
+	    private ManagementService managementService;
+	    private IdentityService identityService;
 	public DemoTest(){
 		processEngine=Configuration.getProcessEngine();
 		repositoryService=processEngine.getRepositoryService();  
         executionService = processEngine.getExecutionService();  
         taskService= processEngine.getTaskService();  
+        historyService=processEngine.getHistoryService();
+        managementService=processEngine.getManagementService();
+        identityService=processEngine.getIdentityService();
 	}
 	protected void setUp(){
 		processEngine.getRepositoryService().createDeployment()
@@ -72,12 +84,12 @@ public class DemoTest extends TestCase {
 //		processInstance=executionService.signalExecutionById(processInstance.getId());
 //		System.out.println(processInstance.isEnded());
 //	}
-	public void testDeleteProcessInstance(){
-		ExecutionService executionService=processEngine.getExecutionService();
-		ProcessInstance processInstance=executionService.startProcessInstanceByKey("caigou");
-		executionService.deleteProcessInstanceCascade(processInstance.getId());
-		
-	}
+//	public void testDeleteProcessInstance(){
+//		ExecutionService executionService=processEngine.getExecutionService();
+//		ProcessInstance processInstance=executionService.startProcessInstanceByKey("caigou");
+//		executionService.deleteProcessInstanceCascade(processInstance.getId());
+//		
+//	}
 	
 //	public void testProcessInastanceList(){
 //	  ExecutionService executionService=processEngine.getExecutionService();
@@ -88,16 +100,34 @@ public class DemoTest extends TestCase {
 //		System.out.println(processInstance);
 //	}
 //	}
-//	public void testPurchase(){
-//		  PurchaseApplyModel purchase=new PurchaseApplyModel();
-//		  purchase.setApplyUser("ttttt");
-//		  Map map=new HashMap();
-//		  map.put("purchase", purchase);
-//		  ProcessInstance processInstance = executionService.startProcessInstanceByKey("caigou", map);
-//		  Task task=taskService.createTaskQuery().processInstanceId(processInstance.getId())
-//		  				  .assignee(purchase.getApplyUser())
-//		  				  .uniqueResult();//取刚发起的流程的任务
-//		  taskService.completeTask(task.getId());//跳过申请task节点
-//		  
-//	}
+	public void testPurchase(){
+		  PurchaseApplyModel purchase=new PurchaseApplyModel();
+		  purchase.setApplyUser("11");
+		  purchase.setApplyUserDepartmentLeader("22");
+		  Map map=new HashMap();
+		  map.put("purchase", purchase);
+		  ProcessInstance processInstance = executionService.startProcessInstanceByKey("caigou", map);
+		  Task task=taskService.createTaskQuery().processInstanceId(processInstance.getId())
+		  				  .assignee(purchase.getApplyUser())
+		  				  .uniqueResult();//取刚发起的流程的任务
+		  taskService.completeTask(task.getId());//跳过申请task节点
+		//7由RepositoryService创建流程定义查询接口
+
+        List<ProcessDefinition> list = repositoryService.createProcessDefinitionQuery().list();
+        for(ProcessDefinition processDefinition:list){
+            System.out.println(processDefinition.getDeploymentId()+"---" +processDefinition.getId()+"---"+processDefinition.getName());
+        }
+		 List<Task> tasks= taskService.findPersonalTasks("22");
+		 for(Task t:tasks){
+			 System.out.println(t.getName());
+		 }
+		 List<HistoryTask> hts=historyService.createHistoryTaskQuery().executionId(task.getExecutionId()).list();
+		 for(HistoryTask ht:hts){
+			 System.out.println(ht.getState());
+		 }
+		 List<HistoryActivityInstance> hais=historyService.createHistoryActivityInstanceQuery().executionId(task.getExecutionId()).list();
+		 for(HistoryActivityInstance hai:hais){
+			 System.out.println(hai.getActivityName());
+		 }
+	}
 }

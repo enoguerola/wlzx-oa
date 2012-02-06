@@ -14,17 +14,18 @@ package oa.entity.logistics
 		public var purchaseDescription:String;
 
 		public var isGovernmentPurchase:Boolean;
-		public var applyUser:Date;
+		public var applyUser:String;
 		public var applyUserDepartmentId:String;
 		public var applyTime:Date;
-		public var money:Number; 
+		public var money:Number=0; 
 		
 		public var applyUserDepartmentLeader:String;
 		public var resourceDepartmentLeader:String;
 		public var applyUserViceHeaderMaster:String;
 		public var financeViceHeaderMaster:String;
 		public var headerMaster:String;
-		
+		public var cancleFlag:Boolean;
+		public var submitFlag:Boolean;
 		
 		
 		public function PurchaseApplyModel()

@@ -28,6 +28,7 @@ public class DepartmentModel  extends BaseModel{
 	private static final long serialVersionUID = -7972036409727505069L;
 	private int level;//部门级别
 	private Boolean supervisorFlag=false;//督导部门标记
+	private Boolean resourceFlag=false;//资源处标记
 	private String detail;
 	private String phone;
 	private Set<DepartmentModel> subordinates=new TreeSet<DepartmentModel>();//直属下级部门
@@ -170,6 +171,17 @@ public Set<UserModel> getAllMainUsers(){
 		return results;
 		
 	}
+//获得所在一级父亲部门
+public DepartmentModel getTrueFirstLevelDepartment(){
+	if(this.getLevel()<=1)return this;
+	else{
+		DepartmentModel parent=this.getLeaders().iterator().next();
+		while(parent.getLevel()!=1){
+			parent=parent.getLeaders().iterator().next();
+		}
+		return parent;
+	}
+}	
 
 public Boolean getSupervisorFlag() {
 	return supervisorFlag;
@@ -177,6 +189,14 @@ public Boolean getSupervisorFlag() {
 
 public void setSupervisorFlag(Boolean supervisorFlag) {
 	this.supervisorFlag = supervisorFlag;
+}
+
+public Boolean getResourceFlag() {
+	return resourceFlag;
+}
+
+public void setResourceFlag(Boolean resourceFlag) {
+	this.resourceFlag = resourceFlag;
 }
 	
 	

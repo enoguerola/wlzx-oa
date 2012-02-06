@@ -135,5 +135,13 @@ public class DepartmentDAOImpl extends BaseDAOImpl<DepartmentModel>  implements 
 			List<DepartmentModel> result = this.getListByCriteria(criteria);
 			return result;
 	}
+	@Override
+	public DepartmentModel getResourceFlagDepartment() {
+		// TODO Auto-generated method stub
+		DetachedCriteria criteria = DetachedCriteria.forClass(DepartmentModel.class);
+		criteria.add(Restrictions.eq("resourceFlag", true));
+		List<DepartmentModel> result = this.getListByCriteria(criteria);
+		return result != null && result.size() > 0 ? result.get(0) : null;
+	}
 
 }

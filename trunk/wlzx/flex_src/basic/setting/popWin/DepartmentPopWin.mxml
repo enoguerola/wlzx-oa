@@ -80,6 +80,7 @@
 					department.symbol=symbol.text;
 					department.sequence=parseInt(sequence.text);
 					department.supervisorFlag=supervisorFlag.selected;
+					department.resourceFlag=resourceFlag.selected;
 				//	var supervisor:String =supervisorName.text;
 //					var  selectedLeaderRolesArray:Array = [];
 //					var len:int = leaderDepartmentRoles.length;					
@@ -161,6 +162,7 @@
 					symbol.text=department.symbol;
 					sequence.text=department.sequence.toString();
 					supervisorFlag.selected=department.supervisorFlag;
+					resourceFlag.selected=department.resourceFlag;
 					var leaderUsers:ArrayCollection=ArrayCollection(department.leaderUsers);
 					var leadersSelectedItems:ArrayCollection=new ArrayCollection();
 					var leadersIds:String="";
@@ -187,6 +189,8 @@
 //					buildSubRoles(parentDepartment.getSupervisorRole() as RoleModel);				
 //					this.leaders.dataProvider=resultList;
 //					this.leaders.selectedIndex=0;
+					if(department.symbol=="root")symbol.enabled=false;
+					
 				}else if(this.toolTip=='Add'){
 					var department:DepartmentModel=event.result as DepartmentModel;
 //					buildSubRoles(department.getSupervisorRole() as RoleModel);				
@@ -355,6 +359,7 @@
 				<mx:HBox width="100%">
 					<mx:TextInput id="symbol" width="200"/>
 					<mx:Label  text="督导部门标识" /><mx:CheckBox id="supervisorFlag"/>
+					<mx:Label  text="资源处标识" /><mx:CheckBox id="resourceFlag"/>
 				</mx:HBox>
 				
 			</mx:FormItem>	

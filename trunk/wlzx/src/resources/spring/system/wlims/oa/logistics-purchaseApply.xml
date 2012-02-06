@@ -19,10 +19,11 @@
 	<bean id="purchaseApplyDAO" class="system.wlims.oa.daoImpl.logistics.PurchaseApplyDAOImpl">
 		<property name="sessionFactory" ref="oaSessionFactory" />
 	</bean>
-	<bean id="purchaseServiceDest" class="system.wlims.oa.serviceImpl.logistics.PurchaseApplyServiceImpl">
+	<bean id="purchaseApplyServiceDest" class="system.wlims.oa.serviceImpl.logistics.PurchaseApplyServiceImpl">
 		<flex:remoting-destination />
-<!-- 		<property name="userDAO" ref="userDAO" /> -->
-<!-- 		<property name="departmentDAO" ref="departmentDAO" /> -->
+		<property name="userDAO" ref="userDAO" />
+		<property name="roleDAO" ref="roleDAO" />
+		<property name="departmentDAO" ref="departmentDAO" />
 		<property name="purchaseApplyDAO" ref="purchaseApplyDAO" />
 	</bean>
 	

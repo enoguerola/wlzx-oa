@@ -92,6 +92,9 @@
     <module application="flex_src/home.mxml" destPath="oa/sendingFiles/documentDetail.swf" optimize="false" sourcePath="flex_src/oa/sendingFiles/documentDetail.mxml"/>
     <module application="flex_src/home.mxml" destPath="oa/course/adjust/adjustArrange.swf" optimize="false" sourcePath="flex_src/oa/course/adjust/adjustArrange.mxml"/>
     <module application="flex_src/home.mxml" destPath="oa/setting/oaSetting.swf" optimize="false" sourcePath="flex_src/oa/setting/oaSetting.mxml"/>
+    <module application="flex_src/home.mxml" destPath="oa/logistics/purchaseApply.swf" optimize="false" sourcePath="flex_src/oa/logistics/purchaseApply.mxml"/>
+    <module application="flex_src/home.mxml" destPath="oa/logistics/repairApply.swf" optimize="false" sourcePath="flex_src/oa/logistics/repairApply.mxml"/>
+    <module application="flex_src/home.mxml" destPath="oa/logistics/repairTechRelative.swf" optimize="false" sourcePath="flex_src/oa/logistics/repairTechRelative.mxml"/>
   </modules>
   <buildCSSFiles/>
   <flashCatalyst validateFlashCatalystCompatibility="false"/>

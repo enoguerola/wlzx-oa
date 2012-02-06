@@ -32,6 +32,7 @@ public class RoleModel extends BaseModel {
 	private Boolean supervisorFlag=false;//部门主管标记，注：有此标记的角色不可自行删除，随部门删除而删除
 	private Boolean teacherFlag=false;//教学职务标记
 	private Boolean basicFlag=false;
+	private Boolean financeViceHeaderMasterFlag=false;//财务校长职务标记
 	private Set<DRModel> relativeDRs=new TreeSet<DRModel>();
 	public String getDetail() {
 		return detail;
@@ -95,6 +96,14 @@ public class RoleModel extends BaseModel {
 
 	public void setTeacherFlag(Boolean teacherFlag) {
 		this.teacherFlag = teacherFlag;
+	}
+
+	public Boolean getFinanceViceHeaderMasterFlag() {
+		return financeViceHeaderMasterFlag;
+	}
+
+	public void setFinanceViceHeaderMasterFlag(Boolean financeViceHeaderMasterFlag) {
+		this.financeViceHeaderMasterFlag = financeViceHeaderMasterFlag;
 	}
 
 }

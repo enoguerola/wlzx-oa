@@ -18,7 +18,7 @@
         <property name="purchaseDescription" type="string">
             <column name="purchase_description" />
         </property>
-        <property name="isGovernmentPurchase" type="string">
+        <property name="isGovernmentPurchase" type="boolean">
             <column name="is_government_purchase" />
         </property>
         <property name="applyUser" type="string">
@@ -30,7 +30,7 @@
         <property name="applyTime" type="java.util.Date">
             <column name="apply_time" />
         </property>
-        <property name="money" type="double">
+        <property name="money" type="java.lang.Double">
             <column name="money" />
         </property>
         <property name="applyUserDepartmentLeader" type="string">
@@ -48,6 +48,11 @@
          <property name="headerMaster" type="string">
             <column name="header_master" />
         </property>
-       
+         <property name="cancleFlag" type="boolean">
+            <column name="cancle_flag" />
+        </property>
+          <property name="submitFlag" type="boolean">
+            <column name="submit_flag" />
+        </property>
     </class>
 </hibernate-mapping>

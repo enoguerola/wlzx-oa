@@ -33,6 +33,7 @@ public interface DepartmentDAO extends BaseDAO<DepartmentModel>{
 	
 	public DepartmentModel getDepartmentBySymbol(String symbol);
 	public DepartmentModel getSupervisorFlagDepartment();
+	public DepartmentModel getResourceFlagDepartment();
 	public DepartmentModel getDepartmentByName(String name) ;
 	public List<DepartmentModel> getAllDepartments();
 

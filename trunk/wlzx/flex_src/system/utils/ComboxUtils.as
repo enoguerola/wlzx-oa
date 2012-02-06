@@ -17,5 +17,18 @@ package system.utils
 			}
 			return index;
 		}
+		public static function findIndexById(whichArray:ArrayCollection, whichItem :Object):int
+		{
+			var index:int = 0;
+			for(var i in whichArray)
+			{
+				if(whichArray[i].id == whichItem)
+				{
+					return index;
+				}
+				index ++;
+			}
+			return index;
+		}
 	}
 }
