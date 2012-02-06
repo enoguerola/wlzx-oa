@@ -1007,4 +1007,52 @@ CREATE TABLE IF NOT EXISTS `wlzx_oa_logistics_purchase` (
 --
 -- 转存表中的数据 `wlzx_oa_logistics_purchase`
 --
+/*
+Navicat MySQL Data Transfer
+
+Source Server         : localhost_3306
+Source Server Version : 50091
+Source Host           : localhost:3306
+Source Database       : wlzx_oa
+
+Target Server Type    : MYSQL
+Target Server Version : 50091
+File Encoding         : 65001
+
+Date: 2012-02-04 19:39:49
+*/
+
+SET FOREIGN_KEY_CHECKS=0;
+-- ----------------------------
+-- Table structure for `wlzx_oa_logistics_repair`
+-- ----------------------------
+DROP TABLE IF EXISTS `wlzx_oa_logistics_repair`;
+CREATE TABLE `wlzx_oa_logistics_repair` (
+  `id` bigint(20) NOT NULL auto_increment,
+  `repair_no` varchar(200) default NULL COMMENT '申请编号',
+  `items` varchar(200) default NULL COMMENT '维修项目',
+  `description` text COMMENT '维修项目描述',
+  `is_electric` tinyint(1) default NULL COMMENT '是否电教 1是 2 否',
+  `apply_id` bigint(20) default NULL COMMENT '申请人',
+  `apply_date` date default NULL COMMENT '请申时间',
+  `phone` varchar(100) default NULL COMMENT '联系方式',
+  `repair_type` smallint(6) default NULL COMMENT '维修类型',
+  `cause` tinyint(1) default NULL COMMENT '故障原因：1人为  2非人为',
+  `failure_cause` text COMMENT '故障原因',
+  `result` tinyint(4) default NULL COMMENT '维修结果：1完成 2未完成',
+  `repair_result` text COMMENT '维修结果',
+  `repairer` varchar(100) default NULL COMMENT '维修者',
+  `repair_date` date default NULL COMMENT '维修时间',
+  `operator_id` bigint(20) default NULL COMMENT '操作人',
+  `operate_date` date default NULL COMMENT '操作时间',
+  `status` smallint(6) default '0' COMMENT '状态：0未提交 1已提交未确认 2已确认未处理 3已处理 4已取消',
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='维修表';
+
+-- ----------------------------
+-- Records of wlzx_oa_logistics_repair
+-- ----------------------------
+INSERT INTO `wlzx_oa_logistics_repair` VALUES ('1', '120204192641', '投影仪', '实得分', '1', '708', '2012-02-04', '123465456', '0', null, null, null, null, null, null, null, null, '1');
+INSERT INTO `wlzx_oa_logistics_repair` VALUES ('2', '120204192642', '投影仪2', '实得分', '1', '708', '2012-02-04', '333333', '0', null, null, null, null, null, null, null, null, '1');
+INSERT INTO `wlzx_oa_logistics_repair` VALUES ('3', '120204192643', 'tests', 'sfd', '2', '708', '2012-02-04', '123', '0', null, null, null, null, null, null, null, null, '0');
 
