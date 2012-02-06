@@ -24,6 +24,8 @@ public class PurchaseApplyModel extends BaseModel{
 	private String applyUserViceHeaderMaster;
 	private String financeViceHeaderMaster;
 	private String headerMaster;
+	private Boolean cancleFlag=false;
+	private Boolean submitFlag=false;
 	public String getApplyUser() {
 		return applyUser;
 	}
@@ -101,5 +103,17 @@ public class PurchaseApplyModel extends BaseModel{
 	}
 	public void setApplyTime(Date applyTime) {
 		this.applyTime = applyTime;
+	}
+	public Boolean getCancleFlag() {
+		return cancleFlag;
+	}
+	public void setCancleFlag(Boolean cancleFlag) {
+		this.cancleFlag = cancleFlag;
+	}
+	public Boolean getSubmitFlag() {
+		return submitFlag;
+	}
+	public void setSubmitFlag(Boolean submitFlag) {
+		this.submitFlag = submitFlag;
 	}
 }

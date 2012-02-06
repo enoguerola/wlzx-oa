@@ -40,6 +40,9 @@
 		<property name="teacherFlag" type="boolean">
 			<column name="teacher_flag" />
 		</property> 
+		<property name="financeViceHeaderMasterFlag" type="boolean">
+			<column name="finance_vice_header_master_flag" />
+		</property> 
 		<set name="relativeDRs" lazy="false"  table="wlzx_system_dr"  cascade="none" inverse="true">
 			<cache usage="read-write"/>
 			<key column="role_id" not-null="true" />

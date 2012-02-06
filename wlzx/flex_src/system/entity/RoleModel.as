@@ -11,6 +11,7 @@
 		public var supervisorFlag:Boolean=false;
 		public var basicFlag:Boolean=false;
 		public var teacherFlag:Boolean=false;
+		public var financeViceHeaderMasterFlag:Boolean=false;
 		public var detail:String;
 		public var level:int;
 //		public var subordinates:Object=new Array();//直属下级角色

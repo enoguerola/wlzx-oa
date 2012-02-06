@@ -32,4 +32,5 @@ public interface RoleDAO extends BaseDAO<RoleModel>{
 
 	public List<RoleModel> getTeachingRoles();
 	public RoleModel getRoleByName(String roleName);
+	public RoleModel getFinanceViceHeaderMasterRole();
 }

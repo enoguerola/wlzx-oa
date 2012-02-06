@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Module xmlns:mx="http://www.adobe.com/2006/mxml" layout="vertical" width="100%" creationComplete="init();" height="100%" xmlns:valueObjects="oa.entity.logistics.*" xmlns:component="system.component.*" currentState="list" xmlns:mx1="library://ns.adobe.com/flex/mx">
-	<mx:StringValidator id="date_stringValidator"   property="text" required="true" requiredFieldError="采购日期不能为空"/>
+	<mx:StringValidator id="purchaseName_stringValidator"   property="text" source="{purchaseName}" required="true" requiredFieldError="采购名称不能为空"/>
 	<valueObjects:PurchaseApplyModel id="form"/>
 	<mx:states>
 		<mx:State name="list">           
@@ -45,11 +45,13 @@
 		
 	</mx:transitions>
 	<mx:RemoteObject id="purchaseApplyServiceRO" destination="purchaseApplyServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
-		<mx:method name="addPurchaseApplyApply"  concurrency="last"  result="addPurchaseApplyApplyResult_resultHandler(event);" />
-		<mx:method name="updatePurchaseApplyApply"  concurrency="last"  result="updatePurchaseApplyApplyResult_resultHandler(event);" />
-		<mx:method name="canclePurchaseApplyApplyById"  concurrency="last"  result="canclePurchaseApplyApplyByIdResult_resultHandler(event);" />
+		<mx:method name="addPurchaseApply"  concurrency="last"  result="addPurchaseApplyResult_resultHandler(event);" />
+		<mx:method name="updatePurchaseApply"  concurrency="last"  result="updatePurchaseApplyResult_resultHandler(event);" />
+		<mx:method name="canclePurchaseApplyById"  concurrency="last"  result="canclePurchaseApplyByIdResult_resultHandler(event);" />
+		<mx:method name="submitPurchaseApply"  concurrency="last"  result="submitPurchaseApplyResult_resultHandler(event);" />
+		
 		<mx:method name="loadApplyInfoById"  concurrency="last"  result="loadApplyInfoById_resultHandler(event);" />
-		<mx:method name="getUserPurchaseApplyApplies"  concurrency="last"  result="getUserPurchaseApplyApplies_resultHandler(event);" />
+		<mx:method name="getApplyListByUser"  concurrency="last"  result="getApplyListByUser_resultHandler(event);" />
 	</mx:RemoteObject>
 	
 	<mx:Script> 
@@ -68,6 +70,8 @@
 			import mx.rpc.events.*;
 			import mx.validators.Validator;
 			
+			import system.component.lockWin.LockWinTool;
+			import system.utils.ComboxUtils;
 			import system.utils.CommonUtils;
 			[Embed(source="../WebContent/resources/common/tools/button_add_icon.png")]
 			private const button_add:Class;
@@ -87,65 +91,90 @@
 				
 			}
 			
-			protected function addPurchaseApplyApplyResult_resultHandler(event:ResultEvent):void
+			protected function addPurchaseApplyResult_resultHandler(event:ResultEvent):void
 			{
 				Alert.show("添加成功");
 				this.currentState='list';
 				search();
 			}
-			protected function updatePurchaseApplyApplyResult_resultHandler(event:ResultEvent):void
+			protected function updatePurchaseApplyResult_resultHandler(event:ResultEvent):void
 			{
 				Alert.show("更新成功");
 				this.currentState='list';
 				search();
 			}
-			protected function canclePurchaseApplyApplyByIdResult_resultHandler(event:ResultEvent):void
+			protected function canclePurchaseApplyByIdResult_resultHandler(event:ResultEvent):void
 			{
-				if(event.result as Boolean==true){
+			/* 	if(event.result as Boolean==true){ */
 					Alert.show("取消成功");
-				}else{
+				/* }else{
 					Alert.show("无法取消");
 				}
-				
+				 */
+				search();
+			}
+			protected function submitPurchaseApplyResult_resultHandler(event:ResultEvent):void
+			{
+				/*  if(event.result as Boolean==true){  */
+					Alert.show("提交成功");
+				/* }else{
+					Alert.show("无法取消");
+				}
+				 */
 				search();
 			}
 			
 			protected function loadApplyInfoById_resultHandler(event:ResultEvent):void{
 				form=event.result as PurchaseApplyModel;
-				/* applyNo.text="编号：【"+form.applyNo+"】";
+				 applyNo.text="编号：【"+form.applyNo+"】";
 				applyNo.visible=true;
-				teacher_name.text=this.parentApplication.getTeacherNameByAccountId(form.teacherId); 
-				teacher_id.text=form.teacherId;
-				var times_attr:Array=form.times.split(";");
-				timeContainer.removeAllChildren();
-				for(var i:int=0;i<times_attr.length;i++){
-					
-					var time:String=times_attr[i];
-					if(time!=null&&time!=""){
-						addItem(time);						
-					}
-				} */
-//				reason.text=form.reason;
-				
-				
+			
+				purchaseName.text=form.purchaseName;
+				purchaseDescription.text=form.purchaseDescription
+				isGovernmentPurchase.selected=form.isGovernmentPurchase;
+				apply_user_name.text=parentApplication.getTeacherNameByAccountId(form.applyUser);
+				apply_user_id.text=form.applyUser;
+				apply_time.text=formatDate(form.applyTime);
+				apply_department.dataProvider=this.parentApplication.currentUserFirstLevelDepartment;
+				apply_department.selectedIndex=ComboxUtils.findIndexById(parentApplication.currentUserFirstLevelDepartment as ArrayCollection,form.applyUserDepartmentId);
 				
 			}
 			
 			
-			protected function getUserPurchaseApplyApplies_resultHandler(event:ResultEvent):void
+			protected function getApplyListByUser_resultHandler(event:ResultEvent):void
 			{
-				var allList:ArrayCollection=event.result as ArrayCollection;
-				applyTable.initdata(allList);
+				LockWinTool.unLockCurrentWin();
+				var result:Object=event.result as Object;
+				var list:Object=new Object;
+				list.data=(result==null?new ArrayCollection():result.items);
+				list.totalLength=(result==null?0:result.totalCount);
+				if(result!=null){
+					pc.AppandData(list);
+					
+				}else{
+					table.dataProvider=null;
+				}
+			}
+			public function searchPage(index:int,dataLength:int):void{
+				LockWinTool.lockCurrentWin(this,"搜索采购申请记录中");
+				/* var departmentId:String=treeSelectedItemId();
+				var userId:String=search_account_id.text; */
+			
+				purchaseApplyServiceRO.getApplyListByUser(parentApplication.currentUser.id,index-1,index-1+dataLength);
 			}
 			public function search():void{
-				purchaseApplyServiceRO.getUserPurchaseApplyApplies(this.parentApplication.currentUser.id);
+				pc.GoToControll(1);
 			}
 			private function addInit():void{
 				applyNo.text="";
+				purchaseName.text="";
+				purchaseDescription.text="";
+				isGovernmentPurchase.selected=false;
 				apply_user_name.text=this.parentApplication.currentUser.person.name;
 				apply_user_id.text=this.parentApplication.currentUser.id;
 				apply_time.text=formatDate(new Date());
 				apply_department.dataProvider=this.parentApplication.currentUserFirstLevelDepartment;
+				apply_department.selectedIndex=ComboxUtils.findIndex(this.parentApplication.currentUserFirstLevelDepartment,this.parentApplication.currentUser.mainSD.departmentId);
 				saveButton.label="新增";
 				
 				
@@ -169,13 +198,22 @@
 				
 			}
 			public function cancleApply(applyId:String):void{
-				Alert.show("你确定要取消该调课申请吗?","确认",Alert.YES | Alert.NO,null,function(event:CloseEvent):void{
+				Alert.show("你确定要取消该采购申请吗?","确认",Alert.YES | Alert.NO,null,function(event:CloseEvent):void{
 					if(event.detail == Alert.YES)
 					{
-						purchaseApplyServiceRO.canclePurchaseApplyApplyById(applyId);
+						purchaseApplyServiceRO.canclePurchaseApplyById(applyId);
 					}
 				});
 			}
+			public function submitApply(applyId:String):void{
+				Alert.show("你确定要提交该采购申请吗?","确认",Alert.YES | Alert.NO,null,function(event:CloseEvent):void{
+					if(event.detail == Alert.YES)
+					{
+						purchaseApplyServiceRO.submitPurchaseApply(applyId);
+					}
+				});
+			}
+			
 			public function detailApply(applyId:String):void{
 				/* purchaseApplyServiceRO.getDetailInfoById(applyId); */
 				var parent:Object=(Object)(((Object)(this.owner)).owner);
@@ -206,11 +244,22 @@
 				if(validateInput()){
 					if(addUpdateFlag.text=="add"){
 						form=new PurchaseApplyModel();
-//						
-						purchaseApplyServiceRO.addPurchaseApplyApply(form);
+						form.purchaseName=purchaseName.text;
+						form.purchaseDescription=purchaseDescription.text;
+						form.isGovernmentPurchase=isGovernmentPurchase.selected;
+						form.applyUser=apply_user_id.text;
+						var item:Object=apply_department.selectedItem;
+						form.applyUserDepartmentId=item.data;
+						/* Alert.show(item.id); */
+						purchaseApplyServiceRO.addPurchaseApply(form);
 					}else if(addUpdateFlag.text=="update"+"_"+form.id){
-//						
-						purchaseApplyServiceRO.updatePurchaseApplyApply(form);
+						form.purchaseName=purchaseName.text;
+						form.purchaseDescription=purchaseDescription.text;
+						form.isGovernmentPurchase=isGovernmentPurchase.selected;
+						form.applyUser=apply_user_id.text;
+						var item:Object=apply_department.selectedItem;
+						form.applyUserDepartmentId=item.data;
+						purchaseApplyServiceRO.updatePurchaseApply(form);
 						
 					}
 					
@@ -219,8 +268,17 @@
 			
 			public function validateInput():Boolean
 			{	
-				
-				return true;
+				validatorArr = new Array();
+				purchaseName_stringValidator.source=purchaseName;
+				validatorArr.push(purchaseName_stringValidator);
+				var validatorErrorArray:Array = Validator.validateAll(validatorArr);
+				var isValidForm:Boolean = validatorErrorArray.length == 0;
+				if (isValidForm) {
+					return true;
+				} else {
+					
+					return false;
+				}
 				
 			}
 			public function formatDate(date:Date):String{
@@ -246,8 +304,8 @@
 				<mx:HBox width="100%" height="100%" paddingLeft="10" paddingRight="10" paddingBottom="10">
 					<mx:Panel width="100%" height="100%"  styleName="customPanel" title="采购申请"  cornerRadius="5" borderVisible="false" dropShadowVisible="false">
 						
-						<component:WlzxPageDataGrid width="100%" height="100%"   borderVisible="true"  autoLayout="true"  borderAlpha="0.2" verticalAlign="middle"   id="applyTable" pagecount="10"  >				
-							<component:mygridcolumns>
+						<mx:DataGrid id="table" rowCount="10" width="100%" height="100%"    verticalAlign="middle" >
+							<mx:columns>
 								<mx:DataGridColumn textAlign="center" headerText="申请编号" dataField="applyNo" width="100">
 									<mx:itemRenderer>
 										<mx:Component>
@@ -258,47 +316,43 @@
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
 								
-								<mx:DataGridColumn textAlign="center" headerText="采购名称"  width="200" >
+								<mx:DataGridColumn textAlign="center" headerText="采购名称"  width="100" >
 									<mx:itemRenderer>
 										<mx:Component>
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off" >
-												<mx1:Text text="{this.outerDocument.timeTip(data.times)}" width="180">
-													
-												</mx1:Text>
+												<mx:Label text="{data.purchaseName}"/>
+
 											</mx:HBox>
 										</mx:Component>
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
 								
-								<mx:DataGridColumn textAlign="center" headerText="申请金额"  width="100" >
+								<mx:DataGridColumn textAlign="center" headerText="申请描述"  width="100" >
 									<mx:itemRenderer>
 										<mx:Component>
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off" >
-												<mx1:Text text="{this.outerDocument.timeTip(data.times)}" width="180">
-													
-												</mx1:Text>
+												<mx:Label text="{data.purchaseDescription}"/>
+
 											</mx:HBox>
 										</mx:Component>
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="申请人"  width="100" >
+								<mx:DataGridColumn textAlign="center" headerText="申请人"  width="80" >
 									<mx:itemRenderer>
 										<mx:Component>
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off" >
-												<mx1:Text text="{this.outerDocument.timeTip(data.times)}" width="180">
-													
-												</mx1:Text>
+												<mx:Label text="{parentApplication.getTeacherNameByAccountId(data.applyUser)}">
+												</mx:Label>
 											</mx:HBox>
 										</mx:Component>
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="申请部门"  width="100" >
+								<mx:DataGridColumn textAlign="center" headerText="申请部门"  width="80" >
 									<mx:itemRenderer>
 										<mx:Component>
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off" >
-												<mx1:Text text="{this.outerDocument.timeTip(data.times)}" width="180">
-													
-												</mx1:Text>
+												<mx:Label text="{parentApplication.getDepartmentObjectById(data.applyUserDepartmentId).name}">
+												</mx:Label>
 											</mx:HBox>
 										</mx:Component>
 									</mx:itemRenderer>
@@ -307,9 +361,8 @@
 									<mx:itemRenderer>
 										<mx:Component>
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off" >
-												<mx1:Text text="{this.outerDocument.timeTip(data.times)}" width="180">
-													
-												</mx1:Text>
+												<mx:Label text="{this.outerDocument.formatDate(data.applyTime)}">
+												</mx:Label>
 											</mx:HBox>
 										</mx:Component>
 									</mx:itemRenderer>
@@ -348,15 +401,15 @@
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
 								
-								<mx:DataGridColumn textAlign="center" headerText="操作" width="100">
+								<mx:DataGridColumn textAlign="center" headerText="操作" width="150">
 									<mx:itemRenderer>
 										<mx:Component>
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0" horizontalScrollPolicy="off" >
-												<mx:LinkButton  label="[编辑]"   click="{this.outerDocument.enterEdit(data.id);}" enabled="{checkAuth(data)}">											
+												<mx:LinkButton  label="[编辑]"   click="{this.outerDocument.enterEdit(data.id);}" enabled="{checkEditAuth(data)}">											
 												</mx:LinkButton>
-												<mx:LinkButton  label="[取消]"   click="{this.outerDocument.cancleApply(data.id);}" enabled="{checkAuth(data)}">											
+												<mx:LinkButton  label="[取消]"   click="{this.outerDocument.cancleApply(data.id);}" enabled="{checkCancleAuth(data)}">											
 												</mx:LinkButton>
-												<mx:LinkButton  label="[提交]"   click="{this.outerDocument.cancleApply(data.id);}" enabled="{checkAuth(data)}">											
+												<mx:LinkButton  label="[提交]"   click="{this.outerDocument.submitApply(data.id);}" enabled="{checkSubmitAuth(data)}">											
 												</mx:LinkButton>
 												<mx:Script>
 													<![CDATA[
@@ -366,13 +419,28 @@
 														
 														import mx.controls.Alert;
 														import mx.core.UIComponent;
-														private function checkAuth(data:Object):Boolean{
+														private function checkEditAuth(data:Object):Boolean{
 															
 															if(data!=null){	
-																if(data.status==0){
-																	return true;
-																}else
-																	return false;
+																return !data.submitFlag;
+																
+															}else{
+																return false;
+															}
+														}
+														private function checkCancleAuth(data:Object):Boolean{
+															
+															if(data!=null){	
+																return !data.submitFlag;
+																
+															}else{
+																return false;
+															}
+														}
+														private function checkSubmitAuth(data:Object):Boolean{
+															
+															if(data!=null){	
+																return !data.submitFlag;
 																
 															}else{
 																return false;
@@ -387,7 +455,7 @@
 										
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
-								<mx:DataGridColumn textAlign="center" headerText="查看" width="100">
+								<mx:DataGridColumn textAlign="center" headerText="查看" width="60">
 									<mx:itemRenderer>
 										<mx:Component>
 											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalGap="0" horizontalScrollPolicy="off" >
@@ -402,9 +470,9 @@
 										
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
-								
-							</component:mygridcolumns>
-						</component:WlzxPageDataGrid>
+							</mx:columns>
+						</mx:DataGrid>
+						<component:SPageController id="pc" useCache="{false}" TargetUI="{table}" callBackFunc="{searchPage}"  PerPage="15" ClientPages="3"  width="100%"/>
 					</mx:Panel>
 				</mx:HBox>
 				
@@ -441,19 +509,20 @@
 								<mx:VBox horizontalAlign="left" width="100%">
 									<mx:FormItem label="采购名称">
 										<mx:HBox width="100%">
-											<mx:TextInput width="300"/>
-											
+											<mx:TextInput width="300" id="purchaseName"/>
+											<mx:Label text="是否政府采购"/>
+											<mx:CheckBox  id="isGovernmentPurchase" selected="false"/>
 										</mx:HBox>
 									</mx:FormItem>
-									<mx:FormItem label="采购金额">
+									<!--<mx:FormItem label="采购金额">
 										<mx:HBox width="100%">
 											<mx:TextInput width="100" restrict="0-9\."/>
 											<mx:Label text="元		是否政府采购"/>
 											<mx:CheckBox  id="isGovernmentPurchase" selected="false"/>
 										</mx:HBox>
-									</mx:FormItem>
+									</mx:FormItem>-->
 									<mx:FormItem label="采购描述">
-										<mx:TextArea width="600" height="100"/>
+										<mx:TextArea width="600" height="100" id="purchaseDescription"/>
 									</mx:FormItem>
 									<mx:FormItem label="申请部门">
 										<mx:HBox width="100%">

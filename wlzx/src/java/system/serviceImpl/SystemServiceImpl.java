@@ -594,6 +594,7 @@ public class SystemServiceImpl implements SystemService{
 		newDepartment.setSequence(department.getSequence());
 		newDepartment.setLevel(department.getLevel());
 		newDepartment.setSupervisorFlag(department.getSupervisorFlag());
+		newDepartment.setResourceFlag(department.getResourceFlag());
 		String[] masterIds=masterUserIds.split(";");
 		for(String id:masterIds){
 			UserModel user=userDAO.get(id);
@@ -706,6 +707,7 @@ public class SystemServiceImpl implements SystemService{
 		newRole.setName(role.getName());
 		newRole.setSequence(role.getSequence());
 		newRole.setTeacherFlag(role.getTeacherFlag());
+		newRole.setFinanceViceHeaderMasterFlag(role.getFinanceViceHeaderMasterFlag());
 //		for(UserModel preUser:role.getUsers()){
 //			newRole.getUsers().remove(preUser);
 //		}

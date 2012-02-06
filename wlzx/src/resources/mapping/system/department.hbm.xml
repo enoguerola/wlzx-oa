@@ -13,6 +13,9 @@
 		<property name="supervisorFlag" type="boolean">
 			<column name="supervisor_flag" />
 		</property>
+		<property name="resourceFlag" type="boolean">
+			<column name="resource_flag" />
+		</property>
 		<property name="level" type="int">
 			<column name="level" />
 		</property>
