@@ -42,7 +42,6 @@ public interface RepairService {
 	 */	
 	public RepairModel getRepair(String id)throws ServiceException;
 	
-	public PaginationSupport<RepairModel> getRepairsByApplyId(String applyId, int startIndex ,int pageSize)throws ServiceException;
 	/**
 	 * 获取维修单
 	 * @param 申请者id 申请开始时间 申请结束时间 维修者 维修开始时间 维修结束时间 状态 是否电教
