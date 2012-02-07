@@ -30,7 +30,7 @@
 			import mx.managers.PopUpManager;
 			import mx.rpc.events.*;
 			import mx.validators.Validator;
-			
+			import system.event.PopEvent;
 			import system.entity.DepartmentModel;
 			import system.entity.UserModel;
 			import system.index;
@@ -50,6 +50,9 @@
 			private function init():void {	
 				apply_account.dataProvider=this.parentApplication.allTeacherAcccounts;
 				search(); 
+				addEventListener(PopEvent.COMPLETED,function():void{
+					search();
+				});
 			}
 			
 			private function systemFaultHandler(event:FaultEvent):void {

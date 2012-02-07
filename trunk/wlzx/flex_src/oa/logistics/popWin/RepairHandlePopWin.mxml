@@ -38,8 +38,9 @@
 			import mx.rpc.events.*;
 			import mx.validators.Validator;
 			
-			import oa.logistics.repairNotTechRelative;
-			import oa.logistics.repairTechRelative;
+			import system.event.PopEvent;
+/* 			import oa.logistics.repairNotTechRelative;
+			import oa.logistics.repairTechRelative; */
 			
 			import system.utils.CommonUtils;
 			import system.utils.ComboxUtils;
@@ -111,13 +112,14 @@
 			protected function saveRepairResult_resultHandler(event:ResultEvent):void
 			{	
 				if(this.toolTip=='Confirm'||this.toolTip=='UpdateNotTech'){
-					var parent:repairNotTechRelative = this.owner as repairNotTechRelative;
-					parent.search();
+/* 					var parent:repairNotTechRelative = this.owner as repairNotTechRelative;
+					parent.search(); */
 				}
 				else{
-					var parent2:repairTechRelative = this.owner as repairTechRelative;
-					parent2.search();
+//					var parent2:repairTechRelative = this.owner as repairTechRelative;
+//					parent2.search();
 				}
+				this.owner.dispatchEvent(new PopEvent(PopEvent.COMPLETED,null,null,null,null,true,false));
 				PopUpManager.removePopUp(this);
 			}
 			protected function getRepair_resultHandler(event:ResultEvent):void
