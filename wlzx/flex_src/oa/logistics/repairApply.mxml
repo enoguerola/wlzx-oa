@@ -165,7 +165,16 @@
 																private function getLabel(data:Object):String{
 																	if(data.isElectric=="1")
 																		return "电教维修";
-																	else return "非电教维修";
+																	else if(data.repairType==1) 
+																		return "木工维修";
+																	else if(data.repairType==2) 
+																		return "水工维修";
+																	else if(data.repairType==3) 
+																		return "电工维修";
+																	else if(data.repairType==4) 
+																		return "其他维修";
+																	else
+																		return "非电教维修";
 																	
 																}
 															]]>

@@ -112,22 +112,20 @@
 			{	
 				if(this.toolTip=='Confirm'||this.toolTip=='UpdateNotTech'){
 					var parent:repairNotTechRelative = this.owner as repairNotTechRelative;
-					//parent.search();
+					parent.search();
 				}
 				else{
 					var parent2:repairTechRelative = this.owner as repairTechRelative;
 					parent2.search();
 				}
 				PopUpManager.removePopUp(this);
-//				this.owner.dispatchEvent(new PopEvent(PopEvent.COMPLETED,null,null,null,null,true,false));
-//				PopUpManager.removePopUp(this);
 			}
 			protected function getRepair_resultHandler(event:ResultEvent):void
 			{
 				repair=event.result as RepairModel;
-				if(this.toolTip=='Check'&&repair.isElectric=='2'){
+				if((this.toolTip=='Check'||this.toolTip=='UpdateNotTech')&&repair.isElectric=='2'){
 					repairType.selectedIndex=ComboxUtils.findIndex(repairTypeList,repair.repairType);
-				}else{
+				}else if(this.toolTip=='Check'&&repair.isElectric=='1'){
 					confirmMessage.visible=false;
 					confirmMessage.height=1;
 					type.visible=false;
