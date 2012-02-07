@@ -160,7 +160,17 @@
 		<servlet-name>FileUpload Servlet</servlet-name>
 		<url-pattern>/servlet/attachmentUpload.action</url-pattern>
 	</servlet-mapping>
-	
+	<servlet>
+		<servlet-name>JBPMProcessImage Servlet</servlet-name>
+		<servlet-class>system.servlet.JBPMProcessImage</servlet-class>
+		
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>JBPMProcessImage Servlet</servlet-name>
+		<url-pattern>/servlet/jbpmProcessImage</url-pattern>
+	</servlet-mapping>
 	<welcome-file-list>
 		<welcome-file>index.jsp</welcome-file>
 	</welcome-file-list>

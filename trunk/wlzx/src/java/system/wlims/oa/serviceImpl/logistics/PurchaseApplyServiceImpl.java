@@ -1,6 +1,8 @@
 package system.wlims.oa.serviceImpl.logistics;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.jbpm.api.Configuration;
 import org.jbpm.api.ExecutionService;
@@ -8,8 +10,10 @@ import org.jbpm.api.HistoryService;
 import org.jbpm.api.IdentityService;
 import org.jbpm.api.ManagementService;
 import org.jbpm.api.ProcessEngine;
+import org.jbpm.api.ProcessInstance;
 import org.jbpm.api.RepositoryService;
 import org.jbpm.api.TaskService;
+import org.jbpm.api.task.Task;
 
 import system.PaginationSupport;
 import system.dao.DepartmentDAO;
@@ -30,7 +34,7 @@ public class PurchaseApplyServiceImpl implements PurchaseApplyService{
     private HistoryService historyService;
     private ManagementService managementService;
     private IdentityService identityService;
-    public PurchaseApplyServiceImpl(){
+    public PurchaseApplyServiceImpl() {
 		processEngine=Configuration.getProcessEngine();
 		repositoryService=processEngine.getRepositoryService();  
         executionService = processEngine.getExecutionService();  
@@ -38,7 +42,6 @@ public class PurchaseApplyServiceImpl implements PurchaseApplyService{
         historyService=processEngine.getHistoryService();
         managementService=processEngine.getManagementService();
         identityService=processEngine.getIdentityService();
-        processEngine.getRepositoryService().createDeployment().addResourceFromClasspath("logistis-caigou.jpdl.xml").deploy();
 	}
 	
 	private PurchaseApplyDAO purchaseApplyDAO;
@@ -58,9 +61,12 @@ public class PurchaseApplyServiceImpl implements PurchaseApplyService{
 		PurchaseApplyModel model=purchaseApplyDAO.get(applyId);
 		model.setSubmitFlag(true);
 		purchaseApplyDAO.saveOrUpdate(model);
+		Task task=taskService.createTaskQuery().processInstanceId(model.getId()).assignee(model.getApplyUser()).uniqueResult();//取刚发起的流程的任务
+		taskService.completeTask(task.getId());
 	}
 
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void addPurchaseApply(PurchaseApplyModel apply) {
 		// TODO Auto-generated method stub
@@ -100,6 +106,11 @@ public class PurchaseApplyServiceImpl implements PurchaseApplyService{
 		}catch(Exception e){
 			apply.setHeaderMaster("1");
 		}
+		purchaseApplyDAO.saveOrUpdate(apply);
+		Map map=new HashMap();
+		map.put("purchase", apply);
+		ProcessInstance processInstance = executionService.startProcessInstanceByKey("caigou", map);
+		apply.setProcessInstanceId(processInstance.getId());
 		purchaseApplyDAO.saveOrUpdate(apply);
 	}
 

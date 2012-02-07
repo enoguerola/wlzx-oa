@@ -10,6 +10,7 @@ public class PurchaseApplyModel extends BaseModel{
 	 * 
 	 */
 	private static final long serialVersionUID = -9078432634342762817L;
+	private String processInstanceId;
 	private String applyNo;
 	private String purchaseName;
 	private String purchaseDescription;
@@ -115,5 +116,11 @@ public class PurchaseApplyModel extends BaseModel{
 	}
 	public void setSubmitFlag(Boolean submitFlag) {
 		this.submitFlag = submitFlag;
+	}
+	public String getProcessInstanceId() {
+		return processInstanceId;
+	}
+	public void setProcessInstanceId(String processInstanceId) {
+		this.processInstanceId = processInstanceId;
 	}
 }

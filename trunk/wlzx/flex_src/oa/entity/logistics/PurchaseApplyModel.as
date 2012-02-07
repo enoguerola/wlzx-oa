@@ -9,6 +9,7 @@ package oa.entity.logistics
 	[RemoteClass(alias="system.wlims.oa.entity.logistics.PurchaseApplyModel")] 
 	public class PurchaseApplyModel extends BaseModel
 	{
+		public var processInstanceId:String;
 		public var applyNo:String;
 		public var purchaseName:String;
 		public var purchaseDescription:String;

@@ -1,18 +1,24 @@
 
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.ZipInputStream;
 
 import junit.framework.TestCase;
 
 import org.jbpm.api.Configuration;
+import org.jbpm.api.Execution;
 import org.jbpm.api.ExecutionService;
 import org.jbpm.api.HistoryService;
 import org.jbpm.api.IdentityService;
 import org.jbpm.api.ManagementService;
 import org.jbpm.api.ProcessDefinition;
+import org.jbpm.api.ProcessDefinitionQuery;
 import org.jbpm.api.ProcessEngine;
 import org.jbpm.api.ProcessInstance;
 import org.jbpm.api.RepositoryService;
@@ -33,19 +39,27 @@ public class DemoTest extends TestCase {
 	    private HistoryService historyService;
 	    private ManagementService managementService;
 	    private IdentityService identityService;
-	public DemoTest(){
-		processEngine=Configuration.getProcessEngine();
-		repositoryService=processEngine.getRepositoryService();  
-        executionService = processEngine.getExecutionService();  
-        taskService= processEngine.getTaskService();  
-        historyService=processEngine.getHistoryService();
-        managementService=processEngine.getManagementService();
-        identityService=processEngine.getIdentityService();
-	}
-	protected void setUp(){
-		processEngine.getRepositoryService().createDeployment()
-		.addResourceFromClasspath("logistis-caigou.jpdl.xml").deploy();
-	}
+		public DemoTest(){
+			processEngine=Configuration.getProcessEngine();
+			repositoryService=processEngine.getRepositoryService();  
+	        executionService = processEngine.getExecutionService();  
+	        taskService= processEngine.getTaskService();  
+	        historyService=processEngine.getHistoryService();
+	        managementService=processEngine.getManagementService();
+	        identityService=processEngine.getIdentityService();
+		}
+		protected void setUp(){
+			 ZipInputStream zis;
+			try {
+				zis = new ZipInputStream(new FileInputStream("E:/AdobeFlashBuilder4.5/wlzx/src/java/logistis-caigou.zip"));
+			     processEngine.getRepositoryService().createDeployment().addResourcesFromZipInputStream(zis).deploy();
+			     zis.close();  
+	
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 //	//测试发布
 //	public void testDeploy(){
 //		//获取流程服务
@@ -101,33 +115,69 @@ public class DemoTest extends TestCase {
 //	}
 //	}
 	public void testPurchase(){
-		  PurchaseApplyModel purchase=new PurchaseApplyModel();
-		  purchase.setApplyUser("11");
-		  purchase.setApplyUserDepartmentLeader("22");
-		  Map map=new HashMap();
-		  map.put("purchase", purchase);
-		  ProcessInstance processInstance = executionService.startProcessInstanceByKey("caigou", map);
-		  Task task=taskService.createTaskQuery().processInstanceId(processInstance.getId())
-		  				  .assignee(purchase.getApplyUser())
-		  				  .uniqueResult();//取刚发起的流程的任务
-		  taskService.completeTask(task.getId());//跳过申请task节点
-		//7由RepositoryService创建流程定义查询接口
+//		  PurchaseApplyModel purchase=new PurchaseApplyModel();
+//		  purchase.setApplyUser("11");
+//		  purchase.setApplyUserDepartmentLeader("22");
+//		  Map map=new HashMap();
+//		  map.put("purchase", purchase);
+//		  ProcessInstance processInstance = executionService.startProcessInstanceByKey("caigou", map);
+//		  Task task=taskService.createTaskQuery().processInstanceId(processInstance.getId())
+//		  				  .assignee(purchase.getApplyUser())
+//		  				  .uniqueResult();//取刚发起的流程的任务
+//		  taskService.completeTask(task.getId());//跳过申请task节点
+//		//7由RepositoryService创建流程定义查询接口
+//
+//        List<ProcessDefinition> list = repositoryService.createProcessDefinitionQuery().list();
+//        for(ProcessDefinition processDefinition:list){
+//            System.out.println(processDefinition.getDeploymentId()+"---" +processDefinition.getId()+"---"+processDefinition.getName());
+//        }
+//		 List<Task> tasks= taskService.findPersonalTasks("22");
+//		 for(Task t:tasks){
+//			 System.out.println(t.getName());
+//		 }
+//		 List<HistoryTask> hts=historyService.createHistoryTaskQuery().executionId(task.getExecutionId()).list();
+//		 for(HistoryTask ht:hts){
+//			 System.out.println(ht.getState());
+//		 }
+//		 List<HistoryActivityInstance> hais=historyService.createHistoryActivityInstanceQuery().executionId(task.getExecutionId()).list();
+//		 for(HistoryActivityInstance hai:hais){
+//			 System.out.println(hai.getActivityName());
+//		 }
+//		ProcessInstance processInstance = 
+//			executionService.startProcessInstanceByKey("caigou");
+//			     //START INSERTED CODE
+//			    ProcessDefinitionQuery pdq = 
+//			repositoryService.createProcessDefinitionQuery();
+//			    
+//			    List<ProcessDefinition> processList = pdq.list();
+//			 
+//			    String retVal;
+//			 
+//			    for (ProcessDefinition def: processList)
+//			    {
+//			       retVal = def.getImageResourceName();
+//			       System.out.println("IMAGE RESOURCE: " + retVal);
+//			    }
+//			    // END INSERTED CODE
+//			    Execution execution = processInstance.findActiveExecutionIn("wait");
+//			 
+//			    executionService.signalExecutionById(execution.getId());
+//			 
+//			    List<String> expectedLogs = new ArrayList<String>();
+//			 
+//			    expectedLogs.add("start on process definition");
+//			 
+//			    expectedLogs.add("start on activity wait");
+//			 
+//			    expectedLogs.add("end on activity wait");
+//			 
+//			    expectedLogs.add("take transition");
+//			 
+//			    List<String> logs = (List<String>) 
+//			executionService.getVariable(processInstance.getId(), "logs");
+//			 
+//			    assertEquals(expectedLogs, logs);
+			 
 
-        List<ProcessDefinition> list = repositoryService.createProcessDefinitionQuery().list();
-        for(ProcessDefinition processDefinition:list){
-            System.out.println(processDefinition.getDeploymentId()+"---" +processDefinition.getId()+"---"+processDefinition.getName());
-        }
-		 List<Task> tasks= taskService.findPersonalTasks("22");
-		 for(Task t:tasks){
-			 System.out.println(t.getName());
-		 }
-		 List<HistoryTask> hts=historyService.createHistoryTaskQuery().executionId(task.getExecutionId()).list();
-		 for(HistoryTask ht:hts){
-			 System.out.println(ht.getState());
-		 }
-		 List<HistoryActivityInstance> hais=historyService.createHistoryActivityInstanceQuery().executionId(task.getExecutionId()).list();
-		 for(HistoryActivityInstance hai:hais){
-			 System.out.println(hai.getActivityName());
-		 }
 	}
 }
