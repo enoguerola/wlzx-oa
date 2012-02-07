@@ -38,9 +38,11 @@
 			import mx.rpc.events.*;
 			import mx.validators.Validator;
 			
+			import oa.logistics.repairNotTechRelative;
 			import oa.logistics.repairTechRelative;
 			
 			import system.utils.CommonUtils;
+			import system.utils.ComboxUtils;
 			private var validatorArr:Array; 
 			[Bindable]
 			public var yesFlag:Boolean=false;
@@ -54,6 +56,12 @@
 			public var resultYesFlag:Boolean=false;
 			[Bindable]
 			public var resultNoFlag:Boolean=false;
+			public var repairTypeList:ArrayCollection = new ArrayCollection( 
+				[
+					{label:"木工", data:1},
+					{label:"水工", data:2},
+					{label:"电工", data:3},
+					{label:"其他", data:4}]);
 			private function init():void
 			{
 				apply_account.dataProvider=this.parentApplication.allTeacherAcccounts;
@@ -66,11 +74,33 @@
 			private function initRepairWin():void{
 				if(this.toolTip=='Update'){		
 					this.placeWin.title="维修申请处理";
+					confirmMessage.visible=false;
+					confirmMessage.height=1;
+					type.visible=false;
+					type.height=1;
+					repairType.visible=false;
+					repairType.height=1;
+				}else if(this.toolTip=='UpdateNotTech'){
+					this.placeWin.title="维修申请处理";
+					repairType.enabled=false;
 				}else if(this.toolTip=='Check'){
-					repair=new RepairModel();
+//					repair=new RepairModel();
 					this.placeWin.title="维修查看";					
 					conform.visible=false;
 					back.label="返回";
+				}else if(this.toolTip=='Confirm'){
+//					repair=new RepairModel();
+					this.placeWin.title="维修受理";					
+					reason.visible=false;
+					reason.height=1;
+					failureText.visible=false;
+					failureText.height=1;
+					repairText.visible=false;
+					repairText.height=1;
+					operateText.visible=false;
+					operateText.height=1;
+					handleMessage.visible=false;
+					handleMessage.height=1;
 				}
 				var repairId:String=this.id;//弹出窗口时设定的中转参数
 				repairServiceRO.getRepair(repairId);
@@ -79,14 +109,30 @@
 				Alert.show(event.fault.faultString, 'Error');
 			}
 			protected function saveRepairResult_resultHandler(event:ResultEvent):void
-			{				
-				var parent:repairTechRelative = this.owner as repairTechRelative;
-				parent.search();
+			{	
+				if(this.toolTip=='Confirm'||this.toolTip=='UpdateNotTech'){
+					var parent:repairNotTechRelative = this.owner as repairNotTechRelative;
+					//parent.search();
+				}
+				else{
+					var parent2:repairTechRelative = this.owner as repairTechRelative;
+					parent2.search();
+				}
 				PopUpManager.removePopUp(this);
+//				this.owner.dispatchEvent(new PopEvent(PopEvent.COMPLETED,null,null,null,null,true,false));
+//				PopUpManager.removePopUp(this);
 			}
 			protected function getRepair_resultHandler(event:ResultEvent):void
 			{
 				repair=event.result as RepairModel;
+				if(this.toolTip=='Check'&&repair.isElectric=='2'){
+					repairType.selectedIndex=ComboxUtils.findIndex(repairTypeList,repair.repairType);
+				}else{
+					confirmMessage.visible=false;
+					confirmMessage.height=1;
+					type.visible=false;
+					type.height=1;
+				}
 				items.text=repair.items;
 				if(repair.isElectric=='1')
 					yesFlag=true;
@@ -114,9 +160,11 @@
 				else resultNoFlag=false;
 				repairResult.text=repair.repairResult;
 				repairer.text=repair.repairer;
+				if(repair.repairDate!=null)
 				repairDate.text=CommonUtils.formatDate(repair.repairDate,"YYYY-MM-DD");
 				operate_account.selectedItems.addItem(this.parentApplication.getItemByAccountId(repair.operatorId));
 				operateAccountHandleAutoCompleteChange();
+				if(repair.operateDate!=null)
 				operateDate.text=CommonUtils.formatDate(repair.operateDate,"YYYY-MM-DD");
 			}
 			protected function placeUpdate_resultHandler(event:ResultEvent):void
@@ -124,15 +172,23 @@
 				
 			}
 			private function validateForm(evt:MouseEvent):void {
-				repair.cause=cause.selectedValue.toString();
-				repair.failureCause=failureCause.text;
-				repair.result=result.selectedValue.toString();
-				repair.repairResult=repairResult.text;
-				repair.repairer=repairer.text;
-				repair.repairDate=DateField.stringToDate(repairDate.text,"YYYY-MM-DD");
-				repair.operatorId=operate_account_id.text;
-				repair.operateDate=DateField.stringToDate(operateDate.text,"YYYY-MM-DD");
-				repair.status=3;
+				if(repair.status==1)
+				{
+					repair.status=2;
+					repair.repairType=repairType.selectedItem.data;
+				}
+				else
+				{
+					repair.status=3;
+					repair.cause=cause.selectedValue.toString();
+					repair.failureCause=failureCause.text;
+					repair.result=result.selectedValue.toString();
+					repair.repairResult=repairResult.text;
+					repair.repairer=repairer.text;
+					repair.repairDate=DateField.stringToDate(repairDate.text,"YYYY-MM-DD");
+					repair.operatorId=operate_account_id.text;
+					repair.operateDate=DateField.stringToDate(operateDate.text,"YYYY-MM-DD");
+				}
 				repairServiceRO.saveRepair(repair);
 			}
 		
@@ -201,12 +257,12 @@
 				</mx:HBox>					
 			</mx:FormItem>				
 			<mx:HRule  width="98%" />
-			<mx:FormHeading label="维修确认信息" fontSize="15" width="100%" textAlign="left"/>
-			<mx:FormItem label="维修类型 ">
-				<mx:ComboBox id="repairType" width="150" editable="false"/>					
+			<mx:FormHeading label="维修确认信息" fontSize="15" width="100%" textAlign="left" id="confirmMessage"/>
+			<mx:FormItem label="维修类型 " id="type">
+				<mx:ComboBox id="repairType" width="150" dataProvider="{repairTypeList}" labelField="label" editable="false"/>					
 			</mx:FormItem>
-			<mx:FormHeading label="维修处理信息" fontSize="15" width="100%" textAlign="left"/>
-			<mx:FormItem label="故障原因" >
+			<mx:FormHeading label="维修处理信息" fontSize="15" width="100%" textAlign="left" id="handleMessage"/>
+			<mx:FormItem label="故障原因" id="reason" >
 				<mx:HBox>
 					<mx:RadioButtonGroup id="cause"/> 
 					<mx:HBox>
@@ -223,20 +279,20 @@
 					</mx:FormItem>
 				</mx:HBox>
 			</mx:FormItem>
-			<mx:FormItem label="">
+			<mx:FormItem label="" id="failureText">
 				<mx:HBox  horizontalGap="10" width="100%"  verticalAlign="middle">
 					<s:TextArea id="failureCause" width="200" height="100"/>	
 					<s:TextArea id="repairResult" width="200" height="100"/>	
 				</mx:HBox>					
 			</mx:FormItem>	
-			<mx:FormItem label="维修人">
+			<mx:FormItem label="维修人" id="repairText">
 				<mx:HBox  horizontalGap="10" width="100%"  verticalAlign="middle">
 					<mx:TextInput id="repairer" width="150"/>
 					<s:Label text="维修时间" verticalAlign="middle"/>
 					<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" id="repairDate"   formatString="YYYY-MM-DD"  editable="false" width="120"/>
 				</mx:HBox>					
 			</mx:FormItem>
-			<mx:FormItem label="操作人">
+			<mx:FormItem label="操作人" id="operateText">
 				<mx:HBox  horizontalGap="10"  width="100%"  verticalAlign="middle">
 					<hc:AutoComplete id="operate_account"  labelField="name"  width="150"  matchType="anyPart" prompt="选择教师"  change="{ searchAccountHandleAutoCompleteChange() }" dropDownItemRenderer="{ operateAccountDropDownItemRenderer }" selectedItemStyleName="none">						
 					</hc:AutoComplete>

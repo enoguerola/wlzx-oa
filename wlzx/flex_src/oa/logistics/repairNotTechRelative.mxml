@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Module xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		   xmlns:s="library://ns.adobe.com/flex/spark" 
+		   xmlns:render="system.component.render.*"
+		   xmlns:hc="com.hillelcoren.components.*"
+		   xmlns:mx="library://ns.adobe.com/flex/mx" layout="vertical"  width="100%" height="100%"   creationComplete="init();" xmlns:component="system.component.*" >
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+		<mx:RemoteObject id="repairServiceRO" destination="repairServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+			<mx:method name="getRepairsByConditions"  concurrency="last"  result="getRepairsByConditions_resultHandler(event);" />	
+			<mx:method name="confirm"  concurrency="last"  result="confirm_resultHandler(event);" />
+			<mx:method name="cancleRepair"  concurrency="last"  result="cancleRepair_resultHandler(event);" />
+		</mx:RemoteObject>
+		<fx:Component id="searchAccountDropDownItemRenderer">
+			<render:AdvancedItemRenderer selectedItems="{ outerDocument.apply_account.selectedItems }" />
+		</fx:Component>	
+	</fx:Declarations>
+	
+	<fx:Script> 
+		<![CDATA[  
+			import oa.logistics.popWin.RepairHandlePopWin;
+			import mx.core.FlexGlobals;
+			import mx.managers.PopUpManager;
+			
+			import mx.collections.ArrayCollection;
+			import mx.containers.*;
+			import mx.controls.*;
+			import mx.events.*; 
+			import mx.events.ValidationResultEvent;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.*;
+			import mx.validators.Validator;
+			
+			import system.entity.DepartmentModel;
+			import system.entity.UserModel;
+			import system.index;
+			import system.utils.CommonUtils;
+			public var statusList:ArrayCollection = new ArrayCollection( 
+				[
+					{label:"全部", data:"1,2,3,4"},
+					{label:"已提交未确认", data:"1"},
+					{label:"已确认未处理", data:"2"},
+					{label:"已处理", data:"3"},
+					{label:"已取消", data:"4"}]);
+			[Bindable] 
+			private var validatorArr:Array;
+			public var places:ArrayCollection = new ArrayCollection();
+			public var placeTypes:ArrayCollection = new ArrayCollection(); 
+			public var buildings:ArrayCollection = new ArrayCollection(); 
+			private function init():void {	
+				apply_account.dataProvider=this.parentApplication.allTeacherAcccounts;
+				search(); 
+			}
+			
+			private function systemFaultHandler(event:FaultEvent):void {
+				Alert.show(event.fault.faultString, 'Error');
+			}
+			
+			protected function getRepairsByConditions_resultHandler(event:ResultEvent):void{
+				var result:Object=event.result as Object;
+				var list:Object=new Object;
+				list.data=(result==null?new ArrayCollection():result.items);
+				list.totalLength=(result==null?0:result.totalCount);
+				if(result!=null){
+					pc.AppandData(list);
+					
+				}else{
+					table.dataProvider=null;
+				} 
+			}
+			private function confirm_resultHandler(event:ResultEvent):void{				
+				search();
+			}
+			public function formatDate(date:Date):String{
+				return CommonUtils.formatDate(date,"YYYY-MM-DD");
+				
+			}
+			private function cancleRepair_resultHandler(event:ResultEvent):void{				
+				search();
+			}
+			
+			public function search():void
+			{
+				pc.GoToControll(1); 
+			}
+			public function searchPage(index:int,dataLength:int):void{
+				repairServiceRO.getRepairsByConditions(apply_account_id.text,search_date_begin.text,search_date_end.text,
+					repairer.text,search_repair_date_begin.text,search_repair_date_end.text,
+					search_status.selectedItem.data,"2",index-1,index-1+dataLength); 
+			}
+			public var pop:RepairHandlePopWin=null;
+			public function enterEdit(place_id:String):void
+			{
+				if(pop!=null)PopUpManager.removePopUp(pop);
+				pop=RepairHandlePopWin(PopUpManager.createPopUp(this,RepairHandlePopWin,true)); 
+				pop.owner=this;
+				PopUpManager.centerPopUp(pop);
+				pop.percentHeight=100;
+				pop.percentWidth=100;
+				pop.x=FlexGlobals.topLevelApplication.stage.stageWidth/2-pop.width/2;
+				pop.y=FlexGlobals.topLevelApplication.stage.stageHeight/2-pop.height/2;
+				pop.id=place_id;//参数传递使用
+				pop.toolTip="UpdateNotTech";
+			}
+			public function enterCheck(place_id:String):void{
+				if(place_id!=null){
+					if(pop!=null)PopUpManager.removePopUp(pop);
+					pop=RepairHandlePopWin(PopUpManager.createPopUp(this,RepairHandlePopWin,true));  
+					pop.owner=this;
+					PopUpManager.centerPopUp(pop);
+					pop.percentHeight=100;
+					pop.percentWidth=100;
+					pop.x=FlexGlobals.topLevelApplication.stage.stageWidth/2-pop.width/2;
+					pop.y=FlexGlobals.topLevelApplication.stage.stageHeight/2-pop.height/2;
+					pop.id=place_id;//参数传递使用
+					pop.toolTip="Check";
+				}	
+			}
+			public function enterConfirm(place_id:String):void{
+				if(place_id!=null){
+					if(pop!=null)PopUpManager.removePopUp(pop);
+					pop=RepairHandlePopWin(PopUpManager.createPopUp(this,RepairHandlePopWin,true));  
+					pop.owner=this;
+					PopUpManager.centerPopUp(pop);
+					pop.percentHeight=100;
+					pop.percentWidth=100;
+					pop.x=FlexGlobals.topLevelApplication.stage.stageWidth/2-pop.width/2;
+					pop.y=FlexGlobals.topLevelApplication.stage.stageHeight/2-pop.height/2;
+					pop.id=place_id;//参数传递使用
+					pop.toolTip="Confirm";
+				}	
+			}
+			public function confirm(id:String):void{
+				repairServiceRO.confirm(id); 
+			}
+			public function cancleRepair(id:String):void{
+				Alert.show("你确定要取消该维修申请吗?","确认删除",Alert.NO|Alert.YES,null,function(event:CloseEvent):void{
+					if(event.detail == Alert.YES)
+						repairServiceRO.cancleRepair(id); 
+				},null,Alert.NO);
+				
+			} 
+			private function searchAccountHandleAutoCompleteChange():void
+			{
+				var color:Object = apply_account.selectedItem;
+				
+				if (color != null && color.hasOwnProperty( "id" ))
+				{
+					apply_account_id.text=color.id;
+				} else{
+					apply_account_id.text="";
+				}             
+			}
+			
+			
+			
+		]]> 		
+	</fx:Script> 
+	
+	<mx:VBox borderVisible="true" width="100%" height="100%" borderStyle="solid">
+		<s:VGroup width="100%" height="100%">
+			<s:VGroup width="100%" height="100%" gap="10" verticalAlign="middle" horizontalAlign="center" >	
+				<mx:VBox width="100%" height="100" verticalAlign="middle" horizontalAlign="left"   verticalGap="0" borderVisible="true"    paddingLeft="10" paddingRight="10">
+					<component:Fieldset title="条件查询" width="100%">
+						
+						<mx:HBox>
+							<mx:HBox>
+								<mx:Label  text="申请人"  width="100"  textAlign="right"/>
+								<hc:AutoComplete id="apply_account"  labelField="name"  width="150"  matchType="anyPart" prompt="选择教师"  change="{ searchAccountHandleAutoCompleteChange() }" dropDownItemRenderer="{ searchAccountDropDownItemRenderer }" selectedItemStyleName="none">						
+								</hc:AutoComplete>
+							</mx:HBox>
+							<mx:HBox>
+								<mx:Label  text="申请日期"  width="100"  textAlign="right"/>
+								<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" id="search_date_begin"   formatString="YYYY-MM-DD"  editable="false" width="120"/>
+								<mx:Label  text="--"  width="30" textAlign="center"/>
+								<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" id="search_date_end"  formatString="YYYY-MM-DD" editable="false" width="120"/>
+								
+								<mx:Label id="apply_account_id" visible="false" width="1">
+								</mx:Label>
+							</mx:HBox>
+						</mx:HBox>
+						<mx:HBox>
+							<mx:HBox>
+								<mx:Label  text="维修人"  width="100"  textAlign="right"/>
+								<mx:TextInput width="150" id="repairer">
+									
+								</mx:TextInput>
+							</mx:HBox>
+							<mx:HBox verticalAlign="middle">
+								
+								<mx:Label  text="维修日期"  width="100"  textAlign="right"/>
+								<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" id="search_repair_date_begin"   formatString="YYYY-MM-DD"  editable="false" width="120"/>
+								<mx:Label  text="--"  width="30" textAlign="center"/>
+								<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" id="search_repair_date_end"  formatString="YYYY-MM-DD" editable="false" width="120"/>
+							</mx:HBox>	
+							<mx:Label  text="状态"  width="60"  textAlign="right"/>
+							<mx:ComboBox id="search_status"  dataProvider="{statusList}" selectedIndex="0"  editable="false" width="120"/>
+							
+							<mx:Button  label="搜索"  width="70"   click="search();"/>
+						</mx:HBox>
+						
+					</component:Fieldset>
+				</mx:VBox>
+				<mx:HBox width="100%" height="100%" paddingLeft="10" paddingRight="10" paddingBottom="10">
+					<mx:Panel width="100%" height="100%"  styleName="customPanel" title="维修申请列表"  cornerRadius="5" borderVisible="false" dropShadowVisible="false">
+						
+						<mx:DataGrid id="table" rowCount="10" width="100%" height="100%"    verticalAlign="middle" >
+							<mx:columns>
+								<mx:DataGridColumn textAlign="center" headerText="编号" dataField="repairNo" width="80">
+								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="维修项目" dataField="items" width="80">
+								</mx:DataGridColumn>
+								
+								<mx:DataGridColumn textAlign="center" headerText="维修类型" dataField="email" width="60">
+									<mx:itemRenderer>
+										<fx:Component>
+											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
+												<mx:Label text="{getLabel(data)}"/>
+												<fx:Script>
+													<![CDATA[
+														
+														private function getLabel(data:Object):String{
+															if(data.isElectric=="1")
+																return "电教维修";
+															else return "非电教维修";
+															
+														}
+													]]>
+												</fx:Script>
+											</mx:HBox>
+											
+										</fx:Component>
+									</mx:itemRenderer>
+								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="申请人" dataField="applyId" width="60">
+									<mx:itemRenderer>
+										<fx:Component>
+											<mx:Label htmlText="{parentApplication.getTeacherNameByAccountId(data.applyId)}"/>									
+										</fx:Component>
+									</mx:itemRenderer>
+								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="联系方式" dataField="phone" width="80">
+								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="申请日期" dataField="applyDate" width="80">
+									<mx:itemRenderer>
+										<fx:Component>
+											<mx:Label text="{this.outerDocument.formatDate(data.applyDate as Date)}"/>
+										</fx:Component>
+									</mx:itemRenderer>
+								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="维修人" dataField="repairer" width="60">
+								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="维修日期" dataField="repairDate" width="80">
+									<mx:itemRenderer>
+										<fx:Component>
+											<mx:Label text="{this.outerDocument.formatDate(data.repairDate as Date)}"/>
+										</fx:Component>
+									</mx:itemRenderer>
+								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="状态" dataField="active" width="80">
+									<mx:itemRenderer>
+										<fx:Component>
+											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
+												<mx:Label text="{getLabel(data)}"/>
+												<fx:Script>
+													<![CDATA[
+														
+														private function getLabel(data:Object):String{
+															if(data!=null){
+																if(data.status==0)
+																	return "未提交";
+																else if(data.status==1)
+																	return "已提交未确认";
+																else if(data.status==2)
+																	return "已确认未处理";
+																else if(data.status==3)
+																	return "已处理";
+																else if(data.status==4)
+																	return "已取消";
+															} 
+															return null;
+															
+														}
+													]]>
+												</fx:Script>
+											</mx:HBox>
+											
+										</fx:Component>
+									</mx:itemRenderer>
+								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="操作" dataField="status" width="180">
+									<mx:itemRenderer>
+										<fx:Component>
+											<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off" >
+												<mx:LinkButton  label="[受理]" enabled="{checkConfirmAuthority(data)}"  click="{this.outerDocument.enterConfirm(data.id);}">											
+												</mx:LinkButton>
+												<mx:LinkButton  label="[处理]" enabled="{checkEditAuthority(data)}"  click="{this.outerDocument.enterEdit(data.id);}">											
+												</mx:LinkButton>
+												<mx:LinkButton  label="[取消]" enabled="{checkCancleAuthority(data)}"  click="{this.outerDocument.cancleRepair(data.id);}">											
+												</mx:LinkButton>
+												<fx:Script>
+													<![CDATA[
+														
+														private function checkConfirmAuthority(data:Object):Boolean{
+															if(data.status==1)
+																return true;
+															else return false;											
+														}
+														private function checkEditAuthority(data:Object):Boolean{
+															if(data.status==2)
+																return true;
+															else return false;											
+														}
+														private function checkCancleAuthority(data:Object):Boolean{
+															if(data.status==4)
+																return false;
+															else return true;											
+														}
+													]]>
+												</fx:Script>
+											</mx:HBox>
+										</fx:Component>
+									</mx:itemRenderer>
+								</mx:DataGridColumn>
+								<mx:DataGridColumn textAlign="center" headerText="查看" dataField="id" width="60">
+									<mx:itemRenderer>
+										<fx:Component>
+											<mx:LinkButton  label="[查看]"   click="{this.outerDocument.enterCheck(data.id);}">											
+											</mx:LinkButton>
+										</fx:Component>
+									</mx:itemRenderer>
+								</mx:DataGridColumn>
+							</mx:columns>
+						</mx:DataGrid>
+						<component:SPageController id="pc" useCache="{false}" TargetUI="{table}" callBackFunc="{searchPage}"  PerPage="13" ClientPages="3"  width="100%"/>
+					</mx:Panel>
+				</mx:HBox>
+				
+			</s:VGroup>
+		</s:VGroup>
+		
+		
+	</mx:VBox>
+	
+	
+</mx:Module>

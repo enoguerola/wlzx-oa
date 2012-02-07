@@ -31,13 +31,6 @@ public class RepairServiceImpl implements RepairService {
 	}
 
 	@Override
-	public PaginationSupport<RepairModel> getRepairsByApplyId(String applyId,
-			int startIndex, int pageSize) throws ServiceException {
-		// TODO Auto-generated method stub
-		return repairDAO.getRepairsByApplyId(applyId, startIndex, pageSize);
-	}
-
-	@Override
 	public void saveRepair(RepairModel repair) throws ServiceException {
 		// TODO Auto-generated method stub
 		if(StringUtils.isEmpty(repair.getId()))
