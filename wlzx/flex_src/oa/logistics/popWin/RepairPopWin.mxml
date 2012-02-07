@@ -35,8 +35,8 @@
 			import mx.rpc.events.*;
 			import mx.validators.Validator;
 			
-			import oa.logistics.repairApply;
-			
+//			import oa.logistics.repairApply;
+			import system.event.PopEvent;
 			import system.utils.CommonUtils;
 			private var validatorArr:Array; 
 			[Bindable]
@@ -67,8 +67,9 @@
 			}
 			protected function saveRepairResult_resultHandler(event:ResultEvent):void
 			{				
-				var parent:repairApply = this.owner as repairApply;
-				parent.search();
+/* 				var parent:repairApply = this.owner as repairApply;
+				parent.search(); */
+				this.owner.dispatchEvent(new PopEvent(PopEvent.COMPLETED,null,null,null,null,true,false));
 				PopUpManager.removePopUp(this);
 			}
 			protected function getRepair_resultHandler(event:ResultEvent):void
