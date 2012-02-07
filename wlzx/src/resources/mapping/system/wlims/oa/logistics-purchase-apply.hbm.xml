@@ -8,6 +8,9 @@
             <column name="id" />
             <generator class="native" />
         </id>
+        <property name="processInstanceId" type="string">
+            <column name="process_instance_id" />
+        </property>
         <property name="applyNo" type="string">
             <column name="apply_no" />
         </property>

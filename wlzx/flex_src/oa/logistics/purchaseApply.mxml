@@ -217,7 +217,7 @@
 			public function detailApply(applyId:String):void{
 				/* purchaseApplyServiceRO.getDetailInfoById(applyId); */
 				var parent:Object=(Object)(((Object)(this.owner)).owner);
-				parent.addTab("purchaseApplyForm-detail"+"_"+applyId,"采购详单",parent.nav,"oa/attendance/purchaseApplyForm.swf",null,applyId);
+				parent.addTab("purchaseApplyForm-detail"+"_"+applyId,"采购详单",parent.nav,"oa/logistics/purchaseApplyForm.swf",null,applyId);
 				
 			}
 			public function sendApply(applyId:String):void{
