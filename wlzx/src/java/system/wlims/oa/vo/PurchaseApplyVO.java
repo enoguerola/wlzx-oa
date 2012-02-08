@@ -1,15 +1,13 @@
-package system.wlims.oa.entity.logistics;
+package system.wlims.oa.vo;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
-import system.wlims.oa.entity.BaseModel;
 
-public class PurchaseApplyModel extends BaseModel{
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -9078432634342762817L;
+public class PurchaseApplyVO {
+	private String id;
 	private String processInstanceId;
 	private String applyNo;
 	private String purchaseName;
@@ -27,7 +25,8 @@ public class PurchaseApplyModel extends BaseModel{
 	private String headerMaster;
 	private Boolean cancleFlag=false;
 	private Boolean submitFlag=false;
-	private String state;//辅助
+	private List<JBPMTaskVO> historyJBPMTaskVOs=new ArrayList<JBPMTaskVO>();
+	private String state;
 	public String getApplyUser() {
 		return applyUser;
 	}
@@ -124,11 +123,22 @@ public class PurchaseApplyModel extends BaseModel{
 	public void setProcessInstanceId(String processInstanceId) {
 		this.processInstanceId = processInstanceId;
 	}
+	public List<JBPMTaskVO> getHistoryJBPMTaskVOs() {
+		return historyJBPMTaskVOs;
+	}
+	public void setHistoryJBPMTaskVOs(List<JBPMTaskVO> historyJBPMTaskVOs) {
+		this.historyJBPMTaskVOs = historyJBPMTaskVOs;
+	}
 	public String getState() {
 		return state;
 	}
 	public void setState(String state) {
 		this.state = state;
 	}
-	
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
 }
