@@ -6,15 +6,11 @@ public class JBPMTaskVO {
 	
 	private String id;
 	private String name;
-	private Integer priority;
-	private Integer progress;
-	private String activityName;
+	private String state;
 	private String assignee;
-	private Date createTime;
+	private Date beginTime;
+	private Date endTime;
 	private String description;
-	private Date dueDate;
-	private String executionId;
-	private String formResourceName;
 	public String getId() {
 		return id;
 	}
@@ -27,60 +23,41 @@ public class JBPMTaskVO {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public Integer getPriority() {
-		return priority;
-	}
-	public void setPriority(Integer priority) {
-		this.priority = priority;
-	}
-	public Integer getProgress() {
-		return progress;
-	}
-	public void setProgress(Integer progress) {
-		this.progress = progress;
-	}
-	public String getActivityName() {
-		return activityName;
-	}
-	public void setActivityName(String activityName) {
-		this.activityName = activityName;
-	}
+	
+	
+	
 	public String getAssignee() {
 		return assignee;
 	}
 	public void setAssignee(String assignee) {
 		this.assignee = assignee;
 	}
-	public Date getCreateTime() {
-		return createTime;
-	}
-	public void setCreateTime(Date createTime) {
-		this.createTime = createTime;
-	}
+
 	public String getDescription() {
 		return description;
 	}
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	public Date getDueDate() {
-		return dueDate;
+	public String getState() {
+		return state;
 	}
-	public void setDueDate(Date dueDate) {
-		this.dueDate = dueDate;
+	public void setState(String state) {
+		this.state = state;
 	}
-	public String getExecutionId() {
-		return executionId;
+	public Date getBeginTime() {
+		return beginTime;
 	}
-	public void setExecutionId(String executionId) {
-		this.executionId = executionId;
+	public void setBeginTime(Date beginTime) {
+		this.beginTime = beginTime;
 	}
-	public String getFormResourceName() {
-		return formResourceName;
+	public Date getEndTime() {
+		return endTime;
 	}
-	public void setFormResourceName(String formResourceName) {
-		this.formResourceName = formResourceName;
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
 	}
+	
 	
 	
 }
