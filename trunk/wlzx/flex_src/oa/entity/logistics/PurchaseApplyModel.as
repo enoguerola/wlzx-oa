@@ -27,8 +27,7 @@ package oa.entity.logistics
 		public var headerMaster:String;
 		public var cancleFlag:Boolean;
 		public var submitFlag:Boolean;
-		
-		
+		public var state:String;//辅助
 		public function PurchaseApplyModel()
 		{
 			super();

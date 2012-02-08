@@ -1,7 +1,9 @@
 package system.wlims.oa.serviceImpl.logistics;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.jbpm.api.Configuration;
@@ -25,6 +27,8 @@ import system.utils.UtilDateTime;
 import system.wlims.oa.dao.logistics.PurchaseApplyDAO;
 import system.wlims.oa.entity.logistics.PurchaseApplyModel;
 import system.wlims.oa.service.logistics.PurchaseApplyService;
+import system.wlims.oa.vo.JBPMTaskVO;
+import system.wlims.oa.vo.PurchaseApplyVO;
 
 public class PurchaseApplyServiceImpl implements PurchaseApplyService{
 	private ProcessEngine processEngine;  
@@ -166,12 +170,61 @@ public class PurchaseApplyServiceImpl implements PurchaseApplyService{
 		// TODO Auto-generated method stub
 		return purchaseApplyDAO.get(applyId);
 	}
-
+	@Override
+	public PurchaseApplyVO getPurchaseApplyDetailById(String applyId) {
+		// TODO Auto-generated method stub
+		PurchaseApplyVO vo=new PurchaseApplyVO();
+		PurchaseApplyModel model=purchaseApplyDAO.get(applyId);
+		vo.setApplyNo(model.getApplyNo());
+		vo.setApplyTime(model.getApplyTime());
+		vo.setApplyUser(model.getApplyUser());
+		vo.setApplyUserDepartmentId(model.getApplyUserDepartmentId());
+		vo.setApplyUserDepartmentLeader(model.getApplyUserDepartmentLeader());
+		vo.setApplyUserViceHeaderMaster(model.getApplyUserViceHeaderMaster());
+		vo.setCancleFlag(model.getCancleFlag());
+		vo.setFinanceViceHeaderMaster(model.getFinanceViceHeaderMaster());
+		vo.setHeaderMaster(model.getHeaderMaster());
+		vo.setId(model.getId());
+		vo.setIsGovernmentPurchase(model.getIsGovernmentPurchase());
+		vo.setMoney(model.getMoney());
+		vo.setProcessInstanceId(model.getProcessInstanceId());
+		vo.setPurchaseDescription(model.getPurchaseName());
+		vo.setPurchaseName(model.getPurchaseName());
+		vo.setResourceDepartmentLeader(vo.getResourceDepartmentLeader());
+		vo.setSubmitFlag(model.getSubmitFlag());
+		List<Task> list=taskService.createTaskQuery().processInstanceId(model.getProcessInstanceId()).list();
+		List<JBPMTaskVO> listObjects=new ArrayList<JBPMTaskVO>();
+		for(Task task:list){
+			JBPMTaskVO o=new JBPMTaskVO();
+			o.setActivityName(task.getActivityName());
+			o.setAssignee(task.getAssignee());
+			o.setCreateTime(task.getCreateTime());
+			o.setDescription(task.getDescription());
+			o.setDueDate(task.getDuedate());
+			o.setExecutionId(task.getExecutionId());
+			o.setFormResourceName(task.getFormResourceName());
+			o.setId(task.getId());
+			o.setName(task.getName());
+			o.setPriority(task.getPriority());
+			o.setProgress(task.getProgress());
+			listObjects.add(o);
+		}
+		vo.setHistoryJBPMTaskVOs(listObjects);
+		vo.setState(executionService.findProcessInstanceById(model.getProcessInstanceId()).getState());
+		return vo;
+	}
 	@Override
 	public PaginationSupport<PurchaseApplyModel> getApplyListByUser(
 			String applyUserId, int index, int pageSize) {
 		// TODO Auto-generated method stub
-		return purchaseApplyDAO.getApplyListByUser(applyUserId,index,pageSize);
+		PaginationSupport<PurchaseApplyModel> ps= purchaseApplyDAO.getApplyListByUser(applyUserId,index,pageSize);
+		if(ps!=null&&ps.getItemCount()>0){
+			for(PurchaseApplyModel model:ps.getItems()){
+				model.setState(executionService.findProcessInstanceById(model.getProcessInstanceId()).getState());
+
+			}
+		}
+		return ps;
 	}
 
 	public DepartmentDAO getDepartmentDAO() {
@@ -197,4 +250,6 @@ public class PurchaseApplyServiceImpl implements PurchaseApplyService{
 	public void setRoleDAO(RoleDAO roleDAO) {
 		this.roleDAO = roleDAO;
 	}
+
+	
 }
