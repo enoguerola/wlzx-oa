@@ -166,11 +166,21 @@
 									</mx:Component>
 								</mx:itemRenderer>
 							</mx:DataGridColumn>
-							<mx:DataGridColumn textAlign="center" headerText="创建时间" dataField="createTime" width="80">
+							<mx:DataGridColumn textAlign="center" headerText="开始时间" dataField="createTime" width="80">
 								<mx:itemRenderer>
 									<mx:Component>
 										<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off" >
-											<mx:Label text="{this.outerDocument.formatDate(data.createTime)}">
+											<mx:Label text="{this.outerDocument.formatDate(data.beginTime)}">
+											</mx:Label>
+										</mx:HBox>
+									</mx:Component>
+								</mx:itemRenderer>
+							</mx:DataGridColumn>
+							<mx:DataGridColumn textAlign="center" headerText="结束时间" dataField="createTime" width="80">
+								<mx:itemRenderer>
+									<mx:Component>
+										<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off" >
+											<mx:Label text="{this.outerDocument.formatDate(data.endTime)}">
 											</mx:Label>
 										</mx:HBox>
 									</mx:Component>
@@ -178,7 +188,7 @@
 							</mx:DataGridColumn>
 							<mx:DataGridColumn textAlign="center" headerText="描述" dataField="description" width="80">
 							</mx:DataGridColumn>
-							<mx:DataGridColumn textAlign="center" headerText="状态" dataField="progress" width="80">
+							<mx:DataGridColumn textAlign="center" headerText="状态" dataField="state" width="80">
 							</mx:DataGridColumn>
 						</mx:columns>
 					</mx:DataGrid>
