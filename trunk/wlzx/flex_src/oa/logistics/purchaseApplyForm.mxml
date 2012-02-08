@@ -51,8 +51,8 @@
 			
 			protected function getPurchaseApplyDetailByIdById_resultHandler(event:ResultEvent):void{
 				var form:Object=event.result as Object;
-				print_b.addEventListener(MouseEvent.CLICK,function():void{print(form.id);} );
-				detail_applyNo.text="编号：【"+form.applyNo+"】";
+/* 				print_b.addEventListener(MouseEvent.CLICK,function():void{print(form.id);} );
+ */				detail_applyNo.text="编号：【"+form.applyNo+"】";
 				processImage.source=parentApplication.homeUrl+"servlet/jbpmProcessImage?processInstanceId="+form.processInstanceId;
 				table.dataProvider=form.historyJBPMTaskVOs;
 				/* Alert.show(form.state); */
