@@ -135,6 +135,7 @@ public class DepartmentDAOImpl extends BaseDAOImpl<DepartmentModel>  implements 
 			List<DepartmentModel> result = this.getListByCriteria(criteria);
 			return result;
 	}
+	@SuppressWarnings("unchecked")
 	@Override
 	public DepartmentModel getResourceFlagDepartment() {
 		// TODO Auto-generated method stub

@@ -6,9 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.hibernate.Hibernate;
 import org.hibernate.Session;
-import org.hibernate.proxy.HibernateProxy;
 import org.jbpm.api.Configuration;
 import org.jbpm.api.ExecutionService;
 import org.jbpm.api.HistoryService;
@@ -21,14 +19,10 @@ import org.jbpm.api.RepositoryService;
 import org.jbpm.api.TaskService;
 import org.jbpm.api.cmd.Command;
 import org.jbpm.api.cmd.Environment;
-import org.jbpm.api.history.HistoryActivityInstance;
-import org.jbpm.api.history.HistoryComment;
-import org.jbpm.api.history.HistoryProcessInstanceQuery;
+
 import org.jbpm.api.history.HistoryTask;
 import org.jbpm.api.task.Task;
-import org.jbpm.pvm.internal.history.model.HistoryTaskImpl;
 import org.jbpm.pvm.internal.history.model.HistoryTaskInstanceImpl;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import system.PaginationSupport;
 import system.dao.DepartmentDAO;
@@ -36,12 +30,14 @@ import system.dao.RoleDAO;
 import system.dao.UserDAO;
 import system.entity.DepartmentModel;
 import system.entity.RoleModel;
+import system.utils.StringUtils;
 import system.utils.UtilDateTime;
 import system.wlims.oa.dao.logistics.PurchaseApplyDAO;
 import system.wlims.oa.entity.logistics.PurchaseApplyModel;
 import system.wlims.oa.service.logistics.PurchaseApplyService;
 import system.wlims.oa.vo.JBPMTaskVO;
 import system.wlims.oa.vo.PurchaseApplyVO;
+import system.wlims.oa.vo.PurchaseApproveTaskVO;
 
 public class PurchaseApplyServiceImpl implements PurchaseApplyService{
 	private ProcessEngine processEngine;  
@@ -298,6 +294,115 @@ public class PurchaseApplyServiceImpl implements PurchaseApplyService{
 	               .setLong("taskDbid", Long.valueOf(taskId)).uniqueResult();
 	    }
 	  });
+	}
+
+	@Override
+	public List<PurchaseApproveTaskVO> getPersonPurchaseApproveTask(
+			String userId) {
+		// TODO Auto-generated method stub
+		List<PurchaseApproveTaskVO> results=new ArrayList<PurchaseApproveTaskVO>();
+		ProcessDefinition pd=repositoryService.createProcessDefinitionQuery().processDefinitionKey("caigou").uniqueResult();
+		List<Task> list=taskService.createTaskQuery().processDefinitionId(pd.getId()).assignee(userId).list();
+		if(list!=null&&list.size()>0){
+			for(Task task:list){
+				ProcessInstance processInstance = executionService.findProcessInstanceById(task.getExecutionId());
+				PurchaseApplyModel model=purchaseApplyDAO.getByProcessInstanceId(processInstance.getId());
+
+				PurchaseApproveTaskVO vo=new PurchaseApproveTaskVO();
+				vo.setApplyNo(model.getApplyNo());
+				vo.setApplyTime(model.getApplyTime());
+				vo.setApplyUser(model.getApplyUser());
+				vo.setApplyUserDepartmentId(model.getApplyUserDepartmentId());
+				vo.setApplyUserDepartmentLeader(model.getApplyUserDepartmentLeader());
+				vo.setApplyUserViceHeaderMaster(model.getApplyUserViceHeaderMaster());
+				vo.setCancleFlag(model.getCancleFlag());
+				vo.setFinanceViceHeaderMaster(model.getFinanceViceHeaderMaster());
+				vo.setHeaderMaster(model.getHeaderMaster());
+				vo.setApplyId(model.getId());
+				vo.setIsGovernmentPurchase(model.getIsGovernmentPurchase());
+				vo.setMoney(model.getMoney());
+				vo.setProcessInstanceId(model.getProcessInstanceId());
+				vo.setPurchaseDescription(model.getPurchaseName());
+				vo.setPurchaseName(model.getPurchaseName());
+				vo.setResourceDepartmentLeader(vo.getResourceDepartmentLeader());
+				vo.setSubmitFlag(model.getSubmitFlag());
+				
+				vo.setTaskId(task.getId());
+				vo.setActivityName(task.getActivityName());
+				vo.setAssignee(task.getAssignee());
+				vo.setBeginTime(task.getCreateTime());
+				results.add(vo);
+			}
+		}
+		
+		return results;
+	}
+
+	@Override
+	public List<PurchaseApproveTaskVO> getPersonPurchaseApproveHistoryTask(
+			String userId) {
+		List<PurchaseApproveTaskVO> results=new ArrayList<PurchaseApproveTaskVO>();
+		ProcessDefinition pd=repositoryService.createProcessDefinitionQuery().processDefinitionKey("caigou").uniqueResult();
+		List<HistoryTask> list=historyService.createHistoryTaskQuery().assignee(userId).list();
+		if(list!=null&&list.size()>0){
+			for(HistoryTask task:list){
+				HistoryTaskInstanceImpl hti =  getHistoryTaskInstanceByTaskId(task.getId());
+				ProcessInstance processInstance = executionService.findProcessInstanceById(task.getExecutionId());
+				if(!processInstance.getProcessDefinitionId().equals(pd.getId()))continue;
+				if(processInstance.isActive(hti.getActivityName()))continue;
+				PurchaseApplyModel model=purchaseApplyDAO.getByProcessInstanceId(processInstance.getId());
+				PurchaseApproveTaskVO vo=new PurchaseApproveTaskVO();
+				vo.setApplyNo(model.getApplyNo());
+				vo.setApplyTime(model.getApplyTime());
+				vo.setApplyUser(model.getApplyUser());
+				vo.setApplyUserDepartmentId(model.getApplyUserDepartmentId());
+				vo.setApplyUserDepartmentLeader(model.getApplyUserDepartmentLeader());
+				vo.setApplyUserViceHeaderMaster(model.getApplyUserViceHeaderMaster());
+				vo.setCancleFlag(model.getCancleFlag());
+				vo.setFinanceViceHeaderMaster(model.getFinanceViceHeaderMaster());
+				vo.setHeaderMaster(model.getHeaderMaster());
+				vo.setApplyId(model.getId());
+				vo.setIsGovernmentPurchase(model.getIsGovernmentPurchase());
+				vo.setMoney(model.getMoney());
+				vo.setProcessInstanceId(model.getProcessInstanceId());
+				vo.setPurchaseDescription(model.getPurchaseName());
+				vo.setPurchaseName(model.getPurchaseName());
+				vo.setResourceDepartmentLeader(vo.getResourceDepartmentLeader());
+				vo.setSubmitFlag(model.getSubmitFlag());
+				
+				
+				vo.setTaskId(task.getId());
+				vo.setActivityName(hti.getActivityName());
+				vo.setAssignee(task.getAssignee());
+				vo.setBeginTime(task.getCreateTime());
+				vo.setEndTime(task.getEndTime());
+				
+				
+				results.add(vo);
+			}
+		}
+		
+		return results;
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Override
+	public void saveApprove(String taskId, String approveState,
+			String approveDescription, String money) {
+		// TODO Auto-generated method stub
+		Map map=new HashMap();
+		map.put("approveDescription", approveDescription);
+		Task task=taskService.getTask(taskId);
+		if(StringUtils.isNotEmpty(money)){
+			ProcessInstance processInstance = executionService.findProcessInstanceById(task.getExecutionId());
+			PurchaseApplyModel model=purchaseApplyDAO.getByProcessInstanceId(processInstance.getId());
+			model.setMoney(Double.parseDouble(money));
+			purchaseApplyDAO.saveOrUpdate(model);
+		}
+		HistoryTaskInstanceImpl hti =  getHistoryTaskInstanceByTaskId(task.getId());
+		taskService.completeTask(taskId,approveState,map); 
+		
+		
 	}
 
 	

@@ -97,6 +97,7 @@
     <module application="flex_src/home.mxml" destPath="oa/logistics/repairTechRelative.swf" optimize="false" sourcePath="flex_src/oa/logistics/repairTechRelative.mxml"/>
     <module application="flex_src/home.mxml" destPath="oa/logistics/purchaseApplyForm.swf" optimize="false" sourcePath="flex_src/oa/logistics/purchaseApplyForm.mxml"/>
     <module application="flex_src/home.mxml" destPath="oa/logistics/repairNotTechRelative.swf" optimize="false" sourcePath="flex_src/oa/logistics/repairNotTechRelative.mxml"/>
+    <module application="flex_src/home.mxml" destPath="oa/logistics/purchaseApprove.swf" optimize="false" sourcePath="flex_src/oa/logistics/purchaseApprove.mxml"/>
   </modules>
   <buildCSSFiles/>
   <flashCatalyst validateFlashCatalystCompatibility="false"/>

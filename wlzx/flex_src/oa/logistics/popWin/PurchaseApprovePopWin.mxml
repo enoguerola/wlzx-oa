@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow   xmlns:mx="http://www.adobe.com/2006/mxml" width="800" height="100%"  close="PopUpManager.removePopUp(this);" showCloseButton="true" creationComplete="init();" styleName="PanelStyle" >
+	
+				
+	<mx:RemoteObject id="purchaseApplyServiceRO" destination="purchaseApplyServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+		<mx:method name="getPurchaseApplyDetailById"  concurrency="last"  result="getPurchaseApplyDetailByIdById_resultHandler(event);" />
+		<mx:method name="saveApprove()"  concurrency="last"  result="saveApprove_resultHandler(event);" />
+	</mx:RemoteObject>
+		
+	<mx:Script> 
+		
+		<![CDATA[  
+		
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.core.FlexGlobals;
+			import mx.events.ValidationResultEvent;
+			import mx.formatters.DateFormatter;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.*;
+			import mx.validators.Validator;
+			
+			import system.event.PopEvent;
+			import system.utils.CommonUtils;
+			private var validatorArr:Array; 
+			[Bindable]
+			public var taskId:String=null;
+			[Bindable]
+			public var applyId:String=null;
+			private function init():void
+			{
+				this.addEventListener(PopEvent.POP_EVENT,function(e:PopEvent):void{
+					if(e._id!=null&&e._arg1!=null){
+						taskId=e._id;
+						applyId=e._arg1;
+						purchaseApplyServiceRO.getPurchaseApplyDetailById(applyId);
+					}
+				});	
+			} 
+			
+			protected function systemFaultHandler(event:FaultEvent):void {
+				Alert.show(event.fault.faultString, 'Error');
+			}
+			
+			public function saveApprove():void{
+				if(validateForm()){
+					purchaseApplyServiceRO.saveApprove(taskId,approve_status.selectedValue,approve_description.text,null);
+				}
+			
+			}
+			private function validateForm():Boolean {
+				if(approve_status.selectedValue!=null){
+					return true;
+				}else{
+					Alert.show("请选择审批结果");
+					return false;
+				}
+			}
+			protected function getPurchaseApplyDetailByIdById_resultHandler(event:ResultEvent):void{
+				var form:Object=event.result as Object;
+								//print_b.addEventListener(MouseEvent.CLICK,function():void{print(form.id);} );
+								detail_applyNo.text="编号：【"+form.applyNo+"】";
+				//processImage.source=parentApplication.homeUrl+"servlet/jbpmProcessImage?processInstanceId="+form.processInstanceId;
+				table.dataProvider=form.historyJBPMTaskVOs;
+				/* Alert.show(form.state); */
+				state.text=form.state;
+				purchaseName.text=form.purchaseName;
+				purchaseDescription.text=form.purchaseDescription
+				isGovernmentPurchase.text=form.isGovernmentPurchase?"是":"否";
+				apply_user_name.text=parentApplication.getTeacherNameByAccountId(form.applyUser);
+				apply_time.text=formatDate(form.applyTime);
+				apply_department.text=parentApplication.getDepartmentObjectById(form.applyUserDepartmentId).name;
+			}
+			public function formatDate(date:Date):String{
+				return CommonUtils.formatDate(date,"YYYY-MM-DD JJ:NN:SS");
+				
+			}
+			protected function saveApprove_resultHandler(event:ResultEvent):void{
+				this.owner.dispatchEvent(new PopEvent(PopEvent.COMPLETED,null,null,null,null,true,false));
+				PopUpManager.removePopUp(this);
+			}
+			
+		]]> 
+		
+	</mx:Script> 
+	<mx:HBox width="100%" height="100%">
+		<mx:VBox width="50%" horizontalAlign="center" verticalGap="0">
+			<mx:HBox width="100%" horizontalAlign="center" height="30" >
+				<mx:Label  text="温岭中学采购单"     letterSpacing="5" textAlign="center" fontSize="14"    id="detail_type_label"/>
+
+				<mx:Label  text="编号【】" id="detail_applyNo"   visible="true"  letterSpacing="5" textAlign="right" fontSize="14"  />
+				
+			</mx:HBox>
+			<mx:Grid width="100%" height="100%"   verticalGap="-1" horizontalGap="-1"   backgroundColor="white">
+				
+				<mx:GridRow width="100%" height="100%">
+					
+					<mx:GridItem borderStyle="solid"  paddingBottom="5"  verticalAlign="middle" horizontalAlign="center">
+						<mx:Text text="申请购物名称及数量"  textAlign="center"  width="100"/>
+					</mx:GridItem>
+					<mx:GridItem borderStyle="solid"   width="100%"   verticalAlign="middle" horizontalAlign="center">
+						<mx:VBox horizontalAlign="left" width="100%">
+							<mx:FormItem label="采购名称">
+								<mx:HBox width="100%">
+									<mx:Label  id="purchaseName" />
+									<mx:Label text="是否政府采购"/>
+									<mx:Label  id="isGovernmentPurchase" />
+								</mx:HBox>
+							</mx:FormItem>
+							
+							<mx:FormItem label="采购描述">
+								<mx:Text  height="100" id="purchaseDescription" />
+							</mx:FormItem>
+							<mx:FormItem label="申请部门">
+								<mx:HBox width="100%">
+									<mx:Text  id="apply_department" />
+									<mx:Label text="申请人"/>
+									<mx:Text     id="apply_user_name" />
+									<mx:Label text="申请时间"/>
+									<mx:Text   id="apply_time" />
+									
+								</mx:HBox>
+								
+							</mx:FormItem>
+						</mx:VBox>
+						
+					</mx:GridItem>
+					
+					
+				</mx:GridRow>
+				
+				
+				
+				
+				
+			</mx:Grid>
+			<mx:FormHeading  label="审批流程日志" width="100%" textAlign="left"  fontSize="14"/>
+			<mx:VBox width="100%" horizontalAlign="center" height="100%" verticalAlign="middle"   borderVisible="true">
+				<mx:DataGrid id="table" rowCount="10" width="100%" height="100%"    verticalAlign="middle" >
+					<mx:columns>
+						<mx:DataGridColumn textAlign="center" headerText="ID" dataField="id" width="50">
+						</mx:DataGridColumn>
+						<mx:DataGridColumn textAlign="center" headerText="节点名称" dataField="name" width="100">
+						</mx:DataGridColumn>
+						<mx:DataGridColumn textAlign="center" headerText="分配人" dataField="assignee" width="80">
+							<mx:itemRenderer>
+								<mx:Component>
+									<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off" >
+										<mx:Label text="{parentApplication.getTeacherNameByAccountId(data.assignee)}">
+										</mx:Label>
+									</mx:HBox>
+								</mx:Component>
+							</mx:itemRenderer>
+						</mx:DataGridColumn>
+						<mx:DataGridColumn textAlign="center" headerText="开始时间" dataField="createTime" width="80">
+							<mx:itemRenderer>
+								<mx:Component>
+									<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off" >
+										<mx:Label text="{this.outerDocument.formatDate(data.beginTime)}">
+										</mx:Label>
+									</mx:HBox>
+								</mx:Component>
+							</mx:itemRenderer>
+						</mx:DataGridColumn>
+						<mx:DataGridColumn textAlign="center" headerText="结束时间" dataField="createTime" width="80">
+							<mx:itemRenderer>
+								<mx:Component>
+									<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off" >
+										<mx:Label text="{this.outerDocument.formatDate(data.endTime)}">
+										</mx:Label>
+									</mx:HBox>
+								</mx:Component>
+							</mx:itemRenderer>
+						</mx:DataGridColumn>
+						<mx:DataGridColumn textAlign="center" headerText="描述" dataField="description">
+							<mx:itemRenderer>
+								<mx:Component>
+									<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off" >
+										<mx:Label text="{data.description}">
+										</mx:Label>
+									</mx:HBox>
+								</mx:Component>
+							</mx:itemRenderer>
+						</mx:DataGridColumn>
+						<mx:DataGridColumn textAlign="center" headerText="状态" dataField="state" width="80">
+						</mx:DataGridColumn>
+					</mx:columns>
+				</mx:DataGrid>
+				
+			</mx:VBox>
+		</mx:VBox>
+		<mx:VRule height="98%"  width="1"/>
+		<mx:VBox width="50%" height="100%" paddingTop="20"  horizontalAlign="right">
+			
+			<mx:FormItem label="当前节点：" width="100%" fontWeight="bold">
+				<mx:Label id="state" fontWeight="bold"/>
+			</mx:FormItem>
+			<mx:FormItem label="审批决策：" width="100%" fontWeight="bold">
+				<mx:HBox>
+					<mx:RadioButtonGroup id="approve_status" />  
+					<mx:RadioButton group="{approve_status}" value="批准" label="批准" width="80" fontWeight="bold"/>  
+					<mx:RadioButton group="{approve_status}" value="不批准" label="不批准" width="80" fontWeight="bold"/>  
+				</mx:HBox>
+				
+			</mx:FormItem>
+			<mx:VBox width="100%">
+				<mx:Label text="审批建议：" width="100%" textAlign="left" fontWeight="bold"/>
+				<mx:TextArea height="150" width="250" id="approve_description">
+					
+				</mx:TextArea>
+			</mx:VBox>
+			
+			<mx:Button label="保存" click="saveApprove();"/>
+		</mx:VBox>
+	</mx:HBox>
+	
+		
+	
+</mx:TitleWindow>

@@ -42,11 +42,11 @@
       <transition g="-31,-4" name="不批准" to="cancel1"/>
    </task>
    <task g="169,467,92,52" name="采购安排">
-      <transition g="-45,-22" name="通过" to="通过"/>
+      <transition g="-45,-22" name="批准" to="通过"/>
    </task>
    <task g="346,16,118,52" name="校办会决议">
-      <transition g="-45,-22" name="通过" to="通过"/>
-      <transition g="-48,-37" name="不通过" to="cancel1"/>
+      <transition g="-45,-22" name="批准" to="通过"/>
+      <transition g="-48,-37" name="不批准" to="cancel1"/>
    </task>
    <end-cancel g="678,344,48,48" name="cancel1"/>
 </process>
