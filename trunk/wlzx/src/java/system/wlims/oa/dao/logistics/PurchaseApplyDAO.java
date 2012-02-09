@@ -10,4 +10,6 @@ public interface PurchaseApplyDAO  extends BaseDAO<PurchaseApplyModel>{
 
 	public PaginationSupport<PurchaseApplyModel> getApplyListByUser(String applyUserId, int index, int pageSize);
 
+	public PurchaseApplyModel getByProcessInstanceId(String id);
+
 }

@@ -63,7 +63,6 @@
 			import mx.controls.DateField;
 			import mx.core.FlexGlobals;
 			import mx.events.*;
-			import mx.events.ListEvent;
 			import mx.events.ValidationResultEvent;
 			import mx.formatters.DateFormatter;
 			import mx.managers.PopUpManager;
@@ -78,10 +77,6 @@
 			[Embed(source="../WebContent/resources/common/tools/button_delete_icon.png")]
 			private const button_delete:Class;
 			private var validatorArr:Array;
-			public var sections:ArrayCollection = new ArrayCollection( 
-				[ {label:"上午", data:0},  
-					{label:"下午", data:1} ,
-					{label:"晚上", data:2}, ]); 
 			
 			private function init():void{
 				search();
