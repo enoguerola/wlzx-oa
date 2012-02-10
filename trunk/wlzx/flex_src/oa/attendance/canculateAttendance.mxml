@@ -169,7 +169,7 @@
 				<!--<component:Fieldset title="列表清单" width="100%" height="100%" >-->
 					<mx:Panel width="100%" height="100%"  styleName="customPanel" title="统计列表"  cornerRadius="5" borderVisible="true" dropShadowVisible="false">
 						
-						<component:WlzxPageDataGrid width="100%" height="100%"  verticalAlign="middle"   id="accountTable" pagecount="10"  >				
+						<component:WlzxPageDataGrid width="100%" height="100%"  verticalAlign="middle"   id="accountTable" pagecount="23"  >				
 							<component:mygridcolumns>
 								<mx:DataGridColumn textAlign="center" headerText="统计类型" width="60">
 									<mx:itemRenderer>

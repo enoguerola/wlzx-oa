@@ -226,7 +226,7 @@
 				</mx:HBox>
 			</mx:HBox>-->
 			<mx:VBox width="100%" height="100"  verticalGap="10" verticalAlign="middle" horizontalAlign="center" >
-				<mx:VBox width="100%" height="100%"   horizontalGap="10" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="0" paddingBottom="0"   paddingLeft="10" paddingRight="10">
+				<mx:VBox width="100%" height="100%"   horizontalGap="10" verticalAlign="middle" horizontalAlign="left" borderVisible="true" paddingTop="0" paddingBottom="0"   paddingLeft="10" paddingRight="14">
 		
 					<component:Fieldset title="条件查询"  width="100%">
 				
