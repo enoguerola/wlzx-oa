@@ -437,7 +437,7 @@
 								</mx:DataGridColumn>
 							</mx:columns>
 						</mx:DataGrid>
-						<component:SPageController id="pc" useCache="{false}" TargetUI="{table}" callBackFunc="{searchPage}"  PerPage="15" ClientPages="3"  width="100%"/>
+						<component:SPageController id="pc" useCache="{false}" TargetUI="{table}" callBackFunc="{searchPage}"  PerPage="23" ClientPages="3"  width="100%"/>
 					</mx:Panel>
 				</mx:HBox>
 				

@@ -536,7 +536,7 @@
 				
 					<mx:VBox width="100%" height="100%" label="个人日程列表"  name="list" id="list">
 						
-						<component:WlzxPageDataGrid  width="100%" height="100%"  verticalAlign="middle" id="table"  borderVisible="true">				
+						<component:WlzxPageDataGrid  width="100%" height="100%"  verticalAlign="middle" id="table"  borderVisible="true"  pagecount="26">				
 							<component:mygridcolumns>
 								
 								<!--<mx:DataGridColumn textAlign="center" headerText="标记" dataField="loginaccount" width="100">

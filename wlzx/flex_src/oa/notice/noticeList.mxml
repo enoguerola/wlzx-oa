@@ -106,7 +106,7 @@
 			</mx:HBox>
 			
 		</mx:VBox>
-	<component:WlzxPageDataGrid width="100%" height="100%"   borderVisible="true"  autoLayout="true"  borderAlpha="0.2" verticalAlign="middle"   id="table" pagecount="10"  paddingLeft="10" paddingRight="10" paddingBottom="10">				
+	<component:WlzxPageDataGrid width="100%" height="100%"   borderVisible="true"  autoLayout="true"  borderAlpha="0.2" verticalAlign="middle"   id="table" pagecount="10"  paddingLeft="10" paddingRight="10" paddingBottom="22">				
 		<component:mygridcolumns>
 			<mx:DataGridColumn textAlign="center" headerText="范围"  width="60">
 				<mx:itemRenderer>

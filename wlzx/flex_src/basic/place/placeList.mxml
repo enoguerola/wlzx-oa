@@ -225,7 +225,7 @@
 						<mx:HBox width="100%" height="100%" paddingLeft="10" paddingRight="10" paddingBottom="10">
 							<mx:Panel width="100%" height="100%"  styleName="customPanel" title="场所列表"  cornerRadius="5" borderVisible="false" dropShadowVisible="false">
 								
-								<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="true"   borderAlpha="0.2" verticalAlign="middle"   id="placeTable" pagecount="10"  >				
+								<component:WlzxPageDataGrid width="100%" height="100%" borderVisible="true"   borderAlpha="0.2" verticalAlign="middle"   id="placeTable" pagecount="20"  >				
 									<component:mygridcolumns>
 										
 										<mx:DataGridColumn textAlign="center" headerText="编号" dataField="symbol" width="100">
