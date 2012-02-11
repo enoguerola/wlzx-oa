@@ -8,7 +8,9 @@ import java.util.Map;
 import java.util.Set;
 
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.jbpm.api.Configuration;
+import org.jbpm.api.Execution;
 import org.jbpm.api.ExecutionService;
 import org.jbpm.api.HistoryService;
 import org.jbpm.api.IdentityService;
@@ -26,7 +28,9 @@ import org.jbpm.api.history.HistoryProcessInstance;
 import org.jbpm.api.history.HistoryProcessInstanceQuery;
 import org.jbpm.api.history.HistoryTask;
 import org.jbpm.api.task.Task;
+import org.jbpm.pvm.internal.env.EnvironmentFactory;
 import org.jbpm.pvm.internal.history.model.HistoryTaskInstanceImpl;
+import org.jbpm.pvm.internal.model.ExecutionImpl;
 
 import system.PaginationSupport;
 import system.dao.DepartmentDAO;
@@ -215,6 +219,8 @@ public class PurchaseApplyServiceImpl implements PurchaseApplyService{
 			// 好像只能自己写hql了
 			HistoryTaskInstanceImpl hti =  getHistoryTaskInstanceByTaskId(task.getId());
 			System.out.println(hti.getActivityName());
+			if(hti.getActivityName().equals("申请"))continue;
+
 			o.setAssignee(task.getAssignee());
 			o.setName(hti.getActivityName());
 			o.setBeginTime(task.getCreateTime());
@@ -225,10 +231,10 @@ public class PurchaseApplyServiceImpl implements PurchaseApplyService{
 //				o.setState(historyService.getVariable(task.getId(),"approveState").toString());
 //				o.setDescription(historyService.getVariable(task.getId(),"approveDescription").toString());
 //			}
-			Set<String> parms=executionService.getVariableNames(model.getProcessInstanceId());
+			Set<String> parms=historyService.getVariableNames(model.getProcessInstanceId());
 			if(parms!=null&&parms.contains(task.getId()+"approveState")&&parms.contains(task.getId()+"approveDescription")){
-				o.setState(executionService.getVariable(model.getProcessInstanceId(),task.getId()+"approveState").toString());
-				o.setDescription(executionService.getVariable(model.getProcessInstanceId(),task.getId()+"approveDescription").toString());
+				o.setState(historyService.getVariable(model.getProcessInstanceId(),task.getId()+"approveState").toString());
+				o.setDescription(historyService.getVariable(model.getProcessInstanceId(),task.getId()+"approveDescription").toString());
 			}
 			
 
@@ -339,7 +345,8 @@ public class PurchaseApplyServiceImpl implements PurchaseApplyService{
 			for(Task task:list){
 				ProcessInstance processInstance = executionService.findProcessInstanceById(task.getExecutionId());
 				PurchaseApplyModel model=purchaseApplyDAO.getByProcessInstanceId(processInstance.getId());
-
+				if(model.getCancleFlag()==true)continue;
+				if(task.getActivityName().equals("申请"))continue;
 				PurchaseApproveTaskVO vo=new PurchaseApproveTaskVO();
 				vo.setApplyNo(model.getApplyNo());
 				vo.setApplyTime(model.getApplyTime());
@@ -382,6 +389,7 @@ public class PurchaseApplyServiceImpl implements PurchaseApplyService{
 			for(HistoryTask task:list){
 				HistoryTaskInstanceImpl hti =  getHistoryTaskInstanceByTaskId(task.getId());
 				PurchaseApplyModel model=purchaseApplyDAO.getByProcessInstanceId(hti.getExecutionId());
+				if(hti.getActivityName().equals("申请"))continue;
 				PurchaseApproveTaskVO vo=new PurchaseApproveTaskVO();
 				vo.setApplyNo(model.getApplyNo());
 				vo.setApplyTime(model.getApplyTime());
@@ -407,7 +415,11 @@ public class PurchaseApplyServiceImpl implements PurchaseApplyService{
 				vo.setAssignee(task.getAssignee());
 				vo.setBeginTime(task.getCreateTime());
 				vo.setEndTime(task.getEndTime());
-				
+				Set<String> parms=historyService.getVariableNames(model.getProcessInstanceId());
+				if(parms!=null&&parms.contains(task.getId()+"approveState")&&parms.contains(task.getId()+"approveDescription")){
+					vo.setApproveResult(historyService.getVariable(model.getProcessInstanceId(),task.getId()+"approveState").toString());
+					vo.setApproveDescription(historyService.getVariable(model.getProcessInstanceId(),task.getId()+"approveDescription").toString());
+				}
 				
 				results.add(vo);
 			}
@@ -428,17 +440,28 @@ public class PurchaseApplyServiceImpl implements PurchaseApplyService{
 			PurchaseApplyModel model=purchaseApplyDAO.getByProcessInstanceId(processInstance.getId());
 			model.setMoney(Double.parseDouble(money));
 			purchaseApplyDAO.saveOrUpdate(model);
+			Map<String, Object> map=new HashMap<String, Object>();
+			map.put("purchase", model);
+			map.put(taskId+"approveState", approveState);
+			map.put(taskId+"approveDescription", approveDescription);
+			executionService.createVariables(processInstance.getId(), map, true);
+			taskService.completeTask(taskId,approveState);  
+
+		}else{
+			Map<String, Object> map=new HashMap<String, Object>();
+			map.put(taskId+"approveState", approveState);
+			map.put(taskId+"approveDescription", approveDescription);
+			executionService.createVariables(processInstance.getId(), map, true);
+			taskService.completeTask(taskId,approveState);  
+
 		}
 //		String executionId = processInstance.findActiveExecutionIn("wait for response").getId();
 //
 //		processInstance = executionService.signalExecutionById(executionId, approveState);
 		
-		taskService.completeTask(taskId,approveState);  
-		Map<String, Object> map=new HashMap<String, Object>();
-		map.put(taskId+"approveState", approveState);
-		map.put(taskId+"approveDescription", approveDescription);
+		
+		
 
-		executionService.createVariables(processInstance.getId(), map, true);
 		
 	}
 
@@ -465,5 +488,50 @@ public class PurchaseApplyServiceImpl implements PurchaseApplyService{
 		return ps;
 	}
 
+	@Override
+	public void activeOrCancle(String applyId) {
+		// TODO Auto-generated method stub
+		PurchaseApplyModel model=purchaseApplyDAO.get(applyId);
+		if(model.getCancleFlag()==true){
+			model.setCancleFlag(false);
+			purchaseApplyDAO.saveOrUpdate(model);
+			resumeProcessInstance(model.getProcessInstanceId());
+
+		}else{
+			model.setCancleFlag(true);
+			purchaseApplyDAO.saveOrUpdate(model);
+			suspendProcessInstance(model.getProcessInstanceId());
+
+		}
+	}
+	public void suspendProcessInstance(String processInstanceId){
+		
+		EnvironmentFactory environmentFactory = (EnvironmentFactory) processEngine; 
+		Environment environment = environmentFactory.openEnvironment(); 
+	    Session session = environment.get(Session.class);
+	    Transaction transaction = session.beginTransaction();
+
+		ExecutionImpl execution = (ExecutionImpl) session.get(ExecutionImpl.class, new Long(processInstanceId.substring(processInstanceId.indexOf("caigou")+"caigou".length()+1)));
+//            execution.setState(Execution.STATE_SUSPENDED);
+            execution.suspend();
+            session.save(execution);
+            session.flush();
+            transaction.commit();
+
+	}
+	public void resumeProcessInstance(String processInstanceId){
+		
+		EnvironmentFactory environmentFactory = (EnvironmentFactory) processEngine; 
+		Environment environment = environmentFactory.openEnvironment(); 
+	    Session session = environment.get(Session.class);
+	    Transaction transaction = session.beginTransaction();
+		ExecutionImpl execution = (ExecutionImpl) session.get(ExecutionImpl.class, new Long(processInstanceId.substring(processInstanceId.indexOf("caigou")+"caigou".length()+1)));
+//            execution.setState(Execution.STATE_ACTIVE_CONCURRENT);
+            execution.resume();
+            session.save(execution);
+            session.flush();
+            transaction.commit();
+
+	}
 	
 }

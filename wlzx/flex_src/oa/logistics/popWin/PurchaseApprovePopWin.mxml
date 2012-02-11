@@ -4,7 +4,8 @@
 				
 	<mx:RemoteObject id="purchaseApplyServiceRO" destination="purchaseApplyServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 		<mx:method name="getPurchaseApplyDetailById"  concurrency="last"  result="getPurchaseApplyDetailByIdById_resultHandler(event);" />
-		<mx:method name="saveApprove()"  concurrency="last"  result="saveApprove_resultHandler(event);" />
+		<mx:method name="saveApprove"  concurrency="last"  result="saveApprove_resultHandler(event);" />
+		
 	</mx:RemoteObject>
 		
 	<mx:Script> 
@@ -44,7 +45,7 @@
 			
 			public function saveApprove():void{
 				if(validateForm()){
-					purchaseApplyServiceRO.saveApprove(taskId,approve_status.selectedValue,approve_description.text,null);
+					purchaseApplyServiceRO.saveApprove(taskId,approve_status.selectedValue,approve_description.text,money.text);
 				}
 			
 			}
@@ -64,6 +65,10 @@
 				table.dataProvider=form.historyJBPMTaskVOs;
 				/* Alert.show(form.state); */
 				state.text=form.state;
+				if(state.text=="资源处审批"){
+					moneyArea.visible=true;
+					money.text="";
+				}
 				purchaseName.text=form.purchaseName;
 				purchaseDescription.text=form.purchaseDescription
 				isGovernmentPurchase.text=form.isGovernmentPurchase?"是":"否";
@@ -209,7 +214,12 @@
 					
 				</mx:TextArea>
 			</mx:VBox>
-			
+			<mx:FormItem label="经费预算：" width="100%" fontWeight="bold" visible="false" id="moneyArea">
+				<mx:HBox>
+					<mx:TextInput id="money" fontWeight="bold" restrict="0-9\."/>
+					<mx:Label  text="元" fontWeight="bold"/>
+				</mx:HBox>
+			</mx:FormItem>
 			<mx:Button label="保存" click="saveApprove();"/>
 		</mx:VBox>
 	</mx:HBox>

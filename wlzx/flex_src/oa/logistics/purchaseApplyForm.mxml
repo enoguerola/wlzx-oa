@@ -70,6 +70,12 @@
 				apply_user_name.text=parentApplication.getTeacherNameByAccountId(form.applyUser);
 				apply_time.text=formatDate(form.applyTime);
 				apply_department.text=parentApplication.getDepartmentObjectById(form.applyUserDepartmentId).name;
+				if(form.money==null||form.money==''){
+					moneyArea.visible=false;
+				}else{
+					moneyArea.visible=true;
+					money.text=form.money;
+				}
 			}
 			
 			
@@ -125,6 +131,11 @@
 											<mx:Label width="300" id="purchaseName" fontWeight="bold"/>
 											<mx:Label text="是否政府采购"/>
 											<mx:Label  id="isGovernmentPurchase" fontWeight="bold"/>
+											<mx:HBox id="moneyArea">
+												<mx:Label text="预算金额:"/>
+												<mx:Label  id="money" fontWeight="bold"/>
+												<mx:Label text="元"/>
+											</mx:HBox>
 										</mx:HBox>
 									</mx:FormItem>
 									
@@ -202,8 +213,8 @@
 					
 				</mx:VBox>
 				<mx:FormHeading  label="采购流程图" width="100%" textAlign="left"  fontSize="14"/>
-				<mx:Box backgroundColor="white" width="100%">
-					<mx:Image  id="processImage" width="100%" verticalAlign="middle" horizontalAlign="center"/>
+				<mx:Box backgroundColor="white" width="100%" horizontalScrollPolicy="off" maxWidth="800">
+					<mx:Image  id="processImage"  verticalAlign="middle" horizontalAlign="center"/>
 
 				</mx:Box>
 			</mx:VBox>
