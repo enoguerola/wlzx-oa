@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.hibernate.Session;
 import org.jbpm.api.Configuration;
@@ -20,6 +21,9 @@ import org.jbpm.api.TaskService;
 import org.jbpm.api.cmd.Command;
 import org.jbpm.api.cmd.Environment;
 
+import org.jbpm.api.history.HistoryActivityInstance;
+import org.jbpm.api.history.HistoryProcessInstance;
+import org.jbpm.api.history.HistoryProcessInstanceQuery;
 import org.jbpm.api.history.HistoryTask;
 import org.jbpm.api.task.Task;
 import org.jbpm.pvm.internal.history.model.HistoryTaskInstanceImpl;
@@ -204,7 +208,7 @@ public class PurchaseApplyServiceImpl implements PurchaseApplyService{
 		
 		List<JBPMTaskVO> listObjects=new ArrayList<JBPMTaskVO>();
 //		ProcessInstance pd = executionService.findProcessInstanceById(model.getProcessInstanceId());
-  
+		
 		List<HistoryTask> hList=historyService.createHistoryTaskQuery().executionId(model.getProcessInstanceId()).list();
 		for(HistoryTask task:hList){
 			JBPMTaskVO o=new JBPMTaskVO();
@@ -216,7 +220,18 @@ public class PurchaseApplyServiceImpl implements PurchaseApplyService{
 			o.setBeginTime(task.getCreateTime());
 			o.setEndTime(task.getEndTime());
 			o.setId(task.getId());
-			o.setState(task.getState());
+//			Set<String> parms=historyService.getVariableNames(task.getId());
+//			if(parms!=null&&parms.contains("approveState")&&parms.contains("approveDescription")){
+//				o.setState(historyService.getVariable(task.getId(),"approveState").toString());
+//				o.setDescription(historyService.getVariable(task.getId(),"approveDescription").toString());
+//			}
+			Set<String> parms=executionService.getVariableNames(model.getProcessInstanceId());
+			if(parms!=null&&parms.contains(task.getId()+"approveState")&&parms.contains(task.getId()+"approveDescription")){
+				o.setState(executionService.getVariable(model.getProcessInstanceId(),task.getId()+"approveState").toString());
+				o.setDescription(executionService.getVariable(model.getProcessInstanceId(),task.getId()+"approveDescription").toString());
+			}
+			
+
 			listObjects.add(o);
 		}
 		// 根据任务开始的时间进行排序，列出来
@@ -236,7 +251,16 @@ public class PurchaseApplyServiceImpl implements PurchaseApplyService{
 //		}  
 		
 		vo.setHistoryJBPMTaskVOs(listObjects);
-		vo.setState(taskService.createTaskQuery().processInstanceId(model.getProcessInstanceId()).uniqueResult().getActivityName());
+		ProcessInstance  processInstance=executionService.createProcessInstanceQuery().processInstanceId(model.getProcessInstanceId()).uniqueResult();
+		if(processInstance==null){
+			HistoryProcessInstance  historyProcessInstance =historyService.createHistoryProcessInstanceQuery().processInstanceId(model.getProcessInstanceId()).uniqueResult();
+			vo.setState(historyProcessInstance.getEndActivityName());
+		}else{
+			Task task=taskService.createTaskQuery().processInstanceId(model.getProcessInstanceId()).uniqueResult();
+			vo.setState(task.getActivityName());
+
+		}
+
 		return vo;
 	}
 	@Override
@@ -246,7 +270,15 @@ public class PurchaseApplyServiceImpl implements PurchaseApplyService{
 		PaginationSupport<PurchaseApplyModel> ps= purchaseApplyDAO.getApplyListByUser(applyUserId,index,pageSize);
 		if(ps!=null&&ps.getItemCount()>0){
 			for(PurchaseApplyModel model:ps.getItems()){
-				model.setState(taskService.createTaskQuery().processInstanceId(model.getProcessInstanceId()).uniqueResult().getActivityName());
+				ProcessInstance  processInstance=executionService.createProcessInstanceQuery().processInstanceId(model.getProcessInstanceId()).uniqueResult();
+				if(processInstance==null){
+					HistoryProcessInstance  historyProcessInstance =historyService.createHistoryProcessInstanceQuery().processInstanceId(model.getProcessInstanceId()).uniqueResult();
+					model.setState(historyProcessInstance.getEndActivityName());
+				}else{
+					Task task=taskService.createTaskQuery().processInstanceId(model.getProcessInstanceId()).uniqueResult();
+					model.setState(task.getActivityName());
+
+				}
 
 			}
 		}
@@ -342,15 +374,14 @@ public class PurchaseApplyServiceImpl implements PurchaseApplyService{
 	public List<PurchaseApproveTaskVO> getPersonPurchaseApproveHistoryTask(
 			String userId) {
 		List<PurchaseApproveTaskVO> results=new ArrayList<PurchaseApproveTaskVO>();
-		ProcessDefinition pd=repositoryService.createProcessDefinitionQuery().processDefinitionKey("caigou").uniqueResult();
 		List<HistoryTask> list=historyService.createHistoryTaskQuery().assignee(userId).list();
+//		List<HistoryProcessInstance> list2=historyService.createHistoryProcessInstanceQuery().processDefinitionId(null).list();
+		
+		
 		if(list!=null&&list.size()>0){
 			for(HistoryTask task:list){
 				HistoryTaskInstanceImpl hti =  getHistoryTaskInstanceByTaskId(task.getId());
-				ProcessInstance processInstance = executionService.findProcessInstanceById(task.getExecutionId());
-				if(!processInstance.getProcessDefinitionId().equals(pd.getId()))continue;
-				if(processInstance.isActive(hti.getActivityName()))continue;
-				PurchaseApplyModel model=purchaseApplyDAO.getByProcessInstanceId(processInstance.getId());
+				PurchaseApplyModel model=purchaseApplyDAO.getByProcessInstanceId(hti.getExecutionId());
 				PurchaseApproveTaskVO vo=new PurchaseApproveTaskVO();
 				vo.setApplyNo(model.getApplyNo());
 				vo.setApplyTime(model.getApplyTime());
@@ -385,24 +416,53 @@ public class PurchaseApplyServiceImpl implements PurchaseApplyService{
 		return results;
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void saveApprove(String taskId, String approveState,
 			String approveDescription, String money) {
 		// TODO Auto-generated method stub
-		Map map=new HashMap();
-		map.put("approveDescription", approveDescription);
-		Task task=taskService.getTask(taskId);
+		
+		HistoryTaskInstanceImpl hti =  getHistoryTaskInstanceByTaskId(taskId);
+		ProcessInstance processInstance = executionService.findProcessInstanceById( hti.getExecutionId());
+//		ProcessDefinition pd=repositoryService.createProcessDefinitionQuery().processDefinitionKey("caigou").uniqueResult();
 		if(StringUtils.isNotEmpty(money)){
-			ProcessInstance processInstance = executionService.findProcessInstanceById(task.getExecutionId());
 			PurchaseApplyModel model=purchaseApplyDAO.getByProcessInstanceId(processInstance.getId());
 			model.setMoney(Double.parseDouble(money));
 			purchaseApplyDAO.saveOrUpdate(model);
 		}
-		HistoryTaskInstanceImpl hti =  getHistoryTaskInstanceByTaskId(task.getId());
-		taskService.completeTask(taskId,approveState,map); 
+//		String executionId = processInstance.findActiveExecutionIn("wait for response").getId();
+//
+//		processInstance = executionService.signalExecutionById(executionId, approveState);
 		
+		taskService.completeTask(taskId,approveState);  
+		Map<String, Object> map=new HashMap<String, Object>();
+		map.put(taskId+"approveState", approveState);
+		map.put(taskId+"approveDescription", approveDescription);
+
+		executionService.createVariables(processInstance.getId(), map, true);
 		
+	}
+
+	@Override
+	public PaginationSupport<PurchaseApplyModel> getApplyByConditions(
+			String applyUserId, String applyDepartmentId,
+			String applyBeginDate, String applyEndDate, int index, int pageSize) {
+		// TODO Auto-generated method stub
+		PaginationSupport<PurchaseApplyModel> ps= purchaseApplyDAO.getApplyByConditions(applyUserId,applyDepartmentId,applyBeginDate,applyEndDate,index,pageSize);
+		if(ps!=null&&ps.getItemCount()>0){
+			for(PurchaseApplyModel model:ps.getItems()){
+				ProcessInstance  processInstance=executionService.createProcessInstanceQuery().processInstanceId(model.getProcessInstanceId()).uniqueResult();
+				if(processInstance==null){
+					HistoryProcessInstance  historyProcessInstance =historyService.createHistoryProcessInstanceQuery().processInstanceId(model.getProcessInstanceId()).uniqueResult();
+					model.setState(historyProcessInstance.getEndActivityName());
+				}else{
+					Task task=taskService.createTaskQuery().processInstanceId(model.getProcessInstanceId()).uniqueResult();
+					model.setState(task.getActivityName());
+
+				}
+
+			}
+		}
+		return ps;
 	}
 
 	

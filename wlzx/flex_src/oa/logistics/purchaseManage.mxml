@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Module xmlns:mx="http://www.adobe.com/2006/mxml" 
+		   xmlns:hc="com.hillelcoren.components.*"
+		   xmlns:render="system.component.render.*" layout="vertical" width="100%" creationComplete="init();" height="100%"  xmlns:component="system.component.*" >
+	
+	<mx:RemoteObject id="purchaseApplyServiceRO" destination="purchaseApplyServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
+		<mx:method name="getApplyByConditions"  concurrency="last"  result="getApplyByConditions_resultHandler(event);" />
+	</mx:RemoteObject>
+	<mx:Component id="searchAccountDropDownItemRenderer">
+		<render:AdvancedItemRenderer selectedItems="{ outerDocument.search_account.selectedItems }" />
+	</mx:Component>
+	<mx:Script> 
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.containers.FormItem;
+			import mx.controls.Alert;
+			import mx.controls.CheckBox;
+			import mx.controls.DateField;
+			import mx.core.FlexGlobals;
+			import mx.events.*;
+			import mx.formatters.DateFormatter;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.*;
+			import mx.validators.Validator;
+			import system.event.PopEvent;
+
+			import oa.logistics.popWin.PurchaseApprovePopWin;
+			
+			import system.component.lockWin.LockWinTool;
+			import system.utils.ComboxUtils;
+			import system.utils.CommonUtils;
+			
+			private function init():void{
+				var temp:ArrayCollection=new ArrayCollection(CommonUtils.clone(parentApplication.allDepartment.source));
+				temp.addItemAt({data:null, label:"全部"},0);
+				department.dataProvider=temp;
+				search_account.dataProvider=this.parentApplication.allTeacherAcccounts;
+
+				search();
+				addEventListener(PopEvent.COMPLETED,function():void{
+					search();
+				});
+			}
+			protected function systemFaultHandler(event:FaultEvent):void {
+				Alert.show(event.fault.faultString, 'Error');
+				
+			}
+			
+
+			
+			protected function getApplyByConditions_resultHandler(event:ResultEvent):void
+			{
+				LockWinTool.unLockCurrentWin();
+				var result:Object=event.result as Object;
+				var list:Object=new Object;
+				list.data=(result==null?new ArrayCollection():result.items);
+				list.totalLength=(result==null?0:result.totalCount);
+				if(result!=null){
+					pc.AppandData(list);
+					
+				}else{
+					table.dataProvider=null;
+				}
+			}
+			
+			
+			public function search():void{
+				pc.GoToControll(1);
+			}
+			public function searchPage(index:int,dataLength:int):void{
+				LockWinTool.lockCurrentWin(this,"搜索采购申请记录中");
+				/* var departmentId:String=treeSelectedItemId();
+				var userId:String=search_account_id.text; */
+				
+				purchaseApplyServiceRO.getApplyByConditions(search_account_id.text,department.selectedItem.data,search_date_begin.text,search_date_end.text,index-1,index-1+dataLength);
+			}
+			public function formatDate(date:Date):String{
+				return CommonUtils.formatDate(date,"YYYY-MM-DD JJ:NN:SS");
+				
+			}
+			public function detailApply(applyId:String):void{
+				/* purchaseApplyServiceRO.getDetailInfoById(applyId); */
+				var parent:Object=(Object)(((Object)(this.owner)).owner);
+				parent.addTab("purchaseApplyForm-detail"+"_"+applyId,"采购详单",parent.nav,"oa/logistics/purchaseApplyForm.swf",null,applyId);
+				
+			}
+
+			public var pop:PurchaseApprovePopWin=null;
+			public function enterApprove(applyId:String,taskId:String):void
+			{
+				if(pop!=null)PopUpManager.removePopUp(pop);
+				pop=PurchaseApprovePopWin(PopUpManager.createPopUp(this,PurchaseApprovePopWin,true)); 
+				pop.owner=this;
+				PopUpManager.centerPopUp(pop);
+				pop.percentHeight=100;
+				pop.percentWidth=100;
+				pop.x=FlexGlobals.topLevelApplication.stage.stageWidth/2-pop.width/2;
+				pop.y=FlexGlobals.topLevelApplication.stage.stageHeight/2-pop.height/2;
+				pop.dispatchEvent(new PopEvent(PopEvent.POP_EVENT,taskId,applyId,null,null,true,true)); 
+
+			}
+			private function searchAccountHandleAutoCompleteChange():void
+			{
+				var color:Object = search_account.selectedItem;
+				
+				if (color != null && color.hasOwnProperty( "account" ))
+				{
+					search_account_id.text=color.account;
+				} else{
+					search_account_id.text="";
+				}               
+			}
+		]]> 		
+	</mx:Script> 
+	<mx:VBox borderVisible="true" width="100%" height="100%" borderStyle="solid" paddingTop="10" paddingBottom="10"   paddingLeft="10" paddingRight="10">	
+		<component:Fieldset title="条件查询" width="100%" height="60" >
+			
+				<mx:HBox verticalAlign="middle">
+					<mx:Label  text="申请员工"  width="150"  textAlign="right"/>
+					<hc:AutoComplete id="search_account"  labelField="name"  width="100"  matchType="anyPart" prompt="选择员工"  change="{ searchAccountHandleAutoCompleteChange() }" dropDownItemRenderer="{ searchAccountDropDownItemRenderer }" selectedItemStyleName="none">
+						
+					</hc:AutoComplete>
+					<mx:Label id="search_account_id" visible="false">
+						
+					</mx:Label>
+					<mx:Label  text="申请部门" />
+					<mx:ComboBox  width="150" id="department" labelField="label" editable="false"/>
+					
+					<mx:Label  text="申请日期"  width="100"  textAlign="right"/>
+					<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" id="search_date_begin"   formatString="YYYY-MM-DD"  editable="false" width="120"/>
+					<mx:Label  text="--"  width="30" textAlign="center"/>
+					<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" id="search_date_end"  formatString="YYYY-MM-DD" editable="false" width="120"/>
+					<mx:Button  label="搜索"  width="70"   click="search()"/>
+
+				</mx:HBox>	
+				
+				
+			
+		</component:Fieldset>
+		<mx:DataGrid id="table" rowCount="10" width="100%" height="100%"    verticalAlign="middle" >
+			<mx:columns>
+				<mx:DataGridColumn textAlign="center" headerText="申请编号" dataField="applyNo" width="100">
+					<mx:itemRenderer>
+						<mx:Component>
+							<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
+								<mx:Label text="{data.applyNo}"/>
+							</mx:VBox>																			
+						</mx:Component>						
+					</mx:itemRenderer>
+				</mx:DataGridColumn>
+				
+				<mx:DataGridColumn textAlign="center" headerText="采购名称"  width="150" >
+					<mx:itemRenderer>
+						<mx:Component>
+							<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off" >
+								<mx:Label text="{data.purchaseName}"/>
+								
+							</mx:HBox>
+						</mx:Component>
+					</mx:itemRenderer>
+				</mx:DataGridColumn>
+				
+				<mx:DataGridColumn textAlign="center" headerText="申请描述"  width="200" >
+					<mx:itemRenderer>
+						<mx:Component>
+							<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off" >
+								<mx:Label text="{data.purchaseDescription}"/>
+								
+							</mx:HBox>
+						</mx:Component>
+					</mx:itemRenderer>
+				</mx:DataGridColumn>
+				<mx:DataGridColumn textAlign="center" headerText="申请人"  width="80" >
+					<mx:itemRenderer>
+						<mx:Component>
+							<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off" >
+								<mx:Label text="{parentApplication.getTeacherNameByAccountId(data.applyUser)}">
+								</mx:Label>
+							</mx:HBox>
+						</mx:Component>
+					</mx:itemRenderer>
+				</mx:DataGridColumn>
+				<mx:DataGridColumn textAlign="center" headerText="申请部门"  width="80" >
+					<mx:itemRenderer>
+						<mx:Component>
+							<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off" >
+								<mx:Label text="{parentApplication.getDepartmentObjectById(data.applyUserDepartmentId).name}">
+								</mx:Label>
+							</mx:HBox>
+						</mx:Component>
+					</mx:itemRenderer>
+				</mx:DataGridColumn>
+				<!--<mx:DataGridColumn textAlign="center" headerText="申请时间"  width="120" >
+					<mx:itemRenderer>
+						<mx:Component>
+							<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off" >
+								<mx:Label text="{this.outerDocument.formatDate(data.applyTime)}">
+								</mx:Label>
+							</mx:HBox>
+						</mx:Component>
+					</mx:itemRenderer>
+				</mx:DataGridColumn>-->
+				
+				<!--<mx:DataGridColumn textAlign="center" headerText="当前节点创建时间"  width="100">
+					<mx:itemRenderer>
+						<mx:Component>
+							<mx:HBox width="100%" height="100%" verticalAlign="middle" horizontalAlign="center" verticalScrollPolicy="off" horizontalScrollPolicy="off">
+								<mx:Label text="{this.outerDocument.formatDate(data.beginTime)}">
+								</mx:Label>
+							</mx:HBox>
+						</mx:Component>
+					</mx:itemRenderer>
+				</mx:DataGridColumn>-->
+				
+				
+				
+				<mx:DataGridColumn textAlign="center" headerText="当前节点"  width="100">
+					<mx:itemRenderer>
+						<mx:Component>
+							<mx:HBox width="100%" height="100%" verticalAlign="middle" horizontalAlign="center" verticalScrollPolicy="off" horizontalScrollPolicy="off">
+								<mx:Label text="{data.state}" width="100%" />
+							</mx:HBox>
+						</mx:Component>
+					</mx:itemRenderer>
+				</mx:DataGridColumn>
+				
+				<mx:DataGridColumn textAlign="center" headerText="操作">
+					<mx:itemRenderer>
+						<mx:Component>
+							<mx:HBox width="100%" height="100%" verticalAlign="middle" horizontalAlign="center" verticalScrollPolicy="off" horizontalScrollPolicy="off">
+								<mx:LinkButton  label="[采购]" click="{approve(data)}"/>
+								<mx:LinkButton  label="[校办决议]" click="{approve(data)}"/>
+								<mx:LinkButton  label="[取消/激活]" click="{approve(data)}"/>
+								<mx:Script>
+									<![CDATA[  
+										private function approve( data:Object):void{
+											this.outerDocument.enterApprove(data.applyId,data.taskId);
+										}
+										
+										
+									]]> 
+								</mx:Script> 
+							</mx:HBox>
+						</mx:Component>
+					</mx:itemRenderer>
+				</mx:DataGridColumn>
+				<mx:DataGridColumn textAlign="center" headerText="详细"  width="80">
+					<mx:itemRenderer>
+						<mx:Component>
+							<mx:HBox width="100%" height="100%" verticalAlign="middle" horizontalAlign="center" verticalScrollPolicy="off" horizontalScrollPolicy="off">
+								<mx:LinkButton  label="[详细]" click="{detail(data)}"/>
+								<mx:Script>
+									<![CDATA[  
+										private function detail( data:Object):void{
+											this.outerDocument.detailApply(data.id);
+											
+										}
+										
+									]]> 
+								</mx:Script> 
+							</mx:HBox>
+						</mx:Component>
+					</mx:itemRenderer>
+				</mx:DataGridColumn>
+			</mx:columns>
+		</mx:DataGrid>
+		<component:SPageController id="pc" useCache="{false}" TargetUI="{table}" callBackFunc="{searchPage}"  PerPage="15" ClientPages="3"  width="100%"/>
+
+				
+			
+	</mx:VBox>	
+</mx:Module>

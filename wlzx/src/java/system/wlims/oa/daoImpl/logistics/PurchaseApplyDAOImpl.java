@@ -8,7 +8,6 @@ import org.hibernate.criterion.Restrictions;
 
 import system.BaseDAOImpl;
 import system.PaginationSupport;
-import system.entity.DepartmentModel;
 import system.utils.StringUtils;
 import system.wlims.oa.dao.logistics.PurchaseApplyDAO;
 import system.wlims.oa.entity.logistics.PurchaseApplyModel;
@@ -39,6 +38,26 @@ public class PurchaseApplyDAOImpl extends BaseDAOImpl<PurchaseApplyModel>  imple
 			return result != null && result.size() > 0 ? result.get(0) : null;
 		}
 		return null;
+	}
+
+	@Override
+	public PaginationSupport<PurchaseApplyModel> getApplyByConditions(
+			String applyUserId, String applyDepartmentId,
+			String applyBeginDate, String applyEndDate, int index, int pageSize) {
+		DetachedCriteria criteria = DetachedCriteria.forClass(PurchaseApplyModel.class);
+		
+		
+		if(StringUtils.isNotEmpty(applyUserId))
+			criteria.add(Restrictions.sqlRestriction("apply_user='"+applyUserId+"'"));
+		if(StringUtils.isNotEmpty(applyDepartmentId))
+			criteria.add(Restrictions.sqlRestriction("apply_user_department_id='"+applyDepartmentId+"'"));
+		if(StringUtils.isNotEmpty(applyBeginDate))
+			criteria.add(Restrictions.sqlRestriction("apply_time >= '"+applyBeginDate+" 00:00:00'"));		
+		if(StringUtils.isNotEmpty(applyEndDate))
+			criteria.add(Restrictions.sqlRestriction("apply_time <= '"+applyEndDate+" 23:59:59'"));
+		
+		criteria.addOrder(Order.desc("applyTime"));
+		return this.findPageByCriteria(criteria, pageSize, index);
 	}
 
 
