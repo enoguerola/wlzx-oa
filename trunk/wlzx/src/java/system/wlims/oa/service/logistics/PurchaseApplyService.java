@@ -25,4 +25,5 @@ public interface PurchaseApplyService{
 	
 	public void saveApprove(String taskId,String approveState,String approveDescription,String money);
 	
+	public PaginationSupport<PurchaseApplyModel> getApplyByConditions(String applyUserId,String applyDepartmentId,String applyBeginDate,String applyEndDate, int index,int pageSize);
 }

@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.jbpm.api.Configuration;
 import org.jbpm.api.ExecutionService;
+import org.jbpm.api.HistoryService;
 import org.jbpm.api.ProcessDefinition;
 import org.jbpm.api.ProcessEngine;
 import org.jbpm.api.ProcessInstance;
@@ -28,10 +29,13 @@ public class JBPMProcessImage extends HttpServlet {
 	private ProcessEngine processEngine;  
     private RepositoryService repositoryService;  
     private ExecutionService executionService;
+    private HistoryService historyService;
+
     public JBPMProcessImage() throws FileNotFoundException{
 		processEngine=Configuration.getProcessEngine();
 		repositoryService=processEngine.getRepositoryService();  
 		executionService=processEngine.getExecutionService();
+		historyService=processEngine.getHistoryService();
 //		ZipInputStream zis;
 //		try {
 //			zis = new ZipInputStream(new FileInputStream("E:/AdobeFlashBuilder4.5/wlzx/src/java/logistis-caigou.zip"));
@@ -56,10 +60,8 @@ public class JBPMProcessImage extends HttpServlet {
 	}
 
 	protected void processRequest(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
-		 String processInstanceId = request.getParameter("processInstanceId");//流程定义ID
-		 ProcessInstance processInstance = executionService.findProcessInstanceById(processInstanceId);
-         String processDefinitionId = processInstance.getProcessDefinitionId();
-         ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery().processDefinitionId(processDefinitionId).uniqueResult();
+		 String key = request.getParameter("key");
+         ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery().processDefinitionKey(key).uniqueResult();
          InputStream inputStream = repositoryService.getResourceAsStream(processDefinition.getDeploymentId(), processDefinition.getImageResourceName());
          if(inputStream!=null)
          {	 response.setContentType("image/png");   
