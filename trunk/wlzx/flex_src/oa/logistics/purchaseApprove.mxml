@@ -27,7 +27,8 @@
 			import system.component.lockWin.LockWinTool;
 			import system.utils.ComboxUtils;
 			import system.utils.CommonUtils;
-			
+			import mx.collections.Sort;
+			import mx.collections.SortField;
 			private function init():void{
 				search();
 				addEventListener(PopEvent.COMPLETED,function():void{
@@ -45,12 +46,25 @@
 			{
 				LockWinTool.unLockCurrentWin();
 				var result:ArrayCollection=event.result as ArrayCollection;
+				var sort:Sort=new Sort();  
+				sort.fields=[new SortField("beginTime")];  
+				sort.reverse();
+
+				result.sort=sort;
+				
+				result.refresh();//更新  
 				table.initdata(result);
 			}
 			protected function getPersonPurchaseApproveHistoryTask_resultHandler(event:ResultEvent):void
 			{
 				LockWinTool.unLockCurrentWin();
 				var result:ArrayCollection=event.result as ArrayCollection;
+				var sort:Sort=new Sort();  
+				sort.fields=[new SortField("beginTime")];  
+				sort.reverse();
+
+				result.sort=sort;
+				result.refresh();//更新  
 				historyTable.initdata(result);
 			}
 			
@@ -302,7 +316,7 @@
 								</mx:Component>
 							</mx:itemRenderer>
 						</mx:DataGridColumn>
-						<mx:DataGridColumn textAlign="center" headerText="节点创建时间"  width="100">
+						<mx:DataGridColumn textAlign="center" headerText="节点创建时间"  width="120">
 							<mx:itemRenderer>
 								<mx:Component>
 									<mx:HBox width="100%" height="100%" verticalAlign="middle" horizontalAlign="center" verticalScrollPolicy="off" horizontalScrollPolicy="off">
@@ -315,7 +329,7 @@
 						
 						
 						
-						<mx:DataGridColumn textAlign="center" headerText="节点结束时间"  width="100">
+						<mx:DataGridColumn textAlign="center" headerText="节点结束时间"  width="120">
 							<mx:itemRenderer>
 								<mx:Component>
 									<mx:HBox width="100%" height="100%" verticalAlign="middle" horizontalAlign="center" verticalScrollPolicy="off" horizontalScrollPolicy="off">
@@ -327,12 +341,12 @@
 							</mx:itemRenderer>
 						</mx:DataGridColumn>
 						
-						<mx:DataGridColumn textAlign="center" headerText="审批状态"  width="100">
+						<mx:DataGridColumn textAlign="center" headerText="审批状态"  width="80">
 							<mx:itemRenderer>
 								<mx:Component>
 									<mx:HBox width="100%" height="100%" verticalAlign="middle" horizontalAlign="center" verticalScrollPolicy="off" horizontalScrollPolicy="off">
-										<mx:Label text="">
-										</mx:Label>
+										<mx:Label text="{data.approveResult}" width="100%" />
+
 									</mx:HBox>
 								</mx:Component>
 							</mx:itemRenderer>

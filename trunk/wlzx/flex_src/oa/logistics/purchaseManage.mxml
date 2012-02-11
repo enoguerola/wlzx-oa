@@ -5,6 +5,8 @@
 	
 	<mx:RemoteObject id="purchaseApplyServiceRO" destination="purchaseApplyServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 		<mx:method name="getApplyByConditions"  concurrency="last"  result="getApplyByConditions_resultHandler(event);" />
+		<mx:method name="activeOrCancle"  concurrency="last"  result="activeOrCancle_resultHandler(event);" />
+		
 	</mx:RemoteObject>
 	<mx:Component id="searchAccountDropDownItemRenderer">
 		<render:AdvancedItemRenderer selectedItems="{ outerDocument.search_account.selectedItems }" />
@@ -64,6 +66,7 @@
 			}
 			
 			
+			
 			public function search():void{
 				pc.GoToControll(1);
 			}
@@ -109,6 +112,19 @@
 				} else{
 					search_account_id.text="";
 				}               
+			}
+			public function activeOrCancle(applyId:String):void
+			{
+				Alert.show("你确定要取消|激活该采购申请吗?","确认",Alert.YES | Alert.NO,null,function(event:CloseEvent):void{
+					if(event.detail == Alert.YES)
+					{
+						purchaseApplyServiceRO.activeOrCancle(applyId);
+					}
+				});
+			}
+			protected function activeOrCancle_resultHandler(event:ResultEvent):void
+			{
+				search();
 			}
 		]]> 		
 	</mx:Script> 
@@ -223,21 +239,53 @@
 						</mx:Component>
 					</mx:itemRenderer>
 				</mx:DataGridColumn>
-				
+				<mx:DataGridColumn textAlign="center" headerText="是否挂起"  width="60">
+					<mx:itemRenderer>
+						<mx:Component>
+							<mx:HBox width="100%" height="100%" verticalAlign="middle" horizontalAlign="center" verticalScrollPolicy="off" horizontalScrollPolicy="off">
+								<mx:Label text="{data.cancleFlag==true?'是':'否'}" width="100%" />
+							</mx:HBox>
+						</mx:Component>
+					</mx:itemRenderer>
+				</mx:DataGridColumn>
 				<mx:DataGridColumn textAlign="center" headerText="操作">
 					<mx:itemRenderer>
 						<mx:Component>
 							<mx:HBox width="100%" height="100%" verticalAlign="middle" horizontalAlign="center" verticalScrollPolicy="off" horizontalScrollPolicy="off">
-								<mx:LinkButton  label="[采购]" click="{approve(data)}"/>
-								<mx:LinkButton  label="[校办决议]" click="{approve(data)}"/>
-								<mx:LinkButton  label="[取消/激活]" click="{approve(data)}"/>
+								<mx:LinkButton  label="[采购]" click="{purchaseStep(data)}" enabled="{purchaseLabelEnabled(data)}"/>
+								<mx:LinkButton  label="[校办决议]" click="{schoolOfficeApprove(data)}" enabled="{schoolOfficeApproveLabelEnabled(data)}"/>
+								<mx:LinkButton  label="{activeOrCancleLabel(data)}" click="{activeOrCancle(data)}"  enabled="{activeOrCancleLabelEnabled(data)}"/>
 								<mx:Script>
 									<![CDATA[  
-										private function approve( data:Object):void{
-											this.outerDocument.enterApprove(data.applyId,data.taskId);
+										private function purchaseLabelEnabled( data:Object):Boolean{
+											if(data.cancleFlag==true)return false;
+											if(data.state=="采购安排")return true;
+											else return false;
+										}
+										private function schoolOfficeApproveLabelEnabled( data:Object):Boolean{
+											if(data.cancleFlag==true)return false;
+											if(data.state=="不予采购"||data.state=="批准采购")return false;
+											else return true;
 										}
 										
+										private function purchaseStep( data:Object):void{
+											//this.outerDocument.purchaseStep(data.applyId);
+										}
+										private function schoolOfficeApprove( data:Object):void{
+											//this.outerDocument.schoolOfficeApprove(data.applyId);
+										}
+										private function activeOrCancle( data:Object):void{
+											this.outerDocument.activeOrCancle(data.id);
+										}
 										
+										private function activeOrCancleLabel( data:Object):String{
+											if(data.cancleFlag==true)return "[激活]";
+											else return "[挂起]";
+										}
+										private function activeOrCancleLabelEnabled( data:Object):Boolean{
+											if(data.state=="不予采购"||data.state=="批准采购")return false;
+											else return true;
+										}
 									]]> 
 								</mx:Script> 
 							</mx:HBox>

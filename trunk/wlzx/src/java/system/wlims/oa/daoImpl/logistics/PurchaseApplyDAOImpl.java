@@ -46,7 +46,7 @@ public class PurchaseApplyDAOImpl extends BaseDAOImpl<PurchaseApplyModel>  imple
 			String applyBeginDate, String applyEndDate, int index, int pageSize) {
 		DetachedCriteria criteria = DetachedCriteria.forClass(PurchaseApplyModel.class);
 		
-		
+		criteria.add(Restrictions.eq("submitFlag", true));
 		if(StringUtils.isNotEmpty(applyUserId))
 			criteria.add(Restrictions.sqlRestriction("apply_user='"+applyUserId+"'"));
 		if(StringUtils.isNotEmpty(applyDepartmentId))

@@ -1,52 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <process name="caigou" xmlns="http://jbpm.org/4.4/jpdl">
-   <start g="290,126,118,95" name="start1">
+   <start g="511,117,118,95" name="start1">
       <transition to="申请"/>
    </start>
-   <task assignee="#{purchase.applyUserDepartmentLeader}" g="365,188,92,52" name="申请部门审批">
+   <task assignee="#{purchase.applyUserDepartmentLeader}" g="586,179,92,52" name="申请部门审批">
       <transition g="-17,-17" name="批准" to="资源处审批"/>
-      <transition g="-50,-22" name="不批准" to="cancel1"/>
+      <transition g="-50,-22" name="不批准" to="不予采购"/>
    </task>
-   <task assignee="#{purchase.resourceDepartmentLeader}" g="366,270,92,52" name="资源处审批">
+   <task assignee="#{purchase.resourceDepartmentLeader}" g="587,261,92,52" name="资源处审批">
       <transition g="-11,-12" name="批准" to="exclusive2"/>
-      <transition g="-57,-20" name="不批准" to="cancel1"/>
+      <transition g="-57,-20" name="不批准" to="不予采购"/>
    </task>
-   <task assignee="#{purchase.financeViceHeaderMaster}" g="368,490,107,52" name="财务副校长审批">
+   <task assignee="#{purchase.financeViceHeaderMaster}" g="589,481,107,52" name="财务副校长审批">
       <transition g="-33,-22" name="批准" to="exclusive1"/>
-      <transition g="-51,15" name="不批准" to="cancel1"/>
+      <transition g="-51,15" name="不批准" to="不予采购"/>
    </task>
-   <task assignee="#{purchase.headerMaster}" g="368,664,92,52" name="校长审批">
+   <task assignee="#{purchase.headerMaster}" g="589,655,92,52" name="校长审批">
       <transition g="-50,-22" name="批准" to="采购安排"/>
-      <transition g="-16,-9" name="不批准" to="cancel1"/>
+      <transition g="-16,-9" name="不批准" to="不予采购"/>
    </task>
-   <decision expr="#{purchase.money &lt; 200 ? '金额小于200' : '金额大于等于200'}" g="388,351,149,48" name="exclusive2">
+   <decision expr="#{purchase.money &lt; 200 ? '金额小于200' : '金额大于等于200'}" g="609,342,149,48" name="exclusive2">
       <transition g="14,-8" name="金额大于等于200" to="分管副校长审批">
       </transition>
       <transition g="-39,-21" name="金额小于200" to="采购安排">
       </transition>
    </decision>
-   <decision expr="#{purchase.money &lt; 2000 ? '金额小于2000' : '金额大于等于2000'}" g="388,578,48,48" name="exclusive1">
+   <decision expr="#{purchase.money &lt; 2000 ? '金额小于2000' : '金额大于等于2000'}" g="609,569,48,48" name="exclusive1">
       <transition g="4,-24" name="金额大于等于2000" to="校长审批">
       </transition>
       <transition g="-50,-22" name="金额小于2000" to="采购安排">
       </transition>
    </decision>
-   <end g="193,152,48,48" name="通过"/>
-   <task assignee="#{purchase.applyUser}" g="365,124,92,52" name="申请">
+   <end g="414,143,48,48" name="批准采购"/>
+   <task assignee="#{purchase.applyUser}" g="586,115,92,52" name="申请">
       <transition to="申请部门审批"/>
       <transition to="校办会决议"/>
    </task>
-   <task assignee="#{purchase.applyUserViceHeaderMaster}" g="367,419,101,52" name="分管副校长审批">
+   <task assignee="#{purchase.applyUserViceHeaderMaster}" g="588,410,101,52" name="分管副校长审批">
       <transition g="-47,-7" name="批准" to="财务副校长审批"/>
-      <transition g="-31,-4" name="不批准" to="cancel1"/>
+      <transition g="-31,-4" name="不批准" to="不予采购"/>
    </task>
-   <task g="169,467,92,52" name="采购安排">
-      <transition g="-45,-22" name="批准" to="通过"/>
+   <task g="390,458,92,52" name="采购安排">
+      <transition g="-45,-22" name="批准" to="批准采购"/>
    </task>
-   <task g="346,16,118,52" name="校办会决议">
-      <transition g="-45,-22" name="批准" to="通过"/>
-      <transition g="-48,-37" name="不批准" to="cancel1"/>
+   <task g="567,7,118,52" name="校办会决议">
+      <transition g="-45,-22" name="批准" to="批准采购"/>
+      <transition g="-48,-37" name="不批准" to="不予采购"/>
    </task>
-   <end-cancel g="678,344,48,48" name="cancel1"/>
+   <end-cancel g="849,367,48,48" name="不予采购"/>
 </process>
