@@ -24,11 +24,12 @@
 			import mx.managers.PopUpManager;
 			import mx.rpc.events.*;
 			import mx.validators.Validator;
-			import system.event.PopEvent;
-
+			
 			import oa.logistics.popWin.PurchaseApprovePopWin;
+			import oa.logistics.popWin.PurchasePopWin;
 			
 			import system.component.lockWin.LockWinTool;
+			import system.event.PopEvent;
 			import system.utils.ComboxUtils;
 			import system.utils.CommonUtils;
 			
@@ -89,7 +90,7 @@
 			}
 
 			public var pop:PurchaseApprovePopWin=null;
-			public function enterApprove(applyId:String,taskId:String):void
+			public function enterApprove(applyId:String,taskId:String,schoolOfficeApprove:Boolean=false):void
 			{
 				if(pop!=null)PopUpManager.removePopUp(pop);
 				pop=PurchaseApprovePopWin(PopUpManager.createPopUp(this,PurchaseApprovePopWin,true)); 
@@ -125,6 +126,24 @@
 			protected function activeOrCancle_resultHandler(event:ResultEvent):void
 			{
 				search();
+			}
+			public function schoolOfficeApprove(applyId:String):void
+			{
+				enterApprove(applyId,null);
+			}
+			public var purchasePopWin:PurchasePopWin=null;
+			public function purchaseStep(applyId:String):void
+			{
+				if(purchasePopWin!=null)PopUpManager.removePopUp(purchasePopWin);
+				purchasePopWin=PurchasePopWin(PopUpManager.createPopUp(this,PurchasePopWin,true)); 
+				purchasePopWin.owner=this;
+				PopUpManager.centerPopUp(purchasePopWin);
+				purchasePopWin.percentHeight=100;
+				purchasePopWin.percentWidth=100;
+				purchasePopWin.x=FlexGlobals.topLevelApplication.stage.stageWidth/2-purchasePopWin.width/2;
+				purchasePopWin.y=FlexGlobals.topLevelApplication.stage.stageHeight/2-purchasePopWin.height/2;
+				purchasePopWin.dispatchEvent(new PopEvent(PopEvent.POP_EVENT,applyId,null,null,null,true,true)); 
+				
 			}
 		]]> 		
 	</mx:Script> 
@@ -235,15 +254,45 @@
 						<mx:Component>
 							<mx:HBox width="100%" height="100%" verticalAlign="middle" horizontalAlign="center" verticalScrollPolicy="off" horizontalScrollPolicy="off">
 								<mx:Label text="{data.state}" width="100%" />
+								<!--<mx:Script>
+									<![CDATA[  
+										
+										private function getState( data:Object):String{
+											if(data.state==null||data.state=="")
+												 return "/";
+											else if(data.schoolOfficeApproveState!=null&&data.schoolOfficeApproveState!="")
+												return "校办决议"+data.schoolOfficeApproveState;
+											else return data.state;
+										}
+									]]> 
+								</mx:Script> -->
 							</mx:HBox>
 						</mx:Component>
 					</mx:itemRenderer>
 				</mx:DataGridColumn>
-				<mx:DataGridColumn textAlign="center" headerText="是否挂起"  width="60">
+				<mx:DataGridColumn textAlign="center" headerText="挂起标记"  width="60">
 					<mx:itemRenderer>
 						<mx:Component>
 							<mx:HBox width="100%" height="100%" verticalAlign="middle" horizontalAlign="center" verticalScrollPolicy="off" horizontalScrollPolicy="off">
-								<mx:Label text="{data.cancleFlag==true?'是':'否'}" width="100%" />
+								<mx:Label text="{data.cancleFlag==true?'挂起':'/'}" width="100%" />
+							</mx:HBox>
+						</mx:Component>
+					</mx:itemRenderer>
+				</mx:DataGridColumn>
+				<mx:DataGridColumn textAlign="center" headerText="采购标识"  width="60">
+					<mx:itemRenderer>
+						<mx:Component>
+							<mx:HBox width="100%" height="100%" verticalAlign="middle" horizontalAlign="center" verticalScrollPolicy="off" horizontalScrollPolicy="off">
+								<mx:Label text="{purchaseLabel(data)}" width="100%" />
+								<mx:Script>
+									<![CDATA[  
+										private function purchaseLabel( data:Object):String{
+											if(data.purchaseDate)return '已采购';
+											else return '/';
+										}
+										
+									]]> 
+								</mx:Script> 
 							</mx:HBox>
 						</mx:Component>
 					</mx:itemRenderer>
@@ -258,21 +307,24 @@
 								<mx:Script>
 									<![CDATA[  
 										private function purchaseLabelEnabled( data:Object):Boolean{
-											if(data.cancleFlag==true)return false;
-											if(data.state=="采购安排")return true;
+											if(data.purchaseDate!=null)return false;
+											if((data.state=="批准采购"||data.state=="校办会决议批准")&&data.purchaseDate==null)return true;
 											else return false;
 										}
 										private function schoolOfficeApproveLabelEnabled( data:Object):Boolean{
-											if(data.cancleFlag==true)return false;
+											/*  if(data.cancleFlag==true)return false;
 											if(data.state=="不予采购"||data.state=="批准采购")return false;
-											else return true;
+											else return true;  */
+											if(data.purchaseDate!=null)return false;
+											if(data.schoolOfficeApproveState==null||data.schoolOfficeApproveState=="")return true;
+											else return false;
 										}
 										
 										private function purchaseStep( data:Object):void{
-											//this.outerDocument.purchaseStep(data.applyId);
-										}
+ 											this.outerDocument.purchaseStep(data.id);
+ 										}
 										private function schoolOfficeApprove( data:Object):void{
-											//this.outerDocument.schoolOfficeApprove(data.applyId);
+											 this.outerDocument.schoolOfficeApprove(data.id); 
 										}
 										private function activeOrCancle( data:Object):void{
 											this.outerDocument.activeOrCancle(data.id);
@@ -283,6 +335,7 @@
 											else return "[挂起]";
 										}
 										private function activeOrCancleLabelEnabled( data:Object):Boolean{
+											if(data.purchaseDate!=null)return false;
 											if(data.state=="不予采购"||data.state=="批准采购")return false;
 											else return true;
 										}

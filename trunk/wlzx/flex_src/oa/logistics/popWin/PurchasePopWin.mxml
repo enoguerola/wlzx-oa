@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:TitleWindow   xmlns:mx="http://www.adobe.com/2006/mxml" width="800" height="100%"  close="PopUpManager.removePopUp(this);" showCloseButton="true" creationComplete="init();" styleName="PanelStyle" >
+<mx:TitleWindow   xmlns:mx="http://www.adobe.com/2006/mxml"
+				  xmlns:hc="com.hillelcoren.components.*"
+				  xmlns:render="system.component.render.*" width="800" height="100%"  close="PopUpManager.removePopUp(this);" showCloseButton="true" creationComplete="init();" styleName="PanelStyle" >
 	
 				
 	<mx:RemoteObject id="purchaseApplyServiceRO" destination="purchaseApplyServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
 		<mx:method name="getPurchaseApplyDetailById"  concurrency="last"  result="getPurchaseApplyDetailByIdById_resultHandler(event);" />
-		<mx:method name="saveApprove"  concurrency="last"  result="saveApprove_resultHandler(event);" />
+		<mx:method name="savePurchase"  concurrency="last"  result="savePurchase_resultHandler(event);" />
 		
 	</mx:RemoteObject>
-		
+	<mx:Component id="searchAccountDropDownItemRenderer">
+		<render:AdvancedItemRenderer selectedItems="{ outerDocument.search_account.selectedItems }" />
+	</mx:Component>
 	<mx:Script> 
 		
 		<![CDATA[  
@@ -24,21 +28,18 @@
 			import system.event.PopEvent;
 			import system.utils.CommonUtils;
 			private var validatorArr:Array; 
-			[Bindable]
-			public var taskId:String=null;
+			
 			[Bindable]
 			public var applyId:String=null;
 			private function init():void
 			{
+				search_account.dataProvider=parentApplication.allTeacherAcccounts;
 				this.addEventListener(PopEvent.POP_EVENT,function(e:PopEvent):void{
 /* 					if(e._id!=null&&e._arg1!=null){
- */						taskId=e._id;
-						applyId=e._arg1;
+ */						
+						applyId=e._id;
 						purchaseApplyServiceRO.getPurchaseApplyDetailById(applyId);
-						if(taskId==null){
-							this.title="校长办公会议决议";
-							state.text="校长办公会议决议";
-						}
+						
 					/* }else{
 					
 						
@@ -50,19 +51,18 @@
 				Alert.show(event.fault.faultString, 'Error');
 			}
 			
-			public function saveApprove():void{
+			public function savePurchase():void{
 				if(validateForm()){
-					purchaseApplyServiceRO.saveApprove(applyId,taskId,approve_status.selectedValue,approve_description.text,money.text);
+					purchaseApplyServiceRO.savePurchase(applyId,purchase_detail.text,purchase_date.text,search_account_id.text);
 				}
 			
 			}
 			private function validateForm():Boolean {
-				if(approve_status.selectedValue!=null){
-					return true;
-				}else{
-					Alert.show("请选择审批结果");
+				if(search_account_id.text==""||purchase_date.text==""||purchase_detail.text==""){
+					Alert.show("请完整填写采购信息");
 					return false;
 				}
+				else return true;
 			}
 			protected function getPurchaseApplyDetailByIdById_resultHandler(event:ResultEvent):void{
 				var form:Object=event.result as Object;
@@ -71,15 +71,7 @@
 				//processImage.source=parentApplication.homeUrl+"servlet/jbpmProcessImage?processInstanceId="+form.processInstanceId;
 				table.dataProvider=form.historyJBPMTaskVOs;
 				/* Alert.show(form.state); */
-				state.text=form.state;
 				
-				if(state.text=="资源处审批"){
-					moneyArea.visible=true;
-					money.text="";
-				}
-				if(taskId==null){
-					state.text="校长办公会议决议";
-				}
 				purchaseName.text=form.purchaseName;
 				purchaseDescription.text=form.purchaseDescription
 				isGovernmentPurchase.text=form.isGovernmentPurchase?"是":"否";
@@ -91,11 +83,22 @@
 				return CommonUtils.formatDate(date,"YYYY-MM-DD JJ:NN:SS");
 				
 			}
-			protected function saveApprove_resultHandler(event:ResultEvent):void{
+			protected function savePurchase_resultHandler(event:ResultEvent):void{
 				this.owner.dispatchEvent(new PopEvent(PopEvent.COMPLETED,null,null,null,null,true,false));
 				PopUpManager.removePopUp(this);
 			}
-			
+			private function searchAccountHandleAutoCompleteChange():void
+			{
+				var item:Object=search_account.selectedItem;
+				if (item != null && item.hasOwnProperty( "id" ))
+				{
+					search_account_id.text=item.id;
+				} else{
+					search_account_id.text="";
+				}             
+				
+				
+			}
 		]]> 
 		
 	</mx:Script> 
@@ -207,30 +210,31 @@
 		</mx:VBox>
 		<mx:VRule height="98%"  width="1"/>
 		<mx:VBox width="50%" height="100%" paddingTop="20"  horizontalAlign="right">
-			<mx:FormItem label="当前节点：" width="100%" fontWeight="bold">
-				<mx:Label id="state" fontWeight="bold"/>
-			</mx:FormItem>
-			<mx:FormItem label="审批决策：" width="100%" fontWeight="bold">
-				<mx:HBox>
-					<mx:RadioButtonGroup id="approve_status" />  
-					<mx:RadioButton group="{approve_status}" value="批准" label="批准" width="80" fontWeight="bold"/>  
-					<mx:RadioButton group="{approve_status}" value="不批准" label="不批准" width="80" fontWeight="bold"/>  
-				</mx:HBox>
-				
-			</mx:FormItem>
+			
 			<mx:VBox width="100%">
-				<mx:Label text="审批建议：" width="100%" textAlign="left" fontWeight="bold"/>
-				<mx:TextArea height="150" width="250" id="approve_description">
-					
-				</mx:TextArea>
-			</mx:VBox>
-			<mx:FormItem label="经费预算：" width="100%" fontWeight="bold" visible="false" id="moneyArea">
 				<mx:HBox>
-					<mx:TextInput id="money" fontWeight="bold" restrict="0-9\."/>
-					<mx:Label  text="元" fontWeight="bold"/>
+					<mx:Label text="采购方式：" width="100%" textAlign="left" fontWeight="bold"/>
+					<mx:TextArea height="150" width="250" id="purchase_detail">
+						
+					</mx:TextArea>
 				</mx:HBox>
-			</mx:FormItem>
-			<mx:Button label="保存" click="saveApprove();"/>
+				<mx:HBox>
+					<mx:Label  text="采购负责人:" textAlign="left" fontWeight="bold"/>
+					<hc:AutoComplete id="search_account"  labelField="name"  width="150"  matchType="anyPart" prompt="选择教师"  change="{ searchAccountHandleAutoCompleteChange() }" dropDownItemRenderer="{ searchAccountDropDownItemRenderer }" selectedItemStyleName="none">
+						
+					</hc:AutoComplete>
+					<mx:Label id="search_account_id" visible="false">
+					</mx:Label>
+
+				</mx:HBox>
+				<mx:HBox>
+	
+					<mx:Label  text="采购日期:" textAlign="left" fontWeight="bold"/>
+					<mx:DateField dayNames='["日", "一", "二", "三", "四", "五", "六"]'  monthNames='["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]' yearNavigationEnabled="true" width="120"  id="purchase_date" formatString="YYYY-MM-DD"/>
+				</mx:HBox>
+			</mx:VBox>
+			
+			<mx:Button label="保存" click="savePurchase();"/>
 		</mx:VBox>
 	</mx:HBox>
 	

@@ -76,6 +76,20 @@
 					moneyArea.visible=true;
 					money.text=form.money;
 				}
+				if(form.schoolOfficeApproveState==null||form.schoolOfficeApproveState==''){
+					
+				}else{
+					schoolOfficeApproveState.text=form.schoolOfficeApproveState;
+					schoolOfficeApproveDescription.text=form.schoolOfficeApproveDescription;
+					
+				}
+				if(form.purchaseDate==null||form.purchaseDate==''){
+					
+				}else{
+					purchaseDetail.text=form.purchaseDetail;
+					purchaseUser.text=form.purchaseUser;
+					purchaseDate.text=form.purchaseDate;
+				}
 			}
 			
 			
@@ -159,9 +173,52 @@
 							
 							
 						</mx:GridRow>
+						<mx:GridRow width="100%"  id="schoolOfficeArea">
+							
+							<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5" verticalAlign="middle" horizontalAlign="center" width="150">
+								<mx:Label text="校办会决议"  textAlign="center"/>
+							</mx:GridItem>
+							<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5"  width="100%"   verticalAlign="middle" horizontalAlign="center">
+								<mx:VBox horizontalAlign="left" width="100%">
+									<mx:Label text="/" id="schoolOfficeApproveState" fontWeight="bold"/>
+
+									<mx:Text width="600" height="100" id="schoolOfficeApproveDescription" fontWeight="bold" text="/"/>
+										
+										
+								</mx:VBox>
+								
+							</mx:GridItem>
+							
+							
+						</mx:GridRow>
 						
-						
-						
+						<mx:GridRow width="100%"  id="purchaseArea">
+							
+							<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5" verticalAlign="middle" horizontalAlign="center" width="150">
+								<mx:Label text="采购方式及采购负责人"  textAlign="center"/>
+							</mx:GridItem>
+							<mx:GridItem borderStyle="solid"  paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5"  width="100%"   verticalAlign="middle" horizontalAlign="center">
+								<mx:VBox horizontalAlign="left" width="100%">
+									<mx:FormItem label="采购方式">
+										<mx:Text width="600" height="100" id="purchaseDetail" fontWeight="bold" text="/"/>
+									</mx:FormItem>
+									<mx:FormItem label="负责人">
+										<mx:HBox width="100%">
+											<mx:Text width="120"    id="purchaseUser" fontWeight="bold" text="/"/>
+											<mx:Label text="采购日期"/>
+											<mx:Text   id="purchaseDate" fontWeight="bold" text="/"/>
+											
+										</mx:HBox>
+										
+									</mx:FormItem>
+									
+									
+								</mx:VBox>
+								
+							</mx:GridItem>
+							
+							
+						</mx:GridRow>
 						
 						
 					</mx:Grid>
@@ -213,8 +270,8 @@
 					
 				</mx:VBox>
 				<mx:FormHeading  label="采购流程图" width="100%" textAlign="left"  fontSize="14"/>
-				<mx:Box backgroundColor="white" width="100%" horizontalScrollPolicy="off" maxWidth="800">
-					<mx:Image  id="processImage"  verticalAlign="middle" horizontalAlign="center"/>
+				<mx:Box backgroundColor="white" width="100%" horizontalScrollPolicy="off">
+					<mx:Image  id="processImage"  verticalAlign="middle" horizontalAlign="center" width="100%"/>
 
 				</mx:Box>
 			</mx:VBox>

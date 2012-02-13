@@ -982,12 +982,18 @@ INSERT INTO `wlzx_oa_workflow_log` VALUES ('199', 'OverWorkWorkFlowLog', '3', '1
 
 -- --------------------------------------------------------
 
+`wlzx_oa`
+--
+
+-- --------------------------------------------------------
+
 --
 -- 表的结构 `wlzx_oa_logistics_purchase`
 --
 
 CREATE TABLE IF NOT EXISTS `wlzx_oa_logistics_purchase` (
   `id` bigint(20) NOT NULL auto_increment,
+  `process_instance_id` varchar(200) default NULL COMMENT '流程实例ID',
   `apply_no` varchar(200) NOT NULL COMMENT '申请编号',
   `purchase_name` varchar(500) NOT NULL COMMENT '采购名称',
   `purchase_description` text COMMENT '采购描述',
@@ -995,7 +1001,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_oa_logistics_purchase` (
   `apply_user` bigint(20) NOT NULL COMMENT '申请人',
   `apply_user_department_id` bigint(20) NOT NULL COMMENT '申请部门',
   `apply_time` datetime NOT NULL COMMENT '申请时间',
-  `money` double NOT NULL COMMENT '采购金额',
+  `money` double default NULL COMMENT '采购金额',
   `apply_user_department_leader` bigint(20) default NULL COMMENT '申请部门领导',
   `resource_department_leader` bigint(20) default NULL COMMENT '资源处领导',
   `apply_user_vice_header_master` bigint(20) default NULL COMMENT '申请部门分管副校长',
@@ -1003,33 +1009,14 @@ CREATE TABLE IF NOT EXISTS `wlzx_oa_logistics_purchase` (
   `header_master` bigint(20) default NULL COMMENT '校长',
   `cancle_flag` tinyint(1) default NULL COMMENT '取消标记',
   `submit_flag` tinyint(1) default NULL COMMENT '提交标记',
+  `school_office_approve_state` varchar(200) default NULL COMMENT '校办决议结果',
+  `school_office_approve_description` text COMMENT '校办决议内容',
+  `purchase_detail` text COMMENT '采购方式',
+  `purchase_user` bigint(20) default NULL COMMENT '采购负责人',
+  `purchase_date` varchar(200) default NULL COMMENT '采购日期',
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='采购申请表' AUTO_INCREMENT=1 ;
 
---
--- 转存表中的数据 `wlzx_oa_logistics_purchase`
---
-
-
---
--- 转存表中的数据 `wlzx_oa_logistics_purchase`
---
-/*
-Navicat MySQL Data Transfer
-
-Source Server         : localhost_3306
-Source Server Version : 50091
-Source Host           : localhost:3306
-Source Database       : wlzx_oa
-
-Target Server Type    : MYSQL
-Target Server Version : 50091
-File Encoding         : 65001
-
-Date: 2012-02-04 19:39:49
-*/
-
-SET FOREIGN_KEY_CHECKS=0;
 -- ----------------------------
 -- Table structure for `wlzx_oa_logistics_repair`
 -- ----------------------------

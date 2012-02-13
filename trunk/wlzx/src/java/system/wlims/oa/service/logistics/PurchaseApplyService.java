@@ -23,12 +23,13 @@ public interface PurchaseApplyService{
 	
 	public List<PurchaseApproveTaskVO> getPersonPurchaseApproveHistoryTask(String userId);
 	
-	public void saveApprove(String taskId,String approveState,String approveDescription,String money);
+	public void saveApprove(String applyId,String taskId,String approveState,String approveDescription,String money);
 	
 	public PaginationSupport<PurchaseApplyModel> getApplyByConditions(String applyUserId,String applyDepartmentId,String applyBeginDate,String applyEndDate, int index,int pageSize);
 
 	public void activeOrCancle(String applyId);
 
-	
+	public void savePurchase(String applyId,String purchaseDetail,String purchaseDate,String purchaseUser);
+
 
 }
