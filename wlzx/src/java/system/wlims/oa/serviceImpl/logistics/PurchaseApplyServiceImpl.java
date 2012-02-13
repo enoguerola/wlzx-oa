@@ -10,7 +10,6 @@ import java.util.Set;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.jbpm.api.Configuration;
-import org.jbpm.api.Execution;
 import org.jbpm.api.ExecutionService;
 import org.jbpm.api.HistoryService;
 import org.jbpm.api.IdentityService;
@@ -23,14 +22,16 @@ import org.jbpm.api.TaskService;
 import org.jbpm.api.cmd.Command;
 import org.jbpm.api.cmd.Environment;
 
-import org.jbpm.api.history.HistoryActivityInstance;
 import org.jbpm.api.history.HistoryProcessInstance;
-import org.jbpm.api.history.HistoryProcessInstanceQuery;
 import org.jbpm.api.history.HistoryTask;
+import org.jbpm.api.model.Transition;
 import org.jbpm.api.task.Task;
 import org.jbpm.pvm.internal.env.EnvironmentFactory;
 import org.jbpm.pvm.internal.history.model.HistoryTaskInstanceImpl;
+import org.jbpm.pvm.internal.model.ActivityImpl;
 import org.jbpm.pvm.internal.model.ExecutionImpl;
+import org.jbpm.pvm.internal.model.ProcessDefinitionImpl;
+import org.jbpm.pvm.internal.model.TransitionImpl;
 
 import system.PaginationSupport;
 import system.dao.DepartmentDAO;
@@ -205,11 +206,15 @@ public class PurchaseApplyServiceImpl implements PurchaseApplyService{
 		vo.setIsGovernmentPurchase(model.getIsGovernmentPurchase());
 		vo.setMoney(model.getMoney());
 		vo.setProcessInstanceId(model.getProcessInstanceId());
-		vo.setPurchaseDescription(model.getPurchaseName());
+		vo.setPurchaseDescription(model.getPurchaseDescription());
 		vo.setPurchaseName(model.getPurchaseName());
 		vo.setResourceDepartmentLeader(vo.getResourceDepartmentLeader());
 		vo.setSubmitFlag(model.getSubmitFlag());
-		
+		vo.setSchoolOfficeApproveState(model.getSchoolOfficeApproveState());
+		vo.setSchoolOfficeApproveDescription(model.getSchoolOfficeApproveDescription());
+		vo.setPurchaseDate(model.getPurchaseDate());
+		vo.setPurchaseDetail(model.getPurchaseDetail());
+		vo.setPurchaseUser(model.getPurchaseUser());
 		List<JBPMTaskVO> listObjects=new ArrayList<JBPMTaskVO>();
 //		ProcessInstance pd = executionService.findProcessInstanceById(model.getProcessInstanceId());
 		
@@ -260,7 +265,10 @@ public class PurchaseApplyServiceImpl implements PurchaseApplyService{
 		ProcessInstance  processInstance=executionService.createProcessInstanceQuery().processInstanceId(model.getProcessInstanceId()).uniqueResult();
 		if(processInstance==null){
 			HistoryProcessInstance  historyProcessInstance =historyService.createHistoryProcessInstanceQuery().processInstanceId(model.getProcessInstanceId()).uniqueResult();
-			vo.setState(historyProcessInstance.getEndActivityName());
+			if(historyProcessInstance!=null)
+				vo.setState(historyProcessInstance.getEndActivityName());
+			if(StringUtils.isNotEmpty(model.getSchoolOfficeApproveState()))
+				 model.setState("校办会决议"+model.getSchoolOfficeApproveState());
 		}else{
 			Task task=taskService.createTaskQuery().processInstanceId(model.getProcessInstanceId()).uniqueResult();
 			vo.setState(task.getActivityName());
@@ -278,14 +286,18 @@ public class PurchaseApplyServiceImpl implements PurchaseApplyService{
 			for(PurchaseApplyModel model:ps.getItems()){
 				ProcessInstance  processInstance=executionService.createProcessInstanceQuery().processInstanceId(model.getProcessInstanceId()).uniqueResult();
 				if(processInstance==null){
+					
 					HistoryProcessInstance  historyProcessInstance =historyService.createHistoryProcessInstanceQuery().processInstanceId(model.getProcessInstanceId()).uniqueResult();
-					model.setState(historyProcessInstance.getEndActivityName());
+					if(historyProcessInstance!=null)
+						model.setState(historyProcessInstance.getEndActivityName());
+					
 				}else{
 					Task task=taskService.createTaskQuery().processInstanceId(model.getProcessInstanceId()).uniqueResult();
 					model.setState(task.getActivityName());
 
 				}
-
+				if(StringUtils.isNotEmpty(model.getSchoolOfficeApproveState()))
+					 model.setState("校办会决议"+model.getSchoolOfficeApproveState());
 			}
 		}
 		return ps;
@@ -429,42 +441,70 @@ public class PurchaseApplyServiceImpl implements PurchaseApplyService{
 	}
 
 	@Override
-	public void saveApprove(String taskId, String approveState,
+	public void saveApprove(String applyId,String taskId, String approveState,
 			String approveDescription, String money) {
 		// TODO Auto-generated method stub
-		
-		HistoryTaskInstanceImpl hti =  getHistoryTaskInstanceByTaskId(taskId);
-		ProcessInstance processInstance = executionService.findProcessInstanceById( hti.getExecutionId());
-//		ProcessDefinition pd=repositoryService.createProcessDefinitionQuery().processDefinitionKey("caigou").uniqueResult();
-		if(StringUtils.isNotEmpty(money)){
-			PurchaseApplyModel model=purchaseApplyDAO.getByProcessInstanceId(processInstance.getId());
-			model.setMoney(Double.parseDouble(money));
-			purchaseApplyDAO.saveOrUpdate(model);
-			Map<String, Object> map=new HashMap<String, Object>();
-			map.put("purchase", model);
-			map.put(taskId+"approveState", approveState);
-			map.put(taskId+"approveDescription", approveDescription);
-			executionService.createVariables(processInstance.getId(), map, true);
-			taskService.completeTask(taskId,approveState);  
+		PurchaseApplyModel model=purchaseApplyDAO.get(applyId);
 
-		}else{
-			Map<String, Object> map=new HashMap<String, Object>();
-			map.put(taskId+"approveState", approveState);
-			map.put(taskId+"approveDescription", approveDescription);
-			executionService.createVariables(processInstance.getId(), map, true);
-			taskService.completeTask(taskId,approveState);  
+		if(StringUtils.isEmpty(taskId)){//校长办公会议决议
+			//suspendProcessInstance(model.getProcessInstanceId());//挂起进程
+			model.setCancleFlag(true);
+
+			model.setSchoolOfficeApproveState(approveState);
+			model.setSchoolOfficeApproveDescription(approveDescription);
+			purchaseApplyDAO.saveOrUpdate(model);
+			
+//			ProcessInstance  processInstance=executionService.createProcessInstanceQuery().processInstanceId(model.getProcessInstanceId()).uniqueResult();
+////			 Execution execution=executionService.findExecutionById(model.getProcessInstanceId());
+//			addOutTransition((ProcessDefinitionImpl)repositoryService.createProcessDefinitionQuery().processDefinitionKey("caigou").uniqueResult(),processInstance.findActiveActivityNames().iterator().next(),"校办会决议");
+//			taskService.completeTask(taskService.createTaskQuery().processInstanceId(model.getProcessInstanceId()).orderDesc(TaskQuery.PROPERTY_CREATEDATE).list().get(0).getId(),"校办会决议");  
+//			removeOutTransition((ProcessDefinitionImpl)repositoryService.createProcessDefinitionQuery().processDefinitionKey("caigou").uniqueResult(),processInstance.findActiveActivityNames().iterator().next(),"校办会决议");
 
 		}
-//		String executionId = processInstance.findActiveExecutionIn("wait for response").getId();
-//
-//		processInstance = executionService.signalExecutionById(executionId, approveState);
+		else{
+			HistoryTaskInstanceImpl hti =  getHistoryTaskInstanceByTaskId(taskId);
+			ProcessInstance processInstance = executionService.findProcessInstanceById( hti.getExecutionId());
+//			ProcessDefinition pd=repositoryService.createProcessDefinitionQuery().processDefinitionKey("caigou").uniqueResult();
+			if(StringUtils.isNotEmpty(money)){
+				model.setMoney(Double.parseDouble(money));
+				purchaseApplyDAO.saveOrUpdate(model);
+				Map<String, Object> map=new HashMap<String, Object>();
+				map.put("purchase", model);
+				map.put(taskId+"approveState", approveState);
+				map.put(taskId+"approveDescription", approveDescription);
+				executionService.createVariables(processInstance.getId(), map, true);
+				taskService.completeTask(taskId,approveState);  
+
+			}else{
+				Map<String, Object> map=new HashMap<String, Object>();
+				map.put(taskId+"approveState", approveState);
+				map.put(taskId+"approveDescription", approveDescription);
+				executionService.createVariables(processInstance.getId(), map, true);
+				taskService.completeTask(taskId,approveState);  
+
+			}
+//			String executionId = processInstance.findActiveExecutionIn("wait for response").getId();
+	//
+//			processInstance = executionService.signalExecutionById(executionId, approveState);
+		}
+		
 		
 		
 		
 
 		
 	}
-
+	@Override
+	public void savePurchase(String applyId, String purchaseDetail,
+			String purchaseDate, String purchaseUser) {
+		// TODO Auto-generated method stub
+		PurchaseApplyModel model=purchaseApplyDAO.get(applyId);
+		model.setPurchaseDate(purchaseDate);
+		model.setPurchaseDetail(purchaseDetail);
+		model.setPurchaseUser(purchaseUser);
+		purchaseApplyDAO.saveOrUpdate(model);
+ 
+	}
 	@Override
 	public PaginationSupport<PurchaseApplyModel> getApplyByConditions(
 			String applyUserId, String applyDepartmentId,
@@ -476,13 +516,16 @@ public class PurchaseApplyServiceImpl implements PurchaseApplyService{
 				ProcessInstance  processInstance=executionService.createProcessInstanceQuery().processInstanceId(model.getProcessInstanceId()).uniqueResult();
 				if(processInstance==null){
 					HistoryProcessInstance  historyProcessInstance =historyService.createHistoryProcessInstanceQuery().processInstanceId(model.getProcessInstanceId()).uniqueResult();
-					model.setState(historyProcessInstance.getEndActivityName());
+					if(historyProcessInstance!=null)
+						model.setState(historyProcessInstance.getEndActivityName());
+				
 				}else{
 					Task task=taskService.createTaskQuery().processInstanceId(model.getProcessInstanceId()).uniqueResult();
 					model.setState(task.getActivityName());
 
 				}
-
+				if(StringUtils.isNotEmpty(model.getSchoolOfficeApproveState()))
+					 model.setState("校办会决议"+model.getSchoolOfficeApproveState());
 			}
 		}
 		return ps;
@@ -495,12 +538,12 @@ public class PurchaseApplyServiceImpl implements PurchaseApplyService{
 		if(model.getCancleFlag()==true){
 			model.setCancleFlag(false);
 			purchaseApplyDAO.saveOrUpdate(model);
-			resumeProcessInstance(model.getProcessInstanceId());
+			//resumeProcessInstance(model.getProcessInstanceId());
 
 		}else{
 			model.setCancleFlag(true);
 			purchaseApplyDAO.saveOrUpdate(model);
-			suspendProcessInstance(model.getProcessInstanceId());
+			//suspendProcessInstance(model.getProcessInstanceId());
 
 		}
 	}
@@ -533,5 +576,75 @@ public class PurchaseApplyServiceImpl implements PurchaseApplyService{
             transaction.commit();
 
 	}
+//	 /**
+//	  * 动态创建连接当前任务节点至名称为destName的节点的Transition
+//	  * @param taskId 任务节点ID
+//	  * @param sourceName 源节点名称
+//	  * @param destName  目标节点名称
+//	  */
+//	 public void addOutTransition(ProcessDefinitionImpl pd,String sourceName,String destName){
+//
+//		 EnvironmentFactory environmentFactory = (EnvironmentFactory) processEngine;
+//		 Environment env=null;
+//		 try {
+//			 env = environmentFactory.openEnvironment();
+//			    Session session = env.get(Session.class);
+//			    Transaction transaction = session.beginTransaction();
+//
+//			 //取得当前流程的活动定义
+//			 ActivityImpl sourceActivity = pd.findActivity(sourceName);
+//			 //取得目标的活动定义
+//			 ActivityImpl destActivity=pd.findActivity(destName);
+//
+//			 //为两个节点创建连接
+//
+//			 TransitionImpl transition = sourceActivity.createOutgoingTransition();
+//
+//			 transition.setName(destName);
+//
+//			 transition.setDestination(destActivity);
+//
+//			 sourceActivity.addOutgoingTransition(transition);
+//			 session.save(sourceActivity);
+//	            session.flush();
+//	            transaction.commit();
+//		 }catch(Exception ex){
+//			 System.out.println(ex.getCause());
+//		 }
+//	 }
+//	 /**
+//	  * 动态删除连接sourceName与destName的Transition
+//	  * @param taskId
+//	  * @param sourceName
+//	  * @param destName
+//	  */
+//	 @SuppressWarnings("unchecked")
+//	public void removeOutTransition(ProcessDefinitionImpl pd,String sourceName,String destName){
+//		 EnvironmentFactory environmentFactory = (EnvironmentFactory) processEngine;
+//		 Environment env=null;
+//		 try {
+//			 env = environmentFactory.openEnvironment();
+//			 Session session = env.get(Session.class);
+//			    Transaction transaction = session.beginTransaction();
+//			 //取得当前流程的活动定义
+//			 ActivityImpl sourceActivity = pd.findActivity(sourceName);
+//			 
+//			 //若存在这个连接，则需要把该连接删除
+//			 List<Transition> trans=(List<Transition>) sourceActivity.getOutgoingTransitions();
+//			 for(Transition tran:trans){
+//				if(destName.equals(tran.getDestination().getName())){//删除该连接
+//					trans.remove(tran);
+//					break;
+//				}
+//			 }
+//			 session.save(sourceActivity);
+//	            session.flush();
+//	            transaction.commit();
+//		 }catch(Exception ex){
+//			 System.out.println(ex.getCause());
+//
+//		 }
+//	 }
+
 	
 }

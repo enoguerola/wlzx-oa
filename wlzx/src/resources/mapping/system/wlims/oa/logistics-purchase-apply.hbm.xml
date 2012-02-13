@@ -57,5 +57,21 @@
           <property name="submitFlag" type="boolean">
             <column name="submit_flag" />
         </property>
+
+        <property name="schoolOfficeApproveState" type="string">
+            <column name="school_office_approve_state" />
+        </property>
+        <property name="schoolOfficeApproveDescription" type="string">
+            <column name="school_office_approve_description" />
+        </property>
+        <property name="purchaseDetail" type="string">
+            <column name="purchase_detail" />
+        </property>
+        <property name="purchaseUser" type="string">
+            <column name="purchase_user" />
+        </property>
+        <property name="purchaseDate" type="string">
+            <column name="purchase_date" />
+        </property>
     </class>
 </hibernate-mapping>

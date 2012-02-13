@@ -28,6 +28,15 @@ public class PurchaseApplyModel extends BaseModel{
 	private Boolean cancleFlag=false;
 	private Boolean submitFlag=false;
 	private String state;//辅助
+	
+	private String schoolOfficeApproveState;
+	private String schoolOfficeApproveDescription;
+	private String purchaseDetail;
+	private String purchaseUser;
+	private String purchaseDate;
+	
+	
+	
 	public String getApplyUser() {
 		return applyUser;
 	}
@@ -129,6 +138,37 @@ public class PurchaseApplyModel extends BaseModel{
 	}
 	public void setState(String state) {
 		this.state = state;
+	}
+	public String getSchoolOfficeApproveState() {
+		return schoolOfficeApproveState;
+	}
+	public void setSchoolOfficeApproveState(String schoolOfficeApproveState) {
+		this.schoolOfficeApproveState = schoolOfficeApproveState;
+	}
+	public String getSchoolOfficeApproveDescription() {
+		return schoolOfficeApproveDescription;
+	}
+	public void setSchoolOfficeApproveDescription(
+			String schoolOfficeApproveDescription) {
+		this.schoolOfficeApproveDescription = schoolOfficeApproveDescription;
+	}
+	public String getPurchaseDetail() {
+		return purchaseDetail;
+	}
+	public void setPurchaseDetail(String purchaseDetail) {
+		this.purchaseDetail = purchaseDetail;
+	}
+	public String getPurchaseUser() {
+		return purchaseUser;
+	}
+	public void setPurchaseUser(String purchaseUser) {
+		this.purchaseUser = purchaseUser;
+	}
+	public String getPurchaseDate() {
+		return purchaseDate;
+	}
+	public void setPurchaseDate(String purchaseDate) {
+		this.purchaseDate = purchaseDate;
 	}
 	
 }

@@ -27,6 +27,13 @@ public class PurchaseApplyVO {
 	private Boolean submitFlag=false;
 	private List<JBPMTaskVO> historyJBPMTaskVOs=new ArrayList<JBPMTaskVO>();
 	private String state;
+
+	private String schoolOfficeApproveState;
+	private String schoolOfficeApproveDescription;
+	private String purchaseDetail;
+	private String purchaseUser;
+	private String purchaseDate;
+	
 	public String getApplyUser() {
 		return applyUser;
 	}
@@ -140,5 +147,36 @@ public class PurchaseApplyVO {
 	}
 	public void setId(String id) {
 		this.id = id;
+	}
+	public String getSchoolOfficeApproveState() {
+		return schoolOfficeApproveState;
+	}
+	public void setSchoolOfficeApproveState(String schoolOfficeApproveState) {
+		this.schoolOfficeApproveState = schoolOfficeApproveState;
+	}
+	public String getSchoolOfficeApproveDescription() {
+		return schoolOfficeApproveDescription;
+	}
+	public void setSchoolOfficeApproveDescription(
+			String schoolOfficeApproveDescription) {
+		this.schoolOfficeApproveDescription = schoolOfficeApproveDescription;
+	}
+	public String getPurchaseDetail() {
+		return purchaseDetail;
+	}
+	public void setPurchaseDetail(String purchaseDetail) {
+		this.purchaseDetail = purchaseDetail;
+	}
+	public String getPurchaseUser() {
+		return purchaseUser;
+	}
+	public void setPurchaseUser(String purchaseUser) {
+		this.purchaseUser = purchaseUser;
+	}
+	public String getPurchaseDate() {
+		return purchaseDate;
+	}
+	public void setPurchaseDate(String purchaseDate) {
+		this.purchaseDate = purchaseDate;
 	}
 }
