@@ -18,7 +18,7 @@ public interface PurchaseApplyService{
 	public PurchaseApplyModel loadApplyInfoById(String applyId);
 	public PurchaseApplyVO getPurchaseApplyDetailById(String applyId);
 	public PaginationSupport<PurchaseApplyModel> getApplyListByUser(String applyUserId, int index,int pageSize);
-	
+	public List<PurchaseApplyModel> getPersonApplyList(String applyUserId);
 	public List<PurchaseApproveTaskVO> getPersonPurchaseApproveTask(String userId);
 	
 	public List<PurchaseApproveTaskVO> getPersonPurchaseApproveHistoryTask(String userId);

@@ -7,11 +7,10 @@
 	
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
-<!--		<mx:StringValidator id="name_stringValidator" source="{pname}" property="text" required="true"  requiredFieldError="场所名称不能为空"/>
-		<mx:StringValidator id="positionBuilding_stringValidator" source="{position_building}"  required="true" property="text"  requiredFieldError="场所所在教学楼不能为空"/>
-		<mx:StringValidator id="positionDetail_stringValidator" source="{position_detail}" property="text"  requiredFieldError="场所所在教学楼具体位置不能为空"/>
-		<mx:NumberValidator id="area_begin_numberValidator" source="{area_begin}" required="false" property="text"   invalidCharError="请输入数值" domain="real"/>
-		<mx:NumberValidator id="contain_begin_numberValidator" source="{contain_begin}" required="false" property="text" integerError="请输入正整数" domain="int" minValue="0"/>-->
+		<mx:StringValidator id="items_stringValidator" source="{items}" property="text" required="true"  requiredFieldError="维修项目不能为空"/>
+		<mx:StringValidator id="description_stringValidator" source="{description}"  required="true" property="text"  requiredFieldError="维修项目描述不能为空"/>
+		<mx:StringValidator id="phone_stringValidator" source="{phone}" property="text"  requiredFieldError="联系方式不能为空"/>
+		
 		
 		<valueObjects:RepairModel id="repair"/>		
 		<mx:RemoteObject id="repairServiceRO" destination="repairServiceDest" showBusyCursor="true" fault="systemFaultHandler(event);">
@@ -92,20 +91,23 @@
 			{
 				
 			}
-			private function validateForm(evt:MouseEvent):void {
-				repair.items=items.text;
-				repair.isElectric=isElectric.selectedValue.toString();
-				repair.description=description.text;
-				repair.phone=phone.text;
-				repair.applyId=apply_account_id.text;
-				repair.applyDate=DateField.stringToDate(date.text,"YYYY-MM-DD");
-				repairServiceRO.saveRepair(repair);
+			private function save(evt:MouseEvent):void {
+				if(validate()){
+					repair.items=items.text;
+					repair.isElectric=isElectric.selectedValue.toString();
+					repair.description=description.text;
+					repair.phone=phone.text;
+					repair.applyId=apply_account_id.text;
+					repair.applyDate=DateField.stringToDate(date.text,"YYYY-MM-DD");
+					repairServiceRO.saveRepair(repair);
+				}
+				
 			}
 		
 			private function handupForm(evt:MouseEvent):void
 			{
 				repair.status=1;
-				validateForm(evt);
+				save(evt);
 			} 
 			
 			private function searchAccountHandleAutoCompleteChange():void
@@ -119,6 +121,27 @@
 					apply_account_id.text="";
 				}               
 			}
+			public function validate():Boolean{
+				validatorArr = new Array();
+				validatorArr.push(items_stringValidator);
+				validatorArr.push(description_stringValidator);
+				validatorArr.push(phone_stringValidator);
+				
+				var validatorErrorArray:Array = Validator.validateAll(validatorArr);
+				var isValidForm:Boolean = validatorErrorArray.length == 0;
+				if (isValidForm) {
+					if(isElectric.selection==null){
+						Alert.show("未制定是否电教维修");
+						return false;
+					}
+					return true;
+				} else {
+				
+					return false;
+				}
+				
+			}
+			
 		]]> 
 		
 	</fx:Script> 
@@ -157,7 +180,7 @@
 			</mx:FormItem>				
 			<mx:FormItem width="100%">
 				<mx:HBox verticalAlign="middle" horizontalAlign="right" width="100%">
-					<mx:Button label="保存" click="validateForm(event)" />
+					<mx:Button label="保存" click="save(event)" />
 					<mx:Button label="提交" click="handupForm(event);" />
 				</mx:HBox>
 			</mx:FormItem> 

@@ -51,7 +51,7 @@
 		<mx:method name="submitPurchaseApply"  concurrency="last"  result="submitPurchaseApplyResult_resultHandler(event);" />
 		
 		<mx:method name="loadApplyInfoById"  concurrency="last"  result="loadApplyInfoById_resultHandler(event);" />
-		<mx:method name="getApplyListByUser"  concurrency="last"  result="getApplyListByUser_resultHandler(event);" />
+		<mx:method name="getPersonApplyList"  concurrency="last"  result="getPersonApplyList_resultHandler(event);" />
 	</mx:RemoteObject>
 	
 	<mx:Script> 
@@ -78,7 +78,7 @@
 			private const button_delete:Class;
 			private var validatorArr:Array;
 			
-			private function init():void{
+			public function init():void{
 				search();
 			}
 			protected function systemFaultHandler(event:FaultEvent):void {
@@ -136,29 +136,30 @@
 			}
 			
 			
-			protected function getApplyListByUser_resultHandler(event:ResultEvent):void
+			protected function getPersonApplyList_resultHandler(event:ResultEvent):void
 			{
 				LockWinTool.unLockCurrentWin();
-				var result:Object=event.result as Object;
-				var list:Object=new Object;
+				var result:ArrayCollection=event.result as ArrayCollection;
+				/* var list:Object=new Object;
 				list.data=(result==null?new ArrayCollection():result.items);
 				list.totalLength=(result==null?0:result.totalCount);
 				if(result!=null){
-					pc.AppandData(list);
+					applyPc.AppandData(list);
 					
 				}else{
-					table.dataProvider=null;
-				}
+					applyTable.dataProvider=null;
+				} */
+				applyTable.initdata(result);
 			}
-			public function searchPage(index:int,dataLength:int):void{
+		/* 	public function searchPage(index:int,dataLength:int):void{
 				LockWinTool.lockCurrentWin(this,"搜索采购申请记录中");
-				/* var departmentId:String=treeSelectedItemId();
-				var userId:String=search_account_id.text; */
 			
-				purchaseApplyServiceRO.getApplyListByUser(parentApplication.currentUser.id,index-1,index-1+dataLength);
-			}
+				purchaseApplyServiceRO.getPersonApplyList(parentApplication.currentUser.id,index-1,index-1+dataLength);
+			} */
 			public function search():void{
-				pc.GoToControll(1);
+				//applyPc.GoToControll(1);
+				LockWinTool.lockCurrentWin(this,"搜索采购申请记录中");
+				purchaseApplyServiceRO.getPersonApplyList(parentApplication.currentUser.id);
 			}
 			private function addInit():void{
 				applyNo.text="";
@@ -298,9 +299,10 @@
 				
 				<mx:HBox width="100%" height="100%" paddingLeft="10" paddingRight="10" paddingBottom="10">
 					<mx:Panel width="100%" height="100%"  styleName="customPanel" title="采购申请"  cornerRadius="5" borderVisible="false" dropShadowVisible="false">
-						
-						<mx:DataGrid id="table" rowCount="10" width="100%" height="100%"    verticalAlign="middle" >
-							<mx:columns>
+						<component:WlzxPageDataGrid width="100%" height="100%"  id="applyTable" pagecount="23">				
+							<component:mygridcolumns>
+						<!--<mx:DataGrid id="applyTable" rowCount="10" width="100%" height="100%"    verticalAlign="middle" >
+							<mx:columns>-->
 								<mx:DataGridColumn textAlign="center" headerText="申请编号" dataField="applyNo" width="100">
 									<mx:itemRenderer>
 										<mx:Component>
@@ -435,9 +437,11 @@
 										
 									</mx:itemRenderer>
 								</mx:DataGridColumn>
-							</mx:columns>
-						</mx:DataGrid>
-						<component:SPageController id="pc" useCache="{false}" TargetUI="{table}" callBackFunc="{searchPage}"  PerPage="23" ClientPages="3"  width="100%"/>
+								<!--</mx:columns>
+						</mx:DataGrid>-->
+					</component:mygridcolumns>
+				</component:WlzxPageDataGrid>
+						<!--<component:SPageController id="applyPc" useCache="{false}" TargetUI="{applyTable}" callBackFunc="{searchPage}"  PerPage="23" ClientPages="3"  width="100%"/>-->
 					</mx:Panel>
 				</mx:HBox>
 				

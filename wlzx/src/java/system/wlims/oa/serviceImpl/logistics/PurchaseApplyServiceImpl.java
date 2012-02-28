@@ -82,6 +82,7 @@ public class PurchaseApplyServiceImpl implements PurchaseApplyService{
 	public void submitPurchaseApply(String applyId){
 		PurchaseApplyModel model=purchaseApplyDAO.get(applyId);
 		model.setSubmitFlag(true);
+		model.setApplyTime(new Date());
 		purchaseApplyDAO.saveOrUpdate(model);
 		Task task=taskService.createTaskQuery().processInstanceId(model.getProcessInstanceId()).assignee(model.getApplyUser()).uniqueResult();//取刚发起的流程的任务
 		taskService.completeTask(task.getId());
@@ -526,6 +527,30 @@ public class PurchaseApplyServiceImpl implements PurchaseApplyService{
 				}
 				if(StringUtils.isNotEmpty(model.getSchoolOfficeApproveState()))
 					 model.setState("校办会决议"+model.getSchoolOfficeApproveState());
+				
+				if(model.getPurchaseDate()!=null)model.setCanPurchase(false) ;
+				else{
+					if((model.getState().equals("批准采购")||model.getState().equals("校办会决议批准"))&&model.getPurchaseDate()==null)model.setCanPurchase(true);
+					else model.setCanPurchase(false) ;	
+					
+				}
+				
+				
+				if(model.getPurchaseDate()!=null)model.setCanSchoolOfficeApprove(false) ;
+				else{
+					
+					if(model.getSchoolOfficeApproveState()==null||model.getSchoolOfficeApproveState()=="")model.setCanSchoolOfficeApprove(true) ;
+					else model.setCanSchoolOfficeApprove(false) ;
+				}
+				
+				
+				if(model.getPurchaseDate()!=null)model.setCanActiveOrCancle(false) ;
+				else{
+					if(model.getState().equals("不予采购")||model.getState().equals("批准采购"))model.setCanActiveOrCancle(false) ;
+					else model.setCanActiveOrCancle(true) ;
+				}
+				
+				
 			}
 		}
 		return ps;
@@ -645,6 +670,54 @@ public class PurchaseApplyServiceImpl implements PurchaseApplyService{
 //
 //		 }
 //	 }
+
+	@Override
+	public List<PurchaseApplyModel> getPersonApplyList(String applyUserId) {
+		// TODO Auto-generated method stub
+		List<PurchaseApplyModel> list= purchaseApplyDAO.getApplyListByUser(applyUserId);
+		if(list.size()>0){
+			for(PurchaseApplyModel model:list){
+				ProcessInstance  processInstance=executionService.createProcessInstanceQuery().processInstanceId(model.getProcessInstanceId()).uniqueResult();
+				if(processInstance==null){
+					HistoryProcessInstance  historyProcessInstance =historyService.createHistoryProcessInstanceQuery().processInstanceId(model.getProcessInstanceId()).uniqueResult();
+					if(historyProcessInstance!=null)
+						model.setState(historyProcessInstance.getEndActivityName());
+				
+				}else{
+					Task task=taskService.createTaskQuery().processInstanceId(model.getProcessInstanceId()).uniqueResult();
+					model.setState(task.getActivityName());
+
+				}
+				if(StringUtils.isNotEmpty(model.getSchoolOfficeApproveState()))
+					 model.setState("校办会决议"+model.getSchoolOfficeApproveState());
+				
+				if(model.getPurchaseDate()!=null)model.setCanPurchase(false) ;
+				else{
+					if((model.getState().equals("批准采购")||model.getState().equals("校办会决议批准"))&&model.getPurchaseDate()==null)model.setCanPurchase(true);
+					else model.setCanPurchase(false) ;	
+					
+				}
+				
+				
+				if(model.getPurchaseDate()!=null)model.setCanSchoolOfficeApprove(false) ;
+				else{
+					
+					if(model.getSchoolOfficeApproveState()==null||model.getSchoolOfficeApproveState()=="")model.setCanSchoolOfficeApprove(true) ;
+					else model.setCanSchoolOfficeApprove(false) ;
+				}
+				
+				
+				if(model.getPurchaseDate()!=null)model.setCanActiveOrCancle(false) ;
+				else{
+					if(model.getState().equals("不予采购")||model.getState().equals("批准采购"))model.setCanActiveOrCancle(false) ;
+					else model.setCanActiveOrCancle(true) ;
+				}
+				
+				
+			}
+		}
+		return list;
+	}
 
 	
 }

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2012 年 02 月 06 日 20:18
+-- 生成日期: 2012 年 02 月 28 日 20:22
 -- 服务器版本: 5.0.91
 -- PHP 版本: 5.2.13
 
@@ -45,7 +45,6 @@ CREATE TABLE IF NOT EXISTS `wlzx_system` (
 
 INSERT INTO `wlzx_system` (`id`, `symbol`, `sequence`, `name`, `detail`, `index_path`, `system_icon`, `creation_date`, `modified_date`) VALUES
 (1, 'root', 0, '温岭数字化校园系列', '数字化校园信息平台是以学校现有网络为基础，以服务于全校师生的教学、科研、生活为目的，建立在学校数据中心平台之上，涵盖了学校的信息化标准管理、学校管理、学生管理、教学管理、教职工管理、科研管理、财务管理、资产与设备管理、行政办公管理、数字图书资料管理等全方位的管理信息平台与信息服务平台。', 'system/index.swf', NULL, '2011-05-06 11:50:32', '2011-05-06 11:50:32'),
-(2, 'basic', 0, '基础数据系统', '基础数据系统是数字化校园所有业务应用系统的公共数据库，处于中心位置，基础数据库保持最完整、最准确的数据，提供其他业务系统使用。基础数据库管理系统实现对基础数据库所有信息库的维护管理。', 'basic/index.swf', NULL, '2011-05-06 11:50:32', '2011-05-06 11:50:32'),
 (3, 'oa', 0, '办公自动化系统', '办公自动化系统以公文流转为核心，实现办公流程的快速高效；同时提供多种部门间的信息交流的手段和渠道，加强部门间的沟通协作；提供信息共享的平台，实现公共资源的共享；提供辅助办公功能，为每一项业务提供相关信息，促进学校办公的成熟和规范化；提供强大的搜索查询功能，便于用户在日积月累的海量信息中快速的查找需要的内容', 'oa/index.swf', NULL, '2011-05-06 11:50:32', '2011-05-06 11:50:32');
 
 -- --------------------------------------------------------
@@ -185,7 +184,7 @@ INSERT INTO `wlzx_system_department` (`id`, `resource_flag`, `supervisor_flag`, 
 (3, 0, 0, 1, '德育处', 'moral_education_office', NULL, 2, '', '2011-05-10 00:00:00', '2011-09-28 01:01:39'),
 (6, 0, 0, 1, '校长办公室', 'headmaster_office', NULL, 1, '', '2011-05-18 00:00:00', '2011-09-26 20:15:32'),
 (10, 0, 0, 1, '综践处', 'practice_education_office', '', 4, '', '2011-05-19 00:00:00', '2011-10-11 18:05:48'),
-(11, 1, 0, 1, '资源处', 'resources_office', '', 5, '', '2011-05-19 00:00:00', '2012-02-06 20:11:44'),
+(11, 1, 0, 1, '资源处', 'resources_office', '', 5, '', '2011-05-19 00:00:00', '2012-02-28 19:03:23'),
 (12, 0, 0, 1, '课程处', 'course_office', '', 3, '', '2011-05-20 00:00:00', '2011-09-28 16:19:29'),
 (13, 0, 0, 1, '语文组', 'course_yuwen', '', 1, '', '2011-07-04 00:00:00', '2011-09-28 01:09:10'),
 (14, 0, 0, 1, '英语组', 'course_yingyu', '', 2, '', '2011-07-04 00:00:00', '2011-09-28 01:04:37'),
@@ -339,7 +338,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_department_master_users` (
   `department_id` bigint(20) NOT NULL,
   `master_user_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='部门主管用户' AUTO_INCREMENT=68 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='部门主管用户' AUTO_INCREMENT=69 ;
 
 --
 -- 转存表中的数据 `wlzx_system_department_master_users`
@@ -368,7 +367,8 @@ INSERT INTO `wlzx_system_department_master_users` (`id`, `department_id`, `maste
 (62, 33, 951),
 (64, 12, 733),
 (65, 10, 946),
-(67, 24, 718);
+(67, 24, 718),
+(68, 11, 983);
 
 -- --------------------------------------------------------
 
@@ -485,7 +485,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_dr_dam_relationship` (
   `dr_id` bigint(20) NOT NULL,
   `dam_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=545 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=546 ;
 
 --
 -- 转存表中的数据 `wlzx_system_dr_dam_relationship`
@@ -999,7 +999,8 @@ INSERT INTO `wlzx_system_dr_dam_relationship` (`id`, `dr_id`, `dam_id`) VALUES
 (541, 1, 85),
 (542, 1, 50),
 (543, 1, 90),
-(544, 1, 49);
+(544, 1, 49),
+(545, 2, 98);
 
 -- --------------------------------------------------------
 
@@ -1062,7 +1063,7 @@ INSERT INTO `wlzx_system_menu` (`id`, `name`, `symbol`, `sequence`, `detail`, `m
 (23, '工作管理', 'work_management', 0, '', '', '2011-05-10 00:00:00', '2011-05-10 11:20:13'),
 (24, '通讯录', 'address_book', 4, '', '', '2011-05-10 00:00:00', '2011-05-10 11:21:13'),
 (28, '工作指派', 'staff_work_assign', 3, '', '', '2011-05-10 00:00:00', '2011-05-10 11:26:18'),
-(29, '公共通讯录', 'public_address_book', 0, '', '', '2011-05-10 00:00:00', '2011-05-10 11:28:18'),
+(29, '公共通讯录', 'public_address_book', 7, '', '', '2011-05-10 00:00:00', '2012-02-28 15:39:43'),
 (31, '人事管理', 'human_resource', 3, '', 'resources/oa/menuIcon/human_resource.png', '2011-05-21 00:00:00', '2011-09-02 12:07:24'),
 (32, '教师档案', 'staff_file', 1, '', '', '2011-05-21 00:00:00', '2011-05-21 09:44:43'),
 (33, '帐号管理', 'system_account', 1, '', '', '2011-05-21 00:00:00', '2011-05-21 09:46:20'),
@@ -1234,7 +1235,7 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_menu_treeship` (
   `parent_id` bigint(20) NOT NULL,
   `child_id` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=93 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=95 ;
 
 --
 -- 转存表中的数据 `wlzx_system_menu_treeship`
@@ -1309,7 +1310,9 @@ INSERT INTO `wlzx_system_menu_treeship` (`id`, `parent_id`, `child_id`) VALUES
 (89, 89, 93),
 (90, 90, 94),
 (91, 90, 95),
-(92, 90, 96);
+(92, 90, 96),
+(93, 9, 91),
+(94, 9, 94);
 
 -- --------------------------------------------------------
 
@@ -2004,8 +2007,8 @@ CREATE TABLE IF NOT EXISTS `wlzx_system_user` (
 --
 
 INSERT INTO `wlzx_system_user` (`id`, `symbol`, `sequence`, `name`, `password`, `last_login_time`, `last_login_ip`, `account_style`, `person_id`, `person_name`, `email`, `creation_date`, `modified_date`, `active`, `main_dr_id`) VALUES
-(1, 'super_root', 0, 'super_root', '134bca5421a15476a1e5ebaebdba1ede', '2012-02-06 19:13:22', '127.0.0.1', -1, NULL, NULL, NULL, '2011-05-07 11:04:22', '2011-07-05 17:33:02', 1, NULL),
-(708, '666888', 0, '666888', '75e266f182b4fa3625d4a4f4f779af54', '2011-12-21 14:11:16', '127.0.0.1', 0, NULL, NULL, '', '2011-07-05 12:57:49', '2011-09-22 16:20:27', 1, 2),
+(1, 'super_root', 0, 'super_root', '134bca5421a15476a1e5ebaebdba1ede', '2012-02-28 20:06:19', '127.0.0.1', -1, NULL, NULL, NULL, '2011-05-07 11:04:22', '2011-07-05 17:33:02', 1, NULL),
+(708, '666888', 0, '666888', '75e266f182b4fa3625d4a4f4f779af54', '2012-02-28 19:04:03', '127.0.0.1', 0, NULL, NULL, '', '2011-07-05 12:57:49', '2011-09-22 16:20:27', 1, 2),
 (709, '666900', 0, '666900', '2e6d1125057ec7c4402a5a2ad84f6601', '2011-11-23 17:31:01', '61.153.193.242', 0, NULL, NULL, '', '2011-07-05 12:57:51', '2011-09-22 16:20:27', 1, 6),
 (710, '666988', 0, '666988', 'cb3d82f7133330c48bee639908125906', '2011-11-30 08:54:56', '61.153.193.242', 0, NULL, NULL, '', '2011-07-05 12:57:52', '2011-09-22 16:20:27', 1, 20),
 (711, '666898', 0, '666898', 'd0ffb310c9c2039ca2daba46ab3addc5', '2011-12-05 18:21:01', '61.153.193.242', 0, NULL, NULL, '', '2011-07-05 12:57:53', '2011-09-22 16:20:27', 1, 7),

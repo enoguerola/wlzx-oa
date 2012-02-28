@@ -174,7 +174,7 @@
 		</component:Fieldset>
 		<mx:DataGrid id="table" rowCount="10" width="100%" height="100%"    verticalAlign="middle" >
 			<mx:columns>
-				<mx:DataGridColumn textAlign="center" headerText="申请编号" dataField="applyNo" width="100">
+				<!--<mx:DataGridColumn textAlign="center" headerText="申请编号" dataField="applyNo" width="100">
 					<mx:itemRenderer>
 						<mx:Component>
 							<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
@@ -182,9 +182,18 @@
 							</mx:VBox>																			
 						</mx:Component>						
 					</mx:itemRenderer>
+				</mx:DataGridColumn>-->
+				<mx:DataGridColumn textAlign="center" headerText="申请时间"  width="140" >
+					<mx:itemRenderer>
+						<mx:Component>
+							<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off" >
+								<mx:Label text="{this.outerDocument.formatDate(data.applyTime)}">
+								</mx:Label>
+							</mx:HBox>
+						</mx:Component>
+					</mx:itemRenderer>
 				</mx:DataGridColumn>
-				
-				<mx:DataGridColumn textAlign="center" headerText="采购名称"  width="150" >
+				<mx:DataGridColumn textAlign="center" headerText="采购名称"  width="110" >
 					<mx:itemRenderer>
 						<mx:Component>
 							<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off" >
@@ -225,16 +234,7 @@
 						</mx:Component>
 					</mx:itemRenderer>
 				</mx:DataGridColumn>
-				<!--<mx:DataGridColumn textAlign="center" headerText="申请时间"  width="120" >
-					<mx:itemRenderer>
-						<mx:Component>
-							<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off" >
-								<mx:Label text="{this.outerDocument.formatDate(data.applyTime)}">
-								</mx:Label>
-							</mx:HBox>
-						</mx:Component>
-					</mx:itemRenderer>
-				</mx:DataGridColumn>-->
+				
 				
 				<!--<mx:DataGridColumn textAlign="center" headerText="当前节点创建时间"  width="100">
 					<mx:itemRenderer>
@@ -297,20 +297,20 @@
 						</mx:Component>
 					</mx:itemRenderer>
 				</mx:DataGridColumn>
-				<mx:DataGridColumn textAlign="center" headerText="操作">
+				<mx:DataGridColumn textAlign="center" headerText="操作" width="220">
 					<mx:itemRenderer>
 						<mx:Component>
-							<mx:HBox width="100%" height="100%" verticalAlign="middle" horizontalAlign="center" verticalScrollPolicy="off" horizontalScrollPolicy="off">
-								<mx:LinkButton  label="[采购]" click="{purchaseStep(data)}" enabled="{purchaseLabelEnabled(data)}"/>
-								<mx:LinkButton  label="[校办决议]" click="{schoolOfficeApprove(data)}" enabled="{schoolOfficeApproveLabelEnabled(data)}"/>
-								<mx:LinkButton  label="{activeOrCancleLabel(data)}" click="{activeOrCancle(data)}"  enabled="{activeOrCancleLabelEnabled(data)}"/>
+							<mx:HBox width="100%" height="100%" verticalAlign="middle" horizontalAlign="center" verticalScrollPolicy="off" horizontalScrollPolicy="off" horizontalGap="0">
+								<mx:LinkButton  label="[采购]" click="{purchaseStep(data)}" enabled="{data.canPurchase}"/>
+								<mx:LinkButton  label="[校办决议]" click="{schoolOfficeApprove(data)}" enabled="{data.canSchoolOfficeApprove}"/>
+								<mx:LinkButton  label="{activeOrCancleLabel(data)}" click="{activeOrCancle(data)}"  enabled="{data.canActiveOrCancle}"/>
 								<mx:Script>
 									<![CDATA[  
-										private function purchaseLabelEnabled( data:Object):Boolean{
+									/* 	private function purchaseLabelEnabled( data:Object):Boolean{
 											if(data.purchaseDate!=null)return false;
 											if((data.state=="批准采购"||data.state=="校办会决议批准")&&data.purchaseDate==null)return true;
 											else return false;
-										}
+										} */
 										private function schoolOfficeApproveLabelEnabled( data:Object):Boolean{
 											/*  if(data.cancleFlag==true)return false;
 											if(data.state=="不予采购"||data.state=="批准采购")return false;
@@ -334,11 +334,11 @@
 											if(data.cancleFlag==true)return "[激活]";
 											else return "[挂起]";
 										}
-										private function activeOrCancleLabelEnabled( data:Object):Boolean{
+										/* private function activeOrCancleLabelEnabled( data:Object):Boolean{
 											if(data.purchaseDate!=null)return false;
 											if(data.state=="不予采购"||data.state=="批准采购")return false;
 											else return true;
-										}
+										} */
 									]]> 
 								</mx:Script> 
 							</mx:HBox>

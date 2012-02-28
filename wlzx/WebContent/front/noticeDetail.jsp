@@ -6,10 +6,24 @@
 
 <link rel="stylesheet" href="front/index.less" type="text/less" media="screen" />
 <script src="front/js/less-1.1.3.min.js" type="text/javascript"></script>
+<script type='text/javascript' src='front/jquery/jquery-1.5.2.min.js'></script>
+
 <!--[if lt IE 9]><script type="text/javascript" src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 <html>
 <head>
 <title>温岭中学通知公告</title>
+
+<script type='text/javascript'>
+	$(document).ready(function() {
+//		alert($("#noticeContent").html());
+	//	$("#noticeContent").css("font-size","0");
+// 		alert($("#noticeContent font").css("font-size"));
+	//	alert($('#noticeContent').find("font").html());
+		$('#noticeContent').find("font").attr('size','4'); 
+	});
+	
+</script>
+
 </head>
 <body>
 <div class="center" id="container">
@@ -18,11 +32,17 @@
 	</div>
 <!-- 	<div class="myPanelTitleLine"></div> -->
 	<div id="page">
-			<div style="width:100%;padding:20px;">
+			<div style="width:100%;text-align:center;font-size:11px;">
 				<h2 style="margin:0;padding:0;width:100%;"><span style="color:red;font-weight:bold;" id="lbTitle">${notice.title}</span>
-				部门：<span>${notice.postDepartmentName}</span>&nbsp;&nbsp;发布时间：<span>${notice.postTime}</span></h2>
+				</h2>
 			</div>
-			<div style="width:100%;font-size:16px;;padding:20px; ">
+			<div style="width:100%;text-align:right;font-size:14px;line-height:30px;">
+				<span>
+				部门：<span>${notice.postDepartmentName}</span>&nbsp;&nbsp;发布时间：<span>${notice.postTime}</span>
+				</span>
+				
+			</div>
+			<div style="width:95%;margin:0 atuo;" id="noticeContent">
 				${notice.content}
           	</div>
 			<div style="width:100%;margin-bottom:20px;;padding:20px;">
