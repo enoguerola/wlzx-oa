@@ -31,6 +31,7 @@
 			import system.entity.UserModel;
 			import system.index;
 			import system.utils.CommonUtils;
+			import system.event.PopEvent;
 			[Bindable] 
 			private var validatorArr:Array;
 			public var places:ArrayCollection = new ArrayCollection();
@@ -38,6 +39,9 @@
 			public var buildings:ArrayCollection = new ArrayCollection(); 
 			private function init():void {	
 				search();
+				addEventListener(PopEvent.COMPLETED,function():void{
+					search();
+				});
 			}
 
 			private function systemFaultHandler(event:FaultEvent):void {

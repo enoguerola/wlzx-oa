@@ -33,9 +33,11 @@ public class PurchaseApplyModel extends BaseModel{
 	private String schoolOfficeApproveDescription;
 	private String purchaseDetail;
 	private String purchaseUser;
-	private String purchaseDate;
+	private String purchaseDate="";
 	
-	
+	private Boolean canPurchase=false;//辅助
+	private Boolean canSchoolOfficeApprove=false;//辅助
+	private Boolean canActiveOrCancle=false;//辅助
 	
 	public String getApplyUser() {
 		return applyUser;
@@ -169,6 +171,24 @@ public class PurchaseApplyModel extends BaseModel{
 	}
 	public void setPurchaseDate(String purchaseDate) {
 		this.purchaseDate = purchaseDate;
+	}
+	public Boolean getCanPurchase() {
+		return canPurchase;
+	}
+	public void setCanPurchase(Boolean canPurchase) {
+		this.canPurchase = canPurchase;
+	}
+	public Boolean getCanSchoolOfficeApprove() {
+		return canSchoolOfficeApprove;
+	}
+	public void setCanSchoolOfficeApprove(Boolean canSchoolOfficeApprove) {
+		this.canSchoolOfficeApprove = canSchoolOfficeApprove;
+	}
+	public Boolean getCanActiveOrCancle() {
+		return canActiveOrCancle;
+	}
+	public void setCanActiveOrCancle(Boolean canActiveOrCancle) {
+		this.canActiveOrCancle = canActiveOrCancle;
 	}
 	
 }

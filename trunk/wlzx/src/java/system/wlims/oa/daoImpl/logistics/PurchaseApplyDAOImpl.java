@@ -27,7 +27,17 @@ public class PurchaseApplyDAOImpl extends BaseDAOImpl<PurchaseApplyModel>  imple
 		criteria.addOrder(Order.desc("applyTime"));
 		return this.findPageByCriteria(criteria, pageSize, index);
 	}
-
+	@Override
+	public List<PurchaseApplyModel> getApplyListByUser(String applyUserId) {
+		DetachedCriteria criteria = DetachedCriteria.forClass(PurchaseApplyModel.class);
+		
+	
+		if(StringUtils.isNotEmpty(applyUserId))
+			criteria.add(Restrictions.sqlRestriction("apply_user='"+applyUserId+"'"));
+		
+		criteria.addOrder(Order.desc("applyTime"));
+		return this.getListByCriteria(criteria);
+	}
 	@SuppressWarnings("unchecked")
 	@Override
 	public PurchaseApplyModel getByProcessInstanceId(String processInstanceId) {

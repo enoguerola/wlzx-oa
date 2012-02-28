@@ -28,6 +28,10 @@ package oa.entity.logistics
 		public var cancleFlag:Boolean;
 		public var submitFlag:Boolean;
 		public var state:String;//辅助
+		public var canPurchase:Boolean;//辅助
+		public var canSchoolOfficeApprove:Boolean;//辅助
+		public var canActiveOrCancle:Boolean;//辅助
+		
 		public function PurchaseApplyModel()
 		{
 			super();

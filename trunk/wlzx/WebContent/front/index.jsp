@@ -50,6 +50,29 @@
 	});
 	
 </script>
+<style>
+	#boxes li{
+		padding:0;
+		margin:0;
+		vertical-align:middle;
+		height:50px; 
+		//text-align:left;
+	}
+	#boxes li a{
+		padding:0;
+		margin:0;
+		vertical-align:middle;
+		line-height:50px; 
+		font-size:20px;
+		font-family: "楷体";
+		//font-weight:bold;
+		//color:black;
+		width:100%;
+		//float:none;
+		//word-spacing: 2em;
+	}
+	
+</style>
 <html>
 <head>
 <title>温岭中学数字化校园</title>
@@ -61,14 +84,16 @@
 	</div>
 	<div id="sidebar">
 		<div id="ims">
-			<div class="myPanelTitle2">信息系统</div>
-			<ul id="boxes">
-				<li><a href="login.html" target="_blank">协同办公系统</a></li>
+			<div class="myPanelTitle2" style="font-weight:bold;">信息系统</div>
+			<ul id="boxes" style="padding-left:0;list-style-type:none;padding-top:30px;">
+				<li style="background: url('resources/oa/oa.png') no-repeat left center;padding:0;"><a href="login.html" target="_blank" style="letter-spacing: 5px;" >办公系统</a></li>
+				<li style="padding:0;"><a href="http://localhost:8080/wlzxCourseSelective/login.jsp" target="_blank" style="letter-spacing: 5px;">选课系统</a></li>
+			
 			</ul>
 			
 		</div>
 		<div id="links">
-			<div class="myPanelTitle2">友情链接</div>
+			<div class="myPanelTitle2" style="font-weight:bold;">友情链接</div>
 
 				
 		</div>
