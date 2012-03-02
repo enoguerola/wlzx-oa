@@ -25,24 +25,25 @@
 </script>
 
 </head>
-<body>
+<body style="overflow-x:hidden;">
 <div class="center" id="container">
 	<div id="top">
 		<img alt="数字化校园" src="resources/common/layout/preloader.png">
 	</div>
 <!-- 	<div class="myPanelTitleLine"></div> -->
 	<div id="page">
-			<div style="width:100%;text-align:center;font-size:11px;">
-				<h2 style="margin:0;padding:0;width:100%;"><span style="color:red;font-weight:bold;" id="lbTitle">${notice.title}</span>
+			<div style="width:100%;text-align:center;">
+				<h2 style="margin:0;padding:0;width:100%;"><span style="color:red;font-weight:bold;font-size:20px;" id="lbTitle">${notice.title}</span>
 				</h2>
-			</div>
-			<div style="width:100%;text-align:right;font-size:14px;line-height:30px;">
+				<h3 style="margin:0;padding:0;width:100%;text-align:center;padding-top:10px;">
 				<span>
 				部门：<span>${notice.postDepartmentName}</span>&nbsp;&nbsp;发布时间：<span>${notice.postTime}</span>
 				</span>
 				
+			</h3>
 			</div>
-			<div style="width:95%;margin:0 atuo;" id="noticeContent">
+			
+			<div style="width:95%;margin:0 auto;" id="noticeContent">
 				${notice.content}
           	</div>
 			<div style="width:100%;margin-bottom:20px;;padding:20px;">
