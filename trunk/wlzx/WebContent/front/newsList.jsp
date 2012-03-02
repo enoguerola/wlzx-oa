@@ -19,7 +19,7 @@
 	}
 
 </script>
-<body>
+<body style="overflow-x:hidden;">
 <div class="center" id="container">
 	<div id="top">
 		<img alt="数字化校园" src="resources/common/layout/preloader.png">

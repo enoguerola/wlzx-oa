@@ -11,7 +11,7 @@
 <head>
 <title>温岭中学校园动态</title>
 </head>
-<body>
+<body style="overflow-x:hidden;">
 <div class="center" id="container">
 	<div id="top">
 		<img alt="数字化校园" src="resources/common/layout/preloader.png">
@@ -19,10 +19,10 @@
 <!-- 	<div class="myPanelTitleLine"></div> -->
 	<div id="page" >
 			<div style="width:100%;padding:20px;">
-				<h2 style="margin:0;padding:0;width:100%;text-align:center;"><span style="color:red;font-weight:bold;width:100%;" id="lbTitle">${news.title}</span></h2>
+				<h2 style="margin:0;padding:0;width:100%;text-align:center;"><span style="color:red;font-weight:bold;width:100%;font-size:20px;" id="lbTitle">${news.title}</span></h2>
 				<h3 style="margin:0;padding:0;width:100%;text-align:center;padding-top:10px;">作者：<span>${news.author}</span>&nbsp;&nbsp;发布时间：<span>${news.postTime}</span></h3>
 			</div>
-			<div style="font-size:14px;padding:10px;width:100%;">
+			<div style="font-size:14px;width:95%;margin:0 auto;">
 				${news.content}
           	</div>
 			

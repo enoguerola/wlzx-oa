@@ -79,7 +79,7 @@
 	}
 
 </script>
-<body>
+<body style="overflow-x:hidden;">
 
 <div class="center" id="container">
 	<div id="top">

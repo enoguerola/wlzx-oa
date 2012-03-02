@@ -3,7 +3,14 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix='fmt'%>
 <!DOCTYPE html>
+<%  
+	String path = request.getContextPath();  
+	String base = request.getScheme()+"://"+request.getServerName()+
+	(request.getServerPort() == 80 ? "" : (":"+request.getServerPort()))+"/";  
+	String basePath = request.getScheme()+"://"+request.getServerName()+
+		(request.getServerPort() == 80 ? "" : (":"+request.getServerPort())) +path+"/";  
 
+%>
 <link rel="stylesheet" href="front/index.less" type="text/less" media="screen" />
 <script src="front/js/less-1.1.3.min.js" type="text/javascript"></script>
 <!--[if lt IE 9]><script type="text/javascript" src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
@@ -77,9 +84,9 @@
 <head>
 <title>温岭中学数字化校园</title>
 </head>
-<body>
+<body style="overflow-x:hidden;">
 <div class="center" id="container">
-	<div id="top">
+	<div id="top" style="padding-left:0;padding-right:0;margin-left:0;margin-right:0;">
 		<img alt="数字化校园" src="resources/common/layout/preloader.png">
 	</div>
 	<div id="sidebar">
@@ -87,7 +94,7 @@
 			<div class="myPanelTitle2" style="font-weight:bold;">信息系统</div>
 			<ul id="boxes" style="padding-left:0;list-style-type:none;padding-top:30px;">
 				<li style="background: url('resources/oa/oa.png') no-repeat left center;padding:0;"><a href="login.html" target="_blank" style="letter-spacing: 5px;" >办公系统</a></li>
-				<li style="padding:0;"><a href="http://localhost:8080/wlzxCourseSelective/login.jsp" target="_blank" style="letter-spacing: 5px;">选课系统</a></li>
+				<li style="padding:0;"><a href="<%=base %>wlzxCourseSelective/login.jsp" target="_blank" style="letter-spacing: 5px;">选课系统</a></li>
 			
 			</ul>
 			
