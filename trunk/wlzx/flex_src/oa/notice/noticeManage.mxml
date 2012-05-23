@@ -82,7 +82,7 @@
 			
 			public var noticeScopeList:ArrayCollection = new ArrayCollection( 
 				[	{label:"校级公告", data:"0"},  
-					{label:"部门公告", data:"1"}]);
+					{label:"部门消息", data:"1"}]);
 			
 			public var noticeTypeList:ArrayCollection = new ArrayCollection();
 			public var typeList:ArrayCollection = new ArrayCollection();
@@ -481,7 +481,7 @@
 															if(data.scope=='0')
 																return "校级公告";
 															else  if(data.scope=='1')
-																return "部门公告";
+																return "部门消息";
 															else return "异常";
 														}
 													]]>
@@ -577,7 +577,7 @@
 																var temp:Object=parentApplication.currentUserDepartment.getItemAt(i);
 																//Alert.show(temp.id);
 																if(temp.data==data.postDepartmentId){
-																	if(data.scope==1)return true;//本部门部门公告编辑
+																	if(data.scope==1)return true;//本部门部门消息编辑
 																	else {
 																		if(parentApplication.currentUser.hasDam("editSelfDepartmentSchoolScopeNotice@noFilter@")){
 																			return true;//本部门校级公告编辑

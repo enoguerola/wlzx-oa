@@ -31,7 +31,7 @@
 			search_date_end.text=CommonUtils.formatDate(CommonUtils.currentMonthEndDate(),"YYYY-MM-DD");
 			var parms:String=((Object)(this.owner)).id;
 			if(parms=='department'){
-				noticeScope.text="部门公告";
+				noticeScope.text="部门消息";
 				if(parentApplication.currentUser.hasDam("department_notice_read_main@defaultVisit@@departmentFilter@")){
 					//Alert.show("aaaaa");
 					var temp:ArrayCollection=new ArrayCollection(CommonUtils.clone(parentApplication.currentUserFirstLevelDepartment.source));
@@ -62,7 +62,7 @@
 		{
 			
 		
-			if(noticeScope.text == "部门公告"){
+			if(noticeScope.text == "部门消息"){
 				var item:Object=departments.selectedItem;
 				//Alert.show(item.data);
 				noticeServiceRO.getDepartmentNotice(search_date_begin.text,search_date_end.text,item.data);
@@ -123,7 +123,7 @@
 										if(data.scope=='0')
 											return "校级公告";
 										else  if(data.scope=='1')
-											return "部门公告";
+											return "部门消息";
 										else return "异常";
 									}
 								]]>

@@ -40,7 +40,7 @@
      
     
 
-<table width="80%" height="600" border="1" style="text-align:center;" align="center" cellpadding="1" cellspacing="0">
+<table width="95%" height="600" border="1" style="text-align:center;" align="center" cellpadding="1" cellspacing="0">
   <tr>
     <td width="20%" height="26">姓名</td>
     <td width="15%">${tlForm.teacherId}</td>
@@ -151,11 +151,11 @@
   </tr>
   <tr>
     <td height="100">备注</td>
-    <td colspan="3">${tlForm.remark==""||tlForm.remark==null?"无":tlForm.remark}</td>  
+    <td colspan="3">${tlForm.remark==""||tlForm.remark==null?"":tlForm.remark}</td>  
   </tr>
   
 </table>
-<table width="80%"  border="0" align="center" style="text-align: left;font-weight: bold;line-height: 25px;" cellpadding="1" cellspacing="0">
+<table width="95%"  border="0" align="center" style="text-align: left;font-weight: bold;line-height: 25px;" cellpadding="1" cellspacing="0">
     <tr>
     	<td>
         说明：<br/>

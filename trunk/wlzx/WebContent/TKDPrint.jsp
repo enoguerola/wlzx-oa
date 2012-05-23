@@ -26,7 +26,7 @@
      <input id="btnPrint" type="button" value="打印" onclick="javascript:window.print();" />
     </div>
 
-   <table  width="80%" border="1px" align="center"  cellpadding="1" cellspacing="0">
+   <table  width="95%" border="1px" align="center"  cellpadding="1" cellspacing="0">
    <tr><td>
 <table width="100%" border="0" align="center">
   <tr>
@@ -42,7 +42,7 @@
     <td colspan="5">${apply.applyReason}</td>
   </tr>
   <tr>
-    <td colspan="6"><table width="80%" border="1" align="center" cellpadding="1" cellspacing="0">
+    <td colspan="6"><table width="95%" border="1" align="center" cellpadding="1" cellspacing="0">
       <tr>
         <td align="center" width="10%">调课班级</td>
         <td align="center" width="10%">调课课程</td>

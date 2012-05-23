@@ -29,7 +29,7 @@ public class NoticeModel extends BaseModel {
 	private String postDepartmentName;//辅助
 	public static enum EScope{
 		School(0, "校级公告"),
-		Department(1, "部门公告");
+		Department(1, "部门消息");
 		
 		private Integer value;
 		private String text;
