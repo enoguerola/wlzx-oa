@@ -56,17 +56,21 @@
     <td height="40">处室负责人</td>
     <td colspan="3"><table width="100%" >
       <tr>
-        <td>${owForm.officeChiefApproveOption}</td>
+      	<td>
+      		<div style="text-align: left; padding-left: 50px; font-size:20">
+        		${owForm.officeChiefStatus==null?"" :(owForm.officeChiefStatus==1?"同意":"不同意")}
+        	</div>
+        	<div style="text-align: left; padding-left: 50px; ">
+        		${owForm.officeChiefApproveOption}
+        	</div>
+        </td>
       </tr>
       <tr>
         <td align="right"  > 
-        	<div style="text-align: left; padding-left: 250px;">
-        		(${owForm.officeChiefStatus==null?"暂无" :(owForm.officeChiefStatus==1?"通过":"未通过")}) 
-        	</div>
-	         <div style="text-align:left; padding-left:250px; ">
+	         <div style="text-align:left; padding-left:280px; ">
 	        	签名:${owForm.officeChiefApproverId} 
 	        </div>
-	         <div style="text-align:left; padding-left:250px; ">
+	         <div style="text-align:left; padding-left:280px; ">
 	        	日期：${fn:substring(owForm.officeChiefApproveTime,0,10)}
 	        </div>
         </td>
