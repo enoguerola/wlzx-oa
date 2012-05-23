@@ -40,7 +40,7 @@
     
     
 
-<table width="80%" height="250" border="1" align="center" style="text-align:center;" cellpadding="1" cellspacing="0">
+<table width="95%" height="250" border="1" align="center" style="text-align:center;" cellpadding="1" cellspacing="0">
   <tr>
     <td width="20%" height="26">姓名</td>
     <td width="15%">${mrForm.teacherId}</td>
@@ -105,7 +105,7 @@
    
   
 </table>
-<table width="80%"  border="0" align="center" style="text-align:left;font-weight: bold;line-height: 25px;" cellpadding="1" cellspacing="0">
+<table width="95%"  border="0" align="center" style="text-align:left;font-weight: bold;line-height: 25px;" cellpadding="1" cellspacing="0">
  <tr>
     	<td>
         说明：<br/>

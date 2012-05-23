@@ -69,7 +69,7 @@
 			public var noticeScopeList:ArrayCollection = new ArrayCollection( 
 				[	
 					{label:"校级公告", data:"0"},  
-					{label:"部门公告", data:"1"}]);
+					{label:"部门消息", data:"1"}]);
 			public var noticeEmergenceList:ArrayCollection = new ArrayCollection( 
 				[	{label:"全部", data:null},
 					{label:"紧急", data:"1"},  
@@ -97,16 +97,16 @@
 				var urlRequest:URLRequest = new URLRequest(parentApplication.homeUrl+"spring/attachmentUpload.action");
 				//upload.urlRequest = urlRequest;
 				messagesView.selectedIndex = 0;
-				noticeScope.dataProvider=  new ArrayCollection([{label:"部门公告", data:"1"}]);
+				noticeScope.dataProvider=  new ArrayCollection([{label:"部门消息", data:"1"}]);
 				departmentList = this.parentApplication.currentUserFirstLevelDepartment;
 				postdepartment.dataProvider= departmentList;
 				postdepartment.selectedIndex=0;
 				//权限控制部分
 				if(this.parentApplication.currentUser.hasDam("postSelfDepartmentSchoolScopeNotice@noFilter@")){
-					noticeScope.dataProvider= new ArrayCollection([{label:"校级公告", data:"0"},{label:"部门公告", data:"1"}]);
+					noticeScope.dataProvider= new ArrayCollection([{label:"校级公告", data:"0"},{label:"部门消息", data:"1"}]);
 				}
 				if(this.parentApplication.currentUser.hasDam("postAnyNotice@noFilter@")){
-					noticeScope.dataProvider= new ArrayCollection([{label:"校级公告", data:"0"},{label:"部门公告", data:"1"}]);
+					noticeScope.dataProvider= new ArrayCollection([{label:"校级公告", data:"0"},{label:"部门消息", data:"1"}]);
 //					departmentList = this.parentApplication.allDepartment;
 //					postdepartment.dataProvider= departmentList;
 //					postdepartment.selectedIndex=0;
@@ -492,7 +492,7 @@
 															if(data.scope=='0')
 																return "校级公告";
 															else  if(data.scope=='1')
-																return "部门公告";
+																return "部门消息";
 															else return "异常";
 														}
 													]]>
@@ -614,7 +614,7 @@
 															if(data.scope=='0')
 																return "校级公告";
 															else  if(data.scope=='1')
-																return "部门公告";
+																return "部门消息";
 															else return "异常";
 														}
 													]]>
