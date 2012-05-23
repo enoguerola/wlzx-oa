@@ -78,17 +78,21 @@
     <td height="84">处室负责人意见</td>
     <td colspan="3"><table width="100%" >
       <tr>
-        <td>${tlForm.officeChiefApproveOption}</td>
+        <td> 		
+        	<div style="text-align: left; padding-left: 50px; font-size:20">
+        		${tlForm.officeChiefStatus==null?"" :(tlForm.officeChiefStatus==1?"同意":"不同意")}
+        	</div>
+        	<div style="text-align: left; padding-left: 50px; ">
+        		${tlForm.officeChiefApproveOption}
+        	</div>
+        </td>
       </tr>
       <tr>
         <td align="right">
-	        <div style="text-align:left; padding-left: 250px;">
-	         	(${tlForm.officeChiefStatus==null?"暂无" :(tlForm.officeChiefStatus==1?"通过":"未通过")}) 
-			</div>
-	        <div style="text-align:left; padding-left: 250px;">
+	        <div style="text-align:left; padding-left: 280px;">
 	        	签名:${tlForm.officeChiefApproverId} 
 	        </div>
-	         <div style="text-align:left; padding-left: 250px;">
+	         <div style="text-align:left; padding-left: 280px;">
 	         	日期：${fn:substring(tlForm.officeChiefApproveTime,0,10)}
 	         </div>
         </td>
@@ -99,17 +103,21 @@
     <td height="91">分管校长意见</td>
     <td colspan="3"><table width="100%" >
       <tr>
-        <td>${tlForm.vicePrincipalApproveOption}</td>
+        <td> 		
+        	<div style="text-align: left; padding-left: 50px; font-size:20">
+        		${tlForm.vicePrincipalStatus==null?"" :(tlForm.vicePrincipalStatus==1?"同意":"不同意")}
+        	</div>
+        	<div style="text-align: left; padding-left: 50px; ">
+        		${tlForm.vicePrincipalApproveOption}
+        	</div>
+        </td>
       </tr>
       <tr>
         <td align="right"> 
-	       	  <div style="text-align:left; padding-left: 250px;">
-	      		  (${tlForm.vicePrincipalStatus==null?"暂无" :(tlForm.vicePrincipalStatus==1?"通过":"未通过")})
-	       	 </div>
-	         <div style="text-align:left; padding-left: 250px;">
+	         <div style="text-align:left; padding-left: 280px;">
 	                签名:${tlForm.vicePrincipalApproverId} 
 	        </div>    
-	         <div style="text-align:left; padding-left: 250px;">
+	         <div style="text-align:left; padding-left: 280px;">
 	        		日期：${fn:substring(tlForm.vicePrincipalApproveTime,0,10)}
 	        </div>   
         </td>
@@ -120,17 +128,21 @@
     <td height="97">校长意见</td>
     <td colspan="3"><table width="100%" >
      <tr>
-        <td>${tlForm.principalApproveOption}</td>
+        <td> 		
+        	<div style="text-align: left; padding-left: 50px; font-size:20">
+        		${tlForm.principalStatus==null?"" :(tlForm.principalStatus==1?"同意":"不同意")}
+        	</div>
+        	<div style="text-align: left; padding-left: 50px; ">
+        		${tlForm.principalApproveOption}
+        	</div>
+        </td>
       </tr>
       <tr>
         <td align="right">
-        	<div style="text-align:left; padding-left: 250px;">
-        		 (${tlForm.principalStatus==null?"暂无" :(tlForm.principalStatus==1?"通过":"未通过")})
-        	 </div>
-	        <div style="text-align:left; padding-left: 250px;">
+	        <div style="text-align:left; padding-left: 280px;">
 	                      签名:${tlForm.principalApproverId} 
 	        </div>
-	        <div style="text-align:left; padding-left: 250px;">
+	        <div style="text-align:left; padding-left: 280px;">
 	       		 日期：${fn:substring(tlForm.principalApproveTime,0,10)}
 	       	 </div>
         </td>

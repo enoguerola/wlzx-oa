@@ -53,17 +53,21 @@
     <td colspan="3">
     <table width="100%" >
       <tr>
-        <td>${mrForm.officeChiefApproveOption}</td>
+        <td>
+      		<div style="text-align: left; padding-left: 50px; font-size:20">
+        		${mrForm.officeChiefStatus==null?"" :(mrForm.officeChiefStatus==1?"同意":"不同意")}
+        	</div>
+        	<div style="text-align: left; padding-left: 50px; ">
+        		${mrForm.officeChiefApproveOption}
+        	</div>
+        </td>
       </tr>
       <tr>
         <td align="right">
-	         <div style="text-align:left; padding-left: 250px;">
-	         	(${mrForm.officeChiefStatus==null?"暂无" :(mrForm.officeChiefStatus==1?"通过":"未通过")}) 
-	         </div>
-	         <div style="text-align:left; padding-left: 250px;">
+	         <div style="text-align:left; padding-left: 280px;">
 	        	签名:${mrForm.officeChiefApproverId}
 	       	</div>
-	       	<div style="text-align:left; padding-left: 250px;" >
+	       	<div style="text-align:left; padding-left: 280px;" >
 	       	 	日期：${fn:substring(mrForm.officeChiefApproveTime,0,10)}
 	       	 	 </div>
 	     </td>
@@ -76,17 +80,21 @@
     <td colspan="3">
     <table width="100%" >
       <tr>
-        <td>${mrForm.vicePrincipalApproveOption}</td>
+        <td>
+      		<div style="text-align: left; padding-left: 50px; font-size:20">
+        		${mrForm.vicePrincipalStatus==null?"" :(mrForm.vicePrincipalStatus==1?"同意":"不同意")}
+        	</div>
+        	<div style="text-align: left; padding-left: 50px; ">
+        		${mrForm.vicePrincipalApproveOption}
+        	</div>
+        </td>
       </tr>
       <tr>
         <td align="right"> 
-        	<div style="text-align:left; padding-left: 250px;">
-	       		 (${mrForm.vicePrincipalStatus==null?"暂无" :(mrForm.vicePrincipalStatus==1?"通过":"未通过")})
-	        </div>
-	         <div style="text-align:left; padding-left: 250px;">
+	         <div style="text-align:left; padding-left: 280px;">
 	                      签名:${mrForm.vicePrincipalApproverId} 
 	        </div>          
-	          <div style="text-align:left; padding-left: 250px;">
+	          <div style="text-align:left; padding-left: 280px;">
 	        	  日期：${fn:substring(mrForm.vicePrincipalApproveTime,0,10)}
 	          </div>    
         </td>
